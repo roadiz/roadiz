@@ -86,13 +86,7 @@ class AjaxNodesController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
@@ -247,13 +241,7 @@ class AjaxNodesController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         $availableStatuses = [
@@ -410,13 +398,7 @@ class AjaxNodesController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         try {
@@ -435,7 +417,7 @@ class AjaxNodesController extends AbstractAjaxController
                     '%name%' => $source->getTitle(),
                 ]
             );
-            $this->get('logger')->info($msg, ['source' => $source]);
+            $this->publishConfirmMessage($request, $msg, $source);
 
             $responseArray = [
                 'statusCode' => Response::HTTP_OK,

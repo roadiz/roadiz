@@ -81,8 +81,8 @@ export default class NodeTreeContextActions {
                 .fail(data => {
                     data = JSON.parse(data.responseText)
                     window.UIkit.notify({
-                        message: data.responseText,
-                        status: data.status,
+                        message: data.message,
+                        status: 'danger',
                         timeout: 3000,
                         pos: 'top-center'
                     })
@@ -116,14 +116,9 @@ export default class NodeTreeContextActions {
                 dataType: 'json',
                 data: postData
             })
-                .done(data => {
+                .done(() => {
                     window.Rozier.refreshAllNodeTrees()
-                    window.UIkit.notify({
-                        message: data.responseText,
-                        status: data.status,
-                        timeout: 3000,
-                        pos: 'top-center'
-                    })
+                    window.Rozier.getMessages()
                 })
                 .fail(data => {
                     data = JSON.parse(data.responseText)
@@ -183,14 +178,9 @@ export default class NodeTreeContextActions {
             dataType: 'json',
             data: postData
         })
-        .done(data => {
+        .done(() => {
             window.Rozier.refreshAllNodeTrees()
-            window.UIkit.notify({
-                message: data.responseText,
-                status: data.status,
-                timeout: 3000,
-                pos: 'top-center'
-            })
+            window.Rozier.getMessages()
         })
         .fail(data => {
             data = JSON.parse(data.responseText)

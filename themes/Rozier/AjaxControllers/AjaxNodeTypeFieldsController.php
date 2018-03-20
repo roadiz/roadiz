@@ -54,13 +54,7 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);
@@ -69,20 +63,11 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
             return $response;
         }
 
-        $responseArray = [
-            'statusCode' => '403',
-            'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans(
-                'field.%nodeTypeFieldId%.not_exists',
-                [
-                    '%nodeTypeFieldId%' => $nodeTypeFieldId
-                ]
-            )
-        ];
-
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw $this->createNotFoundException($this->getTranslator()->trans(
+            'field.%nodeTypeFieldId%.not_exists',
+            [
+                '%nodeTypeFieldId%' => $nodeTypeFieldId
+            ]
+        ));
     }
 }

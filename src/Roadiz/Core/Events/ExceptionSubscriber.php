@@ -123,15 +123,15 @@ class ExceptionSubscriber implements EventSubscriberInterface
                 $exception = $exception->getPrevious();
             }
 
-            if ($exception instanceof MaintenanceModeException &&
-                null !== $ctrl = $exception->getController()) {
-                $response = $ctrl->maintenanceAction($event->getRequest());
-                // Set http code according to status
-                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-                $event->setResponse($response);
-            } elseif (!$this->viewer->isFormatJson($event->getRequest()) &&
-                false !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
-                $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
+            if (!$this->viewer->isFormatJson($event->getRequest())) {
+                if ($exception instanceof MaintenanceModeException && null !== $ctrl = $exception->getController()) {
+                    $response = $ctrl->maintenanceAction($event->getRequest());
+                    // Set http code according to status
+                    $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+                    $event->setResponse($response);
+                } elseif (false !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
+                    $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
+                }
             } else {
                 // Customize your response object to display the exception details
                 $response = $this->getEmergencyResponse($exception, $event->getRequest());

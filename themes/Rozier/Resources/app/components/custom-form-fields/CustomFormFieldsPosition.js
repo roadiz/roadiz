@@ -58,7 +58,13 @@ export default class CustomFormFieldsPosition {
                 })
             })
             .fail(data => {
-                console.log(data)
+                data = JSON.parse(data.responseText)
+                window.UIkit.notify({
+                    message: data.error_message,
+                    status: 'danger',
+                    timeout: 3000,
+                    pos: 'top-center'
+                })
             })
     }
 }

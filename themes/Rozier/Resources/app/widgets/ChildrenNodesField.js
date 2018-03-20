@@ -67,24 +67,17 @@ export default class ChildrenNodesField {
                     dataType: 'json',
                     data: postData
                 })
-                    .done(data => {
+                    .done(() => {
                         window.Rozier.refreshMainNodeTree()
+                        window.Rozier.getMessages()
                         let $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget')
                         this.refreshNodeTree($nodeTree, parentNodeId, translationId)
-
-                        window.UIkit.notify({
-                            message: data.responseText,
-                            status: data.status,
-                            timeout: 3000,
-                            pos: 'top-center'
-                        })
                     })
                     .fail(data => {
                         data = JSON.parse(data.responseText)
-
                         window.UIkit.notify({
-                            message: data.responseText,
-                            status: data.status,
+                            message: data.error_message,
+                            status: 'danger',
                             timeout: 3000,
                             pos: 'top-center'
                         })
@@ -158,8 +151,14 @@ export default class ChildrenNodesField {
                         })
                     }
                 })
-                .fail((jqXHR, textStatus) => {
-                    console.error(textStatus)
+                .fail(data => {
+                    data = JSON.parse(data.responseText)
+                    window.UIkit.notify({
+                        message: data.error_message,
+                        status: 'danger',
+                        timeout: 3000,
+                        pos: 'top-center'
+                    })
                 })
         } else {
             console.error('No node-tree available.')

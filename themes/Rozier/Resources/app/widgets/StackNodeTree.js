@@ -108,19 +108,13 @@ export default class StackNodeTree {
                 .done(data => {
                     window.Rozier.refreshMainNodeTree()
                     this.refreshNodeTree(parentNodeId, null, postData.tagId, 1)
-                    window.UIkit.notify({
-                        message: data.responseText,
-                        status: data.status,
-                        timeout: 3000,
-                        pos: 'top-center'
-                    })
+                    window.Rozier.getMessages()
                 })
                 .fail(data => {
                     data = JSON.parse(data.responseText)
-
                     window.UIkit.notify({
-                        message: data.responseText,
-                        status: data.status,
+                        message: data.error_message,
+                        status: 'danger',
                         timeout: 3000,
                         pos: 'top-center'
                     })

@@ -60,9 +60,6 @@ export default class SettingsSaveButtons {
             .done(() => {
                 console.log('Saved setting with success.')
             })
-            .fail(() => {
-                console.error('Error during save.')
-            })
             .always(() => {
                 window.Rozier.lazyload.canvasLoader.hide()
                 window.Rozier.getMessages()

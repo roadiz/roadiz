@@ -55,13 +55,7 @@ class AjaxFoldersController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $folder = $this->get('em')
@@ -116,12 +110,6 @@ class AjaxFoldersController extends AbstractAjaxController
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $responseArray = [
-            'statusCode' => Response::HTTP_NOT_FOUND,
-            'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans('no.folder.found')
-        ];
-
         if ($request->get('search') != "") {
             $responseArray = [];
 
@@ -138,12 +126,14 @@ class AjaxFoldersController extends AbstractAjaxController
             foreach ($folders as $folder) {
                 $responseArray[] = $folder->getFullPath();
             }
+
+            return new JsonResponse(
+                $responseArray,
+                Response::HTTP_OK
+            );
         }
 
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw $this->createNotFoundException($this->getTranslator()->trans('no.folder.found'));
     }
 
     /**
