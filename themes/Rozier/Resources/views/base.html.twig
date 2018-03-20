@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>{{ head.siteTitle }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Roadiz {{ head.cmsVersion }} {{ head.cmsVersionNumber }} - {{ head.themeName }}" />
+        <meta name="generator" content="Roadiz {{ cms_prefix }} {{ cms_version }} - {{ head.themeName }}" />
         <link rel="apple-touch-icon" sizes="57x57" href="{{ head.resourcesUrl }}img/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="114x114" href="{{ head.resourcesUrl }}img/apple-touch-icon-114x114.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="{{ head.resourcesUrl }}img/apple-touch-icon-72x72.png" />
@@ -42,8 +42,6 @@
                     {% include '@Rozier/panels/user_panel.html.twig' with {
                         'session' : session,
                         'head' : head,
-                        'authorizationChecker' : authorizationChecker,
-                        'tokenStorage': tokenStorage,
                         'themeServices':themeServices,
                         'request':request
                     } only %}
@@ -51,8 +49,6 @@
                 <section class="main-container-section" id="admin-menu">
                     {% include '@Rozier/panels/admin_menu.html.twig' with {
                         'themeServices' : themeServices,
-                        'authorizationChecker' : authorizationChecker,
-                        'tokenStorage': tokenStorage,
                         'backofficeEntries':backofficeEntries,
                         'request':request
                     } only %}
@@ -64,8 +60,6 @@
                     <div id="main-trees-overlay"></div>
                     <div id="main-trees-container">
                         {% include '@Rozier/panels/tree_panel.html.twig' with {
-                            'authorizationChecker': authorizationChecker,
-                            'tokenStorage': tokenStorage,
                             'themeServices': themeServices,
                             "nodeStatuses":nodeStatuses,
                             "request":request,

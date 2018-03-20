@@ -1,6 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+/**
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,50 +23,47 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- *
- * @file AjaxNodeTypeFieldsController.php
- * @author Ambroise Maupate
+ * @file RoadizExtension.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+namespace RZ\Roadiz\Utils\TwigExtensions;
 
-/**
- * {@inheritdoc}
- */
-class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
+use RZ\Roadiz\Core\Kernel;
+
+class RoadizExtension extends \Twig_Extension
 {
     /**
-     * Handle AJAX edition requests for NodeTypeFields
-     * such as coming from widgets.
-     *
-     * @param Request $request
-     * @param int     $nodeTypeFieldId
-     *
-     * @return Response JSON response
+     * @var Kernel
      */
-    public function editAction(Request $request, $nodeTypeFieldId)
+    protected $kernel;
+
+    /**
+     * RoadizExtension constructor.
+     *
+     * @param Kernel $kernel
+     */
+    public function __construct(Kernel $kernel)
     {
-        /*
-         * Validate
-         */
-        $this->validateRequest($request);
-        $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
+        $this->kernel = $kernel;
+    }
 
-        $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return 'RoadizExtension';
+    }
 
-        if (null !== $response = $this->handleFieldActions($request, $field)) {
-            return $response;
-        }
-
-        throw $this->createNotFoundException($this->getTranslator()->trans(
-            'field.%nodeTypeFieldId%.not_exists',
-            [
-                '%nodeTypeFieldId%' => $nodeTypeFieldId
-            ]
-        ));
+    /**
+     * @return array
+     */
+    public function getGlobals()
+    {
+        return [
+            'cms_version' => Kernel::$cmsVersion,
+            'cms_prefix' => Kernel::CMS_VERSION,
+        ];
     }
 }

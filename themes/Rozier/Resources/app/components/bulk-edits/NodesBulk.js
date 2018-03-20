@@ -36,17 +36,19 @@ export default class NodesBulk {
      * Init
      */
     init () {
-        this.$nodesCheckboxes.off('change', this.onCheckboxChange)
         this.$nodesCheckboxes.on('change', this.onCheckboxChange)
-
-        this.$nodesFolderButton.on('click', this.nodesFolderButtonClick)
         this.$nodesStatusButton.on('click', this.nodesStatusButtonClick)
-
-        this.$nodesSelectAll.off('click', this.onSelectAll)
         this.$nodesSelectAll.on('click', this.onSelectAll)
-
-        this.$nodesDeselectAll.off('click', this.onDeselectAll)
         this.$nodesDeselectAll.on('click', this.onDeselectAll)
+    }
+
+    unbind () {
+        if (this.$nodesCheckboxes.length) {
+            this.$nodesCheckboxes.off('change', this.onCheckboxChange)
+            this.$nodesFolderButton.off('click', this.nodesFolderButtonClick)
+            this.$nodesSelectAll.off('click', this.onSelectAll)
+            this.$nodesDeselectAll.off('click', this.onDeselectAll)
+        }
     }
 
     onSelectAll () {

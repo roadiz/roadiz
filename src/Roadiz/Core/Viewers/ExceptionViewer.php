@@ -252,8 +252,7 @@ class ExceptionViewer
             return true;
         }
 
-        if (count($request->getAcceptableContentTypes()) == 1 &&
-            in_array('application/json', $request->getAcceptableContentTypes())) {
+        if (in_array('application/json', $request->getAcceptableContentTypes())) {
             return true;
         }
 

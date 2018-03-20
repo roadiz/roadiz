@@ -54,15 +54,10 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
+        $this->validateRequest($request);
 
         if ($field !== null) {
-            $responseArray = null;
+            $responseArray = [];
 
             /*
              * Get the right update method against "_action" parameter

@@ -54,35 +54,20 @@ class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $field = $this->get('em')->find(CustomFormField::class, (int) $customFormFieldId);
 
-        if (null !== $response = $this->handleFieldActions($request, $field)) {
+        if (null !== $field && null !== $response = $this->handleFieldActions($request, $field)) {
             return $response;
         }
 
-        $responseArray = [
-            'statusCode' => '403',
-            'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans(
-                'field.%customFormFieldId%.not_exists',
-                [
-                    '%customFormFieldId%' => $customFormFieldId
-                ]
-            )
-        ];
-
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw $this->createNotFoundException($this->getTranslator()->trans(
+            'field.%customFormFieldId%.not_exists',
+            [
+                '%customFormFieldId%' => $customFormFieldId
+            ]
+        ));
     }
 }

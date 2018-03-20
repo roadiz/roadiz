@@ -53,6 +53,10 @@ export default class TagAutocomplete {
         }
     }
 
+    unbind () {
+
+    }
+
     split (val) {
         return val.split(/,\s*/)
     }

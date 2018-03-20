@@ -44,6 +44,20 @@ use Themes\DefaultTheme\DefaultThemeApp;
 class ContactController extends DefaultThemeApp
 {
     /**
+     * @inheritDoc
+     */
+    protected function extendAssignation()
+    {
+        parent::extendAssignation();
+
+        // Get session messages
+        // Remove FlashBag assignation from here if you handle your forms
+        // in sub-requests block renders.
+        $this->assignation['session']['messages'] = $this->get('session')->getFlashBag()->all();
+    }
+
+
+    /**
      * @param Request $request
      * @param Node|null $node
      * @param Translation|null $translation

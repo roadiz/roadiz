@@ -15,7 +15,9 @@ export default class NodeEditSource {
         this.$dropdown = null
         this.$input = null
 
+        // Binded methods
         this.onInputKeyDown = this.onInputKeyDown.bind(this)
+        this.onInputKeyUp = this.onInputKeyUp.bind(this)
         this.inputFocus = this.inputFocus.bind(this)
         this.inputFocusOut = this.inputFocusOut.bind(this)
         this.onFormSubmit = this.onFormSubmit.bind(this)
@@ -119,18 +121,21 @@ export default class NodeEditSource {
     }
 
     initEvents () {
-        window.Rozier.$window.off('keydown', this.onInputKeyDown)
         window.Rozier.$window.on('keydown', this.onInputKeyDown)
-        window.Rozier.$window.off('keyup', this.onInputKeyUp)
         window.Rozier.$window.on('keyup', this.onInputKeyUp)
-
-        this.$input.off('focus', this.inputFocus)
         this.$input.on('focus', this.inputFocus)
-        this.$input.off('focusout', this.inputFocusOut)
         this.$input.on('focusout', this.inputFocusOut)
-
-        this.$form.off('submit', this.onFormSubmit)
         this.$form.on('submit', this.onFormSubmit)
+    }
+
+    unbind () {
+        if (this.$content.length) {
+            window.Rozier.$window.off('keydown', this.onInputKeyDown)
+            window.Rozier.$window.off('keyup', this.onInputKeyUp)
+            this.$input.off('focus', this.inputFocus)
+            this.$input.off('focusout', this.inputFocusOut)
+            this.$form.off('submit', this.onFormSubmit)
+        }
     }
 
     onFormSubmit () {
@@ -170,13 +175,15 @@ export default class NodeEditSource {
                     }
                 })
                 .fail(data => {
-                    this.displayErrors(data.responseJSON.errors)
-                    window.UIkit.notify({
-                        message: data.responseJSON.message,
-                        status: 'danger',
-                        timeout: 2000,
-                        pos: 'top-center'
-                    })
+                    if (data.responseJSON) {
+                        this.displayErrors(data.responseJSON.errors)
+                        window.UIkit.notify({
+                            message: data.responseJSON.message,
+                            status: 'danger',
+                            timeout: 2000,
+                            pos: 'top-center'
+                        })
+                    }
                 })
                 .always(() => {
                     window.Rozier.lazyload.canvasLoader.hide()

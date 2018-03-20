@@ -16,6 +16,8 @@ export default class DocumentsBulk {
         this.$documentsFolderCont = $('.documents-bulk-folder-cont')
         this.$documentsSelectAll = $('.uk-button-select-all')
         this.$documentsDeselectAll = $('.uk-button-bulk-deselect')
+        this.$bulkDeleteButton = this.$actionsMenu.find('.uk-button-bulk-delete-documents')
+        this.$bulkDownloadButton = this.$actionsMenu.find('.uk-button-bulk-download-documents')
         this.documentsFolderOpen = false
         this.documentsIds = null
 
@@ -32,23 +34,22 @@ export default class DocumentsBulk {
     }
 
     init () {
-        this.$documentsCheckboxes.off('change', this.onCheckboxChange)
         this.$documentsCheckboxes.on('change', this.onCheckboxChange)
-
-        const $bulkDeleteButton = this.$actionsMenu.find('.uk-button-bulk-delete-documents')
-        $bulkDeleteButton.off('click', this.onBulkDelete)
-        $bulkDeleteButton.on('click', this.onBulkDelete)
-
+        this.$bulkDeleteButton.on('click', this.onBulkDelete)
         this.$documentsFolderButton.on('click', this.documentsFolderButtonClick)
-
-        const $bulkDownloadButton = this.$actionsMenu.find('.uk-button-bulk-download-documents')
-        $bulkDownloadButton.off('click', this.onBulkDownload)
-        $bulkDownloadButton.on('click', this.onBulkDownload)
-
-        this.$documentsSelectAll.off('click', this.onSelectAll)
+        this.$bulkDownloadButton.on('click', this.onBulkDownload)
         this.$documentsSelectAll.on('click', this.onSelectAll)
-        this.$documentsDeselectAll.off('click', this.onDeselectAll)
         this.$documentsDeselectAll.on('click', this.onDeselectAll)
+    }
+
+    unbind () {
+        if (this.$documentsCheckboxes.length) {
+            this.$documentsCheckboxes.off('change', this.onCheckboxChange)
+            this.$bulkDeleteButton.off('click', this.onBulkDelete)
+            this.$bulkDownloadButton.off('click', this.onBulkDownload)
+            this.$documentsSelectAll.off('click', this.onSelectAll)
+            this.$documentsDeselectAll.off('click', this.onDeselectAll)
+        }
     }
 
     onSelectAll () {

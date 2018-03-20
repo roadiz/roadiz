@@ -111,7 +111,11 @@ class LoginController extends RozierApp
                 ]);
             } else {
                 $splash = new SplashbasePictureFinder();
-                $response->setData($splash->getRandom());
+                $feed = $splash->getRandomBySearch('road');
+                if (false === $feed) {
+                    throw new ResourceNotFoundException();
+                }
+                $response->setData($feed);
             }
 
             return $response;

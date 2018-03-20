@@ -33,6 +33,8 @@ export default class NodeTypeFieldEdit {
      */
     init () {}
 
+    unbind () {}
+
     /**
      * Btn click
      * @param {Event} e
@@ -74,7 +76,6 @@ export default class NodeTypeFieldEdit {
                         this.applyContent(e.currentTarget, data, e.currentTarget.href)
                     })
                     .fail(() => {
-                        // console.log("error");
                         window.UIkit.notify({
                             message: window.Rozier.messages.forbiddenPage,
                             status: 'danger',

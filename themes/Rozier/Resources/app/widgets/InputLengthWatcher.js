@@ -8,14 +8,26 @@ export default class InputLengthWatcher {
         this.onMaxKeyUp = this.onMaxKeyUp.bind(this)
         this.onMinKeyUp = this.onMinKeyUp.bind(this)
 
+        this.init()
+    }
+
+    init () {
         if (this.$maxLengthed.length) {
-            this.$maxLengthed.off('keyup', this.onMaxKeyUp)
             this.$maxLengthed.on('keyup', this.onMaxKeyUp)
         }
 
         if (this.$minLengthed.length) {
-            this.$minLengthed.off('keyup', this.onMinKeyUp)
             this.$minLengthed.on('keyup', this.onMinKeyUp)
+        }
+    }
+
+    unbind () {
+        if (this.$maxLengthed.length) {
+            this.$maxLengthed.off('keyup', this.onMaxKeyUp)
+        }
+
+        if (this.$minLengthed.length) {
+            this.$minLengthed.off('keyup', this.onMinKeyUp)
         }
     }
 

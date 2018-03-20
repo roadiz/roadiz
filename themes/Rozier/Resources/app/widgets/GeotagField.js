@@ -24,6 +24,10 @@ export default class GeotagField {
         }
     }
 
+    unbind () {
+
+    }
+
     bindFields () {
         this.geocoder = new window.google.maps.Geocoder()
         this.$fields.each((index, element) => {

@@ -9,6 +9,11 @@ export default class SaveButtons {
     constructor () {
         this.$button = $($('.rz-action-save').get(0))
         this.$actionMenu = $($('.actions-menu').get(0))
+        this.formToSave = null
+
+        // Bind method
+        this.onClick = this.onClick.bind(this)
+
         this.bindKeyboard()
 
         if (this.$button.length &&
@@ -18,21 +23,29 @@ export default class SaveButtons {
     }
 
     init () {
-        let formToSave = $(this.$button.attr('data-action-save'))
+        this.formToSave = $(this.$button.attr('data-action-save'))
 
-        if (formToSave.length) {
+        if (this.formToSave.length) {
             this.$button.prependTo(this.$actionMenu)
-            this.$button.on('click', () => {
-                formToSave.submit()
-            })
+            this.$button.on('click', this.onClick)
 
             window.Mousetrap.bind(['mod+s'], () => {
                 console.log('Save requested')
-                formToSave.submit()
+                this.formToSave.submit()
 
                 return false
             })
         }
+    }
+
+    unbind () {
+        if (this.formToSave && this.formToSave.length) {
+            this.$button.off('click', this.onClick)
+        }
+    }
+
+    onClick () {
+        this.formToSave.submit()
     }
 
     bindKeyboard () {

@@ -90,7 +90,7 @@
         "jbzoo/pimpledumper": "^1.2"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.8",
+        "phpunit/phpunit": "~5.7.27",
         "satooshi/php-coveralls": "~2.0",
         "squizlabs/php_codesniffer": "@stable"
     },

@@ -11,10 +11,14 @@ export default class CustomFormFieldsPosition {
     }
 
     init () {
-        if (this.$list.length &&
-            this.$list.children().length > 1) {
-            this.$list.off('change.uk.sortable', this.onSortableChange)
+        if (this.$list.length && this.$list.children().length > 1) {
             this.$list.on('change.uk.sortable', this.onSortableChange)
+        }
+    }
+
+    unbind () {
+        if (this.$list.length && this.$list.children().length > 1) {
+            this.$list.off('change.uk.sortable', this.onSortableChange)
         }
     }
 
@@ -54,7 +58,13 @@ export default class CustomFormFieldsPosition {
                 })
             })
             .fail(data => {
-                console.log(data)
+                data = JSON.parse(data.responseText)
+                window.UIkit.notify({
+                    message: data.error_message,
+                    status: 'danger',
+                    timeout: 3000,
+                    pos: 'top-center'
+                })
             })
     }
 }

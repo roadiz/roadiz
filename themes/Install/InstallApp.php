@@ -85,9 +85,6 @@ class InstallApp extends AppController
             'head' => [
                 'siteTitle' => 'welcome.title',
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
-                'cmsVersion' => Kernel::CMS_VERSION,
-                'cmsVersionNumber' => Kernel::$cmsVersion,
-                'cmsBuild' => Kernel::$cmsBuild,
                 'devMode' => false,
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
                 'filesUrl' => $this->getRequest()->getBaseUrl() . $this->get('kernel')->getPublicFilesBasePath(),
