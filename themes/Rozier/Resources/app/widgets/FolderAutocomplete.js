@@ -45,6 +45,8 @@ export default class FolderAutocomplete {
             })
     }
 
+    unbind () {}
+
     split (val) {
         return val.split(/,\s*/)
     }

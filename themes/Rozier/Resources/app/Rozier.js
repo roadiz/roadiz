@@ -310,7 +310,7 @@ export default class Rozier {
             }
 
             $.ajax({
-                url: url,
+                url: url + 'okokok',
                 type: 'get',
                 cache: false,
                 dataType: 'json',
@@ -327,12 +327,14 @@ export default class Rozier {
                             this.bindMainTrees()
                             this.resize()
                             this.lazyload.bindAjaxLink()
+
+                            if (this.lazyload.nodeTreeContextActions) {
+                                this.lazyload.nodeTreeContextActions.unbind()
+                            }
+
                             this.lazyload.nodeTreeContextActions = new NodeTreeContextActions()
                         })
                     }
-                })
-                .fail(data => {
-                    console.log(data.responseJSON)
                 })
                 .always(() => {
                     this.lazyload.canvasLoader.hide()
@@ -393,7 +395,7 @@ export default class Rozier {
                     _action: 'searchNodesSources',
                     searchTerms: $input.val()
                 }
-                console.log(postData)
+
                 $.ajax({
                     url: this.routes.searchNodesSourcesAjax,
                     type: 'GET',
@@ -489,8 +491,6 @@ export default class Rozier {
         } else if (element.prev().length && typeof element.prev().attr('data-node-id') !== 'undefined') {
             postData.prevNodeId = parseInt(element.prev().attr('data-node-id'))
         }
-
-        console.log(postData)
 
         $.ajax({
             url: this.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
@@ -590,9 +590,6 @@ export default class Rozier {
                     pos: 'top-center'
                 })
             })
-            .fail(data => {
-                console.err(data)
-            })
     }
 
     /**
@@ -668,9 +665,6 @@ export default class Rozier {
                     timeout: 3000,
                     pos: 'top-center'
                 })
-            })
-            .fail(data => {
-                console.err(data)
             })
     }
 

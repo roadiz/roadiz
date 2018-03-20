@@ -121,4 +121,8 @@ export default class DocumentUploader {
             <i class="uk-icon-rz-file"></i>
         </div>`)
     }
+
+    unbind () {
+
+    }
 }

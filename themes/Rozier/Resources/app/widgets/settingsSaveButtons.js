@@ -21,8 +21,11 @@ export default class SettingsSaveButtons {
      */
     init () {
         // Events
-        this.$button.off('click', this.buttonClick)
         this.$button.on('click', this.buttonClick)
+    }
+
+    unbind () {
+        this.$button.off('click', this.buttonClick)
     }
 
     /**

@@ -44,12 +44,21 @@ export default class StackNodeTree {
 
     init () {
         if (this.$quickAddNodeButtons.length) {
-            this.$quickAddNodeButtons.off('click', this.onQuickAddClick)
             this.$quickAddNodeButtons.on('click', this.onQuickAddClick)
         }
+
+        if (this.$switchLangButtons.length) {
+            this.$switchLangButtons.on('click', this.onChangeLangClick)
+        }
+    }
+
+    unbind () {
+        if (this.$quickAddNodeButtons.length) {
+            this.$quickAddNodeButtons.off('click', this.onQuickAddClick)
+        }
+
         if (this.$switchLangButtons.length) {
             this.$switchLangButtons.off('click', this.onChangeLangClick)
-            this.$switchLangButtons.on('click', this.onChangeLangClick)
         }
     }
 
@@ -107,9 +116,6 @@ export default class StackNodeTree {
                     })
                 })
                 .fail(data => {
-                    console.log('error')
-                    console.log(data)
-
                     data = JSON.parse(data.responseText)
 
                     window.UIkit.notify({
@@ -190,8 +196,6 @@ export default class StackNodeTree {
                 postData.tagId = parseInt(tagId)
             }
 
-            console.log('refresh stackNodeTree', postData)
-
             this.currentRequest = $.ajax({
                 url: url,
                 type: 'get',
@@ -223,12 +227,14 @@ export default class StackNodeTree {
                             }
 
                             window.Rozier.lazyload.canvasLoader.hide()
+
+                            if (window.Rozier.lazyload.nodeTreeContextActions) {
+                                window.Rozier.lazyload.nodeTreeContextActions.unbind()
+                            }
+
                             window.Rozier.lazyload.nodeTreeContextActions = new NodeTreeContextActions()
                         })
                     }
-                })
-                .fail(data => {
-                    console.error(data.responseJSON)
                 })
         } else {
             console.error('No node-tree available.')

@@ -29,6 +29,8 @@ export default class NodeTree {
         if (this.contentHeight >= (window.Rozier.windowHeight - 400)) this.dropdownFlip()
     }
 
+    unbind () {}
+
     /**
      * Flip dropdown
      */

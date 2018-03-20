@@ -40,6 +40,7 @@ export default class NodeTypeFieldsPosition {
         this.$list = $('.node-type-fields > .uk-sortable')
         this.currentRequest = null
 
+        // Bind methods
         this.onSortableChange = this.onSortableChange.bind(this)
 
         this.init()
@@ -49,10 +50,14 @@ export default class NodeTypeFieldsPosition {
      * Init
      */
     init () {
-        if (this.$list.length &&
-            this.$list.children().length > 1) {
-            this.$list.off('change.uk.sortable', this.onSortableChange)
+        if (this.$list.length && this.$list.children().length > 1) {
             this.$list.on('change.uk.sortable', this.onSortableChange)
+        }
+    }
+
+    unbind () {
+        if (this.$list.length && this.$list.children().length > 1) {
+            this.$list.off('change.uk.sortable', this.onSortableChange)
         }
     }
 

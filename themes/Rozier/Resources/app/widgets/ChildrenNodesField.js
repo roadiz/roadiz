@@ -20,11 +20,16 @@ export default class ChildrenNodesField {
         this.$quickAddNodeButtons = this.$fields.find('.children-nodes-quick-creation a')
 
         if (this.$quickAddNodeButtons.length) {
-            this.$quickAddNodeButtons.off('click', this.onQuickAddClick)
             this.$quickAddNodeButtons.on('click', this.onQuickAddClick)
         }
 
         this.$fields.find('.nodetree-langs').remove()
+    }
+
+    unbind () {
+        if (this.$quickAddNodeButtons.length) {
+            this.$quickAddNodeButtons.off('click', this.onQuickAddClick)
+        }
     }
 
     treeAvailable () {
@@ -75,9 +80,6 @@ export default class ChildrenNodesField {
                         })
                     })
                     .fail(data => {
-                        console.log('error')
-                        console.log(data)
-
                         data = JSON.parse(data.responseText)
 
                         window.UIkit.notify({
@@ -147,12 +149,17 @@ export default class ChildrenNodesField {
                             this.init()
 
                             window.Rozier.lazyload.canvasLoader.hide()
+
+                            if (window.Rozier.lazyload.nodeTreeContextActions) {
+                                window.Rozier.lazyload.nodeTreeContextActions.unbind()
+                            }
+
                             window.Rozier.lazyload.nodeTreeContextActions = new NodeTreeContextActions()
                         })
                     }
                 })
-                .fail(data => {
-                    console.error(data.responseJSON)
+                .fail((jqXHR, textStatus) => {
+                    console.error(textStatus)
                 })
         } else {
             console.error('No node-tree available.')

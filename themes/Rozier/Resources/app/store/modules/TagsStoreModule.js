@@ -50,8 +50,6 @@ const state = {
 
 const getters = {
     tagsSearchExisting: state => (searchTerms, tags) => {
-        console.log(tags)
-
         return state.isTagExisting
     }
 }

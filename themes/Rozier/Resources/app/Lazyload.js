@@ -68,11 +68,34 @@ export default class Lazyload {
     constructor () {
         this.$linksSelector = null
         this.$textareasMarkdown = null
+        this.$canvasLoaderContainer = null
+
         this.documentsList = null
         this.mainColor = null
-        this.$canvasLoaderContainer = null
         this.currentRequest = null
+        this.nodeTreeContextActions = null
+        this.documentsBulk = null
+        this.tagsBulk = null
+        this.inputLengthWatcher = null
+        this.documentUploader = null
+        this.childrenNodesFields = null
+        this.geotagField = null
+        this.multiGeotagField = null
+        this.saveButtons = null
+        this.tagAutocomplete = null
+        this.folderAutocomplete = null
+        this.nodeTypeFieldsPosition = null
+        this.customFormFieldsPosition = null
+        this.settingsSaveButtons = null
+        this.nodeTypeFieldEdit = null
+        this.nodeEditSource = null
+        this.customFormFieldEdit = null
+        this.markdownEditors = []
+        this.jsonEditors = []
+        this.cssEditors = []
+        this.yamlEditors = []
 
+        // Binded methods
         this.onPopState = this.onPopState.bind(this)
         this.onClick = this.onClick.bind(this)
 
@@ -111,7 +134,7 @@ export default class Lazyload {
     }
 
     parseLinks () {
-        this.$linksSelector = $("a:not('[target=_blank]')").not('.rz-no-ajax-link')
+        this.$linksSelector = $("a:not('[target=_blank]')").not('.rz-no-ajax-link').not('[href="#"]')
     }
 
     /**
@@ -260,37 +283,59 @@ export default class Lazyload {
      * @return {[type]} [description]
      */
     generalBind () {
+        this.generalUnbind([
+            this.documentsBulk,
+            this.nodesBulk,
+            this.tagsBulk,
+            this.inputLengthWatcher,
+            this.documentUploader,
+            this.childrenNodesFields,
+            this.geotagField,
+            this.multiGeotagField,
+            this.stackNodeTrees,
+            this.nodeTreeContextActions,
+            this.tagAutocomplete,
+            this.folderAutocomplete,
+            this.nodeTypeFieldsPosition,
+            this.customFormFieldsPosition,
+            this.settingsSaveButtons,
+            this.nodeTypeFieldEdit,
+            this.nodeEditSource,
+            this.nodeTree,
+            this.customFormFieldEdit
+        ])
         this.bindAjaxLink()
 
-        /* eslint-disable no-new */
-        new DocumentsBulk()
-        new NodesBulk()
-        new TagsBulk()
-        new InputLengthWatcher()
-        new DocumentUploader(window.Rozier.messages.dropzone)
+        this.documentsBulk = new DocumentsBulk()
+        this.nodesBulk = new NodesBulk()
+        this.tagsBulk = new TagsBulk()
+        this.inputLengthWatcher = new InputLengthWatcher()
+        this.documentUploader = new DocumentUploader(window.Rozier.messages.dropzone)
         this.childrenNodesFields = new ChildrenNodesField()
-        new GeotagField()
-        new MultiGeotagField()
+        this.geotagField = new GeotagField()
+        this.multiGeotagField = new MultiGeotagField()
         this.stackNodeTrees = new StackNodeTree()
 
         if (isMobile.any() === null) {
-            new SaveButtons()
+            if (this.saveButtons) {
+                this.saveButtons.unbind()
+            }
+
+            this.saveButtons = new SaveButtons()
         }
 
-        new TagAutocomplete()
-        new FolderAutocomplete()
-        new NodeTypeFieldsPosition()
-        new CustomFormFieldsPosition()
-        new NodeTreeContextActions()
-        new SettingsSaveButtons()
-        new NodeTypeFieldEdit()
-        new NodeEditSource()
+        this.tagAutocomplete = new TagAutocomplete()
+        this.folderAutocomplete = new FolderAutocomplete()
+        this.nodeTypeFieldsPosition = new NodeTypeFieldsPosition()
+        this.customFormFieldsPosition = new CustomFormFieldsPosition()
+        this.nodeTreeContextActions = new NodeTreeContextActions()
+        this.settingsSaveButtons = new SettingsSaveButtons()
+        this.nodeTypeFieldEdit = new NodeTypeFieldEdit()
+        this.nodeEditSource = new NodeEditSource()
         this.nodeTree = new NodeTree()
-        new CustomFormFieldEdit()
+        this.customFormFieldEdit = new CustomFormFieldEdit()
 
-        /*
-         * Codemirror
-         */
+        // Codemirror
         this.initMarkdownEditors()
         this.initJsonEditors()
         this.initCssEditors()
@@ -325,6 +370,14 @@ export default class Lazyload {
         }
     }
 
+    generalUnbind (objects) {
+        for (let object of objects) {
+            if (object) {
+                object.unbind()
+            }
+        }
+    }
+
     initBootstrapSwitches () {
         let $checkboxes = $('.rz-boolean-checkbox')
 
@@ -340,9 +393,11 @@ export default class Lazyload {
         let editorCount = this.$textareasMarkdown.length
 
         if (editorCount) {
+            this.markdownEditors = []
+
             window.setTimeout(() => {
                 for (let i = 0; i < editorCount; i++) {
-                    new MarkdownEditor(this.$textareasMarkdown.eq(i), i)
+                    this.markdownEditors.push(new MarkdownEditor(this.$textareasMarkdown.eq(i), i))
                 }
             }, 100)
         }
@@ -354,9 +409,11 @@ export default class Lazyload {
         let editorCount = this.$textareasJson.length
 
         if (editorCount) {
+            this.jsonEditors = []
+
             window.setTimeout(() => {
                 for (let i = 0; i < editorCount; i++) {
-                    new JsonEditor(this.$textareasJson.eq(i), i)
+                    this.jsonEditors.push(new JsonEditor(this.$textareasJson.eq(i), i))
                 }
             }, 100)
         }
@@ -368,9 +425,11 @@ export default class Lazyload {
         let editorCount = this.$textareasCss.length
 
         if (editorCount) {
+            this.cssEditors = []
+
             window.setTimeout(() => {
                 for (let i = 0; i < editorCount; i++) {
-                    new CssEditor(this.$textareasCss.eq(i), i)
+                    this.cssEditors.push(new CssEditor(this.$textareasCss.eq(i), i))
                 }
             }, 100)
         }
@@ -382,9 +441,11 @@ export default class Lazyload {
         let editorCount = this.$textareasYaml.length
 
         if (editorCount) {
+            this.yamlEditors = []
+
             window.setTimeout(() => {
                 for (let i = 0; i < editorCount; i++) {
-                    new YamlEditor(this.$textareasYaml.eq(i), i)
+                    this.yamlEditors.push(new YamlEditor(this.$textareasYaml.eq(i), i))
                 }
             }, 100)
         }

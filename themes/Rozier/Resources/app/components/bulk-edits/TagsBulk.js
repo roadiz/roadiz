@@ -41,16 +41,19 @@ export default class TagsBulk {
      * Init
      */
     init () {
-        this.$tagsCheckboxes.off('change', this.onCheckboxChange)
         this.$tagsCheckboxes.on('change', this.onCheckboxChange)
-
-        this.$tagsFolderButton.on('click', this.tagsFolderButtonClick)
         this.$tagsStatusButton.on('click', this.tagsStatusButtonClick)
-
-        this.$tagsSelectAll.off('click', this.onSelectAll)
         this.$tagsSelectAll.on('click', this.onSelectAll)
-        this.$tagsDeselectAll.off('click', this.onDeselectAll)
         this.$tagsDeselectAll.on('click', this.onDeselectAll)
+    }
+
+    unbind () {
+        if (this.$tagsCheckboxes.length) {
+            this.$tagsCheckboxes.off('change', this.onCheckboxChange)
+            this.$tagsFolderButton.off('click', this.tagsFolderButtonClick)
+            this.$tagsSelectAll.off('click', this.onSelectAll)
+            this.$tagsDeselectAll.off('click', this.onDeselectAll)
+        }
     }
 
     onSelectAll () {

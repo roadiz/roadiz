@@ -16,14 +16,15 @@ export default class NodeTreeContextActions {
     }
 
     bind () {
-        this.$links.off('click', this.onClick)
         this.$links.on('click', this.onClick)
-
-        this.$nodeMoveFirstLinks.off('click')
         this.$nodeMoveFirstLinks.on('click', (e) => this.moveNodeToPosition('first', e))
-
-        this.$nodeMoveLastLinks.off('click')
         this.$nodeMoveLastLinks.on('click', (e) => this.moveNodeToPosition('last', e))
+    }
+
+    unbind () {
+        this.$links.off('click', this.onClick)
+        this.$nodeMoveFirstLinks.off('click')
+        this.$nodeMoveLastLinks.off('click')
     }
 
     onClick (event) {
@@ -75,12 +76,7 @@ export default class NodeTreeContextActions {
             })
                 .done((data) => {
                     window.Rozier.refreshAllNodeTrees()
-                    window.UIkit.notify({
-                        message: data.responseText,
-                        status: data.status,
-                        timeout: 3000,
-                        pos: 'top-center'
-                    })
+                    window.Rozier.getMessages()
                 })
                 .fail(data => {
                     data = JSON.parse(data.responseText)

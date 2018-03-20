@@ -11,10 +11,14 @@ export default class CustomFormFieldsPosition {
     }
 
     init () {
-        if (this.$list.length &&
-            this.$list.children().length > 1) {
-            this.$list.off('change.uk.sortable', this.onSortableChange)
+        if (this.$list.length && this.$list.children().length > 1) {
             this.$list.on('change.uk.sortable', this.onSortableChange)
+        }
+    }
+
+    unbind () {
+        if (this.$list.length && this.$list.children().length > 1) {
+            this.$list.off('change.uk.sortable', this.onSortableChange)
         }
     }
 

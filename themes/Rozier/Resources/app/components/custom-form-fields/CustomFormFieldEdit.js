@@ -35,8 +35,13 @@ export default class CustomFormFieldEdit {
      */
     init () {
         // Events
-        this.$btn.off('click', this.btnClick)
         this.$btn.on('click', this.btnClick)
+    }
+
+    unbind () {
+        if (this.$btn.length) {
+            this.$btn.off('click', this.btnClick)
+        }
     }
 
     /**
