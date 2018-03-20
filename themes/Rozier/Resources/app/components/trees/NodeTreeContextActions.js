@@ -74,7 +74,7 @@ export default class NodeTreeContextActions {
                 dataType: 'json',
                 data: postData
             })
-                .done((data) => {
+                .done(() => {
                     window.Rozier.refreshAllNodeTrees()
                     window.Rozier.getMessages()
                 })

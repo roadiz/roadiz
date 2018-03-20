@@ -310,7 +310,7 @@ export default class Rozier {
             }
 
             $.ajax({
-                url: url + 'okokok',
+                url: url,
                 type: 'get',
                 cache: false,
                 dataType: 'json',
