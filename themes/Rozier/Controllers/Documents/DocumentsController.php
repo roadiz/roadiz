@@ -622,9 +622,8 @@ class DocumentsController extends RozierApp
         $document = $this->get('em')
             ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
 
-        if ($document !== null &&
-            null !== $response = $document->getHandler()->getDownloadResponse()) {
-            return $response->send();
+        if ($document !== null) {
+            return $document->getHandler()->getDownloadResponse();
         }
 
         throw new ResourceNotFoundException();

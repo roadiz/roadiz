@@ -35,7 +35,10 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * Handle operations with documents entities.
@@ -157,27 +160,18 @@ class DocumentHandler
     public function getDownloadResponse()
     {
         $fs = new Filesystem();
-
         /** @var Packages $packages */
         $packages = Kernel::getService('assetPackages');
         $documentPath = $packages->getDocumentFilePath($this->document);
 
         if ($fs->exists($documentPath)) {
-            $response = new Response();
-            // Set headers
-            $response->headers->set('Cache-Control', 'private');
-            $response->headers->set('Content-type', mime_content_type($documentPath));
-            $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($documentPath) . '";');
-            $response->headers->set('Content-length', filesize($documentPath));
-            // Send headers before outputting anything
-            $response->sendHeaders();
-            // Set content
-            $response->setContent(readfile($documentPath));
+            $response =  new BinaryFileResponse($documentPath, Response::HTTP_OK, [], false);
+            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
 
             return $response;
-        } else {
-            return null;
         }
+
+        throw new ResourceNotFoundException();
     }
 
     /**
