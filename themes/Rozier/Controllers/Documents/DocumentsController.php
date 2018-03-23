@@ -623,9 +623,8 @@ class DocumentsController extends RozierApp
         $handler = $this->get('document.handler');
         $handler->setDocument($document);
 
-        if ($document !== null &&
-            null !== $response = $handler->getDownloadResponse()) {
-            return $response->send();
+        if ($document !== null) {
+            return $handler->getDownloadResponse();
         }
 
         throw new ResourceNotFoundException();
