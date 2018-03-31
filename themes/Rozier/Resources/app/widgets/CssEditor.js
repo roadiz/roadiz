@@ -47,7 +47,7 @@ export default class CssEditor {
             this.editor.on('focus', this.textareaFocus)
             this.editor.on('blur', this.textareaBlur)
 
-            setTimeout(function () {
+            setTimeout(() => {
                 $('[data-uk-switcher]').on('show.uk.switcher', this.forceEditorUpdate)
                 this.forceEditorUpdate()
             }, 300)

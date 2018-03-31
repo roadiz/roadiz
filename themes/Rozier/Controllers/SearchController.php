@@ -41,6 +41,8 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -152,8 +154,11 @@ class SearchController extends RozierApp
                 if ($key == $field->getName()) {
                     if ($field->getType() === NodeTypeField::MARKDOWN_T
                         || $field->getType() === NodeTypeField::STRING_T
+                        || $field->getType() === NodeTypeField::YAML_T
+                        || $field->getType() === NodeTypeField::JSON_T
                         || $field->getType() === NodeTypeField::TEXT_T
-                        || $field->getType() === NodeTypeField::EMAIL_T) {
+                        || $field->getType() === NodeTypeField::EMAIL_T
+                        || $field->getType() === NodeTypeField::CSS_T) {
                         $data[$key] = ["LIKE", "%" . $value . "%"];
                     } elseif ($field->getType() === NodeTypeField::BOOLEAN_T) {
                         $data[$key] = (bool) $value;
@@ -187,7 +192,6 @@ class SearchController extends RozierApp
     /**
      * @param Request $request
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function searchNodeAction(Request $request)
     {
@@ -290,7 +294,7 @@ class SearchController extends RozierApp
         $builderNodeType = $this->get('formFactory')
                                 ->createNamedBuilder(
                                     'nodeTypeForm',
-                                    "form",
+                                    FormType::class,
                                     [],
                                     ["method" => "get"]
                                 );
@@ -587,9 +591,12 @@ class SearchController extends RozierApp
             if ($field->getType() === NodeTypeField::MARKDOWN_T ||
                 $field->getType() === NodeTypeField::STRING_T ||
                 $field->getType() === NodeTypeField::TEXT_T ||
-                $field->getType() === NodeTypeField::EMAIL_T
+                $field->getType() === NodeTypeField::EMAIL_T ||
+                $field->getType() === NodeTypeField::JSON_T ||
+                $field->getType() === NodeTypeField::YAML_T ||
+                $field->getType() === NodeTypeField::CSS_T
             ) {
-                $type = "text";
+                $type = TextType::class;
             }
 
             $builder->add($field->getName(), $type, $option);
