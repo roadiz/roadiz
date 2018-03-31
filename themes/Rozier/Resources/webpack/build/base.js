@@ -20,6 +20,7 @@ const createLintingRule = (config) => ({
     loader: 'eslint-loader',
     enforce: 'pre',
     include: [resolve('app'), resolve('test')],
+    exclude: [/node_modules/, /bower_components/, /Resources\/app\/vendor/],
     options: {
         formatter: require('eslint-friendly-formatter'),
         emitWarning: !config.showEslintErrorsInOverlay
@@ -53,7 +54,7 @@ const getWebpackConfigBase = (config) => {
                 test: /\.js$/,
                 enforce: 'pre',
                 loader: 'eslint-loader',
-                exclude: [/node_modules/, /app\/vendors/]
+                exclude: [/node_modules/, /bower_components/, /Resources\/app\/vendor/]
             }, {
                 test: /\.js?$/,
                 exclude: /(node_modules)/,
