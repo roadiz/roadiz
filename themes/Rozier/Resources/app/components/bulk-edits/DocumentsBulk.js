@@ -46,6 +46,7 @@ export default class DocumentsBulk {
         if (this.$documentsCheckboxes.length) {
             this.$documentsCheckboxes.off('change', this.onCheckboxChange)
             this.$bulkDeleteButton.off('click', this.onBulkDelete)
+            this.$documentsFolderButton.off('click', this.documentsFolderButtonClick)
             this.$bulkDownloadButton.off('click', this.onBulkDownload)
             this.$documentsSelectAll.off('click', this.onSelectAll)
             this.$documentsDeselectAll.off('click', this.onDeselectAll)
