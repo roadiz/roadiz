@@ -44,6 +44,8 @@ export default class DocumentUploader {
     }
 
     init () {
+        const _self = this
+
         // Get folder id
         let form = $('#upload-dropzone-document')
 
@@ -72,7 +74,7 @@ export default class DocumentUploader {
             dictMaxFilesExceeded: this.options.dictMaxFilesExceeded,
             init: function () {
                 this.on('addedfile', function (file, data) {
-                    this.options.onAdded(file)
+                    _self.options.onAdded(file)
                 })
 
                 this.on('success', function (file, data) {
@@ -83,22 +85,22 @@ export default class DocumentUploader {
                      */
                     if (file.previewElement) {
                         let $preview = $(file.previewElement)
-                        window.setTimeout(function () {
-                            $preview.fadeOut(500, function () {
+                        window.setTimeout(() => {
+                            $preview.fadeOut(500, () => {
                                 $preview.remove()
                             })
                         }, 3000)
                     }
-                    this.options.onSuccess(data)
+                    _self.options.onSuccess(data)
                     window.Rozier.getMessages()
                 })
 
                 this.on('canceled', function (file, data) {
-                    this.options.onError(JSON.parse(data))
+                    _self.options.onError(JSON.parse(data))
                     window.Rozier.getMessages()
                 })
 
-                this.on('error', (file, errorMessage, xhr) => {
+                this.on('error', function (file, errorMessage, xhr) {
                     console.log(errorMessage)
                 })
             }
