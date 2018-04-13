@@ -51,7 +51,7 @@ class UsersCreationCommand extends UsersCommand
             ->addOption('password', 'p', InputOption::VALUE_REQUIRED, 'Set user password (typing plain password in command-line is insecure).')
             ->addOption('back-end', 'b', InputOption::VALUE_NONE, 'Add ROLE_BACKEND_USER to user.')
             ->addOption('super-admin', 's', InputOption::VALUE_NONE, 'Add ROLE_SUPERADMIN to user.')
-            ->addUsage('--email=test@test.com --password=secret --back-end --super-admin test')
+            ->setHelp('--email=test@test.com --password=secret --back-end --super-admin test')
             ->addArgument(
                 'username',
                 InputArgument::REQUIRED,
