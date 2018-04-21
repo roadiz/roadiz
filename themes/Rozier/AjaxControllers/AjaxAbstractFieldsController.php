@@ -80,7 +80,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
 
             return new JsonResponse(
                 $responseArray,
-                Response::HTTP_OK
+                Response::HTTP_PARTIAL_CONTENT
             );
         }
 

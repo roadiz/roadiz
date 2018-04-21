@@ -674,7 +674,7 @@ class DocumentsController extends RozierApp
                         return new JsonResponse([
                             'success' => true,
                             'document' => $documentModel->toArray(),
-                        ]);
+                        ], JsonResponse::HTTP_CREATED);
                     } else {
                         return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
                     }
@@ -683,12 +683,7 @@ class DocumentsController extends RozierApp
                     $this->publishErrorMessage($request, $msg);
 
                     if ($_format === 'json' || $request->isXmlHttpRequest()) {
-                        return new JsonResponse(
-                            [
-                                "error" => $msg,
-                            ],
-                            Response::HTTP_NOT_FOUND
-                        );
+                        throw $this->createNotFoundException($msg);
                     } else {
                         return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
                     }

@@ -67,8 +67,7 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

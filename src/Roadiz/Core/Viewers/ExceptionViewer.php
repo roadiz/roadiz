@@ -207,6 +207,7 @@ class ExceptionViewer
                 'message' => $e->getMessage(),
                 'exception' => $class,
                 'humanMessage' => $humanMessage,
+                'status' => 'danger',
             ];
             if ($debug) {
                 $data['error_trace'] =  $e->getTrace();

@@ -35,10 +35,12 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Handlers\TagHandler;
+use RZ\Roadiz\Core\Repositories\TagRepository;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Themes\Rozier\Models\TagModel;
 
@@ -72,8 +74,7 @@ class AjaxTagsController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -109,8 +110,7 @@ class AjaxTagsController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -147,8 +147,7 @@ class AjaxTagsController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -226,31 +225,21 @@ class AjaxTagsController extends AbstractAjaxController
 
             return new JsonResponse(
                 $responseArray,
-                Response::HTTP_OK
+                Response::HTTP_PARTIAL_CONTENT
             );
         }
 
-        $responseArray = [
-            'statusCode' => '403',
-            'status' => 'danger',
-            'responseText' => 'Tag ' . $tagId . ' does not exists',
-        ];
-
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw $this->createNotFoundException('Tag ' . $tagId . ' does not exists');
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
     public function searchAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
-
-        $responseArray = [
-            'statusCode' => Response::HTTP_NOT_FOUND,
-            'status' => 'danger',
-            'responseText' => 'No tags found',
-        ];
 
         if ($request->get('search') != "") {
             $responseArray = [];
@@ -270,16 +259,22 @@ class AjaxTagsController extends AbstractAjaxController
                              ->getRepository(Tag::class)
                              ->searchBy($pattern, [], [], 10);
             }
-            /** @var Tag $tag */
-            foreach ($tags as $tag) {
-                $responseArray[] = $tag->getFullPath();
+
+            if (count($tags) > 0) {
+                /** @var Tag $tag */
+                foreach ($tags as $tag) {
+                    $responseArray[] = $tag->getFullPath();
+                }
+
+                return new JsonResponse(
+                    $responseArray
+                );
+            } else {
+                throw $this->createNotFoundException('No tags found.');
             }
         }
 
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw new BadRequestHttpException('Search is empty.');
     }
 
     /**
@@ -354,8 +349,13 @@ class AjaxTagsController extends AbstractAjaxController
             throw new InvalidParameterException('tagName should be provided to create a new Tag');
         }
 
+        if ($request->getMethod() != Request::METHOD_POST) {
+            throw new BadRequestHttpException();
+        }
+
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
+        /** @var TagRepository $tagRepository */
         $tagRepository = $entityManager->getRepository(Tag::class);
 
         /** @var Tag $tag */
@@ -366,7 +366,7 @@ class AjaxTagsController extends AbstractAjaxController
             [
                 'tag' => $tagModel->toArray()
             ],
-            Response::HTTP_OK
+            Response::HTTP_CREATED
         );
     }
 }

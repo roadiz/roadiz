@@ -107,8 +107,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         }
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -147,8 +146,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

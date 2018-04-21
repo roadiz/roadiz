@@ -68,8 +68,7 @@ class AjaxNodesController extends AbstractAjaxController
         }
 
         return new JsonResponse(
-            $tags,
-            Response::HTTP_OK
+            $tags
         );
     }
 
@@ -138,22 +137,13 @@ class AjaxNodesController extends AbstractAjaxController
 
             return new JsonResponse(
                 $responseArray,
-                Response::HTTP_OK
+                Response::HTTP_PARTIAL_CONTENT
             );
         }
 
-        $responseArray = [
-            'statusCode' => '403',
-            'status' => 'danger',
-            'responseText' => $this->getTranslator()->trans('node.%nodeId%.not_exists', [
-                '%nodeId%' => $nodeId,
-            ]),
-        ];
-
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw $this->createNotFoundException($this->getTranslator()->trans('node.%nodeId%.not_exists', [
+            '%nodeId%' => $nodeId,
+        ]));
     }
 
     /**
@@ -326,7 +316,7 @@ class AjaxNodesController extends AbstractAjaxController
                             }
 
                             $responseArray = [
-                                'statusCode' => Response::HTTP_OK,
+                                'statusCode' => Response::HTTP_PARTIAL_CONTENT,
                                 'status' => 'success',
                                 'responseText' => $msg,
                                 'name' => $request->get('statusName'),
@@ -389,7 +379,7 @@ class AjaxNodesController extends AbstractAjaxController
             $this->publishConfirmMessage($request, $msg, $source);
 
             $responseArray = [
-                'statusCode' => Response::HTTP_OK,
+                'statusCode' => Response::HTTP_CREATED,
                 'status' => 'success',
                 'responseText' => $msg,
             ];

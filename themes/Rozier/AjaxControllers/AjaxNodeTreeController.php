@@ -131,8 +131,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 }
