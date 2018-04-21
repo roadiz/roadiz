@@ -226,13 +226,15 @@ class RozierApp extends BackendController
         /*
          * Add custom event subscriber to manage document EXIF
          */
-        $container['dispatcher']->addSubscriber(
-            new ExifDocumentSubscriber(
-                $container['em'],
-                $container['assetPackages'],
-                $container['logger']
-            )
-        );
+        if (function_exists('exif_read_data')) {
+            $container['dispatcher']->addSubscriber(
+                new ExifDocumentSubscriber(
+                    $container['em'],
+                    $container['assetPackages'],
+                    $container['logger']
+                )
+            );
+        }
 
         /*
          * Add custom event subscriber to create a downscaled version for HD images.

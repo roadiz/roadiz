@@ -1168,7 +1168,7 @@ class DocumentsController extends RozierApp
      *
      * @param int $folderId
      *
-     * @return Document
+     * @return DocumentInterface
      * @throws \Exception
      * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
      */
@@ -1181,8 +1181,7 @@ class DocumentsController extends RozierApp
             null !== $folderId &&
             $folderId > 0) {
             /** @var Folder $folder */
-            $folder = $this->get('em')
-                ->find(Folder::class, (int) $folderId);
+            $folder = $this->get('em')->find(Folder::class, (int) $folderId);
 
             $document->addFolder($folder);
             $folder->addDocument($document);

@@ -58,6 +58,7 @@ trait EmbedFinderTrait
     {
         $translations = $objectManager->getRepository(Translation::class)->findAll();
 
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
             $documentTr = new DocumentTranslation();
             $documentTr->setDocument($document);

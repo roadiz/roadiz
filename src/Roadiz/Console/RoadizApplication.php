@@ -147,6 +147,7 @@ class RoadizApplication extends Application
     {
         $commands = array(
             new DispatcherDebugCommand(),
+            new ConfigurationDebugCommand(),
             new TranslationsCommand(),
             new TranslationsCreationCommand(),
             new TranslationsDeleteCommand(),

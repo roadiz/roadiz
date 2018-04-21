@@ -136,6 +136,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
              */
             $this->container = new Container();
             $this->container->register($this);
+            /*
+             * Following PHP customization should only use
+             * not-required configuration elements.
+             */
+            @date_default_timezone_set($this->container['config']["timezone"]);
+            @ini_set('session.name', $this->container['config']["security"]["session_name"]);
+            @ini_set('session.cookie_secure', $this->container['config']["security"]["session_secure"]);
             $this->booted = true;
         } catch (InvalidConfigurationException $e) {
             $view = new ExceptionViewer();
@@ -235,15 +242,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             $response->prepare($request);
 
             return $response;
-        }
-
-        /*
-         * Define a request wide timezone
-         */
-        if (!empty($this->container['config']["timezone"])) {
-            date_default_timezone_set($this->container['config']["timezone"]);
-        } else {
-            date_default_timezone_set("Europe/Paris");
         }
 
         $this->container['request'] = $request;

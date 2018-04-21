@@ -19,6 +19,10 @@ cacheDriver:
     port: ~
 security:
     secret: "change#this#secret#very#important"
+    session_name: roadiz_token
+    # Switch session cookie secure to TRUE ONLY if your
+    # website is served with HTTPS only
+    session_secure: false
 mailer:
     type: ~
     host: "localhost"
