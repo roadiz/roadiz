@@ -22,7 +22,8 @@ security:
     session_name: roadiz_token
     # Switch session cookie secure to TRUE ONLY if your
     # website is served with HTTPS only
-    session_secure: false
+    session_cookie_secure: false
+    session_cookie_httponly: true
 mailer:
     type: ~
     host: "localhost"
