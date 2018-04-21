@@ -75,7 +75,8 @@
         "graylog2/gelf-php": "~1.0",
         "enshrined/svg-sanitize": "^0.5.3",
         "maximebf/debugbar": "~1.13.0",
-        "jbzoo/pimpledumper": "^1.2"
+        "jbzoo/pimpledumper": "^1.2",
+        "composer/composer": "^1.6"
     },
     "require-dev": {
         "phpunit/phpunit": "~5.7.27",
@@ -100,6 +101,13 @@
                 "themes/*/composer.json"
             ],
             "recurse": false
+        },
+        "install-files": {
+            "conf/config.default.yml": "./conf/config.yml",
+            "samples/clear_cache.php.sample": "./clear_cache.php",
+            "samples/install.php.sample": "./install.php",
+            "samples/dev.php.sample": "./dev.php",
+            "samples/Vagrantfile.sample": "./Vagrantfile"
         }
     },
     "bin": ["bin/roadiz"],
@@ -112,11 +120,11 @@
             "php bin/roadiz cache:clear-fpm -e prod --preview"
         ],
         "post-install-cmd": [
-            "php bin/roadiz composer:post-install",
+            "RZ\\Roadiz\\Utils\\Composer\\InstallFiles\\ScriptHandler::install",
             "@cache-scripts"
         ],
         "post-update-cmd": [
-            "php bin/roadiz composer:post-update",
+            "RZ\\Roadiz\\Utils\\Composer\\InstallFiles\\ScriptHandler::install",
             "@cache-scripts"
         ]
     }
