@@ -143,7 +143,7 @@ class NodesSourcesController extends RozierApp
                                 'status' => 'success',
                                 'public_url' => $source->getNode()->isPublished() ? $url : $previewUrl,
                                 'errors' => []
-                            ]);
+                            ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }
 
                         return $this->redirect($this->generateUrl(

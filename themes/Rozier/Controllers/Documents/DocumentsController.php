@@ -674,7 +674,7 @@ class DocumentsController extends RozierApp
                         return new JsonResponse([
                             'success' => true,
                             'document' => $documentModel->toArray(),
-                        ]);
+                        ], JsonResponse::HTTP_CREATED);
                     } else {
                         return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
                     }
@@ -683,12 +683,7 @@ class DocumentsController extends RozierApp
                     $this->publishErrorMessage($request, $msg);
 
                     if ($_format === 'json' || $request->isXmlHttpRequest()) {
-                        return new JsonResponse(
-                            [
-                                "error" => $msg,
-                            ],
-                            Response::HTTP_NOT_FOUND
-                        );
+                        throw $this->createNotFoundException($msg);
                     } else {
                         return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
                     }
@@ -1173,7 +1168,7 @@ class DocumentsController extends RozierApp
      *
      * @param int $folderId
      *
-     * @return Document
+     * @return DocumentInterface
      * @throws \Exception
      * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
      */
@@ -1186,8 +1181,7 @@ class DocumentsController extends RozierApp
             null !== $folderId &&
             $folderId > 0) {
             /** @var Folder $folder */
-            $folder = $this->get('em')
-                ->find(Folder::class, (int) $folderId);
+            $folder = $this->get('em')->find(Folder::class, (int) $folderId);
 
             $document->addFolder($folder);
             $folder->addDocument($document);

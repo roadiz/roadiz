@@ -12,32 +12,20 @@
         {
             "name": "Ambroise Maupate",
             "email": "ambroise@rezo-zero.com",
-            "homepage": "http://www.rezo-zero.com",
+            "homepage": "https://www.rezo-zero.com",
             "role": "Lead developer"
         },
         {
             "name": "Julien Blanchet",
             "email": "julien@rezo-zero.com",
-            "homepage": "http://www.rezo-zero.com",
+            "homepage": "https://www.rezo-zero.com",
             "role": "AD, integrator"
         },
         {
-            "name": "Maxime Bérard",
-            "email": "maxime@rezo-zero.com",
-            "homepage": "http://www.rezo-zero.com",
-            "role": "Frontend developer, Integrator"
-        },
-        {
-            "name": "Maxime Constantinian",
-            "email": "azokal@rezo-zero.com",
-            "homepage": "http://www.rezo-zero.com",
-            "role": "Developer"
-        },
-        {
-            "name": "Thomas Aufresne",
-            "email": "thomas@rezo-zero.com",
-            "homepage": "http://www.rezo-zero.com",
-            "role": "Developer"
+            "name": "Adrien Scholaert",
+            "email": "adrien@rezo-zero.com",
+            "homepage": "https://www.rezo-zero.com",
+            "role": "Frontend developer"
         }
     ],
     "config": {

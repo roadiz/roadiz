@@ -115,8 +115,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -161,8 +160,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

@@ -169,7 +169,6 @@ class ExceptionSubscriber implements EventSubscriberInterface
          */
         $class = get_class($e);
 
-
         $this->logger->emergency($e->getMessage(), [
             'trace' => $e->getTraceAsString(),
             'exception' => $class,
@@ -185,17 +184,18 @@ class ExceptionSubscriber implements EventSubscriberInterface
     protected function isNotFoundExceptionWithTheme(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
+        $request = $event->getRequest();
 
         if ($exception instanceof ResourceNotFoundException ||
             $exception instanceof NotFoundHttpException ||
             (null !== $exception->getPrevious() && $exception->getPrevious() instanceof ResourceNotFoundException)
         ) {
-            if (null !== $theme = $this->themeResolver->findTheme($event->getRequest()->getHost())) {
+            if (null !== $theme = $this->themeResolver->findTheme($request->getHost())) {
                 /*
                  * 404 page
                  */
-                if ($event->getRequest() instanceof \RZ\Roadiz\Core\HttpFoundation\Request) {
-                    $event->getRequest()->setTheme($theme);
+                if ($request instanceof \RZ\Roadiz\Core\HttpFoundation\Request) {
+                    $request->setTheme($theme);
                 }
 
                 return $theme;

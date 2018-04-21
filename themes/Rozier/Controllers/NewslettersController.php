@@ -229,7 +229,7 @@ class NewslettersController extends RozierApp
                                 'status' => 'success',
                                 'public_url' => $url,
                                 'errors' => []
-                            ]);
+                            ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }
 
                         return $this->redirect($this->generateUrl(

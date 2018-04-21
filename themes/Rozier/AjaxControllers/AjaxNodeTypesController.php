@@ -77,8 +77,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -114,8 +113,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

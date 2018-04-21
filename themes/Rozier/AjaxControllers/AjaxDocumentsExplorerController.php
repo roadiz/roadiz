@@ -103,8 +103,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         }
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -143,8 +142,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

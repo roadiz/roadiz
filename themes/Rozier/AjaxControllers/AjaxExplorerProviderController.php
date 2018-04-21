@@ -83,7 +83,7 @@ class AjaxExplorerProviderController extends AbstractAjaxController
 
             return new JsonResponse(
                 $responseArray,
-                Response::HTTP_OK
+                Response::HTTP_PARTIAL_CONTENT
             );
         } else {
             throw new InvalidParameterException('providerClass does not implement ExplorerProviderInterface.');
@@ -140,8 +140,7 @@ class AjaxExplorerProviderController extends AbstractAjaxController
             ];
 
             return new JsonResponse(
-                $responseArray,
-                Response::HTTP_OK
+                $responseArray
             );
         } else {
             throw new InvalidParameterException('providerClass does not implement ExplorerProviderInterface.');

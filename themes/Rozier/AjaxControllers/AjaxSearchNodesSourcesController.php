@@ -95,18 +95,10 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             }
 
             return new JsonResponse(
-                $responseArray,
-                Response::HTTP_OK
+                $responseArray
             );
         }
 
-        return new JsonResponse(
-            [
-                'statusCode' => '403',
-                'status' => 'danger',
-                'responseText' => 'No results found.',
-            ],
-            Response::HTTP_NOT_FOUND
-        );
+        throw $this->createNotFoundException('No results found.');
     }
 }

@@ -42,14 +42,10 @@ class Configuration implements ConfigurationInterface
 
         $root->children()
             ->scalarNode('appNamespace')
-                ->defaultValue('chooseAnUniqueNameForYourApp')
-                ->isRequired()
-                ->cannotBeEmpty()
+                ->defaultValue('roadiz_app')
             ->end()
             ->scalarNode('timezone')
                 ->defaultValue('Europe/Paris')
-                ->isRequired()
-                ->cannotBeEmpty()
             ->end()
             ->arrayNode('doctrine')
                 ->children()
@@ -99,9 +95,40 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('security')
                 ->children()
                     ->scalarNode('secret')
-                    ->defaultValue('change#this#secret#very#important')
-                    ->isRequired()
-                    ->cannotBeEmpty()
+                        ->defaultValue('change#this#secret#very#important')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('session_name')
+                        ->info(<<<EOF
+Name of the session (used as cookie name).
+http://php.net/session.name
+EOF
+                        )
+                        ->defaultValue('roadiz_token')
+                        ->cannotBeEmpty()
+                        ->beforeNormalization()
+                            ->always()
+                            ->then(function ($v) {
+                                return strtolower(preg_replace('#[^a-z^A-Z^_]#', '_', trim($v)));
+                            })
+                        ->end()
+                    ->end()
+                    ->booleanNode('session_cookie_secure')
+                        ->info(<<<EOF
+Enable session cookie_secure ONLY if your website is served with HTTPS only
+http://php.net/session.cookie-secure
+EOF
+                        )
+                        ->defaultValue(false)
+                    ->end()
+                    ->booleanNode('session_cookie_httponly')
+                        ->info(<<<EOF
+Whether or not to add the httpOnly flag to the cookie, which makes it inaccessible to browser scripting languages such as JavaScript.
+http://php.net/session.cookie-httponly
+EOF
+                        )
+                        ->defaultValue(true)
                     ->end()
                 ->end()
             ->end()

@@ -108,7 +108,7 @@ class SchemaController extends RozierApp
         try {
             $this->clearMetadata();
             $this->updateSchema($request);
-            return new JsonResponse(['status' => true]);
+            return new JsonResponse(['status' => true], JsonResponse::HTTP_PARTIAL_CONTENT);
         } catch (MappingException $e) {
             return new JsonResponse([
                 'status' => false,
@@ -147,7 +147,7 @@ class SchemaController extends RozierApp
         $outputFpm = new BufferedOutput();
         $application->run($inputFpm, $outputFpm);
 
-        return new JsonResponse(['status' => true]);
+        return new JsonResponse(['status' => true], JsonResponse::HTTP_PARTIAL_CONTENT);
     }
 
     /**
