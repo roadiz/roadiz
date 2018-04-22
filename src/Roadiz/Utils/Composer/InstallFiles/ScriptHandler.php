@@ -42,14 +42,15 @@ class ScriptHandler
     public static function install(Event $event)
     {
         $extras = $event->getComposer()->getPackage()->getExtra();
+        $fs = new Filesystem();
+        $io = $event->getIO();
 
         if (!isset($extras['install-files'])) {
-            throw new \InvalidArgumentException('The dirs or files needs to be configured through the extra.install-files setting.');
+            $io->write('No dirs or files configured through the extra.install-files setting.');
+            return;
         }
 
         $files = $extras['install-files'];
-        $fs = new Filesystem();
-        $io = $event->getIO();
 
         if ($files === array_values($files)) {
             throw new \InvalidArgumentException('The extra.install-files must be hash like "{<dir_or_file_from>: <dir_to>}".');
