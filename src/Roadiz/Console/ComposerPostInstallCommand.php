@@ -35,6 +35,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * Class ComposerPostInstallCommand
+ *
+ * @package RZ\Roadiz\Console
+ * @deprecated
+ */
 class ComposerPostInstallCommand extends Command
 {
     /** @var Kernel|null  */
