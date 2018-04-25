@@ -118,6 +118,12 @@
                 "visible": true
             },
             {
+                "name": "google_tag_manager_id",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
                 "name": "recaptcha_public_key",
                 "value": "",
                 "type": 0,

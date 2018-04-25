@@ -358,6 +358,7 @@ abstract class AppController extends Controller
                 'maintenanceMode' => (boolean) $this->get('settingsBag')->get('maintenance_mode'),
                 'useCdn' => (boolean) $this->get('settingsBag')->get('use_cdn'),
                 'universalAnalyticsId' => $this->get('settingsBag')->get('universal_analytics_id'),
+                'googleTagManagerId' => $this->get('settingsBag')->get('google_tag_manager_id'),
                 'baseUrl' => $this->getRequest()->getSchemeAndHttpHost() . $this->getRequest()->getBasePath(),
                 'filesUrl' => $this->getRequest()->getBaseUrl() . $kernel->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
