@@ -31,9 +31,9 @@ namespace RZ\Roadiz\Utils\DebugBar\DataCollector;
 
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Role\RoleInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthCollector extends DataCollector implements Renderable
@@ -64,7 +64,7 @@ class AuthCollector extends DataCollector implements Renderable
                     'name' => $this->tokenStorage->getToken()->getUsername(),
                     'user' => [
                         'Token' => get_class($this->tokenStorage->getToken()),
-                        'Roles' => array_map(function (RoleInterface $role) {
+                        'Roles' => array_map(function (Role $role) {
                             return $role->getRole();
                         }, $this->tokenStorage->getToken()->getRoles()),
                         'Email' => $user->getEmail(),
@@ -76,7 +76,7 @@ class AuthCollector extends DataCollector implements Renderable
                     'name' => 'Guest',
                     'user' => [
                         'Token' => get_class($this->tokenStorage->getToken()),
-                        'Roles' =>  array_map(function (RoleInterface $role) {
+                        'Roles' =>  array_map(function (Role $role) {
                             return $role->getRole();
                         }, $this->tokenStorage->getToken()->getRoles()),
                     ]
