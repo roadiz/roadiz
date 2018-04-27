@@ -75,6 +75,11 @@ class TagJsonSerializer extends AbstractJsonSerializer
         return $array;
     }
 
+    /**
+     * @param $data
+     *
+     * @return Tag
+     */
     protected function makeTagRec($data)
     {
         $tag = new Tag();
@@ -94,12 +99,12 @@ class TagJsonSerializer extends AbstractJsonSerializer
             $tagSource = new TagTranslation($tag, $trans);
             $tagSource->setName($source["title"]);
             $tagSource->setDescription($source["description"]);
+            $tagSource->setTag($tag);
 
             $tag->getTranslatedTags()->add($tagSource);
         }
         foreach ($data['children'] as $child) {
-            $tmp = $this->makeTagRec($child);
-            $tag->addChild($tmp);
+            $tag->addChild($this->makeTagRec($child));
         }
         return $tag;
     }
@@ -109,7 +114,7 @@ class TagJsonSerializer extends AbstractJsonSerializer
      *
      * @param string $string
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Tag[]
      */
     public function deserialize($string)
     {

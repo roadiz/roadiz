@@ -1,0 +1,46 @@
+<?php
+
+use RZ\Roadiz\CMS\Importers\SettingsImporter;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Tests\SchemaDependentCase;
+
+class SettingsImporterTest extends SchemaDependentCase
+{
+    /**
+     * @dataProvider importJsonFileProvider
+     */
+    public function testImportJsonFile($json, $count)
+    {
+        $this->assertTrue(SettingsImporter::importJsonFile($json, $this->get('em'), $this->get('factory.handler')));
+        $this->assertEquals($count, $this->countSettings());
+
+        $this->getSettingRepository()->createQueryBuilder('t')->delete()->getQuery()->execute();
+        $this->assertEquals(0, $this->countSettings());
+    }
+
+    /**
+     * @return \RZ\Roadiz\Core\Repositories\TagRepository
+     */
+    public function getSettingRepository()
+    {
+        return $this->get('em')->getRepository(Setting::class);
+    }
+
+    /**
+     * @return int
+     */
+    public function countSettings()
+    {
+        return $this->getSettingRepository()->createQueryBuilder('t')->select('count(t)')->getQuery()->getSingleScalarResult();
+    }
+
+    public static function importJsonFileProvider()
+    {
+        return [
+            [
+                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/settings.rzt'),
+                35,
+            ]
+        ];
+    }
+}

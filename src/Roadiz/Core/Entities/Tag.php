@@ -195,7 +195,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     protected $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
@@ -316,5 +316,13 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
         $this->childrenOrderDirection = $childrenOrderDirection;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function __toString()
+    {
+        return '[' . ($this->getId() > 0 ? $this->getId() : 'NULL') . '] ' . $this->getTagName();
     }
 }

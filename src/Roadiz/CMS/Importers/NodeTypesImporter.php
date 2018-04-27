@@ -53,7 +53,6 @@ class NodeTypesImporter implements ImporterInterface
      */
     public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
-        $return = false;
         $serializer = new NodeTypeJsonSerializer();
         $nodeType = $serializer->deserialize($serializedData);
         /** @var NodeType $existingNodeType */
@@ -80,6 +79,6 @@ class NodeTypesImporter implements ImporterInterface
         }
         $em->flush();
         $nodeTypeHandler->regenerateEntityClass();
-        return $return;
+        return true;
     }
 }

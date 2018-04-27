@@ -1,0 +1,3503 @@
+[
+    {
+        "tag_name": "pays",
+        "visible": true,
+        "locked": true,
+        "color": "#00449e",
+        "children": [
+            {
+                "tag_name": "ssd",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SSD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "afg",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "AFG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "aze",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "AZE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bwa",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BWA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "civ",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CIV",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cog",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "COG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cod",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "COD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cri",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CRI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "dom",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "DOM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "abw",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ABW",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ago",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "AGO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "aia",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "AIA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ala",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ALA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "alb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ALB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "and",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "AND",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "are",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ARE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "arg",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ARG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "arm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ARM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "asm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ASM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ata",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ATA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "atf",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ATF",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "atg",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ATG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "aus",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "AUS",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "aut",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "AUT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bdi",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BDI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bel",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BEL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ben",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BEN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bes",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BES",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bfa",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BFA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bgd",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BGD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bgr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BGR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bhr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BHR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bhs",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BHS",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bih",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BIH",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "blm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BLM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "blr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BLR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "blz",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BLZ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bmu",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BMU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bol",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BOL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bra",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BRA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "brb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BRB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "brn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BRN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "btn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BTN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "bvt",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "BVT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "caf",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CAF",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "can",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CAN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cck",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CCK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "che",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CHE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "chl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CHL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "chn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CHN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cmr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CMR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cok",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "COK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "col",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "COL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "com",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "COM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cpv",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CPV",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cub",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CUB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cuw",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CUW",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cxr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CXR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cym",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CYM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cyp",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CYP",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "cze",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "CZE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "deu",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "DEU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "dji",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "DJI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "dma",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "DMA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "dnk",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "DNK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "dza",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "DZA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ecu",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ECU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "egy",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "EGY",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "eri",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ERI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "esh",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ESH",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "esp",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ESP",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "est",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "EST",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "eth",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ETH",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "fin",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "FIN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "fji",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "FJI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "flk",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "FLK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "fra",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "FRA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "fro",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "FRO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "fsm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "FSM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gab",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GAB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gbr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GBR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "geo",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GEO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ggy",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GGY",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gha",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GHA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gib",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GIB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gin",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GIN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "glp",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GLP",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gmb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GMB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gnb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GNB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gnq",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GNQ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "grc",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GRC",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "grd",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GRD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "grl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GRL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gtm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GTM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "guf",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GUF",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "gum",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GUM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "guy",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "GUY",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "hkg",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "HKG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "hmd",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "HMD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "hnd",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "HND",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "hrv",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "HRV",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "hti",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "HTI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "hun",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "HUN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "idn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "IDN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "imn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "IMN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ind",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "IND",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "iot",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "IOT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "irl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "IRL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "irn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "IRN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "irq",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "IRQ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "isl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ISL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "isr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ISR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ita",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ITA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "jam",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "JAM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "jey",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "JEY",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "jor",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "JOR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "jpn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "JPN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "kaz",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KAZ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ken",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KEN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "kgz",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KGZ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "khm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KHM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "kir",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KIR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "kna",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KNA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "kor",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KOR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "kwt",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "KWT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lao",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LAO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lbn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LBN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lbr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LBR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lby",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LBY",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lca",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LCA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lie",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LIE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lka",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LKA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lso",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LSO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ltu",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LTU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lux",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LUX",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "lva",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "LVA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mac",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MAC",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "maf",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MAF",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mar",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MAR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mco",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MCO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mda",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MDA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mdg",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MDG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mdv",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MDV",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mex",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MEX",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mhl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MHL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mkd",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MKD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mli",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MLI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mlt",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MLT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mmr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MMR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mne",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MNE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mng",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MNG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mnp",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MNP",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "moz",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MOZ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mrt",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MRT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "msr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MSR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mtq",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MTQ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mus",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MUS",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mwi",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MWI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "mys",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MYS",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "myt",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "MYT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nam",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NAM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ncl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NCL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ner",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NER",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nfk",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NFK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nga",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NGA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nic",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NIC",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "niu",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NIU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nld",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NLD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nor",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NOR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "npl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NPL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nru",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NRU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "nzl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "NZL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "omn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "OMN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pak",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PAK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pan",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PAN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pcn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PCN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "per",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PER",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "phl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PHL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "plw",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PLW",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "png",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PNG",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pol",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "POL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pri",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PRI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "prk",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PRK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "prt",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PRT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pry",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PRY",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pse",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PSE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "pyf",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "PYF",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "qat",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "QAT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "reu",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "REU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "rou",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ROU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "rus",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "RUS",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "rwa",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "RWA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sau",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SAU",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sdn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SDN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sen",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SEN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sgp",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SGP",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sgs",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SGS",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "shn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SHN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sjm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SJM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "slb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SLB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sle",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SLE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "slv",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SLV",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "smr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SMR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "som",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SOM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "spm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SPM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "srb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SRB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "stp",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "STP",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sur",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SUR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "svk",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SVK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "svn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SVN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "swe",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SWE",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "swz",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SWZ",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "sxm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SXM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "syc",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SYC",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "syr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "SYR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tca",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TCA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tcd",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TCD",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tgo",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TGO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tha",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "THA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tjk",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TJK",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tkl",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TKL",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tkm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TKM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tls",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TLS",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ton",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TON",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tto",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TTO",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tun",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TUN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tur",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TUR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tuv",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TUV",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "twn",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TWN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "tza",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "TZA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "uga",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "UGA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ukr",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "UKR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "umi",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "UMI",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ury",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "URY",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "usa",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "USA",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "uzb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "UZB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "vat",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "VAT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "vct",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "VCT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "ven",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "VEN",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "vgb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "VGB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "vir",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "VIR",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "vnm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "VNM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "vut",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "VUT",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "wlf",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "WLF",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "wsm",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "WSM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "yem",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "YEM",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "zaf",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ZAF",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "zmb",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ZMB",
+                        "description": null
+                    }
+                ]
+            },
+            {
+                "tag_name": "zwe",
+                "visible": true,
+                "locked": true,
+                "color": "#00449e",
+                "children": [],
+                "tag_translation": [
+                    {
+                        "translation": "fr",
+                        "title": "ZWE",
+                        "description": null
+                    }
+                ]
+            }
+        ],
+        "tag_translation": [
+            {
+                "translation": "fr",
+                "title": "Pays",
+                "description": null
+            }
+        ]
+    }
+]
