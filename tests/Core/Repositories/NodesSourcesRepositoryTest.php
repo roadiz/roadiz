@@ -75,4 +75,22 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
             'node.bNodes.field.name' => 'related_node',
         ]);
     }
+
+    public function testFindByANodesAndFieldName()
+    {
+        $home = $this->getNodeRepository()->findHomeWithDefaultTranslation();
+        $this->getNodesSourcesRepository()->findBy([
+            'node.aNodes.nodeA' => $home,
+            'node.aNodes.field.name' => 'related_node',
+        ]);
+    }
+
+    public function testFindByBNodesAndFieldName()
+    {
+        $home = $this->getNodeRepository()->findHomeWithDefaultTranslation();
+        $this->getNodesSourcesRepository()->findBy([
+            'node.bNodes.nodeB' => $home,
+            'node.bNodes.field.name' => 'related_node',
+        ]);
+    }
 }
