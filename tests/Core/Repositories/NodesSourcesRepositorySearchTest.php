@@ -28,13 +28,16 @@
  * @file NodesSourcesRepositoryTest.php
  * @author Ambroise Maupate
  */
+
+use GeneratedNodeSources\NSPage;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 /**
  * NodesSourcesRepositoryTest.
  */
-class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
+class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
 {
     /**
      * @dataProvider findBySearchQueryProvider
@@ -45,7 +48,7 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
     {
         /** @var \RZ\Roadiz\Core\Repositories\NodesSourcesRepository $repository */
         $repository = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
         ;
@@ -64,10 +67,10 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
      */
     public static function findBySearchQueryProvider()
     {
-        return array(
-            array('Propos', 'GeneratedNodeSources\NSPage'),
-            array('About', 'GeneratedNodeSources\NSPage'),
-        );
+        return [
+            ['Propos', NSPage::class],
+            ['About', NSPage::class],
+        ];
     }
 
     /**
@@ -79,7 +82,7 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
     public function testFindBySearchQueryAndTranslation($query, $expectedClass, Translation $translation)
     {
         $nSources = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
             ->findBySearchQueryAndTranslation($query, $translation);
@@ -101,8 +104,8 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
         $english->setLocale('en_GB');
 
         return array(
-            array('Propos', 'GeneratedNodeSources\NSPage', $english),
-            array('About', 'GeneratedNodeSources\NSPage', $english),
+            array('Propos', NSPage::class, $english),
+            array('About', NSPage::class, $english),
         );
     }
 

@@ -40,8 +40,9 @@ class RoleRepositoryTest extends SchemaDependentCase
      */
     public function testRoleValue($name, $expected)
     {
+        /** @var Role $role */
         $role = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Role')
+            ->getRepository(Role::class)
             ->findOneByName($name);
 
         // Assert
@@ -69,7 +70,7 @@ class RoleRepositoryTest extends SchemaDependentCase
 
         foreach ($roles as $value) {
             $role = static::getManager()
-                        ->getRepository('RZ\Roadiz\Core\Entities\Role')
+                        ->getRepository(Role::class)
                         ->findOneByName($value[1]);
 
             if (null === $role) {

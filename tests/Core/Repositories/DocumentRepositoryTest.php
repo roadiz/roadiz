@@ -32,6 +32,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 class DocumentRepositoryTest extends SchemaDependentCase
@@ -54,7 +55,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
     {
         /** @var Document $document */
         $document = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->findOneByFilename($documentFilename);
 
         $this->assertEquals($expectedFolderCount, count($document->getFolders()));
@@ -77,11 +78,11 @@ class DocumentRepositoryTest extends SchemaDependentCase
     public function testGetByFolderInclusive($foldersNames, $expectedDocumentCount)
     {
         $folders = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            ->getRepository(Folder::class)
             ->findByFolderName($foldersNames);
 
         $documentCount = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->countBy([
                 'folders' => $folders,
             ]);
@@ -110,11 +111,11 @@ class DocumentRepositoryTest extends SchemaDependentCase
     public function testGetByFolderExclusive($foldersNames, $expectedDocumentCount)
     {
         $folders = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            ->getRepository(Folder::class)
             ->findByFolderName($foldersNames);
 
         $documentCount = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Document')
+            ->getRepository(Document::class)
             ->countBy([
                 'folders' => $folders,
                 'folderExclusive' => true,
@@ -161,7 +162,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
             ["unittest_document3", ['unittest-folder-1', 'unittest-folder-3', 'unittest-folder-4']],
         ];
 
-        $translation = new \RZ\Roadiz\Core\Entities\Translation();
+        $translation = new Translation();
         $translation->setLocale('en');
         $translation->setName('en');
         $translation->setAvailable(true);
@@ -173,7 +174,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
          * Adding Folders
          */
         foreach ($folders as $value) {
-            $folder = $em->getRepository('RZ\Roadiz\Core\Entities\Folder')
+            $folder = $em->getRepository(Folder::class)
                 ->findOneByFolderName($value);
 
             if (null === $folder) {
@@ -190,7 +191,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
          * Adding documents
          */
         foreach ($documents as $value) {
-            $document = $em->getRepository('RZ\Roadiz\Core\Entities\Document')
+            $document = $em->getRepository(Document::class)
                 ->findOneByFilename($value[0]);
 
             if (null === $document) {
@@ -210,7 +211,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
              */
             foreach ($value[1] as $folderName) {
                 /** @var Folder $folder */
-                $folder = $em->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                $folder = $em->getRepository(Folder::class)
                     ->findOneByFolderName($folderName);
                 if (null !== $folder) {
                     $document->addFolder($folder);

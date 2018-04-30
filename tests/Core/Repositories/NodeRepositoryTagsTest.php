@@ -27,9 +27,13 @@
  * @file NodeRepositoryTest.php
  * @author Ambroise Maupate
  */
+
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
-class NodeRepositoryTest extends DefaultThemeDependentCase
+class NodeRepositoryTagsTest extends DefaultThemeDependentCase
 {
     /**
      * @dataProvider getByTagInclusiveProvider
@@ -39,11 +43,11 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
     public function testGetByTagInclusive($tagsNames, $expectedNodeCount)
     {
         $tags = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->getRepository(Tag::class)
             ->findByTagName($tagsNames);
 
         $nodeCount = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->countBy([
                 'tags' => $tags,
@@ -73,11 +77,11 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
     public function testGetByTagExclusive($tagsNames, $expectedNodeCount)
     {
         $tags = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+            ->getRepository(Tag::class)
             ->findByTagName($tagsNames);
 
         $nodeCount = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->countBy([
                 'tags' => $tags,
@@ -109,11 +113,9 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
     {
         parent::setUpBeforeClass();
 
-        $type = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
-            ->findOneByName('Page');
+        $type = static::$kernel->container['nodeTypesBag']->get('Page');
         $translation = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findDefault();
 
         /*
@@ -151,7 +153,7 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
                  */
                 foreach ($value[1] as $tagName) {
                     $tag = static::getManager()
-                        ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                        ->getRepository(Tag::class)
                         ->findOneByTagName($tagName);
                     if (null !== $tag) {
                         $node->addTag($tag);
