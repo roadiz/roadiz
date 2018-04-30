@@ -189,17 +189,69 @@ class NodeRepository extends StatusAwareRepository
 
             // Dots are forbidden in field definitions
             $baseKey = str_replace('.', '_', $key);
-            /*
-             * Search in translation fields
-             */
-            if (false !== strpos($key, 'translation.')) {
+
+            if (false !== strpos($key, 'nodeType.')) {
+                if (!$this->hasJoinedNodeType($qb, static::NODE_ALIAS)) {
+                    $qb->addSelect(static::NODETYPE_ALIAS);
+                    $qb->innerJoin(
+                        static::NODE_ALIAS . '.nodeType',
+                        static::NODETYPE_ALIAS
+                    );
+                }
+
+                $prefix = static::NODETYPE_ALIAS . '.';
+                $key = str_replace('nodeType.', '', $key);
+            } elseif (false !== strpos($key, 'aNodes.')) {
+                if (!$this->joinExists($qb, static::NODE_ALIAS, 'a_n')) {
+                    $qb->innerJoin(
+                        static::NODE_ALIAS . '.aNodes',
+                        'a_n'
+                    );
+                }
+                if (false !== strpos($key, 'aNodes.field.')) {
+                    if (!$this->joinExists($qb, static::NODE_ALIAS, 'a_n_f')) {
+                        $qb->innerJoin(
+                            'a_n.field',
+                            'a_n_f'
+                        );
+                    }
+                    $prefix = 'a_n_f.';
+                    $key = str_replace('aNodes.field.', '', $key);
+                } else {
+                    $prefix = 'a_n.';
+                    $key = str_replace('aNodes.', '', $key);
+                }
+            } elseif (false !== strpos($key, 'bNodes.')) {
+                if (!$this->joinExists($qb, static::NODE_ALIAS, 'b_n')) {
+                    $qb->innerJoin(
+                        static::NODE_ALIAS . '.bNodes',
+                        'b_n'
+                    );
+                }
+
+                if (false !== strpos($key, 'bNodes.field.')) {
+                    if (!$this->joinExists($qb, static::NODE_ALIAS, 'b_n_f')) {
+                        $qb->innerJoin(
+                            'b_n.field',
+                            'b_n_f'
+                        );
+                    }
+                    $prefix = 'b_n_f.';
+                    $key = str_replace('bNodes.field.', '', $key);
+                } else {
+                    $prefix = 'b_n.';
+                    $key = str_replace('bNodes.', '', $key);
+                }
+            } elseif (false !== strpos($key, 'translation.')) {
+                /*
+                 * Search in translation fields
+                 */
                 $prefix = static::TRANSLATION_ALIAS . '.';
                 $key = str_replace('translation.', '', $key);
-            }
-            /*
-             * Search in nodeSource fields
-             */
-            if ($key == 'translation') {
+            } elseif ($key == 'translation') {
+                /*
+                 * Search in nodeSource fields
+                 */
                 $prefix = static::NODESSOURCES_ALIAS . '.';
             }
 

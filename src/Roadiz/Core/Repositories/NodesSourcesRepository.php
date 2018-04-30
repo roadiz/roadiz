@@ -120,19 +120,75 @@ class NodesSourcesRepository extends StatusAwareRepository
                     $joinedNode = true;
                 }
                 if (!$joinedNodeType) {
-                    $qb->addSelect('nt');
+                    $qb->addSelect(static::NODETYPE_ALIAS);
                     $qb->innerJoin(
                         'n.nodeType',
-                        'nt'
+                        static::NODETYPE_ALIAS
                     );
                     $joinedNodeType = true;
                 }
 
-                $prefix = 'nt.';
+                $prefix = static::NODETYPE_ALIAS . '.';
                 $key = str_replace('node.nodeType.', '', $key);
-            }
+            } elseif (false !== strpos($key, 'node.aNodes.')) {
+                if (!$joinedNode) {
+                    $qb->innerJoin(
+                        'ns.node',
+                        static::NODE_ALIAS
+                    );
+                    $joinedNode = true;
+                }
 
-            if (false !== strpos($key, 'node.')) {
+                if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n')) {
+                    $qb->innerJoin(
+                        static::NODE_ALIAS . '.aNodes',
+                        'a_n'
+                    );
+                }
+
+                if (false !== strpos($key, 'node.aNodes.field.')) {
+                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n_f')) {
+                        $qb->innerJoin(
+                            'a_n.field',
+                            'a_n_f'
+                        );
+                    }
+                    $prefix = 'a_n_f.';
+                    $key = str_replace('node.aNodes.field.', '', $key);
+                } else {
+                    $prefix = 'a_n.';
+                    $key = str_replace('node.aNodes.', '', $key);
+                }
+            } elseif (false !== strpos($key, 'node.bNodes.')) {
+                if (!$joinedNode) {
+                    $qb->innerJoin(
+                        'ns.node',
+                        static::NODE_ALIAS
+                    );
+                    $joinedNode = true;
+                }
+
+                if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n')) {
+                    $qb->innerJoin(
+                        static::NODE_ALIAS . '.bNodes',
+                        'b_n'
+                    );
+                }
+
+                if (false !== strpos($key, 'node.bNodes.field.')) {
+                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n_f')) {
+                        $qb->innerJoin(
+                            'b_n.field',
+                            'b_n_f'
+                        );
+                    }
+                    $prefix = 'b_n_f.';
+                    $key = str_replace('node.bNodes.field.', '', $key);
+                } else {
+                    $prefix = 'b_n.';
+                    $key = str_replace('node.bNodes.', '', $key);
+                }
+            } elseif (false !== strpos($key, 'node.')) {
                 if (!$joinedNode) {
                     $qb->innerJoin(
                         'ns.node',
@@ -636,12 +692,23 @@ class NodesSourcesRepository extends StatusAwareRepository
         foreach ($criteria as $key => $value) {
             $baseKey = str_replace('.', '_', $key);
 
-            if (false !== strpos($key, 'node.')) {
+            if (false !== strpos($key, 'node.nodeType.')) {
                 if (!$this->hasJoinedNode($qb, $alias)) {
                     $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
                 }
+                if (!$this->hasJoinedNodeType($qb, $alias)) {
+                    $qb->innerJoin(static::NODE_ALIAS . '.nodeType', static::NODETYPE_ALIAS);
+                }
+                $prefix = static::NODETYPE_ALIAS . '.';
+                $simpleKey = str_replace('node.nodeType.', '', $key);
+                $qb->andWhere($this->buildComparison($value, $prefix, $simpleKey, $baseKey, $qb));
+            } elseif (false !== strpos($key, 'node.')) {
+                if (!$this->hasJoinedNode($qb, $alias)) {
+                    $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+                }
+                $prefix = static::NODE_ALIAS . '.';
                 $simpleKey = str_replace('node.', '', $key);
-                $qb->andWhere($this->buildComparison($value, static::NODE_ALIAS . '.', $simpleKey, $baseKey, $qb));
+                $qb->andWhere($this->buildComparison($value, $prefix, $simpleKey, $baseKey, $qb));
             } else {
                 $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $baseKey, $qb));
             }

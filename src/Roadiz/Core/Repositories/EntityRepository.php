@@ -35,6 +35,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Pimple\Container;
@@ -125,6 +126,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * Alias for DQL and Query builder representing Tag relation.
      */
     const TAG_ALIAS = 'tg';
+
+    /**
+     * Alias for DQL and Query builder representing NodeType relation.
+     */
+    const NODETYPE_ALIAS = 'nt';
 
     /**
      * Doctrine column types that can be search
@@ -691,15 +697,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function hasJoinedNode(QueryBuilder $qb, $alias)
     {
-        if (isset($qb->getDQLPart('join')[$alias])) {
-            foreach ($qb->getDQLPart('join')[$alias] as $join) {
-                if (null !== $join && $join->getAlias() == static::NODE_ALIAS) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->joinExists($qb, $alias, static::NODE_ALIAS);
     }
 
     /**
@@ -711,9 +709,35 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function hasJoinedNodesSources(QueryBuilder $qb, $alias)
     {
-        if (isset($qb->getDQLPart('join')[$alias])) {
-            foreach ($qb->getDQLPart('join')[$alias] as $join) {
-                if (null !== $join && $join->getAlias() == static::NODESSOURCES_ALIAS) {
+        return $this->joinExists($qb, $alias, static::NODESSOURCES_ALIAS);
+    }
+
+    /**
+     * Ensure that nodes_sources table is joined only once.
+     *
+     * @param  QueryBuilder $qb
+     * @param  string  $alias
+     * @return boolean
+     */
+    protected function hasJoinedNodeType(QueryBuilder $qb, $alias)
+    {
+        return $this->joinExists($qb, $alias, static::NODETYPE_ALIAS);
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $rootAlias
+     * @param string $joinAlias
+     *
+     * @return bool
+     */
+    protected function joinExists(QueryBuilder $qb, $rootAlias, $joinAlias)
+    {
+        if (isset($qb->getDQLPart('join')[$rootAlias])) {
+            foreach ($qb->getDQLPart('join')[$rootAlias] as $join) {
+                if (null !== $join &&
+                    $join instanceof Join &&
+                    $join->getAlias() === $joinAlias) {
                     return true;
                 }
             }
