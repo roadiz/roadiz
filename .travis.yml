@@ -42,7 +42,7 @@ script:
   - bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore="*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/*,*/themes/*" -p ./
 
 after_success:
-  - travis_retry php bin/coveralls -v
+  - travis_retry php bin/php-coveralls -v
 
 notifications:
   webhooks: https://coveralls.io/webhook?repo_token=auwcnYiFOeFFp0vxd4Tx158ToE5YvMAHg
