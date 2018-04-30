@@ -1,6 +1,5 @@
 <?php
 
-
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;

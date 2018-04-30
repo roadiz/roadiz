@@ -615,7 +615,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param  QueryBuilder $qb
      * @param  string $nodeAlias
      */
-    protected function buildTagFiltering(&$criteria, &$qb, $nodeAlias = 'n')
+    protected function buildTagFiltering(array &$criteria, QueryBuilder $qb, $nodeAlias = 'n')
     {
         if (in_array('tags', array_keys($criteria))) {
             /*
@@ -672,7 +672,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param array $criteria
      * @param Query $finalQuery
      */
-    protected function applyFilterByTag(array &$criteria, &$finalQuery)
+    protected function applyFilterByTag(array &$criteria, Query $finalQuery)
     {
         if (in_array('tags', array_keys($criteria))) {
             if ($criteria['tags'] instanceof Tag) {

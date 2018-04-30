@@ -37,7 +37,12 @@ use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryCriteriaEvent;
+use RZ\Roadiz\Core\Events\QueryBuilderEvents;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements search engine query with Solr.
@@ -45,13 +50,47 @@ use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 class NodesSourcesRepository extends StatusAwareRepository
 {
     /**
+     * @param QueryBuilder $qb
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return FilterNodesSourcesQueryBuilderCriteriaEvent
+     */
+    protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value);
+        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
+
+        return $event;
+    }
+
+    /**
+     * @param Query $query
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return FilterNodesSourcesQueryCriteriaEvent
+     */
+    protected function dispatchQueryApplyEvent(Query $query, $property, $value)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        $event = new FilterNodesSourcesQueryCriteriaEvent($query, $property, $value);
+        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
+
+        return $event;
+    }
+
+    /**
      * Add a tag filtering to queryBuilder.
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
      * @param boolean      $joinedNode
      */
-    protected function filterByTag(&$criteria, &$qb, &$joinedNode)
+    protected function filterByTag(array &$criteria, QueryBuilder $qb, &$joinedNode)
     {
         if (in_array('tags', array_keys($criteria))) {
             if (!$joinedNode) {
@@ -89,8 +128,8 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param boolean $joinedNodeType
      */
     protected function filterByCriteria(
-        &$criteria,
-        &$qb,
+        array &$criteria,
+        QueryBuilder $qb,
         &$joinedNode = false,
         &$joinedNodeType = false
     ) {
@@ -102,106 +141,110 @@ class NodesSourcesRepository extends StatusAwareRepository
                 continue;
             }
 
-            /*
-             * compute prefix for
-             * filtering node relation fields
-             */
-            $prefix = static::NODESSOURCES_ALIAS . '.';
+            $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
 
-            // Dots are forbidden in field definitions
-            $baseKey = str_replace('.', '_', $key);
+            if (!$event->isPropagationStopped()) {
+                /*
+                 * compute prefix for
+                 * filtering node relation fields
+                 */
+                $prefix = static::NODESSOURCES_ALIAS . '.';
 
-            if (false !== strpos($key, 'node.nodeType.')) {
-                if (!$joinedNode) {
-                    $qb->innerJoin(
-                        'ns.node',
-                        static::NODE_ALIAS
-                    );
-                    $joinedNode = true;
-                }
-                if (!$joinedNodeType) {
-                    $qb->addSelect(static::NODETYPE_ALIAS);
-                    $qb->innerJoin(
-                        'n.nodeType',
-                        static::NODETYPE_ALIAS
-                    );
-                    $joinedNodeType = true;
-                }
+                // Dots are forbidden in field definitions
+                $baseKey = str_replace('.', '_', $key);
 
-                $prefix = static::NODETYPE_ALIAS . '.';
-                $key = str_replace('node.nodeType.', '', $key);
-            } elseif (false !== strpos($key, 'node.aNodes.')) {
-                if (!$joinedNode) {
-                    $qb->innerJoin(
-                        'ns.node',
-                        static::NODE_ALIAS
-                    );
-                    $joinedNode = true;
-                }
-
-                if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n')) {
-                    $qb->innerJoin(
-                        static::NODE_ALIAS . '.aNodes',
-                        'a_n'
-                    );
-                }
-
-                if (false !== strpos($key, 'node.aNodes.field.')) {
-                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n_f')) {
+                if (false !== strpos($key, 'node.nodeType.')) {
+                    if (!$joinedNode) {
                         $qb->innerJoin(
-                            'a_n.field',
-                            'a_n_f'
+                            'ns.node',
+                            static::NODE_ALIAS
+                        );
+                        $joinedNode = true;
+                    }
+                    if (!$joinedNodeType) {
+                        $qb->addSelect(static::NODETYPE_ALIAS);
+                        $qb->innerJoin(
+                            'n.nodeType',
+                            static::NODETYPE_ALIAS
+                        );
+                        $joinedNodeType = true;
+                    }
+
+                    $prefix = static::NODETYPE_ALIAS . '.';
+                    $key = str_replace('node.nodeType.', '', $key);
+                } elseif (false !== strpos($key, 'node.aNodes.')) {
+                    if (!$joinedNode) {
+                        $qb->innerJoin(
+                            'ns.node',
+                            static::NODE_ALIAS
+                        );
+                        $joinedNode = true;
+                    }
+
+                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n')) {
+                        $qb->innerJoin(
+                            static::NODE_ALIAS . '.aNodes',
+                            'a_n'
                         );
                     }
-                    $prefix = 'a_n_f.';
-                    $key = str_replace('node.aNodes.field.', '', $key);
-                } else {
-                    $prefix = 'a_n.';
-                    $key = str_replace('node.aNodes.', '', $key);
-                }
-            } elseif (false !== strpos($key, 'node.bNodes.')) {
-                if (!$joinedNode) {
-                    $qb->innerJoin(
-                        'ns.node',
-                        static::NODE_ALIAS
-                    );
-                    $joinedNode = true;
-                }
 
-                if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n')) {
-                    $qb->innerJoin(
-                        static::NODE_ALIAS . '.bNodes',
-                        'b_n'
-                    );
-                }
-
-                if (false !== strpos($key, 'node.bNodes.field.')) {
-                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n_f')) {
+                    if (false !== strpos($key, 'node.aNodes.field.')) {
+                        if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n_f')) {
+                            $qb->innerJoin(
+                                'a_n.field',
+                                'a_n_f'
+                            );
+                        }
+                        $prefix = 'a_n_f.';
+                        $key = str_replace('node.aNodes.field.', '', $key);
+                    } else {
+                        $prefix = 'a_n.';
+                        $key = str_replace('node.aNodes.', '', $key);
+                    }
+                } elseif (false !== strpos($key, 'node.bNodes.')) {
+                    if (!$joinedNode) {
                         $qb->innerJoin(
-                            'b_n.field',
-                            'b_n_f'
+                            'ns.node',
+                            static::NODE_ALIAS
+                        );
+                        $joinedNode = true;
+                    }
+
+                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n')) {
+                        $qb->innerJoin(
+                            static::NODE_ALIAS . '.bNodes',
+                            'b_n'
                         );
                     }
-                    $prefix = 'b_n_f.';
-                    $key = str_replace('node.bNodes.field.', '', $key);
-                } else {
-                    $prefix = 'b_n.';
-                    $key = str_replace('node.bNodes.', '', $key);
-                }
-            } elseif (false !== strpos($key, 'node.')) {
-                if (!$joinedNode) {
-                    $qb->innerJoin(
-                        'ns.node',
-                        static::NODE_ALIAS
-                    );
-                    $joinedNode = true;
+
+                    if (false !== strpos($key, 'node.bNodes.field.')) {
+                        if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n_f')) {
+                            $qb->innerJoin(
+                                'b_n.field',
+                                'b_n_f'
+                            );
+                        }
+                        $prefix = 'b_n_f.';
+                        $key = str_replace('node.bNodes.field.', '', $key);
+                    } else {
+                        $prefix = 'b_n.';
+                        $key = str_replace('node.bNodes.', '', $key);
+                    }
+                } elseif (false !== strpos($key, 'node.')) {
+                    if (!$joinedNode) {
+                        $qb->innerJoin(
+                            'ns.node',
+                            static::NODE_ALIAS
+                        );
+                        $joinedNode = true;
+                    }
+
+                    $prefix = static::NODE_ALIAS . '.';
+                    $key = str_replace('node.', '', $key);
                 }
 
-                $prefix = static::NODE_ALIAS . '.';
-                $key = str_replace('node.', '', $key);
+                $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
             }
-
-            $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
         }
     }
 
@@ -236,7 +279,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param array $criteria
      * @param Query $finalQuery
      */
-    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    protected function applyFilterByCriteria(array &$criteria, Query $finalQuery)
     {
         /*
          * Reimplementing findBy features…
@@ -246,7 +289,10 @@ class NodesSourcesRepository extends StatusAwareRepository
                 continue;
             }
 
-            $this->applyComparison($key, $value, $finalQuery);
+            $event = $this->dispatchQueryApplyEvent($finalQuery, $key, $value);
+            if (!$event->isPropagationStopped()) {
+                $this->applyComparison($key, $value, $finalQuery);
+            }
         }
     }
 

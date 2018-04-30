@@ -171,16 +171,13 @@ class DocumentRepository extends EntityRepository
             if (false !== strpos($key, 'translation.')) {
                 $prefix = 't.';
                 $key = str_replace('translation.', '', $key);
-            }
-            /*
-             * Search in translation fields
-             */
-            if (false !== strpos($key, 'documentTranslations.')) {
+            } elseif (false !== strpos($key, 'documentTranslations.')) {
+                /*
+                 * Search in translation fields
+                 */
                 $prefix = 'dt.';
                 $key = str_replace('documentTranslations.', '', $key);
-            }
-
-            if ($key == 'translation') {
+            } elseif ($key == 'translation') {
                 $prefix = 'dt.';
             }
 
@@ -238,7 +235,7 @@ class DocumentRepository extends EntityRepository
      * @param array $criteria
      * @param Query $finalQuery
      */
-    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    protected function applyFilterByCriteria($criteria, $finalQuery)
     {
         /*
          * Reimplementing findBy features…
