@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Utils\Doctrine\ORM;
 
-
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
