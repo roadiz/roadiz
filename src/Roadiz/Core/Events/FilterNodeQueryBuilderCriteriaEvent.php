@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,34 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file QueryBuilderEvents.php
+ * @file FilterNodeQueryBuilderCriteriaEvent.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
 namespace RZ\Roadiz\Core\Events;
 
-final class QueryBuilderEvents
+use Doctrine\ORM\QueryBuilder;
+use RZ\Roadiz\Core\Entities\Node;
+
+class FilterNodeQueryBuilderCriteriaEvent extends FilterQueryBuilderCriteriaEvent
 {
-    const QUERY_BUILDER_SELECT = 'qb.select';
-    const QUERY_BUILDER_BUILD_FILTER = 'qb.build_filter';
-    const QUERY_BUILDER_APPLY_FILTER = 'qb.apply_filter';
+    /**
+     * @inheritDoc
+     */
+    public function __construct(QueryBuilder $queryBuilder, $property, $value, $actualEntityName)
+    {
+        parent::__construct($queryBuilder, Node::class, $property, $value, $actualEntityName);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function supports()
+    {
+        if ($this->actualEntityName === Node::class) {
+            return true;
+        }
+
+        return false;
+    }
 }

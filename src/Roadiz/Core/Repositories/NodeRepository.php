@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\QueryBuilderEvents;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
@@ -59,7 +60,7 @@ class NodeRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterQueryBuilderCriteriaEvent($qb, Node::class, $property, $value, $this->getEntityName());
+        $event = new FilterNodeQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
         $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
 
         return $event;
@@ -76,7 +77,7 @@ class NodeRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterQueryBuilderCriteriaEvent($qb, Node::class, $property, $value, $this->getEntityName());
+        $event = new FilterNodeQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
         $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
 
         return $event;
@@ -141,8 +142,8 @@ class NodeRepository extends StatusAwareRepository
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id']) ||
             isset($criteria['translation.available'])) {
-            $qb->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS);
-            $qb->innerJoin('ns.translation', static::TRANSLATION_ALIAS);
+            $qb->innerJoin(static::NODE_ALIAS . '.nodeSources', static::NODESSOURCES_ALIAS);
+            $qb->innerJoin(static::NODESSOURCES_ALIAS . '.translation', static::TRANSLATION_ALIAS);
         } else {
             if (null !== $translation) {
                 /*
@@ -152,14 +153,14 @@ class NodeRepository extends StatusAwareRepository
                     'n.nodeSources',
                     static::NODESSOURCES_ALIAS,
                     'WITH',
-                    'ns.translation = :translation'
+                    static::NODESSOURCES_ALIAS . '.translation = :translation'
                 );
             } else {
                 /*
                  * With a null translation, not filter by translation to enable
                  * nodes with only one translation which is not the default one.
                  */
-                $qb->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS);
+                $qb->innerJoin(static::NODE_ALIAS . '.nodeSources', static::NODESSOURCES_ALIAS);
             }
         }
     }
@@ -207,72 +208,20 @@ class NodeRepository extends StatusAwareRepository
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
-
+            /*
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
+             */
             $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
+
             if (!$event->isPropagationStopped()) {
                 /*
-             * compute prefix for
-             * filtering node, and sources relation fields
-             */
+                 * compute prefix for
+                 * filtering node, and sources relation fields
+                 */
                 $prefix = static::NODE_ALIAS . '.';
-
                 // Dots are forbidden in field definitions
                 $baseKey = $simpleQB->getParameterKey($key);
-
-                if (false !== strpos($key, 'aNodes.')) {
-                    if (!$this->joinExists($qb, static::NODE_ALIAS, 'a_n')) {
-                        $qb->innerJoin(
-                            static::NODE_ALIAS . '.aNodes',
-                            'a_n'
-                        );
-                    }
-                    if (false !== strpos($key, 'aNodes.field.')) {
-                        if (!$this->joinExists($qb, static::NODE_ALIAS, 'a_n_f')) {
-                            $qb->innerJoin(
-                                'a_n.field',
-                                'a_n_f'
-                            );
-                        }
-                        $prefix = 'a_n_f.';
-                        $key = str_replace('aNodes.field.', '', $key);
-                    } else {
-                        $prefix = 'a_n.';
-                        $key = str_replace('aNodes.', '', $key);
-                    }
-                } elseif (false !== strpos($key, 'bNodes.')) {
-                    if (!$this->joinExists($qb, static::NODE_ALIAS, 'b_n')) {
-                        $qb->innerJoin(
-                            static::NODE_ALIAS . '.bNodes',
-                            'b_n'
-                        );
-                    }
-
-                    if (false !== strpos($key, 'bNodes.field.')) {
-                        if (!$this->joinExists($qb, static::NODE_ALIAS, 'b_n_f')) {
-                            $qb->innerJoin(
-                                'b_n.field',
-                                'b_n_f'
-                            );
-                        }
-                        $prefix = 'b_n_f.';
-                        $key = str_replace('bNodes.field.', '', $key);
-                    } else {
-                        $prefix = 'b_n.';
-                        $key = str_replace('bNodes.', '', $key);
-                    }
-                } elseif (false !== strpos($key, 'translation.')) {
-                    /*
-                     * Search in translation fields
-                     */
-                    $prefix = static::TRANSLATION_ALIAS . '.';
-                    $key = str_replace('translation.', '', $key);
-                } elseif ($key == 'translation') {
-                    /*
-                     * Search in nodeSource fields
-                     */
-                    $prefix = static::NODESSOURCES_ALIAS . '.';
-                }
-
                 $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
             }
         }

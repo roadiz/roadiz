@@ -133,7 +133,10 @@ class NodesSourcesRepository extends StatusAwareRepository
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
-
+            /*
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
+             */
             $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
 
             if (!$event->isPropagationStopped()) {
@@ -142,78 +145,8 @@ class NodesSourcesRepository extends StatusAwareRepository
                  * filtering node relation fields
                  */
                 $prefix = static::NODESSOURCES_ALIAS . '.';
-
                 // Dots are forbidden in field definitions
                 $baseKey = $simpleQB->getParameterKey($key);
-
-                if (false !== strpos($key, 'node.aNodes.')) {
-                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
-                        $qb->innerJoin(
-                            'ns.node',
-                            static::NODE_ALIAS
-                        );
-                    }
-
-                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n')) {
-                        $qb->innerJoin(
-                            static::NODE_ALIAS . '.aNodes',
-                            'a_n'
-                        );
-                    }
-
-                    if (false !== strpos($key, 'node.aNodes.field.')) {
-                        if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n_f')) {
-                            $qb->innerJoin(
-                                'a_n.field',
-                                'a_n_f'
-                            );
-                        }
-                        $prefix = 'a_n_f.';
-                        $key = str_replace('node.aNodes.field.', '', $key);
-                    } else {
-                        $prefix = 'a_n.';
-                        $key = str_replace('node.aNodes.', '', $key);
-                    }
-                } elseif (false !== strpos($key, 'node.bNodes.')) {
-                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
-                        $qb->innerJoin(
-                            'ns.node',
-                            static::NODE_ALIAS
-                        );
-                    }
-
-                    if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n')) {
-                        $qb->innerJoin(
-                            static::NODE_ALIAS . '.bNodes',
-                            'b_n'
-                        );
-                    }
-
-                    if (false !== strpos($key, 'node.bNodes.field.')) {
-                        if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n_f')) {
-                            $qb->innerJoin(
-                                'b_n.field',
-                                'b_n_f'
-                            );
-                        }
-                        $prefix = 'b_n_f.';
-                        $key = str_replace('node.bNodes.field.', '', $key);
-                    } else {
-                        $prefix = 'b_n.';
-                        $key = str_replace('node.bNodes.', '', $key);
-                    }
-                } elseif (false !== strpos($key, 'node.')) {
-                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
-                        $qb->innerJoin(
-                            'ns.node',
-                            static::NODE_ALIAS
-                        );
-                    }
-
-                    $prefix = static::NODE_ALIAS . '.';
-                    $key = str_replace('node.', '', $key);
-                }
-
                 $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
             }
         }

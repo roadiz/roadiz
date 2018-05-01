@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,15 +23,52 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file QueryBuilderEvents.php
+ * @file BNodesFilter.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Events;
+namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
-final class QueryBuilderEvents
+use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+
+/**
+ * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter
+ */
+class BNodesFilter extends ANodesFilter
 {
-    const QUERY_BUILDER_SELECT = 'qb.select';
-    const QUERY_BUILDER_BUILD_FILTER = 'qb.build_filter';
-    const QUERY_BUILDER_APPLY_FILTER = 'qb.apply_filter';
+    public static function getSubscribedEvents()
+    {
+        return [
+            QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER => [
+                // NodesSources should be first as properties are
+                // more detailed and precise.
+                ['onNodesSourcesQueryBuilderBuild', 40],
+                ['onNodeQueryBuilderBuild', 30],
+            ]
+        ];
+    }
+
+    /**
+     * @return string
+     */
+    protected function getProperty()
+    {
+        return 'bNodes';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNodeJoinAlias()
+    {
+        return 'b_n';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNodeFieldJoinAlias()
+    {
+        return 'b_n_f';
+    }
 }

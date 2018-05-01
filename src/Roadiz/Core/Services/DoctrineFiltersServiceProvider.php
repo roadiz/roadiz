@@ -29,9 +29,12 @@
 
 namespace RZ\Roadiz\Core\Services;
 
-
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Utils\Doctrine\ORM\Filter\ANodesFilter;
+use RZ\Roadiz\Utils\Doctrine\ORM\Filter\BNodesFilter;
+use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodesSourcesNodeFilter;
+use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodeTranslationFilter;
 use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodeTypeFilter;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -44,6 +47,10 @@ class DoctrineFiltersServiceProvider implements ServiceProviderInterface
     {
         $pimple->extend('dispatcher', function (EventDispatcher $dispatcher) {
             $dispatcher->addSubscriber(new NodeTypeFilter());
+            $dispatcher->addSubscriber(new ANodesFilter());
+            $dispatcher->addSubscriber(new BNodesFilter());
+            $dispatcher->addSubscriber(new NodesSourcesNodeFilter());
+            $dispatcher->addSubscriber(new NodeTranslationFilter());
 
             return $dispatcher;
         });
