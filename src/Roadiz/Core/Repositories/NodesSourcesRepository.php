@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Log;
@@ -38,10 +37,9 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryCriteriaEvent;
 use RZ\Roadiz\Core\Events\QueryBuilderEvents;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
-use Symfony\Component\EventDispatcher\Event;
+use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -67,17 +65,17 @@ class NodesSourcesRepository extends StatusAwareRepository
     }
 
     /**
-     * @param Query $query
+     * @param QueryBuilder $qb
      * @param string $property
      * @param mixed $value
      *
-     * @return FilterNodesSourcesQueryCriteriaEvent
+     * @return FilterNodesSourcesQueryBuilderCriteriaEvent
      */
-    protected function dispatchQueryApplyEvent(Query $query, $property, $value)
+    protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterNodesSourcesQueryCriteriaEvent($query, $property, $value);
+        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value);
         $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
 
         return $event;
@@ -88,17 +86,15 @@ class NodesSourcesRepository extends StatusAwareRepository
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
-     * @param boolean      $joinedNode
      */
-    protected function filterByTag(array &$criteria, QueryBuilder $qb, &$joinedNode)
+    protected function filterByTag(array &$criteria, QueryBuilder $qb)
     {
         if (in_array('tags', array_keys($criteria))) {
-            if (!$joinedNode) {
+            if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                 $qb->innerJoin(
                     'ns.node',
                     static::NODE_ALIAS
                 );
-                $joinedNode = true;
             }
 
             $this->buildTagFiltering($criteria, $qb);
@@ -124,15 +120,12 @@ class NodesSourcesRepository extends StatusAwareRepository
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
-     * @param boolean $joinedNode
-     * @param boolean $joinedNodeType
      */
     protected function filterByCriteria(
         array &$criteria,
-        QueryBuilder $qb,
-        &$joinedNode = false,
-        &$joinedNodeType = false
+        QueryBuilder $qb
     ) {
+        $simpleQB = new SimpleQueryBuilder($qb);
         /*
          * Reimplementing findBy features…
          */
@@ -151,34 +144,31 @@ class NodesSourcesRepository extends StatusAwareRepository
                 $prefix = static::NODESSOURCES_ALIAS . '.';
 
                 // Dots are forbidden in field definitions
-                $baseKey = str_replace('.', '_', $key);
+                $baseKey = $simpleQB->getParameterKey($key);
 
                 if (false !== strpos($key, 'node.nodeType.')) {
-                    if (!$joinedNode) {
+                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                         $qb->innerJoin(
                             'ns.node',
                             static::NODE_ALIAS
                         );
-                        $joinedNode = true;
                     }
-                    if (!$joinedNodeType) {
+                    if (!$this->hasJoinedNodeType($qb, static::NODESSOURCES_ALIAS)) {
                         $qb->addSelect(static::NODETYPE_ALIAS);
                         $qb->innerJoin(
                             'n.nodeType',
                             static::NODETYPE_ALIAS
                         );
-                        $joinedNodeType = true;
                     }
 
                     $prefix = static::NODETYPE_ALIAS . '.';
                     $key = str_replace('node.nodeType.', '', $key);
                 } elseif (false !== strpos($key, 'node.aNodes.')) {
-                    if (!$joinedNode) {
+                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                         $qb->innerJoin(
                             'ns.node',
                             static::NODE_ALIAS
                         );
-                        $joinedNode = true;
                     }
 
                     if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'a_n')) {
@@ -202,12 +192,11 @@ class NodesSourcesRepository extends StatusAwareRepository
                         $key = str_replace('node.aNodes.', '', $key);
                     }
                 } elseif (false !== strpos($key, 'node.bNodes.')) {
-                    if (!$joinedNode) {
+                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                         $qb->innerJoin(
                             'ns.node',
                             static::NODE_ALIAS
                         );
-                        $joinedNode = true;
                     }
 
                     if (!$this->joinExists($qb, static::NODESSOURCES_ALIAS, 'b_n')) {
@@ -231,19 +220,18 @@ class NodesSourcesRepository extends StatusAwareRepository
                         $key = str_replace('node.bNodes.', '', $key);
                     }
                 } elseif (false !== strpos($key, 'node.')) {
-                    if (!$joinedNode) {
+                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                         $qb->innerJoin(
                             'ns.node',
                             static::NODE_ALIAS
                         );
-                        $joinedNode = true;
                     }
 
                     $prefix = static::NODE_ALIAS . '.';
                     $key = str_replace('node.', '', $key);
                 }
 
-                $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
             }
         }
     }
@@ -257,6 +245,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param string       $alias
      *
      * @return QueryBuilder
+     * @deprecated Use findBy or manual QueryBuilder methods
      */
     protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
@@ -277,21 +266,22 @@ class NodesSourcesRepository extends StatusAwareRepository
      * Bind parameters to generated query.
      *
      * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      */
-    protected function applyFilterByCriteria(array &$criteria, Query $finalQuery)
+    protected function applyFilterByCriteria(array &$criteria, QueryBuilder $qb)
     {
         /*
          * Reimplementing findBy features…
          */
+        $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
 
-            $event = $this->dispatchQueryApplyEvent($finalQuery, $key, $value);
+            $event = $this->dispatchQueryBuilderApplyEvent($qb, $key, $value);
             if (!$event->isPropagationStopped()) {
-                $this->applyComparison($key, $value, $finalQuery);
+                $simpleQB->bindValue($key, $value);
             }
         }
     }
@@ -342,19 +332,14 @@ class NodesSourcesRepository extends StatusAwareRepository
         $limit = null,
         $offset = null
     ) {
-        $joinedNodeType = false;
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-
         $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODE_ALIAS);
-        $joinedNode = true;
-
         $qb->addSelect(static::NODE_ALIAS);
-
         /*
          * Filtering by tag
          */
-        $this->filterByTag($criteria, $qb, $joinedNode);
-        $this->filterByCriteria($criteria, $qb, $joinedNode, $joinedNodeType);
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
 
         // Add ordering
         if (null !== $orderBy) {
@@ -387,20 +372,10 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param array $criteria
      * @return QueryBuilder
      */
-    protected function getCountContextualQueryWithTranslation(
-        array &$criteria
-    ) {
-        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $qb->select($qb->expr()->countDistinct(static::NODESSOURCES_ALIAS . '.id'));
-        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODE_ALIAS);
-        $joinedNode = true;
-        /*
-         * Filtering by tag
-         */
-        $this->filterByTag($criteria, $qb, $joinedNode);
-        $this->filterByCriteria($criteria, $qb, $joinedNode);
-
-        return $qb;
+    protected function getCountContextualQuery(array &$criteria)
+    {
+        $qb = $this->getContextualQuery($criteria);
+        return $qb->select($qb->expr()->countDistinct(static::NODESSOURCES_ALIAS . '.id'));
     }
 
     /**
@@ -410,19 +385,15 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @return int
      *
      */
-    public function countBy(
-        $criteria
-    ) {
-        $query = $this->getCountContextualQueryWithTranslation(
-            $criteria
-        );
+    public function countBy($criteria)
+    {
+        $query = $this->getCountContextualQuery($criteria);
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-        $this->applyFilterByTag($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyFilterByTag($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
 
         try {
-            return (int) $finalQuery->getSingleScalarResult();
+            return (int) $query->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }
@@ -472,7 +443,6 @@ class NodesSourcesRepository extends StatusAwareRepository
             $limit,
             $offset
         );
-
         /*
          * Eagerly fetch UrlAliases
          * to limit SQL query count
@@ -480,12 +450,10 @@ class NodesSourcesRepository extends StatusAwareRepository
         $qb->leftJoin('ns.urlAliases', 'ua')
             ->addSelect('ua')
         ;
-
         $qb->setCacheable(true);
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $finalQuery = $qb->getQuery();
-        $this->applyFilterByTag($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyFilterByTag($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -493,10 +461,10 @@ class NodesSourcesRepository extends StatusAwareRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($finalQuery);
+            return new Paginator($qb);
         } else {
             try {
-                return $finalQuery->getResult();
+                return $qb->getQuery()->getResult();
             } catch (NoResultException $e) {
                 return [];
             }
@@ -530,15 +498,13 @@ class NodesSourcesRepository extends StatusAwareRepository
         $qb->leftJoin('ns.urlAliases', 'ua')
             ->addSelect('ua')
         ;
-
         $qb->setCacheable(true);
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $finalQuery = $qb->getQuery();
-        $this->applyFilterByTag($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
+        $this->applyFilterByTag($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
 
         try {
-            return $finalQuery->getSingleResult();
+            return $qb->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -735,8 +701,10 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
     {
+        $simpleQB = new SimpleQueryBuilder($qb);
+
         foreach ($criteria as $key => $value) {
-            $baseKey = str_replace('.', '_', $key);
+            $baseKey = $simpleQB->getParameterKey($key);
 
             if (false !== strpos($key, 'node.nodeType.')) {
                 if (!$this->hasJoinedNode($qb, $alias)) {
@@ -747,16 +715,16 @@ class NodesSourcesRepository extends StatusAwareRepository
                 }
                 $prefix = static::NODETYPE_ALIAS . '.';
                 $simpleKey = str_replace('node.nodeType.', '', $key);
-                $qb->andWhere($this->buildComparison($value, $prefix, $simpleKey, $baseKey, $qb));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
             } elseif (false !== strpos($key, 'node.')) {
                 if (!$this->hasJoinedNode($qb, $alias)) {
                     $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
                 }
                 $prefix = static::NODE_ALIAS . '.';
                 $simpleKey = str_replace('node.', '', $key);
-                $qb->andWhere($this->buildComparison($value, $prefix, $simpleKey, $baseKey, $qb));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
             } else {
-                $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $baseKey, $qb));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $baseKey));
             }
         }
 

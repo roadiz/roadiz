@@ -31,13 +31,13 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -78,18 +78,18 @@ class TagRepository extends EntityRepository
      * Bind node parameter to final query
      *
      * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      */
-    protected function applyFilterByNodes(array &$criteria, Query $finalQuery)
+    protected function applyFilterByNodes(array &$criteria, QueryBuilder $qb)
     {
         if (in_array('nodes', array_keys($criteria))) {
             if ($criteria['nodes'] instanceof Node) {
-                $finalQuery->setParameter('nodes', $criteria['nodes']->getId());
+                $qb->setParameter('nodes', $criteria['nodes']->getId());
             } elseif (is_array($criteria['nodes']) ||
                 $criteria['nodes'] instanceof Collection) {
-                $finalQuery->setParameter('nodes', $criteria['nodes']);
+                $qb->setParameter('nodes', $criteria['nodes']);
             } elseif (is_integer($criteria['nodes'])) {
-                $finalQuery->setParameter('nodes', (int) $criteria['nodes']);
+                $qb->setParameter('nodes', (int) $criteria['nodes']);
             }
             unset($criteria['nodes']);
         }
@@ -117,6 +117,7 @@ class TagRepository extends EntityRepository
      */
     protected function filterByCriteria($criteria, QueryBuilder $qb)
     {
+        $simpleQB = new SimpleQueryBuilder($qb);
         /*
          * Reimplementing findBy features…
          */
@@ -135,7 +136,7 @@ class TagRepository extends EntityRepository
             $prefix = static::TAG_ALIAS . '.';
 
             // Dots are forbidden in field definitions
-            $baseKey = str_replace('.', '_', $key);
+            $baseKey = $simpleQB->getParameterKey($key);
 
             if (false !== strpos($key, 'translation.')) {
                 /*
@@ -162,22 +163,23 @@ class TagRepository extends EntityRepository
                 $prefix = 'tt.';
             }
 
-            $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
         }
     }
     /**
      * Bind parameters to generated query.
      *
      * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      */
-    protected function applyFilterByCriteria($criteria, Query $finalQuery)
+    protected function applyFilterByCriteria(array &$criteria, QueryBuilder $qb)
     {
         /*
          * Reimplementing findBy features…
          */
+        $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
-            $this->applyComparison($key, $value, $finalQuery);
+            $simpleQB->bindValue($key, $value);
         }
     }
 
@@ -224,17 +226,15 @@ class TagRepository extends EntityRepository
     /**
      * Bind translation parameter to final query
      *
-     * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
-        array $criteria,
-        Query $finalQuery,
+        QueryBuilder $qb,
         Translation $translation = null
     ) {
         if (null !== $translation) {
-            $finalQuery->setParameter('translation', $translation);
+            $qb->setParameter('translation', $translation);
         }
     }
 
@@ -250,7 +250,7 @@ class TagRepository extends EntityRepository
      * @return QueryBuilder
      */
     protected function getContextualQueryWithTranslation(
-        array $criteria,
+        array &$criteria,
         array $orderBy = null,
         $limit = null,
         $offset = null,
@@ -289,18 +289,11 @@ class TagRepository extends EntityRepository
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
-        array $criteria,
+        array &$criteria,
         Translation $translation = null
     ) {
-
-        $qb = $this->createQueryBuilder('tg');
-        $qb->select($qb->expr()->countDistinct('tg.id'));
-
-        $this->filterByNodes($criteria, $qb);
-        $this->filterByTranslation($criteria, $qb, $translation);
-        $this->filterByCriteria($criteria, $qb);
-
-        return $qb;
+        $qb = $this->getContextualQueryWithTranslation($criteria, null, null, null, $translation);
+        return $qb->select($qb->expr()->countDistinct('tg.id'));
     }
 
     /**
@@ -330,11 +323,9 @@ class TagRepository extends EntityRepository
         );
 
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByNodes($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyFilterByNodes($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -342,10 +333,10 @@ class TagRepository extends EntityRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($finalQuery);
+            return new Paginator($query);
         } else {
             try {
-                return $finalQuery->getResult();
+                return $query->getQuery()->getResult();
             } catch (NoResultException $e) {
                 return [];
             }
@@ -375,14 +366,12 @@ class TagRepository extends EntityRepository
         );
 
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByNodes($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyFilterByNodes($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         try {
-            return $finalQuery->getSingleResult();
+            return $query->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -404,14 +393,12 @@ class TagRepository extends EntityRepository
         );
 
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByNodes($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyFilterByNodes($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         try {
-            return (int) $finalQuery->getSingleScalarResult();
+            return (int) $query->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }
