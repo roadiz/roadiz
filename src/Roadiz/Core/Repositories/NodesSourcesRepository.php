@@ -58,7 +58,7 @@ class NodesSourcesRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value);
+        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
         $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
 
         return $event;
@@ -75,7 +75,7 @@ class NodesSourcesRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value);
+        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
         $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
 
         return $event;
@@ -146,24 +146,7 @@ class NodesSourcesRepository extends StatusAwareRepository
                 // Dots are forbidden in field definitions
                 $baseKey = $simpleQB->getParameterKey($key);
 
-                if (false !== strpos($key, 'node.nodeType.')) {
-                    if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
-                        $qb->innerJoin(
-                            'ns.node',
-                            static::NODE_ALIAS
-                        );
-                    }
-                    if (!$this->hasJoinedNodeType($qb, static::NODESSOURCES_ALIAS)) {
-                        $qb->addSelect(static::NODETYPE_ALIAS);
-                        $qb->innerJoin(
-                            'n.nodeType',
-                            static::NODETYPE_ALIAS
-                        );
-                    }
-
-                    $prefix = static::NODETYPE_ALIAS . '.';
-                    $key = str_replace('node.nodeType.', '', $key);
-                } elseif (false !== strpos($key, 'node.aNodes.')) {
+                if (false !== strpos($key, 'node.aNodes.')) {
                     if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                         $qb->innerJoin(
                             'ns.node',

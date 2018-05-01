@@ -48,6 +48,7 @@ use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
 use RZ\Roadiz\Core\Services\DebugServiceProvider;
+use RZ\Roadiz\Core\Services\DoctrineFiltersServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
@@ -178,6 +179,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $container->register(new AssetsServiceProvider());
         $container->register(new BackofficeServiceProvider());
         $container->register(new DoctrineServiceProvider());
+        $container->register(new DoctrineFiltersServiceProvider());
         $container->register(new EmbedDocumentsServiceProvider());
         $container->register(new EntityApiServiceProvider());
         $container->register(new FormServiceProvider());

@@ -50,6 +50,10 @@ class FilterQueryBuilderCriteriaEvent extends Event
      * @var string
      */
     protected $entityClass;
+    /**
+     * @var string
+     */
+    protected $actualEntityName;
 
     /**
      * FilterQueryBuilderEvent constructor.
@@ -58,13 +62,15 @@ class FilterQueryBuilderCriteriaEvent extends Event
      * @param string $entityClass
      * @param string $property
      * @param mixed $value
+     * @param $actualEntityName
      */
-    public function __construct(QueryBuilder $queryBuilder, $entityClass, $property, $value)
+    public function __construct(QueryBuilder $queryBuilder, $entityClass, $property, $value, $actualEntityName)
     {
         $this->queryBuilder = $queryBuilder;
         $this->entityClass = $entityClass;
         $this->property = $property;
         $this->value = $value;
+        $this->actualEntityName = $actualEntityName;
     }
 
     /**
@@ -103,11 +109,10 @@ class FilterQueryBuilderCriteriaEvent extends Event
 
 
     /**
-     * @param string $entityClass
      * @return bool
      */
-    public function supports($entityClass)
+    public function supports()
     {
-        return $this->entityClass === $entityClass;
+        return $this->entityClass === $this->actualEntityName;
     }
 }

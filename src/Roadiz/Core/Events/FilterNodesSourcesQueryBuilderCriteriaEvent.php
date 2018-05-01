@@ -37,21 +37,21 @@ class FilterNodesSourcesQueryBuilderCriteriaEvent extends FilterQueryBuilderCrit
     /**
      * @inheritDoc
      */
-    public function __construct(QueryBuilder $queryBuilder, $property, $value)
+    public function __construct(QueryBuilder $queryBuilder, $property, $value, $actualEntityName)
     {
-        parent::__construct($queryBuilder, NodesSources::class, $property, $value);
+        parent::__construct($queryBuilder, NodesSources::class, $property, $value, $actualEntityName);
     }
 
     /**
      * @inheritDoc
      */
-    public function supports($entityClass)
+    public function supports()
     {
-        if ($entityClass === NodesSources::class) {
+        if ($this->actualEntityName === NodesSources::class) {
             return true;
         }
 
-        $reflectionClass = new \ReflectionClass($entityClass);
+        $reflectionClass = new \ReflectionClass($this->actualEntityName);
         if ($reflectionClass->isSubclassOf(NodesSources::class)) {
             return true;
         }

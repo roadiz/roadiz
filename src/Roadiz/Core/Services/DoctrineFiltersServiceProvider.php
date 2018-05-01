@@ -23,39 +23,29 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FilterNodesSourcesQueryCriteriaEvent.php
+ * @file DoctrineFiltersServiceProvider.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Core\Events;
+namespace RZ\Roadiz\Core\Services;
 
-use Doctrine\ORM\Query;
-use RZ\Roadiz\Core\Entities\NodesSources;
 
-class FilterNodesSourcesQueryCriteriaEvent extends FilterQueryCriteriaEvent
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodeTypeFilter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+
+class DoctrineFiltersServiceProvider implements ServiceProviderInterface
 {
     /**
      * @inheritDoc
      */
-    public function __construct(Query $query, $property, $value)
+    public function register(Container $pimple)
     {
-        parent::__construct($query, NodesSources::class, $property, $value);
-    }
+        $pimple->extend('dispatcher', function (EventDispatcher $dispatcher) {
+            $dispatcher->addSubscriber(new NodeTypeFilter());
 
-    /**
-     * @inheritDoc
-     */
-    public function supports($entityClass)
-    {
-        if ($entityClass === NodesSources::class) {
-            return true;
-        }
-
-        $reflectionClass = new \ReflectionClass($entityClass);
-        if ($reflectionClass->isSubclassOf(NodesSources::class)) {
-            return true;
-        }
-
-        return false;
+            return $dispatcher;
+        });
     }
 }

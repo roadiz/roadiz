@@ -59,7 +59,7 @@ class NodeRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterQueryBuilderCriteriaEvent($qb, Node::class, $property, $value);
+        $event = new FilterQueryBuilderCriteriaEvent($qb, Node::class, $property, $value, $this->getEntityName());
         $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
 
         return $event;
@@ -76,7 +76,7 @@ class NodeRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterQueryBuilderCriteriaEvent($qb, Node::class, $property, $value);
+        $event = new FilterQueryBuilderCriteriaEvent($qb, Node::class, $property, $value, $this->getEntityName());
         $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
 
         return $event;
@@ -219,18 +219,7 @@ class NodeRepository extends StatusAwareRepository
                 // Dots are forbidden in field definitions
                 $baseKey = $simpleQB->getParameterKey($key);
 
-                if (false !== strpos($key, 'nodeType.')) {
-                    if (!$this->hasJoinedNodeType($qb, static::NODE_ALIAS)) {
-                        $qb->addSelect(static::NODETYPE_ALIAS);
-                        $qb->innerJoin(
-                            static::NODE_ALIAS . '.nodeType',
-                            static::NODETYPE_ALIAS
-                        );
-                    }
-
-                    $prefix = static::NODETYPE_ALIAS . '.';
-                    $key = str_replace('nodeType.', '', $key);
-                } elseif (false !== strpos($key, 'aNodes.')) {
+                if (false !== strpos($key, 'aNodes.')) {
                     if (!$this->joinExists($qb, static::NODE_ALIAS, 'a_n')) {
                         $qb->innerJoin(
                             static::NODE_ALIAS . '.aNodes',
