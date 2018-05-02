@@ -73,24 +73,20 @@ class AddNodeType extends AbstractType
             'label' => 'node.dynamicNodeName',
             'required' => false,
             'attr' => [
-                'class' => 'rz-boolean-checkbox',
                 'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation',
             ],
         ])
         ->add('visible', 'checkbox', [
             'label' => 'visible',
             'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
         ->add('locked', 'checkbox', [
             'label' => 'locked',
             'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
         ->add('hideChildren', 'checkbox', [
             'label' => 'hiding-children',
             'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
         ->add('status', 'choice', [
             'label' => 'node.status',
