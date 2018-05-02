@@ -36,7 +36,6 @@ use RZ\Roadiz\Utils\Doctrine\ORM\Filter\BNodesFilter;
 use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodesSourcesNodeFilter;
 use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodeTranslationFilter;
 use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodeTypeFilter;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class DoctrineFiltersServiceProvider implements ServiceProviderInterface
 {
@@ -45,7 +44,7 @@ class DoctrineFiltersServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $pimple)
     {
-        $pimple->extend('dispatcher', function (EventDispatcher $dispatcher) {
+        $pimple->extend('dispatcher', function ($dispatcher) {
             $dispatcher->addSubscriber(new NodeTypeFilter());
             $dispatcher->addSubscriber(new ANodesFilter());
             $dispatcher->addSubscriber(new BNodesFilter());
