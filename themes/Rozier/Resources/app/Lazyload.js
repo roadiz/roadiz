@@ -315,11 +315,12 @@ export default class Lazyload {
             add: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
             remove: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
             after_add: function (collection, element) {
-                // Codemirror
                 _this.initMarkdownEditors(element)
                 _this.initJsonEditors(element)
                 _this.initCssEditors(element)
                 _this.initYamlEditors(element)
+                _this.initBootstrapSwitches(element)
+                _this.initColorPickers(element)
 
                 let $vueComponents = element.find('[data-vuejs]')
                 // Create each component
@@ -365,13 +366,7 @@ export default class Lazyload {
         this.initCssEditors()
         this.initYamlEditors()
         this.initFilterBars()
-
-        const $colorPickerInput = $('.colorpicker-input')
-
-        // Init colorpicker
-        if ($colorPickerInput.length) {
-            $colorPickerInput.minicolors()
-        }
+        this.initColorPickers()
 
         // Animate actions menu
         if ($('.actions-menu').length && isMobile.any() === null) {
@@ -402,8 +397,24 @@ export default class Lazyload {
         }
     }
 
-    initBootstrapSwitches () {
+    initColorPickers ($scope) {
+        let $colorPickerInput = $('.colorpicker-input')
+
+        if ($scope && $scope.length) {
+            $colorPickerInput = $scope.find('.colorpicker-input')
+        }
+
+        // Init colorpicker
+        if ($colorPickerInput.length) {
+            $colorPickerInput.minicolors()
+        }
+    }
+
+    initBootstrapSwitches ($scope) {
         let $checkboxes = $('.rz-boolean-checkbox')
+        if ($scope && $scope.length) {
+            $checkboxes = $scope.find('.rz-boolean-checkbox')
+        }
 
         // Switch checkboxes
         $checkboxes.bootstrapSwitch({

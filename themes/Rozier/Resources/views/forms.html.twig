@@ -395,11 +395,15 @@
 
 {% block form_row -%}
     {% set rowClasses = [
-        attr.class,
         'uk-form-row',
         'form-col-' ~ form.vars.block_prefixes[1],
         'form-col-' ~ form.vars.name|replace('_','-')
     ] %}
+    {% if attr.class %}
+        {% set rowClasses = rowClasses|merge([
+            attr.class ~ '-wrapper'
+        ]) %}
+    {% endif %}
     <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group']|trans }}"{% endif %} class="{{ rowClasses|join(' ') }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
             {{- form_label(form) -}}
