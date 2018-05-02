@@ -225,4 +225,12 @@ class SimpleQueryBuilder
 
         return false;
     }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function getQueryBuilder()
+    {
+        return $this->queryBuilder;
+    }
 }
