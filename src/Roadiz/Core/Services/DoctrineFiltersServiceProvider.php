@@ -36,6 +36,7 @@ use RZ\Roadiz\Utils\Doctrine\ORM\Filter\BNodesFilter;
 use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodesSourcesNodeFilter;
 use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodeTranslationFilter;
 use RZ\Roadiz\Utils\Doctrine\ORM\Filter\NodeTypeFilter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DoctrineFiltersServiceProvider implements ServiceProviderInterface
 {
