@@ -107,12 +107,19 @@ class FilterQueryBuilderCriteriaEvent extends Event
         return $this->value;
     }
 
-
     /**
      * @return bool
      */
     public function supports()
     {
         return $this->entityClass === $this->actualEntityName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActualEntityName()
+    {
+        return $this->actualEntityName;
     }
 }
