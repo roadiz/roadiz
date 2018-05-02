@@ -74,6 +74,9 @@ class EntityGenerator
         if ($field->getType() === AbstractField::YAML_T) {
             return new YamlFieldGenerator($field);
         }
+        if ($field->getType() === AbstractField::COLLECTION_T) {
+            return new CollectionFieldGenerator($field);
+        }
         if ($field->getType() === AbstractField::CUSTOM_FORMS_T) {
             return new CustomFormsFieldGenerator($field);
         }

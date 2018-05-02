@@ -47,6 +47,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Forms\NodeTreeType;
 
 class NodeSourceType extends AbstractType
@@ -396,6 +397,26 @@ class NodeSourceType extends AbstractType
                         'preferred_choices' => $countries,
                     ]);
                 }
+                break;
+            case NodeTypeField::COLLECTION_T:
+                $configuration = Yaml::parse($field->getDefaultValues());
+                $collectionOptions = [
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'attr' => [
+                        'class' => 'rz-collection-form-type'
+                    ],
+                    'entry_options' => [
+                        'label' => false,
+                    ]
+                ];
+                if (isset($configuration['entry_type'])) {
+                    $reflectionClass = new \ReflectionClass($configuration['entry_type']);
+                    if ($reflectionClass->isSubclassOf(AbstractType::class)) {
+                        $collectionOptions['entry_type'] = $reflectionClass->getName();
+                    }
+                }
+                $options = array_merge_recursive($options, $collectionOptions);
                 break;
         }
 

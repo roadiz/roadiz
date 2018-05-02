@@ -4203,6 +4203,10 @@
         <source>country.type</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target></target>
+      </trans-unit>
 
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
@@ -6675,6 +6679,13 @@
             <target></target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
+
         <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target></target>

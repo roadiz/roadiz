@@ -30,6 +30,7 @@
 namespace Themes\Rozier\Forms;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField as NodeTypeFieldConstraint;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
@@ -167,7 +168,7 @@ class NodeTypeFieldType extends AbstractType
                 'class' => 'uk-form node-type-field-form',
             ],
             'constraints' => [
-                new \RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField(),
+                new NodeTypeFieldConstraint(),
             ]
         ]);
 

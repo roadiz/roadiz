@@ -28,7 +28,6 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Doctrine\ORM\QueryBuilder;
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;

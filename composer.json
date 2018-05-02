@@ -36,8 +36,8 @@
     },
     "require": {
         "php":                         ">=5.6",
-        "roadiz/models":               "0.22.*",
-        "roadiz/documents":            "0.22.*",
+        "roadiz/models":               "dev-develop",
+        "roadiz/documents":            "dev-develop",
         "doctrine/orm":                "^2.5",
         "symfony/yaml":                "3.2.*",
         "symfony/console":             "2.8.*",
