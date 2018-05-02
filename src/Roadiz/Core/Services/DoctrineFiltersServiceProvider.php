@@ -44,7 +44,7 @@ class DoctrineFiltersServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $pimple)
     {
-        $pimple->extend('dispatcher', function ($dispatcher) {
+        $pimple->extend('dispatcher', function (EventDispatcherInterface $dispatcher) {
             $dispatcher->addSubscriber(new NodeTypeFilter());
             $dispatcher->addSubscriber(new ANodesFilter());
             $dispatcher->addSubscriber(new BNodesFilter());
