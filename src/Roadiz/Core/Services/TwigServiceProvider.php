@@ -168,6 +168,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new \Twig_Extensions_Extension_Intl());
             $extensions->add($c['twig.routingExtension']);
             $extensions->add(new \Twig_Extensions_Extension_Text());
+            $extensions->add(new \Twig_Extensions_Extension_Array());
+            $extensions->add(new \Twig_Extensions_Extension_Date());
             $extensions->add(new BlockRenderExtension($c));
             $extensions->add(new UrlExtension(
                 $c['requestStack'],
