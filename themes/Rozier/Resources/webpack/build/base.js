@@ -122,6 +122,7 @@ const getWebpackConfigBase = (config) => {
                 test: /\.(eot|svg|ttf|woff|woff2)$/,
                 loader: 'url-loader',
                 options: {
+                    publicPath: '../',
                     name: config.assets_name_font
                 }
             }, {
