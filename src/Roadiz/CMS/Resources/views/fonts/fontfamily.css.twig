@@ -1,47 +1,36 @@
+{% spaceless %}
 {% for item in fonts %}
 {% set font = item.font %}
+{% set fontAlternatives = [
+    'url(\'' ~ url('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "eot"}) ~ '?#iefix\') format(\'embedded-opentype\')'
+] %}
+{% if font.getWOFF2Filename %}
+{% set fontAlternatives = fontAlternatives|merge([
+    'url(\'' ~ url('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "woff2"}) ~ '\') format(\'woff2\')'
+]) %}
+{% endif %}
+{% if font.getWOFFFilename %}
+{% set fontAlternatives = fontAlternatives|merge([
+    'url(\'' ~ url('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "woff"}) ~ '\') format(\'woff\')'
+]) %}
+{% endif %}
+{% if font.getOTFFilename %}
+{% set fontAlternatives = fontAlternatives|merge([
+    'url(\'' ~ url('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "otf"}) ~ '\') format(\'opentype\')'
+]) %}
+{% endif %}
+{% if font.getSVGFilename %}
+{% set fontAlternatives = fontAlternatives|merge([
+    'url(\'' ~ url('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "svg"}) ~ '\') format(\'svg\')'
+]) %}
+{% endif %}
 @font-face {
     font-family: "{{ font.hash }}";
-    src: url('{{ url('FontFile', {
-            'filename'  : font.hash,
-            'variant'   : font.variant,
-            'extension' : "eot",
-        }) }}');
-    src: url('{{ url('FontFile', {
-            'filename'  : font.hash,
-            'variant'   : font.variant,
-            'extension' : "eot",
-        }) }}?#iefix') format('embedded-opentype'),
-        {% if font.getWOFF2Filename %}
-        url('{{ url('FontFile', {
-            'filename'  : font.hash,
-            'variant'   : font.variant,
-            'extension' : "woff2",
-        }) }}') format('woff2'),
-        {% endif %}
-        {% if font.getWOFFFilename %}
-        url('{{ url('FontFile', {
-            'filename'  : font.hash,
-            'variant'   : font.variant,
-            'extension' : "woff",
-        }) }}') format('woff'),
-        {% endif %}
-        {% if font.getOTFFilename %}
-        url('{{ url('FontFile', {
-            'filename'  : font.hash,
-            'variant'   : font.variant,
-            'extension' : "otf",
-        }) }}') format('opentype'),
-        {% endif %}
-        {% if font.getSVGFilename %}
-        url('{{ url('FontFile', {
-            'filename'  : font.hash,
-            'variant'   : font.variant,
-            'extension' : "svg",
-        }) }}') format('svg')
-        {% endif %};
+    src: url('{{ url('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "eot" }) }}');
+    src: {{ fontAlternatives|join(', \n')|raw }};
 {% for key, value in font.fontVariantInfos %}
     font-{{ key }}: {{ value }};
 {% endfor %}
 }
 {% endfor %}
+{% endspaceless %}
