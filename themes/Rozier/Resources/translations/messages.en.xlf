@@ -5871,6 +5871,54 @@
           <source>font_variant.light.italic</source>
           <target xml:lang="en">Light italic</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target xml:lang="en" state="translated">Thin</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target xml:lang="en" state="translated">Thin italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target xml:lang="en" state="translated">Extra light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target xml:lang="en" state="translated">Extra light italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target xml:lang="en" state="translated">Extra bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target xml:lang="en" state="translated">Extra bold italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target xml:lang="en" state="translated">Semi bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target xml:lang="en" state="translated">Semi bold italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target xml:lang="en" state="translated">Medium</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target xml:lang="en" state="translated">Medium italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target xml:lang="en" state="translated">Black</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target xml:lang="en" state="translated">Black italic</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="update.roadiz" approved="yes">
           <source>update.roadiz</source>
           <target xml:lang="en">Update Roadiz</target>
@@ -6709,6 +6757,15 @@
             <source>multiple-provider.type</source>
             <target xml:lang="en" state="translated">Multiple relationship using a Provider</target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+            <source>collection.type</source>
+            <target xml:lang="en" state="translated">Custom collection</target>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target xml:lang="en" state="translated">PHP class %classname% must extend AbstractType class.</target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="pictureUrl">
             <source>pictureUrl</source>

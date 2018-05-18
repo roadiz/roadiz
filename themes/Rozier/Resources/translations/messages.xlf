@@ -5981,6 +5981,59 @@
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
@@ -6856,6 +6909,17 @@
             <target></target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="collection.type">
+            <source>collection.type</source>
+            <target></target>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
+
 
         <trans-unit xml:space="preserve" id="pictureUrl">
             <source>pictureUrl</source>

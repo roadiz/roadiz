@@ -50,6 +50,18 @@ class Font extends AbstractDateTimed
     const BOLD_ITALIC = 3;
     const LIGHT = 4;
     const LIGHT_ITALIC = 5;
+    const MEDIUM = 6;
+    const MEDIUM_ITALIC = 7;
+    const BLACK = 8;
+    const BLACK_ITALIC = 9;
+    const THIN = 10;
+    const THIN_ITALIC = 11;
+    const EXTRA_LIGHT = 12;
+    const EXTRA_LIGHT_ITALIC = 13;
+    const SEMI_BOLD = 14;
+    const SEMI_BOLD_ITALIC = 15;
+    const EXTRA_BOLD = 16;
+    const EXTRA_BOLD_ITALIC = 17;
 
     const MIME_DEFAULT = 'application/octet-stream';
     const MIME_SVG = 'image/svg+xml';
@@ -65,12 +77,24 @@ class Font extends AbstractDateTimed
      * @var array
      */
     public static $variantToHuman = [
-        Font::REGULAR => 'font_variant.regular',
-        Font::ITALIC => 'font_variant.italic',
-        Font::BOLD => 'font_variant.bold',
-        Font::BOLD_ITALIC => 'font_variant.bold.italic',
-        Font::LIGHT => 'font_variant.light',
-        Font::LIGHT_ITALIC => 'font_variant.light.italic',
+        Font::THIN => 'font_variant.thin',                      // 100
+        Font::THIN_ITALIC => 'font_variant.thin.italic',        // 100
+        Font::EXTRA_LIGHT => 'font_variant.extra_light',               // 200
+        Font::EXTRA_LIGHT_ITALIC => 'font_variant.extra_light.italic', // 200
+        Font::LIGHT => 'font_variant.light',                    // 300
+        Font::LIGHT_ITALIC => 'font_variant.light.italic',      // 300
+        Font::REGULAR => 'font_variant.regular',                    // 400
+        Font::ITALIC => 'font_variant.italic',                      // 400
+        Font::MEDIUM => 'font_variant.medium',                  // 500
+        Font::MEDIUM_ITALIC => 'font_variant.medium.italic',    // 500
+        Font::SEMI_BOLD => 'font_variant.semi_bold',                 // 600
+        Font::SEMI_BOLD_ITALIC => 'font_variant.semi_bold.italic',   // 600
+        Font::BOLD => 'font_variant.bold',                      // 700
+        Font::BOLD_ITALIC => 'font_variant.bold.italic',        // 700
+        Font::EXTRA_BOLD => 'font_variant.extra_bold',                // 800
+        Font::EXTRA_BOLD_ITALIC => 'font_variant.extra_bold.italic',  // 800
+        Font::BLACK => 'font_variant.black',                    // 900
+        Font::BLACK_ITALIC => 'font_variant.black.italic',      // 900
     ];
 
     /**
@@ -113,11 +137,84 @@ class Font extends AbstractDateTimed
      * * style
      * * weight
      *
+     * @see https://developer.mozilla.org/fr/docs/Web/CSS/font-weight
      * @return array
      */
     public function getFontVariantInfos()
     {
         switch ($this->getVariant()) {
+            case static::SEMI_BOLD_ITALIC:
+                return [
+                    'style' => 'italic',
+                    'weight' => 600,
+                ];
+
+            case static::SEMI_BOLD:
+                return [
+                    'style' => 'normal',
+                    'weight' => 600,
+                ];
+
+            case static::EXTRA_BOLD_ITALIC:
+                return [
+                    'style' => 'italic',
+                    'weight' => 800,
+                ];
+
+            case static::EXTRA_BOLD:
+                return [
+                    'style' => 'normal',
+                    'weight' => 800,
+                ];
+
+            case static::EXTRA_LIGHT_ITALIC:
+                return [
+                    'style' => 'italic',
+                    'weight' => 200,
+                ];
+
+            case static::EXTRA_LIGHT:
+                return [
+                    'style' => 'normal',
+                    'weight' => 200,
+                ];
+
+            case static::THIN_ITALIC:
+                return [
+                    'style' => 'italic',
+                    'weight' => 100,
+                ];
+
+            case static::THIN:
+                return [
+                    'style' => 'normal',
+                    'weight' => 100,
+                ];
+
+            case static::BLACK_ITALIC:
+                return [
+                    'style' => 'italic',
+                    'weight' => 900,
+                ];
+
+            case static::BLACK:
+                return [
+                    'style' => 'normal',
+                    'weight' => 900,
+                ];
+
+            case static::MEDIUM_ITALIC:
+                return [
+                    'style' => 'italic',
+                    'weight' => 500,
+                ];
+
+            case static::MEDIUM:
+                return [
+                    'style' => 'normal',
+                    'weight' => 500,
+                ];
+
             case static::LIGHT_ITALIC:
                 return [
                     'style' => 'italic',
