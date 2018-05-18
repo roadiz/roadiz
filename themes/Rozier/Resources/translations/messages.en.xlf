@@ -6758,15 +6758,6 @@
             <target xml:lang="en" state="translated">Multiple relationship using a Provider</target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="collection.type">
-            <source>collection.type</source>
-            <target xml:lang="en" state="translated">Custom collection</target>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
-            <source>classname_%classname%_must_extend_abstract_type_class</source>
-            <target xml:lang="en" state="translated">PHP class %classname% must extend AbstractType class.</target>
-            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
-        </trans-unit>
       <trans-unit xml:space="preserve" id="pictureUrl">
             <source>pictureUrl</source>
             <target xml:lang="en" state="translated">Avatar picture URL</target>
