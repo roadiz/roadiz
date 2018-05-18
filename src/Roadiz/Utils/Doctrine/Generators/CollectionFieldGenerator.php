@@ -35,19 +35,5 @@ namespace RZ\Roadiz\Utils\Doctrine\Generators;
  */
 class CollectionFieldGenerator extends NonVirtualFieldGenerator
 {
-    /**
-     * @return string
-     */
-    public function getFieldAlternativeGetter()
-    {
-        $assignation = '$this->'.$this->field->getName();
-        return '
-    /**
-     * @return mixed
-     */
-    public function '.$this->field->getGetterName().'AsObject()
-    {
-        return json_decode('.$assignation.', true);
-    }'.PHP_EOL;
-    }
+
 }
