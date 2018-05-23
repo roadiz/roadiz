@@ -31,7 +31,6 @@ import 'codemirror/mode/gfm/gfm.js'
 
 import 'jquery-ui'
 import 'jquery-ui/ui/widgets/autocomplete'
-import './components/login/login'
 
 import $ from 'jquery'
 import Rozier from './Rozier'

@@ -44,7 +44,7 @@
                             href="#"
                             @click.prevent="onRemoveItemButtonClick()"
                             class="uk-button uk-button-mini document-link uk-button-danger rz-no-ajax-link">
-                            <i class="uk-icon-rz-minus"></i>
+                            <i class="uk-icon-rz-trash-o"></i>
                         </a>
                     </div>
                     <template v-if="document.isEmbed">
