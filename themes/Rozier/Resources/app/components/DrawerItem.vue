@@ -28,7 +28,7 @@
                     </ajax-link><a href="#"
                                    class="uk-button uk-button-mini link uk-button-danger rz-no-ajax-link"
                                    @click.prevent="onRemoveItemButtonClick()">
-                    <i class="uk-icon-rz-minus"></i>
+                    <i class="uk-icon-rz-trash-o"></i>
                 </a>
                 </div>
                 <a href="#" class="uk-button uk-button-mini link-button">

@@ -12,7 +12,7 @@
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                <legend>{% trans %}are_you_sure.delete.tag{% endtrans %}</legend>
+                <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.tag{% endtrans %}</legend>
                 <a href="{{ path('tagsHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
                 <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
             </fieldset>
