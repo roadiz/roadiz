@@ -189,6 +189,19 @@
     }
 }
 
+.uk-button-danger {
+    background: rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.8);
+    border-color: @alert-color;
+    color: white;
+    text-shadow: none;
+    -webkit-font-smoothing: subpixel-antialiased;
+
+    &:hover, &:active, &:focus {
+        background: rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 1);
+        border-color: @alert-color;
+        color: white;
+    }
+}
 
 .uk-button-primary {
     background: @contrast-color-darker;

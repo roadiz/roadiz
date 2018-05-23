@@ -9,15 +9,15 @@
     </header>
 
     <article class="content content-delete content-no-action-menu">
-    	{% form_theme form '@Rozier/forms.html.twig' %}
+        {% form_theme form '@Rozier/forms.html.twig' %}
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
-    	    <fieldset data-uk-margin>
-    	    	<legend>{% trans %}are_you_sure.delete.user{% endtrans %}</legend>
-    	    	<a href="{{ path('usersHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-    	    	<button class="uk-button uk-button-danger" type="submit"><i class='uk-icon-trash-o'></i> {% trans %}delete{% endtrans %}</button>
-       		</fieldset>
-    	</form>
+            <fieldset data-uk-margin>
+                <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.user{% endtrans %}</legend>
+                <a href="{{ path('usersHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class='uk-icon-trash-o'></i> {% trans %}delete{% endtrans %}</button>
+            </fieldset>
+        </form>
     </article>
 </section>
 {% endblock %}
