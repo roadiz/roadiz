@@ -3,21 +3,20 @@
     {# Delete current node #}
 
     {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.locked ) %}
-
         {% if node.isDeleted %}
         <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesUndeletePage', { nodeId: node.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-untrash"></i></span>
             <span class="label"><span class="label-text">{% trans %}undelete{% endtrans %}</span></span>
         </a>
-        {% else %}
+        {% elseif node.nodeSources|length == 1 or source.translation.defaultTranslation  %}
         <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-trash"></i></span>
-            <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
+            <span class="label"><span class="label-text">{% trans %}delete.node{% endtrans %}</span></span>
         </a>
         {% endif %}
         {% if node.nodeSources|length > 1 and source %}
         <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesDeleteSourcePage', { nodeSourceId: source.id}) }}">
-            <span class="icon-container"><i class="uk-icon-rz-trash"></i></span>
+            <span class="icon-container"><i class="uk-icon-flag"></i></span>
             <span class="label"><span class="label-text">{% trans %}delete.translation{% endtrans %}</span></span>
         </a>
         {% endif %}
