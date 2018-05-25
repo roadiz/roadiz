@@ -23,7 +23,10 @@
 	<input type="hidden" name="{{ full_name }}" value="{{ node.getId }}" />
 
     <div class="node-links">
-        <a href="{{ path('nodesEditPage', { nodeId: node.getId}) }}" class="uk-button node-link uk-button-mini">
+        <a href="{{ path('nodesEditSourcePage', {
+            nodeId: node.getId,
+            translationId: node.nodeSources.first.translation.id
+        }) }}" class="uk-button node-link uk-button-mini">
             <i class="uk-icon-rz-pencil"></i>
             <span class="label">{% trans %}edit.node{% endtrans %}</span>
         </a>
