@@ -5297,11 +5297,19 @@
 
       <trans-unit xml:space="preserve" id="more.documents">
           <source>more.documents</source>
-          <target></target>
+          <target>Document drawer explorer button label</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.nodes">
           <source>more.nodes</source>
-          <target></target>
+          <target>Nodes drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types">
+          <source>more.node_types</source>
+          <target>Node Types drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags">
+          <source>more.tags</source>
+          <target>Tag drawer explorer button label</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>

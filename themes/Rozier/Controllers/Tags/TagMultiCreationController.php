@@ -59,7 +59,10 @@ class TagMultiCreationController extends RozierApp
             if ($form->isValid()) {
                 $data = $form->getData();
                 $names = explode(',', $data['names']);
-
+                $names = array_map('trim', $names);
+                $names = array_filter($names);
+                $names = array_unique($names);
+                
                 /*
                  * Get latest position to add tags after.
                  */

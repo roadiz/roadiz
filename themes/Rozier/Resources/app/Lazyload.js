@@ -246,6 +246,22 @@ export default class Lazyload {
         }, 100)
     }
 
+    refreshCodemirrorEditor () {
+        console.log('Refreshing all codemirror instances…')
+        for (let editor of this.markdownEditors) {
+            editor.forceEditorUpdate()
+        }
+        for (let editor of this.yamlEditors) {
+            editor.forceEditorUpdate()
+        }
+        for (let editor of this.cssEditors) {
+            editor.forceEditorUpdate()
+        }
+        for (let editor of this.jsonEditors) {
+            editor.forceEditorUpdate()
+        }
+    }
+
     /**
      * Apply content to main content
      * @param {[type]} data [description]
