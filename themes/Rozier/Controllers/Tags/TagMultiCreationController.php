@@ -62,7 +62,7 @@ class TagMultiCreationController extends RozierApp
                 $names = array_map('trim', $names);
                 $names = array_filter($names);
                 $names = array_unique($names);
-                
+
                 /*
                  * Get latest position to add tags after.
                  */

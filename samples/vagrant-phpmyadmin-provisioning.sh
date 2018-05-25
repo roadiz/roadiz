@@ -33,7 +33,7 @@ echo -e "\n--- Configure phpmyadmin to connect automatically for roadiz DB\n"
 sudo cp -a /var/www/samples/vagrant/phpmyadmin/config.inc.php ${PHPMYADMIN_DIR}/config.inc.php;
 
 
-export PRIVATE_IP=`/sbin/ifconfig eth1 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
+export PRIVATE_IP=`/sbin/ifconfig enp0s8 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}'`
 
 echo -e "\n-----------------------------------------------------------------"
 echo -e "\n------------------- Your phpmyadmin is ready --------------------"
