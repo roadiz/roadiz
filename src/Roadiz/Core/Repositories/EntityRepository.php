@@ -168,6 +168,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     protected function buildComparison($value, $prefix, $key, $baseKey, QueryBuilder $qb)
     {
         $simpleQB = new SimpleQueryBuilder($qb);
+        $baseKey = $simpleQB->getParameterKey($baseKey);
         return $simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey);
     }
 

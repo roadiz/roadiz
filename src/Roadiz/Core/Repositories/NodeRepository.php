@@ -1246,13 +1246,14 @@ class NodeRepository extends StatusAwareRepository
     {
         $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
+            $baseKey = $simpleQB->getParameterKey($key);
             if ($key == 'translation') {
                 if (!$this->hasJoinedNodesSources($qb, $alias)) {
                     $qb->innerJoin($alias . '.nodeSources', static::NODESSOURCES_ALIAS);
                 }
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, static::NODESSOURCES_ALIAS . '.', $key, $key));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, static::NODESSOURCES_ALIAS . '.', $key, $baseKey));
             } else {
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $key));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $baseKey));
             }
         }
 
