@@ -123,15 +123,28 @@ class AjaxTagsController extends AbstractAjaxController
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
+        $arrayFilter = [];
+        $defaultOrder = [
+            'createdAt' => 'DESC'
+        ];
+
+        if ($request->get('tagId') > 0) {
+            $parentTag = $this->get('em')
+                ->find(
+                    Tag::class,
+                    $request->get('tagId')
+                );
+
+            $arrayFilter['parent'] = $parentTag;
+        }
+
         /*
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
             Tag::class,
-            [],
-            [
-                'createdAt' => 'DESC'
-            ]
+            $arrayFilter,
+            $defaultOrder
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
