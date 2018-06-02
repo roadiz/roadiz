@@ -47,7 +47,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('timezone')
                 ->defaultValue('Europe/Paris')
             ->end()
-            ->arrayNode('doctrine')
+            ->arrayNode('doctrine')->addDefaultsIfNotSet()
                 ->children()
                     ->enumNode('driver')
                         ->isRequired()

@@ -64,6 +64,15 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\NodesSourcesUrlsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\OPCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -168,7 +177,21 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         };
 
         $container['dispatcher'] = function () {
-            return new EventDispatcher();
+            $dispatcher = new EventDispatcher();
+            $dispatcher->addSubscriber(new SaveSessionListener());
+            $dispatcher->addSubscriber(new AppCacheEventSubscriber());
+            $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());
+            $dispatcher->addSubscriber(new DoctrineCacheEventSubscriber());
+            $dispatcher->addSubscriber(new NodesSourcesUrlsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new OPCacheEventSubscriber());
+            $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
+            $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
+            $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
+            $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
+            $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
+            return $dispatcher;
         };
 
         $container['kernel'] = $this;
@@ -263,9 +286,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
         $dispatcher->addSubscriber($this->container['routeListener']);
         $dispatcher->addSubscriber($this->container['firewall']);
-        $dispatcher->addSubscriber(new SaveSessionListener());
-        $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
-        $dispatcher->addSubscriber(new ExceptionSubscriber($this, $this->container['themeResolver'], $this->container['logger'], $this->isDebug()));
+        $dispatcher->addSubscriber(new ExceptionSubscriber(
+            $this,
+            $this->container['themeResolver'],
+            $this->container['logger'],
+            $this->isDebug()
+        ));
         $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
 
@@ -277,9 +303,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
                 $dispatcher->addSubscriber(new PreviewModeSubscriber($this->container));
             }
         }
-
-        $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
-        $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
 
         /*
          * If debug, alter HTML responses to append Debug panel to view

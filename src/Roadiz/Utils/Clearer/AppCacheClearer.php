@@ -45,11 +45,12 @@ class AppCacheClearer extends Clearer
             if ($fs->exists($this->getCacheDir() . '/http_cache')) {
                 $finder->in($this->getCacheDir() . '/http_cache');
                 $fs->remove($finder);
-                $this->output .= 'Application cache has been purged.';
-
+                $this->output .= 'Application HTTP cache has been purged.';
                 return true;
             }
         }
+
+        $this->output .= 'No application HTTP cache found.';
 
         return false;
     }

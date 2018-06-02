@@ -37,6 +37,8 @@ use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Events\CacheEvents;
+use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
@@ -45,6 +47,7 @@ use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -246,7 +249,7 @@ class InstallApp extends AppController
             if ($doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {
                 /*
-                 * Save informations
+                 * Save information
                  */
                 try {
                     /*
@@ -254,18 +257,24 @@ class InstallApp extends AppController
                      */
                     $this->get('session')->invalidate();
 
-                    $clearers = [
-                        new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
-                        new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
-                        new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
-                        new ConfigurationCacheClearer($this->get('kernel')->getCacheDir()),
-                        // Force clear prod configuration too
-                        new ConfigurationCacheClearer(ROADIZ_ROOT . '/cache/prod'),
-                        new OPCacheClearer(),
-                    ];
-                    foreach ($clearers as $clearer) {
-                        $clearer->clear();
-                    }
+                    /** @var EventDispatcher $dispatcher */
+                    $dispatcher = $this->get('dispatcher');
+
+                    // Clear cache for install
+                    $installEvent = new FilterCacheEvent($this->get('kernel'));
+                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $installEvent);
+
+                    // Clear cache for prod
+                    $prodKernel = new Kernel('prod', false);
+                    $prodKernel->boot();
+                    $prodEvent = new FilterCacheEvent($prodKernel);
+                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodEvent);
+
+                    // Clear cache for prod preview
+                    $prodPreviewKernel = new Kernel('prod', false, true);
+                    $prodPreviewKernel->boot();
+                    $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
+                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);
 
                     /*
                      * Force redirect to avoid resending form when refreshing page

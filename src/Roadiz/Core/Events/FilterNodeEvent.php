@@ -39,11 +39,19 @@ class FilterNodeEvent extends Event
 {
     protected $node;
 
+    /**
+     * FilterNodeEvent constructor.
+     *
+     * @param Node $node
+     */
     public function __construct(Node $node)
     {
         $this->node = $node;
     }
 
+    /**
+     * @return Node
+     */
     public function getNode()
     {
         return $this->node;
