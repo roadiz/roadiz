@@ -45,6 +45,7 @@ use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Client;
+use Solarium\Exception\HttpException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -54,7 +55,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SolariumSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var null|Client
+     */
     protected $solr;
+
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
     /**
      * @var EventDispatcherInterface
@@ -67,13 +75,17 @@ class SolariumSubscriber implements EventSubscriberInterface
 
     /**
      * SolariumSubscriber constructor.
-     * @param Client $solr
+     * @param Client|null $solr
      * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface $logger
      * @param HandlerFactory $handlerFactory
      */
-    public function __construct(Client $solr, EventDispatcherInterface $dispatcher, LoggerInterface $logger, HandlerFactory $handlerFactory)
-    {
+    public function __construct(
+        Client $solr = null,
+        EventDispatcherInterface $dispatcher,
+        LoggerInterface $logger,
+        HandlerFactory $handlerFactory
+    ) {
         $this->solr = $solr;
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
@@ -103,23 +115,27 @@ class SolariumSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Update or create solr document for current Node-source.
+     * Update or create Solr document for current Node-source.
      *
      * @param  FilterNodesSourcesEvent $event
      */
     public function onSolariumSingleUpdate(FilterNodesSourcesEvent $event)
     {
-        // Update Solr Serach engine if setup
+        // Update Solr Search engine if setup
         if (null !== $this->solr) {
-            $solrSource = new SolariumNodeSource(
-                $event->getNodeSource(),
-                $this->solr,
-                $this->dispatcher,
-                $this->handlerFactory,
-                $this->logger
-            );
-            $solrSource->getDocumentFromIndex();
-            $solrSource->updateAndCommit();
+            try {
+                $solrSource = new SolariumNodeSource(
+                    $event->getNodeSource(),
+                    $this->solr,
+                    $this->dispatcher,
+                    $this->handlerFactory,
+                    $this->logger
+                );
+                $solrSource->getDocumentFromIndex();
+                $solrSource->updateAndCommit();
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
     }
 
@@ -130,17 +146,21 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumSingleDelete(FilterNodesSourcesEvent $event)
     {
-        // Update Solr Serach engine if setup
+        // Update Solr Search engine if setup
         if (null !== $this->solr) {
-            $solrSource = new SolariumNodeSource(
-                $event->getNodeSource(),
-                $this->solr,
-                $this->dispatcher,
-                $this->handlerFactory,
-                $this->logger
-            );
-            $solrSource->getDocumentFromIndex();
-            $solrSource->removeAndCommit();
+            try {
+                $solrSource = new SolariumNodeSource(
+                    $event->getNodeSource(),
+                    $this->solr,
+                    $this->dispatcher,
+                    $this->handlerFactory,
+                    $this->logger
+                );
+                $solrSource->getDocumentFromIndex();
+                $solrSource->removeAndCommit();
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
     }
 
@@ -152,16 +172,20 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumNodeDelete(FilterNodeEvent $event)
     {
         if (null !== $this->solr) {
-            foreach ($event->getNode()->getNodeSources() as $nodeSource) {
-                $solrSource = new SolariumNodeSource(
-                    $nodeSource,
-                    $this->solr,
-                    $this->dispatcher,
-                    $this->handlerFactory,
-                    $this->logger
-                );
-                $solrSource->getDocumentFromIndex();
-                $solrSource->removeAndCommit();
+            try {
+                foreach ($event->getNode()->getNodeSources() as $nodeSource) {
+                    $solrSource = new SolariumNodeSource(
+                        $nodeSource,
+                        $this->solr,
+                        $this->dispatcher,
+                        $this->handlerFactory,
+                        $this->logger
+                    );
+                    $solrSource->getDocumentFromIndex();
+                    $solrSource->removeAndCommit();
+                }
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
             }
         }
     }
@@ -174,16 +198,20 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumNodeUpdate(FilterNodeEvent $event)
     {
         if (null !== $this->solr) {
-            foreach ($event->getNode()->getNodeSources() as $nodeSource) {
-                $solrSource = new SolariumNodeSource(
-                    $nodeSource,
-                    $this->solr,
-                    $this->dispatcher,
-                    $this->handlerFactory,
-                    $this->logger
-                );
-                $solrSource->getDocumentFromIndex();
-                $solrSource->updateAndCommit();
+            try {
+                foreach ($event->getNode()->getNodeSources() as $nodeSource) {
+                    $solrSource = new SolariumNodeSource(
+                        $nodeSource,
+                        $this->solr,
+                        $this->dispatcher,
+                        $this->handlerFactory,
+                        $this->logger
+                    );
+                    $solrSource->getDocumentFromIndex();
+                    $solrSource->updateAndCommit();
+                }
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
             }
         }
     }
@@ -196,15 +224,20 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumDocumentDelete(FilterDocumentEvent $event)
     {
-        if (null !== $this->solr) {
-            foreach ($event->getDocument()->getDocumentTranslations() as $documentTranslation) {
-                $solarium = new SolariumDocumentTranslation(
-                    $documentTranslation,
-                    $this->solr,
-                    $this->logger
-                );
-                $solarium->getDocumentFromIndex();
-                $solarium->removeAndCommit();
+        $document = $event->getDocument();
+        if (null !== $this->solr && $document instanceof Document) {
+            try {
+                foreach ($document->getDocumentTranslations() as $documentTranslation) {
+                    $solarium = new SolariumDocumentTranslation(
+                        $documentTranslation,
+                        $this->solr,
+                        $this->logger
+                    );
+                    $solarium->getDocumentFromIndex();
+                    $solarium->removeAndCommit();
+                }
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
             }
         }
     }
@@ -216,15 +249,20 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumDocumentUpdate(FilterDocumentEvent $event)
     {
-        if (null !== $this->solr) {
-            foreach ($event->getDocument()->getDocumentTranslations() as $documentTranslation) {
-                $solarium = new SolariumDocumentTranslation(
-                    $documentTranslation,
-                    $this->solr,
-                    $this->logger
-                );
-                $solarium->getDocumentFromIndex();
-                $solarium->updateAndCommit();
+        $document = $event->getDocument();
+        if (null !== $this->solr && $document instanceof Document) {
+            try {
+                foreach ($document->getDocumentTranslations() as $documentTranslation) {
+                    $solarium = new SolariumDocumentTranslation(
+                        $documentTranslation,
+                        $this->solr,
+                        $this->logger
+                    );
+                    $solarium->getDocumentFromIndex();
+                    $solarium->updateAndCommit();
+                }
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
             }
         }
     }
@@ -237,32 +275,36 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumTagUpdate(FilterTagEvent $event)
     {
         if (null !== $this->solr) {
-            $update = $this->solr->createUpdate();
-            $nodes = $event->getTag()->getNodes();
+            try {
+                $update = $this->solr->createUpdate();
+                $nodes = $event->getTag()->getNodes();
 
-            foreach ($nodes as $node) {
-                foreach ($node->getNodeSources() as $nodeSource) {
-                    $solrSource = new SolariumNodeSource(
-                        $nodeSource,
-                        $this->solr,
-                        $this->dispatcher,
-                        $this->handlerFactory,
-                        $this->logger
-                    );
-                    $solrSource->getDocumentFromIndex();
-                    $solrSource->update($update);
+                foreach ($nodes as $node) {
+                    foreach ($node->getNodeSources() as $nodeSource) {
+                        $solrSource = new SolariumNodeSource(
+                            $nodeSource,
+                            $this->solr,
+                            $this->dispatcher,
+                            $this->handlerFactory,
+                            $this->logger
+                        );
+                        $solrSource->getDocumentFromIndex();
+                        $solrSource->update($update);
+                    }
                 }
-            }
-            $this->solr->update($update);
+                $this->solr->update($update);
 
-            // then optimize
-            $optimizeUpdate = $this->solr->createUpdate();
-            $optimizeUpdate->addOptimize(true, true, 5);
-            $this->solr->update($optimizeUpdate);
-            // and commit
-            $finalCommitUpdate = $this->solr->createUpdate();
-            $finalCommitUpdate->addCommit(true, true, false);
-            $this->solr->update($finalCommitUpdate);
+                // then optimize
+                $optimizeUpdate = $this->solr->createUpdate();
+                $optimizeUpdate->addOptimize(true, true, 5);
+                $this->solr->update($optimizeUpdate);
+                // and commit
+                $finalCommitUpdate = $this->solr->createUpdate();
+                $finalCommitUpdate->addCommit(true, true, false);
+                $this->solr->update($finalCommitUpdate);
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
     }
 
@@ -274,31 +316,35 @@ class SolariumSubscriber implements EventSubscriberInterface
     public function onSolariumFolderUpdate(FilterFolderEvent $event)
     {
         if (null !== $this->solr) {
-            $update = $this->solr->createUpdate();
-            $documents = $event->getFolder()->getDocuments();
+            try {
+                $update = $this->solr->createUpdate();
+                $documents = $event->getFolder()->getDocuments();
 
-            /** @var Document $document */
-            foreach ($documents as $document) {
-                foreach ($document->getDocumentTranslations() as $documentTranslation) {
-                    $solarium = new SolariumDocumentTranslation(
-                        $documentTranslation,
-                        $this->solr,
-                        $this->logger
-                    );
-                    $solarium->getDocumentFromIndex();
-                    $solarium->update($update);
+                /** @var Document $document */
+                foreach ($documents as $document) {
+                    foreach ($document->getDocumentTranslations() as $documentTranslation) {
+                        $solarium = new SolariumDocumentTranslation(
+                            $documentTranslation,
+                            $this->solr,
+                            $this->logger
+                        );
+                        $solarium->getDocumentFromIndex();
+                        $solarium->update($update);
+                    }
                 }
-            }
-            $this->solr->update($update);
+                $this->solr->update($update);
 
-            // then optimize
-            $optimizeUpdate = $this->solr->createUpdate();
-            $optimizeUpdate->addOptimize(true, true, 5);
-            $this->solr->update($optimizeUpdate);
-            // and commit
-            $finalCommitUpdate = $this->solr->createUpdate();
-            $finalCommitUpdate->addCommit(true, true, false);
-            $this->solr->update($finalCommitUpdate);
+                // then optimize
+                $optimizeUpdate = $this->solr->createUpdate();
+                $optimizeUpdate->addOptimize(true, true, 5);
+                $this->solr->update($optimizeUpdate);
+                // and commit
+                $finalCommitUpdate = $this->solr->createUpdate();
+                $finalCommitUpdate->addCommit(true, true, false);
+                $this->solr->update($finalCommitUpdate);
+            } catch (HttpException $exception) {
+                $this->logger->error($exception->getMessage());
+            }
         }
     }
 }
