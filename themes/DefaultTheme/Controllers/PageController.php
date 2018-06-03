@@ -74,8 +74,15 @@ class PageController extends DefaultThemeApp
          * right into your front page.
          * Awesome isn’t it ?
          */
+        $response = $this->render('pages/page.html.twig', $this->assignation);
 
-        return $this->render('pages/page.html.twig', $this->assignation);
+        if (!$this->get('kernel')->isDebug() &&
+            !$this->get('kernel')->isPreview()) {
+            $response->setPublic();
+            $response->setSharedMaxAge(60*2);
+        }
+
+        return $response;
     }
 
     /**

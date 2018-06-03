@@ -27,17 +27,12 @@
  * @file clear_cache.php
  * @author Ambroise Maupate
  */
-use RZ\Roadiz\Core\Kernel;
+
+use RZ\Roadiz\Core\Events\CacheEvents;
+use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\HttpFoundation\Request;
-use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
-use RZ\Roadiz\Utils\Clearer\AssetsClearer;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 if (version_compare(phpversion(), '5.6.0', '<')) {
@@ -81,35 +76,17 @@ if ($request->query->has('env') && $request->query->get('env') == 'preview') {
 
 $kernel->boot();
 $kernel->container['request'] = $request;
-
-$clearers = [
-    // PROD
-    new AssetsClearer($kernel->getPublicCachePath()),
-    new RoutingCacheClearer($kernel->getCacheDir()),
-    new TemplatesCacheClearer($kernel->getCacheDir()),
-    new TranslationsCacheClearer($kernel->getCacheDir()),
-    new ConfigurationCacheClearer($kernel->getCacheDir()),
-    new NodesSourcesUrlsCacheClearer($kernel->get('nodesSourcesUrlCacheProvider')),
-    new AppCacheClearer($kernel->getCacheDir()),
-    new OPCacheClearer(),
-    // Keep doctrine at the end
-    new DoctrineCacheClearer($kernel->get('em'), $kernel),
-];
+/** @var EventDispatcher $dispatcher */
+$dispatcher = $kernel->get('dispatcher');
+$event = new FilterCacheEvent($kernel);
+$dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
+$dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
 
 $text = [
     'status' => 'ok',
-    'trace' => [],
-    'errors' => [],
+    'trace' => $event->getMessages(),
+    'errors' => $event->getErrors(),
 ];
-
-foreach ($clearers as $clearer) {
-    try {
-        $clearer->clear();
-        $text['trace'][] = $clearer->getOutput();
-    } catch (\Exception $e) {
-        $text['errors'][] = $e->getMessage();
-    }
-}
 
 $response = new JsonResponse($text);
 $response->send();
