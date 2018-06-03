@@ -61,7 +61,9 @@ class CacheController extends RozierApp
             $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
 
             // Clear cache for prod preview
-            $prodPreviewKernel = new Kernel('prod', false, true);
+            $kernelClass = get_class($this->get('kernel'));
+            /** @var Kernel $prodPreviewKernel */
+            $prodPreviewKernel = new $kernelClass('prod', false, true);
             $prodPreviewKernel->boot();
             $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
             $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);

@@ -259,19 +259,23 @@ class InstallApp extends AppController
 
                     /** @var EventDispatcher $dispatcher */
                     $dispatcher = $this->get('dispatcher');
+                    // Get real kernel class if Standard edition
+                    $kernelClass = get_class($this->get('kernel'));
 
                     // Clear cache for install
                     $installEvent = new FilterCacheEvent($this->get('kernel'));
                     $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $installEvent);
 
                     // Clear cache for prod
-                    $prodKernel = new Kernel('prod', false);
+                    /** @var Kernel $prodKernel */
+                    $prodKernel = new $kernelClass('prod', false);
                     $prodKernel->boot();
                     $prodEvent = new FilterCacheEvent($prodKernel);
                     $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodEvent);
 
                     // Clear cache for prod preview
-                    $prodPreviewKernel = new Kernel('prod', false, true);
+                    /** @var Kernel $prodPreviewKernel */
+                    $prodPreviewKernel = new $kernelClass('prod', false, true);
                     $prodPreviewKernel->boot();
                     $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
                     $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);
