@@ -70,6 +70,7 @@ use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\NodesSourcesUrlsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\OPCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\ReverseProxyCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
@@ -176,7 +177,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return new NullStopwatch();
         };
 
-        $container['dispatcher'] = function () {
+        $container['kernel'] = $this;
+        $container['stopwatch']->openSection();
+        $container['stopwatch']->start('registerServices');
+
+        $container->register(new YamlConfigurationServiceProvider());
+
+        $container['dispatcher'] = function ($c) {
             $dispatcher = new EventDispatcher();
             $dispatcher->addSubscriber(new SaveSessionListener());
             $dispatcher->addSubscriber(new AppCacheEventSubscriber());
@@ -188,17 +195,18 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
             $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
             $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
+
+            if (isset($c['config']['reverseProxyCache']) &&
+                count($c['config']['reverseProxyCache']['frontend']) > 0) {
+                $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
+            }
+
             $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
             $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
             return $dispatcher;
         };
 
-        $container['kernel'] = $this;
-        $container['stopwatch']->openSection();
-        $container['stopwatch']->start('registerServices');
-
-        $container->register(new YamlConfigurationServiceProvider());
         $container->register(new AssetsServiceProvider());
         $container->register(new BackofficeServiceProvider());
         $container->register(new DoctrineServiceProvider());

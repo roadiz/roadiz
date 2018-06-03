@@ -30,6 +30,8 @@
  */
 namespace RZ\Roadiz\Config;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -159,12 +161,13 @@ EOF
             ->append($this->addMailerNode())
             ->append($this->addAssetsNode())
             ->append($this->addSolrNode())
+            ->append($this->addReverseProxyCacheNode())
         ;
         return $builder;
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addMailerNode()
     {
@@ -201,7 +204,7 @@ EOF
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addAssetsNode()
     {
@@ -241,7 +244,7 @@ EOF
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addSolrNode()
     {
@@ -272,7 +275,38 @@ EOF
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addReverseProxyCacheNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('reverseProxyCache');
+
+        $node->children()
+                ->arrayNode('frontend')
+                    ->isRequired()
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                    ->children()
+                        ->scalarNode('host')
+                            ->isRequired()
+                            ->defaultValue('localhost')
+                        ->end()
+                        ->scalarNode('domainName')
+                            ->isRequired()
+                            ->defaultValue('localhost')
+                        ->end()
+                        ->scalarNode('timeout')->defaultValue(3)->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addMonologNode()
     {
