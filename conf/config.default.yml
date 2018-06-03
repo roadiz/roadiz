@@ -64,3 +64,16 @@ assetsProcessing:
 #            timeout: 3
 #            username: ""
 #            password: ""
+
+#
+# Reverse proxy invalidation
+#
+#reverseProxyCache:
+#    frontend:
+#        localhost:
+#            host: localhost
+#            domainName: roadiz.test
+#
+#        external:
+#            host: 127.0.0.1
+#            domainName: roadiz.test
