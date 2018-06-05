@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -68,7 +68,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
      */
     protected $viewer;
     /**
-     * @var ThemeResolver
+     * @var ThemeResolverInterface
      */
     private $themeResolver;
     /**
@@ -79,11 +79,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
     /**
      * ExceptionSubscriber constructor.
      * @param Kernel $kernel
-     * @param ThemeResolver $themeResolver
+     * @param ThemeResolverInterface $themeResolver
      * @param LoggerInterface $logger
      * @param bool $debug
      */
-    public function __construct(Kernel $kernel, ThemeResolver $themeResolver, LoggerInterface $logger, $debug = false)
+    public function __construct(Kernel $kernel, ThemeResolverInterface $themeResolver, LoggerInterface $logger, $debug = false)
     {
         $this->logger = $logger;
         $this->debug = $debug;

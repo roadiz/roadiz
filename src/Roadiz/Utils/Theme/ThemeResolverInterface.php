@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,32 +23,55 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ThemeServiceProvider.php
- * @author Ambroise Maupate
+ * @file ThemeResolverInterface.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Services;
 
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
-use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+namespace RZ\Roadiz\Utils\Theme;
 
-/**
- * Register Theme services for dependency injection container.
- */
-class ThemeServiceProvider implements ServiceProviderInterface
+use RZ\Roadiz\Core\Entities\Theme;
+
+interface ThemeResolverInterface
 {
-    public function register(Container $container)
-    {
-        /**
-         * @param Container $c
-         *
-         * @return ThemeResolverInterface
-         */
-        $container['themeResolver'] = function ($c) {
-            return new ThemeResolver($c['em'], $c['stopwatch'], $c['kernel']->isInstallMode());
-        };
+    /**
+     * @return Theme|null
+     */
+    public function getBackendTheme();
 
-        return $container;
-    }
+    /**
+     * @return string
+     */
+    public function getBackendClassName();
+
+    /**
+     * @param string $host
+     *
+     * @return Theme|null
+     */
+    public function findTheme($host);
+
+
+    /**
+     * @param string $classname
+     *
+     * @return Theme|null
+     */
+    public function findThemeByClass($classname);
+
+    /**
+     * @return Theme[]
+     */
+    public function findAll();
+
+    /**
+     * @param integer $id
+     *
+     * @return Theme|null
+     */
+    public function findById($id);
+
+    /**
+     * @return Theme[]
+     */
+    public function getFrontendThemes();
 }

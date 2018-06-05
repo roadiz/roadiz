@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -114,6 +115,7 @@ abstract class AppController extends Controller
      * @var string
      */
     protected static $themeDir = '';
+
     /**
      * @return string
      */
@@ -408,10 +410,13 @@ abstract class AppController extends Controller
      * Return the current Theme
      *
      * @return Theme|null
+     * @deprecated Theme will become static in next releases.
      */
     public function getTheme()
     {
         $this->container['stopwatch']->start('getTheme');
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->get('themeResolver');
         if (null === $this->theme) {
             $className = static::getCalledClass();
             while (!StringHandler::endsWith($className, "App")) {
@@ -424,9 +429,7 @@ abstract class AppController extends Controller
                     $className = "\\" . $className;
                 }
             }
-            $this->theme = $this->get('em')
-                ->getRepository(Theme::class)
-                ->findOneByClassName($className);
+            $this->theme = $themeResolver->findThemeByClass($className);
         }
         $this->container['stopwatch']->stop('getTheme');
         return $this->theme;
@@ -492,12 +495,16 @@ abstract class AppController extends Controller
     }
 
     /**
-     * @return Node
+     * @return Node|null
+     * @deprecated Theme root has never been used and will be removed.
      */
     protected function getRoot()
     {
         $theme = $this->getTheme();
-        return $theme->getRoot();
+        if (null !== $theme) {
+            return $theme->getRoot();
+        }
+        return null;
     }
 
     /**

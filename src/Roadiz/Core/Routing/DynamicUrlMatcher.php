@@ -35,7 +35,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -59,14 +59,14 @@ class DynamicUrlMatcher extends UrlMatcher
     /** @var bool */
     protected $preview;
     /**
-     * @var ThemeResolver
+     * @var ThemeResolverInterface
      */
     protected $themeResolver;
 
     /**
      * @param RequestContext $context
      * @param EntityManager $em
-     * @param ThemeResolver $themeResolver
+     * @param ThemeResolverInterface $themeResolver
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
      * @param bool $preview
@@ -74,7 +74,7 @@ class DynamicUrlMatcher extends UrlMatcher
     public function __construct(
         RequestContext $context,
         EntityManager $em,
-        ThemeResolver $themeResolver,
+        ThemeResolverInterface $themeResolver,
         Stopwatch $stopwatch = null,
         LoggerInterface $logger = null,
         $preview = false

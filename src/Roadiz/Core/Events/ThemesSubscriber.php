@@ -35,6 +35,7 @@ use Doctrine\DBAL\Schema\SchemaException;
 use RZ\Roadiz\Console\ThemeAwareCommandInterface;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -87,8 +88,10 @@ class ThemesSubscriber implements EventSubscriberInterface
          */
         if ($event->getCommand() instanceof ThemeAwareCommandInterface) {
             try {
+                /** @var ThemeResolverInterface $themeResolver */
+                $themeResolver = $this->kernel->get('themeResolver');
                 /** @var Theme $theme */
-                foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
+                foreach ($themeResolver->getFrontendThemes() as $theme) {
                     $feClass = $theme->getClassName();
                     call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
                 }
@@ -114,25 +117,23 @@ class ThemesSubscriber implements EventSubscriberInterface
     public function onKernelRequest(GetResponseEvent $event)
     {
         if ($event->isMasterRequest()) {
+            /** @var ThemeResolverInterface $themeResolver */
+            $themeResolver = $this->kernel->get('themeResolver');
             /*
              * Register Themes dependency injection
              */
             if (!$this->kernel->isInstallMode()) {
                 $this->stopwatch->start('backendDependencyInjection');
                 // Register back-end security scheme
-                $beClass = $this->kernel->container['themeResolver']->getBackendClassName();
-                if (null !== $beClass) {
-                    call_user_func([$beClass, 'setupDependencyInjection'], $this->kernel->getContainer());
-                }
+                call_user_func([$themeResolver->getBackendClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
                 $this->stopwatch->stop('backendDependencyInjection');
             }
 
             $this->stopwatch->start('themeDependencyInjection');
             // Register front-end security scheme
             /** @var Theme $theme */
-            foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
-                $feClass = $theme->getClassName();
-                call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
+            foreach ($themeResolver->getFrontendThemes() as $theme) {
+                call_user_func([$theme->getClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
             }
             $this->stopwatch->stop('themeDependencyInjection');
         }

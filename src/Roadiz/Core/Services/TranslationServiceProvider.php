@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -88,6 +89,8 @@ class TranslationServiceProvider implements ServiceProviderInterface
             $c['stopwatch']->start('initTranslator');
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
+            /** @var ThemeResolverInterface $themeResolver */
+            $themeResolver = $c['themeResolver'];
 
             $translator = new Translator(
                 $c['translator.locale'],
@@ -98,15 +101,14 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
             $translator->addLoader('xlf', new XliffFileLoader());
             $translator->addLoader('yml', new YamlFileLoader());
-            $classes = [$c['backendTheme']];
-            $classes = array_merge($classes, $c['frontendThemes']);
+            $classes = [$themeResolver->getBackendTheme()];
+            $classes = array_merge($classes, $themeResolver->getFrontendThemes());
 
             /*
              * DO NOT wake up entity manager in Install
              */
             if (!$kernel->isInstallMode()) {
-                $availableTranslations = $c['em']->getRepository(Translation::class)
-                                                 ->findAllAvailable();
+                $availableTranslations = $c['em']->getRepository(Translation::class)->findAllAvailable();
                 /** @var Translation $availableTranslation */
                 foreach ($availableTranslations as $availableTranslation) {
                     $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);
