@@ -158,11 +158,7 @@ class InstallCommand extends Command
 
     private function hasDefaultBackend()
     {
-        $default = $this->entityManager
-            ->getRepository(Theme::class)
-            ->findOneBy(["backendTheme" => true]);
-
-        return $default !== null ? true : false;
+        return true;
     }
 
     /**

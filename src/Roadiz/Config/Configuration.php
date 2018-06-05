@@ -162,6 +162,7 @@ EOF
             ->append($this->addAssetsNode())
             ->append($this->addSolrNode())
             ->append($this->addReverseProxyCacheNode())
+            ->append($this->addThemesNode())
         ;
         return $builder;
     }
@@ -300,6 +301,32 @@ EOF
                         ->end()
                     ->end()
                 ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addThemesNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('themes');
+
+        $node->isRequired()
+            ->prototype('array')
+            ->children()
+                ->scalarNode('classname')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('hostname')
+                    ->defaultValue('*')
+                ->end()
+                ->scalarNode('routePrefix')
+                    ->defaultValue('')
+                ->end()
+            ->end()
             ->end();
 
         return $node;
