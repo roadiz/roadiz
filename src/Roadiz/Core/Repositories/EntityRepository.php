@@ -111,6 +111,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     /**
      * Alias for DQL and Query builder representing Node relation.
      */
+    const DEFAULT_ALIAS = 'obj';
+
+    /**
+     * Alias for DQL and Query builder representing Node relation.
+     */
     const NODE_ALIAS = 'n';
 
     /**
@@ -392,11 +397,12 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
             $collection = $this->matching($criteria);
             return $collection->count();
         } elseif (is_array($criteria)) {
-            $qb = $this->createQueryBuilder('obj');
-            $qb->select($qb->expr()->countDistinct('obj.id'));
-            $qb = $this->prepareComparisons($criteria, $qb, 'obj');
+            $qb = $this->createQueryBuilder(static::DEFAULT_ALIAS);
+            $qb->select($qb->expr()->countDistinct(static::DEFAULT_ALIAS . '.id'));
+            $qb = $this->prepareComparisons($criteria, $qb, static::DEFAULT_ALIAS);
             $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
             $simpleQB = new SimpleQueryBuilder($qb);
+
             foreach ($criteria as $key => $value) {
                 $simpleQB->bindValue($key, $value);
             }
@@ -482,12 +488,20 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         $limit = null,
         $offset = null
     ) {
-        $qb = $this->createQueryBuilder('obj');
-        $qb = $this->createSearchBy($pattern, $qb, $criteria, 'obj');
+        $qb = $this->createQueryBuilder(static::DEFAULT_ALIAS);
+        $qb = $this->createSearchBy($pattern, $qb, $criteria, static::DEFAULT_ALIAS);
 
         // Add ordering
         foreach ($orders as $key => $value) {
-            $qb->addOrderBy('obj.' . $key, $value);
+            if (strpos($key, static::NODE_ALIAS . '.') !== false &&
+                $this->hasJoinedNode($qb, static::DEFAULT_ALIAS)) {
+                $qb->addOrderBy($key, $value);
+            } elseif (strpos($key, static::NODESSOURCES_ALIAS . '.') !== false &&
+                $this->hasJoinedNodesSources($qb, static::DEFAULT_ALIAS)) {
+                $qb->addOrderBy($key, $value);
+            } else {
+                $qb->addOrderBy(static::DEFAULT_ALIAS . '.' . $key, $value);
+            }
         }
         if (null !== $offset) {
             $qb->setFirstResult($offset);
@@ -526,8 +540,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
-        $qb = $this->createQueryBuilder('obj');
-        $qb->select($qb->expr()->countDistinct('obj.id'));
+        $qb = $this->createQueryBuilder(static::DEFAULT_ALIAS);
+        $qb->select($qb->expr()->countDistinct(static::DEFAULT_ALIAS . '.id'));
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());

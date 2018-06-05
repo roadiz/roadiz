@@ -92,7 +92,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         if (in_array('tags', array_keys($criteria))) {
             if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                 $qb->innerJoin(
-                    'ns.node',
+                    static::NODESSOURCES_ALIAS . '.node',
                     static::NODE_ALIAS
                 );
             }
@@ -214,7 +214,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $prefix = EntityRepository::NODE_ALIAS
     ) {
         if (true === $this->isDisplayingAllNodesStatuses()) {
-            $qb->innerJoin('ns.node', $prefix);
+            $qb->innerJoin(static::NODESSOURCES_ALIAS . '.node', $prefix);
             return $qb;
         }
 
@@ -222,12 +222,22 @@ class NodesSourcesRepository extends StatusAwareRepository
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
-            $qb->innerJoin('ns.node', $prefix, 'WITH', $qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
+            $qb->innerJoin(
+                static::NODESSOURCES_ALIAS . '.node',
+                $prefix,
+                'WITH',
+                $qb->expr()->lte($prefix . '.status', Node::PUBLISHED)
+            );
         } else {
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
-            $qb->innerJoin('ns.node', $prefix, 'WITH', $qb->expr()->eq($prefix . '.status', Node::PUBLISHED));
+            $qb->innerJoin(
+                static::NODESSOURCES_ALIAS . '.node',
+                $prefix,
+                'WITH',
+                $qb->expr()->eq($prefix . '.status', Node::PUBLISHED)
+            );
         }
         return $qb;
     }
@@ -363,7 +373,7 @@ class NodesSourcesRepository extends StatusAwareRepository
          * Eagerly fetch UrlAliases
          * to limit SQL query count
          */
-        $qb->leftJoin('ns.urlAliases', 'ua')
+        $qb->leftJoin(static::NODESSOURCES_ALIAS . '.urlAliases', 'ua')
             ->addSelect('ua')
         ;
         $qb->setCacheable(true);
@@ -411,7 +421,7 @@ class NodesSourcesRepository extends StatusAwareRepository
          * Eagerly fetch UrlAliases
          * to limit SQL query count
          */
-        $qb->leftJoin('ns.urlAliases', 'ua')
+        $qb->leftJoin(static::NODESSOURCES_ALIAS . '.urlAliases', 'ua')
             ->addSelect('ua')
         ;
         $qb->setCacheable(true);
@@ -496,14 +506,14 @@ class NodesSourcesRepository extends StatusAwareRepository
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->addSelect(static::NODE_ALIAS)
             ->addSelect('ua')
-            ->leftJoin('ns.urlAliases', 'ua')
+            ->leftJoin(static::NODESSOURCES_ALIAS . '.urlAliases', 'ua')
             ->andWhere($qb->expr()->orX(
-                $qb->expr()->like('ns.title', ':query'),
-                $qb->expr()->like('ns.metaTitle', ':query'),
-                $qb->expr()->like('ns.metaKeywords', ':query'),
-                $qb->expr()->like('ns.metaDescription', ':query')
+                $qb->expr()->like(static::NODESSOURCES_ALIAS . '.title', ':query'),
+                $qb->expr()->like(static::NODESSOURCES_ALIAS . '.metaTitle', ':query'),
+                $qb->expr()->like(static::NODESSOURCES_ALIAS . '.metaKeywords', ':query'),
+                $qb->expr()->like(static::NODESSOURCES_ALIAS . '.metaDescription', ':query')
             ))
-            ->orderBy('ns.title', 'ASC')
+            ->orderBy(static::NODESSOURCES_ALIAS . '.title', 'ASC')
             ->setParameter(':query', '%' . $textQuery . '%');
 
         if ($limit > 0) {
@@ -551,7 +561,7 @@ class NodesSourcesRepository extends StatusAwareRepository
                  ->orderBy('slog.datetime', 'DESC');
 
         $query = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $query->andWhere($query->expr()->in('ns.id', $subQuery->getQuery()->getDQL()));
+        $query->andWhere($query->expr()->in(static::NODESSOURCES_ALIAS . '.id', $subQuery->getQuery()->getDQL()));
         $query->setMaxResults($maxResult);
 
         return new Paginator($query->getQuery());
@@ -566,12 +576,12 @@ class NodesSourcesRepository extends StatusAwareRepository
     public function findParent(NodesSources $nodeSource)
     {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $qb->select('ns, n, ua')
-            ->innerJoin('ns.node', static::NODE_ALIAS)
+        $qb->select(static::NODESSOURCES_ALIAS . ', n, ua')
+            ->innerJoin(static::NODESSOURCES_ALIAS . '.node', static::NODE_ALIAS)
             ->innerJoin('n.children', 'cn')
-            ->leftJoin('ns.urlAliases', 'ua')
+            ->leftJoin(static::NODESSOURCES_ALIAS . '.urlAliases', 'ua')
             ->andWhere($qb->expr()->eq('cn.id', ':childNodeId'))
-            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->andWhere($qb->expr()->eq(static::NODESSOURCES_ALIAS . '.translation', ':translation'))
             ->setParameter('childNodeId', $nodeSource->getNode()->getId())
             ->setParameter('translation', $nodeSource->getTranslation())
             ->setMaxResults(1)
@@ -595,8 +605,8 @@ class NodesSourcesRepository extends StatusAwareRepository
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
 
         $qb->select(static::NODESSOURCES_ALIAS)
-            ->andWhere($qb->expr()->eq('ns.node', ':node'))
-            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->andWhere($qb->expr()->eq(static::NODESSOURCES_ALIAS . '.node', ':node'))
+            ->andWhere($qb->expr()->eq(static::NODESSOURCES_ALIAS . '.translation', ':translation'))
             ->setMaxResults(1)
             ->setParameter('node', $node)
             ->setParameter('translation', $translation)
