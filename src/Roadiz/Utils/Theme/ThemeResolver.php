@@ -188,5 +188,4 @@ class ThemeResolver implements ThemeResolverInterface
     {
         return $this->getRepository()->find($id);
     }
-
 }
