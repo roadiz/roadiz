@@ -59,8 +59,7 @@ class NodesTreesController extends RozierApp
         if ($nodeId > 0) {
             $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
             /** @var Node $node */
-            $node = $this->get('em')
-                ->find(Node::class, (int) $nodeId);
+            $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
             if (null === $node) {
                 throw new ResourceNotFoundException();
@@ -89,7 +88,7 @@ class NodesTreesController extends RozierApp
             $request->get('tagId') > 0) {
             $filterTag = $this->get('em')
                             ->find(
-                                '\RZ\Roadiz\Core\Entities\Tag',
+                                Tag::class,
                                 (int) $request->get('tagId')
                             );
 
