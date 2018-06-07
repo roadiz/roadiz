@@ -480,20 +480,9 @@ abstract class AppController extends Controller
     {
         $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {
-            $theme = $this->getTheme();
             /** @var NodeRepository $nodeRepository */
             $nodeRepository = $this->get('em')->getRepository(Node::class);
 
-            if ($theme !== null) {
-                $home = $theme->getHomeNode();
-                if ($home !== null) {
-                    if ($translation !== null) {
-                        $this->homeNode = $nodeRepository->findWithTranslation($home->getId(), $translation);
-                    } else {
-                        $this->homeNode = $nodeRepository->findWithDefaultTranslation($home->getId());
-                    }
-                }
-            }
             if ($translation !== null) {
                 $this->homeNode = $nodeRepository->findHomeWithTranslation($translation);
             } else {
