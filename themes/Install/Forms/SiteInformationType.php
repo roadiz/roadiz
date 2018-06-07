@@ -29,7 +29,6 @@
 
 namespace Themes\Install\Forms;
 
-
 use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\CMS\Forms\ThemesType;
 use Symfony\Component\Form\AbstractType;

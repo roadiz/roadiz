@@ -31,8 +31,6 @@ namespace Themes\Install;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\CMS\Forms\SeparatorType;
-use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
@@ -40,18 +38,11 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\CacheEvents;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Installation application
