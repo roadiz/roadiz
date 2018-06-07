@@ -29,6 +29,7 @@
  */
 namespace Themes\DefaultTheme\NewsletterControllers;
 
+use RZ\Roadiz\Core\Entities\Newsletter;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
 
@@ -46,11 +47,11 @@ class BasicNewsletterController extends DefaultThemeApp
      * by NewsletterUtilsController to get your newsletter HTML body.
      *
      * @param Request $request
-     * @param \RZ\Roadiz\Core\Entities\Newsletter $newsletter
+     * @param Newsletter $newsletter
      *
      * @return string
      */
-    public function makeHtml(Request $request, $newsletter)
+    public function makeHtml(Request $request, Newsletter $newsletter)
     {
         $this->prepareThemeAssignation($newsletter->getNode(), null);
         $this->assignation["nodeSource"] = $newsletter->getNode()->getNodeSources()->first();

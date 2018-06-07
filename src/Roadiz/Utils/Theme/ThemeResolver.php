@@ -130,7 +130,9 @@ class ThemeResolver implements ThemeResolverInterface
                 if (count($this->frontendThemes) === 0) {
                     return [];
                 }
-
+                $this->stopwatch->start('sortFrontendThemes');
+                usort($this->frontendThemes, [static::class, 'compareThemePriority']);
+                $this->stopwatch->stop('sortFrontendThemes');
                 $this->stopwatch->stop('getFrontendThemes');
             }
             return $this->frontendThemes;
@@ -187,5 +189,26 @@ class ThemeResolver implements ThemeResolverInterface
     public function findById($id)
     {
         return $this->getRepository()->find($id);
+    }
+
+    /**
+     * @param Theme $themeA
+     * @param Theme $themeB
+     *
+     * @return int
+     */
+    public static function compareThemePriority(Theme $themeA, Theme $themeB)
+    {
+        $classA = $themeA->getClassName();
+        $classB = $themeB->getClassName();
+
+        if (call_user_func([$classA, 'getPriority']) === call_user_func([$classB, 'getPriority'])) {
+            return 0;
+        }
+        if (call_user_func([$classA, 'getPriority']) > call_user_func([$classB, 'getPriority'])) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

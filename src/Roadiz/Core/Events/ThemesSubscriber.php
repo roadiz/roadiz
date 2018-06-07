@@ -90,6 +90,8 @@ class ThemesSubscriber implements EventSubscriberInterface
             try {
                 /** @var ThemeResolverInterface $themeResolver */
                 $themeResolver = $this->kernel->get('themeResolver');
+
+                call_user_func([$themeResolver->getBackendClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
                 /** @var Theme $theme */
                 foreach ($themeResolver->getFrontendThemes() as $theme) {
                     $feClass = $theme->getClassName();
