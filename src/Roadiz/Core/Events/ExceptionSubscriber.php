@@ -129,8 +129,10 @@ class ExceptionSubscriber implements EventSubscriberInterface
                     // Set http code according to status
                     $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
                     $event->setResponse($response);
-                } elseif (false !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
+                } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
                     $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
+                } else {
+                    $event->setResponse($this->getEmergencyResponse($exception, $event->getRequest()));
                 }
             } else {
                 // Customize your response object to display the exception details
@@ -179,7 +181,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     /**
      * @param GetResponseForExceptionEvent $event
-     * @return bool|Theme
+     * @return null|Theme
      */
     protected function isNotFoundExceptionWithTheme(GetResponseForExceptionEvent $event)
     {
@@ -202,7 +204,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

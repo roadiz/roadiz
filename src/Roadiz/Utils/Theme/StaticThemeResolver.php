@@ -37,7 +37,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @var array
      */
-    protected $themesConfig;
+    protected $themesConfig = [];
 
     /**
      * @var array
@@ -51,9 +51,11 @@ class StaticThemeResolver implements ThemeResolverInterface
      */
     public function __construct(array $configuration)
     {
-        $this->themesConfig = $configuration['themes'];
-        foreach ($this->themesConfig as $index => $themeConfig) {
-            $this->frontendThemes[] = $this->getThemeFromConfig($themeConfig, $index);
+        if (isset($configuration['themes'])) {
+            $this->themesConfig = $configuration['themes'];
+            foreach ($this->themesConfig as $index => $themeConfig) {
+                $this->frontendThemes[] = $this->getThemeFromConfig($themeConfig, $index);
+            }
         }
     }
 

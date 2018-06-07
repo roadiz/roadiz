@@ -410,7 +410,6 @@ abstract class AppController extends Controller
      * Return the current Theme
      *
      * @return Theme|null
-     * @deprecated Theme will become static in next releases.
      */
     public function getTheme()
     {
@@ -424,9 +423,6 @@ abstract class AppController extends Controller
                 if ($className === false) {
                     $className = "";
                     break;
-                }
-                if (strpos($className, "\\") !== 0) {
-                    $className = "\\" . $className;
                 }
             }
             $this->theme = $themeResolver->findThemeByClass($className);
