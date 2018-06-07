@@ -124,6 +124,9 @@ class StaticThemeResolver implements ThemeResolverInterface
      */
     public function findById($id)
     {
+        if (isset($this->getFrontendThemes()[$id])) {
+            return $this->getFrontendThemes()[$id];
+        }
         return null;
     }
 

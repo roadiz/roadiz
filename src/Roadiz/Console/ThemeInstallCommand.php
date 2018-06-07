@@ -115,7 +115,7 @@ class ThemeInstallCommand extends ThemesCommand
         } elseif ($input->getOption('nodes')) {
             $this->importThemeNodes($reflectionClass->getName(), $output);
         } else {
-            $this->importTheme($reflectionClass->getName(), $output);
+            $output->writeln('Frontend themes are no more registered into database. <info>You should use --data or --nodes option.</info>');
         }
     }
 
@@ -240,6 +240,7 @@ class ThemeInstallCommand extends ThemesCommand
     /**
      * @param string $classname
      * @param $text
+     * @deprecated Frontend themes no more need to be registered in database.
      */
     protected function importTheme($classname, OutputInterface $output)
     {

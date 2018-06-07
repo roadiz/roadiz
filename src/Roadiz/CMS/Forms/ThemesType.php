@@ -29,84 +29,35 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Theme selector form field type.
  */
 class ThemesType extends AbstractType
 {
-    protected $themes;
-    private $choices;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * ThemesType constructor.
-     * @param EntityManager $entityManager
-     */
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-        $themes = $this->entityManager->getRepository(Theme::class)->findAll();
-
-        $existingThemes = [Kernel::INSTALL_CLASSNAME];
-        /** @var Theme $theme */
-        foreach ($themes as $theme) {
-            $existingThemes[] = $theme->getClassName();
-        }
-        $choices = [];
-
-        $finder = new Finder();
-
-        // Extracting the PHP files from every Theme folder
-        $iterator = $finder
-            ->followLinks()
-            ->files()
-            ->name('config.yml')
-            ->depth(1)
-            ->in(ROADIZ_ROOT . '/themes');
-
-        // And storing it into an array, used in the form
-        /** @var SplFileInfo $file */
-        foreach ($iterator as $file) {
-            $data = Yaml::parse(file_get_contents($file->getPathname()));
-            $classname = '\Themes\\' . $data['themeDir'] . "\\" . $data['themeDir'] . "App";
-
-            /*
-             * Parsed file is not or does not contain any PHP Class
-             * Bad Theme !
-             */
-            if (!in_array($classname, $existingThemes)) {
-                $choices[$data['name']] = $classname;
-            }
-        }
-        $this->choices = $choices;
-    }
-
-    public function getSize()
-    {
-        return (count($this->choices));
-    }
-
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices' => $this->choices,
+            'choices' => [],
             'choices_as_values' => true,
         ]);
+        $resolver->setRequired('themes_config');
+        $resolver->setAllowedTypes('themes_config', 'array');
+        $resolver->setNormalizer('choices', function (Options $options, $value) {
+            $value = [];
+            foreach ($options['themes_config'] as $themeConfig) {
+                $class = $themeConfig['classname'];
+                $value[call_user_func([$class, 'getThemeName'])] = $class;
+            }
+
+            return $value;
+        });
     }
 
     /**
