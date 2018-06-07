@@ -101,8 +101,10 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
             $translator->addLoader('xlf', new XliffFileLoader());
             $translator->addLoader('yml', new YamlFileLoader());
-            $classes = [$themeResolver->getBackendTheme()];
-            $classes = array_merge($classes, $themeResolver->getFrontendThemes());
+            $classes = array_merge(
+                [$themeResolver->getBackendTheme()],
+                $themeResolver->getFrontendThemes()
+            );
 
             /*
              * DO NOT wake up entity manager in Install
@@ -127,7 +129,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
     /**
      * @param string $locale
      * @param Translator $translator
-     * @param array $classes
+     * @param Theme[] $classes
      * @param Kernel $kernel
      */
     protected function addResourcesForLocale($locale, Translator $translator, array &$classes, Kernel $kernel)
