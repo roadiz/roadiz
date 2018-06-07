@@ -114,30 +114,30 @@
         </div>
 
     </article>
-</section>
-<div id="error" class="uk-modal">
-    <div class="uk-modal-dialog">
-        <h3 class="import-nodetypes-part">{% trans %}error.modal.title{% endtrans %}</h3>
-        <ul class="import-nodetypes-part">
-            {% if not status.version %}
-                <li>{% trans %}error.version.message{% endtrans %}</li>
-            {% endif %}
-            {% if not status.locale %}
-                <li>{% trans %}error.locale.message{% endtrans %}</li>
-            {% endif %}
-            {% for name, filenames in theme.imports %}
-                {% for filename in filenames %}
-                    {% if not status.import[filename] %}
-                    <li>{{ "file.not.exist.%filename%"|trans({"%filename%": filename}) }}</li>
-                    {% endif %}
+    <div id="error" class="uk-modal">
+        <div class="uk-modal-dialog">
+            <h3 class="import-nodetypes-part">{% trans %}error.modal.title{% endtrans %}</h3>
+            <ul class="import-nodetypes-part">
+                {% if not status.version %}
+                    <li>{% trans %}error.version.message{% endtrans %}</li>
+                {% endif %}
+                {% if not status.locale %}
+                    <li>{% trans %}error.locale.message{% endtrans %}</li>
+                {% endif %}
+                {% for name, filenames in theme.imports %}
+                    {% for filename in filenames %}
+                        {% if not status.import[filename] %}
+                            <li>{{ "file.not.exist.%filename%"|trans({"%filename%": filename}) }}</li>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </ul>
-        <p>{% trans %}warning.theme.continue{% endtrans %}</p>
-        <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage', { classname: classname }) }}">
-            <span class="label"><span class="label-text">{% trans %}install.theme{% endtrans %} </span></span>
-            <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
-        </a>
+            </ul>
+            <p>{% trans %}warning.theme.continue{% endtrans %}</p>
+            <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage', { classname: classname }) }}">
+                <span class="label"><span class="label-text">{% trans %}install.theme{% endtrans %} </span></span>
+                <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
+            </a>
+        </div>
     </div>
-</div>
+</section>
 {% endblock %}

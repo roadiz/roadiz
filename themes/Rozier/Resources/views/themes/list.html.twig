@@ -32,7 +32,7 @@
                             {% endfor %}
                         </td>
                         <td class="mobile-hidden">
-                            <a href="{{ path('themesSummaryPage', { classname: theme.classname }) }}">{{ theme.getClassName }}</a>
+                            {{- theme.className -}}
                         </td>
                         <td class="mobile-hidden">
                             {% if theme.getHostname != "*" %}
@@ -48,7 +48,9 @@
                         </td>
                         <td class="table-actions-row">
                         {% spaceless %}
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesSummaryPage', { classname: theme.classname }) }}" title="{% trans %}import{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            {% if not theme.isBackendTheme %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesSummaryPage', { classname: theme.classname }) }}" title="{% trans %}import{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-download"></i></a>
+                            {% endif %}
                         {% endspaceless %}
                         </td>
                     </tr>
