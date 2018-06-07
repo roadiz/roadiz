@@ -53,7 +53,8 @@ class SolrServiceProvider implements ServiceProviderInterface
          */
         $container['solr'] = function ($c) {
             if (isset($c['config']['solr']['endpoint'])) {
-                $solrService = new Client($c['config']['solr'], $c['dispatcher']);
+                // Do not pass $c['dispatcher'] - it can cause dependency infinite loop
+                $solrService = new Client($c['config']['solr']);
                 $solrService->setDefaultEndpoint('localhost');
                 return $solrService;
             } else {
