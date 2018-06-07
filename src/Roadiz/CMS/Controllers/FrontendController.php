@@ -66,6 +66,10 @@ abstract class FrontendController extends AppController
      * {@inheritdoc}
      */
     protected static $backendTheme = false;
+    /**
+     * {@inheritdoc}
+     */
+    public static $priority = 10;
 
     /**
      * Put here your node which need a specific controller

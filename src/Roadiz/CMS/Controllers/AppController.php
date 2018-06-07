@@ -125,6 +125,19 @@ abstract class AppController extends Controller
     }
 
     /**
+     * @var int Theme priority to load templates and translation in the right order.
+     */
+    public static $priority = 0;
+
+    /**
+     * @return int
+     */
+    public static function getPriority()
+    {
+        return static::$priority;
+    }
+
+    /**
      * @return string Main theme class name
      */
     public static function getThemeMainClassName()
@@ -452,13 +465,15 @@ abstract class AppController extends Controller
      */
     public static function addThemeTemplatesPath(Container $container)
     {
+        /** @var \Twig_Loader_Filesystem $loader */
+        $loader = $container['twig.loaderFileSystem'];
         /*
          * Enable theme templates in main namespace and in its own theme namespace.
          */
-        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder());
+        $loader->prependPath(static::getViewsFolder());
         // Add path into a namespaced loader to enable using same template name
         // over different static themes.
-        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder(), static::getThemeDir());
+        $loader->prependPath(static::getViewsFolder(), static::getThemeDir());
     }
 
     /**
