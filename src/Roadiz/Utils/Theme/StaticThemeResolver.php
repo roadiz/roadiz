@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\Theme;
 
 use RZ\Roadiz\Core\Entities\Theme;
+use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Rozier\RozierApp;
 
 class StaticThemeResolver implements ThemeResolverInterface
@@ -43,19 +44,33 @@ class StaticThemeResolver implements ThemeResolverInterface
      * @var array
      */
     protected $frontendThemes = [];
+    /**
+     * @var Stopwatch
+     */
+    protected $stopwatch;
+    /**
+     * @var bool
+     */
+    protected $installMode;
 
     /**
      * StaticThemeResolver constructor.
      *
      * @param array $configuration
      */
-    public function __construct(array $configuration)
+    public function __construct(array $configuration, Stopwatch $stopwatch, $installMode = false)
     {
+        $this->stopwatch = $stopwatch;
+        $this->installMode = $installMode;
+
         if (isset($configuration['themes'])) {
+            $this->stopwatch->start('parse_frontend_themes');
             $this->themesConfig = $configuration['themes'];
             foreach ($this->themesConfig as $index => $themeConfig) {
                 $this->frontendThemes[] = $this->getThemeFromConfig($themeConfig, $index);
             }
+            usort($this->frontendThemes, [static::class, 'compareThemePriority']);
+            $this->stopwatch->stop('parse_frontend_themes');
         }
     }
 
@@ -85,8 +100,12 @@ class StaticThemeResolver implements ThemeResolverInterface
     public function findTheme($host)
     {
         $default = null;
-
-        foreach ($this->getFrontendThemes() as $theme) {
+        /*
+         * Search theme by beginning at the end of the array.
+         * Getting high priority theme first!
+         */
+        $searchThemes = array_reverse($this->getFrontendThemes());
+        foreach ($searchThemes as $theme) {
             if ($theme->getHostname() === $host) {
                 return $theme;
             } elseif ($theme->getHostname() === '*') {
@@ -155,5 +174,26 @@ class StaticThemeResolver implements ThemeResolverInterface
         $theme->setHostname($themeConfig['hostname']);
         $theme->setRoutePrefix($themeConfig['routePrefix']);
         return $theme;
+    }
+
+    /**
+     * @param Theme $themeA
+     * @param Theme $themeB
+     *
+     * @return int
+     */
+    public static function compareThemePriority(Theme $themeA, Theme $themeB)
+    {
+        $classA = $themeA->getClassName();
+        $classB = $themeB->getClassName();
+
+        if (call_user_func([$classA, 'getPriority']) === call_user_func([$classB, 'getPriority'])) {
+            return 0;
+        }
+        if (call_user_func([$classA, 'getPriority']) > call_user_func([$classB, 'getPriority'])) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

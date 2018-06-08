@@ -37,6 +37,8 @@ use Themes\Rozier\RozierApp;
 
 /**
  * ThemeResolver to get backend and frontend themes.
+ *
+ * @deprecated Use StaticThemeResolver instead.
  */
 class ThemeResolver implements ThemeResolverInterface
 {

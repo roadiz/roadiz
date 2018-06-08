@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\Theme\StaticThemeResolver;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 
 /**
@@ -48,8 +47,7 @@ class ThemeServiceProvider implements ServiceProviderInterface
          * @return ThemeResolverInterface
          */
         $container['themeResolver'] = function ($c) {
-            //return new ThemeResolver($c['em'], $c['stopwatch'], $c['kernel']->isInstallMode());
-            return new StaticThemeResolver($c['config']);
+            return new StaticThemeResolver($c['config'], $c['stopwatch'], $c['kernel']->isInstallMode());
         };
 
         return $container;
