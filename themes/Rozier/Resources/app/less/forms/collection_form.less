@@ -49,6 +49,8 @@
                 padding: 1em;
                 border-top: 1px dashed #cbcbcb;
                 margin: 0;
+                display: flex;
+                justify-content: space-between;
 
                 &:first-child {
                     border-top: none;
@@ -58,6 +60,12 @@
                     background-color: #F8F8F8;
                 }
 
+                &:after,
+                &:before {
+                    content: none;
+                    display: none;
+                }
+
                 & > .uk-form-label {
                     display: none;
                 }
@@ -65,23 +73,46 @@
                 .uk-form-row + .uk-form-row {
                     margin-top: 0.5em;
                 }
+
+                & > .data-uk-margin {
+                    margin: 0;
+
+                    & > .uk-form-row {
+                        & > .uk-form-label {
+                            margin-right: 1em;
+                        }
+                    }
+
+                    @media (min-width: @screen-sm-min) {
+                        & > .uk-form-row {
+                            display: flex;
+                            align-items: center;
+
+                            & > .uk-form-label {
+                                flex-shrink: 0;
+                                min-width: 7vw;
+                            }
+                        }
+                    }
+                }
             }
         }
 
         div[class$="collection-actions"] {
-            position: absolute;
+            position: relative;
             top: 0;
             right: 0;
-            padding: 9px 15px;
+            padding: 0 0 9px 15px;
 
             .uk-button {
+                display: flex;
                 width: 20px;
                 height: 20px;
                 min-height: 20px;
                 line-height: 20px;
                 border-radius: 100%;
                 padding: 0;
-                margin-right: 2px;
+                margin-bottom: 2px;
                 text-align: center;
 
                 [class*=uk-icon-] {
@@ -113,6 +144,17 @@
                 text-shadow: none;
                 display: block;
             }
+        }
+
+        .markdown-editor {
+            &-tabs {
+                flex-shrink: 0;
+                width: 100%;
+            }
+        }
+
+        .markdown-editor-navbar {
+            flex-shrink: 0;
         }
     }
 }
