@@ -1,17 +1,4 @@
-themesEditPage:
-    path: /edit/{themeId}
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::editAction
-    requirements: { themeId : "[0-9]+" }
-themesAddPage:
-    path: /add
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::addAction
-themesDeletePage:
-    path:     /delete/{themeId}
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::deleteAction
-    requirements: { themeId : "[0-9]+" }
+
 themesSummaryPage:
     path:      /summary
     defaults:

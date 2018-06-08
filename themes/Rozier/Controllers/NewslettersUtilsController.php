@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Utils\DomHandler;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\NewsletterControllers\BasicNewsletterController;
@@ -111,17 +112,19 @@ class NewslettersUtilsController extends RozierApp
      */
     private function getBaseNamespace()
     {
-        // get first not static frontend
-        $theme = $this->get("em")
-                      ->getRepository(Theme::class)
-                      ->findFirstAvailableNonStaticFrontend();
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->get('themeResolver');
+        $frontendThemes = $themeResolver->getFrontendThemes();
+        if (count($frontendThemes) > 0) {
+            // get first not static frontend
+            $theme = $themeResolver->getFrontendThemes()[0];
+            $baseNamespace = explode("\\", $theme->getClassName());
+            // remove last elem of the array
+            array_pop($baseNamespace);
 
-        $baseNamespace = explode("\\", $theme->getClassName());
-
-        // remove last elem of the array
-        array_pop($baseNamespace);
-
-        return implode("\\", $baseNamespace);
+            return implode("\\", $baseNamespace);
+        }
+        throw new \RuntimeException('There is no theme registered to render newsletters.');
     }
 
     /**

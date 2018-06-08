@@ -291,6 +291,10 @@ class Fixtures
         }
     }
 
+    /**
+     * @param array $data
+     * @deprecated  Frontend themes no more need to be registered in database.
+     */
     public function installTheme($data)
     {
         /*
@@ -305,6 +309,7 @@ class Fixtures
      * @param $classname
      *
      * @return int
+     * @deprecated Frontend themes no more need to be registered in database.
      */
     public function installFrontendTheme($classname)
     {

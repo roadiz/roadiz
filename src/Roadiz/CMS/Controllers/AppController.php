@@ -423,7 +423,6 @@ abstract class AppController extends Controller
      * Return the current Theme
      *
      * @return Theme|null
-     * @deprecated Theme will become static in next releases.
      */
     public function getTheme()
     {
@@ -437,9 +436,6 @@ abstract class AppController extends Controller
                 if ($className === false) {
                     $className = "";
                     break;
-                }
-                if (strpos($className, "\\") !== 0) {
-                    $className = "\\" . $className;
                 }
             }
             $this->theme = $themeResolver->findThemeByClass($className);
@@ -484,20 +480,9 @@ abstract class AppController extends Controller
     {
         $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {
-            $theme = $this->getTheme();
             /** @var NodeRepository $nodeRepository */
             $nodeRepository = $this->get('em')->getRepository(Node::class);
 
-            if ($theme !== null) {
-                $home = $theme->getHomeNode();
-                if ($home !== null) {
-                    if ($translation !== null) {
-                        $this->homeNode = $nodeRepository->findWithTranslation($home->getId(), $translation);
-                    } else {
-                        $this->homeNode = $nodeRepository->findWithDefaultTranslation($home->getId());
-                    }
-                }
-            }
             if ($translation !== null) {
                 $this->homeNode = $nodeRepository->findHomeWithTranslation($translation);
             } else {

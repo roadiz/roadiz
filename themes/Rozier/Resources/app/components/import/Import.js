@@ -10,17 +10,16 @@ export default class Import {
      */
     constructor (routesArray) {
         this.routes = routesArray
-        this.always(0)
+        this.always(0, this.routes)
         this.$nextStepButton = $('#next-step-button')
-        this.routes = null
         this.score = 0
     }
 
-    always (index) {
-        if (this.routes.length > index) {
-            if (typeof this.routes[index].update !== 'undefined') {
+    always (index, routes) {
+        if (routes.length > index) {
+            if (typeof routes[index].update !== 'undefined') {
                 $.ajax({
-                    url: this.routes[index].update,
+                    url: routes[index].update,
                     type: 'POST',
                     dataType: 'json',
                     complete: () => {
@@ -36,63 +35,65 @@ export default class Import {
     }
 
     callSingleImport (index) {
-        let $row = $('#' + this.routes[index].id)
+        const currentIndex = index
+        const routes = this.routes
+        let $row = $('#' + routes[currentIndex].id)
         let $icon = $row.find('i')
         $icon.removeClass('uk-icon-circle-o')
         $icon.addClass('uk-icon-spin')
         $icon.addClass('uk-icon-spinner')
 
         let postData = {
-            'filename': this.routes[index].filename
+            'filename': routes[currentIndex].filename
         }
 
         $.ajax({
-            url: this.routes[index].url,
+            url: routes[currentIndex].url,
             type: 'POST',
             dataType: 'json',
             data: postData,
             success: () => {
+                $icon.removeClass('uk-icon-spin')
                 $icon.removeClass('uk-icon-spinner')
                 $icon.addClass('uk-icon-check')
                 $row.addClass('uk-badge-success')
 
                 // Call post-update route
-                if (this.routes[index].postUpdate) {
-                    if (this.routes[index].postUpdate instanceof Array &&
-                         this.routes[index].postUpdate.length > 1) {
+                if (routes[currentIndex].postUpdate) {
+                    if (routes[currentIndex].postUpdate instanceof Array &&
+                         routes[currentIndex].postUpdate.length > 1) {
                         // Call clear cache before updating schema
                         $.ajax({
-                            url: this.routes[index].postUpdate[0],
+                            url: routes[currentIndex].postUpdate[0],
                             type: 'POST',
                             dataType: 'json',
                             complete: () => {
-                                // Update schema
-                                console.log('Calling: ' + this.routes[index].postUpdate[0])
                                 $.ajax({
-                                    url: this.routes[index].postUpdate[1],
+                                    url: routes[currentIndex].postUpdate[1],
                                     type: 'POST',
                                     dataType: 'json',
                                     complete: () => {
-                                        this.always(index + 1)
+                                        this.always(currentIndex + 1, routes)
                                     }
                                 })
                             }
                         })
                     } else {
                         $.ajax({
-                            url: this.routes[index].postUpdate,
+                            url: routes[currentIndex].postUpdate,
                             type: 'POST',
                             dataType: 'json',
                             complete: () => {
-                                this.always(index + 1)
+                                this.always(currentIndex + 1, routes)
                             }
                         })
                     }
                 } else {
-                    this.always(index + 1)
+                    this.always(currentIndex + 1, routes)
                 }
             },
             error: (data) => {
+                $icon.removeClass('uk-icon-spin')
                 $icon.removeClass('uk-icon-spinner')
                 $icon.addClass('uk-icon-warning')
                 $row.addClass('uk-badge-danger')
@@ -103,6 +104,7 @@ export default class Import {
             },
             complete: () => {
                 $icon.removeClass('uk-icon-spin')
+                $icon.removeClass('uk-icon-spinner')
             }
         })
     }

@@ -31,8 +31,6 @@ namespace Themes\Install;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\CMS\Forms\SeparatorType;
-use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
@@ -40,18 +38,11 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\CacheEvents;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Type;
 
 /**
  * Installation application
@@ -409,92 +400,6 @@ class InstallApp extends AppController
                     new NotBlank(),
                 ],
             ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * Build form for theme and site informations.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildInformationsForm(Request $request)
-    {
-        $siteName = $this->get('settingsBag')->get('site_name');
-        $metaDescription = $this->get('settingsBag')->get('seo_description');
-        $emailSender = $this->get('settingsBag')->get('email_sender');
-        $emailSenderName = $this->get('settingsBag')->get('email_sender_name');
-        $timeZone = $this->get('config')['timezone'];
-
-        $timeZoneList = include dirname(__FILE__) . '/Resources/import/timezones.php';
-
-        $defaults = [
-            'site_name' => $siteName != '' ? $siteName : "My website",
-            'seo_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
-            'email_sender' => $emailSender != '' ? $emailSender : "",
-            'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
-            'install_frontend' => true,
-            'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
-        ];
-        $builder = $this->createFormBuilder($defaults)
-            ->add('site_name', 'text', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('site_name'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('email_sender', 'email', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('email_sender'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('email_sender_name', 'text', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('email_sender_name'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('seo_description', 'text', [
-                'required' => false,
-                'label' => $this->getTranslator()->trans('meta_description'),
-            ])
-            ->add('timezone', 'choice', [
-                'choices' => $timeZoneList,
-                'choices_as_values' => true,
-                'label' => $this->getTranslator()->trans('timezone'),
-                'required' => true,
-            ]);
-
-        $themesType = new ThemesType($this->get('em'));
-
-        if ($themesType->getSize() > 0) {
-            $builder->add('separator_1', new SeparatorType(), [
-                'label' => $this->getTranslator()->trans('themes.frontend.description'),
-            ])
-                ->add('install_theme', 'checkbox', [
-                    'required' => false,
-                    'label' => $this->getTranslator()->trans('install_theme'),
-                    'data' => true,
-                ])
-                ->add(
-                    'className',
-                    $themesType,
-                    [
-                        'label' => $this->getTranslator()->trans('theme.selector'),
-                        'required' => true,
-                        'constraints' => [
-                            new NotNull(),
-                            new Type('string'),
-                        ],
-                    ]
-                );
-        }
 
         return $builder->getForm();
     }

@@ -162,6 +162,7 @@ EOF
             ->append($this->addAssetsNode())
             ->append($this->addSolrNode())
             ->append($this->addReverseProxyCacheNode())
+            ->append($this->addThemesNode())
         ;
         return $builder;
     }
@@ -300,6 +301,39 @@ EOF
                         ->end()
                     ->end()
                 ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addThemesNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('themes');
+
+        $node->isRequired()
+            ->prototype('array')
+            ->children()
+                ->scalarNode('classname')
+                    ->info('Full qualified theme class (this must start with \ character and ends with App suffix)')
+                    ->isRequired()
+                    ->validate()
+                        ->ifTrue(function ($s) {
+                            return preg_match('/^\\\[a-zA-Z\\\]+App$/', trim($s)) !== 1 || !class_exists($s);
+                        })
+                        ->thenInvalid('Theme class does not exist or classname is invalid: must start with \ character and ends with App suffix.')
+                    ->end()
+                ->end()
+                ->scalarNode('hostname')
+                    ->defaultValue('*')
+                ->end()
+                ->scalarNode('routePrefix')
+                    ->defaultValue('')
+                ->end()
+            ->end()
             ->end();
 
         return $node;

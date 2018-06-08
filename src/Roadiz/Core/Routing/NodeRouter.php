@@ -224,19 +224,21 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     protected function getResourcePath(NodesSources $source)
     {
-        $cacheKey = $source->getId();
+        $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost();
         if (null !== $this->nodeSourceUrlCacheProvider) {
             if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
+                $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
                 $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
                 $this->nodeSourceUrlCacheProvider->save(
                     $cacheKey,
-                    $urlGenerator->getNonContextualUrl($this->themeResolver->findTheme($this->getContext()->getHost()))
+                    $urlGenerator->getNonContextualUrl($theme)
                 );
             }
             return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
         } else {
+            $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
             $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
-            return $urlGenerator->getNonContextualUrl($this->themeResolver->findTheme($this->getContext()->getHost()));
+            return $urlGenerator->getNonContextualUrl($theme);
         }
     }
 

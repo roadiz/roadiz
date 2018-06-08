@@ -48,7 +48,15 @@ class ThemeInstaller
     {
         $themeFolder = call_user_func([$classname, 'getThemeFolder']);
         $file = $themeFolder . "/config.yml";
-        return Yaml::parse(file_get_contents($file));
+        if (file_exists($file)) {
+            return Yaml::parse(file_get_contents($file));
+        }
+        return [
+            "name" => 'Theme',
+            "versionRequire" => '*',
+            "supportedLocale" => [],
+            "importFiles" => [],
+        ];
     }
 
     /**
@@ -73,10 +81,7 @@ class ThemeInstaller
             $request
         );
         $data["className"] = $classname;
-        $fix->installTheme($data);
-
-        $installedLanguage = $em->getRepository(Translation::class)
-            ->findAll();
+        $installedLanguage = $em->getRepository(Translation::class)->findAll();
 
         /**
          * @var int $key
@@ -86,19 +91,21 @@ class ThemeInstaller
             $installedLanguage[$key] = $locale->getLocale();
         }
 
-        $exist = false;
-        foreach ($data["supportedLocale"] as $locale) {
-            if (in_array($locale, $installedLanguage)) {
-                $exist = true;
+        if (count($data["supportedLocale"]) > 0) {
+            $exist = false;
+            foreach ($data["supportedLocale"] as $locale) {
+                if (in_array($locale, $installedLanguage)) {
+                    $exist = true;
+                }
             }
-        }
 
-        if ($exist === false) {
-            $newTranslation = new Translation();
-            $newTranslation->setLocale($data["supportedLocale"][0]);
-            $newTranslation->setName(Translation::$availableLocales[$data["supportedLocale"][0]]);
-            $em->persist($newTranslation);
-            $em->flush();
+            if ($exist === false) {
+                $newTranslation = new Translation();
+                $newTranslation->setLocale($data["supportedLocale"][0]);
+                $newTranslation->setName(Translation::$availableLocales[$data["supportedLocale"][0]]);
+                $em->persist($newTranslation);
+                $em->flush();
+            }
         }
 
         $importFile = false;

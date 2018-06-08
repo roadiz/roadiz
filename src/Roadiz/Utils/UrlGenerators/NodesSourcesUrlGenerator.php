@@ -90,17 +90,10 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
 
     /**
      * @param NodesSources $nodeSource
-     * @param Theme|null $theme
      * @return bool
      */
-    protected function isNodeSourceHome(NodesSources $nodeSource, Theme $theme = null)
+    protected function isNodeSourceHome(NodesSources $nodeSource)
     {
-        if (null !== $theme &&
-            null !== $theme->getHomeNode() &&
-            $theme->getHomeNode()->getId() === $nodeSource->getNode()->getId()) {
-            return true;
-        }
-
         if ($nodeSource->getNode()->isHome()) {
             return true;
         }
@@ -120,7 +113,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
     public function getNonContextualUrl(Theme $theme = null)
     {
         if (null !== $this->nodeSource) {
-            if ($this->isNodeSourceHome($this->nodeSource, $theme)) {
+            if ($this->isNodeSourceHome($this->nodeSource)) {
                 if ($this->nodeSource->getTranslation()->isDefaultTranslation() &&
                     false === $this->forceLocale) {
                     return '';
@@ -153,6 +146,10 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             }
 
             $urlTokens = array_reverse($urlTokens);
+
+            if (null !== $theme && $theme->getRoutePrefix() != '') {
+                return $theme->getRoutePrefix() . '/' . implode('/', $urlTokens);
+            }
 
             return implode('/', $urlTokens);
         } else {

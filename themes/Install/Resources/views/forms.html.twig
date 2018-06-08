@@ -64,7 +64,7 @@
 {% block separator_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
-        <p {{ block('widget_attributes') }}>{{label}}</p>
+        <p {{ block('widget_attributes') }}>{{ label|trans }}</p>
     {% endspaceless %}
 {% endblock separator_widget %}
 
