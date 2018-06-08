@@ -328,8 +328,8 @@ export default class Lazyload {
         $('.rz-collection-form-type').collection({
             up: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-up"></i></a>',
             down: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-down"></i></a>',
-            add: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
-            remove: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
+            add: '<a class="uk-button-primary uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
+            remove: '<a class="uk-button-danger uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
             after_add: function (collection, element) {
                 _this.initMarkdownEditors(element)
                 _this.initJsonEditors(element)
