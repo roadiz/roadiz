@@ -113,7 +113,7 @@ export default class GeotagField {
                 draggable: true,
                 position: mapOptions.center,
                 animation: window.google.maps.Animation.DROP,
-                icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
+                icon: window.Rozier.resourcesUrl + 'assets/img/map_marker.png'
             })
         }
 
@@ -204,7 +204,7 @@ export default class GeotagField {
             draggable: true,
             animation: window.google.maps.Animation.DROP,
             position: latlng,
-            icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
+            icon: window.Rozier.resourcesUrl + 'assets/img/map_marker.png'
         })
 
         map.panTo(latlng)
