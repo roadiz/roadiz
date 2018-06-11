@@ -652,4 +652,34 @@ abstract class AppController extends Controller
         }
         return $errors;
     }
+
+    /**
+     * Make current response cachable by reverse proxy and browsers.
+     *
+     * Pay attention that, some reverse proxies systems will need to remove your response
+     * cookies header to actually save your response.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param int $minutes TTL in minutes
+     *
+     * @return Response
+     */
+    public function makeResponseCachable(Request $request, Response $response, $minutes)
+    {
+        $kernel = $this->get('kernel');
+        if (!$kernel->isPreview() && !$kernel->isDebug() && $request->isMethodCacheable()) {
+            $response->setPublic();
+            $response->setMaxAge(60 * $minutes);
+            $response->setSharedMaxAge(60 * $minutes);
+            $response->setVary('Accept-Encoding, X-Partial, x-requested-with');
+            if ($request->isXmlHttpRequest()) {
+                $response->headers->add([
+                    'X-Partial' => true
+                ]);
+            }
+        }
+
+        return $response;
+    }
 }
