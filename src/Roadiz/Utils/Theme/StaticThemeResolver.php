@@ -101,14 +101,16 @@ class StaticThemeResolver implements ThemeResolverInterface
     {
         $default = null;
         /*
-         * Search theme by beginning at the end of the array.
-         * Getting high priority theme first!
+         * Search theme by beginning at the start of the array.
+         * Getting high priority theme at last
          */
-        $searchThemes = array_reverse($this->getFrontendThemes());
+        $searchThemes = $this->getFrontendThemes();
+
         foreach ($searchThemes as $theme) {
             if ($theme->getHostname() === $host) {
                 return $theme;
             } elseif ($theme->getHostname() === '*') {
+                // Getting high priority theme at last option
                 $default = $theme;
             }
         }
