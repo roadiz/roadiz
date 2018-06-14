@@ -80,14 +80,14 @@
                 & > .data-uk-margin {
                     margin: 0;
 
-                    & > .uk-form-row {
+                    & > .uk-form-row:not(.drawer-widget) {
                         & > .uk-form-label {
                             margin-right: 1em;
                         }
                     }
 
                     @media (min-width: @screen-sm-min) {
-                        & > .uk-form-row {
+                        & > .uk-form-row:not(.drawer-widget) {
                             display: flex;
                             align-items: center;
 
