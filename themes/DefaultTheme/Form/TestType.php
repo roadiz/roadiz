@@ -32,6 +32,7 @@ namespace Themes\DefaultTheme\Form;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,16 +44,46 @@ class TestType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', TextType::class)
+        $builder->add('name', TextType::class, [
+            'attr' => [
+                'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
+            ]
+        ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
                     'class' => 'rz-date-field',
+                    'data-desc' => 'Etiam porta sem malesuada magna mollis euismod. Nullam quis risus eget urna mollis ornare vel eu leo.'
                 ],
                 'placeholder' => '',
             ])
-            ->add('content', MarkdownType::class)
+            ->add('content', MarkdownType::class, [
+                'attr' => [
+                    'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
+                ]
+            ])
+            ->add('choice', ChoiceType::class, [
+                'choices_as_values' => true,
+                'choices' => [
+                    'Fusce' => 'Fusce',
+                    'Inceptos Bibendum' => 'Inceptos Bibendum',
+                ],
+                'attr' => [
+                    'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
+                ]
+            ])
+            ->add('choice_bullet', ChoiceType::class, [
+                'choices_as_values' => true,
+                'expanded' => true,
+                'choices' => [
+                    'Fusce' => 'Fusce',
+                    'Inceptos Bibendum' => 'Inceptos Bibendum',
+                ],
+                'attr' => [
+                    'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
+                ]
+            ])
         ;
 
         $builder->get('date')->addModelTransformer(new CallbackTransformer(
