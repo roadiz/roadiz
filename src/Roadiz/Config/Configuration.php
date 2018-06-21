@@ -358,6 +358,7 @@ EOF
                                     'stream',
                                     'syslog',
                                     'gelf',
+                                    'sentry',
                                 ])
                                 ->isRequired()
                                 ->cannotBeEmpty()

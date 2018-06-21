@@ -111,10 +111,12 @@ class DefaultThemeApp extends FrontendController
      */
     public function throw404($message = '')
     {
-        $this->translation = $this->get('defaultTranslation');
-
-        $this->prepareThemeAssignation(null, $this->translation);
-        $this->get('logger')->error($message);
+        $translation = $this->bindLocaleFromRoute(
+            $this->get('request'),
+            $this->get('request')->getLocale()
+        );
+        $this->prepareThemeAssignation(null, $translation);
+        $this->get('logger')->warn($message);
 
         $this->assignation['nodeName'] = 'error-404';
         $this->assignation['nodeTypeName'] = 'error404';

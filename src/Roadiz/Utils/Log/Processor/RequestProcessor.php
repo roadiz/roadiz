@@ -42,7 +42,7 @@ class RequestProcessor
 
     public function __invoke(array $record)
     {
-        $record['extra'] = [
+        $record['context']['request'] = [
             'url'         => $this->request->getRequestUri(),
             'ip'          => $this->request->getClientIp(),
             'http_method' => $this->request->getMethod(),
