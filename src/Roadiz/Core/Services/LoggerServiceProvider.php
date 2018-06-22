@@ -152,7 +152,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
                 $handlers[] = new DoctrineHandler(
                     $c['em'],
                     $c['securityTokenStorage'],
-                    $c['request'],
+                    $c['requestStack'],
                     Logger::INFO
                 );
             }
