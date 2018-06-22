@@ -42,7 +42,7 @@ use RZ\Roadiz\Utils\Log\Handler\TolerantGelfHandler;
 use RZ\Roadiz\Utils\Log\Processor\RequestProcessor;
 use RZ\Roadiz\Utils\Log\Processor\TokenStorageProcessor;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class LoggerServiceProvider.
@@ -158,9 +158,9 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /*
              * Add processors
              */
-            /** @var Request $request */
-            $request = $c['request'];
-            $log->pushProcessor(new RequestProcessor($request));
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $log->pushProcessor(new RequestProcessor($requestStack));
             $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
 
             return $log;
