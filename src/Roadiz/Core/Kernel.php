@@ -246,6 +246,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         }
 
         $this->container['request'] = $request;
+        $this->container['requestContext']->fromRequest($request);
         $this->initEvents();
 
         return $this->container['httpKernel']->handle($request, $type, $catch);
