@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
@@ -43,21 +44,33 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class DoctrineHandler extends AbstractProcessingHandler
 {
+    /**
+     * @var EntityManager|null
+     */
     protected $em = null;
+    /**
+     * @var null|TokenStorageInterface
+     */
     protected $tokenStorage = null;
+    /**
+     * @var null|User
+     */
     protected $user = null;
-    protected $request = null;
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
 
     public function __construct(
         EntityManager $em,
         TokenStorageInterface $tokenStorage,
-        Request $request,
+        RequestStack $requestStack,
         $level = Logger::DEBUG,
         $bubble = true
     ) {
         $this->em = $em;
         $this->tokenStorage = $tokenStorage;
-        $this->request = $request;
+        $this->requestStack = $requestStack;
 
         parent::__construct($level, $bubble);
     }
@@ -81,7 +94,6 @@ class DoctrineHandler extends AbstractProcessingHandler
         return $this;
     }
 
-
     /**
      * @return \RZ\Roadiz\Core\Entities\User
      */
@@ -102,20 +114,21 @@ class DoctrineHandler extends AbstractProcessingHandler
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Request
+     * @return RequestStack
      */
-    public function getRequest()
+    public function getRequestStack()
     {
-        return $this->request;
+        return $this->requestStack;
     }
 
     /**
-     * @param Request $request
-     * @return $this
+     * @param RequestStack $requestStack
+     *
+     * @return DoctrineHandler
      */
-    public function setRequest(Request $request)
+    public function setRequestStack($requestStack)
     {
-        $this->request = $request;
+        $this->requestStack = $requestStack;
 
         return $this;
     }
@@ -151,8 +164,8 @@ class DoctrineHandler extends AbstractProcessingHandler
                 /*
                  * Add client IP to log if it’s an HTTP request
                  */
-                if (null !== $this->getRequest()) {
-                    $log->setClientIp($this->getRequest()->getClientIp());
+                if (null !== $this->requestStack->getMasterRequest()) {
+                    $log->setClientIp($this->requestStack->getMasterRequest()->getClientIp());
                 }
 
                 /*

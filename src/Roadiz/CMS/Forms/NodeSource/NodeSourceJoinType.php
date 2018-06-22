@@ -76,44 +76,40 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) {
+        $builder->addModelTransformer(new CallbackTransformer(function ($entitiesToForm) {
+            /*
+             * If model is already an AbstractEntity
+             */
+            if (!empty($entitiesToForm) && $entitiesToForm instanceof AbstractEntity) {
+                return $entitiesToForm->getId();
+            } elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
                 /*
-                 * If model is already an AbstractEntity
-                 */
-                if (!empty($entitiesToForm) &&
-                    $entitiesToForm instanceof AbstractEntity) {
-                    return $entitiesToForm->getId();
-                } /*
                  * If model is a collection of AbstractEntity
                  */
-                elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
-                    $idArray = [];
-                    foreach ($entitiesToForm as $entity) {
-                        if ($entity instanceof AbstractEntity) {
-                            $idArray[] = $entity->getId();
-                        }
+                $idArray = [];
+                foreach ($entitiesToForm as $entity) {
+                    if ($entity instanceof AbstractEntity) {
+                        $idArray[] = $entity->getId();
                     }
-                    return $idArray;
-                } elseif (!empty($entitiesToForm)) {
-                    return $entitiesToForm;
                 }
-                return '';
-            },
-            function ($formToEntities) {
-                if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_MANY_T) {
-                    return $this->entityManager->getRepository($this->classname)->findBy([
-                        'id' => $formToEntities,
-                    ]);
-                }
-                if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_ONE_T) {
-                    return $this->entityManager->getRepository($this->classname)->findOneBy([
-                        'id' => $formToEntities,
-                    ]);
-                }
-                return null;
+                return $idArray;
+            } elseif (!empty($entitiesToForm)) {
+                return $entitiesToForm;
             }
-        ));
+            return '';
+        }, function ($formToEntities) {
+            if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_MANY_T) {
+                return $this->entityManager->getRepository($this->classname)->findBy([
+                    'id' => $formToEntities,
+                ]);
+            }
+            if ($this->nodeTypeField->getType() === NodeTypeField::MANY_TO_ONE_T) {
+                return $this->entityManager->getRepository($this->classname)->findOneBy([
+                    'id' => $formToEntities,
+                ]);
+            }
+            return null;
+        }));
     }
 
     /**
