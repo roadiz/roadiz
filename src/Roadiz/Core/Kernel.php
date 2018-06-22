@@ -98,9 +98,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const CMS_VERSION = 'beta';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
-
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.22.15";
+    public static $cmsVersion = "0.22.16";
 
     /**
      * @var Container|null
