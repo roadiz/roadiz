@@ -146,7 +146,7 @@ class FontType extends AbstractType
             ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'font';
     }

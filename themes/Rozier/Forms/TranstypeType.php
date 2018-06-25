@@ -67,7 +67,7 @@ class TranstypeType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'transtype';
     }

@@ -295,7 +295,7 @@ class CustomFormsType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'custom_form_'.$this->customForm->getId();
     }

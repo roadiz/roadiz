@@ -95,7 +95,7 @@ class TranslationType extends AbstractType
         );
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'translation';
     }

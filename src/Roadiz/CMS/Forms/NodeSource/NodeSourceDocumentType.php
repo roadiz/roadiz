@@ -108,7 +108,7 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'documents';
     }
