@@ -37,17 +37,6 @@
         <hr />
         <h2 class="content-subtitle">{% trans %}urlAlias{% endtrans %}</h2>
 
-        <h3>{% trans %}add.a.urlAlias{% endtrans %}</h3>
-        {% form_theme form 'horizontalForms.html.twig' %}
-        {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <button class="uk-button uk-button-primary" type="submit">
-                <i class="uk-icon-rz-plus"></i> {% trans %}add.urlAlias{% endtrans %}
-            </button>
-        {{ form_end(form) }}
-
-        <hr />
-
         <div class="content-table-cont">
             <table class="aliases content-table uk-table">
                 <thead>
@@ -58,6 +47,17 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td colspan="3">
+                            {% form_theme form 'horizontalForms.html.twig' %}
+                            {{ form_start(form) }}
+                            {{ form_widget(form) }}
+                            <button class="uk-button uk-button-primary" type="submit">
+                                <i class="uk-icon-rz-plus"></i> {% trans %}add.urlAlias{% endtrans %}
+                            </button>
+                            {{ form_end(form) }}
+                        </td>
+                    </tr>
                     {% for urlAlias in aliases %}
                         {% include '@Rozier/url-aliases/editRow.html.twig' %}
                     {% endfor %}

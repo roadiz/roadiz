@@ -6,7 +6,7 @@
             attr: { class: "uk-form uk-form-horizontal urlalias-form" }
         }) }}
             {{ form_widget(urlAlias.editForm) }}
-            <button class="uk-button uk-button-small uk-button-primary" type="submit" value="{% trans %}edit{% endtrans %}"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
+            <button class="uk-button uk-button-primary" type="submit" value="{% trans %}edit{% endtrans %}"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
         {{ form_end(urlAlias.editForm) }}
     </td>
     <td>{{ urlAlias.alias.getNodeSource.getTranslation.getName }}</td>
@@ -15,7 +15,7 @@
         {% form_theme urlAlias.deleteForm 'horizontalForms.html.twig' %}
         {{ form_start(urlAlias.deleteForm) }}
             {{ form_widget(urlAlias.deleteForm) }}
-            <button class="uk-button uk-button-small uk-button-danger" type="submit" value="{% trans %}delete{% endtrans %}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</button>
+            <button class="uk-button uk-button-danger" type="submit" value="{% trans %}delete{% endtrans %}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</button>
         {{ form_end(urlAlias.deleteForm) }}
     </td>
 </tr>

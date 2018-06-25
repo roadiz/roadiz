@@ -352,13 +352,16 @@ class UrlAliasesController extends RozierApp
                             ],
                         ])
                         ->add('alias', 'text', [
-                            'label' => 'urlAlias',
+                            'label' => false,
+                            'attr' => [
+                                'placeholder' => 'urlAlias',
+                            ],
                             'constraints' => [
                                 new NotBlank(),
                             ]
                         ])
                         ->add('translationId', new TranslationsType($this->get('em')), [
-                            'label' => 'translation',
+                            'label' => false,
                         ]);
 
         return $builder->getForm();
