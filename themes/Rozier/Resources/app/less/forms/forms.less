@@ -316,6 +316,13 @@
         .uk-form-row {
             display: inline-block;
         }
+        .uk-form-label {
+            float: none;
+            &:before {
+                content: none;
+                display: none;
+            }
+        }
     }
     &.uk-form-stacked .uk-form-label {
         margin-bottom: 5px;

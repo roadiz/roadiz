@@ -5,70 +5,67 @@
 
 {% block content %}
 <section class="content-global">
-
-	<header class="content-header header-node header-node-edit-seo">
-		{% include '@Rozier/nodes/breadcrumb.html.twig' with {
+    <header class="content-header header-node header-node-edit-seo">
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {
             "node": node,
             "source": source,
         } only %}
-		<h1 class="content-title node-edit-seo-title">
-			{{ "edit.node.%name%.seo"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
+        <h1 class="content-title node-edit-seo-title">
+            {{ "edit.node.%name%.seo"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
-		</h1>
-		{#{% include '@Rozier/nodes/navBack.html.twig' %}#}
-		{% include '@Rozier/nodes/navBar.html.twig' with {"current": 'seo'} %}
-		{% include '@Rozier/nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
-	</header>
+        </h1>
+        {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
+        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'seo'} %}
+        {% include '@Rozier/nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
+    </header>
 
-	<article class="content content-node-edit-seo">
-		<h2 class="content-subtitle">{% trans %}edit.node.seo{% endtrans %}</h2>
+    <article class="content content-node-edit-seo">
+        <h2 class="content-subtitle">{% trans %}edit.node.seo{% endtrans %}</h2>
 
-		{% form_theme seoForm '@Rozier/forms.html.twig' %}
-		<form id="edit-seo-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(seoForm) }}>
-		    {{ form_widget(seoForm) }}
-		    <fieldset data-uk-margin>
-		    	{% spaceless %}
-		    	<button data-action-save="#edit-seo-form" class="uk-button uk-button-primary rz-action-save" type="submit">
-		    		<span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
-		    		<span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
-		    	</button>
-		    	{% endspaceless %}
-	   		</fieldset>
-		</form>
-		<hr />
-		<h2 class="content-subtitle">{% trans %}urlAlias{% endtrans %}</h2>
+        {% form_theme seoForm '@Rozier/forms.html.twig' %}
+        <form id="edit-seo-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(seoForm) }}>
+            {{ form_widget(seoForm) }}
+            <fieldset data-uk-margin>
+                {% spaceless %}
+                <button data-action-save="#edit-seo-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+                {% endspaceless %}
+            </fieldset>
+        </form>
+        <hr />
+        <h2 class="content-subtitle">{% trans %}urlAlias{% endtrans %}</h2>
 
-		<h3>{% trans %}add.a.urlAlias{% endtrans %}</h3>
-		{% form_theme form '@Rozier/forms.html.twig' %}
-		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	<button class="uk-button uk-button-primary" type="submit">
-		    		<i class="uk-icon-rz-plus"></i> {% trans %}add.urlAlias{% endtrans %}
-		    	</button>
-	   		</fieldset>
-		</form>
+        <h3>{% trans %}add.a.urlAlias{% endtrans %}</h3>
+        {% form_theme form 'horizontalForms.html.twig' %}
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="uk-button uk-button-primary" type="submit">
+                <i class="uk-icon-rz-plus"></i> {% trans %}add.urlAlias{% endtrans %}
+            </button>
+        {{ form_end(form) }}
 
-		<hr />
+        <hr />
 
-		<div class="content-table-cont">
-			<table class="aliases content-table uk-table">
-				<thead>
-			        <tr>
-			            <th>{% trans %}urlAlias{% endtrans %}</th>
-			            <th>{% trans %}translation{% endtrans %}</th>
-			            <th>{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for urlAlias in aliases %}
-						{% include '@Rozier/url-aliases/editRow.html.twig' %}
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-	</article>
+        <div class="content-table-cont">
+            <table class="aliases content-table uk-table">
+                <thead>
+                    <tr>
+                        <th>{% trans %}urlAlias{% endtrans %}</th>
+                        <th>{% trans %}translation{% endtrans %}</th>
+                        <th>{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for urlAlias in aliases %}
+                        {% include '@Rozier/url-aliases/editRow.html.twig' %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </article>
 
-	{% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

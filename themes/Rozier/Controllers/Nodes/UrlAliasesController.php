@@ -129,26 +129,30 @@ class UrlAliasesController extends RozierApp
                 // Match edit
                 $editForm->handleRequest($request);
                 if ($editForm->isValid() && $editForm->get('urlaliasId')->getData() === $alias->getId()) {
-                    if ($this->editUrlAlias($editForm->getData(), $alias)) {
-                        $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
-                        $this->publishConfirmMessage($request, $msg, $source);
-                        /*
-                         * Dispatch event
-                         */
-                        $event = new FilterUrlAliasEvent($alias);
-                        $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_UPDATED, $event);
-                    } else {
-                        $msg = $this->getTranslator()->trans('url_alias.%alias%.no_update.already_exists', ['%alias%' => $alias->getAlias()]);
-                        $this->publishErrorMessage($request, $msg, $source);
-                    }
+                    try {
+                        if ($this->editUrlAlias($editForm->getData(), $alias)) {
+                            $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
+                            $this->publishConfirmMessage($request, $msg, $source);
+                            /*
+                             * Dispatch event
+                             */
+                            $event = new FilterUrlAliasEvent($alias);
+                            $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_UPDATED, $event);
 
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditSEOPage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    ));
+                            return $this->redirect($this->generateUrl(
+                                'nodesEditSEOPage',
+                                ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                            ));
+                        } else {
+                            $msg = $this->getTranslator()->trans(
+                                'url_alias.%alias%.no_update.already_exists',
+                                ['%alias%' => $alias->getAlias()]
+                            );
+                            $editForm->addError(new FormError($msg));
+                        }
+                    } catch (EntityAlreadyExistsException $e) {
+                        $editForm->addError(new FormError($e->getMessage()));
+                    }
                 }
 
                 // Match delete
@@ -163,9 +167,7 @@ class UrlAliasesController extends RozierApp
                      */
                     $event = new FilterUrlAliasEvent($alias);
                     $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_DELETED, $event);
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
+
                     return $this->redirect($this->generateUrl(
                         'nodesEditSEOPage',
                         ['nodeId' => $node->getId(), 'translationId' => $translationId]
