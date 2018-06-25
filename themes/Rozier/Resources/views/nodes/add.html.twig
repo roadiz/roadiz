@@ -4,25 +4,26 @@
 <section class="content-global">
 
     <header class="content-header header-node header-node-add">
-    	<h1 class="content-title">{% trans %}add.a.node{% endtrans %}</h1>
-    	{% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
-    	{% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
+        <h1 class="content-title">{% trans %}add.a.node{% endtrans %}</h1>
+        {% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
+        {% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
         {% include '@Rozier/nodes/navBack.html.twig' %}
     </header>
 
-    <article class="content content-no-action-menu">
+    <article class="content">
         {% if nodeTypesCount %}
-        	{% form_theme form '@Rozier/forms.html.twig' %}
-        	<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        	    {{ form_widget(form) }}
+            {% form_theme form '@Rozier/forms.html.twig' %}
+            <form id="add-node-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+                {{ form_widget(form) }}
                 <fieldset data-uk-margin>
                 {% spaceless %}
-                <button class="uk-button uk-button-primary" type="submit">
-                    <i class="uk-icon-plus"></i> {% trans %}add.a.node{% endtrans %}
-                </button>
+                    <button data-action-save="#add-node-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                        <span class="icon-container"><i class="uk-icon-plus"></i></span>
+                        <span class="label"><span class="label-text">{% trans %}add.a.node{% endtrans %}</span></span>
+                    </button>
                 {% endspaceless %}
                 </fieldset>
-        	</form>
+            </form>
         {% else %}
             <div class="content-inner">
                 <p class="uk-alert uk-alert-warning">{% trans %}no.nodeType.available.create_one_first{% endtrans %}</p>
@@ -30,6 +31,6 @@
             </div>
         {% endif %}
     </article>
-
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

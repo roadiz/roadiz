@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -55,6 +56,9 @@ class AddNodeType extends AbstractType
             'mapped' => false,
             'constraints' => [
                 new NotBlank(),
+                new Length([
+                    'max' => 255
+                ])
             ],
         ]);
 

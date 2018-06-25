@@ -36,6 +36,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -56,6 +57,9 @@ class FontType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(),
+                    new Length([
+                        'max' => 100,
+                    ])
                 ],
             ])
             ->add('hash', 'text', [

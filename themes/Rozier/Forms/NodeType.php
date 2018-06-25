@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -52,12 +53,10 @@ class NodeType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['nodeName'],
                     ]),
+                    new Length([
+                        'max' => 255,
+                    ])
                 ],
-            ])
-            ->add('home', 'checkbox', [
-                'label' => 'node.isHome',
-                'required' => false,
-                'attr' => ['class' => 'rz-boolean-checkbox'],
             ])
             ->add('dynamicNodeName', 'checkbox', [
                 'label' => 'node.dynamicNodeName',
@@ -66,6 +65,11 @@ class NodeType extends AbstractType
                     'class' => 'rz-boolean-checkbox',
                     'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation'
                 ],
+            ])
+            ->add('home', 'checkbox', [
+                'label' => 'node.isHome',
+                'required' => false,
+                'attr' => ['class' => 'rz-boolean-checkbox'],
             ])
             ->add('childrenOrder', 'choice', [
                 'label' => 'node.childrenOrder',

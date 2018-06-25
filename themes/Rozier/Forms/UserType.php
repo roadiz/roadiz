@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -63,6 +64,9 @@ class UserType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['username'],
                     ]),
+                    new Length([
+                        'max' => 200
+                    ])
                 ],
             ])
             ->add('plainPassword', 'repeated', [

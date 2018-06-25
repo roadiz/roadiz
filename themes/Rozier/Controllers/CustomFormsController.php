@@ -97,12 +97,9 @@ class CustomFormsController extends RozierApp
                     $this->get('em')->flush();
                     $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
-                    return $this->redirect($this->generateUrl(
-                        'customFormsHomePage',
-                        [
-                            '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
-                        ]
-                    ));
+                    return $this->redirect($this->generateUrl('customFormsEditPage', [
+                        'customFormId' => $customForm->getId(),
+                    ]));
                 } catch (EntityAlreadyExistsException $e) {
                     $form->addError(new FormError($e->getMessage()));
                 }
@@ -143,12 +140,9 @@ class CustomFormsController extends RozierApp
                     $msg = $this->getTranslator()->trans('customForm.%name%.created', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
 
-                    /*
-                     * Redirect to update schema page
-                     */
-                    return $this->redirect($this->generateUrl(
-                        'customFormsHomePage'
-                    ));
+                    return $this->redirect($this->generateUrl('customFormsEditPage', [
+                        'customFormId' => $customForm->getId(),
+                    ]));
                 } catch (EntityAlreadyExistsException $e) {
                     $form->addError(new FormError($e->getMessage()));
                 }

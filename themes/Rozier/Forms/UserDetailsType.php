@@ -36,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  *
@@ -48,14 +49,29 @@ class UserDetailsType extends AbstractType
             ->add('firstName', 'text', [
                 'label' => 'firstName',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('lastName', 'text', [
                 'label' => 'lastName',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('phone', 'text', [
                 'label' => 'phone',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 20
+                    ])
+                ]
             ])
             ->add('facebookName', 'text', [
                 'label' => 'facebookName',
@@ -67,10 +83,20 @@ class UserDetailsType extends AbstractType
             ->add('company', 'text', [
                 'label' => 'company',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('job', 'text', [
                 'label' => 'job',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('birthday', 'date', [
                 'label' => 'birthday',
@@ -90,6 +116,11 @@ class UserDetailsType extends AbstractType
             ->add('pictureUrl', TextType::class, [
                 'label' => 'pictureUrl',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('locale', ChoiceType::class, [
                 'label' => 'user.backoffice.language',
