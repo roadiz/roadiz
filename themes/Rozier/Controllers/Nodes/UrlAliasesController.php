@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceSeoType;
 use RZ\Roadiz\CMS\Forms\TranslationsType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -41,7 +42,6 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Events\UrlAliasEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -88,37 +88,32 @@ class UrlAliasesController extends RozierApp
             $uas = $this->get('em')
                         ->getRepository(UrlAlias::class)
                         ->findAllFromNode($node->getId());
-
-            /** @var NodeHandler $nodeHandler */
-            $nodeHandler = $this->get('node.handler')->setNode($node);
+            $availableTranslations = $this->get('em')
+                ->getRepository(Translation::class)
+                ->findAvailableTranslationsForNode($node);
 
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $source;
             $this->assignation['aliases'] = [];
             $this->assignation['translation'] = $translation;
-            $this->assignation['available_translations'] = $nodeHandler->getAvailableTranslations();
+            $this->assignation['available_translations'] = $availableTranslations;
 
             /*
              * SEO Form
              */
-            $seoForm = $this->buildEditSEOForm($source);
-            $this->assignation['seoForm'] = $seoForm->createView();
+            $seoForm = $this->createForm(NodeSourceSeoType::class, $source);
             $seoForm->handleRequest($request);
-
             if ($seoForm->isValid()) {
-                if ($this->editSEO($seoForm->getData(), $source)) {
-                    $msg = $this->getTranslator()->trans('node.seo.updated');
-                    $this->publishConfirmMessage($request, $msg, $source);
+                $this->get('em')->flush();
+                $msg = $this->getTranslator()->trans('node.seo.updated');
+                $this->publishConfirmMessage($request, $msg, $source);
 
-                    /*
-                     * Dispatch event
-                     */
-                    $event = new FilterNodesSourcesEvent($source);
-                    $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
-                } else {
-                    $msg = $this->getTranslator()->trans('node.seo.not.updated');
-                    $this->publishErrorMessage($request, $msg, $source);
-                }
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodesSourcesEvent($source);
+                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
 
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -132,6 +127,7 @@ class UrlAliasesController extends RozierApp
             /*
              * each url alias edit form
              */
+            /** @var UrlAlias $alias */
             foreach ($uas as $alias) {
                 $editForm = $this->buildEditUrlAliasForm($alias);
                 $deleteForm = $this->buildDeleteUrlAliasForm($alias);
@@ -228,6 +224,7 @@ class UrlAliasesController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['seoForm'] = $seoForm->createView();
 
             return $this->render('nodes/editAliases.html.twig', $this->assignation);
         }
@@ -286,28 +283,6 @@ class UrlAliasesController extends RozierApp
         }
 
         return null;
-    }
-
-    /**
-     * Edit NodesSources SEO fields.
-     *
-     * @param array                                 $data
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
-     *
-     * @return boolean
-     */
-    private function editSEO(array $data, $nodeSource)
-    {
-        if ($data['id'] == $nodeSource->getId()) {
-            $nodeSource->setMetaTitle($data['metaTitle']);
-            $nodeSource->setMetaKeywords($data['metaKeywords']);
-            $nodeSource->setMetaDescription($data['metaDescription']);
-
-            $this->get('em')->flush();
-            return true;
-        }
-
-        return false;
     }
 
     /**
@@ -431,45 +406,6 @@ class UrlAliasesController extends RozierApp
                             'constraints' => [
                                 new NotBlank(),
                             ],
-                        ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $ns
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildEditSEOForm($ns)
-    {
-        $defaults = [
-            'id' => $ns->getId(),
-            'metaTitle' => $ns->getMetaTitle(),
-            'metaKeywords' => $ns->getMetaKeywords(),
-            'metaDescription' => $ns->getMetaDescription(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('id', 'hidden', [
-                            'data' => $ns->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('metaTitle', 'text', [
-                            'label' => 'metaTitle',
-                            'required' => false,
-                            'attr' => [
-                                'data-max-length' => 55,
-                            ],
-                        ])
-                        ->add('metaKeywords', 'text', [
-                            'label' => 'metaKeywords',
-                            'required' => false,
-                        ])
-                        ->add('metaDescription', 'textarea', [
-                            'label' => 'metaDescription',
-                            'required' => false,
                         ]);
 
         return $builder->getForm();
