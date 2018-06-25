@@ -43,6 +43,7 @@ use RZ\Roadiz\Core\Events\UrlAliasEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -83,8 +84,7 @@ class UrlAliasesController extends RozierApp
 
         $node = $source->getNode();
 
-        if ($source !== null &&
-            $node !== null) {
+        if ($source !== null && $node !== null) {
             $uas = $this->get('em')
                         ->getRepository(UrlAlias::class)
                         ->findAllFromNode($node->getId());
@@ -107,17 +107,12 @@ class UrlAliasesController extends RozierApp
                 $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans('node.seo.updated');
                 $this->publishConfirmMessage($request, $msg, $source);
-
                 /*
                  * Dispatch event
                  */
                 $event = new FilterNodesSourcesEvent($source);
                 $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
 
-
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 return $this->redirect($this->generateUrl(
                     'nodesEditSEOPage',
                     ['nodeId' => $node->getId(), 'translationId' => $translationId]
@@ -131,15 +126,12 @@ class UrlAliasesController extends RozierApp
             foreach ($uas as $alias) {
                 $editForm = $this->buildEditUrlAliasForm($alias);
                 $deleteForm = $this->buildDeleteUrlAliasForm($alias);
-
                 // Match edit
                 $editForm->handleRequest($request);
-                if ($editForm->isValid() &&
-                    $editForm->getData()['urlaliasId'] == $alias->getId()) {
+                if ($editForm->isValid() && $editForm->get('urlaliasId')->getData() === $alias->getId()) {
                     if ($this->editUrlAlias($editForm->getData(), $alias)) {
                         $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
                         $this->publishConfirmMessage($request, $msg, $source);
-
                         /*
                          * Dispatch event
                          */
@@ -161,9 +153,7 @@ class UrlAliasesController extends RozierApp
 
                 // Match delete
                 $deleteForm->handleRequest($request);
-
-                if ($deleteForm->isValid() &&
-                    $deleteForm->getData()['urlaliasId'] == $alias->getId()) {
+                if ($deleteForm->isValid() && $deleteForm->get('urlaliasId')->getData() === $alias->getId()) {
                     $this->deleteUrlAlias($editForm->getData(), $alias);
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.deleted', ['%alias%' => $alias->getAlias()]);
                     $this->publishConfirmMessage($request, $msg, $source);
@@ -195,7 +185,6 @@ class UrlAliasesController extends RozierApp
              */
             $form = $this->buildAddUrlAliasForm($node);
             $form->handleRequest($request);
-
             if ($form->isValid()) {
                 try {
                     $ua = $this->addNodeUrlAlias($form->getData(), $node);
@@ -209,18 +198,16 @@ class UrlAliasesController extends RozierApp
                      */
                     $event = new FilterUrlAliasEvent($ua);
                     $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_CREATED, $event);
+
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSEOPage',
+                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
+                    ));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage(), $source);
+                    $form->addError(new FormError($e->getMessage()));
                 } catch (NoTranslationAvailableException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage(), $source);
+                    $form->addError(new FormError($e->getMessage()));
                 }
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                return $this->redirect($this->generateUrl(
-                    'nodesEditSEOPage',
-                    ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -366,7 +353,7 @@ class UrlAliasesController extends RozierApp
         $defaults = [
             'nodeId' => $node->getId(),
         ];
-        $builder = $this->createFormBuilder($defaults)
+        $builder = $this->createNamedFormBuilder('add_url_alias', $defaults)
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -375,6 +362,9 @@ class UrlAliasesController extends RozierApp
                         ])
                         ->add('alias', 'text', [
                             'label' => 'urlAlias',
+                            'constraints' => [
+                                new NotBlank(),
+                            ]
                         ])
                         ->add('translationId', new TranslationsType($this->get('em')), [
                             'label' => 'translation',
@@ -394,7 +384,7 @@ class UrlAliasesController extends RozierApp
             'urlaliasId' => $ua->getId(),
             'alias' => $ua->getAlias(),
         ];
-        $builder = $this->createFormBuilder($defaults)
+        $builder = $this->createNamedFormBuilder('edit_urlalias_'.$ua->getId(), $defaults)
                         ->add('urlaliasId', 'hidden', [
                             'data' => $ua->getId(),
                             'constraints' => [

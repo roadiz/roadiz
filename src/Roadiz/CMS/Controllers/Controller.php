@@ -40,7 +40,11 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\EmailManager;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -408,8 +412,8 @@ abstract class Controller implements ContainerAwareInterface
      * Creates and returns a Form instance from the type of the form.
      *
      * @param string|FormTypeInterface $type    The built type of the form
-     * @param mixed                    $data    The initial data for the form
-     * @param array                    $options Options for the form
+     * @param mixed $data The initial data for the form
+     * @param array $options Options for the form
      *
      * @return Form
      */
@@ -424,12 +428,28 @@ abstract class Controller implements ContainerAwareInterface
      * @param mixed $data    The initial data for the form
      * @param array $options Options for the form
      *
-     * @return \Symfony\Component\Form\FormBuilder
+     * @return FormBuilderInterface
      */
     protected function createFormBuilder($data = null, array $options = [])
     {
         return $this->get('formFactory')->createBuilder('form', $data, $options);
     }
+
+    /**
+     * Creates and returns a form builder instance.
+     *
+     * @param mixed $data    The initial data for the form
+     * @param array $options Options for the form
+     *
+     * @return FormBuilderInterface
+     */
+    protected function createNamedFormBuilder($name = 'form', $data = null, array $options = [])
+    {
+        /** @var FormFactory $formFactory */
+        $formFactory = $this->get('formFactory');
+        return $formFactory->createNamedBuilder($name, FormType::class, $data, $options);
+    }
+
 
     /**
      * Creates and returns an EntityListManager instance.
