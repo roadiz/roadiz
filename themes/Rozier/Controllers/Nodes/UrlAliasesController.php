@@ -44,6 +44,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -63,7 +64,6 @@ class UrlAliasesController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws EntityAlreadyExistsException
-     * @throws \Twig_Error_Runtime
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
@@ -125,10 +125,10 @@ class UrlAliasesController extends RozierApp
             /** @var UrlAlias $alias */
             foreach ($uas as $alias) {
                 $editForm = $this->buildEditUrlAliasForm($alias);
-                $deleteForm = $this->buildDeleteUrlAliasForm($alias);
+                $deleteForm = $this->createNamedFormBuilder('delete_urlalias_'.$alias->getId())->getForm();
                 // Match edit
                 $editForm->handleRequest($request);
-                if ($editForm->isValid() && $editForm->get('urlaliasId')->getData() === $alias->getId()) {
+                if ($editForm->isValid()) {
                     try {
                         if ($this->editUrlAlias($editForm->getData(), $alias)) {
                             $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
@@ -157,8 +157,9 @@ class UrlAliasesController extends RozierApp
 
                 // Match delete
                 $deleteForm->handleRequest($request);
-                if ($deleteForm->isValid() && $deleteForm->get('urlaliasId')->getData() === $alias->getId()) {
-                    $this->deleteUrlAlias($editForm->getData(), $alias);
+                if ($deleteForm->isValid()) {
+                    $this->get('em')->remove($alias);
+                    $this->get('em')->flush();
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.deleted', ['%alias%' => $alias->getAlias()]);
                     $this->publishConfirmMessage($request, $msg, $source);
 
@@ -334,21 +335,9 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param array    $data
-     * @param UrlAlias $ua
-     */
-    private function deleteUrlAlias($data, UrlAlias $ua)
-    {
-        if ($data['urlaliasId'] == $ua->getId()) {
-            $this->get('em')->remove($ua);
-            $this->get('em')->flush();
-        }
-    }
-
-    /**
      * @param Node $node
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildAddUrlAliasForm(Node $node)
     {
@@ -378,7 +367,7 @@ class UrlAliasesController extends RozierApp
     /**
      * @param UrlAlias $ua
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildEditUrlAliasForm(UrlAlias $ua)
     {
@@ -395,27 +384,6 @@ class UrlAliasesController extends RozierApp
                         ])
                         ->add('alias', 'text', [
                             'label' => false,
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param UrlAlias $ua
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildDeleteUrlAliasForm(UrlAlias $ua)
-    {
-        $defaults = [
-            'urlaliasId' => $ua->getId(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('urlaliasId', 'hidden', [
-                            'data' => $ua->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
