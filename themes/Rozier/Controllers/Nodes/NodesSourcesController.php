@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -89,18 +88,15 @@ class NodesSourcesController extends RozierApp
             if (null !== $source) {
                 $this->get('em')->refresh($source);
                 $node = $source->getNode();
-
-                /** @var NodeHandler $nodeHandler */
-                $nodeHandler = $this->get('node.handler')->setNode($gnode);
+                $availableTranslations = $this->get('em')
+                    ->getRepository(Translation::class)
+                    ->findAvailableTranslationsForNode($gnode);
 
                 $this->assignation['translation'] = $translation;
-                $this->assignation['available_translations'] = $nodeHandler->getAvailableTranslations();
+                $this->assignation['available_translations'] = $availableTranslations;
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
 
-                /*
-                 * Form
-                 */
                 $form = $this->createForm(
                     new NodeSourceType($node->getNodeType()),
                     $source,
@@ -184,6 +180,7 @@ class NodesSourcesController extends RozierApp
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
+        /** @var NodesSources $ns */
         $ns = $this->get("em")->find(NodesSources::class, $nodeSourceId);
         if (null === $ns) {
             throw new ResourceNotFoundException();
