@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -53,6 +54,9 @@ class TagType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['tagName'],
                     ]),
+                    new Length([
+                        'max' => 255,
+                    ])
                 ],
             ])
             ->add('color', 'text', [
@@ -91,7 +95,7 @@ class TagType extends AbstractType
             ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'tag';
     }

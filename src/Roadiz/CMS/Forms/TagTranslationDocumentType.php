@@ -84,7 +84,7 @@ class TagTranslationDocumentType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'documents';
     }

@@ -90,7 +90,7 @@ class ExplorerProviderItemType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'explorer_provider';
     }

@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
@@ -113,14 +114,12 @@ trait NodesTrait
     {
         if ($node->isHidingChildren()) {
             $defaults = [];
-
-            $builder = $this->get('formFactory')
-                            ->createBuilder('form', $defaults)
+            $builder = $this->createNamedFormBuilder('add_stack_type', $defaults)
                             ->add('nodeId', 'hidden', [
                                 'data' => (int) $node->getId(),
                             ])
                             ->add('nodeTypeId', new NodeTypesType($this->get('em'), true), [
-                                'label' => 'nodeType',
+                                'label' => false,
                                 'constraints' => [
                                     new NotBlank(),
                                 ],
@@ -173,11 +172,11 @@ trait NodesTrait
     /**
      * @param Node $node
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildDeleteForm(Node $node)
     {
-        $builder = $this->createFormBuilder()
+        $builder = $this->createNamedFormBuilder('remove_stack_type_'.$node->getId())
                         ->add('nodeId', 'hidden', [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -194,7 +193,6 @@ trait NodesTrait
     protected function buildEmptyTrashForm()
     {
         $builder = $this->createFormBuilder();
-
         return $builder->getForm();
     }
 }

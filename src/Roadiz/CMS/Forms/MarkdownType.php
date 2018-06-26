@@ -47,7 +47,7 @@ class MarkdownType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'markdown';
     }

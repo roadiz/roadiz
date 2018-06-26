@@ -1,9 +1,7 @@
 {% spaceless %}
 <nav data-action-menu class="actions-menu uk-navbar">
     {# Delete current node #}
-
-    {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.locked ) %}
-
+    {% if node and (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.locked ) %}
         {% if node.isDeleted %}
         <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesUndeletePage', { nodeId: node.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-untrash"></i></span>
@@ -23,7 +21,7 @@
         {% endif %}
     {% endif %}
 
-    {% if not node.isDeleted %}
+    {% if node and not node.isDeleted %}
         {#
          # Node actions
          #}
@@ -52,7 +50,7 @@
         {#
          # Node parameters
          #}
-        {% if (is_granted('ROLE_ACCESS_NODES_STATUS')) %}
+        {% if node and (is_granted('ROLE_ACCESS_NODES_STATUS')) %}
         <div class="node-statuses node-parameters with-subnav">
             <header><i class="uk-icon-rz-settings-general"></i><span class="label"><span class="label-text">{% trans %}parameters{% endtrans %}</span></span></header>
             <ul>
@@ -79,10 +77,10 @@
             </ul>
         </div>
         {% endif %}
-        {% if not node.isLocked %}
+        {% if node and not node.isLocked %}
             {#
-         # Node statuses
-         #}
+             # Node statuses
+             #}
             <div class="node-statuses node-status with-subnav uk-form">
 
                 {% if node.isDraft %}

@@ -108,11 +108,13 @@ class CustomFormsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         try {
-            $existingCustomForm = $this->get('em')
-                ->find(CustomForm::class, (int) $customFormId);
+            /** @var CustomForm $existingCustomForm */
+            $existingCustomForm = $this->get('em')->find(CustomForm::class, (int) $customFormId);
+            if (null === $existingCustomForm) {
+                throw $this->createNotFoundException();
+            }
 
             $newCustomForm = clone $existingCustomForm;
-
             $em = $this->get("em");
 
             foreach ($newCustomForm->getFields() as $field) {
@@ -120,12 +122,7 @@ class CustomFormsUtilsController extends RozierApp
             }
 
             $em->persist($newCustomForm);
-
             $em->flush();
-
-            foreach ($newCustomForm->getFields() as $field) {
-                $field->setCustomForm($newCustomForm);
-            }
 
             $msg = $this->getTranslator()->trans("duplicated.custom.form.%name%", [
                 '%name%' => $existingCustomForm->getDisplayName(),
@@ -139,13 +136,10 @@ class CustomFormsUtilsController extends RozierApp
                         ["customFormId" => $newCustomForm->getId()]
                     ));
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                $this->getTranslator()->trans("impossible.duplicate.custom.form.%name%", [
-                    '%name%' => $existingCustomForm->getDisplayName(),
-                ])
-            );
-            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->publishErrorMessage($request, $this->getTranslator()->trans("impossible.duplicate.custom.form.%name%", [
+                '%name%' => $existingCustomForm->getDisplayName(),
+            ]));
+            $this->publishErrorMessage($request, $e->getMessage());
 
             return $this->redirect($this->get('urlGenerator')
                     ->generate(
