@@ -613,7 +613,6 @@ class NodesController extends RozierApp
         try {
             $generator = new UniqueNodeGenerator($this->get('em'));
             $source = $generator->generateFromRequest($request);
-
             /*
              * Dispatch event
              */

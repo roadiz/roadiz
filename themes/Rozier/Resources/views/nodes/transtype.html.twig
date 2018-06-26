@@ -15,9 +15,9 @@
         <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}transtype_will_copy_data_from_fields_existing_in_both_types_not_others{% endtrans %}</legend>
+                <legend class="uk-alert uk-alert-warning"><i class="uk-icon uk-icon-warning"></i> {% trans %}transtype_will_copy_data_from_fields_existing_in_both_types_not_others{% endtrans %}</legend>
                 <a href="{{ path('nodesEditPage', {nodeId: node.getId}) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-bolt"></i> {% trans %}transtype.node{% endtrans %}</button>
+                <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-bolt"></i> {% trans %}transtype.node{% endtrans %}</button>
             </fieldset>
         </form>
     </article>

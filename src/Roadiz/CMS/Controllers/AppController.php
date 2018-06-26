@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Translation\Translator;
 
 /**
  * Base class for Roadiz themes.
@@ -627,11 +628,17 @@ abstract class AppController extends Controller
      */
     protected function getErrorsAsArray(FormInterface $form)
     {
+        /** @var Translator $translator */
+        $translator = $this->get('translator');
         $errors = [];
         /** @var FormError $error */
         foreach ($form->getErrors() as $error) {
             if (count($error->getMessageParameters()) > 0) {
-                $errors[] = $this->get('translator')->trans($error->getMessageTemplate(), $error->getMessageParameters());
+                if (null !== $error->getMessagePluralization()) {
+                    $errors[] = $translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters());
+                } else {
+                    $errors[] = $translator->trans($error->getMessageTemplate(), $error->getMessageParameters());
+                }
             } else {
                 $errors[] = $error->getMessage();
             }

@@ -57,8 +57,8 @@ class NodesSourcesController extends RozierApp
      * Return an edition form for requested node.
      *
      * @param Request $request
-     * @param int     $nodeId
-     * @param int     $translationId
+     * @param int $nodeId
+     * @param int $translationId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -67,8 +67,7 @@ class NodesSourcesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         /** @var Translation $translation */
-        $translation = $this->get('em')
-                            ->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
         /*
          * Here we need to directly select nodeSource
          * if not doctrine will grab a cache tag because of NodeTreeWidget
