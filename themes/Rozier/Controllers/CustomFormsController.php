@@ -31,9 +31,10 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\CustomFormType;
 use Themes\Rozier\RozierApp;
 
@@ -79,8 +80,8 @@ class CustomFormsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
-        $customForm = $this->get('em')
-                           ->find(CustomForm::class, (int) $customFormId);
+        /** @var CustomForm $customForm */
+        $customForm = $this->get('em')->find(CustomForm::class, (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
@@ -94,21 +95,14 @@ class CustomFormsController extends RozierApp
             if ($form->isValid()) {
                 try {
                     $this->get('em')->flush();
-
                     $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
+                    return $this->redirect($this->generateUrl('customFormsEditPage', [
+                        'customFormId' => $customForm->getId(),
+                    ]));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
+                    $form->addError(new FormError($e->getMessage()));
                 }
-                /*
-                 * Redirect to update schema page
-                 */
-                return $this->redirect($this->generateUrl(
-                    'customFormsHomePage',
-                    [
-                        '_token' => $this->get('csrfTokenManager')->getToken(static::SCHEMA_TOKEN_INTENTION),
-                    ]
-                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -129,15 +123,11 @@ class CustomFormsController extends RozierApp
     public function addAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
-
         $customForm = new CustomForm();
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
-            /*
-             * form
-             */
             $form = $this->createForm(new CustomFormType(), $customForm, [
                 'em' => $this->get('em'),
             ]);
@@ -150,17 +140,11 @@ class CustomFormsController extends RozierApp
                     $msg = $this->getTranslator()->trans('customForm.%name%.created', ['%name%' => $customForm->getName()]);
                     $this->publishConfirmMessage($request, $msg);
 
-                    /*
-                     * Redirect to update schema page
-                     */
-                    return $this->redirect($this->generateUrl(
-                        'customFormsHomePage'
-                    ));
+                    return $this->redirect($this->generateUrl('customFormsEditPage', [
+                        'customFormId' => $customForm->getId(),
+                    ]));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                    return $this->redirect($this->generateUrl(
-                        'customFormsAddPage'
-                    ));
+                    $form->addError(new FormError($e->getMessage()));
                 }
             }
 
@@ -184,19 +168,17 @@ class CustomFormsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
+        /** @var CustomForm $customForm */
         $customForm = $this->get('em')
                            ->find(CustomForm::class, (int) $customFormId);
 
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
-
-            $form = $this->buildDeleteForm($customForm);
-
+            $form = $this->createForm(FormType::class, $customForm);
             $form->handleRequest($request);
-
-            if ($form->isValid() &&
-                $form->getData()['customFormId'] == $customForm->getId()) {
+            if ($form->isValid()) {
                 $this->get("em")->remove($customForm);
+                $this->get("em")->flush();
 
                 $msg = $this->getTranslator()->trans('customForm.%name%.deleted', ['%name%' => $customForm->getName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -214,23 +196,5 @@ class CustomFormsController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * @param CustomForm $customForm
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildDeleteForm(CustomForm $customForm)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('customFormId', 'hidden', [
-                            'data' => $customForm->getId(),
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ]);
-
-        return $builder->getForm();
     }
 }

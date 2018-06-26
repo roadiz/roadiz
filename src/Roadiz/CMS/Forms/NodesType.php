@@ -132,7 +132,7 @@ class NodesType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getNagetBlockPrefixme()
     {
         return 'nodes';
     }

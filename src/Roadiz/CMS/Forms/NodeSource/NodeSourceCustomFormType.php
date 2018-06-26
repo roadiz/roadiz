@@ -108,7 +108,7 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'custom_forms';
     }

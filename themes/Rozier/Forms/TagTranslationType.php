@@ -69,7 +69,7 @@ class TagTranslationType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'tag_translation';
     }

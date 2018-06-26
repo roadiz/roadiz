@@ -71,7 +71,6 @@ class NodesController extends RozierApp
     public function indexAction(Request $request, $filter = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
-
         $translation = $this->get('defaultTranslation');
 
         /** @var User $user */
@@ -159,8 +158,7 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
@@ -181,7 +179,6 @@ class NodesController extends RozierApp
             $stackTypesForm = $this->buildStackTypesForm($node);
             if (null !== $stackTypesForm) {
                 $stackTypesForm->handleRequest($request);
-
                 if ($stackTypesForm->isSubmitted() && $stackTypesForm->isValid()) {
                     try {
                         $type = $this->addStackType($stackTypesForm->getData(), $node);
@@ -193,14 +190,13 @@ class NodesController extends RozierApp
                             ]
                         );
                         $this->publishConfirmMessage($request, $msg);
+                        return $this->redirect($this->generateUrl(
+                            'nodesEditPage',
+                            ['nodeId' => $node->getId()]
+                        ));
                     } catch (EntityAlreadyExistsException $e) {
-                        $this->publishErrorMessage($request, $e->getMessage());
+                        $stackTypesForm->addError(new FormError($e->getMessage()));
                     }
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditPage',
-                        ['nodeId' => $node->getId()]
-                    ));
                 }
 
                 $this->assignation['stackTypesForm'] = $stackTypesForm->createView();
@@ -229,14 +225,13 @@ class NodesController extends RozierApp
                         '%name%' => $node->getNodeName(),
                     ]);
                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditPage',
+                        ['nodeId' => $node->getId()]
+                    ));
                 } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
+                    $form->addError(new FormError($e->getMessage()));
                 }
-
-                return $this->redirect($this->generateUrl(
-                    'nodesEditPage',
-                    ['nodeId' => $node->getId()]
-                ));
             }
             $this->assignation['form'] = $form->createView();
             $this->assignation['securityAuthorizationChecker'] = $this->get("securityAuthorizationChecker");
@@ -244,7 +239,7 @@ class NodesController extends RozierApp
             return $this->render('nodes/edit.html.twig', $this->assignation);
         }
 
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
     }
 
     /**
@@ -258,11 +253,9 @@ class NodesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find(Node::class, $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
         /** @var NodeType $type */
-        $type = $this->get('em')
-            ->find(NodeType::class, $typeId);
+        $type = $this->get('em')->find(NodeType::class, $typeId);
 
         if (null !== $node && null !== $type) {
             $node->removeStackType($type);
@@ -280,7 +273,7 @@ class NodesController extends RozierApp
             return $this->redirect($this->generateUrl('nodesEditPage', ['nodeId'=>$node->getId()]));
         }
 
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
     }
 
     /**
@@ -308,8 +301,7 @@ class NodesController extends RozierApp
                 ->find(Translation::class, (int) $translationId);
         }
 
-        if ($type !== null &&
-            $translation !== null) {
+        if ($type !== null && $translation !== null) {
             $node = new Node($type);
 
             /** @var Form $form */
@@ -354,8 +346,7 @@ class NodesController extends RozierApp
 
             return $this->render('nodes/add.html.twig', $this->assignation);
         }
-
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('Node-type #%s does not exist.', $nodeTypeId));
     }
 
     /**
@@ -380,8 +371,7 @@ class NodesController extends RozierApp
 
         if (null !== $translationId) {
             /** @var Translation $translation */
-            $translation = $this->get('em')
-                ->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, (int) $translationId);
         }
 
         if ($nodeId > 0) {
@@ -442,7 +432,7 @@ class NodesController extends RozierApp
             return $this->render('nodes/add.html.twig', $this->assignation);
         }
 
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('Translation does not exist'));
     }
 
     /**
@@ -480,7 +470,6 @@ class NodesController extends RozierApp
 
                 /** @var NodeHandler $nodeHandler */
                 $nodeHandler = $this->get('node.handler')->setNode($node);
-
                 $nodeHandler->softRemoveWithChildren();
                 $this->get('em')->flush();
 
@@ -491,23 +480,15 @@ class NodesController extends RozierApp
                 $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
                 if ($request->query->has('referer')) {
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
                     return $this->redirect($request->query->get('referer'));
                 }
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
                 return $this->redirect($this->generateUrl('nodesHomePage'));
             }
-
             $this->assignation['form'] = $form->createView();
-
             return $this->render('nodes/delete.html.twig', $this->assignation);
         }
 
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
     }
 
     /**
@@ -577,8 +558,7 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if (null !== $node &&
             $node->isDeleted()) {
@@ -618,10 +598,14 @@ class NodesController extends RozierApp
 
             return $this->render('nodes/undelete.html.twig', $this->assignation);
         }
-
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
     public function generateAndAddNodeAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
@@ -629,7 +613,6 @@ class NodesController extends RozierApp
         try {
             $generator = new UniqueNodeGenerator($this->get('em'));
             $source = $generator->generateFromRequest($request);
-
             /*
              * Dispatch event
              */
@@ -655,8 +638,7 @@ class NodesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {
             $form = $this->createFormBuilder()
@@ -688,6 +670,6 @@ class NodesController extends RozierApp
             return $this->render('nodes/publishAll.html.twig', $this->assignation);
         }
 
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
     }
 }

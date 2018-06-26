@@ -51,18 +51,7 @@
         </div>
 
         {% if node.isHidingChildren %}
-        <hr />
-        <h2 id="add-node-translation">{% trans %}add.stack.type{% endtrans %}</h2>
-
-        {% form_theme stackTypesForm '@Rozier/forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
-            {{ form_widget(stackTypesForm) }}
-            <fieldset data-uk-margin>
-                <button class="uk-button uk-button-primary" type="submit">
-                    <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
-                </button>
-            </fieldset>
-        </form>
+            <hr>
         <h2 id="add-node-translation">{% trans %}stack.types{% endtrans %}</h2>
         <div class="content-table-cont">
             <table class="uk-table content-table">
@@ -70,12 +59,23 @@
                     <th>{% trans %}nodeType{% endtrans %}</th>
                     <th>{% trans %}actions{% endtrans %}</th>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                        {% form_theme stackTypesForm 'horizontalForms.html.twig' %}
+                        <form class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
+                            {{ form_widget(stackTypesForm) }}
+                            <button class="uk-button uk-button-primary" type="submit">
+                                <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
+                            </button>
+                        </form>
+                    </td>
+                </tr>
                 {% for type in node.stackTypes %}
                 <tr>
                     <td>{{ type.displayName }}</td>
                     <td>
                         <form action="{{ path('nodesRemoveStackTypePage', {nodeId:node.id, typeId:type.id}) }}" method="POST">
-                            <button type="submit" class="uk-button"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</button>
+                            <button type="submit" class="uk-button uk-button-danger"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</button>
                         </form>
                     </td>
                 </tr>

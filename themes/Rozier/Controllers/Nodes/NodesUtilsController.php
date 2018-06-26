@@ -141,8 +141,7 @@ class NodesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $existingNode */
-        $existingNode = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $existingNode = $this->get('em')->find(Node::class, (int) $nodeId);
 
         try {
             $duplicator = new NodeDuplicator($existingNode, $this->get('em'));

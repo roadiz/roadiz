@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2016, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,24 +23,24 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TranslateNodeType.php
- * @author Ambroise Maupate
+ * @file NodeSourceSeoType.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\Common\Persistence\ObjectManager;
-use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
+namespace RZ\Roadiz\CMS\Forms\NodeSource;
+
+use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
- * Class TranslateNodeType
- * @package Themes\Rozier\Forms\Node
+ * Class NodeSourceSeoType
+ *
+ * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
-class TranslateNodeType extends AbstractType
+class NodeSourceSeoType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -49,41 +48,32 @@ class TranslateNodeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        /** @var ObjectManager $em */
-        $em = $options['em'];
-        $translations = $em->getRepository(Translation::class)
-                           ->findUnavailableTranslationsForNode($options['node']);
-
-
-        $choices = [];
-
-        /** @var Translation $translation */
-        foreach ($translations as $translation) {
-            $choices[$translation->getName()] = $translation->getId();
-        }
-
-        $builder->add('translation', 'choice', [
-            'label' => 'translation',
-            'choices' => $choices,
-            'choices_as_values' => true,
-            'required' => true,
-            'multiple' => false,
-        ])
-        ->add('translate_offspring', 'checkbox', [
-            'label' => 'translate_offspring',
-            'required' => false,
-        ]);
-
-        $builder->get('translation')
-            ->addModelTransformer(new TranslationTransformer($options['em']));
-    }
-
-    /**
-     * @return string
-     */
-    public function getBlockPrefix()
-    {
-        return 'translate_node';
+        $builder->add('metaTitle', 'text', [
+                'label' => 'metaTitle',
+                'required' => false,
+                'attr' => [
+                    'data-max-length' => 60,
+                ],
+                'constraints' => [
+                    new Length([
+                        'max' => 60
+                    ])
+                ]
+            ])
+            ->add('metaKeywords', 'text', [
+                'label' => 'metaKeywords',
+                'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
+            ])
+            ->add('metaDescription', 'textarea', [
+                'label' => 'metaDescription',
+                'required' => false,
+            ])
+        ;
     }
 
     /**
@@ -92,18 +82,8 @@ class TranslateNodeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'label' => false,
-            'attr' => [
-                'class' => 'uk-form node-translation-form',
-            ],
+            'class' => NodesSources::class,
+            'property' => 'id',
         ]);
-
-        $resolver->setRequired([
-            'node',
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('node', Node::class);
-        $resolver->setAllowedTypes('em', ObjectManager::class);
     }
 }

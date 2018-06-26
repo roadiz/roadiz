@@ -76,6 +76,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
         $kernel = new Kernel('test', true);
         $kernel->boot();
         $kernel->get('requestStack')->push($this->getRequest());
+        $kernel->get('requestContext')->fromRequest($this->getRequest());
         $kernel->container->offsetSet('request', $this->getRequest());
 
         $this->assertEquals('/test', $kernel->get('requestContext')->getBaseUrl());
@@ -134,6 +135,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
 
         $requestStack = new RequestStack();
         $requestStack->push($this->getRequest());
+        $kernel->get('requestContext')->fromRequest($this->getRequest());
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel);
 
         $this->assertEquals(
@@ -190,6 +192,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
 
         $requestStack = new RequestStack();
         $requestStack->push($this->getRequest());
+        $kernel->get('requestContext')->fromRequest($this->getRequest());
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel);
 
         $this->assertNotEquals(

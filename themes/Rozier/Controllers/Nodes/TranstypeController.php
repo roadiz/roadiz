@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Repositories\NodeTypeFieldRepository;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -126,6 +127,7 @@ class TranstypeController extends RozierApp
          */
         $fieldAssociations = [];
         $oldFields = $node->getNodeType()->getFields();
+        /** @var NodeTypeFieldRepository $er */
         $er = $this->get('em')->getRepository(NodeTypeField::class);
 
         foreach ($oldFields as $oldField) {
@@ -156,6 +158,7 @@ class TranstypeController extends RozierApp
          * Perform actual transtyping
          */
         foreach ($node->getNodeSources() as $existingSource) {
+            /** @var NodesSources $source */
             $source = new $sourceClass($node, $existingSource->getTranslation());
             $source->setTitle($existingSource->getTitle());
             $nsDocuments = new ArrayCollection();
