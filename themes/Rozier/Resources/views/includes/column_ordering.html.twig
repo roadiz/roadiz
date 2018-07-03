@@ -22,13 +22,13 @@
         'field': field,
         'ordering': 'ASC'
     }) %}
-    <a title="{{ 'sort_asc'|trans }}" class="active uk-text-primary" href="?{{ localOrderingParams|url_encode }}"><i class="uk-icon-caret-down"></i></a>
+    <a title="{{ 'sort_asc'|trans }}" class="active" href="?{{ localOrderingParams|url_encode }}"><i class="uk-icon-caret-down"></i></a>
 {% elseif request.query.get("field") == field and request.query.get("ordering") == "ASC" %}
     {% set localOrderingParams = orderingParams|merge({
         'field': field,
         'ordering': 'DESC'
     }) %}
-    <a title="{{ 'sort_desc'|trans }}" class="active uk-text-primary" href="?{{ localOrderingParams|url_encode }}"><i class="uk-icon-caret-up"></i></a>
+    <a title="{{ 'sort_desc'|trans }}" class="active" href="?{{ localOrderingParams|url_encode }}"><i class="uk-icon-caret-up"></i></a>
 {% else %}
     {% set localOrderingParams = orderingParams|merge({
         'field': field,

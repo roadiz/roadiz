@@ -27,8 +27,13 @@
             padding:5px 10px 0;
             border-left:1px solid @form-head-border-color;
             .box-sizing();
-            a{
+
+            a {
                 margin-left:5px;
+
+                &.active {
+                    color: @contrast-color-darker;
+                }
             }
 
             @media screen and (min-width: 1380px) {

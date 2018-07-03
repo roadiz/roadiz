@@ -6933,6 +6933,17 @@
             <target></target>
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target></target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target></target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
