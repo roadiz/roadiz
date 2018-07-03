@@ -23,21 +23,10 @@
                 <table class="node-type-fields content-table uk-table">
                     <thead>
                     <tr>
-                        <th>
-                            {% trans %}name{% endtrans %}
-                            {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
-                                'field': 'name',
-                                'filters': filters,
-                            } only %}
-                        </th>
-                        <th class="mobile-hidden">
-                            {% trans %}label{% endtrans %}
-                        </th>
+                        <th>{% trans %}name{% endtrans %}</th>
+                        <th class="mobile-hidden">{% trans %}label{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}type{% endtrans %}</th>
-                        <th class="mobile-hidden">
-                            {% trans %}group{% endtrans %}
-                        </th>
+                        <th class="mobile-hidden">{% trans %}group{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
                     </tr>
