@@ -3,47 +3,49 @@
 {% block content %}
 <section class="content-global edit-group">
 
-	<header class="content-header header-group header-group-roles">
+    <header class="content-header header-group header-group-roles">
         <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName})|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-		{% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'roles'} %}
+        {% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'roles'} %}
     </header>
 
     <article class="content content-edit">
-    	<div class="content-table-cont">
-			<table class="content-table groups-roles uk-table">
-				<thead>
-			        <tr>
-			            <th>{% trans %}role{% endtrans %}</th>
-			            <th class="table-actions-row">{% trans %}actions{% endtrans %}</th>
-			        </tr>
-			    </thead>
-				<tbody>
-					{% for role in group.getRolesEntities %}
-					<tr>
-						<td>{{ role.getName }}</td>
-						<td>
-						{% spaceless %}
+        <div class="content-table-cont">
+            <table class="content-table groups-roles uk-table">
+                <thead>
+                    <tr>
+                        <th>
+                            {% trans %}role{% endtrans %}
+                        </th>
+                        <th class="table-actions-row">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for role in group.getRolesEntities %}
+                    <tr>
+                        <td>{{ role.name }}</td>
+                        <td>
+                        {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}" title="{% trans %}unlink.role{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                         {% endspaceless %}
-						</td>
-					</tr>
-					{% endfor %}
-				</tbody>
-			</table>
-		</div>
-		<hr />
-		<h2>{% trans %}add.a.role{% endtrans %}</h2>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <hr />
+        <h2>{% trans %}add.a.role{% endtrans %}</h2>
 
-		{% form_theme form '@Rozier/forms.html.twig' %}
-		<form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-		    {{ form_widget(form) }}
-		    <fieldset data-uk-margin>
-		    	<button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.role{% endtrans %}</button>
-	   		</fieldset>
-		</form>
-	</article>
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.role{% endtrans %}</button>
+            </fieldset>
+        </form>
+    </article>
 
-	{% include '@Rozier/groups/actionsMenu.html.twig' %}
+    {% include '@Rozier/groups/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

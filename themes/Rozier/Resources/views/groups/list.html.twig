@@ -19,7 +19,14 @@
             <table class="groups content-table uk-table">
                 <thead>
                     <tr>
-                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>
+                            {% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th class="mobile-hidden">{% trans %}roles{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}users{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>

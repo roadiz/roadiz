@@ -2,7 +2,6 @@
 
 {% block content %}
     <section class="content-global content-nav-and-filters">
-
         <header class="content-header header-node-types header-node-types-list">
             <h1 class="content-title nodes-node-types-title">{{ customForm.displayName|truncate(25, true, '[…]') }}</h1>
             {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
@@ -12,17 +11,29 @@
             current: 'customFormAnswers'
             } only %}
         </header>
-
         {% include '@Rozier/widgets/filtersBar.html.twig' %}
-
         <article class="content content-no-action-menu content-node-types-list">
             <div class="content-table-cont">
                 {% spaceless %}
                     <table class="node-types content-table uk-table">
                         <thead>
                         <tr>
-                            <th class="mobile-hidden">{% trans %}ip{% endtrans %}</th>
-                            <th>{% trans %}submitted.date{% endtrans %}</th>
+                            <th class="mobile-hidden">
+                                {% trans %}ip{% endtrans %}
+                                {% include 'includes/column_ordering.html.twig' with {
+                                    'request': request,
+                                    'field': 'ip',
+                                    'filters': filters,
+                                } only %}
+                            </th>
+                            <th>
+                                {% trans %}submitted.date{% endtrans %}
+                                {% include 'includes/column_ordering.html.twig' with {
+                                    'request': request,
+                                    'field': 'submittedAt',
+                                    'filters': filters,
+                                } only %}
+                            </th>
                             <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
                         </tr>
                         </thead>
@@ -46,6 +57,5 @@
                 {% endspaceless %}
             </div>
         </article>
-
     </section>
 {% endblock %}

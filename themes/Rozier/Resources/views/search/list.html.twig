@@ -37,33 +37,49 @@
                     <thead>
                     <tr>
                         <th>{% trans %}nodeName{% endtrans %}
-                            {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                            {% else %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% set field = 'nodeName' %}
+                            {% if nodesSources %}
+                                {% set field = 'node.nodeName' %}
                             {% endif %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': field,
+                                'filters': filters,
+                            } only %}
                         </th>
                         <th class="mobile-hidden">{% trans %}node.type{% endtrans %}
-                            {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                            {% else %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% set field = 'nodeType' %}
+                            {% if nodesSources %}
+                                {% set field = 'node.nodeType' %}
                             {% endif %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': field,
+                                'filters': filters,
+                            } only %}
                         </th>
                         <th class="mobile-hidden">{% trans %}node.status{% endtrans %}</th>
                         <th class="mobile-hidden">{% trans %}created.at{% endtrans %}
-                            {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}createdAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                            {% else %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}createdAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% set field = 'createdAt' %}
+                            {% if nodesSources %}
+                                {% set field = 'node.createdAt' %}
                             {% endif %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': field,
+                                'filters': filters,
+                            } only %}
                         </th>
                         <th class="mobile-hidden">{% trans %}updated.at{% endtrans %}
-                            {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                            {% else %}
-                                <a href="{{ request.getUri() }}&amp;field={% if nodesSources %}node.{% endif %}updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                            {% set field = 'updatedAt' %}
+                            {% if nodesSources %}
+                                {% set field = 'node.updatedAt' %}
                             {% endif %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': field,
+                                'filters': filters,
+                            } only %}
                         </th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>

@@ -18,8 +18,22 @@
             <table class="content-table redirections uk-table">
                 <thead>
                     <tr>
-                        <th>{% trans %}redirection.query{% endtrans %}</th>
-                        <th>{% trans %}redirection.redirect_uri{% endtrans %}</th>
+                        <th>
+                            {% trans %}redirection.query{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': 'query',
+                                'filters': filters,
+                            } only %}
+                        </th>
+                        <th>
+                            {% trans %}redirection.redirect_uri{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': 'redirectUri',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th>{% trans %}redirection.type{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>

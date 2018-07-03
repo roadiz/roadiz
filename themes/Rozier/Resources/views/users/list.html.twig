@@ -20,18 +20,18 @@
                     <tr>
                         <th class="table-actions-userpicture-row mobile-hidden uk-visible-xlarge"></th>
                         <th class="mobile-hidden">{% trans %}user.username{% endtrans %}
-                            {% if request.query.get("field") == 'username' and request.query.get("ordering") == "DESC" %}
-                                <a href="?field=username&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                            {% else %}
-                                <a href="?field=username&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
-                            {% endif %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': 'username',
+                                'filters': filters,
+                            } only %}
                         </th>
                         <th>{% trans %}user.email{% endtrans %}
-                            {% if request.query.get("field") == 'email' and request.query.get("ordering") == "DESC" %}
-                                <a href="?field=email&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                            {% else %}
-                                <a href="?field=email&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
-                            {% endif %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': 'email',
+                                'filters': filters,
+                            } only %}
                         </th>
                         <th class="mobile-hidden uk-visible-xlarge">{% trans %}user.roles{% endtrans %}</th>
                         <th class="mobile-hidden uk-visible-large">{% trans %}user.status{% endtrans %}</th>

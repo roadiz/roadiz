@@ -61,10 +61,6 @@ class TranslationsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        $translations = $this->get('em')
-                             ->getRepository(Translation::class)
-                             ->findAll();
-
         $this->assignation['translations'] = [];
 
         $listManager = $this->createEntityListManager(
@@ -74,6 +70,7 @@ class TranslationsController extends RozierApp
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
+        $translations = $listManager->getEntities();
 
         /** @var Translation $translation */
         foreach ($translations as $translation) {

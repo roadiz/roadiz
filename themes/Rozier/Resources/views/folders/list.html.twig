@@ -10,15 +10,20 @@
             <a class="uk-button" href="{{ path('foldersAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.folder{% endtrans %}</a>
         </div>
     </header>
-
     {% include '@Rozier/widgets/filtersBar.html.twig' %}
-
     <article class="content content-no-action-menu">
         <div class="content-table-cont">
             <table class="folders content-table uk-table">
                 <thead>
                     <tr>
-                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>
+                            {% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>

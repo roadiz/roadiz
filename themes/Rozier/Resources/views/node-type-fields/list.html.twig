@@ -5,7 +5,6 @@
 
         <header class="content-header header-node-type-fields header-node-type-fields-list">
             <h1 class="content-title">{{ "edit.nodeTypeFields.for.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName}) }}</h1>
-
             <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
             <div class="content-header-action-menu">
                 <nav>
@@ -24,10 +23,21 @@
                 <table class="node-type-fields content-table uk-table">
                     <thead>
                     <tr>
-                        <th>{% trans %}name{% endtrans %}</th>
-                        <th class="mobile-hidden">{% trans %}label{% endtrans %}</th>
+                        <th>
+                            {% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'request': request,
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
+                        </th>
+                        <th class="mobile-hidden">
+                            {% trans %}label{% endtrans %}
+                        </th>
                         <th class="mobile-hidden">{% trans %}type{% endtrans %}</th>
-                        <th class="mobile-hidden">{% trans %}group{% endtrans %}</th>
+                        <th class="mobile-hidden">
+                            {% trans %}group{% endtrans %}
+                        </th>
                         <th class="mobile-hidden">{% trans %}status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-2">{% trans %}actions{% endtrans %}</th>
                     </tr>
@@ -36,8 +46,10 @@
                     {% for field in fields %}
                         <tr class="node-type-field-row" data-position="{{ field.position }}" data-field-id="{{ field.getId }}">
                             <td class="node-type-field-col node-type-field-col-1">
-                                <a class="node-type-field-edit-button edit-button-chevron" href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">
-                                    <i class="uk-icon-chevron-right"></i>{{ field.getName }}
+                                <a class="node-type-field-edit-button edit-button-chevron"
+                                   href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}"
+                                   data-index="{{ loop.index0 }}">
+                                    {{- field.getName -}}
                                 </a>
                             </td>
                             <td class="mobile-hidden">{{ field.label }}</td>
