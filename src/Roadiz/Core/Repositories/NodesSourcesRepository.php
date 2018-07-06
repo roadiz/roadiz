@@ -656,4 +656,19 @@ class NodesSourcesRepository extends StatusAwareRepository
 
         return $qb;
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createSearchBy(
+        $pattern,
+        QueryBuilder $qb,
+        array &$criteria = [],
+        $alias = "obj"
+    ) {
+        $qb = parent::createSearchBy($pattern, $qb, $criteria, static::NODESSOURCES_ALIAS);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        return $qb;
+    }
 }

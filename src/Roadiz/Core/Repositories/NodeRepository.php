@@ -1230,6 +1230,10 @@ class NodeRepository extends StatusAwareRepository
         }
 
         $this->prepareComparisons($criteria, $qb, $alias);
+        /*
+         * Alter at the end not to filter in OR groups
+         */
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $alias);
 
         return $qb;
     }
