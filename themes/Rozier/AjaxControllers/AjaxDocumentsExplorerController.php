@@ -61,7 +61,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'raw' => false,
         ];
 
-        if ($request->get('folderId') > 0) {
+        if ($request->query->has('folderId') && $request->get('folderId') > 0) {
             $folder = $this->get('em')
                         ->find(
                             Folder::class,
@@ -96,7 +96,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
             'trans' => $this->getTrans(),
         ];
 
-        if ($request->get('folderId') > 0) {
+        if ($request->query->has('folderId') && $request->get('folderId') > 0) {
             $responseArray['filters'] = array_merge($responseArray['filters'], [
                 'folderId' => $request->get('folderId')
             ]);

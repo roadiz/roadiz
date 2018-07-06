@@ -31,7 +31,6 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
