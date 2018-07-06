@@ -57,7 +57,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'status' => ['<', Node::DELETED],
         ];
 
-        if ($request->get('tagId') > 0) {
+        if ($request->query->has('tagId') && $request->get('tagId') > 0) {
             $tag = $this->get('em')
                 ->find(
                     Tag::class,
@@ -67,7 +67,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             $arrayFilter['tags'] = [$tag];
         }
 
-        if (count($request->get('nodeTypes')) > 0) {
+        if ($request->query->has('nodeTypes') && count($request->get('nodeTypes')) > 0) {
             $nodeTypeNames = array_map('trim', $request->get('nodeTypes'));
 
             $nodeTypes = $this->get('nodeTypeApi')->getBy([
@@ -100,7 +100,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'filters' => $listManager->getAssignation(),
         ];
 
-        if ($request->get('tagId') > 0) {
+        if ($request->query->has('tagId') && $request->get('tagId') > 0) {
             $responseArray['filters'] = array_merge($responseArray['filters'], [
                 'tagId' => $request->get('tagId')
             ]);
