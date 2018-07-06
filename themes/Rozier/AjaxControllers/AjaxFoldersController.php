@@ -110,7 +110,7 @@ class AjaxFoldersController extends AbstractAjaxController
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        if ($request->get('search') != "") {
+        if ($request->query->has('search') && $request->get('search') != "") {
             $responseArray = [];
 
             $pattern = strip_tags($request->get('search'));
