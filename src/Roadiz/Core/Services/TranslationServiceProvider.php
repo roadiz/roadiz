@@ -105,8 +105,12 @@ class TranslationServiceProvider implements ServiceProviderInterface
              * DO NOT wake up entity manager in Install
              */
             if (!$kernel->isInstallMode()) {
-                $availableTranslations = $c['em']->getRepository(Translation::class)
-                                                 ->findAllAvailable();
+                if ($kernel->isPreview()) {
+                    $availableTranslations = $c['em']->getRepository(Translation::class)->findAll();
+                } else {
+                    $availableTranslations = $c['em']->getRepository(Translation::class)->findAllAvailable();
+                }
+
                 /** @var Translation $availableTranslation */
                 foreach ($availableTranslations as $availableTranslation) {
                     $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);

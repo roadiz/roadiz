@@ -759,6 +759,31 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
+     * @param string $urlAliasAlias
+     * @return null|Node
+     */
+    public function findOneWithAlias($urlAliasAlias)
+    {
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select('n, ns, t, uas')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.urlAliases', 'uas')
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
+            ->andWhere($qb->expr()->eq('uas.alias', ':alias'))
+            ->setParameter('alias', $urlAliasAlias)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
      * @param $nodeName
      * @return bool
      */
