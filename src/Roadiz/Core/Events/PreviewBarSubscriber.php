@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
@@ -67,6 +68,7 @@ class PreviewBarSubscriber implements EventSubscriberInterface
         $response = $event->getResponse();
         if ($event->isMasterRequest() &&
             $this->container['kernel']->isPreview() &&
+            $response->getStatusCode() === Response::HTTP_OK &&
             false !== strpos($response->headers->get('Content-Type'), 'text/html')) {
             return true;
         }
@@ -86,7 +88,7 @@ class PreviewBarSubscriber implements EventSubscriberInterface
                 false !== strpos($response->getContent(), '</head>')) {
                 $content = str_replace(
                     '</head>',
-                    "<style>#roadiz-preview-bar { position: fixed; display: inline-flex; align-items: center; font-size: 11px; padding: 5px 10px; bottom: 0; left: 1em; background-color: #ffe200; color: #923f00; border-radius: 3px 3px 0 0; } #roadiz-preview-bar svg { width: 14px; margin-right: 5px;}</style></head>",
+                    "<style>#roadiz-preview-bar { font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen-Sans, Ubuntu, Cantarell, \"Helvetica Neue\", Helvetica, Arial, sans-serif; position: fixed; display: inline-flex; align-items: center; font-size: 9px; padding: 6px 10px 5px; bottom: 0; left: 1em; background-color: #ffe200; color: #923f00; border-radius: 3px 3px 0 0; text-transform: uppercase; letter-spacing: 0.005em; z-index: 9999;} #roadiz-preview-bar svg { width: 14px; margin-right: 5px;}</style></head>",
                     $response->getContent()
                 );
                 $content = str_replace(

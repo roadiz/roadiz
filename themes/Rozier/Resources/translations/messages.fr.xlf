@@ -6776,7 +6776,7 @@
 
         <trans-unit xml:space="preserve" id="preview">
             <source>preview</source>
-            <target>Prévisualisation</target>
+            <target>Preview</target>
             <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>
