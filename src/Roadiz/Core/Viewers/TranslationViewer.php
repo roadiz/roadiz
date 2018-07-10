@@ -45,6 +45,11 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class TranslationViewer
 {
+    /**
+     * @var bool
+     */
+    private $preview;
+
     /** @var Settings */
     private $settingsBag;
     /**
@@ -55,19 +60,29 @@ class TranslationViewer
      * @var RouterInterface
      */
     private $router;
+    /**
+     * @var Translation
+     */
     private $translation;
 
     /**
      * TranslationViewer constructor.
+     *
      * @param EntityManager $entityManager
      * @param Settings $settingsBag
      * @param RouterInterface $router
+     * @param boolean $preview
      */
-    public function __construct(EntityManager $entityManager, Settings $settingsBag, RouterInterface $router)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        Settings $settingsBag,
+        RouterInterface $router,
+        $preview = false
+    ) {
         $this->settingsBag = $settingsBag;
         $this->entityManager = $entityManager;
         $this->router = $router;
+        $this->preview = $preview;
     }
 
     /**
@@ -138,16 +153,11 @@ class TranslationViewer
             $translations = $this->getRepository()->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
         } elseif (null !== $node) {
-            $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
-            $translations = array_filter(
-                $translations,
-                function (Translation $trans) {
-                    if ($trans->isAvailable()) {
-                        return true;
-                    }
-                    return false;
-                }
-            );
+            if ($this->preview === true) {
+                $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
+            } else {
+                $translations = $this->getRepository()->findStrictlyAvailableTranslationsForNode($node);
+            }
             $name = "node";
         } else {
             return [];

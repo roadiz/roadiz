@@ -6934,6 +6934,7 @@
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
 
+
         <trans-unit xml:space="preserve" id="sort_asc">
             <source>sort_asc</source>
             <target></target>
@@ -6943,6 +6944,11 @@
             <source>sort_desc</source>
             <target></target>
             <note>Table column link to sort data descendently</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target></target>
+            <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>
   </file>

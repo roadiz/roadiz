@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DebugBarSubscriber.php
+ * @file PreviewBarSubscriber.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
@@ -31,10 +31,11 @@ namespace RZ\Roadiz\Core\Events;
 
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class DebugBarSubscriber implements EventSubscriberInterface
+class PreviewBarSubscriber implements EventSubscriberInterface
 {
     protected $container = null;
 
@@ -53,9 +54,7 @@ class DebugBarSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::RESPONSE => ['onKernelResponse', -128],
-            KernelEvents::REQUEST => 'onKernelRequest',
-            KernelEvents::CONTROLLER => 'onControllerMatched',
+            KernelEvents::RESPONSE => ['onKernelResponse', -128]
         ];
     }
 
@@ -68,7 +67,8 @@ class DebugBarSubscriber implements EventSubscriberInterface
     {
         $response = $event->getResponse();
         if ($event->isMasterRequest() &&
-            $this->container['settingsBag']->get('display_debug_panel') == true &&
+            $this->container['kernel']->isPreview() &&
+            $response->getStatusCode() === Response::HTTP_OK &&
             false !== strpos($response->headers->get('Content-Type'), 'text/html')) {
             return true;
         }
@@ -84,50 +84,21 @@ class DebugBarSubscriber implements EventSubscriberInterface
         if ($this->supports($event)) {
             $response = $event->getResponse();
 
-            if ($this->container['stopwatch']->isStarted('controllerHandling')) {
-                $this->container['stopwatch']->stop('controllerHandling');
-            }
-            if ($this->container['stopwatch']->isStarted('twigRender')) {
-                $this->container['stopwatch']->stop('twigRender');
-            }
-
-            $this->container['stopwatch']->stopSection('runtime');
-
-
             if (false !== strpos($response->getContent(), '</body>') &&
                 false !== strpos($response->getContent(), '</head>')) {
                 $content = str_replace(
                     '</head>',
-                    $this->container['debugbar.renderer']->renderHead() . "</head>",
+                    "<style>#roadiz-preview-bar { font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Oxygen-Sans, Ubuntu, Cantarell, \"Helvetica Neue\", Helvetica, Arial, sans-serif; position: fixed; display: inline-flex; align-items: center; font-size: 9px; padding: 6px 10px 5px; bottom: 0; left: 1em; background-color: #ffe200; color: #923f00; border-radius: 3px 3px 0 0; text-transform: uppercase; letter-spacing: 0.005em; z-index: 9999;} #roadiz-preview-bar svg { width: 14px; margin-right: 5px;}</style></head>",
                     $response->getContent()
                 );
                 $content = str_replace(
                     '</body>',
-                    $this->container['debugbar.renderer']->render() . "</body>",
+                    "<div id=\"roadiz-preview-bar\"><svg aria-hidden=\"true\" data-prefix=\"fas\" data-icon=\"exclamation-triangle\" class=\"svg-inline--fa fa-exclamation-triangle fa-w-18\" role=\"img\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 576 512\"><path fill=\"currentColor\" d=\"M569.517 440.013C587.975 472.007 564.806 512 527.94 512H48.054c-36.937 0-59.999-40.055-41.577-71.987L246.423 23.985c18.467-32.009 64.72-31.951 83.154 0l239.94 416.028zM288 354c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z\"></path></svg>" . $this->container['translator']->trans('preview') . "</div></body>",
                     $content
                 );
                 $response->setContent($content);
                 $event->setResponse($response);
             }
         }
-    }
-
-    /**
-     * Start a stopwatch event when a kernel start handling.
-     */
-    public function onKernelRequest()
-    {
-        $this->container['stopwatch']->start('requestHandling');
-        $this->container['stopwatch']->start('matchingRoute');
-    }
-    /**
-     * Stop request-handling stopwatch event and
-     * start a new stopwatch event when a controller is instanciated.
-     */
-    public function onControllerMatched()
-    {
-        $this->container['stopwatch']->stop('matchingRoute');
-        $this->container['stopwatch']->stop('requestHandling');
-        $this->container['stopwatch']->start('controllerHandling');
     }
 }

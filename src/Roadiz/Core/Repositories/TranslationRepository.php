@@ -132,6 +132,27 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
+     * Get all locales.
+     *
+     * @return array
+     */
+    public function getAllLocales()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t.locale')
+            ->setCacheable(true);
+
+        $query = $qb->getQuery();
+        $query->useResultCache(true, 60, 'RZTranslationGetAllLocales');
+
+        try {
+            return array_map('current', $query->getScalarResult());
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
      * Get all available locales.
      *
      * @return array
@@ -149,6 +170,30 @@ class TranslationRepository extends EntityRepository
 
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationGetAvailableOverrideLocales');
+
+        try {
+            return array_map('current', $query->getScalarResult());
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get all available locales.
+     *
+     * @return array
+     */
+    public function getAllOverrideLocales()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t.overrideLocale')
+            ->andWhere($qb->expr()->isNotNull('t.overrideLocale'))
+            ->andWhere($qb->expr()->neq('t.overrideLocale', ':overrideLocale'))
+            ->setParameter(':overrideLocale', '')
+            ->setCacheable(true);
+
+        $query = $qb->getQuery();
+        $query->useResultCache(true, 60, 'RZTranslationGetAllOverrideLocales');
 
         try {
             return array_map('current', $query->getScalarResult());
@@ -280,6 +325,32 @@ class TranslationRepository extends EntityRepository
             return [];
         }
     }
+
+    /**
+     * Find available node translations which are available too.
+     *
+     * @param Node $node
+     * @return Translation[]
+     */
+    public function findStrictlyAvailableTranslationsForNode(Node $node)
+    {
+        $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
+        $qb->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
+            ->andWhere($qb->expr()->eq(static::NODESSOURCES_ALIAS . '.node', ':node'))
+            ->andWhere($qb->expr()->eq(static::TRANSLATION_ALIAS . '.available', ':available'))
+            ->addOrderBy('t.defaultTranslation', 'DESC')
+            ->addOrderBy('t.locale', 'ASC')
+            ->setParameter('node', $node)
+            ->setParameter('available', true)
+            ->setCacheable(true);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
 
     /**
      * @param Node $node

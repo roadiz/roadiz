@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
+use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
@@ -99,7 +100,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.22.19";
+    public static $cmsVersion = "0.22.20";
 
     /**
      * @var Container|null
@@ -309,6 +310,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
             if ($this->isPreview()) {
                 $dispatcher->addSubscriber(new PreviewModeSubscriber($this->container));
+                $dispatcher->addSubscriber(new PreviewBarSubscriber($this->container));
             }
         }
 

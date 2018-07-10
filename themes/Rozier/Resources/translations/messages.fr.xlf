@@ -6809,6 +6809,12 @@
             <target xml:lang="fr" state="translated">-- Utiliser la langue par défaut --</target>
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target>Preview</target>
+            <note>Preview mode label on warning sign.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

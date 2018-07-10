@@ -124,35 +124,38 @@ class ExceptionSubscriber implements EventSubscriberInterface
             }
 
             if (!$this->viewer->isFormatJson($event->getRequest())) {
-                if ($exception instanceof MaintenanceModeException && null !== $ctrl = $exception->getController()) {
+                /*
+                 * Themed exception pages…
+                 */
+                if ($exception instanceof MaintenanceModeException &&
+                    null !== $ctrl = $exception->getController()) {
                     $response = $ctrl->maintenanceAction($event->getRequest());
                     // Set http code according to status
                     $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
                     $event->setResponse($response);
+                    return;
                 } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
                     $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
-                } else {
-                    $event->setResponse($this->getEmergencyResponse($exception, $event->getRequest()));
+                    return;
                 }
-            } else {
-                // Customize your response object to display the exception details
-                $response = $this->getEmergencyResponse($exception, $event->getRequest());
-                // Set http code according to status
-                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-
-                // HttpExceptionInterface is a special type of exception that
-                // holds status code and header details
-                if ($exception instanceof HttpExceptionInterface) {
-                    $response->headers->replace($exception->getHeaders());
-                }
-
-                if ($response instanceof JsonResponse) {
-                    $response->headers->set('Content-Type', 'application/problem+json');
-                }
-
-                // Send the modified response object to the event
-                $event->setResponse($response);
             }
+
+            // Customize your response object to display the exception details
+            $response = $this->getEmergencyResponse($exception, $event->getRequest());
+            // Set http code according to status
+            $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+
+            // HttpExceptionInterface is a special type of exception that
+            // holds status code and header details
+            if ($exception instanceof HttpExceptionInterface) {
+                $response->headers->replace($exception->getHeaders());
+            }
+
+            if ($response instanceof JsonResponse) {
+                $response->headers->set('Content-Type', 'application/problem+json');
+            }
+            // Send the modified response object to the event
+            $event->setResponse($response);
         }
     }
 

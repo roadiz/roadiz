@@ -99,7 +99,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     $this->preview
                 );
 
-                if (!$translation->isAvailable()) {
+                if (!$this->preview && !$translation->isAvailable()) {
                     return false;
                 }
 
@@ -186,6 +186,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         if (count($tokens) > 0) {
             $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
             if ($identifier != '') {
+                if ($this->preview === true) {
+                    return $this->repository->findOneWithAlias($identifier);
+                }
                 return $this->repository->findOneWithAliasAndAvailableTranslation($identifier);
             }
         }
