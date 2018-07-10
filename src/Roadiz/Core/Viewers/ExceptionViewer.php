@@ -227,6 +227,14 @@ class ExceptionViewer
             $html = str_replace('{{ http_code }}', $this->getHttpStatusCode($e), $html);
             $html = str_replace('{{ human_message }}', $humanMessage, $html);
 
+            if ($this->getHttpStatusCode($e) === Response::HTTP_FORBIDDEN) {
+                $html = str_replace('{{ smiley }}', '🤔', $html);
+            } elseif ($this->getHttpStatusCode($e) === Response::HTTP_NOT_FOUND) {
+                $html = str_replace('{{ smiley }}', '🧐', $html);
+            } {
+                $html = str_replace('{{ smiley }}', '🤕', $html);
+            }
+
             if ($debug) {
                 $html = str_replace('{{ message }}', $e->getMessage(), $html);
                 $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
