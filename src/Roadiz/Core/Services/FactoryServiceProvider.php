@@ -143,7 +143,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
         $container['translation.viewer'] = $container->factory(function ($c) {
-            return new TranslationViewer($c['em'], $c['settingsBag'], $c['router']);
+            return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
         });
         $container['user.viewer'] = $container->factory(function ($c) {
             return new UserViewer($c['em'], $c['settingsBag'], $c['translator'], $c['emailManager']);

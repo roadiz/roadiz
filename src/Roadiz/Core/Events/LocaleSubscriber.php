@@ -80,7 +80,9 @@ class LocaleSubscriber implements EventSubscriberInterface
              * Set default locale
              */
             $this->stopwatch->start('setRequestLocale');
-            if ($locale = $request->attributes->get('_locale')) {
+            if ($request->attributes->has('_locale') &&
+                $request->attributes->get('_locale') !== '') {
+                $locale = $request->attributes->get('_locale');
                 $event->getRequest()->setLocale($locale);
                 \Locale::setDefault($locale);
             } elseif (null !== $translation = $this->kernel->container['defaultTranslation']) {

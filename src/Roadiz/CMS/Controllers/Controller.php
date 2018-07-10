@@ -44,7 +44,6 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -254,35 +253,47 @@ abstract class Controller implements ContainerAwareInterface
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
-        /** @var TranslationRepository $repository */
-        $repository = $this->get('em')->getRepository(Translation::class);
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
          *
          * Get language from static route
          */
-        if (null !== $_locale) {
-            /*
-             * First try with override locale
-             */
-            $translation = $repository->findOneByOverrideLocaleAndAvailable($_locale);
-
-            if ($translation === null) {
-                /*
-                 * Then with regular locale
-                 */
-                $translation = $repository->findOneByLocaleAndAvailable($_locale);
-            }
-            if ($translation === null) {
-                throw new NoTranslationAvailableException();
-            }
-        } else {
-            $translation = $this->get('defaultTranslation');
-        }
-
+        $translation = $this->findTranslationForLocale($_locale);
         $request->setLocale($translation->getLocale());
         return $translation;
+    }
+
+    /**
+     * @param null $_locale
+     *
+     * @return Translation
+     */
+    protected function findTranslationForLocale($_locale = null)
+    {
+        if (null === $_locale) {
+            return $this->get('defaultTranslation');
+        }
+        /** @var TranslationRepository $repository */
+        $repository = $this->get('em')->getRepository(Translation::class);
+
+        if ($this->get('kernel')->isPreview()) {
+            $translation = $repository->findOneByOverrideLocale($_locale);
+            if (null === $translation) {
+                $translation = $repository->findOneByLocale($_locale);
+            }
+        } else {
+            $translation = $repository->findOneByOverrideLocaleAndAvailable($_locale);
+            if (null === $translation) {
+                $translation = $repository->findOneByLocaleAndAvailable($_locale);
+            }
+        }
+
+        if (null !== $translation) {
+            return $translation;
+        }
+
+        throw new NoTranslationAvailableException();
     }
 
     /**
