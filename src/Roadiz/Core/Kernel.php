@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
+use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
@@ -274,6 +275,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
             if ($this->isPreview()) {
                 $dispatcher->addSubscriber(new PreviewModeSubscriber($this->container));
+                $dispatcher->addSubscriber(new PreviewBarSubscriber($this->container));
             }
         }
 
