@@ -211,10 +211,10 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     protected function alterQueryBuilderWithAuthorizationChecker(
         QueryBuilder $qb,
-        $prefix = EntityRepository::NODE_ALIAS
+        $prefix = EntityRepository::NODESSOURCES_ALIAS
     ) {
         if (true === $this->isDisplayingAllNodesStatuses()) {
-            $qb->innerJoin(static::NODESSOURCES_ALIAS . '.node', $prefix);
+            $qb->innerJoin($prefix . '.node', static::NODE_ALIAS);
             return $qb;
         }
 
@@ -223,20 +223,20 @@ class NodesSourcesRepository extends StatusAwareRepository
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
             $qb->innerJoin(
-                static::NODESSOURCES_ALIAS . '.node',
-                $prefix,
+                $prefix . '.node',
+                static::NODE_ALIAS,
                 'WITH',
-                $qb->expr()->lte($prefix . '.status', Node::PUBLISHED)
+                $qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED)
             );
         } else {
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
             $qb->innerJoin(
-                static::NODESSOURCES_ALIAS . '.node',
-                $prefix,
+                $prefix . '.node',
+                static::NODE_ALIAS,
                 'WITH',
-                $qb->expr()->eq($prefix . '.status', Node::PUBLISHED)
+                $qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED)
             );
         }
         return $qb;
@@ -259,7 +259,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $offset = null
     ) {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODE_ALIAS);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODESSOURCES_ALIAS);
         $qb->addSelect(static::NODE_ALIAS);
         /*
          * Filtering by tag
@@ -523,7 +523,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         /*
          * Alteration always join node table.
          */
-        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODE_ALIAS);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODESSOURCES_ALIAS);
 
         if (count($nodeTypes) > 0) {
             $qb->andWhere($qb->expr()->in(static::NODE_ALIAS . '.nodeType', ':types'))
@@ -666,9 +666,23 @@ class NodesSourcesRepository extends StatusAwareRepository
         array &$criteria = [],
         $alias = "obj"
     ) {
-        $qb = parent::createSearchBy($pattern, $qb, $criteria, static::NODESSOURCES_ALIAS);
-        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+        $qb = parent::createSearchBy($pattern, $qb, $criteria, $alias);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $alias);
 
         return $qb;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function searchBy(
+        $pattern,
+        array $criteria = [],
+        array $orders = [],
+        $limit = null,
+        $offset = null,
+        $alias = EntityRepository::DEFAULT_ALIAS
+    ) {
+        return parent::searchBy($pattern, $criteria, $orders, $limit, $offset, static::NODESSOURCES_ALIAS);
     }
 }

@@ -478,6 +478,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param array   $orders
      * @param integer $limit
      * @param integer $offset
+     * @param string $alias
      *
      * @return array|Paginator
      */
@@ -486,21 +487,22 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         array $criteria = [],
         array $orders = [],
         $limit = null,
-        $offset = null
+        $offset = null,
+        $alias = EntityRepository::DEFAULT_ALIAS
     ) {
-        $qb = $this->createQueryBuilder(static::DEFAULT_ALIAS);
-        $qb = $this->createSearchBy($pattern, $qb, $criteria, static::DEFAULT_ALIAS);
+        $qb = $this->createQueryBuilder($alias);
+        $qb = $this->createSearchBy($pattern, $qb, $criteria, $alias);
 
         // Add ordering
         foreach ($orders as $key => $value) {
             if (strpos($key, static::NODE_ALIAS . '.') !== false &&
-                $this->hasJoinedNode($qb, static::DEFAULT_ALIAS)) {
+                $this->hasJoinedNode($qb, $alias)) {
                 $qb->addOrderBy($key, $value);
             } elseif (strpos($key, static::NODESSOURCES_ALIAS . '.') !== false &&
-                $this->hasJoinedNodesSources($qb, static::DEFAULT_ALIAS)) {
+                $this->hasJoinedNodesSources($qb, $alias)) {
                 $qb->addOrderBy($key, $value);
             } else {
-                $qb->addOrderBy(static::DEFAULT_ALIAS . '.' . $key, $value);
+                $qb->addOrderBy($alias . '.' . $key, $value);
             }
         }
         if (null !== $offset) {

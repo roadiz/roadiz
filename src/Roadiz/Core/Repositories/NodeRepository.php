@@ -1203,7 +1203,6 @@ class NodeRepository extends StatusAwareRepository
         array &$criteria = [],
         $alias = "obj"
     ) {
-
         $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*
