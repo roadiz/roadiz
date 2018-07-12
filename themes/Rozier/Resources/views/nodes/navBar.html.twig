@@ -10,7 +10,7 @@
                 {% endif %}
                 <a class="uk-navbar-link" href="{{ url }}">{% trans %}node.content{% endtrans %}</a>
             </li>
-            {% if node.nodeType.reachable and (is_granted('ROLE_ACCESS_NODES_SETTING')) %}
+            {% if (is_granted('ROLE_ACCESS_NODES_SETTING')) %}
                 <li class="uk-navbar-item{% if current == 'edit' %} uk-active{% endif %}" >
                     <a class="uk-navbar-link" href="{{ path('nodesEditPage', { nodeId: node.id }) }}">{% trans %}node.parameters{% endtrans %}</a>
                 </li>

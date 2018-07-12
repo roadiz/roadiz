@@ -152,16 +152,13 @@ class NodeTreeWidget extends AbstractWidget
             'position' => 'ASC',
         ];
 
-        if (null !== $parent &&
-            $parent->getChildrenOrder() !== 'order' &&
-            $parent->getChildrenOrder() !== 'position') {
+        if (false === $subRequest && null !== $parent && $parent->getChildrenOrder() !== 'position') {
             $ordering = [
                 $parent->getChildrenOrder() => $parent->getChildrenOrderDirection(),
             ];
 
             $this->canReorder = false;
         }
-
         /*
          * Manage get request to filter list
          */
