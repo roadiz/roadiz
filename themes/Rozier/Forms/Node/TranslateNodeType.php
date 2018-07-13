@@ -89,14 +89,6 @@ class TranslateNodeType extends AbstractType
     }
 
     /**
-     * @return string
-     */
-    public function getBlockPrefix()
-    {
-        return 'translate_node';
-    }
-
-    /**
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)

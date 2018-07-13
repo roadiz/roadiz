@@ -4,7 +4,7 @@
 
     <article class="content content-node-type-field-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        {{ form_start(form, { attr: {id: "edit-custom-form-field-form"}}) }}
+        {{ form_start(form, { 'attr': {'id': "edit-custom-form-field-form"}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}

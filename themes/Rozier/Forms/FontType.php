@@ -158,11 +158,6 @@ class FontType extends AbstractType
         return 'font';
     }
 
-    public function getBlockPrefix()
-    {
-        return 'font';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

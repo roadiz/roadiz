@@ -18,7 +18,7 @@
     <article class="content content-node-edit-tags">
         <h2 class="content-subtitle">{% trans %}tags{% endtrans %}</h2>
         {% form_theme form '@Rozier/forms.html.twig' %}
-        {{ form_start(form) }}
+        {{ form_start(form, { attr: {id: 'edit-node-tags-form'}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}

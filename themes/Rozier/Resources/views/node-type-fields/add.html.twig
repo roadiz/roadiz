@@ -11,7 +11,7 @@
     <node-type-field-form-container inline-template data-vuejs>
         <article class="content">
             {% form_theme form '@Rozier/forms.html.twig' %}
-            {{ form_start(form) }}
+            {{ form_start(form, { attr: { id: 'add-node-type-field-form'}}) }}
                 {{ form_widget(form) }}
                 <fieldset data-uk-margin>
                     {% spaceless %}
