@@ -181,7 +181,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new \Twig_Extensions_Extension_Text());
             $extensions->add(new \Twig_Extensions_Extension_Array());
             $extensions->add(new \Twig_Extensions_Extension_Date());
-            $extensions->add(new BlockRenderExtension($c));
+            $extensions->add(new BlockRenderExtension($c['twig.fragmentHandler']));
             $extensions->add(new HttpKernelExtension($c['twig.fragmentHandler']));
             $extensions->add(new UrlExtension(
                 $c['requestStack'],

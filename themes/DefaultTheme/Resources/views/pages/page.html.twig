@@ -13,6 +13,7 @@
             'node.nodeType' : ['!=', bags.nodeTypes.get('Page')]
         }) %}
         {% for singleBlock in blocks %}
+            {#{{ singleBlock|render('DefaultTheme') }}#}
             {% include '@DefaultTheme/blocks/' ~ singleBlock.node.nodeType.name|lower ~ '.html.twig' ignore missing with {
                 'nodeSource': singleBlock,
                 'parentNodeSource': nodeSource,
@@ -21,8 +22,7 @@
                 'node': singleBlock.node,
                 'nodeType': singleBlock.node.nodeType,
                 'loop': loop,
-                'blocksLength':blocks|length,
-                'bags': bags
+                'blocksLength':blocks|length
             } only %}
         {% endfor %}
     </div>
