@@ -73,13 +73,7 @@ class NodeType extends AbstractType
             ->add('childrenOrder', 'choice', [
                 'label' => 'node.childrenOrder',
                 'choices_as_values' => true,
-                'choices' => [
-                    'position' => 'position',
-                    'nodeName' => 'nodeName',
-                    'createdAt' => 'createdAt',
-                    'updatedAt' => 'updatedAt',
-                    'publishedAt' => 'ns.publishedAt',
-                ],
+                'choices' => Node::$orderingFields,
             ])
             ->add('childrenOrderDirection', 'choice', [
                 'label' => 'node.childrenOrderDirection',
