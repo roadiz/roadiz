@@ -36,14 +36,16 @@
         <h2>{% trans %}add.a.role{% endtrans %}</h2>
 
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-            {{ form_widget(form) }}
+        {{ form_start(form, {
+            'attr': {
+                'class': 'uk-form uk-form-stacked'
+            }
+        }) }}{{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.role{% endtrans %}</button>
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
-
     {% include '@Rozier/groups/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

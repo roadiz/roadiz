@@ -83,12 +83,4 @@ class CompareDatetimeType extends AbstractType
     {
         return 'comparedatetime';
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBlockPrefix()
-    {
-        return 'comparedatetime';
-    }
 }

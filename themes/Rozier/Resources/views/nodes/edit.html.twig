@@ -65,12 +65,15 @@
                     <tr>
                         <td colspan="2">
                             {% form_theme stackTypesForm 'horizontalForms.html.twig' %}
-                            <form class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
-                                {{ form_widget(stackTypesForm) }}
+                            {{ form_start(stackTypesForm, {
+                                    'attr': {
+                                        'class': 'uk-form uk-form-horizontal'
+                                    }
+                                }) }}{{ form_widget(stackTypesForm) }}
                                 <button class="uk-button uk-button-primary" type="submit">
                                     <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
                                 </button>
-                            </form>
+                            {{ form_end(stackTypesForm) }}
                         </td>
                     </tr>
                     {% for type in node.stackTypes %}

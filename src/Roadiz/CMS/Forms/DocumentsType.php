@@ -136,12 +136,4 @@ class DocumentsType extends AbstractType
     {
         return 'documents';
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBlockPrefix()
-    {
-        return 'documents';
-    }
 }

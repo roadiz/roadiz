@@ -54,12 +54,4 @@ class SeparatorType extends AbstractType
     {
         return 'separator';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'separator';
-    }
 }

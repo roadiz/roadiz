@@ -53,14 +53,6 @@ class MarkdownType extends AbstractType
         return 'markdown';
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getBlockPrefix()
-    {
-        return 'markdown';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

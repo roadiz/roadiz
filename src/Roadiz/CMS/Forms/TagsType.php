@@ -92,12 +92,4 @@ class TagsType extends AbstractType
     {
         return 'tags';
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBlockPrefix()
-    {
-        return 'tags';
-    }
 }

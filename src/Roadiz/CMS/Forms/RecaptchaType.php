@@ -88,12 +88,4 @@ class RecaptchaType extends AbstractType
     {
         return 'recaptcha';
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBlockPrefix()
-    {
-        return 'recaptcha';
-    }
 }

@@ -22,7 +22,7 @@
     <article class="content content-node-edit-seo">
         <h2 class="content-subtitle">{% trans %}edit.node.seo{% endtrans %}</h2>
         {% form_theme seoForm '@Rozier/forms.html.twig' %}
-        <form id="edit-seo-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(seoForm) }}>
+        <form id="edit-seo-form" class="uk-form uk-form-stacked" action="#" method="post">
             {{ form_widget(seoForm) }}
             <fieldset data-uk-margin>
                 {% spaceless %}

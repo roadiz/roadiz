@@ -10,14 +10,20 @@
     <article class="content content-delete content-no-action-menu">
 
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="documents-bulk-delete-form" class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, {
+            'id': 'documents-bulk-delete-form',
+            'action': action,
+            'attr': {
+                'class': 'uk-form uk-form-stacked'
+            }
+        }) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.these.documents{% endtrans %}</legend>
                 <a href="{{ path('documentsHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
                 <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-trash-mini-o"></i> {% trans %}delete{% endtrans %}</button>
             </fieldset>
-        </form>
+        {{ form_end(form) }}
 
         {% spaceless %}
         <ul class="documents-list" id="documents-list-bulk-delete">

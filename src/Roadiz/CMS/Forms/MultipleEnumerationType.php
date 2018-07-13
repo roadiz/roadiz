@@ -89,12 +89,4 @@ class MultipleEnumerationType extends AbstractType
     {
         return 'enumeration';
     }
-
-    /**
-     * @inheritDoc
-     */
-    public function getBlockPrefix()
-    {
-        return 'enumeration';
-    }
 }

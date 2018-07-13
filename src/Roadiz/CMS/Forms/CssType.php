@@ -53,14 +53,6 @@ class CssType extends AbstractType
         return 'css';
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getBlockPrefix()
-    {
-        return 'css';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
