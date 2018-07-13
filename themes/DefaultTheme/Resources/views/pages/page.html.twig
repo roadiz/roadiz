@@ -3,7 +3,6 @@
 {% block inner_content %}
     <h1 class="page-title">{{ nodeSource.title }}</h1>
     <div class="page-text">{{ nodeSource.content|markdown }}</div>
-
     <div class="page-blocks row">
         {#
          # Use a loop over children to display blocks
@@ -29,13 +28,12 @@
     </div>
 
     {# Test render #}
-    <pre>
+    {#<pre>
         {{ render(controller(
             'Themes\\DefaultTheme\\Controllers\\PageController::embedAction',
             { 'name': 'Roadiz' }
         )) }}
-    </pre>
-
+    </pre>#}
 
     <div class="images row">
         {% for image in nodeSource.pictures %}
