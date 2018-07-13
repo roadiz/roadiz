@@ -28,7 +28,6 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Doctrine\ORM\QueryBuilder;
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
@@ -59,7 +58,7 @@ class SearchController extends DefaultThemeApp
             throw new ResourceNotFoundException();
         }
 
-        $callable = function(FilterQueryBuilderEvent $event) {
+        $callable = function (FilterQueryBuilderEvent $event) {
             if ($event->supports(NodesSources::class) || $event->supports(NSPage::class)) {
                 $qb = $event->getQueryBuilder();
                 $qb->andWhere($qb->expr()->neq($qb->expr()->lower('ns.title'), ':neq'));

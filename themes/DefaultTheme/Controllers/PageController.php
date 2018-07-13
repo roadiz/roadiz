@@ -33,7 +33,10 @@ namespace Themes\DefaultTheme\Controllers;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
@@ -41,6 +44,21 @@ use Themes\DefaultTheme\DefaultThemeApp;
  */
 class PageController extends DefaultThemeApp
 {
+    /**
+     * @param Request $request
+     * @param string $_locale
+     *
+     * @return JsonResponse
+     */
+    public function embedAction(Request $request, $name, $_locale = 'en')
+    {
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
+        $this->prepareThemeAssignation(null, $translation);
+
+        return new JsonResponse([
+            'message' => 'Hello '. $name. '!'
+        ]);
+    }
 
     /**
      * Default action for any Page node.
@@ -59,13 +77,28 @@ class PageController extends DefaultThemeApp
     ) {
         $this->prepareThemeAssignation($node, $translation);
 
+        if ($request->query->has('404') && $request->query->get('404') == true) {
+            throw $this->createNotFoundException('This is a 404 page manually triggered via ' . ResourceNotFoundException::class);
+        }
+
+        if ($request->query->has('not-found') && $request->query->get('not-found') == true) {
+            throw new NotFoundHttpException('This is a 404 page manually triggered via '. NotFoundHttpException::class);
+        }
+
         /*
          * You can add a NodeSourceType form to edit it
          * right into your front page.
          * Awesome isn’t it ?
          */
+        $response = $this->render('pages/page.html.twig', $this->assignation);
 
-        return $this->render('pages/page.html.twig', $this->assignation);
+        if (!$this->get('kernel')->isDebug() &&
+            !$this->get('kernel')->isPreview()) {
+            $response->setPublic();
+            $response->setSharedMaxAge(60*2);
+        }
+
+        return $response;
     }
 
     /**

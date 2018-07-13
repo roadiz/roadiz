@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Core\Routing;
 
+use RZ\Roadiz\CMS\Controllers\RedirectionController;
 use Symfony\Component\Routing\Matcher\RedirectableUrlMatcher as BaseMatcher;
 
 class RedirectableUrlMatcher extends BaseMatcher
@@ -44,14 +45,14 @@ class RedirectableUrlMatcher extends BaseMatcher
      */
     public function redirect($path, $route, $scheme = null)
     {
-        return array(
-            '_controller' => 'RZ\\Roadiz\\CMS\\Controllers\\RedirectionController::redirectToRouteAction',
+        return [
+            '_controller' => RedirectionController::class . '::redirectToRouteAction',
             'path' => $path,
             'permanent' => true,
             'scheme' => $scheme,
             'httpPort' => $this->context->getHttpPort(),
             'httpsPort' => $this->context->getHttpsPort(),
             '_route' => $route,
-        );
+        ];
     }
 }

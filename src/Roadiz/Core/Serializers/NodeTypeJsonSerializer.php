@@ -101,7 +101,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
-        $nodeType = $serializer->deserialize($string, 'RZ\Roadiz\Core\Entities\NodeType', 'json');
+        $nodeType = $serializer->deserialize($string, NodeType::class, 'json');
 
         /*
          * Importing Fields.

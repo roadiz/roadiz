@@ -10,19 +10,20 @@
         {% include '@Rozier/nodes/navBack.html.twig' %}
     </header>
 
-    <article class="content content-no-action-menu">
+    <article class="content">
         {% if nodeTypesCount %}
             {% form_theme form '@Rozier/forms.html.twig' %}
-            {{ form_start(form, { attr: {id: "add-node-form"}}) }}
+            <form id="add-node-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
                 {{ form_widget(form) }}
                 <fieldset data-uk-margin>
                 {% spaceless %}
-                <button class="uk-button uk-button-primary" type="submit">
-                    <i class="uk-icon-plus"></i> {% trans %}add.a.node{% endtrans %}
-                </button>
+                    <button data-action-save="#add-node-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                        <span class="icon-container"><i class="uk-icon-plus"></i></span>
+                        <span class="label"><span class="label-text">{% trans %}add.a.node{% endtrans %}</span></span>
+                    </button>
                 {% endspaceless %}
                 </fieldset>
-            {{ form_end(form) }}
+            </form>
         {% else %}
             <div class="content-inner">
                 <p class="uk-alert uk-alert-warning">{% trans %}no.nodeType.available.create_one_first{% endtrans %}</p>
@@ -30,6 +31,6 @@
             </div>
         {% endif %}
     </article>
-
+    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

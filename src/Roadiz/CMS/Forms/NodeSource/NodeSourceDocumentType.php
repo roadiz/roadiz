@@ -92,14 +92,6 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'documents';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getBlockPrefix()
     {
         return 'documents';
@@ -122,14 +114,12 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
                                                      $nodeSource,
                                                      $nodeTypeField->getName()
                                                  );
+
         $event->setData($this->selectedDocuments);
     }
 
     /**
      * @param FormEvent $event
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function onPostSubmit(FormEvent $event)
     {
@@ -150,6 +140,7 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
             foreach ($event->getData() as $documentId) {
                 /** @var Document|null $tempDoc */
                 $tempDoc = $entityManager->find(Document::class, (int) $documentId);
+
                 if ($tempDoc !== null) {
                     $nodesSourcesHandler->addDocumentForField($tempDoc, $nodeTypeField, false, $position);
                     $position++;

@@ -8,7 +8,7 @@
         <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename})|truncate(25, true, '[…]') }}</h1>
         {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'metas'} %}
         {% include '@Rozier/document-translations/translationBar.html.twig' with {"current": translation.getId} %}
-        {% include '@Rozier/documents/backLink.html.twig' with { 'request': request } only %}
+        {% include '@Rozier/documents/backLink.html.twig' %}
     </header>
 
     <article class="content content-document-edit">

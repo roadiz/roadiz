@@ -60,7 +60,7 @@ class NodeTypesController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\NodeType',
+            NodeType::class,
             [],
             ['name' => 'ASC']
         );
@@ -94,7 +94,7 @@ class NodeTypesController extends RozierApp
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
+                         ->find(NodeType::class, (int) $nodeTypeId);
 
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;
@@ -201,7 +201,7 @@ class NodeTypesController extends RozierApp
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
+                         ->find(NodeType::class, (int) $nodeTypeId);
 
         if (null !== $nodeType) {
             $this->assignation['nodeType'] = $nodeType;

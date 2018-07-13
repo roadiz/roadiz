@@ -83,13 +83,6 @@ class UsersType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'users';
-    }
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
         return 'users';

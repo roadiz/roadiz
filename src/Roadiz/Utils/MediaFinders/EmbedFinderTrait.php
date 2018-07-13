@@ -30,7 +30,9 @@
 namespace RZ\Roadiz\Utils\MediaFinders;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 
 trait EmbedFinderTrait
@@ -40,7 +42,7 @@ trait EmbedFinderTrait
      */
     protected function documentExists(ObjectManager $objectManager, $embedId, $embedPlatform)
     {
-        $existingDocument = $objectManager->getRepository('RZ\Roadiz\Core\Entities\Document')
+        $existingDocument = $objectManager->getRepository(Document::class)
             ->findOneBy([
                 'embedId' => $embedId,
                 'embedPlatform' => $embedPlatform,
@@ -54,8 +56,9 @@ trait EmbedFinderTrait
      */
     protected function injectMetaInDocument(ObjectManager $objectManager, DocumentInterface $document)
     {
-        $translations = $objectManager->getRepository('RZ\Roadiz\Core\Entities\Translation')->findAll();
+        $translations = $objectManager->getRepository(Translation::class)->findAll();
 
+        /** @var Translation $translation */
         foreach ($translations as $translation) {
             $documentTr = new DocumentTranslation();
             $documentTr->setDocument($document);

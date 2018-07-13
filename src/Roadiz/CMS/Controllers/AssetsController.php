@@ -68,6 +68,7 @@ class AssetsController extends CmsController
              * Handle short url with Url rewriting
              */
             $expander = new ShortUrlExpander($request);
+            $expander->setIgnorePath($this->get('kernel')->getPublicCacheBasePath());
             $expander->injectParamsToRequest($queryString, $filename);
 
             /*
@@ -105,8 +106,7 @@ class AssetsController extends CmsController
     public function fontFileAction(Request $request, $filename, $variant, $extension)
     {
         /** @var FontRepository $repository */
-        $repository = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $repository = $this->get('em')->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
         /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
@@ -186,8 +186,7 @@ class AssetsController extends CmsController
     public function fontFacesAction(Request $request)
     {
         /** @var FontRepository $repository */
-        $repository = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Font');
+        $repository = $this->get('em')->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(

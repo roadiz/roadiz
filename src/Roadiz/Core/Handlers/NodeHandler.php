@@ -77,7 +77,7 @@ class NodeHandler extends AbstractHandler
     public function cleanCustomFormsFromField(NodeTypeField $field, $flush = true)
     {
         $nodesCustomForms = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
+            ->getRepository(NodesCustomForms::class)
             ->findBy(['node' => $this->node, 'field' => $field]);
 
         foreach ($nodesCustomForms as $ncf) {
@@ -106,7 +106,7 @@ class NodeHandler extends AbstractHandler
 
         if (null === $position) {
             $latestPosition = $this->objectManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesCustomForms')
+                ->getRepository(NodesCustomForms::class)
                 ->getLatestPosition($this->node, $field);
             $ncf->setPosition($latestPosition + 1);
         } else {
@@ -131,7 +131,7 @@ class NodeHandler extends AbstractHandler
     public function getCustomFormsFromFieldName($fieldName)
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\CustomForm')
+            ->getRepository(CustomForm::class)
             ->findByNodeAndFieldName($this->node, $fieldName);
     }
 
@@ -146,7 +146,7 @@ class NodeHandler extends AbstractHandler
     public function cleanNodesFromField(NodeTypeField $field, $flush = true)
     {
         $nodesToNodes = $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
+            ->getRepository(NodesToNodes::class)
             ->findBy(['nodeA' => $this->node, 'field' => $field]);
 
         foreach ($nodesToNodes as $ntn) {
@@ -175,7 +175,7 @@ class NodeHandler extends AbstractHandler
 
         if (null === $position) {
             $latestPosition = $this->objectManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodesToNodes')
+                ->getRepository(NodesToNodes::class)
                 ->getLatestPosition($this->node, $field);
             $ntn->setPosition($latestPosition + 1);
         } else {
@@ -226,12 +226,12 @@ class NodeHandler extends AbstractHandler
      *
      * @param Translation $translation
      *
-     * @return NodesSources|null
+     * @return null|object|NodesSources
      */
     public function getNodeSourceByTranslation($translation)
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+            ->getRepository(NodesSources::class)
             ->findOneBy(["node" => $this->node, "translation" => $translation]);
     }
 
@@ -380,7 +380,7 @@ class NodeHandler extends AbstractHandler
     public function getAvailableTranslations()
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findAvailableTranslationsForNode($this->node);
     }
     /**
@@ -392,7 +392,7 @@ class NodeHandler extends AbstractHandler
     public function getAvailableTranslationsId()
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findAvailableTranslationsIdForNode($this->node);
     }
 
@@ -405,7 +405,7 @@ class NodeHandler extends AbstractHandler
     public function getUnavailableTranslations()
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findUnavailableTranslationsForNode($this->node);
     }
 
@@ -418,7 +418,7 @@ class NodeHandler extends AbstractHandler
     public function findUnavailableTranslationIdForNode()
     {
         return $this->objectManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findUnavailableTranslationIdForNode($this->node);
     }
 
@@ -689,10 +689,10 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * @return NodeRepository
+     * @return \Doctrine\Common\Persistence\ObjectRepository|NodeRepository
      */
     public function getRepository()
     {
-        return $this->objectManager->getRepository('RZ\Roadiz\Core\Entities\Node');
+        return $this->objectManager->getRepository(Node::class);
     }
 }

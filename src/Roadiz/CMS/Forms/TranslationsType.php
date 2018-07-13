@@ -79,13 +79,6 @@ class TranslationsType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'translations';
-    }
-    /**
-     * {@inheritdoc}
-     */
     public function getBlockPrefix()
     {
         return 'translations';

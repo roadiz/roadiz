@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -59,6 +60,9 @@ class AddNodeType extends AbstractType
             'mapped' => false,
             'constraints' => [
                 new NotBlank(),
+                new Length([
+                    'max' => 255
+                ])
             ],
         ]);
 
@@ -77,24 +81,20 @@ class AddNodeType extends AbstractType
             'label' => 'node.dynamicNodeName',
             'required' => false,
             'attr' => [
-                'class' => 'rz-boolean-checkbox',
                 'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation',
             ],
         ])
         ->add('visible', CheckboxType::class, [
             'label' => 'visible',
             'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
         ->add('locked', CheckboxType::class, [
             'label' => 'locked',
             'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
         ->add('hideChildren', CheckboxType::class, [
             'label' => 'hiding-children',
             'required' => false,
-            'attr' => ['class' => 'rz-boolean-checkbox'],
         ])
         ->add('status', ChoiceType::class, [
             'label' => 'node.status',
@@ -113,7 +113,7 @@ class AddNodeType extends AbstractType
     /**
      * @return string
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'childnode';
     }

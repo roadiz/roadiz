@@ -34,6 +34,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\CMS\Forms\TagTranslationDocumentType;
+use RZ\Roadiz\Core\Entities\TagTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -70,7 +71,7 @@ class TagTranslationType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'tag_translation';
     }

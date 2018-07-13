@@ -37,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 /**
  *
@@ -49,14 +50,29 @@ class UserDetailsType extends AbstractType
             ->add('firstName', TextType::class, [
                 'label' => 'firstName',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('lastName', TextType::class, [
                 'label' => 'lastName',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('phone', TextType::class, [
                 'label' => 'phone',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 20
+                    ])
+                ]
             ])
             ->add('facebookName', TextType::class, [
                 'label' => 'facebookName',
@@ -68,10 +84,20 @@ class UserDetailsType extends AbstractType
             ->add('company', TextType::class, [
                 'label' => 'company',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('job', TextType::class, [
                 'label' => 'job',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('birthday', DateType::class, [
                 'label' => 'birthday',
@@ -91,6 +117,11 @@ class UserDetailsType extends AbstractType
             ->add('pictureUrl', TextType::class, [
                 'label' => 'pictureUrl',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 255
+                    ])
+                ]
             ])
             ->add('locale', ChoiceType::class, [
                 'label' => 'user.backoffice.language',
@@ -108,7 +139,7 @@ class UserDetailsType extends AbstractType
         ;
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'user';
     }

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -51,7 +52,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $this->stopwatch->stop('findTheme');
         }
 
-        $this->repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Node');
+        $this->repository = $this->em->getRepository(Node::class);
         $decodedUrl = rawurldecode($pathinfo);
 
         /*
@@ -98,7 +99,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     $this->preview
                 );
 
-                if (!$translation->isAvailable()) {
+                if (!$this->preview && !$translation->isAvailable()) {
                     return false;
                 }
 
@@ -140,9 +141,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 /*
                  * Prevent displaying home node using its nodeName
                  */
-                if ($node !== null &&
-                    !$node->isHome() &&
-                    $this->theme->getHomeNode() !== $node) {
+                if ($node !== null && !$node->isHome()) {
                     $nodeRouteHelper = new NodeRouteHelper(
                         $node,
                         $this->theme,
@@ -187,6 +186,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         if (count($tokens) > 0) {
             $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
             if ($identifier != '') {
+                if ($this->preview === true) {
+                    return $this->repository->findOneWithAlias($identifier);
+                }
                 return $this->repository->findOneWithAliasAndAvailableTranslation($identifier);
             }
         }

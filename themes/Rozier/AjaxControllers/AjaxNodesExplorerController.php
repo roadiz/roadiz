@@ -32,6 +32,7 @@ namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,17 +57,17 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'status' => ['<', Node::DELETED],
         ];
 
-        if ($request->get('tagId') > 0) {
+        if ($request->query->has('tagId') && $request->get('tagId') > 0) {
             $tag = $this->get('em')
                 ->find(
-                    'RZ\Roadiz\Core\Entities\Tag',
+                    Tag::class,
                     $request->get('tagId')
                 );
 
             $arrayFilter['tags'] = [$tag];
         }
 
-        if (count($request->get('nodeTypes')) > 0) {
+        if ($request->query->has('nodeTypes') && count($request->get('nodeTypes')) > 0) {
             $nodeTypeNames = array_map('trim', $request->get('nodeTypes'));
 
             $nodeTypes = $this->get('nodeTypeApi')->getBy([
@@ -81,7 +82,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Node',
+            Node::class,
             $arrayFilter
         );
         $listManager->setDisplayingNotPublishedNodes(true);
@@ -99,15 +100,14 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             'filters' => $listManager->getAssignation(),
         ];
 
-        if ($request->get('tagId') > 0) {
+        if ($request->query->has('tagId') && $request->get('tagId') > 0) {
             $responseArray['filters'] = array_merge($responseArray['filters'], [
                 'tagId' => $request->get('tagId')
             ]);
         }
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -129,7 +129,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
         /** @var EntityManager $em */
         $em = $this->get('em');
-        $nodes = $em->getRepository('RZ\Roadiz\Core\Entities\Node')
+        $nodes = $em->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findBy([
                 'id' => $cleanNodeIds,
@@ -146,8 +146,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

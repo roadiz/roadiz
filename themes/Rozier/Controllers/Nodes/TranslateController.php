@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\Node\TranslateNodeType;
@@ -58,12 +59,11 @@ class TranslateController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {
             $availableTranslations = $this->get('em')
-                                 ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                 ->getRepository(Translation::class)
                                  ->findUnavailableTranslationsForNode($node);
 
             if (count($availableTranslations) > 0) {
@@ -85,14 +85,13 @@ class TranslateController extends RozierApp
                             '%name%' => $node->getNodeName(),
                         ]);
                         $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+                        return $this->redirect($this->generateUrl(
+                            'nodesEditSourcePage',
+                            ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
+                        ));
                     } catch (EntityAlreadyExistsException $e) {
-                        $this->publishErrorMessage($request, $e->getMessage(), $node->getNodeSources()->first());
+                        $form->addError(new FormError($e->getMessage()));
                     }
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditSourcePage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
-                    ));
                 }
                 $this->assignation['form'] = $form->createView();
             }
@@ -121,7 +120,7 @@ class TranslateController extends RozierApp
     protected function translateNode(Translation $translation, Node $node)
     {
         $existing = $this->get('em')
-                         ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                         ->getRepository(NodesSources::class)
                          ->setDisplayingAllNodesStatuses(true)
                          ->setDisplayingNotPublishedNodes(true)
                          ->findOneByNodeAndTranslation($node, $translation);

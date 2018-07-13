@@ -30,10 +30,12 @@
 namespace Themes\Rozier\Forms;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField as NodeTypeFieldConstraint;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -147,7 +149,7 @@ class NodeTypeFieldType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'nodetypefield';
     }
@@ -163,7 +165,7 @@ class NodeTypeFieldType extends AbstractType
                 'class' => 'uk-form node-type-field-form',
             ],
             'constraints' => [
-                new \RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField(),
+                new NodeTypeFieldConstraint(),
             ]
         ]);
 
@@ -173,6 +175,6 @@ class NodeTypeFieldType extends AbstractType
         ]);
         $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('fieldName', 'string');
-        $resolver->setAllowedTypes('nodeType', \RZ\Roadiz\Core\Entities\NodeType::class);
+        $resolver->setAllowedTypes('nodeType', NodeType::class);
     }
 }

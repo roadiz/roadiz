@@ -125,16 +125,19 @@ type|lower,
                                 <i class="uk-icon-rz-pencil"></i> {% trans %}edit.node{% endtrans %}
                             </a>
                         </p>
-                        <p>
-                            <a class="move-node-first-position smaller-text" title="{% trans %}move.node.to.first.position{% endtrans %}" href="#">
-                                <i class="uk-icon-arrow-up"></i> {% trans %}move.node.to.first.position{% endtrans %}
-                            </a>
-                        </p>
-                        <p>
-                            <a class="move-node-last-position smaller-text" title="{% trans %}move.node.to.last.position{% endtrans %}" href="#">
-                                <i class="uk-icon-arrow-down"></i> {% trans %}move.node.to.last.position{% endtrans %}
-                            </a>
-                        </p>
+                        {% if not node.Locked %}
+                            <p>
+                                <a class="move-node-first-position smaller-text" title="{% trans %}move.node.to.first.position{% endtrans %}" href="#">
+                                    <i class="uk-icon-arrow-up"></i> {% trans %}move.node.to.first.position{% endtrans %}
+                                </a>
+                            </p>
+                            <p>
+                                <a class="move-node-last-position smaller-text" title="{% trans %}move.node.to.last.position{% endtrans %}" href="#">
+                                    <i class="uk-icon-arrow-down"></i> {% trans %}move.node.to.last.position{% endtrans %}
+                                </a>
+                            </p>
+                        {% endif %}
+
                         {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.Locked) %}
                             {% set refererUrl = request.uri %}
                             {% if refererUrl matches '/ajax/' and parent %}
@@ -149,29 +152,31 @@ type|lower,
                             </p>
                         {% endif %}
                     </div>
-                    <div class="wrapper node-actions">
-                        <header class="uk-nav-header">{% trans %}statuses{% endtrans %}</header>
-                        <p>
-                            {% if node.visible %}
-                                <a data-action="hide" data-status="visible" data-value="0" class="hide-node" title="{% trans %}node.hide{% endtrans %}" href="#"><i class="uk-icon-eye-slash"></i> {% trans %}node.hide{% endtrans %}</a>
-                            {% else %}
-                                <a data-action="show" data-status="visible" data-value="1" class="show-node" title="{% trans %}node.show{% endtrans %}" href="#"><i class="uk-icon-rz-visibility-mini"></i> {% trans %}node.show{% endtrans %}</a>
-                            {% endif %}
-                        </p>
-                        {% if is_granted('ROLE_ACCESS_NODES_STATUS')%}
+                    {% if not node.Locked %}
+                        <div class="wrapper node-actions">
+                            <header class="uk-nav-header">{% trans %}statuses{% endtrans %}</header>
                             <p>
-                                {% if not node.published %}
-                                    <a data-action="publish" data-status="status" data-value="{{ nodeStatuses.published }}" class="publish-node" title="{% trans %}node.publish{% endtrans %}" href="#"><i class="uk-icon-rz-published-mini"></i> {% trans %}node.publish{% endtrans %}</a>
+                                {% if node.visible %}
+                                    <a data-action="hide" data-status="visible" data-value="0" class="hide-node" title="{% trans %}node.hide{% endtrans %}" href="#"><i class="uk-icon-eye-slash"></i> {% trans %}node.hide{% endtrans %}</a>
                                 {% else %}
-                                    <a data-action="unpublish" data-status="status" data-value="{{ nodeStatuses.draft }}" class="unpublish-node" title="{% trans %}node.unpublish{% endtrans %}" href="#"><i class="uk-icon-rz-draft-nodes"></i> {% trans %}node.unpublish{% endtrans %}</a>
+                                    <a data-action="show" data-status="visible" data-value="1" class="show-node" title="{% trans %}node.show{% endtrans %}" href="#"><i class="uk-icon-rz-visibility-mini"></i> {% trans %}node.show{% endtrans %}</a>
                                 {% endif %}
                             </p>
-                            <p><a class="publish-all-node" title="{% trans %}publish_node_offspring{% endtrans %}" href="{{ path('nodesPublishAllAction', {nodeId : node.id}) }}"><i class="uk-icon-rz-published-mini"></i> {% trans %}publish_node_offspring{% endtrans %}</a></p>
-                        {% endif %}
-                        <p>
-                            <a data-action="duplicate" class="duplicate-node" title="{% trans %}node.duplicate{% endtrans %}" href="#"><i class="uk-icon-rz-duplicate"></i> {% trans %}node.duplicate{% endtrans %}</a>
-                        </p>
-                    </div>
+                            {% if is_granted('ROLE_ACCESS_NODES_STATUS') %}
+                                <p>
+                                    {% if not node.published %}
+                                        <a data-action="publish" data-status="status" data-value="{{ nodeStatuses.published }}" class="publish-node" title="{% trans %}node.publish{% endtrans %}" href="#"><i class="uk-icon-rz-published-mini"></i> {% trans %}node.publish{% endtrans %}</a>
+                                    {% else %}
+                                        <a data-action="unpublish" data-status="status" data-value="{{ nodeStatuses.draft }}" class="unpublish-node" title="{% trans %}node.unpublish{% endtrans %}" href="#"><i class="uk-icon-rz-draft-nodes"></i> {% trans %}node.unpublish{% endtrans %}</a>
+                                    {% endif %}
+                                </p>
+                                <p><a class="publish-all-node" title="{% trans %}publish_node_offspring{% endtrans %}" href="{{ path('nodesPublishAllAction', {nodeId : node.id}) }}"><i class="uk-icon-rz-published-mini"></i> {% trans %}publish_node_offspring{% endtrans %}</a></p>
+                            {% endif %}
+                            <p>
+                                <a data-action="duplicate" class="duplicate-node" title="{% trans %}node.duplicate{% endtrans %}" href="#"><i class="uk-icon-rz-duplicate"></i> {% trans %}node.duplicate{% endtrans %}</a>
+                            </p>
+                        </div>
+                    {% endif %}
                 </div>
             </nav>
         </div>
@@ -201,7 +206,6 @@ type|lower,
                     "request":request,
                     "nodeTree":nodeTree,
                     "mainNodeTree":mainNodeTree,
-                    "authorizationChecker":authorizationChecker,
                     "nodeStatuses":nodeStatuses
                     } only %}
                 {% endfor %}

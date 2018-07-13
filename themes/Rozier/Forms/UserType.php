@@ -40,6 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -67,6 +68,9 @@ class UserType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['username'],
                     ]),
+                    new Length([
+                        'max' => 200
+                    ])
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -82,7 +86,7 @@ class UserType extends AbstractType
             ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'user';
     }

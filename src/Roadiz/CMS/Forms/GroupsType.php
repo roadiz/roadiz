@@ -84,14 +84,6 @@ class GroupsType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'groups';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getBlockPrefix()
     {
         return 'groups';

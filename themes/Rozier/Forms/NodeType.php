@@ -38,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -55,31 +56,27 @@ class NodeType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['nodeName'],
                     ]),
+                    new Length([
+                        'max' => 255,
+                    ])
                 ],
-            ])
-            ->add('home', CheckboxType::class, [
-                'label' => 'node.isHome',
-                'required' => false,
-                'attr' => ['class' => 'rz-boolean-checkbox'],
             ])
             ->add('dynamicNodeName', CheckboxType::class, [
                 'label' => 'node.dynamicNodeName',
                 'required' => false,
                 'attr' => [
-                    'class' => 'rz-boolean-checkbox',
                     'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation'
                 ],
+            ])
+            ->add('home', ChoiceType::class, [
+                'label' => 'node.isHome',
+                'required' => false,
+                'attr' => ['class' => 'rz-boolean-checkbox'],
             ])
             ->add('childrenOrder', ChoiceType::class, [
                 'label' => 'node.childrenOrder',
                 'choices_as_values' => true,
-                'choices' => [
-                    'position' => 'position',
-                    'nodeName' => 'nodeName',
-                    'createdAt' => 'createdAt',
-                    'updatedAt' => 'updatedAt',
-                    'publishedAt' => 'ns.publishedAt',
-                ],
+                'choices' => Node::$orderingFields,
             ])
             ->add('childrenOrderDirection', ChoiceType::class, [
                 'label' => 'node.childrenOrderDirection',
@@ -91,7 +88,7 @@ class NodeType extends AbstractType
             ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'node';
     }

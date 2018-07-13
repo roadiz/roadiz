@@ -55,17 +55,11 @@ class AjaxFoldersController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $folder = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Folder', (int) $folderId);
+            ->find(Folder::class, (int) $folderId);
 
         if ($folder !== null) {
             $responseArray = null;
@@ -91,7 +85,7 @@ class AjaxFoldersController extends AbstractAjaxController
 
             return new JsonResponse(
                 $responseArray,
-                Response::HTTP_OK
+                Response::HTTP_PARTIAL_CONTENT
             );
         }
 
@@ -116,18 +110,12 @@ class AjaxFoldersController extends AbstractAjaxController
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $responseArray = [
-            'statusCode' => Response::HTTP_NOT_FOUND,
-            'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans('no.folder.found')
-        ];
-
-        if ($request->get('search') != "") {
+        if ($request->query->has('search') && $request->get('search') != "") {
             $responseArray = [];
 
             $pattern = strip_tags($request->get('search'));
             $folders = $this->get('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                        ->getRepository(Folder::class)
                         ->searchBy(
                             $pattern,
                             [],
@@ -136,17 +124,16 @@ class AjaxFoldersController extends AbstractAjaxController
                         );
             /** @var Folder $folder */
             foreach ($folders as $folder) {
-                /** @var FolderHandler $handler */
-                $handler = $this->get('folder.handler');
-                $handler->setFolder($folder);
-                $responseArray[] = $handler->getFullPath();
+                $responseArray[] = $folder->getFullPath();
             }
+
+            return new JsonResponse(
+                $responseArray,
+                Response::HTTP_OK
+            );
         }
 
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw $this->createNotFoundException($this->getTranslator()->trans('no.folder.found'));
     }
 
     /**
@@ -164,7 +151,7 @@ class AjaxFoldersController extends AbstractAjaxController
             $parameters['newParent'] > 0) {
             /** @var Folder $parent */
             $parent = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['newParent']);
+                ->find(Folder::class, (int) $parameters['newParent']);
 
             if ($parent !== null) {
                 $folder->setParent($parent);
@@ -180,7 +167,7 @@ class AjaxFoldersController extends AbstractAjaxController
             $parameters['nextFolderId'] > 0) {
             /** @var Folder $nextFolder */
             $nextFolder = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['nextFolderId']);
+                ->find(Folder::class, (int) $parameters['nextFolderId']);
             if ($nextFolder !== null) {
                 $folder->setPosition($nextFolder->getPosition() - 0.5);
             }
@@ -188,7 +175,7 @@ class AjaxFoldersController extends AbstractAjaxController
             $parameters['prevFolderId'] > 0) {
             /** @var Folder $prevFolder */
             $prevFolder = $this->get('em')
-                ->find('RZ\Roadiz\Core\Entities\Folder', (int) $parameters['prevFolderId']);
+                ->find(Folder::class, (int) $parameters['prevFolderId']);
             if ($prevFolder !== null) {
                 $folder->setPosition($prevFolder->getPosition() + 0.5);
             }

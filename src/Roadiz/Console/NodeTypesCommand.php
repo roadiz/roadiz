@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -63,11 +64,11 @@ class NodeTypesCommand extends Command
 
         if ($name) {
             $nodetype = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->getRepository(NodeType::class)
                 ->findOneByName($name);
 
             if ($nodetype !== null) {
-                $fields = $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                $fields = $this->entityManager->getRepository(NodeTypeField::class)
                     ->findBy([
                         'nodeType' => $nodetype,
                     ], ['position' => 'ASC']);
@@ -91,7 +92,7 @@ class NodeTypesCommand extends Command
             }
         } else {
             $nodetypes = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->getRepository(NodeType::class)
                 ->findBy([], ['name' => 'ASC']);
 
             if (count($nodetypes) > 0) {

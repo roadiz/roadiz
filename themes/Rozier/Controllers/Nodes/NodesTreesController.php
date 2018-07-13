@@ -38,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -90,14 +91,8 @@ class NodesTreesController extends RozierApp
 
         if ($request->get('tagId') &&
             $request->get('tagId') > 0) {
-            $filterTag = $this->get('em')
-                              ->find(
-                                  Tag::class,
-                                  (int) $request->get('tagId')
-                              );
-
+            $filterTag = $this->get('em')->find(Tag::class, (int) $request->get('tagId'));
             $this->assignation['filterTag'] = $filterTag;
-
             $widget->setTag($filterTag);
         }
 
@@ -275,6 +270,7 @@ class NodesTreesController extends RozierApp
         $referer = false,
         $nodesIds = []
     ) {
+        /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
                         ->createNamedBuilder('deleteForm')
                         ->add('nodesIds', HiddenType::class, [
@@ -365,6 +361,7 @@ class NodesTreesController extends RozierApp
      */
     private function buildBulkTagForm()
     {
+        /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
                         ->createNamedBuilder('tagForm')
                         ->add('nodesIds', HiddenType::class, [
@@ -501,6 +498,7 @@ class NodesTreesController extends RozierApp
         $status = Node::DRAFT,
         $submit = true
     ) {
+        /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
                         ->createNamedBuilder('statusForm')
                         ->add('nodesIds', HiddenType::class, [

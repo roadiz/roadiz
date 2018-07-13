@@ -34,7 +34,6 @@ namespace Themes\Rozier\Controllers;
 
 use Doctrine\ORM\Mapping\MappingException;
 use RZ\Roadiz\Console\RoadizApplication;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
@@ -109,7 +108,7 @@ class SchemaController extends RozierApp
         try {
             $this->clearMetadata();
             $this->updateSchema($request);
-            return new JsonResponse(['status' => true]);
+            return new JsonResponse(['status' => true], JsonResponse::HTTP_PARTIAL_CONTENT);
         } catch (MappingException $e) {
             return new JsonResponse([
                 'status' => false,
@@ -134,21 +133,21 @@ class SchemaController extends RozierApp
         $application = new RoadizApplication(new $kernelClass('prod', false));
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array(
+        $input = new ArrayInput([
             'command' => 'cache:clear'
-        ));
+        ]);
         // You can use NullOutput() if you don't need the output
         $output = new BufferedOutput();
         $application->run($input, $output);
 
-        $inputFpm = new ArrayInput(array(
+        $inputFpm = new ArrayInput([
             'command' => 'cache:clear-fpm'
-        ));
+        ]);
         // You can use NullOutput() if you don't need the output
         $outputFpm = new BufferedOutput();
         $application->run($inputFpm, $outputFpm);
 
-        return new JsonResponse(['status' => true]);
+        return new JsonResponse(['status' => true], JsonResponse::HTTP_PARTIAL_CONTENT);
     }
 
     /**
@@ -180,11 +179,11 @@ class SchemaController extends RozierApp
         $application = new RoadizApplication(new $kernelClass('dev', true));
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array(
+        $input = new ArrayInput([
             'command' => 'orm:schema-tool:update',
             '--dump-sql' => true,
             '--force' => true,
-        ));
+        ]);
         // You can use NullOutput() if you don't need the output
         $output = new BufferedOutput();
         $application->run($input, $output);

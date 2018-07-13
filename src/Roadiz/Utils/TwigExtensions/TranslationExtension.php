@@ -32,11 +32,12 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow render document images
  */
-class TranslationExtension extends \Twig_Extension
+class TranslationExtension extends AbstractExtension
 {
     /**
      * @var RequestStack
@@ -56,11 +57,6 @@ class TranslationExtension extends \Twig_Extension
     {
         $this->requestStack = $requestStack;
         $this->translationViewer = $translationViewer;
-    }
-
-    public function getName()
-    {
-        return 'translationExtension';
     }
 
     public function getFilters()

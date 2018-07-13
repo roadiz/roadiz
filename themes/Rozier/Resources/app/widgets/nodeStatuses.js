@@ -102,20 +102,15 @@ export default class NodeStatuses {
                     cache: false,
                     data: postData
                 })
-                    .done(data => {
+                    .done(() => {
                         window.Rozier.refreshMainNodeTree()
-                        window.UIkit.notify({
-                            message: data.responseText,
-                            status: data.status,
-                            timeout: 3000,
-                            pos: 'top-center'
-                        })
+                        window.Rozier.getMessages()
                     })
                     .fail(data => {
                         data = JSON.parse(data.responseText)
                         window.UIkit.notify({
-                            message: data.responseText,
-                            status: data.status,
+                            message: data.error_message,
+                            status: 'danger',
                             timeout: 3000,
                             pos: 'top-center'
                         })

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Command\Command;
@@ -44,6 +45,9 @@ use Symfony\Component\Console\Question\Question;
 class NodeTypesCreationCommand extends Command
 {
     protected $questionHelper;
+    /**
+     * @var EntityManager
+     */
     protected $entityManager;
 
     protected function configure()
@@ -64,7 +68,7 @@ class NodeTypesCreationCommand extends Command
         $name = $input->getArgument('name');
 
         $nodetype = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findOneBy(['name' => $name]);
 
         if ($nodetype !== null) {
@@ -163,7 +167,7 @@ class NodeTypesCreationCommand extends Command
             $output,
             $questionfType
         );
-        $fType = constant('RZ\Roadiz\Core\Entities\NodeTypeField::' . $fType);
+        $fType = constant(NodeTypeField::class . '::' . $fType);
         $field->setType($fType);
 
         $questionIndexed = new ConfirmationQuestion('[Field ' . $position . '] <question>Must this field be indexed?</question> [y/N]: ', false);

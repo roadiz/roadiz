@@ -327,12 +327,14 @@ export default class Rozier {
                             this.bindMainTrees()
                             this.resize()
                             this.lazyload.bindAjaxLink()
+
+                            if (this.lazyload.nodeTreeContextActions) {
+                                this.lazyload.nodeTreeContextActions.unbind()
+                            }
+
                             this.lazyload.nodeTreeContextActions = new NodeTreeContextActions()
                         })
                     }
-                })
-                .fail(data => {
-                    console.log(data.responseJSON)
                 })
                 .always(() => {
                     this.lazyload.canvasLoader.hide()
@@ -393,7 +395,7 @@ export default class Rozier {
                     _action: 'searchNodesSources',
                     searchTerms: $input.val()
                 }
-                console.log(postData)
+
                 $.ajax({
                     url: this.routes.searchNodesSourcesAjax,
                     type: 'GET',
@@ -490,8 +492,6 @@ export default class Rozier {
             postData.prevNodeId = parseInt(element.prev().attr('data-node-id'))
         }
 
-        console.log(postData)
-
         $.ajax({
             url: this.routes.nodeAjaxEdit.replace('%nodeId%', nodeId),
             type: 'POST',
@@ -507,7 +507,13 @@ export default class Rozier {
                 })
             })
             .fail(data => {
-                console.err(data)
+                data = JSON.parse(data.responseText)
+                window.UIkit.notify({
+                    message: data.error_message,
+                    status: 'danger',
+                    timeout: 3000,
+                    pos: 'top-center'
+                })
             })
     }
 
@@ -570,8 +576,6 @@ export default class Rozier {
             postData.prevTagId = parseInt(element.prev().attr('data-tag-id'))
         }
 
-        console.log(postData)
-
         $.ajax({
             url: this.routes.tagAjaxEdit.replace('%tagId%', tagId),
             type: 'POST',
@@ -585,9 +589,6 @@ export default class Rozier {
                     timeout: 3000,
                     pos: 'top-center'
                 })
-            })
-            .fail(data => {
-                console.err(data)
             })
     }
 
@@ -664,9 +665,6 @@ export default class Rozier {
                     timeout: 3000,
                     pos: 'top-center'
                 })
-            })
-            .fail(data => {
-                console.err(data)
             })
     }
 

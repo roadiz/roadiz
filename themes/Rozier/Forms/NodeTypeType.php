@@ -37,6 +37,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -114,7 +115,7 @@ class NodeTypeType extends AbstractType
                 ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'nodetypefield';
     }
@@ -124,7 +125,7 @@ class NodeTypeType extends AbstractType
         $resolver->setDefaults([
             'label' => false,
             'name' => '',
-            'data_class' => \RZ\Roadiz\Core\Entities\NodeType::class,
+            'data_class' => NodeType::class,
             'attr' => [
                 'class' => 'uk-form node-type-form',
             ],

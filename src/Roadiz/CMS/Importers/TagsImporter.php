@@ -34,6 +34,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
 
@@ -44,6 +45,8 @@ use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
  */
 class TagsImporter implements ImporterInterface
 {
+    protected static $usedTranslations;
+
     /**
      * Import a Json file (.rzt) containing tag and tag translation.
      *
@@ -59,6 +62,9 @@ class TagsImporter implements ImporterInterface
         foreach ($tags as $tag) {
             static::browseTree($tag, $em);
         }
+
+        $em->flush();
+
         return true;
     }
 
@@ -69,52 +75,49 @@ class TagsImporter implements ImporterInterface
      */
     protected static function browseTree(Tag $tag, EntityManager $em)
     {
-        try {
-            /**
-             * Test if tag already exists against its tagName
-             *
-             * @var Tag|null $existing
-             */
-            $existing = $em->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                           ->findOneByTagName($tag->getTagName());
-            if (null !== $existing) {
-                return null;
-            }
-
-            $childObj = [];
-            $sourceObj = [];
-            /** @var Tag $child */
-            foreach ($tag->getChildren() as $child) {
-                $childObj[] = static::browseTree($child, $em);
-            }
-            $tag->getChildren()->clear();
-            /** @var TagTranslation $tagTranslation */
-            foreach ($tag->getTranslatedTags() as $tagTranslation) {
-                $trans = $em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                    ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
-
-                if (empty($trans)) {
-                    $trans = new Translation();
-                    $trans->setLocale($tagTranslation->getTranslation()->getLocale());
-                    $trans->setName(Translation::$availableLocales[$tagTranslation->getTranslation()->getLocale()]);
-                    $em->persist($trans);
-                }
-                $tagTranslation->setTranslation($trans);
-                $em->persist($tagTranslation);
-                $sourceObj[] = $tagTranslation;
-            }
-            $em->persist($tag);
-            foreach ($childObj as $child) {
-                $child->setParent($tag);
-            }
-            foreach ($sourceObj as $tagTranslation) {
-                $tagTranslation->setTag($tag);
-            }
-            $em->flush();
-
-            return $tag;
-        } catch (UniqueConstraintViolationException $e) {
-            return null;
+        /**
+         * Test if tag already exists against its tagName
+         *
+         * @var Tag|null $existing
+         */
+        $existing = $em->getRepository(Tag::class)
+                       ->findOneByTagName($tag->getTagName());
+        if (null !== $existing) {
+            throw new EntityAlreadyExistsException('"' . $tag . '" already exists.');
         }
+
+        foreach ($tag->getChildren() as $child) {
+            static::browseTree($child, $em);
+        }
+        /*
+         * Persist current tag BEFORE
+         * handling any relationship
+         */
+        $em->persist($tag);
+
+        /** @var TagTranslation $tagTranslation */
+        foreach ($tag->getTranslatedTags() as $tagTranslation) {
+            /** @var Translation|null $trans */
+            $trans = $em->getRepository(Translation::class)
+                ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
+
+            if (null === $trans &&
+                !empty(static::$usedTranslations[$tagTranslation->getTranslation()->getLocale()])) {
+                $trans = static::$usedTranslations[$tagTranslation->getTranslation()->getLocale()];
+            }
+
+            if (null === $trans) {
+                $trans = new Translation();
+                $trans->setLocale($tagTranslation->getTranslation()->getLocale());
+                $trans->setName(Translation::$availableLocales[$tagTranslation->getTranslation()->getLocale()]);
+                $em->persist($trans);
+
+                static::$usedTranslations[$tagTranslation->getTranslation()->getLocale()] = $trans;
+            }
+            $tagTranslation->setTranslation($trans);
+            $em->persist($tagTranslation);
+        }
+
+        return $tag;
     }
 }

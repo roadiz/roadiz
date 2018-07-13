@@ -12,6 +12,7 @@ import $ from 'jquery'
     const requestImage = function () {
         $.ajax({
             url: window.RozierRoot.routes.splashRequest,
+            async: true,
             type: 'GET',
             cache: false,
             dataType: 'json'

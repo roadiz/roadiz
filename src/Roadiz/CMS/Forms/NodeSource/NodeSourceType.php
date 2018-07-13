@@ -58,6 +58,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Forms\NodeTreeType;
 
 class NodeSourceType extends AbstractType
@@ -85,6 +86,40 @@ class NodeSourceType extends AbstractType
                 );
             }
         }
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'property' => 'id',
+            'withTitle' => true,
+            'withVirtual' => true,
+        ]);
+        $resolver->setRequired([
+            'class',
+            'entityManager',
+            'controller',
+            'container',
+            'nodeType',
+        ]);
+        $resolver->setAllowedTypes('container', Container::class);
+        $resolver->setAllowedTypes('controller', Controller::class);
+        $resolver->setAllowedTypes('entityManager', EntityManager::class);
+        $resolver->setAllowedTypes('withTitle', 'boolean');
+        $resolver->setAllowedTypes('withVirtual', 'boolean');
+        $resolver->setAllowedTypes('nodeType', NodeType::class);
+        $resolver->setAllowedTypes('class', 'string');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'source';
     }
 
     /**
@@ -389,6 +424,26 @@ class NodeSourceType extends AbstractType
                     ]);
                 }
                 break;
+            case NodeTypeField::COLLECTION_T:
+                $configuration = Yaml::parse($field->getDefaultValues());
+                $collectionOptions = [
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'attr' => [
+                        'class' => 'rz-collection-form-type'
+                    ],
+                    'entry_options' => [
+                        'label' => false,
+                    ]
+                ];
+                if (isset($configuration['entry_type'])) {
+                    $reflectionClass = new \ReflectionClass($configuration['entry_type']);
+                    if ($reflectionClass->isSubclassOf(AbstractType::class)) {
+                        $collectionOptions['entry_type'] = $reflectionClass->getName();
+                    }
+                }
+                $options = array_merge_recursive($options, $collectionOptions);
+                break;
         }
 
         return $options;
@@ -451,39 +506,5 @@ class NodeSourceType extends AbstractType
         }
 
         return $options;
-    }
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'property' => 'id',
-            'withTitle' => true,
-            'withVirtual' => true,
-        ]);
-        $resolver->setRequired([
-            'class',
-            'entityManager',
-            'controller',
-            'container',
-            'nodeType',
-        ]);
-        $resolver->setAllowedTypes('container', Container::class);
-        $resolver->setAllowedTypes('controller', Controller::class);
-        $resolver->setAllowedTypes('entityManager', EntityManager::class);
-        $resolver->setAllowedTypes('withTitle', 'boolean');
-        $resolver->setAllowedTypes('withVirtual', 'boolean');
-        $resolver->setAllowedTypes('nodeType', NodeType::class);
-        $resolver->setAllowedTypes('class', 'string');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'source';
     }
 }

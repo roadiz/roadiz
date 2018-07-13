@@ -29,9 +29,13 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
-use RZ\Roadiz\Console\SolrReindexCommand;
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
+use Doctrine\DBAL\Schema\SchemaException;
+use RZ\Roadiz\Console\ThemeAwareCommandInterface;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -76,11 +80,32 @@ class ThemesSubscriber implements EventSubscriberInterface
      */
     public function onCommand(ConsoleCommandEvent $event)
     {
-        if ($event->getCommand() instanceof SolrReindexCommand) {
-            /** @var Theme $theme */
-            foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
-                $feClass = $theme->getClassName();
-                call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
+        /*
+         * Call setupDependencyInjection method on each registered theme when command
+         * is implementing ThemeAwareCommandInterface.
+         *
+         * Warning: This may lead to Doctrine exception if your database is not synced.
+         */
+        if ($event->getCommand() instanceof ThemeAwareCommandInterface) {
+            try {
+                /** @var ThemeResolverInterface $themeResolver */
+                $themeResolver = $this->kernel->get('themeResolver');
+
+                call_user_func([$themeResolver->getBackendClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
+                /** @var Theme $theme */
+                foreach ($themeResolver->getFrontendThemes() as $theme) {
+                    $feClass = $theme->getClassName();
+                    call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
+                }
+            } catch (ConnectionException $connectionException) {
+                $event->getOutput()->writeln('<error>Database is not reachable.</error> Themes won’t be initialized!');
+                $event->getOutput()->writeln('<error>'.$connectionException->getMessage().'</error>');
+            } catch (SchemaException $schemaException) {
+                $event->getOutput()->writeln('<error>Database synced is not synced.</error> Themes won’t be initialized!');
+                $event->getOutput()->writeln('<error>'.$schemaException->getMessage().'</error>');
+            } catch (TableNotFoundException $tableNotFoundException) {
+                $event->getOutput()->writeln('<error>Database synced is not synced.</error> Themes won’t be initialized!');
+                $event->getOutput()->writeln('<error>'.$tableNotFoundException->getMessage().'</error>');
             }
         }
     }
@@ -94,25 +119,23 @@ class ThemesSubscriber implements EventSubscriberInterface
     public function onKernelRequest(GetResponseEvent $event)
     {
         if ($event->isMasterRequest()) {
+            /** @var ThemeResolverInterface $themeResolver */
+            $themeResolver = $this->kernel->get('themeResolver');
             /*
              * Register Themes dependency injection
              */
             if (!$this->kernel->isInstallMode()) {
                 $this->stopwatch->start('backendDependencyInjection');
                 // Register back-end security scheme
-                $beClass = $this->kernel->container['themeResolver']->getBackendClassName();
-                if (null !== $beClass) {
-                    call_user_func([$beClass, 'setupDependencyInjection'], $this->kernel->getContainer());
-                }
+                call_user_func([$themeResolver->getBackendClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
                 $this->stopwatch->stop('backendDependencyInjection');
             }
 
             $this->stopwatch->start('themeDependencyInjection');
             // Register front-end security scheme
             /** @var Theme $theme */
-            foreach ($this->kernel->container['themeResolver']->getFrontendThemes() as $theme) {
-                $feClass = $theme->getClassName();
-                call_user_func([$feClass, 'setupDependencyInjection'], $this->kernel->getContainer());
+            foreach ($themeResolver->getFrontendThemes() as $theme) {
+                call_user_func([$theme->getClassName(), 'setupDependencyInjection'], $this->kernel->getContainer());
             }
             $this->stopwatch->stop('themeDependencyInjection');
         }

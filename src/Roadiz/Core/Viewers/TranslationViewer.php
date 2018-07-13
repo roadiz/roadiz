@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Bags\Settings;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
@@ -44,6 +45,11 @@ use Symfony\Component\Routing\RouterInterface;
  */
 class TranslationViewer
 {
+    /**
+     * @var bool
+     */
+    private $preview;
+
     /** @var Settings */
     private $settingsBag;
     /**
@@ -54,27 +60,37 @@ class TranslationViewer
      * @var RouterInterface
      */
     private $router;
+    /**
+     * @var Translation
+     */
     private $translation;
 
     /**
      * TranslationViewer constructor.
+     *
      * @param EntityManager $entityManager
      * @param Settings $settingsBag
      * @param RouterInterface $router
+     * @param boolean $preview
      */
-    public function __construct(EntityManager $entityManager, Settings $settingsBag, RouterInterface $router)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        Settings $settingsBag,
+        RouterInterface $router,
+        $preview = false
+    ) {
         $this->settingsBag = $settingsBag;
         $this->entityManager = $entityManager;
         $this->router = $router;
+        $this->preview = $preview;
     }
 
     /**
-     * @return TranslationRepository
+     * @return \Doctrine\ORM\EntityRepository|TranslationRepository
      */
     public function getRepository()
     {
-        return $this->entityManager->getRepository('RZ\Roadiz\Core\Entities\Translation');
+        return $this->entityManager->getRepository(Translation::class);
     }
 
     /**
@@ -137,16 +153,11 @@ class TranslationViewer
             $translations = $this->getRepository()->findAllAvailable();
             $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
         } elseif (null !== $node) {
-            $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
-            $translations = array_filter(
-                $translations,
-                function (Translation $trans) {
-                    if ($trans->isAvailable()) {
-                        return true;
-                    }
-                    return false;
-                }
-            );
+            if ($this->preview === true) {
+                $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
+            } else {
+                $translations = $this->getRepository()->findStrictlyAvailableTranslationsForNode($node);
+            }
             $name = "node";
         } else {
             return [];
@@ -160,7 +171,7 @@ class TranslationViewer
 
             if ($node) {
                 $nodesSources = $this->entityManager
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->getRepository(NodesSources::class)
                     ->findOneBy(["node" => $node, "translation" => $translation]);
                 $url = $this->router->generate(
                     $nodesSources,

@@ -51,7 +51,7 @@ class TagMultiCreationController extends RozierApp
 
         $translation = $this->get('defaultTranslation');
         $parentTag = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Tag', (int) $parentTagId);
+            ->find(Tag::class, (int) $parentTagId);
 
         if (null !== $parentTag) {
             $form = $this->buildAddForm();
@@ -60,12 +60,15 @@ class TagMultiCreationController extends RozierApp
             if ($form->isValid()) {
                 $data = $form->getData();
                 $names = explode(',', $data['names']);
+                $names = array_map('trim', $names);
+                $names = array_filter($names);
+                $names = array_unique($names);
 
                 /*
                  * Get latest position to add tags after.
                  */
                 $latestPosition = $this->get('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                    ->getRepository(Tag::class)
                     ->findLatestPositionInParent($parentTag);
 
                 $tagsArray = [];

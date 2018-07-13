@@ -123,14 +123,14 @@ class UniqueNodeGenerator
 
         if ($request->get('tagId') > 0) {
             $tag = $this->entityManager
-                        ->find('RZ\Roadiz\Core\Entities\Tag', (int) $request->get('tagId'));
+                        ->find(Tag::class, (int) $request->get('tagId'));
         } else {
             $tag = null;
         }
 
         if ($request->get('parentNodeId') > 0) {
             $parent = $this->entityManager->find(
-                'RZ\Roadiz\Core\Entities\Node',
+                Node::class,
                 (int) $request->get('parentNodeId')
             );
         } else {
@@ -140,7 +140,7 @@ class UniqueNodeGenerator
         if ($request->get('nodeTypeId') > 0) {
             /** @var NodeType|null $nodeType */
             $nodeType = $this->entityManager->find(
-                'RZ\Roadiz\Core\Entities\NodeType',
+                NodeType::class,
                 (int) $request->get('nodeTypeId')
             );
 
@@ -150,13 +150,13 @@ class UniqueNodeGenerator
                 if ($request->get('translationId') > 0) {
                     /** @var Translation $translation */
                     $translation = $this->entityManager->find(
-                        'RZ\Roadiz\Core\Entities\Translation',
+                        Translation::class,
                         (int) $request->get('translationId')
                     );
                 } else {
                     /** @var Translation $translation */
                     $translation = $this->entityManager
-                                        ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                        ->getRepository(Translation::class)
                                         ->findDefault();
                 }
 

@@ -87,19 +87,10 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'custom_forms';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getBlockPrefix()
     {
         return 'custom_forms';
     }
-
 
     /**
      * @param FormEvent $event
@@ -118,14 +109,12 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
         $this->selectedCustomForms = $entityManager
             ->getRepository(CustomForm::class)
             ->findByNodeAndFieldName($nodeSource->getNode(), $nodeTypeField->getName());
+
         $event->setData($this->selectedCustomForms);
     }
 
     /**
      * @param FormEvent $event
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function onPostSubmit(FormEvent $event)
     {
@@ -149,6 +138,7 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
             foreach ($event->getData() as $customFormId) {
                 /** @var CustomForm|null $tempCForm */
                 $tempCForm = $entityManager->find(CustomForm::class, (int) $customFormId);
+
                 if ($tempCForm !== null) {
                     $nodeHandler->addCustomFormForField($tempCForm, $nodeTypeField, false, $position);
                     $position++;

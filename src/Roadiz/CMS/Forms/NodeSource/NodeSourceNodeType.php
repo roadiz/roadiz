@@ -87,14 +87,6 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'nodes';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getBlockPrefix()
     {
         return 'nodes';
@@ -126,9 +118,6 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
 
     /**
      * @param FormEvent $event
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Doctrine\ORM\TransactionRequiredException
      */
     public function onPostSubmit(FormEvent $event)
     {
@@ -152,6 +141,7 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
             foreach ($event->getData() as $nodeId) {
                 /** @var Node|null $tempNode */
                 $tempNode = $entityManager->find(Node::class, (int) $nodeId);
+
                 if ($tempNode !== null) {
                     $nodeHandler->addNodeForField($tempNode, $nodeTypeField, false, $position);
                     $position++;

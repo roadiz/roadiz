@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Utils;
 
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
@@ -41,7 +42,7 @@ class NodeSourceApi extends AbstractApi
     /**
      * @var string
      */
-    protected $repository = 'RZ\Roadiz\Core\Entities\NodesSources';
+    protected $repository = NodesSources::class;
 
     /**
      * @param array $criteria
@@ -57,7 +58,7 @@ class NodeSourceApi extends AbstractApi
 
             unset($criteria['node.nodeType']);
         } else {
-            $rep = 'RZ\Roadiz\Core\Entities\NodesSources';
+            $rep = NodesSources::class;
         }
 
         $this->repository = $rep;

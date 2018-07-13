@@ -64,18 +64,18 @@ class DocumentTranslationsController extends RozierApp
             $translationId = $translation->getId();
         } else {
             $translation = $this->get('em')
-                                ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                                ->find(Translation::class, (int) $translationId);
         }
 
         $this->assignation['available_translations'] = $this->get('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+             ->getRepository(Translation::class)
              ->findAll();
 
         /** @var Document $document */
         $document = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+                         ->find(Document::class, (int) $documentId);
         $documentTr = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
+                           ->getRepository(DocumentTranslation::class)
                            ->findOneBy(['document' => (int) $documentId, 'translation' => (int) $translationId]);
 
         if ($documentTr === null &&
@@ -168,10 +168,10 @@ class DocumentTranslationsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $documentTr = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\DocumentTranslation')
+                           ->getRepository(DocumentTranslation::class)
                            ->findOneBy(['document' => (int) $documentId, 'translation' => (int) $translationId]);
         $document = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\Document', (int) $documentId);
+                         ->find(Document::class, (int) $documentId);
 
         if ($documentTr !== null &&
             $document !== null) {

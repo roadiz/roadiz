@@ -32,11 +32,12 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow to gather nodes-source from hierarchy
  */
-class NodesSourcesExtension extends \Twig_Extension
+class NodesSourcesExtension extends AbstractExtension
 {
     protected $preview;
     protected $securityAuthorizationChecker;
@@ -65,11 +66,6 @@ class NodesSourcesExtension extends \Twig_Extension
         $this->preview = $preview;
         $this->throwExceptions = $throwExceptions;
         $this->nodesSourcesHandler = $nodesSourcesHandler;
-    }
-
-    public function getName()
-    {
-        return 'nodesSourcesExtension';
     }
 
     public function getFilters()
@@ -103,7 +99,7 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getChildren($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getChildren($criteria, $order);
     }
 
     /**
@@ -124,7 +120,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getNext($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getNext($criteria, $order);
     }
 
     /**
@@ -145,7 +141,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getPrevious($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getPrevious($criteria, $order);
     }
 
     /**
@@ -166,7 +162,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getLastSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getLastSibling($criteria, $order);
     }
 
     /**
@@ -187,7 +183,7 @@ class NodesSourcesExtension extends \Twig_Extension
         }
 
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getFirstSibling($criteria, $order, $this->securityAuthorizationChecker, $this->preview);
+        return $this->nodesSourcesHandler->getFirstSibling($criteria, $order);
     }
 
     /**
@@ -225,9 +221,8 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        $preview = $preview !== null ? $preview : $this->preview;
         $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getParents($criteria, $this->securityAuthorizationChecker, $preview);
+        return $this->nodesSourcesHandler->getParents($criteria);
     }
 
     /**

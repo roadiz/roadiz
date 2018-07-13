@@ -32,6 +32,7 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
+use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -57,10 +58,10 @@ class SettingsUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $groups = $this->get('em')
-                       ->getRepository('RZ\Roadiz\Core\Entities\SettingGroup')
+                       ->getRepository(SettingGroup::class)
                        ->findAll();
         $lonelySettings = $this->get('em')
-                               ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+                               ->getRepository(Setting::class)
                                ->findBy(['settingGroup' => null]);
 
         $tmpGroup = new SettingGroup();

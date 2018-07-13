@@ -593,8 +593,13 @@
 
 
     // Forms
-    .uk-form .form-col-datetime>div:last-child>div:last-child{
-        margin-left:0;
+    .uk-form {
+        .form-col-date,
+        .form-col-datetime {
+            & > div:last-child > div:last-child{
+                margin-left:0;
+            }
+        }
     }
 
 
@@ -840,11 +845,13 @@
 
     }
 
-    #add-custom-form-form .form-col-datetime,
-    #edit-custom-form-form .form-col-datetime,
-    #add-custom-form-form .form-col-color,
-    #edit-custom-form-form .form-col-color{
-        margin-left:0;
+    #add-custom-form-form,
+    #edit-custom-form-form {
+        .form-col-date,
+        .form-col-datetime,
+        .form-col-color {
+            margin-left:0;
+        }
     }
 
 

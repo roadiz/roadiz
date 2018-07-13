@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
@@ -85,7 +86,7 @@ class DocumentDownscaleCommand extends Command
                 $confirmation
             )) {
                 $documents = $this->entityManager
-                    ->getRepository('RZ\Roadiz\Core\Entities\Document')
+                    ->getRepository(Document::class)
                     ->findBy([
                         'mimeType' => [
                             'image/png',
@@ -110,7 +111,7 @@ class DocumentDownscaleCommand extends Command
                 /*
                  * Clear cache documents
                  */
-                $assetsClearer = new AssetsClearer($kernel->getCacheDir());
+                $assetsClearer = new AssetsClearer($kernel->getPublicCachePath());
                 $assetsClearer->clear();
                 $text .= $assetsClearer->getOutput() . PHP_EOL;
             }

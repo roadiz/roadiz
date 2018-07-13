@@ -29,13 +29,13 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
-use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -63,58 +63,52 @@ class NodesTagsController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
-        $translation = $this->get('defaultTranslation');
+        /** @var NodesSources $source */
+        $source = $this->get('em')
+                       ->getRepository(NodesSources::class)
+                       ->setDisplayingAllNodesStatuses(true)
+                       ->setDisplayingNotPublishedNodes(true)
+                       ->findOneBy([
+                           'node.id' => (int) $nodeId,
+                       ]);
 
-        if (null !== $translation) {
-            /** @var NodesSources $source */
-            $source = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
-                           ->setDisplayingAllNodesStatuses(true)
-                           ->setDisplayingNotPublishedNodes(true)
-                           ->findOneBy([
-                               'translation' => $translation,
-                               'node.id' => (int) $nodeId,
-                           ]);
+        if (null !== $source) {
+            $node = $source->getNode();
 
-            if (null !== $source &&
-                null !== $translation) {
-                $node = $source->getNode();
+            $this->assignation['translation'] = $this->get('defaultTranslation');
+            $this->assignation['node'] = $node;
+            $this->assignation['source'] = $source;
 
-                $this->assignation['translation'] = $translation;
-                $this->assignation['node'] = $node;
-                $this->assignation['source'] = $source;
+            $form = $this->createForm(NodeTagsType::class, $node, [
+                'entityManager' => $this->get('em'),
+            ]);
 
-                $form = $this->createForm(NodeTagsType::class, $node, [
-                    'entityManager' => $this->get('em'),
+            $form->handleRequest($request);
+
+            if ($form->isValid()) {
+                $this->get('em')->flush();
+                /*
+                 * Dispatch event
+                 */
+                $event = new FilterNodeEvent($node);
+                $this->get('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+
+                $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
+                    '%node%' => $node->getNodeName(),
                 ]);
+                $this->publishConfirmMessage($request, $msg, $source);
 
-                $form->handleRequest($request);
-
-                if ($form->isValid()) {
-                    $this->get('em')->flush();
-
-                    /*
-                     * Dispatch event
-                     */
-                    $event = new FilterNodeEvent($node);
-                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
-
-                    $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
-                        '%node%' => $node->getNodeName(),
-                    ]);
-                    $this->publishConfirmMessage($request, $msg, $source);
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditTagsPage',
-                        ['nodeId' => $node->getId()]
-                    ));
-                }
-
-                $this->assignation['form'] = $form->createView();
-
-                return $this->render('nodes/editTags.html.twig', $this->assignation);
+                return $this->redirect($this->generateUrl(
+                    'nodesEditTagsPage',
+                    ['nodeId' => $node->getId()]
+                ));
             }
+
+            $this->assignation['form'] = $form->createView();
+
+            return $this->render('nodes/editTags.html.twig', $this->assignation);
         }
+
 
         throw new ResourceNotFoundException();
     }
@@ -127,18 +121,15 @@ class NodesTagsController extends RozierApp
      * @param int     $tagId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function removeTagAction(Request $request, $nodeId, $tagId)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
         /** @var Tag $tag */
-        $tag = $this->get('em')
-                    ->find('RZ\Roadiz\Core\Entities\Tag', (int) $tagId);
+        $tag = $this->get('em')->find(Tag::class, (int) $tagId);
 
         if ($node !== null && $tag !== null) {
             $this->assignation['node'] = $node;
@@ -191,7 +182,7 @@ class NodesTagsController extends RozierApp
 
             foreach ($paths as $path) {
                 $tag = $this->get('em')
-                            ->getRepository('RZ\Roadiz\Core\Entities\Tag')
+                            ->getRepository(Tag::class)
                             ->findOrCreateByPath($path);
 
                 $node->addTag($tag);
@@ -223,7 +214,7 @@ class NodesTagsController extends RozierApp
      * @param Node $node
      * @param Tag  $tag
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildRemoveTagForm(Node $node, Tag $tag)
     {

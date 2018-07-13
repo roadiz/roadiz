@@ -34,6 +34,8 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
@@ -60,7 +62,7 @@ class NewslettersController extends RozierApp
 
         $translation = $this->get('defaultTranslation');
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\Newsletter',
+            Newsletter::class,
             [],
             ["id" => "DESC"]
         );
@@ -70,7 +72,7 @@ class NewslettersController extends RozierApp
         $this->assignation['filters'] = $listManager->getAssignation();
         $this->assignation['newsletters'] = $listManager->getEntities();
         $this->assignation['nodeTypes'] = $this->get('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+             ->getRepository(NodeType::class)
              ->findBy(['newsletterType' => true]);
         $this->assignation['translation'] = $translation;
 
@@ -91,13 +93,13 @@ class NewslettersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
         $type = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
+                     ->find(NodeType::class, $nodeTypeId);
 
         $trans = $this->get('defaultTranslation');
 
         if ($translationId !== null) {
             $trans = $this->get('em')
-                          ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                          ->find(Translation::class, (int) $translationId);
         }
 
         if ($type !== null &&
@@ -164,7 +166,7 @@ class NewslettersController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
 
         $translation = $this->get('em')
-                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+                            ->find(Translation::class, (int) $translationId);
 
         if ($translation !== null) {
             /*
@@ -174,11 +176,11 @@ class NewslettersController extends RozierApp
              */
             /** @var Newsletter $newsletter */
             $newsletter = $this->get('em')
-                               ->find('RZ\Roadiz\Core\Entities\Newsletter', (int) $newsletterId);
+                               ->find(Newsletter::class, (int) $newsletterId);
 
             /** @var NodesSources $source */
             $source = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->getRepository(NodesSources::class)
                            ->setDisplayingNotPublishedNodes(true)
                            ->findOneBy(['translation' => $translation, 'node' => $newsletter->getNode()]);
 
@@ -187,7 +189,7 @@ class NewslettersController extends RozierApp
 
                 $this->assignation['translation'] = $translation;
                 $this->assignation['available_translations'] = $this->get('em')
-                                                                    ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                                                                    ->getRepository(Translation::class)
                                                                     ->findAvailableTranslationsForNode($newsletter->getNode());
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
@@ -230,7 +232,7 @@ class NewslettersController extends RozierApp
                                 'status' => 'success',
                                 'public_url' => $url,
                                 'errors' => []
-                            ]);
+                            ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }
 
                         return $this->redirect($this->generateUrl(

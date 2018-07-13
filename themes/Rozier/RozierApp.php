@@ -33,7 +33,9 @@ use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
+use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -88,6 +90,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['mainColor'] = $this->get('settingsBag')->get('main_color');
         $this->assignation['head']['googleClientId'] = $this->get('settingsBag')->get('google_client_id') ? $this->get('settingsBag')->get('google_client_id') : "";
         $this->assignation['head']['themeName'] = static::$themeName;
+        $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
 
         $this->themeContainer['nodeTree'] = function () {
             if (null !== $this->getUser()) {
@@ -155,8 +158,8 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = $this->get('settingsBag')->get('main_color');
-        $this->assignation['nodeTypes'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([]);
-        $this->assignation['tags'] = $this->get('em')->getRepository('RZ\Roadiz\Core\Entities\Tag')->findBy([
+        $this->assignation['nodeTypes'] = $this->get('em')->getRepository(NodeType::class)->findBy([]);
+        $this->assignation['tags'] = $this->get('em')->getRepository(Tag::class)->findBy([
                 'color' => ['!=', '#000000'],
             ]);
 
@@ -178,8 +181,11 @@ class RozierApp extends BackendController
 
         /*
          * Add custom event subscribers to the general dispatcher.
+         *
+         * Important: do not check here if Solr respond, not to request
+         * solr server at each HTTP request.
          */
-        if ($container['solr.ready']) {
+        if (isset($container['config']['solr']['endpoint'])) {
             $container['dispatcher']->addSubscriber(
                 new SolariumSubscriber($container['solr'], $container['dispatcher'], $container['logger'], $container['factory.handler'])
             );
@@ -223,13 +229,15 @@ class RozierApp extends BackendController
         /*
          * Add custom event subscriber to manage document EXIF
          */
-        $container['dispatcher']->addSubscriber(
-            new ExifDocumentSubscriber(
-                $container['em'],
-                $container['assetPackages'],
-                $container['logger']
-            )
-        );
+        if (function_exists('exif_read_data')) {
+            $container['dispatcher']->addSubscriber(
+                new ExifDocumentSubscriber(
+                    $container['em'],
+                    $container['assetPackages'],
+                    $container['logger']
+                )
+            );
+        }
 
         /*
          * Add custom event subscriber to create a downscaled version for HD images.

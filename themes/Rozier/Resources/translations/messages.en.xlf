@@ -1,4 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is furnished
+  ~ to do so, subject to the following conditions:
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+  ~ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+  ~ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  ~ IN THE SOFTWARE.
+  ~
+  ~ Except as contained in this notice, the name of the ROADIZ shall not
+  ~ be used in advertising or otherwise to promote the sale, use or other dealings
+  ~ in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+  ~
+  ~ @file messages.en.xlf
+  ~ @author Ambroise Maupate <ambroise@rezo-zero.com>
+  -->
+
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="en">
     <body>
@@ -4193,6 +4221,10 @@
         <source>country.type</source>
         <target xml:lang="en">Country (ISO 3166-1 alpha-2)</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target xml:lang="en" state="translated">Custom collection</target>
+      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445" approved="yes">
         <source>add.a.%nodeType%</source>
@@ -5228,6 +5260,14 @@
           <source>more.nodes</source>
           <target xml:lang="en">More nodes</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types" approved="yes">
+          <source>more.node_types</source>
+          <target xml:lang="en">More node-types</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags" approved="yes">
+          <source>more.tags</source>
+          <target xml:lang="en">More tags</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms" approved="yes">
           <source>more.custom_forms</source>
           <target xml:lang="en">More custom-forms</target>
@@ -5866,6 +5906,54 @@
       <trans-unit xml:space="preserve" id="font_variant.light.italic" approved="yes">
           <source>font_variant.light.italic</source>
           <target xml:lang="en">Light italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target xml:lang="en" state="translated">Thin</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target xml:lang="en" state="translated">Thin italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target xml:lang="en" state="translated">Extra light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target xml:lang="en" state="translated">Extra light italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target xml:lang="en" state="translated">Extra bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target xml:lang="en" state="translated">Extra bold italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target xml:lang="en" state="translated">Semi bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target xml:lang="en" state="translated">Semi bold italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target xml:lang="en" state="translated">Medium</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target xml:lang="en" state="translated">Medium italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target xml:lang="en" state="translated">Black</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target xml:lang="en" state="translated">Black italic</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="update.roadiz" approved="yes">
           <source>update.roadiz</source>
@@ -6541,14 +6629,19 @@
             <target xml:lang="en" state="translated">PHP Class "%classname%" must extend AbstractEntity class.</target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target xml:lang="en" state="translated">PHP class %classname% must extend AbstractType class.</target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target xml:lang="en" state="translated">PHP Class "%classname%" does not implement "%method%" method.</target>
             <note>Validator message: when provided classname does not declare provided method.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="more.entities">
+      <trans-unit xml:space="preserve" id="more.entities" approved="yes">
             <source>more.entities</source>
-            <target xml:lang="en" state="translated">More items</target>
+            <target xml:lang="en">More items</target>
             <note>Explorer more button label for entities.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
@@ -6715,6 +6808,11 @@
             <source>use.website.default_language</source>
             <target xml:lang="en" state="translated">-- Use website default language --</target>
             <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target>Preview</target>
+            <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>
   </file>

@@ -153,14 +153,6 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'join';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getBlockPrefix()
     {
         return 'join';

@@ -91,7 +91,7 @@ class NodeTypesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         $nodeTypes = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findAll();
 
         $serializer = new NodeTypeJsonSerializer();

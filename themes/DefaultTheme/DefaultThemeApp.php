@@ -33,7 +33,6 @@ use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -101,27 +100,23 @@ class DefaultThemeApp extends FrontendController
         $this->assignation['head']['twitterAccount'] = $this->get('settingsBag')->get('twitter_account');
         $this->assignation['head']['mapsStyle'] = $this->get('settingsBag')->get('maps_style');
         $this->assignation['head']['themeName'] = static::$themeName;
-        $this->assignation['head']['themeVersion'] = Kernel::$cmsVersion;
-
-        // Get session messages
-        // Remove FlashBag assignation from here if you handle your forms
-        // in sub-requests block renders.
-        $this->assignation['session']['messages'] = $this->get('session')->getFlashBag()->all();
     }
 
     /**
      * Return a Response with default backend 404 error page.
      *
-     * @param string $message Additionnal message to describe 404 error.
+     * @param string $message Additional message to describe 404 error.
      *
      * @return Response
      */
     public function throw404($message = '')
     {
-        $this->translation = $this->get('defaultTranslation');
-
-        $this->prepareThemeAssignation(null, $this->translation);
-        $this->get('logger')->error($message);
+        $translation = $this->bindLocaleFromRoute(
+            $this->get('request'),
+            $this->get('request')->getLocale()
+        );
+        $this->prepareThemeAssignation(null, $translation);
+        $this->get('logger')->warn($message);
 
         $this->assignation['nodeName'] = 'error-404';
         $this->assignation['nodeTypeName'] = 'error404';

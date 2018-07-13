@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -56,6 +57,9 @@ class TagType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['tagName'],
                     ]),
+                    new Length([
+                        'max' => 255,
+                    ])
                 ],
             ])
             ->add('color', TextType::class, [
@@ -94,7 +98,7 @@ class TagType extends AbstractType
             ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'tag';
     }

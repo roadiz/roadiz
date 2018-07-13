@@ -23,7 +23,7 @@ export default {
             watchOptions: {
                 // poll: config.watchInterval,
                 aggregateTimeout: 50,
-                ignored: /node_modules/
+                ignored: [/node_modules/, '/bower_components/' ,'/Resources\/app\/vendor/']
             }
         },
         resolve: {

@@ -234,7 +234,7 @@ export default class MultiGeotagField extends GeotagField {
                 draggable: true,
                 animation: window.google.maps.Animation.DROP,
                 position: latlng,
-                icon: window.Rozier.resourcesUrl + 'img/map_marker.png'
+                icon: window.Rozier.resourcesUrl + 'assets/img/map_marker.png'
             })
         }
 

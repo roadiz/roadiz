@@ -31,9 +31,12 @@ namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -75,37 +78,58 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * @param DocumentInterface $document
+     *
+     * @return bool
+     */
+    protected function supports(DocumentInterface $document)
+    {
+        if (!function_exists('exif_read_data')) {
+            return false;
+        }
+
+        if ($document->getEmbedPlatform() !== "") {
+            return false;
+        }
+
+        if (($document->getMimeType() == 'image/jpeg' || $document->getMimeType() == 'image/tiff') &&
+            $document instanceof Document &&
+            $document->getDocumentTranslations()->count() === 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * @param FilterDocumentEvent $event
      */
     public function onImageUploaded(FilterDocumentEvent $event)
     {
-        if (function_exists('exif_read_data')) {
-            $document = $event->getDocument();
-            if ($document->getDocumentTranslations()->count() === 0 &&
-                ($document->getMimeType() == 'image/jpeg' || $document->getMimeType() == 'image/tiff')) {
-                $filePath = $this->packages->getDocumentFilePath($document);
-                $exif = exif_read_data($filePath, null, false);
+        $document = $event->getDocument();
+        if ($this->supports($document)) {
+            $filePath = $this->packages->getDocumentFilePath($document);
+            $exif = exif_read_data($filePath, null, false);
 
-                if (false !== $exif) {
-                    $copyright = $this->getCopyright($exif);
-                    $description = $this->getDescription($exif);
+            if (false !== $exif) {
+                $copyright = $this->getCopyright($exif);
+                $description = $this->getDescription($exif);
 
-                    if (null !== $copyright || null !== $description) {
-                        if (null !== $this->logger) {
-                            $this->logger->debug('EXIF information available for document.', ['document' => $document->getFilename()]);
-                        }
-                        $defaultTranslation = $this->entityManager
-                                                   ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                                   ->findDefault();
-
-                        $documentTranslation = new DocumentTranslation();
-                        $documentTranslation->setCopyright($copyright)
-                                            ->setDocument($document)
-                                            ->setDescription($description)
-                                            ->setTranslation($defaultTranslation);
-
-                        $this->entityManager->persist($documentTranslation);
+                if (null !== $copyright || null !== $description) {
+                    if (null !== $this->logger) {
+                        $this->logger->debug('EXIF information available for document.', ['document' => $document->getFilename()]);
                     }
+                    $defaultTranslation = $this->entityManager
+                                               ->getRepository(Translation::class)
+                                               ->findDefault();
+
+                    $documentTranslation = new DocumentTranslation();
+                    $documentTranslation->setCopyright($copyright)
+                                        ->setDocument($document)
+                                        ->setDescription($description)
+                                        ->setTranslation($defaultTranslation);
+
+                    $this->entityManager->persist($documentTranslation);
                 }
             }
         }

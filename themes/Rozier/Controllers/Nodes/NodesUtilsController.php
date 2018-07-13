@@ -60,7 +60,7 @@ class NodesUtilsController extends RozierApp
 
         /** @var Node $existingNode */
         $existingNode = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+            ->find(Node::class, (int) $nodeId);
         $this->get('em')->refresh($existingNode);
 
         $serializer = new NodeJsonSerializer($this->get('em'));
@@ -98,7 +98,7 @@ class NodesUtilsController extends RozierApp
 
         /** @var Node[] $existingNodes */
         $existingNodes = $this->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findBy(["parent" => null]);
 
@@ -141,8 +141,7 @@ class NodesUtilsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         /** @var Node $existingNode */
-        $existingNode = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $existingNode = $this->get('em')->find(Node::class, (int) $nodeId);
 
         try {
             $duplicator = new NodeDuplicator($existingNode, $this->get('em'));

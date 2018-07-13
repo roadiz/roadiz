@@ -31,11 +31,11 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
-use Themes\Rozier\Forms\NodeType;
 use Themes\Rozier\Models\NodeTypeModel;
 
 /**
@@ -58,7 +58,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\NodeType',
+            NodeType::class,
             $arrayFilter
         );
         $listManager->setDisplayingNotPublishedNodes(true);
@@ -77,8 +77,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -100,7 +99,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
 
         /** @var EntityManager $em */
         $em = $this->get('em');
-        $nodeTypes = $em->getRepository('RZ\Roadiz\Core\Entities\NodeType')->findBy([
+        $nodeTypes = $em->getRepository(NodeType::class)->findBy([
             'name' => $cleanNodeTypesName
         ]);
 
@@ -114,8 +113,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

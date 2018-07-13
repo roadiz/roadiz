@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Serializers;
 
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
 use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
@@ -101,6 +102,6 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
         $serializer = new Serializer([$normalizer], [$encoder]);
-        return $serializer->deserialize($jsonString, 'RZ\Roadiz\Core\Entities\NodeTypeField', 'json');
+        return $serializer->deserialize($jsonString, NodeTypeField::class, 'json');
     }
 }

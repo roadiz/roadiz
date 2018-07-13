@@ -63,7 +63,7 @@ trait LoginRequestTrait
     ) {
         $email = $form->get('email')->getData();
         /** @var User $user */
-        $user = $entityManager->getRepository('RZ\Roadiz\Core\Entities\User')->findOneByEmail($email);
+        $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
 
         if (null !== $user) {
             if (!$user->isPasswordRequestNonExpired(User::CONFIRMATION_TTL)) {

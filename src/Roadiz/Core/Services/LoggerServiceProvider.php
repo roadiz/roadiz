@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Gelf\Publisher;
 use Gelf\Transport\HttpTransport;
+use Monolog\Handler\RavenHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
@@ -42,7 +43,7 @@ use RZ\Roadiz\Utils\Log\Handler\TolerantGelfHandler;
 use RZ\Roadiz\Utils\Log\Processor\RequestProcessor;
 use RZ\Roadiz\Utils\Log\Processor\TokenStorageProcessor;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Class LoggerServiceProvider.
@@ -98,7 +99,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
                                 break;
                             case 'gelf':
                                 if (empty($config['url'])) {
-                                    throw new InvalidConfigurationException('A monolog NewRelicHandler must define a log "url".');
+                                    throw new InvalidConfigurationException('A monolog GELFHandler must define a log "url".');
                                 }
                                 $publisher = new Publisher(HttpTransport::fromUrl($config['url']));
 
@@ -106,6 +107,25 @@ class LoggerServiceProvider implements ServiceProviderInterface
                                     $publisher,
                                     constant('\Monolog\Logger::'.$config['level'])
                                 );
+                                break;
+                            case 'sentry':
+                                if (!class_exists('Raven_Client')) {
+                                    throw new InvalidConfigurationException('Sentry handler requires sentry/sentry library.');
+                                }
+                                if (empty($config['url'])) {
+                                    throw new InvalidConfigurationException('A monolog RavenHandler must define a log "url".');
+                                }
+                                $client = new \Raven_Client($config['url']);
+                                $error_handler = new \Raven_ErrorHandler($client);
+                                $error_handler->registerExceptionHandler();
+                                $error_handler->registerErrorHandler();
+                                $error_handler->registerShutdownFunction();
+                                $handler = new RavenHandler(
+                                    $client,
+                                    constant('\Monolog\Logger::'.$config['level'])
+                                );
+                                //$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
+                                $handlers[] = $handler;
                                 break;
                         }
                     } else {
@@ -132,7 +152,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
                 $handlers[] = new DoctrineHandler(
                     $c['em'],
                     $c['securityTokenStorage'],
-                    $c['request'],
+                    $c['requestStack'],
                     Logger::INFO
                 );
             }
@@ -158,9 +178,9 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /*
              * Add processors
              */
-            /** @var Request $request */
-            $request = $c['request'];
-            $log->pushProcessor(new RequestProcessor($request));
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $log->pushProcessor(new RequestProcessor($requestStack));
             $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
 
             return $log;

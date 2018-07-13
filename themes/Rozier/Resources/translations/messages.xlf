@@ -4203,6 +4203,10 @@
         <source>country.type</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target></target>
+      </trans-unit>
 
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
@@ -5293,11 +5297,19 @@
 
       <trans-unit xml:space="preserve" id="more.documents">
           <source>more.documents</source>
-          <target></target>
+          <target>Document drawer explorer button label</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.nodes">
           <source>more.nodes</source>
-          <target></target>
+          <target>Nodes drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types">
+          <source>more.node_types</source>
+          <target>Node Types drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags">
+          <source>more.tags</source>
+          <target>Tag drawer explorer button label</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>
@@ -5977,6 +5989,59 @@
           <target></target>
       </trans-unit>
 
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target></target>
+      </trans-unit>
+
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
@@ -6675,6 +6740,13 @@
             <target></target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
+
         <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target></target>
@@ -6860,6 +6932,23 @@
             <source>use.website.default_language</source>
             <target></target>
             <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
+
+
+        <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target></target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target></target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target></target>
+            <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>
   </file>

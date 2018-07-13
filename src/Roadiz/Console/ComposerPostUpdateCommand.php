@@ -28,6 +28,12 @@
  */
 namespace RZ\Roadiz\Console;
 
+/**
+ * Class ComposerPostUpdateCommand
+ *
+ * @package RZ\Roadiz\Console
+ * @deprecated
+ */
 class ComposerPostUpdateCommand extends ComposerPostInstallCommand
 {
     protected function configure()

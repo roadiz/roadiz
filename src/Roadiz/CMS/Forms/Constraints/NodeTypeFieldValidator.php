@@ -29,11 +29,12 @@
 
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Config\CollectionFieldConfiguration;
 use RZ\Roadiz\Config\JoinNodeTypeFieldConfiguration;
 use RZ\Roadiz\Config\ProviderFieldConfiguration;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -50,6 +51,9 @@ class NodeTypeFieldValidator extends ConstraintValidator
             }
             if ($value->isMultiProvider() || $value->isSingleProvider()) {
                 $this->validateProviderTypes($value, $constraint);
+            }
+            if ($value->isCollection()) {
+                $this->validateCollectionTypes($value, $constraint);
             }
         } else {
             $this->context->buildViolation('Value is not a valid NodeTypeField.')->addViolation();
@@ -149,6 +153,49 @@ class NodeTypeFieldValidator extends ConstraintValidator
                 if (!$reflection->isSubclassOf(AbstractExplorerProvider::class)) {
                     $this->context->buildViolation('classname_%classname%_must_extend_abstract_explorer_provider_class')
                         ->setParameter('%classname%', $configuration['classname'])
+                        ->atPath('defaultValues')
+                        ->addViolation();
+                }
+            }
+        } catch (ParseException $e) {
+            $this->context->buildViolation($e->getMessage())->atPath('defaultValues')->addViolation();
+        } catch (\RuntimeException $e) {
+            $this->context->buildViolation($e->getMessage())->atPath('defaultValues')->addViolation();
+        }
+    }
+
+    /**
+     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $value
+     * @param Constraint $constraint
+     */
+    protected function validateCollectionTypes(\RZ\Roadiz\Core\Entities\NodeTypeField $value, Constraint $constraint)
+    {
+        try {
+            $defaultValuesParsed = Yaml::parse($value->getDefaultValues());
+            if (null === $defaultValuesParsed) {
+                $this->context->buildViolation('default_values_should_not_be_empty_for_this_type')->atPath('defaultValues')->addViolation();
+            } elseif (!is_array($defaultValuesParsed)) {
+                $this->context->buildViolation('default_values_should_be_a_yaml_configuration_for_this_type')->atPath('defaultValues')->addViolation();
+            } else {
+                $configs = [
+                    $defaultValuesParsed,
+                ];
+                $processor = new Processor();
+                $providerConfig = new CollectionFieldConfiguration();
+                $configuration = $processor->processConfiguration($providerConfig, $configs);
+
+                if (!class_exists($configuration['entry_type'])) {
+                    $this->context->buildViolation('classname_%classname%_does_not_exist')
+                        ->setParameter('%classname%', $configuration['entry_type'])
+                        ->atPath('defaultValues')
+                        ->addViolation();
+                    return;
+                }
+
+                $reflection = new \ReflectionClass($configuration['entry_type']);
+                if (!$reflection->isSubclassOf(AbstractType::class)) {
+                    $this->context->buildViolation('classname_%classname%_must_extend_abstract_type_class')
+                        ->setParameter('%classname%', $configuration['entry_type'])
                         ->atPath('defaultValues')
                         ->addViolation();
                 }

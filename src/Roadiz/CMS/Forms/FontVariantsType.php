@@ -60,7 +60,7 @@ class FontVariantsType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'font_variants';
     }

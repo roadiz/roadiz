@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -42,6 +43,9 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class TranslationsCreationCommand extends Command
 {
     private $questionHelper;
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     protected function configure()
@@ -70,10 +74,10 @@ class TranslationsCreationCommand extends Command
 
         if ($name) {
             $translationByName = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->getRepository(Translation::class)
                 ->findOneByName($name);
             $translationByLocale = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+                ->getRepository(Translation::class)
                 ->findOneByLocale($locale);
 
             $confirmation = new ConfirmationQuestion(

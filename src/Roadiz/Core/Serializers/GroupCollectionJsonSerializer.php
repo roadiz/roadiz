@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Serializers;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Entities\Role;
 
 /**
  * Serialization class for Group.
@@ -89,7 +90,7 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
                 $group->setName($groupAssoc['name']);
 
                 foreach ($groupAssoc["roles"] as $role) {
-                    $role = $this->em->getRepository('RZ\Roadiz\Core\Entities\Role')->findOneByName($role['name']);
+                    $role = $this->em->getRepository(Role::class)->findOneByName($role['name']);
                     $group->addRole($role);
                 }
 

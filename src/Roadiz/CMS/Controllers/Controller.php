@@ -33,26 +33,26 @@ use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\EmailManager;
-use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormTypeInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Base controller.
@@ -252,35 +252,47 @@ abstract class Controller implements ContainerAwareInterface
      */
     protected function bindLocaleFromRoute(Request $request, $_locale = null)
     {
-        /** @var TranslationRepository $repository */
-        $repository = $this->get('em')->getRepository(Translation::class);
         /*
          * If you use a static route for Home page
          * we need to grab manually language.
          *
          * Get language from static route
          */
-        if (null !== $_locale) {
-            /*
-             * First try with override locale
-             */
-            $translation = $repository->findOneByOverrideLocaleAndAvailable($_locale);
-
-            if ($translation === null) {
-                /*
-                 * Then with regular locale
-                 */
-                $translation = $repository->findOneByLocaleAndAvailable($_locale);
-            }
-            if ($translation === null) {
-                throw new NoTranslationAvailableException();
-            }
-        } else {
-            $translation = $this->get('defaultTranslation');
-        }
-
+        $translation = $this->findTranslationForLocale($_locale);
         $request->setLocale($translation->getLocale());
         return $translation;
+    }
+
+    /**
+     * @param null $_locale
+     *
+     * @return Translation
+     */
+    protected function findTranslationForLocale($_locale = null)
+    {
+        if (null === $_locale) {
+            return $this->get('defaultTranslation');
+        }
+        /** @var TranslationRepository $repository */
+        $repository = $this->get('em')->getRepository(Translation::class);
+
+        if ($this->get('kernel')->isPreview()) {
+            $translation = $repository->findOneByOverrideLocale($_locale);
+            if (null === $translation) {
+                $translation = $repository->findOneByLocale($_locale);
+            }
+        } else {
+            $translation = $repository->findOneByOverrideLocaleAndAvailable($_locale);
+            if (null === $translation) {
+                $translation = $repository->findOneByLocaleAndAvailable($_locale);
+            }
+        }
+
+        if (null !== $translation) {
+            return $translation;
+        }
+
+        throw new NoTranslationAvailableException();
     }
 
     /**
@@ -375,7 +387,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * Returns a NotFoundHttpException.
+     * Returns a ResourceNotFoundException.
      *
      * This will result in a 404 response code. Usage example:
      *
@@ -384,11 +396,11 @@ abstract class Controller implements ContainerAwareInterface
      * @param string          $message  A message
      * @param \Exception|null $previous The previous exception
      *
-     * @return NotFoundHttpException
+     * @return ResourceNotFoundException
      */
     protected function createNotFoundException($message = 'Not Found', \Exception $previous = null)
     {
-        return new NotFoundHttpException($message, $previous);
+        return new ResourceNotFoundException($message, $previous);
     }
     /**
      * Returns an AccessDeniedException.
@@ -425,12 +437,29 @@ abstract class Controller implements ContainerAwareInterface
      * @param mixed $data    The initial data for the form
      * @param array $options Options for the form
      *
-     * @return \Symfony\Component\Form\FormBuilder
+     * @return FormBuilderInterface
      */
     protected function createFormBuilder($data = null, array $options = [])
     {
         return $this->get('formFactory')->createBuilder(FormType::class, $data, $options);
     }
+
+    /**
+     * Creates and returns a form builder instance.
+     *
+     * @param string $name Form name
+     * @param mixed $data The initial data for the form
+     * @param array $options Options for the form
+     *
+     * @return FormBuilderInterface
+     */
+    protected function createNamedFormBuilder($name = 'form', $data = null, array $options = [])
+    {
+        /** @var FormFactory $formFactory */
+        $formFactory = $this->get('formFactory');
+        return $formFactory->createNamedBuilder($name, FormType::class, $data, $options);
+    }
+
 
     /**
      * Creates and returns an EntityListManager instance.
@@ -476,7 +505,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Get a user from the tokenStorage.
      *
-     * @return UserInterface|null
+     * @return User|null
      *
      * @throws \LogicException If tokenStorage is not available
      *

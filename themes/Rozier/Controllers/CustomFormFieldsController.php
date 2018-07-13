@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +57,7 @@ class CustomFormFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = $this->get('em')
-                           ->find('RZ\Roadiz\Core\Entities\CustomForm', (int) $customFormId);
+                           ->find(CustomForm::class, (int) $customFormId);
 
         if ($customForm !== null) {
             $fields = $customForm->getFields();
@@ -84,7 +85,7 @@ class CustomFormFieldsController extends RozierApp
 
         /** @var CustomFormField $field */
         $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
+                      ->find(CustomFormField::class, (int) $customFormFieldId);
 
         if ($field !== null) {
             $this->assignation['customForm'] = $field->getCustomForm();
@@ -135,7 +136,7 @@ class CustomFormFieldsController extends RozierApp
 
         $field = new CustomFormField();
         $customForm = $this->get('em')
-                           ->find('RZ\Roadiz\Core\Entities\CustomForm', $customFormId);
+                           ->find(CustomForm::class, $customFormId);
         $field->setCustomForm($customForm);
 
         if ($customForm !== null &&
@@ -203,7 +204,7 @@ class CustomFormFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\CustomFormField', (int) $customFormFieldId);
+                      ->find(CustomFormField::class, (int) $customFormFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;

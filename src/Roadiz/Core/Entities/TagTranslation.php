@@ -128,7 +128,7 @@ class TagTranslation extends AbstractEntity
         $this->setTranslation($translation);
 
         $this->name = $original->getDirtyTagName() != '' ? $original->getDirtyTagName() : $original->getTagName();
-        $this->documents = new ArrayCollection();
+        $this->tagTranslationDocuments = new ArrayCollection();
     }
 
     /**
@@ -219,11 +219,11 @@ class TagTranslation extends AbstractEntity
             $this->id = null;
             $documents = $this->getDocuments();
             if ($documents !== null) {
-                $this->documents = new ArrayCollection();
+                $this->tagTranslationDocuments = new ArrayCollection();
                 /** @var TagTranslationDocuments $document */
                 foreach ($documents as $document) {
                     $cloneDocument = clone $document;
-                    $this->documents->add($cloneDocument);
+                    $this->tagTranslationDocuments->add($cloneDocument);
                     $cloneDocument->setTagTranslation($this);
                 }
             }

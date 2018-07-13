@@ -81,8 +81,13 @@ class SolariumNodeSource extends AbstractSolarium
      * @param HandlerFactory $handlerFactory
      * @param Logger $logger
      */
-    public function __construct(NodesSources $nodeSource, Client $client, EventDispatcherInterface $dispatcher, HandlerFactory $handlerFactory, Logger $logger = null)
-    {
+    public function __construct(
+        NodesSources $nodeSource,
+        Client $client,
+        EventDispatcherInterface $dispatcher,
+        HandlerFactory $handlerFactory,
+        Logger $logger = null
+    ) {
         if (null === $client) {
             throw new SolrServerNotConfiguredException("No Solr server available", 1);
         }

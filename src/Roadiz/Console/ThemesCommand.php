@@ -30,6 +30,9 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
+use ReflectionClass;
+use ReflectionException;
+use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
@@ -83,6 +86,37 @@ class ThemesCommand extends Command
     }
 
     /**
+     * @param $name
+     * @return string
+     */
+    public function validateThemeName($name)
+    {
+        if (false !== strpos($name, '\\')) {
+            if (null !== $reflection = $this->getThemeReflectionClass($name)) {
+                return $reflection->getName();
+            }
+            throw new \RuntimeException('Theme class ' . $name . ' does not exist.');
+        }
+
+        if (in_array($name, ['Debug', 'Install', 'Rozier'])) {
+            $this->getThemePath($name);
+            return $name;
+        }
+
+        if (1 !== preg_match('#^[A-Z][a-zA-Z]+$#', $name)) {
+            throw new \RuntimeException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
+        }
+
+        if (1 === preg_match('#[Tt]heme$#', $name)) {
+            throw new \RuntimeException('Theme name must not contain "Theme" suffix, it will be added automatically.');
+        }
+
+        $this->getThemePath($this->getThemeName($name));
+
+        return $name;
+    }
+
+    /**
      * Get real theme path from its name.
      *
      * Attention: theme could be located in vendor folder (/vendor/roadiz/roadiz)
@@ -92,6 +126,12 @@ class ThemesCommand extends Command
      */
     protected function getThemePath($themeName)
     {
+        if (false !== strpos($themeName, '\\')) {
+            if (null !== $themePath = $this->getThemeReflectionClassPath($themeName)) {
+                return $themePath;
+            }
+        }
+
         if ($this->filesystem->exists(ROADIZ_ROOT . '/themes/' . $themeName)) {
             return ROADIZ_ROOT . '/themes/' . $themeName;
         }
@@ -113,15 +153,71 @@ class ThemesCommand extends Command
     }
 
     /**
+     * @param $className
+     *
+     * @return null|ReflectionClass
+     */
+    protected function getThemeReflectionClass($className)
+    {
+        try {
+            $reflection = new ReflectionClass($className);
+            if ($reflection->isSubclassOf(AppController::class)) {
+                return $reflection;
+            }
+        } catch (ReflectionException $Exception) {
+            return null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $className
+     *
+     * @return string|null
+     */
+    protected function getThemeReflectionClassPath($className)
+    {
+        if (null !== $this->getThemeReflectionClass($className)) {
+            return call_user_func([$className, 'getThemeFolder']);
+        }
+
+        return null;
+    }
+
+    /**
      * @param string $name Theme name WITHOUT suffix.
      * @return string
      */
     protected function getThemeName($name)
     {
+        if (false !== strpos($name, '\\')) {
+            if (null !== $reflection = $this->getThemeReflectionClass($name)) {
+                return $reflection->getName();
+            }
+        }
+
         if (in_array($name, ['Debug', 'Install', 'Rozier'])) {
             return $name;
         }
+
         return $name . 'Theme';
+    }
+
+    /**
+     * @param $themeName
+     *
+     * @return string
+     */
+    protected function getThemeFolderName($themeName)
+    {
+        if (false !== strpos($themeName, '\\')) {
+            if (null !== $reflection = $this->getThemeReflectionClass($themeName)) {
+                return call_user_func([$reflection->getName(), 'getThemeDir']);
+            }
+        }
+
+        return $themeName;
     }
 
     /**
@@ -134,7 +230,7 @@ class ThemesCommand extends Command
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
-            $publicThemeDir = $kernel->getPublicDir() . '/themes/' . $themeName;
+            $publicThemeDir = $kernel->getPublicDir() . '/themes/' . $this->getThemeFolderName($themeName);
             $targetDir = $publicThemeDir . '/static';
             $originDir = $this->getThemePath($themeName) . '/static';
 
@@ -149,6 +245,7 @@ class ThemesCommand extends Command
                 return $this->hardCopy($originDir, $targetDir);
             }
         }
+        throw new \RuntimeException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

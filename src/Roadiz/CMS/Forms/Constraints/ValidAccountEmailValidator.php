@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -38,7 +39,7 @@ class ValidAccountEmailValidator extends ConstraintValidator
     {
         if (null !== $constraint->entityManager) {
             $user = $constraint->entityManager
-                               ->getRepository('RZ\Roadiz\Core\Entities\User')
+                               ->getRepository(User::class)
                                ->findOneByEmail($value);
 
             if (null === $user) {

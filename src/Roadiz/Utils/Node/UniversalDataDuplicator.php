@@ -68,13 +68,13 @@ class UniversalDataDuplicator
          */
         if ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source)) {
             $universalFields = $this->em
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeTypeField')
+                ->getRepository(NodeTypeField::class)
                 ->findAllUniversal($source->getNode()->getNodeType());
 
             if (count($universalFields) > 0) {
                 /** @var NodesSourcesRepository $repository */
                 $repository = $this->em
-                    ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                    ->getRepository(NodesSources::class)
                     ->setDisplayingAllNodesStatuses(true)
                     ->setDisplayingNotPublishedNodes(true)
                 ;
@@ -116,10 +116,9 @@ class UniversalDataDuplicator
     private function hasDefaultTranslation(NodesSources $source)
     {
         /** @var Translation $defaultTranslation */
-        $defaultTranslation = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findDefault();
+        $defaultTranslation = $this->em->getRepository(Translation::class)->findDefault();
 
-        $sourceCount = $this->em->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+        $sourceCount = $this->em->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
             ->countBy([
@@ -151,11 +150,11 @@ class UniversalDataDuplicator
     protected function duplicateDocumentsField(NodesSources $universalSource, NodesSources $destSource, NodeTypeField $field)
     {
         $newDocuments = $this->em
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
+            ->getRepository(NodesSourcesDocuments::class)
             ->findBy(['nodeSource' => $universalSource, 'field' => $field]);
 
         $formerDocuments = $this->em
-            ->getRepository('RZ\Roadiz\Core\Entities\NodesSourcesDocuments')
+            ->getRepository(NodesSourcesDocuments::class)
             ->findBy(['nodeSource' => $destSource, 'field' => $field]);
 
         /* Delete former documents */

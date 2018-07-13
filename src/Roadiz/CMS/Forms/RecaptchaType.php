@@ -84,7 +84,7 @@ class RecaptchaType extends AbstractType
      *          <div class="g-recaptcha" data-sitekey="{{ configs.publicKey }}"></div>
      *      {%- endblock recaptcha_widget %}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'recaptcha';
     }

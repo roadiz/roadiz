@@ -334,6 +334,6 @@ class SettingsController extends RozierApp
             return $this->render('settings/delete.html.twig', $this->assignation);
         }
 
-        throw $this->createNotFoundException();
+        throw new ResourceNotFoundException();
     }
 }

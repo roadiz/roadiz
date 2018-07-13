@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,17 +67,17 @@ class NodesCommand extends Command
 
         if ($input->getOption('type')) {
             $nodeType = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+                ->getRepository(NodeType::class)
                 ->findByName($input->getOption('type'));
             if (null !== $nodeType) {
                 $nodes = $this->entityManager
-                    ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                    ->getRepository(Node::class)
                     ->setDisplayingNotPublishedNodes(true)
                     ->findBy(['nodeType' => $nodeType], ['nodeName' => 'ASC']);
             }
         } else {
             $nodes = $this->entityManager
-                ->getRepository('RZ\Roadiz\Core\Entities\Node')
+                ->getRepository(Node::class)
                 ->setDisplayingNotPublishedNodes(true)
                 ->findBy([], ['nodeName' => 'ASC']);
         }

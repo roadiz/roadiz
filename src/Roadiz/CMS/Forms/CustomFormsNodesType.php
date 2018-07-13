@@ -128,7 +128,7 @@ class CustomFormsNodesType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'custom_forms';
     }

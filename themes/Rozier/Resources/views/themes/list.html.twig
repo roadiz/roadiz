@@ -5,12 +5,6 @@
 
     <header class="content-header header-themes header-nodes-list">
         <h1 class="content-title themes-list-title">{% trans %}themes{% endtrans %}</h1>
-        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
-        <div class="content-header-action-menu">
-            <nav>
-                <a class="uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.theme{% endtrans %}</a>
-            </nav>
-        </div>
     </header>
 
     {% include '@Rozier/widgets/filtersBar.html.twig' %}
@@ -38,7 +32,7 @@
                             {% endfor %}
                         </td>
                         <td class="mobile-hidden">
-                            <a href="{{ path('themesEditPage', { themeId: theme.getId }) }}">{{ theme.getClassName }}</a>
+                            {{- theme.className -}}
                         </td>
                         <td class="mobile-hidden">
                             {% if theme.getHostname != "*" %}
@@ -54,8 +48,9 @@
                         </td>
                         <td class="table-actions-row">
                         {% spaceless %}
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesEditPage', { themeId: theme.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('themesDeletePage', { themeId: theme.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% if not theme.isBackendTheme %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesSummaryPage', { classname: theme.classname }) }}" title="{% trans %}import{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-download"></i></a>
+                            {% endif %}
                         {% endspaceless %}
                         </td>
                     </tr>

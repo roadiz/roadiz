@@ -31,11 +31,7 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Entities\CustomFormField;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\AbstractHandler;
-use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
-use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,15 +54,10 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
+        $this->validateRequest($request);
 
         if ($field !== null) {
-            $responseArray = null;
+            $responseArray = [];
 
             /*
              * Get the right update method against "_action" parameter
@@ -89,7 +80,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
 
             return new JsonResponse(
                 $responseArray,
-                Response::HTTP_OK
+                Response::HTTP_PARTIAL_CONTENT
             );
         }
 

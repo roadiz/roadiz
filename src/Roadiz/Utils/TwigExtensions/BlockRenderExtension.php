@@ -29,35 +29,37 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-use Pimple\Container;
-use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow render inner page part calling directly their
  * controller response instead of doing a simple include.
  */
-class BlockRenderExtension extends \Twig_Extension
+class BlockRenderExtension extends AbstractExtension
 {
-    protected $container;
-    protected $kernel;
+    /**
+     * @var FragmentHandler
+     */
+    protected $handler;
 
-    public function __construct(Container $container)
+    /**
+     * BlockRenderExtension constructor.
+     *
+     * @param FragmentHandler $handler
+     */
+    public function __construct(FragmentHandler $handler)
     {
-        $this->container = $container;
-    }
-
-    public function getName()
-    {
-        return 'blockRenderExtension';
+        $this->handler = $handler;
     }
 
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('render', array($this, 'blockRender'), ['is_safe' => ['html']]),
-        );
+        return [
+            new \Twig_SimpleFilter('render', [$this, 'blockRender'], ['is_safe' => ['html']]),
+        ];
     }
 
     /**
@@ -76,21 +78,13 @@ class BlockRenderExtension extends \Twig_Extension
                 '\\Controllers\\Blocks\\' .
                 $nodeSource->getNode()->getNodeType()->getName() .
                 'Controller';
-                if (class_exists($class) &&
-                    method_exists($class, 'blockAction')) {
-                    /** @var FrontendController $ctrl */
-                    $ctrl = new $class();
-                    $ctrl->setContainer($this->container);
-                    $ctrl->__init();
+                if (class_exists($class) && method_exists($class, 'blockAction')) {
+                    $controllerReference = new ControllerReference($class. '::blockAction', [
+                        'source' => $nodeSource,
+                        'assignation' => $assignation,
+                    ]);
 
-                    /** @var Response $response */
-                    $response = $ctrl->blockAction(
-                        $this->container['request'],
-                        $nodeSource,
-                        $assignation
-                    );
-
-                    return $response->getContent();
+                    return $this->handler->render($controllerReference, 'inline');
                 } else {
                     throw new \Twig_Error_Runtime($class . "::blockAction() action does not exist.");
                 }

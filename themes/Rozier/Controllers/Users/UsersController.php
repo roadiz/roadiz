@@ -99,7 +99,7 @@ class UsersController extends RozierApp
         }
         /** @var User $user */
         $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;

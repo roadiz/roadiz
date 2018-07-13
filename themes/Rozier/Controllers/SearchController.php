@@ -159,8 +159,11 @@ class SearchController extends RozierApp
                 if ($key == $field->getName()) {
                     if ($field->getType() === NodeTypeField::MARKDOWN_T
                         || $field->getType() === NodeTypeField::STRING_T
+                        || $field->getType() === NodeTypeField::YAML_T
+                        || $field->getType() === NodeTypeField::JSON_T
                         || $field->getType() === NodeTypeField::TEXT_T
-                        || $field->getType() === NodeTypeField::EMAIL_T) {
+                        || $field->getType() === NodeTypeField::EMAIL_T
+                        || $field->getType() === NodeTypeField::CSS_T) {
                         $data[$key] = ["LIKE", "%" . $value . "%"];
                     } elseif ($field->getType() === NodeTypeField::BOOLEAN_T) {
                         $data[$key] = (bool) $value;
@@ -194,7 +197,6 @@ class SearchController extends RozierApp
     /**
      * @param Request $request
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function searchNodeAction(Request $request)
     {
@@ -250,9 +252,8 @@ class SearchController extends RozierApp
     /**
      * @param Request $request
      * @param $nodetypeId
+     *
      * @return null|\Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function searchNodeSourceAction(Request $request, $nodetypeId)
     {
@@ -362,8 +363,8 @@ class SearchController extends RozierApp
     /**
      * @param Form $form
      * @param NodeType $nodetype
+     *
      * @return null|Response
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     protected function handleNodeForm(Form $form, NodeType $nodetype)
     {
@@ -434,8 +435,8 @@ class SearchController extends RozierApp
     /**
      * @param NodeType $nodetype
      * @param array|\IteratorAggregate $entities
+     *
      * @return string
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     protected function getXlsxResults(NodeType $nodetype, $entities)
     {
@@ -587,6 +588,17 @@ class SearchController extends RozierApp
                 $type = CompareDateType::class;
             } else {
                 $type = NodeSourceType::getFormTypeFromFieldType($field);
+            }
+
+            if ($field->getType() === NodeTypeField::MARKDOWN_T ||
+                $field->getType() === NodeTypeField::STRING_T ||
+                $field->getType() === NodeTypeField::TEXT_T ||
+                $field->getType() === NodeTypeField::EMAIL_T ||
+                $field->getType() === NodeTypeField::JSON_T ||
+                $field->getType() === NodeTypeField::YAML_T ||
+                $field->getType() === NodeTypeField::CSS_T
+            ) {
+                $type = TextType::class;
             }
 
             $builder->add($field->getName(), $type, $option);

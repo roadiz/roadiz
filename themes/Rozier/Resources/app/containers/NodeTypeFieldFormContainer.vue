@@ -111,6 +111,12 @@
                         view: CodeMirror,
                         mode: 'yaml'
                     }
+                },
+                31: { // collection.type
+                    defaultValues: {
+                        view: CodeMirror,
+                        mode: 'yaml'
+                    }
                 }
             }
         },

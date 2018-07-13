@@ -9,7 +9,7 @@
 {% block content %}
 <section class="content-global manage-node">
     <header class="content-header header-node header-node-edit">
-        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node, "authorizationChecker": authorizationChecker} only %}
+        {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-title">
             {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
@@ -51,35 +51,39 @@
         </div>
 
         {% if node.isHidingChildren %}
-        <hr />
-        <h2 id="add-node-translation">{% trans %}add.stack.type{% endtrans %}</h2>
-
-        {% form_theme stackTypesForm '@Rozier/forms.html.twig' %}
-        {{ form_start(stackTypesForm) }}
-            {{ form_widget(stackTypesForm) }}
-            <fieldset data-uk-margin>
-                <button class="uk-button uk-button-primary" type="submit">
-                    <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
-                </button>
-            </fieldset>
-        {{ form_end(stackTypesForm) }}
+        <hr>
         <h2 id="add-node-translation">{% trans %}stack.types{% endtrans %}</h2>
         <div class="content-table-cont">
             <table class="uk-table content-table">
-                <tr>
-                    <th>{% trans %}nodeType{% endtrans %}</th>
-                    <th>{% trans %}actions{% endtrans %}</th>
-                </tr>
-                {% for type in node.stackTypes %}
-                <tr>
-                    <td>{{ type.displayName }}</td>
-                    <td>
-                        <form action="{{ path('nodesRemoveStackTypePage', {nodeId:node.id, typeId:type.id}) }}" method="POST">
-                            <button type="submit" class="uk-button"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
+                <thead>
+                    <tr>
+                        <th>{% trans %}nodeType{% endtrans %}</th>
+                        <th>{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2">
+                            {% form_theme stackTypesForm 'horizontalForms.html.twig' %}
+                            <form class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
+                                {{ form_widget(stackTypesForm) }}
+                                <button class="uk-button uk-button-primary" type="submit">
+                                    <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% for type in node.stackTypes %}
+                    <tr>
+                        <td>{{ type.displayName }}</td>
+                        <td>
+                            <form action="{{ path('nodesRemoveStackTypePage', {nodeId:node.id, typeId:type.id}) }}" method="POST">
+                                <button type="submit" class="uk-button uk-button-danger"><i class="uk-icon-trash-o"></i> {% trans %}remove{% endtrans %}</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
             </table>
         </div>
         {% endif %}

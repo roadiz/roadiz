@@ -77,6 +77,16 @@ class ContactFormManager extends EmailManager
     /**
      * @var array
      */
+    protected $options = [];
+
+    /**
+     * @var string
+     */
+    protected $method = Request::METHOD_POST;
+
+    /**
+     * @var array
+     */
     protected $allowedMimeTypes = [
         'application/pdf',
         'application/x-pdf',
@@ -88,7 +98,11 @@ class ContactFormManager extends EmailManager
     /**
      * @var int
      */
-    protected $maxFileSize = 5242880; // 5MB
+    protected $maxFileSize = 5242880;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory; // 5MB
 
     /**
      * ContactFormManager constructor.
@@ -115,12 +129,12 @@ class ContactFormManager extends EmailManager
     ) {
         parent::__construct($request, $translator, $templating, $mailer, $settingsBag, $documentUrlGenerator);
 
-        $this->formBuilder = $formFactory->createBuilder(FormType::class, null, [
-                 'attr' => [
-                     'id' => 'contactForm',
-                 ],
-             ])
-             ->setMethod('POST');
+        $this->formFactory = $formFactory;
+        $this->options = [
+            'attr' => [
+                'id' => 'contactForm',
+            ],
+        ];
 
         $this->successMessage = 'form.successfully.sent';
         $this->failMessage = 'form.has.errors';
@@ -139,10 +153,25 @@ class ContactFormManager extends EmailManager
     }
 
     /**
+     * @return $this
+     */
+    public function disableCsrfProtection()
+    {
+        $this->options['csrf_protection'] = false;
+
+        return $this;
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     public function getFormBuilder()
     {
+        if (null === $this->formBuilder) {
+            $this->formBuilder = $this->formFactory
+                ->createBuilder(FormType::class, null, $this->options)
+                ->setMethod($this->method);
+        }
         return $this->formBuilder;
     }
 
@@ -161,15 +190,15 @@ class ContactFormManager extends EmailManager
      */
     public function withDefaultFields()
     {
-        $this->formBuilder->add('email', EmailType::class, [
-            'label' => 'your.email',
-            'constraints' => [
-                new NotBlank(),
-                new Email([
-                    'message' => 'email.not.valid',
-                ]),
-            ],
-        ])
+        $this->getFormBuilder()->add('email', EmailType::class, [
+                'label' => 'your.email',
+                'constraints' => [
+                    new NotBlank(),
+                    new Email([
+                        'message' => 'email.not.valid',
+                    ]),
+                ],
+            ])
             ->add('name', TextType::class, [
                 'label' => 'your.name',
                 'constraints' => [
@@ -181,7 +210,8 @@ class ContactFormManager extends EmailManager
                 'constraints' => [
                     new NotBlank(),
                 ],
-            ]);
+            ])
+        ;
 
         return $this;
     }
@@ -209,7 +239,7 @@ class ContactFormManager extends EmailManager
 
         if (!empty($publicKey) &&
             !empty($privateKey)) {
-            $this->formBuilder->add('recaptcha', RecaptchaType::class, [
+            $this->getFormBuilder()->add('recaptcha', RecaptchaType::class, [
                 'label' => false,
                 'configs' => [
                     'publicKey' => $publicKey,
@@ -230,11 +260,10 @@ class ContactFormManager extends EmailManager
      * Handle custom form validation and send it as an email.
      *
      * @return Response|null
-     * @throws BadFormRequestException
      */
     public function handle()
     {
-        $this->form = $this->formBuilder->getForm();
+        $this->form = $this->getFormBuilder()->getForm();
         $this->form->handleRequest($this->request);
         $returnJson = $this->request->isXmlHttpRequest() ||
             ($this->request->attributes->has('_format') && $this->request->attributes->get('_format') == 'json');
@@ -514,5 +543,25 @@ class ContactFormManager extends EmailManager
         return (null !== parent::getReceiver() && parent::getReceiver() != "") ?
             (parent::getReceiver()) :
             ($this->settingsBag->get('email_sender'));
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return ContactFormManager
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+
+        return $this;
     }
 }

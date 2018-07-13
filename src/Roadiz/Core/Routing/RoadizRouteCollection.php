@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Routing;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -43,7 +43,13 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 class RoadizRouteCollection extends DeferredRouteCollection
 {
+    /**
+     * @var Stopwatch
+     */
     protected $stopwatch;
+    /**
+     * @var ThemeResolverInterface
+     */
     protected $themeResolver;
     /**
      * @var bool
@@ -55,13 +61,13 @@ class RoadizRouteCollection extends DeferredRouteCollection
     private $settingsBag;
 
     /**
-     * @param ThemeResolver $themeResolver
+     * @param ThemeResolverInterface $themeResolver
      * @param Settings $settingsBag
      * @param Stopwatch $stopwatch
      * @param bool $isPreview
      */
     public function __construct(
-        ThemeResolver $themeResolver,
+        ThemeResolverInterface $themeResolver,
         Settings $settingsBag,
         Stopwatch $stopwatch = null,
         $isPreview = false

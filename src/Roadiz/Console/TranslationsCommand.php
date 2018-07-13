@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -51,7 +52,7 @@ class TranslationsCommand extends Command
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $translations = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findAll();
 
         if (count($translations) > 0) {

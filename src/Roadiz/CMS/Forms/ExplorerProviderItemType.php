@@ -29,14 +29,13 @@
 
 namespace RZ\Roadiz\CMS\Forms;
 
+use RZ\Roadiz\CMS\Forms\DataTransformer\ExplorerProviderItemTransformer;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Themes\Rozier\Explorer\ExplorerItemInterface;
 use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 /**
@@ -51,33 +50,7 @@ class ExplorerProviderItemType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) use ($options) {
-                if (!empty($entitiesToForm) && $options['explorerProvider']->supports($entitiesToForm)) {
-                    $item = $options['explorerProvider']->toExplorerItem($entitiesToForm);
-                    return [$item];
-                } elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
-                    $idArray = [];
-                    foreach ($entitiesToForm as $entity) {
-                        if ($options['explorerProvider']->supports($entity)) {
-                            $item = $options['explorerProvider']->toExplorerItem($entity);
-                            $idArray[] = $item;
-                        }
-                    }
-                    return $idArray;
-                }
-                return '';
-            },
-            function ($formToEntities) use ($options) {
-                $items = $options['explorerProvider']->getItemsById($formToEntities);
-                $originals = [];
-                /** @var ExplorerItemInterface $item */
-                foreach ($items as $item) {
-                    $originals[] = $item->getOriginal();
-                }
-                return $originals;
-            }
-        ));
+        $builder->addModelTransformer(new ExplorerProviderItemTransformer($options['explorerProvider']));
     }
 
     /**
@@ -104,14 +77,6 @@ class ExplorerProviderItemType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
-    {
-        return 'explorer_provider';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getBlockPrefix()
     {
         return 'explorer_provider';
@@ -126,7 +91,6 @@ class ExplorerProviderItemType extends AbstractType
 
         $resolver->setRequired('explorerProvider');
         $resolver->setAllowedTypes('explorerProvider', [ExplorerProviderInterface::class]);
-
         $resolver->setDefault('max_length', 0);
         $resolver->setDefault('min_length', 0);
         $resolver->setAllowedTypes('max_length', ['int']);

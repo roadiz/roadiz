@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 trait NodesTrait
@@ -58,7 +59,7 @@ trait NodesTrait
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
         /** @var NodeRepository $repository */
-        $repository = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Node');
+        $repository = $entityManager->getRepository(Node::class);
 
         if (true === $repository->exists($nodeName)) {
             $nodeName .= '-' . uniqid();
@@ -93,8 +94,7 @@ trait NodesTrait
     {
         if ($data['nodeId'] == $node->getId() &&
             !empty($data['nodeTypeId'])) {
-            $nodeType = $this->get('em')
-                             ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $data['nodeTypeId']);
+            $nodeType = $this->get('em')->find(NodeType::class, (int) $data['nodeTypeId']);
 
             if (null !== $nodeType) {
                 $node->addStackType($nodeType);
@@ -116,13 +116,13 @@ trait NodesTrait
     {
         if ($node->isHidingChildren()) {
             $defaults = [];
-
-            $builder = $this->createFormBuilder($defaults)
+            $builder = $this->createNamedFormBuilder('add_stack_type', $defaults)
                             ->add('nodeId', HiddenType::class, [
                                 'data' => (int) $node->getId(),
                             ])
-                            ->add('nodeTypeId', new NodeTypesType($this->get('em'), true), [
-                                'label' => 'nodeType',
+                            ->add('nodeTypeId', NodeTypesType::class, [
+                                'entityManager' => $this->get('em'),
+                                'label' => false,
                                 'constraints' => [
                                     new NotBlank(),
                                 ],
@@ -153,8 +153,9 @@ trait NodesTrait
                                 ]),
                             ],
                         ])
-            ->add('nodeTypeId', new NodeTypesType($this->get('em')), [
+            ->add('nodeTypeId', NodeTypesType::class, [
                 'label' => 'nodeType',
+                'entityManager' => $this->get('em'),
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -175,11 +176,12 @@ trait NodesTrait
     /**
      * @param Node $node
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildDeleteForm(Node $node)
     {
-        $builder = $this->createFormBuilder()
+
+        $builder = $this->createNamedFormBuilder('remove_stack_type_'.$node->getId())
                         ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
@@ -196,7 +198,6 @@ trait NodesTrait
     protected function buildEmptyTrashForm()
     {
         $builder = $this->createFormBuilder();
-
         return $builder->getForm();
     }
 }

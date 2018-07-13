@@ -32,9 +32,10 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -58,14 +59,14 @@ class DynamicUrlMatcher extends UrlMatcher
     /** @var bool */
     protected $preview;
     /**
-     * @var ThemeResolver
+     * @var ThemeResolverInterface
      */
     protected $themeResolver;
 
     /**
      * @param RequestContext $context
      * @param EntityManager $em
-     * @param ThemeResolver $themeResolver
+     * @param ThemeResolverInterface $themeResolver
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
      * @param bool $preview
@@ -73,7 +74,7 @@ class DynamicUrlMatcher extends UrlMatcher
     public function __construct(
         RequestContext $context,
         EntityManager $em,
-        ThemeResolver $themeResolver,
+        ThemeResolverInterface $themeResolver,
         Stopwatch $stopwatch = null,
         LoggerInterface $logger = null,
         $preview = false
@@ -96,17 +97,25 @@ class DynamicUrlMatcher extends UrlMatcher
     protected function parseTranslation(&$tokens)
     {
         /** @var TranslationRepository $repository */
-        $repository = $this->em->getRepository('RZ\Roadiz\Core\Entities\Translation');
+        $repository = $this->em->getRepository(Translation::class);
 
         if (!empty($tokens[0])) {
             $firstToken = $tokens[0];
             $locale = strip_tags($firstToken);
             // First token is for language
             if ($locale !== null && $locale != '') {
-                if (in_array($locale, $repository->getAvailableOverrideLocales())) {
-                    return $repository->findOneByOverrideLocaleAndAvailable($locale);
-                } elseif (in_array($locale, $repository->getAvailableLocales())) {
-                    return $repository->findOneByLocaleAndAvailable($locale);
+                if ($this->preview === true) {
+                    if (in_array($locale, $repository->getAllOverrideLocales())) {
+                        return $repository->findOneByOverrideLocale($locale);
+                    } elseif (in_array($locale, $repository->getAllLocales())) {
+                        return $repository->findOneByLocale($locale);
+                    }
+                } else {
+                    if (in_array($locale, $repository->getAvailableOverrideLocales())) {
+                        return $repository->findOneByOverrideLocaleAndAvailable($locale);
+                    } elseif (in_array($locale, $repository->getAvailableLocales())) {
+                        return $repository->findOneByLocaleAndAvailable($locale);
+                    }
                 }
             }
         }

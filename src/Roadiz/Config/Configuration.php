@@ -30,6 +30,8 @@
  */
 namespace RZ\Roadiz\Config;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -42,16 +44,12 @@ class Configuration implements ConfigurationInterface
 
         $root->children()
             ->scalarNode('appNamespace')
-                ->defaultValue('chooseAnUniqueNameForYourApp')
-                ->isRequired()
-                ->cannotBeEmpty()
+                ->defaultValue('roadiz_app')
             ->end()
             ->scalarNode('timezone')
                 ->defaultValue('Europe/Paris')
-                ->isRequired()
-                ->cannotBeEmpty()
             ->end()
-            ->arrayNode('doctrine')
+            ->arrayNode('doctrine')->addDefaultsIfNotSet()
                 ->children()
                     ->enumNode('driver')
                         ->isRequired()
@@ -99,9 +97,40 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('security')
                 ->children()
                     ->scalarNode('secret')
-                    ->defaultValue('change#this#secret#very#important')
-                    ->isRequired()
-                    ->cannotBeEmpty()
+                        ->defaultValue('change#this#secret#very#important')
+                        ->isRequired()
+                        ->cannotBeEmpty()
+                    ->end()
+                    ->scalarNode('session_name')
+                        ->info(<<<EOF
+Name of the session (used as cookie name).
+http://php.net/session.name
+EOF
+                        )
+                        ->defaultValue('roadiz_token')
+                        ->cannotBeEmpty()
+                        ->beforeNormalization()
+                            ->always()
+                            ->then(function ($v) {
+                                return strtolower(preg_replace('#[^a-z^A-Z^_]#', '_', trim($v)));
+                            })
+                        ->end()
+                    ->end()
+                    ->booleanNode('session_cookie_secure')
+                        ->info(<<<EOF
+Enable session cookie_secure ONLY if your website is served with HTTPS only
+http://php.net/session.cookie-secure
+EOF
+                        )
+                        ->defaultValue(false)
+                    ->end()
+                    ->booleanNode('session_cookie_httponly')
+                        ->info(<<<EOF
+Whether or not to add the httpOnly flag to the cookie, which makes it inaccessible to browser scripting languages such as JavaScript.
+http://php.net/session.cookie-httponly
+EOF
+                        )
+                        ->defaultValue(true)
                     ->end()
                 ->end()
             ->end()
@@ -132,12 +161,14 @@ class Configuration implements ConfigurationInterface
             ->append($this->addMailerNode())
             ->append($this->addAssetsNode())
             ->append($this->addSolrNode())
+            ->append($this->addReverseProxyCacheNode())
+            ->append($this->addThemesNode())
         ;
         return $builder;
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addMailerNode()
     {
@@ -174,7 +205,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addAssetsNode()
     {
@@ -214,7 +245,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addSolrNode()
     {
@@ -245,7 +276,71 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addReverseProxyCacheNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('reverseProxyCache');
+
+        $node->children()
+                ->arrayNode('frontend')
+                    ->isRequired()
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                    ->children()
+                        ->scalarNode('host')
+                            ->isRequired()
+                            ->defaultValue('localhost')
+                        ->end()
+                        ->scalarNode('domainName')
+                            ->isRequired()
+                            ->defaultValue('localhost')
+                        ->end()
+                        ->scalarNode('timeout')->defaultValue(3)->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addThemesNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('themes');
+
+        $node->isRequired()
+            ->prototype('array')
+            ->children()
+                ->scalarNode('classname')
+                    ->info('Full qualified theme class (this must start with \ character and ends with App suffix)')
+                    ->isRequired()
+                    ->validate()
+                        ->ifTrue(function ($s) {
+                            return preg_match('/^\\\[a-zA-Z\\\]+App$/', trim($s)) !== 1 || !class_exists($s);
+                        })
+                        ->thenInvalid('Theme class does not exist or classname is invalid: must start with \ character and ends with App suffix.')
+                    ->end()
+                ->end()
+                ->scalarNode('hostname')
+                    ->defaultValue('*')
+                ->end()
+                ->scalarNode('routePrefix')
+                    ->defaultValue('')
+                ->end()
+            ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addMonologNode()
     {
@@ -263,6 +358,7 @@ class Configuration implements ConfigurationInterface
                                     'stream',
                                     'syslog',
                                     'gelf',
+                                    'sentry',
                                 ])
                                 ->isRequired()
                                 ->cannotBeEmpty()

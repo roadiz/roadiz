@@ -36,13 +36,14 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
@@ -67,7 +68,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
      */
     protected $viewer;
     /**
-     * @var ThemeResolver
+     * @var ThemeResolverInterface
      */
     private $themeResolver;
     /**
@@ -78,11 +79,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
     /**
      * ExceptionSubscriber constructor.
      * @param Kernel $kernel
-     * @param ThemeResolver $themeResolver
+     * @param ThemeResolverInterface $themeResolver
      * @param LoggerInterface $logger
      * @param bool $debug
      */
-    public function __construct(Kernel $kernel, ThemeResolver $themeResolver, LoggerInterface $logger, $debug = false)
+    public function __construct(Kernel $kernel, ThemeResolverInterface $themeResolver, LoggerInterface $logger, $debug = false)
     {
         $this->logger = $logger;
         $this->debug = $debug;
@@ -122,34 +123,39 @@ class ExceptionSubscriber implements EventSubscriberInterface
                 $exception = $exception->getPrevious();
             }
 
-            if ($exception instanceof MaintenanceModeException &&
-                null !== $ctrl = $exception->getController()) {
-                $response = $ctrl->maintenanceAction($event->getRequest());
-                // Set http code according to status
-                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-                $event->setResponse($response);
-            } elseif (!$this->viewer->isFormatJson($event->getRequest()) &&
-                false !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
-                $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
-            } else {
-                // Customize your response object to display the exception details
-                $response = $this->getEmergencyResponse($exception, $event->getRequest());
-                // Set http code according to status
-                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-
-                // HttpExceptionInterface is a special type of exception that
-                // holds status code and header details
-                if ($exception instanceof HttpExceptionInterface) {
-                    $response->headers->replace($exception->getHeaders());
+            if (!$this->viewer->isFormatJson($event->getRequest())) {
+                /*
+                 * Themed exception pages…
+                 */
+                if ($exception instanceof MaintenanceModeException &&
+                    null !== $ctrl = $exception->getController()) {
+                    $response = $ctrl->maintenanceAction($event->getRequest());
+                    // Set http code according to status
+                    $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+                    $event->setResponse($response);
+                    return;
+                } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
+                    $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
+                    return;
                 }
-
-                if ($response instanceof JsonResponse) {
-                    $response->headers->set('Content-Type', 'application/problem+json');
-                }
-
-                // Send the modified response object to the event
-                $event->setResponse($response);
             }
+
+            // Customize your response object to display the exception details
+            $response = $this->getEmergencyResponse($exception, $event->getRequest());
+            // Set http code according to status
+            $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+
+            // HttpExceptionInterface is a special type of exception that
+            // holds status code and header details
+            if ($exception instanceof HttpExceptionInterface) {
+                $response->headers->replace($exception->getHeaders());
+            }
+
+            if ($response instanceof JsonResponse) {
+                $response->headers->set('Content-Type', 'application/problem+json');
+            }
+            // Send the modified response object to the event
+            $event->setResponse($response);
         }
     }
 
@@ -168,7 +174,6 @@ class ExceptionSubscriber implements EventSubscriberInterface
          */
         $class = get_class($e);
 
-
         $this->logger->emergency($e->getMessage(), [
             'trace' => $e->getTraceAsString(),
             'exception' => $class,
@@ -179,28 +184,30 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     /**
      * @param GetResponseForExceptionEvent $event
-     * @return bool|Theme
+     * @return null|Theme
      */
     protected function isNotFoundExceptionWithTheme(GetResponseForExceptionEvent $event)
     {
         $exception = $event->getException();
+        $request = $event->getRequest();
 
         if ($exception instanceof ResourceNotFoundException ||
+            $exception instanceof NotFoundHttpException ||
             (null !== $exception->getPrevious() && $exception->getPrevious() instanceof ResourceNotFoundException)
         ) {
-            if (null !== $theme = $this->themeResolver->findTheme($event->getRequest()->getHost())) {
+            if (null !== $theme = $this->themeResolver->findTheme($request->getHost())) {
                 /*
                  * 404 page
                  */
-                if ($event->getRequest() instanceof \RZ\Roadiz\Core\HttpFoundation\Request) {
-                    $event->getRequest()->setTheme($theme);
+                if ($request instanceof \RZ\Roadiz\Core\HttpFoundation\Request) {
+                    $request->setTheme($theme);
                 }
 
                 return $theme;
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

@@ -31,7 +31,7 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Themes\Rozier\RozierApp;
 
@@ -41,40 +41,33 @@ use Themes\Rozier\RozierApp;
  */
 abstract class AbstractAjaxController extends RozierApp
 {
-    protected static $validMethods = ['post', 'get'];
+    protected static $validMethods = [
+        Request::METHOD_POST,
+        Request::METHOD_GET,
+    ];
+
     /**
      * @param Request $request
      * @param string  $method
      *
-     * @return boolean | array  Return true if request is valid, else return error array
+     * @return boolean  Return true if request is valid, else throw exception
      */
     protected function validateRequest(Request $request, $method = 'POST', $requestCsrfToken = true)
     {
         if ($request->get('_action') == "") {
-            return [
-                'statusCode'   => Response::HTTP_FORBIDDEN,
-                'status'       => 'danger',
-                'responseText' => 'Wrong request'
-            ];
+            throw new BadRequestHttpException('Wrong action requested');
         }
 
         if ($requestCsrfToken === true) {
             $token = new CsrfToken(static::AJAX_TOKEN_INTENTION, $request->get('_token'));
             if (!$this->get('csrfTokenManager')->isTokenValid($token)) {
-                return [
-                    'statusCode'   => Response::HTTP_FORBIDDEN,
-                    'status'       => 'danger',
-                    'responseText' => 'Bad token'
-                ];
+                throw new BadRequestHttpException('Bad token');
             }
         }
+
         if (in_array(strtolower($method), static::$validMethods) &&
             strtolower($request->getMethod()) != strtolower($method)) {
-            return [
-                'statusCode'   => Response::HTTP_FORBIDDEN,
-                'status'       => 'danger',
-                'responseText' => 'Bad method'
-            ];
+            throw new BadRequestHttpException('Bad method');
         }
 
         return true;

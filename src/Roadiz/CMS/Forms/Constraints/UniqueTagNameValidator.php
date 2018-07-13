@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -85,8 +86,7 @@ class UniqueTagNameValidator extends ConstraintValidator
      */
     protected function tagNameExists($name, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\Tag')
-                             ->findOneByTagName($name);
+        $entity = $entityManager->getRepository(Tag::class)->findOneByTagName($name);
 
         return (null !== $entity);
     }

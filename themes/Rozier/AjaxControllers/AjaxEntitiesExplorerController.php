@@ -79,7 +79,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         }
 
         /** @var NodeTypeField $nodeTypeField */
-        $nodeTypeField = $this->get('em')->find('RZ\Roadiz\Core\Entities\NodeTypeField', $request->query->get('nodeTypeFieldId'));
+        $nodeTypeField = $this->get('em')->find(NodeTypeField::class, $request->query->get('nodeTypeFieldId'));
         $configuration = $this->getFieldConfiguration($nodeTypeField);
 
         $orderBy = [];
@@ -115,8 +115,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -142,7 +141,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         $em = $this->get('em');
 
         /** @var NodeTypeField $nodeTypeField */
-        $nodeTypeField = $this->get('em')->find('RZ\Roadiz\Core\Entities\NodeTypeField', $request->query->get('nodeTypeFieldId'));
+        $nodeTypeField = $this->get('em')->find(NodeTypeField::class, $request->query->get('nodeTypeFieldId'));
         $configuration = $this->getFieldConfiguration($nodeTypeField);
         $cleanNodeIds = array_filter($request->query->get('ids'));
 
@@ -161,8 +160,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

@@ -71,8 +71,9 @@ class NodeModel implements ModelInterface
             'title' => $this->node->getNodeSources()->first()->getTitle(),
             'nodeName' => $this->node->getNodeName(),
             'isPublished' => $this->node->isPublished(),
-            'nodesEditPage' => $urlGenerator->generate('nodesEditPage', [
-                'nodeId' => $this->node->getId()
+            'nodesEditPage' => $urlGenerator->generate('nodesEditSourcePage', [
+                'nodeId' => $this->node->getId(),
+                'translationId' => $this->node->getNodeSources()->first()->getTranslation()->getId(),
             ]),
             'nodeType' => [
                 'color' => $this->node->getNodeType()->getColor()

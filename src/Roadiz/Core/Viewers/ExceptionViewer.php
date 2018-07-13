@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
 use RZ\Roadiz\CMS\Controllers\CmsController;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,6 +114,10 @@ class ExceptionViewer
  */
     public function getHumanExceptionTitle(\Exception $e)
     {
+        if ($e instanceof InvalidConfigurationException) {
+            return "Roadiz configuration is not valid.";
+        }
+
         if ($e instanceof NoConfigurationFoundException) {
             return "No configuration file has been found. Did you run composer install before using Roadiz?";
         }
@@ -146,6 +151,10 @@ class ExceptionViewer
      */
     public function getJsonError(\Exception $e)
     {
+        if ($e instanceof InvalidConfigurationException) {
+            return "invalid_configuration";
+        }
+
         if ($e instanceof NoConfigurationFoundException) {
             return "no_configuration_file";
         }
@@ -207,6 +216,7 @@ class ExceptionViewer
                 'message' => $e->getMessage(),
                 'exception' => $class,
                 'humanMessage' => $humanMessage,
+                'status' => 'danger',
             ];
             if ($debug) {
                 $data['error_trace'] =  $e->getTrace();
@@ -217,13 +227,23 @@ class ExceptionViewer
             $html = str_replace('{{ http_code }}', $this->getHttpStatusCode($e), $html);
             $html = str_replace('{{ human_message }}', $humanMessage, $html);
 
+            if ($this->getHttpStatusCode($e) === Response::HTTP_FORBIDDEN) {
+                $html = str_replace('{{ smiley }}', '🤔', $html);
+            } elseif ($this->getHttpStatusCode($e) === Response::HTTP_NOT_FOUND) {
+                $html = str_replace('{{ smiley }}', '🧐', $html);
+            } {
+                $html = str_replace('{{ smiley }}', '🤕', $html);
+            }
+
             if ($debug) {
                 $html = str_replace('{{ message }}', $e->getMessage(), $html);
                 $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
                 $html = str_replace('{{ details }}', $trace, $html);
+                $html = str_replace('{{ exception }}', $class, $html);
             } else {
                 $html = str_replace('{{ message }}', '', $html);
                 $html = str_replace('{{ details }}', '', $html);
+                $html = str_replace('{{ exception }}', '', $html);
             }
 
             return new Response(
@@ -252,8 +272,7 @@ class ExceptionViewer
             return true;
         }
 
-        if (count($request->getAcceptableContentTypes()) == 1 &&
-            in_array('application/json', $request->getAcceptableContentTypes())) {
+        if (in_array('application/json', $request->getAcceptableContentTypes())) {
             return true;
         }
 

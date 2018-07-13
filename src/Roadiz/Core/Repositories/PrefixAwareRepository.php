@@ -34,6 +34,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 
 /**
  * Class PrefixAwareRepository for defining join-qeuries prefixes.
@@ -104,10 +105,11 @@ class PrefixAwareRepository extends EntityRepository
      */
     protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
     {
+        $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
-            $baseKey = str_replace('.', '_', $key);
+            $baseKey = $simpleQB->getParameterKey($key);
             $realKey = $this->getRealKey($qb, $key);
-            $qb->andWhere($this->buildComparison($value, $realKey['prefix'], $realKey['key'], $baseKey, $qb));
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $realKey['prefix'].'.', $realKey['key'], $baseKey));
         }
 
         return $qb;
@@ -160,15 +162,7 @@ class PrefixAwareRepository extends EntityRepository
      */
     protected function hasJoinedPrefix(QueryBuilder $qb, $prefix)
     {
-        if (isset($qb->getDQLPart('join')[$this->getDefaultPrefix()])) {
-            foreach ($qb->getDQLPart('join')[$this->getDefaultPrefix()] as $join) {
-                if (null !== $join && $join->getAlias() == $prefix) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return $this->joinExists($qb, $this->getDefaultPrefix(), $prefix);
     }
 
     /**
@@ -205,13 +199,12 @@ class PrefixAwareRepository extends EntityRepository
         }
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $finalQuery = $qb->getQuery();
-
+        $simpleQB = new SimpleQueryBuilder($qb);
         /*
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-            $this->applyComparison($key, $value, $finalQuery);
+            $simpleQB->bindValue($key, $value);
         }
 
         if (null !== $limit &&
@@ -220,10 +213,10 @@ class PrefixAwareRepository extends EntityRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($finalQuery);
+            return new Paginator($qb);
         } else {
             try {
-                return $finalQuery->getResult();
+                return $qb->getQuery()->getResult();
             } catch (NoResultException $e) {
                 return [];
             }
@@ -256,17 +249,16 @@ class PrefixAwareRepository extends EntityRepository
         $qb->setMaxResults(1);
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $finalQuery = $qb->getQuery();
-
+        $simpleQB = new SimpleQueryBuilder($qb);
         /*
          * Reimplementing findBy features…
          */
         foreach ($criteria as $key => $value) {
-            $this->applyComparison($key, $value, $finalQuery);
+            $simpleQB->bindValue($key, $value);
         }
 
         try {
-            return $finalQuery->getSingleResult();
+            return $qb->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -308,8 +300,13 @@ class PrefixAwareRepository extends EntityRepository
         }
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $finalQuery = $qb->getQuery();
-        $this->applyComparisons($criteria, $finalQuery);
+        $simpleQB = new SimpleQueryBuilder($qb);
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+            $simpleQB->bindValue($key, $value);
+        }
 
         if (null !== $limit &&
             null !== $offset) {
@@ -317,10 +314,10 @@ class PrefixAwareRepository extends EntityRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($finalQuery);
+            return new Paginator($qb);
         } else {
             try {
-                return $finalQuery->getResult();
+                return $qb->getQuery()->getResult();
             } catch (NoResultException $e) {
                 return [];
             }
@@ -340,11 +337,16 @@ class PrefixAwareRepository extends EntityRepository
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $finalQuery = $qb->getQuery();
-        $this->applyComparisons($criteria, $finalQuery);
+        $simpleQB = new SimpleQueryBuilder($qb);
+        /*
+         * Reimplementing findBy features…
+         */
+        foreach ($criteria as $key => $value) {
+            $simpleQB->bindValue($key, $value);
+        }
 
         try {
-            return (int) $finalQuery->getSingleScalarResult();
+            return (int) $qb->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }

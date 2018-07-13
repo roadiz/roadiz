@@ -31,5 +31,7 @@ namespace RZ\Roadiz\Core\Events;
 
 final class QueryBuilderEvents
 {
-    const QUERY_BUILDER_SELECT = 'query_builder.select';
+    const QUERY_BUILDER_SELECT = 'qb.select';
+    const QUERY_BUILDER_BUILD_FILTER = 'qb.build_filter';
+    const QUERY_BUILDER_APPLY_FILTER = 'qb.apply_filter';
 }

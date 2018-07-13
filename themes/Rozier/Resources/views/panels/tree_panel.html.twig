@@ -39,7 +39,6 @@
                 {% include '@Rozier/widgets/nodeTree/nodeStackTree.html.twig' with {
                     "node":themeServices.nodeTree.getRootNode,
                     'mainNodeTree':true,
-                    "authorizationChecker":authorizationChecker,
                     "nodeStatuses":nodeStatuses,
                     "request":request,
                 } only %}
@@ -50,7 +49,6 @@
                     "nodeTree":themeServices.nodeTree,
                     "node":themeServices.nodeTree.getRootNode,
                     'mainNodeTree':true,
-                    "authorizationChecker":authorizationChecker,
                     "nodeStatuses":nodeStatuses,
                     "request":request,
                 } only %}
@@ -63,7 +61,6 @@
                     "tagTree":themeServices.tagTree,
                     "tag":themeServices.tagTree.getRootTag,
                     'mainTagTree':true,
-                    "authorizationChecker":authorizationChecker,
                     "nodeStatuses":nodeStatuses
                 } only %}
                 </li>
@@ -73,8 +70,7 @@
                 {% include '@Rozier/widgets/folderTree/folderTree.html.twig' with {
                     "folderTree":themeServices.folderTree,
                     "folder":themeServices.folderTree.getRootFolder,
-                    'mainFolderTree':true,
-                    "authorizationChecker":authorizationChecker
+                    'mainFolderTree':true
                 } only %}
                 </li>
             {% endif %}

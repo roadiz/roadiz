@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -67,7 +68,7 @@ class UniqueCustomFormFieldNameValidator extends ConstraintValidator
      */
     protected function nameExists($name, $customForm, $entityManager)
     {
-        $entity = $entityManager->getRepository('RZ\Roadiz\Core\Entities\CustomFormField')
+        $entity = $entityManager->getRepository(CustomFormField::class)
                              ->findOneBy([
                                  'name' => $name,
                                  'customForm' => $customForm,

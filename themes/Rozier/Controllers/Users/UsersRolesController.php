@@ -57,7 +57,7 @@ class UsersRolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -105,9 +105,9 @@ class UsersRolesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         $user = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\User', (int) $userId);
+                     ->find(User::class, (int) $userId);
         $role = $this->get('em')
-                     ->find('RZ\Roadiz\Core\Entities\Role', (int) $roleId);
+                     ->find(Role::class, (int) $roleId);
 
         if ($user !== null && $role !== null) {
             $this->assignation['user'] = $user;
@@ -151,7 +151,7 @@ class UsersRolesController extends RozierApp
     {
         if ($data['userId'] == $user->getId()) {
             $role = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
+                         ->find(Role::class, $data['roleId']);
 
             $user->addRole($role);
             $this->get('em')->flush();
@@ -172,7 +172,7 @@ class UsersRolesController extends RozierApp
     {
         if ($data['userId'] == $user->getId()) {
             $role = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\Role', $data['roleId']);
+                         ->find(Role::class, $data['roleId']);
 
             if ($role !== null) {
                 $user->removeRole($role);

@@ -74,7 +74,7 @@ class NodeTypeTransformer implements DataTransformerInterface
         }
 
         $nodeType = $this->manager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->find($nodeTypeId)
         ;
 

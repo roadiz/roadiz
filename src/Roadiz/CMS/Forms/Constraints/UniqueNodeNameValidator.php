@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -66,7 +68,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
      */
     protected function urlAliasExists($name, $entityManager)
     {
-        return (boolean) $entityManager->getRepository('RZ\Roadiz\Core\Entities\UrlAlias')->exists($name);
+        return (boolean) $entityManager->getRepository(UrlAlias::class)->exists($name);
     }
 
     /**
@@ -77,7 +79,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
      */
     protected function nodeNameExists($name, $entityManager)
     {
-        return (boolean) $entityManager->getRepository('RZ\Roadiz\Core\Entities\Node')
+        return (boolean) $entityManager->getRepository(Node::class)
                                        ->setDisplayingNotPublishedNodes(true)
                                        ->exists($name);
     }

@@ -50,7 +50,7 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         $folders = $this->get('em')
-                        ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                        ->getRepository(Folder::class)
                         ->findBy(
                             [
                                 'parent' => null,
@@ -67,8 +67,7 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

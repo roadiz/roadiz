@@ -30,20 +30,59 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
+use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
+use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * NodeRepository
  */
 class NodeRepository extends StatusAwareRepository
 {
+    /**
+     * @param QueryBuilder $qb
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return FilterQueryBuilderCriteriaEvent
+     */
+    protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        $event = new FilterNodeQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
+        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
+
+        return $event;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return FilterQueryBuilderCriteriaEvent
+     */
+    protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        $event = new FilterNodeQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
+        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
+
+        return $event;
+    }
+
     /**
      * Just like the countBy method but with relational criteria.
      *
@@ -61,13 +100,12 @@ class NodeRepository extends StatusAwareRepository
         );
 
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-        $this->applyFilterByTag($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($finalQuery, $translation);
+        $this->applyFilterByTag($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         try {
-            return (int) $finalQuery->getSingleScalarResult();
+            return (int) $query->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }
@@ -87,18 +125,8 @@ class NodeRepository extends StatusAwareRepository
         array &$criteria,
         Translation $translation = null
     ) {
-        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select($qb->expr()->countDistinct('n.id'));
-
-        $this->filterByTranslation($criteria, $qb, $translation);
-        /*
-         * Filtering by tag
-         */
-        $this->filterByTag($criteria, $qb);
-        $this->filterByCriteria($criteria, $qb);
-        $this->alterQueryBuilderWithAuthorizationChecker($qb);
-
-        return $qb;
+        $qb = $this->getContextualQueryWithTranslation($criteria, null, null, null, $translation);
+        return $qb->select($qb->expr()->countDistinct(static::NODE_ALIAS . '.id'));
     }
 
     /**
@@ -108,14 +136,14 @@ class NodeRepository extends StatusAwareRepository
      * @param QueryBuilder     $qb
      * @param Translation|null $translation
      */
-    protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
+    protected function filterByTranslation(array $criteria, QueryBuilder $qb, Translation $translation = null)
     {
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id']) ||
             isset($criteria['translation.available'])) {
-            $qb->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS);
-            $qb->innerJoin('ns.translation', static::TRANSLATION_ALIAS);
+            $qb->innerJoin(static::NODE_ALIAS . '.nodeSources', static::NODESSOURCES_ALIAS);
+            $qb->innerJoin(static::NODESSOURCES_ALIAS . '.translation', static::TRANSLATION_ALIAS);
         } else {
             if (null !== $translation) {
                 /*
@@ -125,14 +153,14 @@ class NodeRepository extends StatusAwareRepository
                     'n.nodeSources',
                     static::NODESSOURCES_ALIAS,
                     'WITH',
-                    'ns.translation = :translation'
+                    static::NODESSOURCES_ALIAS . '.translation = :translation'
                 );
             } else {
                 /*
                  * With a null translation, not filter by translation to enable
                  * nodes with only one translation which is not the default one.
                  */
-                $qb->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS);
+                $qb->innerJoin(static::NODE_ALIAS . '.nodeSources', static::NODESSOURCES_ALIAS);
             }
         }
     }
@@ -143,7 +171,7 @@ class NodeRepository extends StatusAwareRepository
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByTag(&$criteria, &$qb)
+    protected function filterByTag(array &$criteria, QueryBuilder $qb)
     {
         if (in_array('tags', array_keys($criteria))) {
             $this->buildTagFiltering($criteria, $qb);
@@ -170,8 +198,9 @@ class NodeRepository extends StatusAwareRepository
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByCriteria(&$criteria, &$qb)
+    protected function filterByCriteria(array &$criteria, QueryBuilder $qb)
     {
+        $simpleQB = new SimpleQueryBuilder($qb);
         /*
          * Reimplementing findBy features…
          */
@@ -179,30 +208,22 @@ class NodeRepository extends StatusAwareRepository
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
-
             /*
-             * compute prefix for
-             * filtering node, and sources relation fields
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
              */
-            $prefix = static::NODE_ALIAS . '.';
+            $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
 
-            // Dots are forbidden in field definitions
-            $baseKey = str_replace('.', '_', $key);
-            /*
-             * Search in translation fields
-             */
-            if (false !== strpos($key, 'translation.')) {
-                $prefix = static::TRANSLATION_ALIAS . '.';
-                $key = str_replace('translation.', '', $key);
+            if (!$event->isPropagationStopped()) {
+                /*
+                 * compute prefix for
+                 * filtering node, and sources relation fields
+                 */
+                $prefix = static::NODE_ALIAS . '.';
+                // Dots are forbidden in field definitions
+                $baseKey = $simpleQB->getParameterKey($key);
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
             }
-            /*
-             * Search in nodeSource fields
-             */
-            if ($key == 'translation') {
-                $prefix = static::NODESSOURCES_ALIAS . '.';
-            }
-
-            $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
         }
     }
 
@@ -210,34 +231,38 @@ class NodeRepository extends StatusAwareRepository
      * Bind parameters to generated query.
      *
      * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      */
-    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    protected function applyFilterByCriteria(array &$criteria, QueryBuilder $qb)
     {
         /*
          * Reimplementing findBy features…
          */
+        $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
             if ($key == "tags" || $key == "tagExclusive") {
                 continue;
             }
 
-            $this->applyComparison($key, $value, $finalQuery);
+            $event = $this->dispatchQueryBuilderApplyEvent($qb, $key, $value);
+            if (!$event->isPropagationStopped()) {
+                $simpleQB->bindValue($key, $value);
+            }
         }
     }
 
     /**
      * Bind translation parameter to final query.
      *
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
-        Query $finalQuery,
+        QueryBuilder $qb,
         Translation $translation = null
     ) {
         if (null !== $translation) {
-            $finalQuery->setParameter('translation', $translation);
+            $qb->setParameter('translation', $translation);
         }
     }
 
@@ -319,11 +344,9 @@ class NodeRepository extends StatusAwareRepository
 
         $query->setCacheable(true);
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByTag($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($finalQuery, $translation);
+        $this->applyFilterByTag($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -331,10 +354,10 @@ class NodeRepository extends StatusAwareRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($finalQuery);
+            return new Paginator($query);
         } else {
             try {
-                return $finalQuery->getResult();
+                return $query->getQuery()->getResult();
             } catch (NoResultException $e) {
                 return [];
             }
@@ -356,7 +379,7 @@ class NodeRepository extends StatusAwareRepository
      */
     protected function getContextualQueryWithTranslation(
         array &$criteria,
-        array &$orderBy = null,
+        array $orderBy = null,
         $limit = null,
         $offset = null,
         Translation $translation = null
@@ -429,7 +452,6 @@ class NodeRepository extends StatusAwareRepository
         array $orderBy = null,
         Translation $translation = null
     ) {
-
         $query = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
@@ -440,14 +462,12 @@ class NodeRepository extends StatusAwareRepository
 
         $query->setCacheable(true);
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByTag($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($finalQuery, $translation);
+        $this->applyFilterByTag($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         try {
-            return $finalQuery->getSingleResult();
+            return $query->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -745,6 +765,31 @@ class NodeRepository extends StatusAwareRepository
             ->andWhere($qb->expr()->eq('t.available', ':available'))
             ->setParameter('alias', $urlAliasAlias)
             ->setParameter('available', true)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        try {
+            return $qb->getQuery()->getSingleResult();
+        } catch (NoResultException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param string $urlAliasAlias
+     * @return null|Node
+     */
+    public function findOneWithAlias($urlAliasAlias)
+    {
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select('n, ns, t, uas')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.urlAliases', 'uas')
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
+            ->andWhere($qb->expr()->eq('uas.alias', ':alias'))
+            ->setParameter('alias', $urlAliasAlias)
             ->setMaxResults(1)
             ->setCacheable(true);
 
@@ -1061,7 +1106,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select(static::TRANSLATION_ALIAS)
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
@@ -1084,7 +1129,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select(static::TRANSLATION_ALIAS)
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
@@ -1105,7 +1150,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
             ->innerJoin('ns.node', static::NODE_ALIAS)
             ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
@@ -1129,7 +1174,7 @@ class NodeRepository extends StatusAwareRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('t.id')
-            ->from('RZ\Roadiz\Core\Entities\Translation', static::TRANSLATION_ALIAS)
+            ->from(Translation::class, static::TRANSLATION_ALIAS)
             ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
@@ -1158,7 +1203,6 @@ class NodeRepository extends StatusAwareRepository
         array &$criteria = [],
         $alias = "obj"
     ) {
-
         $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*
@@ -1166,7 +1210,7 @@ class NodeRepository extends StatusAwareRepository
          */
         $qb->innerJoin($alias . '.nodeSources', static::NODESSOURCES_ALIAS);
         $criteriaFields = [];
-        $metadatas = $this->_em->getClassMetadata('RZ\Roadiz\Core\Entities\NodesSources');
+        $metadatas = $this->_em->getClassMetadata(NodesSources::class);
         $cols = $metadatas->getColumnNames();
         foreach ($cols as $col) {
             $field = $metadatas->getFieldName($col);
@@ -1185,16 +1229,35 @@ class NodeRepository extends StatusAwareRepository
          */
         if (isset($criteria['tags'])) {
             if (is_object($criteria['tags'])) {
-                $qb->innerJoin($alias . '.tags', static::TAG_ALIAS, Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']->getId()));
+                $qb->innerJoin(
+                    $alias . '.tags',
+                    static::TAG_ALIAS,
+                    Expr\Join::WITH,
+                    $qb->expr()->eq('tg.id', (int) $criteria['tags']->getId())
+                );
             } elseif (is_array($criteria['tags'])) {
-                $qb->innerJoin($alias . '.tags', static::TAG_ALIAS, Expr\Join::WITH, $qb->expr()->in('tg.id', $criteria['tags']));
+                $qb->innerJoin(
+                    $alias . '.tags',
+                    static::TAG_ALIAS,
+                    Expr\Join::WITH,
+                    $qb->expr()->in('tg.id', $criteria['tags'])
+                );
             } elseif (is_integer($criteria['tags'])) {
-                $qb->innerJoin($alias . '.tags', static::TAG_ALIAS, Expr\Join::WITH, $qb->expr()->eq('tg.id', (int) $criteria['tags']));
+                $qb->innerJoin(
+                    $alias . '.tags',
+                    static::TAG_ALIAS,
+                    Expr\Join::WITH,
+                    $qb->expr()->eq('tg.id', (int) $criteria['tags'])
+                );
             }
             unset($criteria['tags']);
         }
 
         $this->prepareComparisons($criteria, $qb, $alias);
+        /*
+         * Alter at the end not to filter in OR groups
+         */
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, $alias);
 
         return $qb;
     }
@@ -1209,14 +1272,16 @@ class NodeRepository extends StatusAwareRepository
      */
     protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
     {
+        $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
+            $baseKey = $simpleQB->getParameterKey($key);
             if ($key == 'translation') {
                 if (!$this->hasJoinedNodesSources($qb, $alias)) {
                     $qb->innerJoin($alias . '.nodeSources', static::NODESSOURCES_ALIAS);
                 }
-                $qb->andWhere($this->buildComparison($value, static::NODESSOURCES_ALIAS . '.', $key, $key, $qb));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, static::NODESSOURCES_ALIAS . '.', $key, $baseKey));
             } else {
-                $qb->andWhere($this->buildComparison($value, $alias . '.', $key, $key, $qb));
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $baseKey));
             }
         }
 

@@ -71,7 +71,7 @@ class CompareDateType extends AbstractType
         ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'comparedate';
     }

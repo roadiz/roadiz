@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
+use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
@@ -48,6 +49,7 @@ use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
 use RZ\Roadiz\Core\Services\DebugServiceProvider;
+use RZ\Roadiz\Core\Services\DoctrineFiltersServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
@@ -63,6 +65,16 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\NodesSourcesUrlsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\OPCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\ReverseProxyCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -87,9 +99,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     const CMS_VERSION = 'beta';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
-
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.21.1";
+    public static $cmsVersion = "0.22.20";
 
     /**
      * @var Container|null
@@ -136,6 +147,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
              */
             $this->container = new Container();
             $this->container->register($this);
+            /*
+             * Following PHP customization should only use
+             * not-required configuration elements.
+             */
+            @date_default_timezone_set($this->container['config']["timezone"]);
+            @ini_set('session.name', $this->container['config']["security"]["session_name"]);
+            @ini_set('session.cookie_secure', $this->container['config']["security"]["session_cookie_secure"]);
+            @ini_set('session.cookie_httponly', $this->container['config']["security"]["session_cookie_httponly"]);
             $this->booted = true;
         } catch (InvalidConfigurationException $e) {
             $view = new ExceptionViewer();
@@ -158,18 +177,40 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return new NullStopwatch();
         };
 
-        $container['dispatcher'] = function () {
-            return new EventDispatcher();
-        };
-
         $container['kernel'] = $this;
         $container['stopwatch']->openSection();
         $container['stopwatch']->start('registerServices');
 
         $container->register(new YamlConfigurationServiceProvider());
+
+        $container['dispatcher'] = function ($c) {
+            $dispatcher = new EventDispatcher();
+            $dispatcher->addSubscriber(new SaveSessionListener());
+            $dispatcher->addSubscriber(new AppCacheEventSubscriber());
+            $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());
+            $dispatcher->addSubscriber(new DoctrineCacheEventSubscriber());
+            $dispatcher->addSubscriber(new NodesSourcesUrlsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new OPCacheEventSubscriber());
+            $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
+            $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
+            $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
+
+            if (isset($c['config']['reverseProxyCache']) &&
+                count($c['config']['reverseProxyCache']['frontend']) > 0) {
+                $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
+            }
+
+            $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
+            $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
+            $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
+            return $dispatcher;
+        };
+
         $container->register(new AssetsServiceProvider());
         $container->register(new BackofficeServiceProvider());
         $container->register(new DoctrineServiceProvider());
+        $container->register(new DoctrineFiltersServiceProvider());
         $container->register(new EmbedDocumentsServiceProvider());
         $container->register(new EntityApiServiceProvider());
         $container->register(new FormServiceProvider());
@@ -237,16 +278,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return $response;
         }
 
-        /*
-         * Define a request wide timezone
-         */
-        if (!empty($this->container['config']["timezone"])) {
-            date_default_timezone_set($this->container['config']["timezone"]);
-        } else {
-            date_default_timezone_set("Europe/Paris");
-        }
-
         $this->container['request'] = $request;
+        $this->container['requestContext']->fromRequest($request);
         $this->initEvents();
 
         return $this->container['httpKernel']->handle($request, $type, $catch);
@@ -262,9 +295,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
         $dispatcher->addSubscriber($this->container['routeListener']);
         $dispatcher->addSubscriber($this->container['firewall']);
-        $dispatcher->addSubscriber(new SaveSessionListener());
-        $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
-        $dispatcher->addSubscriber(new ExceptionSubscriber($this, $this->container['themeResolver'], $this->container['logger'], $this->isDebug()));
+        $dispatcher->addSubscriber(new ExceptionSubscriber(
+            $this,
+            $this->container['themeResolver'],
+            $this->container['logger'],
+            $this->isDebug()
+        ));
         $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
 
@@ -274,11 +310,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
             if ($this->isPreview()) {
                 $dispatcher->addSubscriber(new PreviewModeSubscriber($this->container));
+                $dispatcher->addSubscriber(new PreviewBarSubscriber($this->container));
             }
         }
-
-        $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
-        $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
 
         /*
          * If debug, alter HTML responses to append Debug panel to view
@@ -556,6 +590,22 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     public function getPublicFilesBasePath()
     {
         return '/files';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPublicCachePath()
+    {
+        return $this->getPublicDir() . $this->getPublicCacheBasePath();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPublicCacheBasePath()
+    {
+        return '/assets';
     }
 
     /**

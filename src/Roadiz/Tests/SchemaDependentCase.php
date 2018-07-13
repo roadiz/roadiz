@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DataInheritanceEvent;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
@@ -88,10 +89,10 @@ abstract class SchemaDependentCase extends KernelDependentCase
         /*
          * Empty caches
          */
-        $kernel = new \RZ\Roadiz\Core\Kernel('test', true);
+        $kernel = new Kernel('test', true);
         $clearers = [
             // PROD
-            new AssetsClearer($kernel->getCacheDir()),
+            new AssetsClearer($kernel->getPublicCachePath()),
             new RoutingCacheClearer($kernel->getCacheDir()),
             new TemplatesCacheClearer($kernel->getCacheDir()),
             new TranslationsCacheClearer($kernel->getCacheDir()),

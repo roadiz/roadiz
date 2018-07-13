@@ -30,7 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -53,36 +53,20 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
         /*
          * Validate
          */
-        if (true !== $notValid = $this->validateRequest($request)) {
-            return new JsonResponse(
-                $notValid,
-                Response::HTTP_FORBIDDEN
-            );
-        }
-
+        $this->validateRequest($request);
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
-        $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
+        $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);
 
         if (null !== $response = $this->handleFieldActions($request, $field)) {
             return $response;
         }
 
-        $responseArray = [
-            'statusCode' => '403',
-            'status'    => 'danger',
-            'responseText' => $this->getTranslator()->trans(
-                'field.%nodeTypeFieldId%.not_exists',
-                [
-                    '%nodeTypeFieldId%' => $nodeTypeFieldId
-                ]
-            )
-        ];
-
-        return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
-        );
+        throw $this->createNotFoundException($this->getTranslator()->trans(
+            'field.%nodeTypeFieldId%.not_exists',
+            [
+                '%nodeTypeFieldId%' => $nodeTypeFieldId
+            ]
+        ));
     }
 }

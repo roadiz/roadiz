@@ -47,6 +47,20 @@ use Themes\DefaultTheme\DefaultThemeApp;
 class ContactController extends DefaultThemeApp
 {
     /**
+     * @inheritDoc
+     */
+    protected function extendAssignation()
+    {
+        parent::extendAssignation();
+
+        // Get session messages
+        // Remove FlashBag assignation from here if you handle your forms
+        // in sub-requests block renders.
+        $this->assignation['session']['messages'] = $this->get('session')->getFlashBag()->all();
+    }
+
+
+    /**
      * @param Request $request
      * @param Node|null $node
      * @param Translation|null $translation
@@ -71,8 +85,16 @@ class ContactController extends DefaultThemeApp
             $this->prepareThemeAssignation($node, $translation);
 
             $contactFormManager = $this->createContactFormManager()
+                                       /*
+                                        * Disable CSRF protection if using Varnish
+                                        */
+                                       ->disableCsrfProtection()
                                        ->withDefaultFields()
-                                       ->withGoogleRecaptcha();
+                                       ->withGoogleRecaptcha()
+                                       ->setRedirectUrl($this->generateUrl('thanksPageLocale', [
+                                           '_locale' => $request->getLocale()
+                                       ]))
+            ;
 
             /*
              * Create a custom contact form
@@ -107,10 +129,41 @@ class ContactController extends DefaultThemeApp
              * Assign route to check current menu entry in navigation.html.twig
              */
             $this->assignation['route'] = $_route;
+            $response = $this->render('pages/contact.html.twig', $this->assignation);
 
-            return $this->render('pages/contact.html.twig', $this->assignation);
+            if (!$this->get('kernel')->isDebug() &&
+                !$this->get('kernel')->isPreview()) {
+                $response->setPublic();
+                $response->setSharedMaxAge(60*2);
+            }
+
+            return $response;
         } catch (NoTranslationAvailableException $e) {
             throw new ResourceNotFoundException($e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param string $_locale
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function thankAction(
+        Request $request,
+        $_locale = "en"
+    ) {
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
+        $this->prepareThemeAssignation(null, $translation);
+
+        $response = $this->render('pages/thank.html.twig', $this->assignation);
+
+        if (!$this->get('kernel')->isDebug() &&
+            !$this->get('kernel')->isPreview()) {
+            $response->setPublic();
+            $response->setSharedMaxAge(60*2);
+        }
+
+        return $response;
     }
 }

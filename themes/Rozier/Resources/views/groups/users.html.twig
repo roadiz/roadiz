@@ -35,12 +35,12 @@
         <h2>{% trans %}add.a.user{% endtrans %}</h2>
 
         {% form_theme form '@Rozier/forms.html.twig' %}
-        {{ form_start(form) }}
+        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-plus"></i> {% trans %}add.user{% endtrans %}</button>
             </fieldset>
-        {{ form_end(form) }}
+        </form>
     </article>
     {% include '@Rozier/groups/actionsMenu.html.twig' %}
 </section>

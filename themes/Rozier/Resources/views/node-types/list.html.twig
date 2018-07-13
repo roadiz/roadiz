@@ -25,13 +25,18 @@
                     <tr>
                         <th>
                             {% trans %}name{% endtrans %}
-                            {% if request.query.get("field") == 'name' and request.query.get("ordering") == "DESC" %}
-                                <a href="?field=name&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                            {% else %}
-                                <a href="?field=name&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
-                            {% endif %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
                         </th>
-                        <th class="mobile-hidden uk-hidden-small">{% trans %}nodeType.displayName{% endtrans %}</th>
+                        <th class="mobile-hidden uk-hidden-small">
+                            {% trans %}nodeType.displayName{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'displayName',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th class="mobile-hidden uk-hidden-small uk-visible-xlarge">{% trans %}nodeType.entityName{% endtrans %}</th>
                         <th class="mobile-hidden uk-hidden-small uk-visible-large">{% trans %}nodeType.numberFields{% endtrans %}</th>
                         <th class="mobile-hidden uk-hidden-small uk-visible-large">{% trans %}nodeType.status{% endtrans %}</th>

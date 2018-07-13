@@ -35,6 +35,7 @@ use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class NodeSourceBaseType extends AbstractType
 {
@@ -51,6 +52,11 @@ class NodeSourceBaseType extends AbstractType
                 'data-desc' => '',
                 'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
             ],
+            'constraints' => [
+                new Length([
+                    'max' => 255,
+                ])
+            ]
         ]);
 
         if ($options['publishable'] === true) {
@@ -75,7 +81,7 @@ class NodeSourceBaseType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'nodesourcebase';
     }

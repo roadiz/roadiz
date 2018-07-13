@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -58,8 +59,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
-        $nodeType = $this->get('em')
-                         ->find('RZ\Roadiz\Core\Entities\NodeType', $nodeTypeId);
+        $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         if ($nodeType !== null) {
             $fields = $nodeType->getFields();
@@ -86,8 +86,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeTypeField $field */
-        $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\NodeTypeField', $nodeTypeFieldId);
+        $field = $this->get('em')->find(NodeTypeField::class, $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['nodeType'] = $field->getNodeType();
@@ -225,8 +224,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         /** @var NodeTypeField $field */
-        $field = $this->get('em')
-                      ->find('RZ\Roadiz\Core\Entities\NodeTypeField', (int) $nodeTypeFieldId);
+        $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;
@@ -243,8 +241,7 @@ class NodeTypeFieldsController extends RozierApp
                  * Update Database
                  */
                 /** @var NodeType $nodeType */
-                $nodeType = $this->get('em')
-                                 ->find('RZ\Roadiz\Core\Entities\NodeType', (int) $nodeTypeId);
+                $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
 
                 /** @var NodeTypeHandler $handler */
                 $handler = $this->get('node_type.handler');
@@ -279,7 +276,7 @@ class NodeTypeFieldsController extends RozierApp
     /**
      * @param NodeTypeField $field
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteForm(NodeTypeField $field)
     {

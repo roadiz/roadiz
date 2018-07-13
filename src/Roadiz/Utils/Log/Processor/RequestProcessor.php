@@ -29,28 +29,32 @@
  */
 namespace RZ\Roadiz\Utils\Log\Processor;
 
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestProcessor
 {
-    private $request;
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
 
-    public function __construct(Request $request)
+    public function __construct(RequestStack $requestStack)
     {
-        $this->request = $request;
+        $this->requestStack = $requestStack;
     }
 
     public function __invoke(array $record)
     {
-        $record['extra'] = [
-            'url'         => $this->request->getRequestUri(),
-            'ip'          => $this->request->getClientIp(),
-            'http_method' => $this->request->getMethod(),
-            'server'      => $this->request->getHost(),
-            'referrer'    => $this->request->headers->get('referer'),
-            'locale'      => $this->request->getLocale(),
-        ];
-
+        if (null !== $request = $this->requestStack->getMasterRequest()) {
+            $record['context']['request'] = [
+                'url'         => $request->getRequestUri(),
+                'ip'          => $request->getClientIp(),
+                'http_method' => $request->getMethod(),
+                'server'      => $request->getHost(),
+                'referrer'    => $request->headers->get('referer'),
+                'locale'      => $request->getLocale(),
+            ];
+        }
         return $record;
     }
 }

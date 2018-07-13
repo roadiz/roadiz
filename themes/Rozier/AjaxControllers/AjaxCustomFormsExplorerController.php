@@ -57,7 +57,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            'RZ\Roadiz\Core\Entities\CustomForm',
+            CustomForm::class,
             $arrayFilter
         );
         $listManager->setDisplayingNotPublishedNodes(true);
@@ -77,8 +77,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 
@@ -100,7 +99,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
 
         /** @var EntityManager $em */
         $em = $this->get('em');
-        $customForms = $em->getRepository('RZ\Roadiz\Core\Entities\CustomForm')->findBy([
+        $customForms = $em->getRepository(CustomForm::class)->findBy([
             'id' => $cleanCustomFormsIds,
         ]);
 
@@ -115,8 +114,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
         ];
 
         return new JsonResponse(
-            $responseArray,
-            Response::HTTP_OK
+            $responseArray
         );
     }
 

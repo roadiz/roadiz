@@ -40,11 +40,12 @@ use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow render documents Url
  */
-class UrlExtension extends \Twig_Extension
+class UrlExtension extends AbstractExtension
 {
     protected $forceLocale;
     protected $cacheProvider;
@@ -88,14 +89,6 @@ class UrlExtension extends \Twig_Extension
         $this->throwExceptions = $throwExceptions;
         $this->packages = $packages;
         $this->urlGenerator = $urlGenerator;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'urlExtension';
     }
 
     /**
@@ -172,7 +165,7 @@ class UrlExtension extends \Twig_Extension
      * Get nodeSource url using cache.
      *
      * @param NodesSources $ns
-     * @param array        $criteria
+     * @param array $criteria
      * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
@@ -210,13 +203,14 @@ class UrlExtension extends \Twig_Extension
     /**
      * Get node url using its first source.
      *
-     * @param  Node   $node
-     * @param  array  $criteria
+     * @param Node $node
+     * @param array $criteria
      * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
      * @return string
      */
     public function getNodeUrl(Node $node, array $criteria = [])
     {
+        trigger_error('url filter is deprecated for Node. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}', E_USER_DEPRECATED);
         return $this->getNodesSourceUrl($node->getNodeSources()->first(), $criteria);
     }
 }

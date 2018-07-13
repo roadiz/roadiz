@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>{{ head.siteTitle }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Roadiz {{ head.cmsVersion }} {{ head.cmsVersionNumber }} - {{ head.themeName }}" />
+        <meta name="generator" content="Roadiz {{ cms_prefix }} {{ cms_version }} - {{ head.themeName }}" />
         <link rel="apple-touch-icon" sizes="57x57" href="{{ head.resourcesUrl }}img/apple-touch-icon-57x57.png" />
         <link rel="apple-touch-icon" sizes="114x114" href="{{ head.resourcesUrl }}img/apple-touch-icon-114x114.png" />
         <link rel="apple-touch-icon" sizes="72x72" href="{{ head.resourcesUrl }}img/apple-touch-icon-72x72.png" />
@@ -27,9 +27,9 @@
 
         <link rel="stylesheet" href="{{ path('cssMainColor') }}" />
         {% block customStyles %}{% endblock %}
-        {% if additionnalStylesheets %}
-            {% for additionnalStylesheet in additionnalStylesheets %}
-                <link rel="stylesheet" href="{{ additionnalStylesheet.path }}" />
+        {% if additionalStylesheets %}
+            {% for additionalStylesheet in additionalStylesheets %}
+                <link rel="stylesheet" href="{{ additionalStylesheet.path }}" />
             {% endfor %}
         {% endif %}
         <script src="{{ head.resourcesUrl }}/vendor/modernizr.custom.50380.js"></script>
@@ -42,8 +42,6 @@
                     {% include '@Rozier/panels/user_panel.html.twig' with {
                         'session' : session,
                         'head' : head,
-                        'authorizationChecker' : authorizationChecker,
-                        'tokenStorage': tokenStorage,
                         'themeServices':themeServices,
                         'request':request
                     } only %}
@@ -51,8 +49,6 @@
                 <section class="main-container-section" id="admin-menu">
                     {% include '@Rozier/panels/admin_menu.html.twig' with {
                         'themeServices' : themeServices,
-                        'authorizationChecker' : authorizationChecker,
-                        'tokenStorage': tokenStorage,
                         'backofficeEntries':backofficeEntries,
                         'request':request
                     } only %}
@@ -64,8 +60,6 @@
                     <div id="main-trees-overlay"></div>
                     <div id="main-trees-container">
                         {% include '@Rozier/panels/tree_panel.html.twig' with {
-                            'authorizationChecker': authorizationChecker,
-                            'tokenStorage': tokenStorage,
                             'themeServices': themeServices,
                             "nodeStatuses":nodeStatuses,
                             "request":request,
@@ -126,7 +120,7 @@
                     'searchCustomForms':      '{{ 'search.custom_forms'|trans|trim|escape }}',
                     'moreDocuments':          '{{ 'more.documents'|trans|trim|escape }}',
                     'moreNodes':              '{{ 'more.nodes'|trans|trim|escape }}',
-                    'moreNodeTypes':          '{{ 'more.nodes'|trans|trim|escape }}',
+                    'moreNodeTypes':          '{{ 'more.node_types'|trans|trim|escape }}',
                     'moreTags':               '{{ 'more.tags'|trans|trim|escape }}',
                     'moreEntities':           '{{ 'more.entities'|trans|trim|escape }}',
                     'moreCustomForms':        '{{ 'more.custom_forms'|trans|trim|escape }}',
@@ -237,16 +231,16 @@
         {% else %}
             <script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js"></script>
             <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.min.js"></script>
-            <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.js"></script>
+            <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
         {% endif %}
 
         {# JS scripts inclusions / Using webpack #}
         {% include '@Rozier/partials/js-inject.html.twig' %}
 
         {% block customScripts %}{% endblock %}
-        {% if additionnalScripts %}
-            {% for additionnalScript in additionnalScripts %}
-                <script src="{{ additionnalScript.path }}"></script>
+        {% if additionalScripts %}
+            {% for additionalScript in additionalScripts %}
+                <script src="{{ additionalScript.path }}"></script>
             {% endfor %}
         {% endif %}
     </body>

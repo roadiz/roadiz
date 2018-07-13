@@ -31,19 +31,40 @@ namespace RZ\Roadiz\Utils\Theme;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Core\Repositories\ThemeRepository;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Themes\Rozier\RozierApp;
 
 /**
  * ThemeResolver to get backend and frontend themes.
+ *
+ * @deprecated Use StaticThemeResolver instead.
  */
-class ThemeResolver
+class ThemeResolver implements ThemeResolverInterface
 {
+    /**
+     * @var EntityManager
+     */
     protected $em;
+    /**
+     * @var bool
+     */
     protected $installMode;
+    /**
+     * @var Stopwatch
+     */
     protected $stopwatch;
-
+    /**
+     * @var string|null
+     */
     protected $backendClass = null;
+    /**
+     * @var Theme|null
+     */
     protected $backendTheme = null;
+    /**
+     * @var Themes[]|null
+     */
     protected $frontendThemes = null;
 
     /**
@@ -59,6 +80,14 @@ class ThemeResolver
     }
 
     /**
+     * @return ThemeRepository
+     */
+    protected function getRepository()
+    {
+        return $this->em->getRepository(Theme::class);
+    }
+
+    /**
      * @return Theme
      */
     public function getBackendTheme()
@@ -66,7 +95,7 @@ class ThemeResolver
         if (!$this->installMode) {
             if (null === $this->backendTheme) {
                 $this->stopwatch->start('getBackendTheme');
-                $this->backendTheme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableBackend();
+                $this->backendTheme = $this->getRepository()->findAvailableBackend();
                 $this->stopwatch->stop('getBackendTheme');
             }
             return $this->backendTheme;
@@ -87,7 +116,7 @@ class ThemeResolver
             return $this->backendClass;
         }
 
-        return null;
+        return RozierApp::class;
     }
 
     /**
@@ -98,12 +127,14 @@ class ThemeResolver
         if (!$this->installMode) {
             if (null === $this->frontendThemes) {
                 $this->stopwatch->start('getFrontendThemes');
-                $this->frontendThemes = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')->findAvailableFrontends();
+                $this->frontendThemes = $this->getRepository()->findAvailableFrontends();
 
                 if (count($this->frontendThemes) === 0) {
                     return [];
                 }
-
+                $this->stopwatch->start('sortFrontendThemes');
+                usort($this->frontendThemes, [static::class, 'compareThemePriority']);
+                $this->stopwatch->stop('sortFrontendThemes');
                 $this->stopwatch->stop('getFrontendThemes');
             }
             return $this->frontendThemes;
@@ -125,21 +156,61 @@ class ThemeResolver
             /*
              * First we look for theme according to hostname.
              */
-            $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                ->findAvailableNonStaticFrontendWithHost($host);
-
+            $theme = $this->getRepository()->findAvailableNonStaticFrontendWithHost($host);
             /*
              * If no theme for current host, we look for
              * any frontend available theme.
              */
             if (null === $theme) {
-                $theme = $this->em->getRepository('RZ\Roadiz\Core\Entities\Theme')
-                    ->findFirstAvailableNonStaticFrontend();
+                $theme = $this->getRepository()->findFirstAvailableNonStaticFrontend();
             }
-
             return $theme;
         }
-
         return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findThemeByClass($classname)
+    {
+        return $this->getRepository()->findOneByClassName($classname);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAll()
+    {
+        return $this->getRepository()->findAll();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findById($id)
+    {
+        return $this->getRepository()->find($id);
+    }
+
+    /**
+     * @param Theme $themeA
+     * @param Theme $themeB
+     *
+     * @return int
+     */
+    public static function compareThemePriority(Theme $themeA, Theme $themeB)
+    {
+        $classA = $themeA->getClassName();
+        $classB = $themeB->getClassName();
+
+        if (call_user_func([$classA, 'getPriority']) === call_user_func([$classB, 'getPriority'])) {
+            return 0;
+        }
+        if (call_user_func([$classA, 'getPriority']) > call_user_func([$classB, 'getPriority'])) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

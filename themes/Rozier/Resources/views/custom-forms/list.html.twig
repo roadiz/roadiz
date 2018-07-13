@@ -11,7 +11,6 @@
                 </nav>
             </div>
         </header>
-
         {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
         <article class="content content-no-action-menu content-custom-forms-list">
@@ -20,8 +19,20 @@
                     <table class="custom-forms content-table uk-table">
                         <thead>
                         <tr>
-                            <th>{% trans %}customForm.displayName{% endtrans %}</th>
-                            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
+                            <th>
+                                {% trans %}customForm.displayName{% endtrans %}
+                                {% include 'includes/column_ordering.html.twig' with {
+                                    'field': 'displayName',
+                                    'filters': filters,
+                                } only %}
+                            </th>
+                            <th class="mobile-hidden">
+                                {% trans %}customForm.closeDate{% endtrans %}
+                                {% include 'includes/column_ordering.html.twig' with {
+                                    'field': 'closeDate',
+                                    'filters': filters,
+                                } only %}
+                            </th>
                             <th class="mobile-hidden"></th>
                             <th class="table-actions-row table-actions-row-6">{% trans %}actions{% endtrans %}</th>
                         </tr>
@@ -29,9 +40,10 @@
                         <tbody>
                         {% for type in custom_forms %}
                             <tr>
-                                <td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
-                                        <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getDisplayName }}</a></td>
-                                {# <td>{{ type.getSourceEntityClassName }}</td> #}
+                                <td class="name">
+                                    <a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}"><span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.displayName }}</a>
+                                </td>
+                                <td class="mobile-hidden">{{ type.closeDate|localizeddate('medium', 'short') }}</td>
                                 <td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
                                 <td class="table-actions-row table-actions-row-6">
                                     {% spaceless %}

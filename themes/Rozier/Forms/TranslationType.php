@@ -39,6 +39,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -48,57 +49,47 @@ class TranslationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add(
-            'name',
-            TextType::class,
-            [
-                'label' => 'name',
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]
-        )
-        ->add(
-            'locale',
-            ChoiceType::class,
-            [
-                'label' => 'locale',
-                'required' => true,
-                'choices_as_values' => true,
-                'choices' => array_flip(Translation::$availableLocales),
-                'constraints' => [
-                    new UniqueTranslationLocale([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['locale'],
-                    ]),
-                ],
-            ]
-        )
-        ->add(
-            'available',
-            CheckboxType::class,
-            [
-                'label' => 'available',
-                'required' => false,
-            ]
-        )
-        ->add(
-            'overrideLocale',
-            TextType::class,
-            [
-                'label' => 'overrideLocale',
-                'required' => false,
-                'constraints' => [
-                    new UniqueTranslationOverrideLocale([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['overrideLocale'],
-                    ]),
-                ],
-            ]
-        );
+        $builder->add('name', TextType::class, [
+            'label' => 'name',
+            'constraints' => [
+                new NotBlank(),
+                new Length([
+                    'max' => 255,
+                ])
+            ],
+        ])
+        ->add('locale', ChoiceType::class, [
+            'label' => 'locale',
+            'required' => true,
+            'choices_as_values' => true,
+            'choices' => array_flip(Translation::$availableLocales),
+            'constraints' => [
+                new UniqueTranslationLocale([
+                    'entityManager' => $options['em'],
+                    'currentValue' => $options['locale'],
+                ]),
+            ],
+        ])
+        ->add('available', CheckboxType::class, [
+            'label' => 'available',
+            'required' => false,
+        ])
+        ->add('overrideLocale', TextType::class, [
+            'label' => 'overrideLocale',
+            'required' => false,
+            'constraints' => [
+                new UniqueTranslationOverrideLocale([
+                    'entityManager' => $options['em'],
+                    'currentValue' => $options['overrideLocale'],
+                ]),
+                new Length([
+                    'max' => 7,
+                ])
+            ],
+        ]);
     }
 
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'translation';
     }

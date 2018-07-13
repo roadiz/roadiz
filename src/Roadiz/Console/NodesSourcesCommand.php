@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\Console\Command\Command;
@@ -40,6 +41,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class NodesSourcesCommand extends Command
 {
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     protected function configure()
@@ -50,11 +54,12 @@ class NodesSourcesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /** @var EntityManager entityManager */
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
 
         $nodetypes = $this->entityManager
-            ->getRepository('RZ\Roadiz\Core\Entities\NodeType')
+            ->getRepository(NodeType::class)
             ->findAll();
 
         if (count($nodetypes) > 0) {

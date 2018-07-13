@@ -87,7 +87,7 @@ class CacheFpmCommand extends Command
                 'timeout' => 2
             ]);
             if ($output->getVerbosity() === OutputInterface::VERBOSITY_DEBUG) {
-                $output->writeln($res->getEffectiveUrl());
+                $output->writeln($url);
             }
             $output->writeln('PHP-FPM caches were cleared for <info>'.$kernel->getEnvironment().'</info> environement.');
         } catch (ConnectException $exception) {

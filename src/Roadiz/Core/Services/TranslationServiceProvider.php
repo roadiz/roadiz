@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -59,7 +60,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
          * @return Translation
          */
         $container['defaultTranslation'] = function ($c) {
-            return $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            return $c['em']->getRepository(Translation::class)
                 ->findDefault();
         };
 
@@ -88,6 +89,8 @@ class TranslationServiceProvider implements ServiceProviderInterface
             $c['stopwatch']->start('initTranslator');
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
+            /** @var ThemeResolverInterface $themeResolver */
+            $themeResolver = $c['themeResolver'];
 
             $translator = new Translator(
                 $c['translator.locale'],
@@ -98,15 +101,20 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
             $translator->addLoader('xlf', new XliffFileLoader());
             $translator->addLoader('yml', new YamlFileLoader());
-            $classes = [$c['backendTheme']];
-            $classes = array_merge($classes, $c['frontendThemes']);
+            $classes = array_merge(
+                [$themeResolver->getBackendTheme()],
+                $themeResolver->getFrontendThemes()
+            );
 
             /*
              * DO NOT wake up entity manager in Install
              */
             if (!$kernel->isInstallMode()) {
-                $availableTranslations = $c['em']->getRepository('RZ\Roadiz\Core\Entities\Translation')
-                                                 ->findAllAvailable();
+                if ($kernel->isPreview()) {
+                    $availableTranslations = $c['em']->getRepository(Translation::class)->findAll();
+                } else {
+                    $availableTranslations = $c['em']->getRepository(Translation::class)->findAllAvailable();
+                }
                 /** @var Translation $availableTranslation */
                 foreach ($availableTranslations as $availableTranslation) {
                     $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);
@@ -125,7 +133,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
     /**
      * @param string $locale
      * @param Translator $translator
-     * @param array $classes
+     * @param Theme[] $classes
      * @param Kernel $kernel
      */
     protected function addResourcesForLocale($locale, Translator $translator, array &$classes, Kernel $kernel)

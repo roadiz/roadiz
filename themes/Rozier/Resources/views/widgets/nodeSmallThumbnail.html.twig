@@ -23,12 +23,15 @@
 	<input type="hidden" name="{{ full_name }}" value="{{ node.getId }}" />
 
     <div class="node-links">
-        <a href="{{ path('nodesEditPage', { nodeId: node.getId}) }}" class="uk-button node-link uk-button-mini">
+        <a href="{{ path('nodesEditSourcePage', {
+            nodeId: node.getId,
+            translationId: node.nodeSources.first.translation.id
+        }) }}" class="uk-button node-link uk-button-mini">
             <i class="uk-icon-rz-pencil"></i>
             <span class="label">{% trans %}edit.node{% endtrans %}</span>
         </a>
         <a data-node-widget-unlink-node href="#" class="uk-button uk-button-mini node-link uk-button-danger rz-no-ajax-link">
-            <i class="uk-icon-rz-minus"></i>
+            <i class="uk-icon-rz-trash-o"></i>
             <span class="label">{% trans %}unlink.node{% endtrans %}</span>
         </a>
     </div>

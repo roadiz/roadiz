@@ -32,6 +32,7 @@ namespace Themes\Rozier\Widgets;
 
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -57,7 +58,7 @@ class FolderTreeWidget extends AbstractWidget
 
         $this->parentFolder = $parent;
         $this->translation = $this->getController()->get('em')
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneBy(['defaultTranslation' => true]);
         $this->getFolderTreeAssignationForParent();
     }
@@ -68,7 +69,7 @@ class FolderTreeWidget extends AbstractWidget
     protected function getFolderTreeAssignationForParent()
     {
         $this->folders = $this->getController()->get('em')
-             ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+             ->getRepository(Folder::class)
              ->findByParentAndTranslation($this->parentFolder, $this->translation);
     }
 
@@ -79,7 +80,7 @@ class FolderTreeWidget extends AbstractWidget
     public function getChildrenFolders(Folder $parent)
     {
         return $this->folders = $this->getController()->get('em')
-                    ->getRepository('RZ\Roadiz\Core\Entities\Folder')
+                    ->getRepository(Folder::class)
                     ->findByParentAndTranslation($parent, $this->translation);
     }
     /**

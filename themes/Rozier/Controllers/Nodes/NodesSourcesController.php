@@ -38,7 +38,6 @@ use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -59,8 +58,8 @@ class NodesSourcesController extends RozierApp
      * Return an edition form for requested node.
      *
      * @param Request $request
-     * @param int     $nodeId
-     * @param int     $translationId
+     * @param int $nodeId
+     * @param int $translationId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -69,21 +68,19 @@ class NodesSourcesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         /** @var Translation $translation */
-        $translation = $this->get('em')
-                            ->find('RZ\Roadiz\Core\Entities\Translation', (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
         /*
          * Here we need to directly select nodeSource
          * if not doctrine will grab a cache tag because of NodeTreeWidget
          * that is initialized before calling route method.
          */
         /** @var Node $gnode */
-        $gnode = $this->get('em')
-            ->find('RZ\Roadiz\Core\Entities\Node', (int) $nodeId);
+        $gnode = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if ($translation !== null && $gnode !== null) {
             /** @var NodesSources $source */
             $source = $this->get('em')
-                           ->getRepository('RZ\Roadiz\Core\Entities\NodesSources')
+                           ->getRepository(NodesSources::class)
                            ->setDisplayingAllNodesStatuses(true)
                            ->setDisplayingNotPublishedNodes(true)
                            ->findOneBy(['translation' => $translation, 'node' => $gnode]);
@@ -91,18 +88,15 @@ class NodesSourcesController extends RozierApp
             if (null !== $source) {
                 $this->get('em')->refresh($source);
                 $node = $source->getNode();
-
-                /** @var NodeHandler $nodeHandler */
-                $nodeHandler = $this->get('node.handler')->setNode($gnode);
+                $availableTranslations = $this->get('em')
+                    ->getRepository(Translation::class)
+                    ->findAvailableTranslationsForNode($gnode);
 
                 $this->assignation['translation'] = $translation;
-                $this->assignation['available_translations'] = $nodeHandler->getAvailableTranslations();
+                $this->assignation['available_translations'] = $availableTranslations;
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
 
-                /*
-                 * Form
-                 */
                 $form = $this->createForm(
                     NodeSourceType::class,
                     $source,
@@ -147,7 +141,7 @@ class NodesSourcesController extends RozierApp
                                 'status' => 'success',
                                 'public_url' => $source->getNode()->isPublished() ? $url : $previewUrl,
                                 'errors' => []
-                            ]);
+                            ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }
 
                         return $this->redirect($this->generateUrl(
@@ -188,7 +182,8 @@ class NodesSourcesController extends RozierApp
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
-        $ns = $this->get("em")->find('RZ\Roadiz\Core\Entities\NodesSources', $nodeSourceId);
+        /** @var NodesSources $ns */
+        $ns = $this->get("em")->find(NodesSources::class, $nodeSourceId);
         if (null === $ns) {
             throw new ResourceNotFoundException();
         }

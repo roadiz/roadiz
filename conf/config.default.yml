@@ -19,6 +19,11 @@ cacheDriver:
     port: ~
 security:
     secret: "change#this#secret#very#important"
+    session_name: roadiz_token
+    # Switch session cookie secure to TRUE ONLY if your
+    # website is served with HTTPS only
+    session_cookie_secure: false
+    session_cookie_httponly: true
 mailer:
     type: ~
     host: "localhost"
@@ -26,6 +31,10 @@ mailer:
     encryption: ~
     username: ""
     password: ""
+themes:
+    - classname: \Themes\DefaultTheme\DefaultThemeApp
+      hostname: '*'
+      routePrefix: ''
 # Doctrine entities search paths
 # Append yours here if you want to create custom
 # entities in your theme.
@@ -59,3 +68,16 @@ assetsProcessing:
 #            timeout: 3
 #            username: ""
 #            password: ""
+
+#
+# Reverse proxy invalidation
+#
+#reverseProxyCache:
+#    frontend:
+#        localhost:
+#            host: localhost
+#            domainName: roadiz.test
+#
+#        external:
+#            host: 127.0.0.1
+#            domainName: roadiz.test

@@ -29,7 +29,9 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-class ParsedownExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+
+class ParsedownExtension extends AbstractExtension
 {
     /**
      * @var \Parsedown
@@ -44,11 +46,6 @@ class ParsedownExtension extends \Twig_Extension
     {
         $this->parsedown = new \Parsedown();
         $this->parsedownExtra = new \ParsedownExtra();
-    }
-
-    public function getName()
-    {
-        return 'parsedownExtension';
     }
 
     public function getFilters()

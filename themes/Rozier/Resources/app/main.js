@@ -5,7 +5,9 @@ import './less/style.less'
 // Include bower dependencies
 import '../../bower_components/CanvasLoader/js/heartcode-canvasloader'
 import '../../bower_components/jquery.actual/jquery.actual'
-import '../../bower_components/jquery-tag-editor/jquery.tag-editor'
+// import '../../bower_components/jquery-tag-editor/jquery.tag-editor'
+import './vendor/jquery.tag-editor'
+import './vendor/jquery.collection'
 import '../../bower_components/bootstrap-switch/dist/js/bootstrap-switch'
 import '../../bower_components/mousetrap/mousetrap'
 import '../../bower_components/caret/jquery.caret.js'
@@ -30,7 +32,6 @@ import 'codemirror/mode/gfm/gfm.js'
 
 import 'jquery-ui'
 import 'jquery-ui/ui/widgets/autocomplete'
-import './components/login/login'
 
 import $ from 'jquery'
 import Rozier from './Rozier'

@@ -42,9 +42,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NodesType extends AbstractType
 {
-    protected $selectedNodes;
-    protected $entityManager;
-
     /**
      * {@inheritdoc}
      *
@@ -87,13 +84,6 @@ class NodesType extends AbstractType
     public function getParent()
     {
         return HiddenType::class;
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'nodes';
     }
 
     /**

@@ -49,7 +49,7 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
         if (null === $this->' . $this->field->getName() . ') {
             if (null !== $this->objectManager) {
                 $this->' . $this->field->getName() . ' = $this->objectManager
-                    ->getRepository(\'RZ\Roadiz\Core\Entities\Document\')
+                    ->getRepository(Document::class)
                     ->findByNodeSourceAndFieldName($this, "'.$this->field->getName().'");
             } else {
                 $this->' . $this->field->getName() . ' = [];

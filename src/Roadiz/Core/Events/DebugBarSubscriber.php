@@ -33,6 +33,7 @@ use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class DebugBarSubscriber implements EventSubscriberInterface
 {
@@ -61,21 +62,41 @@ class DebugBarSubscriber implements EventSubscriberInterface
 
     /**
      * @param FilterResponseEvent $event
+     *
+     * @return bool
+     */
+    protected function supports(FilterResponseEvent $event)
+    {
+        $response = $event->getResponse();
+        if ($event->isMasterRequest() &&
+            $this->container['settingsBag']->get('display_debug_panel') == true &&
+            false !== strpos($response->headers->get('Content-Type'), 'text/html')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
-        if ($event->isMasterRequest() && $this->container['settingsBag']->get('display_debug_panel') == true) {
+        if ($this->supports($event)) {
+            /** @var Stopwatch $stopWatch */
+            $stopWatch = $this->container['stopwatch'];
             $response = $event->getResponse();
 
-            if ($this->container['stopwatch']->isStarted('controllerHandling')) {
-                $this->container['stopwatch']->stop('controllerHandling');
+            if ($stopWatch->isStarted('controllerHandling')) {
+                $stopWatch->stop('controllerHandling');
+            }
+            if ($stopWatch->isStarted('twigRender')) {
+                $stopWatch->stop('twigRender');
             }
 
-            if ($this->container['stopwatch']->isStarted('twigRender')) {
-                $this->container['stopwatch']->stop('twigRender');
+            if ($stopWatch->isStarted('__section__')) {
+                $stopWatch->stopSection('runtime');
             }
-
-            $this->container['stopwatch']->stopSection('runtime');
 
 
             if (false !== strpos($response->getContent(), '</body>') &&
