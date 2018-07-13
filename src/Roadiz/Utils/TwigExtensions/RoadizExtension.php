@@ -31,7 +31,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Kernel;
 
-class RoadizExtension extends \Twig_Extension
+class RoadizExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
 {
     /**
      * @var Kernel
@@ -49,14 +49,6 @@ class RoadizExtension extends \Twig_Extension
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'RoadizExtension';
-    }
-
-    /**
      * @return array
      */
     public function getGlobals()
@@ -64,6 +56,16 @@ class RoadizExtension extends \Twig_Extension
         return [
             'cms_version' => Kernel::$cmsVersion,
             'cms_prefix' => Kernel::CMS_VERSION,
+            'request' => $this->kernel->get('requestStack')->getCurrentRequest(),
+            'is_debug' => $this->kernel->isDebug(),
+            'is_preview' => $this->kernel->isPreview(),
+            'is_dev_mode' => $this->kernel->isDevMode(),
+            'is_prod_mode' => $this->kernel->isProdMode(),
+            'bags' => [
+                'settings' => $this->kernel->get('settingsBag'),
+                'roles' => $this->kernel->get('rolesBag'),
+                'nodeTypes' => $this->kernel->get('nodeTypesBag'),
+            ]
         ];
     }
 }

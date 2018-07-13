@@ -63,9 +63,4 @@ class DumpExtension extends \Twig_Extension
             }, ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
         );
     }
-
-    public function getName()
-    {
-        return 'dump';
-    }
 }

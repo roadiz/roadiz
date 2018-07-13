@@ -48,11 +48,6 @@ class BlockRenderExtension extends \Twig_Extension
         $this->container = $container;
     }
 
-    public function getName()
-    {
-        return 'blockRenderExtension';
-    }
-
     public function getFilters()
     {
         return array(

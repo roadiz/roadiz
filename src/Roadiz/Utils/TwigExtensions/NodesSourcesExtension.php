@@ -67,11 +67,6 @@ class NodesSourcesExtension extends \Twig_Extension
         $this->nodesSourcesHandler = $nodesSourcesHandler;
     }
 
-    public function getName()
-    {
-        return 'nodesSourcesExtension';
-    }
-
     public function getFilters()
     {
         return [
@@ -225,7 +220,6 @@ class NodesSourcesExtension extends \Twig_Extension
             }
         }
 
-        $preview = $preview !== null ? $preview : $this->preview;
         $this->nodesSourcesHandler->setNodeSource($ns);
         return $this->nodesSourcesHandler->getParents($criteria);
     }

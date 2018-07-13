@@ -52,14 +52,6 @@ class FontExtension extends \Twig_Extension
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'fontExtension';
-    }
-
-    /**
      * @return array
      */
     public function getFilters()

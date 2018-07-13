@@ -46,11 +46,6 @@ class ParsedownExtension extends \Twig_Extension
         $this->parsedownExtra = new \ParsedownExtra();
     }
 
-    public function getName()
-    {
-        return 'parsedownExtension';
-    }
-
     public function getFilters()
     {
         return [

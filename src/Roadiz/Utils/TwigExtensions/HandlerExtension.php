@@ -52,11 +52,6 @@ class HandlerExtension extends \Twig_Extension
         $this->handlerFactory = $handlerFactory;
     }
 
-    public function getName()
-    {
-        return 'handlerExtension';
-    }
-
     public function getFilters()
     {
         return [

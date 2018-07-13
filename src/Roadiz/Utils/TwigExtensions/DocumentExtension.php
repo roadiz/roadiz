@@ -63,14 +63,6 @@ class DocumentExtension extends \Twig_Extension
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'documentExtension';
-    }
-
-    /**
      * @return array
      */
     public function getFilters()

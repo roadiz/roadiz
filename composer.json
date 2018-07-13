@@ -29,6 +29,7 @@
         }
     ],
     "config": {
+        "optimize-autoloader": true,
         "bin-dir": "bin",
         "platform": {
             "php": "5.6.1"

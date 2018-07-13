@@ -367,7 +367,6 @@ abstract class AppController extends Controller
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
         $this->assignation = [
-            'request' => $this->getRequest(),
             'head' => [
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'devMode' => $kernel->isDevMode(),
@@ -383,11 +382,6 @@ abstract class AppController extends Controller
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
                 'user' => $this->getUser(),
-            ],
-            'bags' => [
-                'settings' => $this->get('settingsBag'),
-                'roles' => $this->get('rolesBag'),
-                'nodeTypes' => $this->get('nodeTypesBag'),
             ]
         ];
 

@@ -58,11 +58,6 @@ class TranslationExtension extends \Twig_Extension
         $this->translationViewer = $translationViewer;
     }
 
-    public function getName()
-    {
-        return 'translationExtension';
-    }
-
     public function getFilters()
     {
         return [
