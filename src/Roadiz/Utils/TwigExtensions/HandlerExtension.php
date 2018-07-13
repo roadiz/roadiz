@@ -31,12 +31,13 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Class HandlerExtension
  * @package RZ\Roadiz\Utils\TwigExtensions
  */
-class HandlerExtension extends \Twig_Extension
+class HandlerExtension extends AbstractExtension
 {
     /**
      * @var HandlerFactory

@@ -36,11 +36,12 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow render document images.
  */
-class DocumentExtension extends \Twig_Extension
+class DocumentExtension extends AbstractExtension
 {
     /**
      * @var Container

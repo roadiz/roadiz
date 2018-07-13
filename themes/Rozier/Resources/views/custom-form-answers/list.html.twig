@@ -21,7 +21,6 @@
                             <th class="mobile-hidden">
                                 {% trans %}ip{% endtrans %}
                                 {% include 'includes/column_ordering.html.twig' with {
-                                    'request': request,
                                     'field': 'ip',
                                     'filters': filters,
                                 } only %}
@@ -29,7 +28,6 @@
                             <th>
                                 {% trans %}submitted.date{% endtrans %}
                                 {% include 'includes/column_ordering.html.twig' with {
-                                    'request': request,
                                     'field': 'submittedAt',
                                     'filters': filters,
                                 } only %}

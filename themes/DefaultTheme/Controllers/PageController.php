@@ -33,6 +33,7 @@ namespace Themes\DefaultTheme\Controllers;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -43,6 +44,21 @@ use Themes\DefaultTheme\DefaultThemeApp;
  */
 class PageController extends DefaultThemeApp
 {
+    /**
+     * @param Request $request
+     * @param string $_locale
+     *
+     * @return JsonResponse
+     */
+    public function embedAction(Request $request, $name, $_locale = 'en')
+    {
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
+        $this->prepareThemeAssignation(null, $translation);
+
+        return new JsonResponse([
+            'message' => 'Hello '. $name. '!'
+        ]);
+    }
 
     /**
      * Default action for any Page node.

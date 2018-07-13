@@ -33,6 +33,7 @@ use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 class DebugBarSubscriber implements EventSubscriberInterface
 {
@@ -82,16 +83,20 @@ class DebugBarSubscriber implements EventSubscriberInterface
     public function onKernelResponse(FilterResponseEvent $event)
     {
         if ($this->supports($event)) {
+            /** @var Stopwatch $stopWatch */
+            $stopWatch = $this->container['stopwatch'];
             $response = $event->getResponse();
 
-            if ($this->container['stopwatch']->isStarted('controllerHandling')) {
-                $this->container['stopwatch']->stop('controllerHandling');
+            if ($stopWatch->isStarted('controllerHandling')) {
+                $stopWatch->stop('controllerHandling');
             }
-            if ($this->container['stopwatch']->isStarted('twigRender')) {
-                $this->container['stopwatch']->stop('twigRender');
+            if ($stopWatch->isStarted('twigRender')) {
+                $stopWatch->stop('twigRender');
             }
 
-            $this->container['stopwatch']->stopSection('runtime');
+            if ($stopWatch->isStarted('__section__')) {
+                $stopWatch->stopSection('runtime');
+            }
 
 
             if (false !== strpos($response->getContent(), '</body>') &&

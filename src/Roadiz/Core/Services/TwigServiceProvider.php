@@ -42,6 +42,7 @@ use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HandlerExtension;
+use RZ\Roadiz\Utils\TwigExtensions\HttpKernelExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use RZ\Roadiz\Utils\TwigExtensions\RoadizExtension;
@@ -54,6 +55,8 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRenderer;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
 
 /**
  * Register Twig services for dependency injection container.
@@ -141,6 +144,14 @@ class TwigServiceProvider implements ServiceProviderInterface
             return $filters;
         };
 
+        $container['twig.fragmentHandler'] = function ($c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return new FragmentHandler($c['requestStack'], [
+                new InlineFragmentRenderer($kernel, $c['dispatcher']),
+            ], $kernel->isDebug());
+        };
+
         /**
          * Twig extensions.
          *
@@ -171,6 +182,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new \Twig_Extensions_Extension_Array());
             $extensions->add(new \Twig_Extensions_Extension_Date());
             $extensions->add(new BlockRenderExtension($c));
+            $extensions->add(new HttpKernelExtension($c['twig.fragmentHandler']));
             $extensions->add(new UrlExtension(
                 $c['requestStack'],
                 $c['assetPackages'],

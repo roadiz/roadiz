@@ -33,12 +33,13 @@ use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow render inner page part calling directly their
  * controller response instead of doing a simple include.
  */
-class BlockRenderExtension extends \Twig_Extension
+class BlockRenderExtension extends AbstractExtension
 {
     protected $container;
     protected $kernel;

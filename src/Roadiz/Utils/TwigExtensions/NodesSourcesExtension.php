@@ -32,11 +32,12 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow to gather nodes-source from hierarchy
  */
-class NodesSourcesExtension extends \Twig_Extension
+class NodesSourcesExtension extends AbstractExtension
 {
     protected $preview;
     protected $securityAuthorizationChecker;

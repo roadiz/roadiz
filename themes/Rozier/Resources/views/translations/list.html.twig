@@ -21,21 +21,18 @@
                     <tr>
                         <th>{% trans %}name{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'name',
                                 'filters': filters,
                             } only %}
                         </th>
                         <th>{% trans %}translation.locale{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'locale',
                                 'filters': filters,
                             } only %}
                         </th>
                         <th>{% trans %}overrideLocale{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'overrideLocale',
                                 'filters': filters,
                             } only %}

@@ -21,7 +21,6 @@
                         <th>
                             {% trans %}redirection.query{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'query',
                                 'filters': filters,
                             } only %}
@@ -29,7 +28,6 @@
                         <th>
                             {% trans %}redirection.redirect_uri{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'redirectUri',
                                 'filters': filters,
                             } only %}

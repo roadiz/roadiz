@@ -23,7 +23,6 @@
                         <th>
                             {% trans %}name{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'name',
                                 'filters': filters,
                             } only %}

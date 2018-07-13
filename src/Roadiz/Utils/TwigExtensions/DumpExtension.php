@@ -31,8 +31,9 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Doctrine\Common\Util\Debug;
 use Pimple\Container;
+use Twig\Extension\AbstractExtension;
 
-class DumpExtension extends \Twig_Extension
+class DumpExtension extends AbstractExtension
 {
     /**
      * @var Container

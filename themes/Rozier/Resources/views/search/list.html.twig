@@ -42,7 +42,6 @@
                                 {% set field = 'node.nodeName' %}
                             {% endif %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': field,
                                 'filters': filters,
                             } only %}
@@ -53,7 +52,6 @@
                                 {% set field = 'node.nodeType' %}
                             {% endif %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': field,
                                 'filters': filters,
                             } only %}
@@ -65,7 +63,6 @@
                                 {% set field = 'node.createdAt' %}
                             {% endif %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': field,
                                 'filters': filters,
                             } only %}
@@ -76,7 +73,6 @@
                                 {% set field = 'node.updatedAt' %}
                             {% endif %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': field,
                                 'filters': filters,
                             } only %}

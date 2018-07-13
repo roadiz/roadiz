@@ -30,8 +30,10 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Kernel;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\GlobalsInterface;
 
-class RoadizExtension extends \Twig_Extension implements \Twig_Extension_GlobalsInterface
+class RoadizExtension extends AbstractExtension implements GlobalsInterface
 {
     /**
      * @var Kernel

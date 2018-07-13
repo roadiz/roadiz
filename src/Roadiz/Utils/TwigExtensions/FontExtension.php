@@ -31,11 +31,12 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Font;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow render fonts.
  */
-class FontExtension extends \Twig_Extension
+class FontExtension extends AbstractExtension
 {
     /**
      * @var Container

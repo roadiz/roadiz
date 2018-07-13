@@ -40,11 +40,12 @@ use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Extension that allow render documents Url
  */
-class UrlExtension extends \Twig_Extension
+class UrlExtension extends AbstractExtension
 {
     protected $forceLocale;
     protected $cacheProvider;

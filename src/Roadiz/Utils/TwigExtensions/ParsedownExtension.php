@@ -29,7 +29,9 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-class ParsedownExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+
+class ParsedownExtension extends AbstractExtension
 {
     /**
      * @var \Parsedown

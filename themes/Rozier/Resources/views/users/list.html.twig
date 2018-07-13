@@ -21,14 +21,12 @@
                         <th class="table-actions-userpicture-row mobile-hidden uk-visible-xlarge"></th>
                         <th class="mobile-hidden">{% trans %}user.username{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'username',
                                 'filters': filters,
                             } only %}
                         </th>
                         <th>{% trans %}user.email{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
-                                'request': request,
                                 'field': 'email',
                                 'filters': filters,
                             } only %}

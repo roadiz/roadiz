@@ -22,7 +22,6 @@
                             <th>
                                 {% trans %}customForm.displayName{% endtrans %}
                                 {% include 'includes/column_ordering.html.twig' with {
-                                    'request': request,
                                     'field': 'displayName',
                                     'filters': filters,
                                 } only %}
@@ -30,7 +29,6 @@
                             <th class="mobile-hidden">
                                 {% trans %}customForm.closeDate{% endtrans %}
                                 {% include 'includes/column_ordering.html.twig' with {
-                                    'request': request,
                                     'field': 'closeDate',
                                     'filters': filters,
                                 } only %}
