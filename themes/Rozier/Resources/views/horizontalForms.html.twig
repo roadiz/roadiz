@@ -34,7 +34,7 @@
 {%- block button_row -%}
     {% set rowClasses = [
     'form-col-' ~ form.vars.block_prefixes[1],
-    'form-col-' ~ form.vars.name|replace('_','-')
+    'form-col-' ~ form.vars.name|replace({'_':'-'})
     ] %}
     <span class="{{ rowClasses|join(' ') }}">
         {{- form_widget(form) -}}

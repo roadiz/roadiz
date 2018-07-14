@@ -208,9 +208,8 @@ class EmailManager
     {
         $this->appendWebsiteIcon();
 
-        $this->message = \Swift_Message::newInstance()
-            // Give the message a subject
-            ->setSubject($this->getSubject())
+        $this->message = new \Swift_Message();
+        $this->message->setSubject($this->getSubject())
             ->setFrom($this->getOrigin())
             ->setTo($this->getReceiver())
             // Force using string and only one email

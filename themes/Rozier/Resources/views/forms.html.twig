@@ -399,7 +399,7 @@
     {% set rowClasses = [
         'uk-form-row',
         'form-col-' ~ form.vars.block_prefixes[1],
-        'form-col-' ~ form.vars.name|replace('_','-')
+        'form-col-' ~ form.vars.name|replace({'_': '-'})
     ] %}
     {% if attr.class %}
         {% set rowClasses = rowClasses|merge([
@@ -419,7 +419,7 @@
     {% set rowClasses = [
     'uk-form-row',
     'form-col-' ~ form.vars.block_prefixes[1],
-    'form-col-' ~ form.vars.name|replace('_','-')
+    'form-col-' ~ form.vars.name|replace({'_': '-'})
     ] %}
     <div class="{{ rowClasses|join(' ') }}">
         {{- form_widget(form) -}}

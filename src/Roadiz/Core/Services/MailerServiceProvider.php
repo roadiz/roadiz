@@ -84,7 +84,7 @@ class MailerServiceProvider implements ServiceProviderInterface
 
                 return $transport;
             } else {
-                return new \Swift_SmtpTransport();
+                return new \Swift_SendmailTransport();
             }
         };
 

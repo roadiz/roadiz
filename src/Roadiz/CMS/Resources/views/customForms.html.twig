@@ -164,7 +164,7 @@
 
 
 {% block form_row -%}
-    <div class="uk-form-row form-col form-col-{{ form.vars.block_prefixes[1] }} form-col-{{ form.vars.name|replace('_', '-') }}">
+    <div class="uk-form-row form-col form-col-{{ form.vars.block_prefixes[1] }} form-col-{{ form.vars.name|replace({'_': '-'}) }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
             {{- form_label(form) -}}
         {% endif %}
