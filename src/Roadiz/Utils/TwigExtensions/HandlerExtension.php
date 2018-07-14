@@ -31,7 +31,9 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Class HandlerExtension
@@ -56,14 +58,14 @@ class HandlerExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('handler', [$this, 'getHandler']),
+            new TwigFilter('handler', [$this, 'getHandler']),
         ];
     }
 
     /**
      * @param $mixed
      * @return \RZ\Roadiz\Core\Handlers\AbstractHandler|null
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getHandler($mixed)
     {
@@ -75,10 +77,10 @@ class HandlerExtension extends AbstractExtension
             try {
                 return $this->handlerFactory->getHandler($mixed);
             } catch (\InvalidArgumentException $exception) {
-                throw new \Twig_Error_Runtime($exception->getMessage(), -1, null, $exception);
+                throw new RuntimeError($exception->getMessage(), -1, null, $exception);
             }
         }
 
-        throw new \Twig_Error_Runtime('Handler filter only supports AbstractEntity objects.');
+        throw new RuntimeError('Handler filter only supports AbstractEntity objects.');
     }
 }

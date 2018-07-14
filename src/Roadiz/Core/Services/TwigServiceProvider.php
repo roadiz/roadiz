@@ -58,6 +58,17 @@ use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\Extension\ProfilerExtension;
+use Twig\Extensions\ArrayExtension;
+use Twig\Extensions\DateExtension;
+use Twig\Extensions\IntlExtension;
+use Twig\Extensions\TextExtension;
+use Twig\Loader\FilesystemLoader;
+use Twig\Profiler\Profile;
+use Twig\RuntimeLoader\FactoryRuntimeLoader;
+use Twig\TwigFilter;
 
 /**
  * Register Twig services for dependency injection container.
@@ -84,7 +95,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $kernel = $c['kernel'];
             $vendorDir = realpath($kernel->getVendorDir());
 
-            $loader = new \Twig_Loader_Filesystem([
+            $loader = new FilesystemLoader([
                 // Default Form extension templates
                 $vendorDir . '/symfony/twig-bridge/Resources/views/Form',
                 // Documents rendering templates
@@ -96,7 +107,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         };
 
         $container['twig.environment_class'] = function ($c) {
-            return new \Twig_Environment($c['twig.loaderFileSystem'], [
+            return new Environment($c['twig.loaderFileSystem'], [
                 'debug' => $c['kernel']->isDebug(),
                 'cache' => $c['twig.cacheFolder'],
             ]);
@@ -127,7 +138,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $twig = $c['twig.environment_class'];
 
             foreach ($c['twig.extensions'] as $extension) {
-                if ($extension instanceof \Twig_Extension) {
+                if ($extension instanceof AbstractExtension) {
                     $twig->addExtension($extension);
                 } else {
                     throw new \RuntimeException('Try to add Twig extension which does not extends Twig_Extension.');
@@ -135,7 +146,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             }
 
             foreach ($c['twig.filters'] as $filter) {
-                if ($filter instanceof \Twig_SimpleFilter) {
+                if ($filter instanceof TwigFilter) {
                     $twig->addFilter($filter);
                 } else {
                     throw new \RuntimeException('Try to add Twig filter which does not extends Twig_SimpleFilter.');
@@ -147,7 +158,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             /** @var CsrfTokenManager $csrfManager */
             $csrfManager = $c['csrfTokenManager'];
 
-            $twig->addRuntimeLoader(new \Twig_FactoryRuntimeLoader([
+            $twig->addRuntimeLoader(new FactoryRuntimeLoader([
                 FormRenderer::class => function () use ($formEngine, $csrfManager) {
                     return new FormRenderer($formEngine, $csrfManager);
                 },
@@ -202,11 +213,11 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new HttpFoundationExtension($c['requestStack']));
             $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add(new TranslationExtension($c['translator']));
-            $extensions->add(new \Twig_Extensions_Extension_Intl());
+            $extensions->add(new IntlExtension());
             $extensions->add($c['twig.routingExtension']);
-            $extensions->add(new \Twig_Extensions_Extension_Text());
-            $extensions->add(new \Twig_Extensions_Extension_Array());
-            $extensions->add(new \Twig_Extensions_Extension_Date());
+            $extensions->add(new TextExtension());
+            $extensions->add(new ArrayExtension());
+            $extensions->add(new DateExtension());
             $extensions->add(new BlockRenderExtension($c['twig.fragmentHandler']));
             $extensions->add(new HttpKernelExtension($c['twig.fragmentHandler']));
             $extensions->add(new UrlExtension(
@@ -236,7 +247,7 @@ class TwigServiceProvider implements ServiceProviderInterface
 
                 $extensions->add(new DumpExtension($c));
                 if ($kernel->isDebug()) {
-                    $extensions->add(new \Twig_Extension_Profiler($c['twig.profile']));
+                    $extensions->add(new ProfilerExtension($c['twig.profile']));
                 }
             }
 
@@ -244,7 +255,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         };
 
         $container['twig.profile'] = function () {
-            return new \Twig_Profiler_Profile();
+            return new Profile();
         };
 
         /*
@@ -258,7 +269,7 @@ class TwigServiceProvider implements ServiceProviderInterface
          * Central Truncate extension
          */
         $container['twig.centralTruncateExtension'] = function () {
-            return new \Twig_SimpleFilter(
+            return new TwigFilter(
                 'centralTruncate',
                 function ($object, $length, $offset = 0, $ellipsis = "[…]") {
                     if (strlen($object) > $length + strlen($ellipsis)) {

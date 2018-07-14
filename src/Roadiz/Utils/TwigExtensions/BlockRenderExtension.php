@@ -32,7 +32,9 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Extension that allow render inner page part calling directly their
@@ -58,7 +60,7 @@ class BlockRenderExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('render', [$this, 'blockRender'], ['is_safe' => ['html']]),
+            new TwigFilter('render', [$this, 'blockRender'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -68,7 +70,7 @@ class BlockRenderExtension extends AbstractExtension
      * @param array $assignation
      *
      * @return string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function blockRender(NodesSources $nodeSource = null, $themeName = "DefaultTheme", $assignation = [])
     {
@@ -86,12 +88,12 @@ class BlockRenderExtension extends AbstractExtension
 
                     return $this->handler->render($controllerReference, 'inline');
                 } else {
-                    throw new \Twig_Error_Runtime($class . "::blockAction() action does not exist.");
+                    throw new RuntimeError($class . "::blockAction() action does not exist.");
                 }
             } else {
-                throw new \Twig_Error_Runtime("Invalid name formatting for your theme.");
+                throw new RuntimeError("Invalid name formatting for your theme.");
             }
         }
-        throw new \Twig_Error_Runtime("Invalid NodesSources.");
+        throw new RuntimeError("Invalid NodesSources.");
     }
 }
