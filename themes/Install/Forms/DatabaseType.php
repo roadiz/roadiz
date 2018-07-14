@@ -30,6 +30,10 @@
 namespace Themes\Install\Forms;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -40,7 +44,7 @@ class DatabaseType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('driver', 'choice', [
+        $builder->add('driver', ChoiceType::class, [
                 'choices' => [
                     'pdo_mysql' => 'pdo_mysql',
                     'pdo_pgsql' => 'pdo_pgsql',
@@ -55,7 +59,7 @@ class DatabaseType extends AbstractType
                     "id" => "choice",
                 ],
             ])
-            ->add('host', 'text', [
+            ->add('host', TextType::class, [
                 "required" => false,
                 'label' => 'host',
                 'attr' => [
@@ -63,7 +67,7 @@ class DatabaseType extends AbstractType
                     'id' => "host",
                 ],
             ])
-            ->add('port', 'integer', [
+            ->add('port', IntegerType::class, [
                 "required" => false,
                 'label' => 'port',
                 'attr' => [
@@ -71,7 +75,7 @@ class DatabaseType extends AbstractType
                     'id' => "port",
                 ],
             ])
-            ->add('unix_socket', 'text', [
+            ->add('unix_socket', TextType::class, [
                 "required" => false,
                 'label' => 'unix_socket',
                 'attr' => [
@@ -79,7 +83,7 @@ class DatabaseType extends AbstractType
                     'id' => "unix_socket",
                 ],
             ])
-            ->add('path', 'text', [
+            ->add('path', TextType::class, [
                 "required" => false,
                 'label' => 'path',
                 'attr' => [
@@ -87,7 +91,7 @@ class DatabaseType extends AbstractType
                     'id' => "path",
                 ],
             ])
-            ->add('user', 'text', [
+            ->add('user', TextType::class, [
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => "user",
@@ -97,7 +101,7 @@ class DatabaseType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->add('password', 'password', [
+            ->add('password', PasswordType::class, [
                 "required" => false,
                 'label' => 'password',
                 'attr' => [
@@ -105,7 +109,7 @@ class DatabaseType extends AbstractType
                     'id' => 'password',
                 ],
             ])
-            ->add('dbname', 'text', [
+            ->add('dbname', TextType::class, [
                 "required" => false,
                 'label' => 'dbname',
                 'attr' => [

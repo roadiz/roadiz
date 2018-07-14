@@ -46,6 +46,7 @@ use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -907,15 +908,16 @@ class DocumentsController extends RozierApp
     {
         $services = [];
         foreach (array_keys($this->get('document.platforms')) as $value) {
-            $services[$value] = ucwords($value);
+            $services[ucwords($value)] = $value;
         }
 
         $builder = $this->createFormBuilder()
             ->add('embedId', TextType::class, [
                 'label' => 'document.embedId',
             ])
-            ->add('embedPlatform', 'choice', [
+            ->add('embedPlatform', ChoiceType::class, [
                 'label' => 'document.platform',
+                'choices_as_values' => true,
                 'choices' => $services,
             ]);
 
