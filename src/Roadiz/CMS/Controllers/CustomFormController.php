@@ -56,7 +56,6 @@ class CustomFormController extends CmsController
      * @param int $customFormId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request, $customFormId)
     {
@@ -95,7 +94,6 @@ class CustomFormController extends CmsController
      * @param int $customFormId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function sentAction(Request $request, $customFormId)
     {

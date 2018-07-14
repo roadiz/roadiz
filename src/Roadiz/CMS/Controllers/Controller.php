@@ -53,6 +53,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * Base controller.
@@ -163,7 +165,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * @return \Twig_Environment
+     * @return Environment
      */
     public function getTwig()
     {
@@ -317,6 +319,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param array $parameters Twig assignation array
      * @param Response $response Optional Response object to customize response parameters
      * @param string $namespace Twig loader namespace
+     *
      * @return Response
      * @throws \Twig_Error_Runtime
      */

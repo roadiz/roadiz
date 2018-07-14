@@ -41,10 +41,9 @@ class LoginResetController extends RozierApp
 
     /**
      * @param Request $request
-     * @param string  $token
+     * @param string $token
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function resetAction(Request $request, $token)
     {

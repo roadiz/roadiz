@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\DebugBar;
 use DebugBar\DataCollector\TimeDataCollector;
 use DebugBar\DebugBarException;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Twig\Profiler\Profile;
 
 class StopwatchDataCollector extends TimeDataCollector
 {
@@ -40,16 +41,16 @@ class StopwatchDataCollector extends TimeDataCollector
      */
     private $stopwatch;
     /**
-     * @var \Twig_Profiler_Profile
+     * @var Profile
      */
     private $twigProfile;
 
     /**
      * @param Stopwatch $stopwatch
-     * @param \Twig_Profiler_Profile|null $twigProfile
+     * @param Profile|null $twigProfile
      * @internal param float $requestStartTime
      */
-    public function __construct(Stopwatch $stopwatch, \Twig_Profiler_Profile $twigProfile = null)
+    public function __construct(Stopwatch $stopwatch, Profile $twigProfile = null)
     {
         parent::__construct();
         $this->stopwatch = $stopwatch;

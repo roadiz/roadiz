@@ -127,7 +127,6 @@ abstract class FrontendController extends AppController
      * @param string|null $_locale
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function homeAction(Request $request, $_locale = null)
     {
@@ -421,7 +420,6 @@ abstract class FrontendController extends AppController
      * available even when no user has logged in.
      *
      * @param Container $container
-     * @throws \Twig_Error_Loader
      */
     public static function setupDependencyInjection(Container $container)
     {

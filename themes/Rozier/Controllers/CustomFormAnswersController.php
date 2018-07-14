@@ -84,7 +84,6 @@ class CustomFormAnswersController extends RozierApp
      * @param         $customFormAnswerId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $customFormAnswerId)
     {

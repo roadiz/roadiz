@@ -60,15 +60,13 @@ class NodesController extends RozierApp
     use NodesTrait;
 
 
-
     /**
      * List every nodes.
      *
      * @param Request $request
-     * @param string  $filter
+     * @param string $filter
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $filter = null)
     {

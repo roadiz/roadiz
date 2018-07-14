@@ -65,10 +65,11 @@ class NodeType extends AbstractType
                 'label' => 'node.dynamicNodeName',
                 'required' => false,
                 'attr' => [
+                    'class' => 'rz-boolean-checkbox',
                     'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation'
                 ],
             ])
-            ->add('home', ChoiceType::class, [
+            ->add('home', CheckboxType::class, [
                 'label' => 'node.isHome',
                 'required' => false,
                 'attr' => ['class' => 'rz-boolean-checkbox'],

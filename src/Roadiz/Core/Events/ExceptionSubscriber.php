@@ -46,6 +46,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Twig\Error\RuntimeError;
 
 /**
  * Class ExceptionSubscriber
@@ -118,7 +119,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             /*
              * Get previous exception if thrown in Twig execution context.
              */
-            if ($exception instanceof \Twig_Error_Runtime &&
+            if ($exception instanceof RuntimeError &&
                 null !== $exception->getPrevious()) {
                 $exception = $exception->getPrevious();
             }

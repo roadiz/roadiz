@@ -50,6 +50,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Twig\Environment;
 
 /**
  * Class ContactFormManager
@@ -113,7 +114,7 @@ class ContactFormManager extends EmailManager
      * @param Request $request
      * @param FormFactoryInterface $formFactory
      * @param TranslatorInterface $translator
-     * @param \Twig_Environment $templating
+     * @param Environment $templating
      * @param \Swift_Mailer $mailer
      * @param Settings|null $settingsBag
      * @param DocumentUrlGenerator $documentUrlGenerator
@@ -122,7 +123,7 @@ class ContactFormManager extends EmailManager
         Request $request,
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
-        \Twig_Environment $templating,
+        Environment $templating,
         \Swift_Mailer $mailer,
         Settings $settingsBag,
         DocumentUrlGenerator $documentUrlGenerator

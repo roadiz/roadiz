@@ -81,8 +81,8 @@ class DocumentsController extends RozierApp
     /**
      * @param Request $request
      * @param null $folderId
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $folderId = null)
     {
@@ -519,10 +519,9 @@ class DocumentsController extends RozierApp
      * Embed external document page.
      *
      * @param Request $request
-     * @param int     $folderId
+     * @param int $folderId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function embedAction(Request $request, $folderId = null)
     {

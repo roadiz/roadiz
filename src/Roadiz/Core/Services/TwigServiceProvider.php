@@ -130,11 +130,11 @@ class TwigServiceProvider implements ServiceProviderInterface
          * Main twig environment.
          *
          * @param $c
-         * @return \Twig_Environment
+         * @return Environment
          */
         $container['twig.environment'] = function ($c) {
             $c['stopwatch']->start('initTwig');
-            /** @var \Twig_Environment $twig */
+            /** @var Environment $twig */
             $twig = $c['twig.environment_class'];
 
             foreach ($c['twig.extensions'] as $extension) {
