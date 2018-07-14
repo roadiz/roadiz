@@ -71,10 +71,10 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
                 if (!empty($entitiesToForm) &&
                     $entitiesToForm instanceof AbstractEntity) {
                     return $entitiesToForm->getId();
-                } /*
-                 * If model is a collection of AbstractEntity
-                 */
-                elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
+                } elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
+                    /*
+                     * If model is a collection of AbstractEntity
+                     */
                     $idArray = [];
                     foreach ($entitiesToForm as $entity) {
                         if ($entity instanceof AbstractEntity) {
