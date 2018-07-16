@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
@@ -37,9 +38,7 @@ use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
-use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -56,6 +55,11 @@ class ThemeInstallCommand extends ThemesCommand
      * @var string
      */
     private $themeRoot;
+
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
 
     /**
      * @var bool
@@ -235,28 +239,5 @@ class ThemeInstallCommand extends ThemesCommand
     protected function getThemeConfig()
     {
         return Yaml::parse(file_get_contents($this->themeRoot . "/config.yml"));
-    }
-
-    /**
-     * @param string $classname
-     * @param $text
-     * @deprecated Frontend themes no more need to be registered in database.
-     */
-    protected function importTheme($classname, OutputInterface $output)
-    {
-        /** @var Kernel $kernel */
-        $kernel = $this->getHelper('kernel')->getKernel();
-
-        if (!$this->dryRun) {
-            $fixtures = new Fixtures(
-                $this->entityManager,
-                $kernel->getCacheDir(),
-                $kernel->getRootDir() . '/conf/config.yml',
-                $kernel->getRootDir(),
-                $kernel->isDebug()
-            );
-            $fixtures->installFrontendTheme($classname);
-        }
-        $output->writeln('Theme class <info>' . $classname . '</info> has been registered into database.');
     }
 }

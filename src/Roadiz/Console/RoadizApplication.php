@@ -44,6 +44,7 @@ use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Console\Helper\AssetPackagesHelper;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
+use RZ\Roadiz\Utils\Console\Helper\ConfigurationHandlerHelper;
 use RZ\Roadiz\Utils\Console\Helper\ConfigurationHelper;
 use RZ\Roadiz\Utils\Console\Helper\HandlerFactoryHelper;
 use RZ\Roadiz\Utils\Console\Helper\KernelHelper;
@@ -51,6 +52,7 @@ use RZ\Roadiz\Utils\Console\Helper\LoggerHelper;
 use RZ\Roadiz\Utils\Console\Helper\MailerHelper;
 use RZ\Roadiz\Utils\Console\Helper\RolesBagHelper;
 use RZ\Roadiz\Utils\Console\Helper\SolrHelper;
+use RZ\Roadiz\Utils\Console\Helper\ThemeResolverHelper;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\HelperSet;
@@ -229,6 +231,8 @@ class RoadizApplication extends Application
 
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
+        $helperSet->set(new ThemeResolverHelper($this->kernel->container['themeResolver']));
+        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->container['config_handler']));
         $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
         $helperSet->set(new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']));
 

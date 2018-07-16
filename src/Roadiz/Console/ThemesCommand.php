@@ -29,12 +29,12 @@
  */
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
 use ReflectionClass;
 use ReflectionException;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
@@ -52,11 +52,6 @@ class ThemesCommand extends Command
     const METHOD_COPY = 'copy';
     const METHOD_ABSOLUTE_SYMLINK = 'absolute symlink';
     const METHOD_RELATIVE_SYMLINK = 'relative symlink';
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
 
     /**
      * @var Filesystem
@@ -223,7 +218,7 @@ class ThemesCommand extends Command
     /**
      * @param string $themeName Theme name WITH suffix.
      * @param string $expectedMethod
-     * @return string
+     * @return string|null
      */
     protected function generateThemeSymlink($themeName, $expectedMethod)
     {
@@ -245,12 +240,19 @@ class ThemesCommand extends Command
                 return $this->hardCopy($originDir, $targetDir);
             }
         }
-        throw new \RuntimeException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
+        return null;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     *
+     * @return int|null|void
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->getHelper('themeResolver')->getThemeResolver();
         $text = "";
         $name = $input->getArgument('classname');
 
@@ -263,17 +265,14 @@ class ThemesCommand extends Command
              * Replace slash by anti-slashes
              */
             $name = str_replace('/', '\\', $name);
-            $theme = $this->entityManager->getRepository(Theme::class)
-                ->findOneBy(['className' => $name]);
+            $theme = $themeResolver->findThemeByClass($name);
             $tableContent[] = [
                 str_replace('\\', '/', $theme->getClassName()),
                 ($theme->isAvailable() ? 'X' : ''),
                 ($theme->isBackendTheme() ? 'Backend' : 'Frontend'),
             ];
         } else {
-            $themes = $this->entityManager
-                ->getRepository(Theme::class)
-                ->findAll();
+            $themes = $themeResolver->findAll();
 
             if (count($themes) > 0) {
                 /** @var Theme $theme */

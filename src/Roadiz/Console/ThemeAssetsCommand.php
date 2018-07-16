@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -79,9 +80,11 @@ class ThemeAssetsCommand extends ThemesCommand
                 $output->writeln('Installing theme assets as <info>hard copy</info>.');
             }
 
-            $this->generateThemeSymlink($themeName, $expectedMethod);
+            if (null === $this->generateThemeSymlink($themeName, $expectedMethod)) {
+                throw new LogicException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
+            }
         } else {
-            throw new \RuntimeException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
+            throw new LogicException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
         }
     }
 }
