@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -42,7 +43,7 @@ class JsonType extends AbstractType
      */
     public function getParent()
     {
-        return 'textarea';
+        return TextareaType::class;
     }
     /**
      * {@inheritdoc}

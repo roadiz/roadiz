@@ -30,9 +30,21 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\CMS\Forms\CssType;
+use RZ\Roadiz\CMS\Forms\JsonType;
+use RZ\Roadiz\CMS\Forms\MarkdownType;
+use RZ\Roadiz\CMS\Forms\YamlType;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
  * Settings entity are a simple key-value configuration system.
@@ -54,6 +66,7 @@ class Setting extends AbstractEntity
         AbstractField::STRING_T => 'string.type',
         AbstractField::DATETIME_T => 'date-time.type',
         AbstractField::TEXT_T => 'text.type',
+        AbstractField::MARKDOWN_T => 'markdown.type',
         AbstractField::BOOLEAN_T => 'boolean.type',
         AbstractField::INTEGER_T => 'integer.type',
         AbstractField::DECIMAL_T => 'decimal.type',
@@ -61,6 +74,8 @@ class Setting extends AbstractEntity
         AbstractField::DOCUMENTS_T => 'documents.type',
         AbstractField::COLOUR_T => 'colour.type',
         AbstractField::JSON_T => 'json.type',
+        AbstractField::CSS_T => 'css.type',
+        AbstractField::YAML_T => 'yaml.type',
     ];
 
     /**
@@ -69,16 +84,19 @@ class Setting extends AbstractEntity
      * @var array
      */
     public static $typeToForm = [
-        AbstractField::STRING_T => 'text',
-        AbstractField::DATETIME_T => 'datetime',
-        AbstractField::TEXT_T => 'textarea',
-        AbstractField::BOOLEAN_T => 'checkbox',
-        AbstractField::INTEGER_T => 'integer',
-        AbstractField::DECIMAL_T => 'number',
-        AbstractField::EMAIL_T => 'email',
-        AbstractField::DOCUMENTS_T => 'file',
-        AbstractField::COLOUR_T => 'text',
-        AbstractField::JSON_T => 'json',
+        AbstractField::STRING_T => TextType::class,
+        AbstractField::DATETIME_T => DateTimeType::class,
+        AbstractField::TEXT_T => TextareaType::class,
+        AbstractField::MARKDOWN_T => MarkdownType::class,
+        AbstractField::BOOLEAN_T => CheckboxType::class,
+        AbstractField::INTEGER_T => IntegerType::class,
+        AbstractField::DECIMAL_T => NumberType::class,
+        AbstractField::EMAIL_T => EmailType::class,
+        AbstractField::DOCUMENTS_T => FileType::class,
+        AbstractField::COLOUR_T => TextType::class,
+        AbstractField::JSON_T => JsonType::class,
+        AbstractField::CSS_T => CssType::class,
+        AbstractField::YAML_T => YamlType::class,
     ];
 
     /**

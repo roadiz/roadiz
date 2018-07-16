@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -89,7 +90,7 @@ class CustomFormFieldsController extends RozierApp
         if ($field !== null) {
             $this->assignation['customForm'] = $field->getCustomForm();
             $this->assignation['field'] = $field;
-            $form = $this->createForm(new CustomFormFieldType(), $field, [
+            $form = $this->createForm(CustomFormFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'customForm' => $field->getCustomForm(),
                 'fieldName' => $field->getName(),
@@ -142,7 +143,7 @@ class CustomFormFieldsController extends RozierApp
             $field !== null) {
             $this->assignation['customForm'] = $customForm;
             $this->assignation['field'] = $field;
-            $form = $this->createForm(new CustomFormFieldType(), $field, [
+            $form = $this->createForm(CustomFormFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'customForm' => $customForm,
             ]);
@@ -253,7 +254,7 @@ class CustomFormFieldsController extends RozierApp
     private function buildDeleteForm(CustomFormField $field)
     {
         $builder = $this->createFormBuilder()
-                        ->add('customFormFieldId', 'hidden', [
+                        ->add('customFormFieldId', HiddenType::class, [
                             'data' => $field->getId(),
                             'constraints' => [
                                 new NotBlank(),

@@ -32,6 +32,10 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -80,9 +84,8 @@ class SettingGroupsController extends RozierApp
     public function editAction(Request $request, $settingGroupId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
-
-        $settingGroup = $this->get('em')
-                             ->find(SettingGroup::class, (int) $settingGroupId);
+        /** @var SettingGroup $settingGroup */
+        $settingGroup = $this->get('em')->find(SettingGroup::class, (int) $settingGroupId);
 
         if ($settingGroup !== null) {
             $this->assignation['settingGroup'] = $settingGroup;
@@ -175,15 +178,13 @@ class SettingGroupsController extends RozierApp
     public function deleteAction(Request $request, $settingGroupId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
-
-        $settingGroup = $this->get('em')
-                             ->find(SettingGroup::class, (int) $settingGroupId);
+        /** @var SettingGroup|null $settingGroup */
+        $settingGroup = $this->get('em')->find(SettingGroup::class, (int) $settingGroupId);
 
         if (null !== $settingGroup) {
             $this->assignation['settingGroup'] = $settingGroup;
 
             $form = $this->buildDeleteForm($settingGroup);
-
             $form->handleRequest($request);
 
             if ($form->isValid() &&
@@ -299,7 +300,7 @@ class SettingGroupsController extends RozierApp
     /**
      * @param SettingGroup $settingGroup
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildAddForm(SettingGroup $settingGroup)
     {
@@ -308,13 +309,13 @@ class SettingGroupsController extends RozierApp
             'inMenu' => $settingGroup->isInMenu(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('name', 'text', [
+                        ->add('name', TextType::class, [
                             'label' => 'name',
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('inMenu', 'checkbox', [
+                        ->add('inMenu', CheckboxType::class, [
                             'label' => 'settingGroup.in.menu',
                             'required' => false,
                         ])
@@ -326,7 +327,7 @@ class SettingGroupsController extends RozierApp
     /**
      * @param SettingGroup $settingGroup
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildEditForm(SettingGroup $settingGroup)
     {
@@ -338,7 +339,7 @@ class SettingGroupsController extends RozierApp
         $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'name',
-                            'text',
+                            TextType::class,
                             [
                                 'label' => 'name',
                                 'constraints' => [new NotBlank()],
@@ -346,7 +347,7 @@ class SettingGroupsController extends RozierApp
                         )
                         ->add(
                             'inMenu',
-                            'checkbox',
+                            CheckboxType::class,
                             [
                                 'label' => 'settingGroup.in.menu',
                                 'required' => false,
@@ -359,12 +360,12 @@ class SettingGroupsController extends RozierApp
     /**
      * @param SettingGroup $settingGroup
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteForm(SettingGroup $settingGroup)
     {
         $builder = $this->createFormBuilder()
-                        ->add('settingGroupId', 'hidden', [
+                        ->add('settingGroupId', HiddenType::class, [
                             'data' => $settingGroup->getId(),
                             'constraints' => [
                                 new NotBlank(),

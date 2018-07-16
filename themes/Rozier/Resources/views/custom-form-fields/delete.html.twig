@@ -9,14 +9,18 @@
 
     <article class="content content-delete content-node-type-fields-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
-    <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
-        <fieldset data-uk-margin>
-            <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.customFormField{% endtrans %}</legend>
-            <a href="{{ path('customFormFieldsListPage', { customFormId: field.customForm.getId }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-            <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
-        </fieldset>
-    </form>
+        {{ form_start(form, {
+            attr: {
+                class: 'uk-form uk-form-stacked'
+            }
+        }) }}
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.customFormField{% endtrans %}</legend>
+                <a href="{{ path('customFormFieldsListPage', { customFormId: field.customForm.getId }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
+            </fieldset>
+        {{ form_end(form) }}
     </article>
 
 </section>

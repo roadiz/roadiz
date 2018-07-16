@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\CMS\Forms\DataTransformer\ExplorerProviderItemTransformer;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -44,26 +45,12 @@ use Themes\Rozier\Explorer\ExplorerProviderInterface;
 class ExplorerProviderItemType extends AbstractType
 {
     /**
-     * @var ExplorerProviderInterface
-     */
-    protected $explorerProvider;
-
-    /**
-     * ExplorerProviderItemType constructor.
-     * @param ExplorerProviderInterface $explorerProvider
-     */
-    public function __construct(ExplorerProviderInterface $explorerProvider)
-    {
-        $this->explorerProvider = $explorerProvider;
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer(new ExplorerProviderItemTransformer($this->explorerProvider));
+        $builder->addModelTransformer(new ExplorerProviderItemTransformer($options['explorerProvider']));
     }
 
     /**
@@ -84,7 +71,7 @@ class ExplorerProviderItemType extends AbstractType
             $view->vars['attr']['data-min-length'] = $options['min_length'];
         }
 
-        $view->vars['provider_class'] = get_class($this->explorerProvider);
+        $view->vars['provider_class'] = get_class($options['explorerProvider']);
     }
 
     /**
@@ -102,6 +89,8 @@ class ExplorerProviderItemType extends AbstractType
     {
         parent::configureOptions($resolver);
 
+        $resolver->setRequired('explorerProvider');
+        $resolver->setAllowedTypes('explorerProvider', [ExplorerProviderInterface::class]);
         $resolver->setDefault('max_length', 0);
         $resolver->setDefault('min_length', 0);
         $resolver->setAllowedTypes('max_length', ['int']);
@@ -113,6 +102,6 @@ class ExplorerProviderItemType extends AbstractType
      */
     public function getParent()
     {
-        return 'hidden';
+        return HiddenType::class;
     }
 }

@@ -10,7 +10,7 @@
 
     <article class="content">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="add-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { 'attr': { 'id': "add-node-type-field-form" }}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
@@ -20,7 +20,7 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
 
     {% include '@Rozier/custom-form-fields/actionsMenu.html.twig' %}

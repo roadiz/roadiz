@@ -21,7 +21,7 @@
 
     <article class="content content-node-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-node-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { attr: {id: 'edit-node-form'}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
@@ -31,7 +31,7 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
 
         <div class="content-table-cont">
             <table class="uk-table content-table">
@@ -51,7 +51,7 @@
         </div>
 
         {% if node.isHidingChildren %}
-            <hr>
+        <hr>
         <h2 id="add-node-translation">{% trans %}stack.types{% endtrans %}</h2>
         <div class="content-table-cont">
             <table class="uk-table content-table">
@@ -65,12 +65,15 @@
                     <tr>
                         <td colspan="2">
                             {% form_theme stackTypesForm 'horizontalForms.html.twig' %}
-                            <form class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(stackTypesForm) }}>
-                                {{ form_widget(stackTypesForm) }}
+                            {{ form_start(stackTypesForm, {
+                                    'attr': {
+                                        'class': 'uk-form uk-form-horizontal'
+                                    }
+                                }) }}{{ form_widget(stackTypesForm) }}
                                 <button class="uk-button uk-button-primary" type="submit">
                                     <i class="uk-icon-plus"></i> {% trans %}add.stack.type{% endtrans %}
                                 </button>
-                            </form>
+                            {{ form_end(stackTypesForm) }}
                         </td>
                     </tr>
                     {% for type in node.stackTypes %}
@@ -92,14 +95,14 @@
         <hr />
         <h2 id="add-node-translation">{% trans %}translate.node{% endtrans %}</h2>
         {% form_theme translationForm '@Rozier/forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(translationForm) }}>
+        {{ form_start(translationForm) }}
             {{ form_widget(translationForm) }}
             <fieldset data-uk-margin>
                 <button class="uk-button uk-button-primary" type="submit">
                     <i class="uk-icon-flag"></i> {% trans %}translate{% endtrans %}
                 </button>
             </fieldset>
-        </form>
+        {{ form_end(translationForm) }}
         {% endif %}
     </article>
 

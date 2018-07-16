@@ -34,6 +34,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -52,7 +53,7 @@ class TranstypeType extends AbstractType
     {
         $builder->add(
             'nodeTypeId',
-            'choice',
+            ChoiceType::class,
             [
                 'choices_as_values' => true,
                 'choices' => $this->getAvailableTypes($options['em'], $options['currentType']),

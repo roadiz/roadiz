@@ -31,7 +31,6 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -50,30 +49,6 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
     private $selectedNodes;
 
     /**
-     * @var NodeHandler
-     */
-    private $nodeHandler;
-
-    /**
-     * NodeSourceDocumentType constructor.
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $nodeTypeField
-     * @param EntityManager $entityManager
-     * @param NodeHandler $nodeHandler
-     */
-    public function __construct(
-        NodesSources $nodeSource,
-        NodeTypeField $nodeTypeField,
-        EntityManager $entityManager,
-        NodeHandler $nodeHandler
-    ) {
-        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
-
-        $this->nodeHandler = $nodeHandler;
-        $this->nodeHandler->setNode($this->nodeSource->getNode());
-    }
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -81,11 +56,11 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
     {
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            array($this, 'onPreSetData')
+            [$this, 'onPreSetData']
         )
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
-                array($this, 'onPostSubmit')
+                [$this, 'onPostSubmit']
             )
         ;
     }
@@ -95,17 +70,18 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
+        parent::configureOptions($resolver);
+
         $resolver->setDefaults([
-            'label' => $this->nodeTypeField->getLabel(),
             'required' => false,
             'mapped' => false,
             'class' => Node::class,
             'multiple' => true,
             'property' => 'id',
-            'attr' => [
-                'data-nodetypes' => json_encode(explode(',', $this->nodeTypeField->getDefaultValues()))
-            ],
         ]);
+
+        $resolver->setRequired('nodeHandler');
+        $resolver->setAllowedTypes('nodeHandler', [NodeHandler::class]);
     }
 
     /**
@@ -121,12 +97,21 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
      */
     public function onPreSetData(FormEvent $event)
     {
-        $this->selectedNodes = $this->entityManager
+        /** @var EntityManager $entityManager */
+        $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
+
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
+
+        /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
+        $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
+
+        $this->selectedNodes = $entityManager
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findByNodeAndFieldName(
-                $this->nodeSource->getNode(),
-                $this->nodeTypeField->getName()
+                $nodeSource->getNode(),
+                $nodeTypeField->getName()
             );
         $event->setData($this->selectedNodes);
     }
@@ -136,15 +121,29 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
      */
     public function onPostSubmit(FormEvent $event)
     {
-        $this->nodeHandler->cleanNodesFromField($this->nodeTypeField, false);
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
+
+        /** @var EntityManager $entityManager */
+        $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
+
+        /** @var NodeHandler $nodeHandler */
+        $nodeHandler = $event->getForm()->getConfig()->getOption('nodeHandler');
+
+        /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
+        $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
+
+        $nodeHandler->setNode($nodeSource->getNode());
+        $nodeHandler->cleanNodesFromField($nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
             foreach ($event->getData() as $nodeId) {
-                $tempNode = $this->entityManager
-                    ->find(Node::class, (int) $nodeId);
+                /** @var Node|null $tempNode */
+                $tempNode = $entityManager->find(Node::class, (int) $nodeId);
+
                 if ($tempNode !== null) {
-                    $this->nodeHandler->addNodeForField($tempNode, $this->nodeTypeField, false, $position);
+                    $nodeHandler->addNodeForField($tempNode, $nodeTypeField, false, $position);
                     $position++;
                 } else {
                     throw new \RuntimeException('Node #'.$nodeId.' was not found during relationship creation.');

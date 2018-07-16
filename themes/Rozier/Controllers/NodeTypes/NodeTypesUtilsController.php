@@ -119,8 +119,8 @@ class NodeTypesUtilsController extends RozierApp
      * Import a Json file (.rzt) containing NodeType datas and fields.
      *
      * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {

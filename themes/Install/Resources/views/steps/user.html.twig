@@ -34,8 +34,7 @@
             {% endif %}
 
             {% form_theme userForm '@Install/forms.html.twig' %}
-            <form id="formUser" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(userForm) }}>
-
+            {{ form_start(userForm, { attr: { id: "formUser"}}) }}
                 <div class="content-text content-text-form">
                     {{ form_widget(userForm) }}
                 </div>
@@ -49,8 +48,7 @@
 
                     </div>
                 {% endspaceless %}
-
-            </form>
+            {{ form_end(userForm) }}
 
         </div>
 

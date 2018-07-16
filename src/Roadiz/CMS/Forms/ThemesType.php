@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -55,7 +56,6 @@ class ThemesType extends AbstractType
                 $class = $themeConfig['classname'];
                 $value[call_user_func([$class, 'getThemeName'])] = $class;
             }
-
             return $value;
         });
     }
@@ -65,8 +65,9 @@ class ThemesType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
+
     /**
      * {@inheritdoc}
      */

@@ -31,6 +31,8 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -38,46 +40,48 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class EnumerationType extends AbstractType
 {
-    protected $field;
-    /**
-     * {@inheritdoc}
-     */
-    public function __construct(NodeTypeField $field)
-    {
-        $this->field = $field;
-    }
     /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $choices = [];
-        $values = explode(',', $this->field->getDefaultValues());
-
-        foreach ($values as $value) {
-            $value = trim($value);
-            $choices[$value] = $value;
-        }
-
         $resolver->setDefaults([
-            'choices' => $choices,
             'strict' => true,
             'multiple' => false,
             'choices_as_values' => true,
             'placeholder' => 'choose.value',
-            'expanded' => $this->field->isExpanded(),
         ]);
 
-        if ('' !== $this->field->getPlaceholder()) {
-            $resolver->setDefault('placeholder', $this->field->getPlaceholder());
-        }
+        $resolver->setRequired(['nodeTypeField']);
+        $resolver->setAllowedTypes('nodeTypeField', [NodeTypeField::class]);
+
+        $resolver->setNormalizer('choices', function (Options $options, $choices) {
+            $values = explode(',', $options['nodeTypeField']->getDefaultValues());
+
+            foreach ($values as $value) {
+                $value = trim($value);
+                $choices[$value] = $value;
+            }
+            return $choices;
+        });
+
+        $resolver->setNormalizer('placeholder', function (Options $options, $placeholder) {
+            if ('' !== $options['nodeTypeField']->getPlaceholder()) {
+                $placeholder = $options['nodeTypeField']->getPlaceholder();
+            }
+            return $placeholder;
+        });
+
+        $resolver->setNormalizer('expanded', function (Options $options, $expanded) {
+            return $options['nodeTypeField']->isExpanded();
+        });
     }
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
     /**
      * {@inheritdoc}

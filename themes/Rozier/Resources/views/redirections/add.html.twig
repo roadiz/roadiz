@@ -11,7 +11,7 @@
 
     <article class="content">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="add-redirection-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { attr: { id: 'add-redirection-form'}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
@@ -21,7 +21,7 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
     {% include '@Rozier/redirections/actionsMenu.html.twig' %}
 </section>

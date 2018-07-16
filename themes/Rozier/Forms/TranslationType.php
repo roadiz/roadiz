@@ -34,6 +34,9 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationLocale;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationOverrideLocale;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -46,7 +49,7 @@ class TranslationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
+        $builder->add('name', TextType::class, [
             'label' => 'name',
             'constraints' => [
                 new NotBlank(),
@@ -55,7 +58,7 @@ class TranslationType extends AbstractType
                 ])
             ],
         ])
-        ->add('locale', 'choice', [
+        ->add('locale', ChoiceType::class, [
             'label' => 'locale',
             'required' => true,
             'choices_as_values' => true,
@@ -67,11 +70,11 @@ class TranslationType extends AbstractType
                 ]),
             ],
         ])
-        ->add('available', 'checkbox', [
+        ->add('available', CheckboxType::class, [
             'label' => 'available',
             'required' => false,
         ])
-        ->add('overrideLocale', 'text', [
+        ->add('overrideLocale', TextType::class, [
             'label' => 'overrideLocale',
             'required' => false,
             'constraints' => [

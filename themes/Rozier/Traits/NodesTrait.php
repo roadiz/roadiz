@@ -39,6 +39,8 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -115,10 +117,11 @@ trait NodesTrait
         if ($node->isHidingChildren()) {
             $defaults = [];
             $builder = $this->createNamedFormBuilder('add_stack_type', $defaults)
-                            ->add('nodeId', 'hidden', [
+                            ->add('nodeId', HiddenType::class, [
                                 'data' => (int) $node->getId(),
                             ])
-                            ->add('nodeTypeId', new NodeTypesType($this->get('em'), true), [
+                            ->add('nodeTypeId', NodeTypesType::class, [
+                                'entityManager' => $this->get('em'),
                                 'label' => false,
                                 'constraints' => [
                                     new NotBlank(),
@@ -141,7 +144,7 @@ trait NodesTrait
         $defaults = [];
 
         $builder = $this->createFormBuilder($defaults)
-                        ->add('nodeName', 'text', [
+                        ->add('nodeName', TextType::class, [
                             'label' => 'nodeName',
                             'constraints' => [
                                 new NotBlank(),
@@ -150,15 +153,16 @@ trait NodesTrait
                                 ]),
                             ],
                         ])
-            ->add('nodeTypeId', new NodeTypesType($this->get('em')), [
+            ->add('nodeTypeId', NodeTypesType::class, [
                 'label' => 'nodeType',
+                'entityManager' => $this->get('em'),
                 'constraints' => [
                     new NotBlank(),
                 ],
             ]);
 
         if (null !== $parentNode) {
-            $builder->add('parentId', 'hidden', [
+            $builder->add('parentId', HiddenType::class, [
                 'data' => (int) $parentNode->getId(),
                 'constraints' => [
                     new NotBlank(),
@@ -176,8 +180,9 @@ trait NodesTrait
      */
     protected function buildDeleteForm(Node $node)
     {
+
         $builder = $this->createNamedFormBuilder('remove_stack_type_'.$node->getId())
-                        ->add('nodeId', 'hidden', [
+                        ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
                                 new NotBlank(),

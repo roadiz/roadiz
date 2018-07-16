@@ -58,7 +58,7 @@
                     {% form_theme deleteNodesForm '@Rozier/forms.html.twig' %}
                     <form class="uk-form uk-form-horizontal node-bulk-delete-form"
                           action="{{ path('nodesBulkDeletePage') }}"
-                          method="post" {{ form_enctype(deleteNodesForm) }}>
+                          method="post">
                         {{ form_widget(deleteNodesForm) }}
                         <button type="submit"
                             class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-nodes"
@@ -72,7 +72,7 @@
                         {% form_theme tagNodesForm '@Rozier/forms.html.twig' %}
                         <form class="uk-form uk-form-horizontal node-bulk-tag-form"
                               action="#"
-                              method="post" {{ form_enctype(tagNodesForm) }}>
+                              method="post">
                             {{ form_widget(tagNodesForm) }}
                         </form>
                     </div>
@@ -82,7 +82,7 @@
                         {% form_theme statusNodesForm '@Rozier/forms.html.twig' %}
                         <form class="uk-form uk-form-horizontal node-bulk-status-form"
                               action="{{ path('nodesBulkStatusPage') }}"
-                              method="get" {{ form_enctype(statusNodesForm) }}>
+                              method="get">
                             {{ form_widget(statusNodesForm) }}
                         </form>
                     </div>

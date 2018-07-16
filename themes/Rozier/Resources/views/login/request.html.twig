@@ -16,7 +16,7 @@
         </div>
     </div>
     <div id="login-formGlobal">
-    	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
+        <h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
 
         {% if not error and form.vars.valid %}
         <p class="login-desc">{% trans %}to.get.new.password.enter.your.account.email{% endtrans %}</p>
@@ -26,13 +26,13 @@
         <div data-uk-alert class="uk-alert uk-alert-danger">{{ error }}</div>
         {% endif %}
 
-       	{% form_theme form '@Rozier/forms.html.twig' %}
-        <form method="post" id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}" {{ form_enctype(form) }}>
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        <form method="post" id="login-form" class="uk-form uk-form-stacked {% if error %}uk-animation-shake{% endif %}">
             {{ form_widget(form) }}
-    	    <fieldset>
-    	    	<button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}request.new.password{% endtrans %}</button>
-       		</fieldset>
-    	</form>
+            <fieldset>
+                <button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}request.new.password{% endtrans %}</button>
+            </fieldset>
+        </form>
         <div id="login-link">
             <a id="frontend-home-link"
                title="{% trans %}see.website{% endtrans %}" target="_blank" href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>

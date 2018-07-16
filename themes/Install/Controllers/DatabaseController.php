@@ -38,6 +38,7 @@ use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
 use Themes\Install\Forms\DatabaseType;
 use Themes\Install\InstallApp;
@@ -52,8 +53,7 @@ class DatabaseController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
      */
     public function databaseAction(Request $request)
     {
@@ -123,8 +123,7 @@ class DatabaseController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -173,9 +172,7 @@ class DatabaseController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Twig_Error_Runtime
+     * @return Response
      */
     public function databaseFixturesAction(Request $request)
     {

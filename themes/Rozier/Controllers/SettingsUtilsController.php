@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -160,7 +161,7 @@ class SettingsUtilsController extends RozierApp
     private function buildImportJsonFileForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('setting_file', 'file', [
+                        ->add('setting_file', FileType::class, [
                             'label' => 'settingFile',
                         ]);
 

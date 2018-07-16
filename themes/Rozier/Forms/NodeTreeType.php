@@ -37,8 +37,10 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
 /**
@@ -50,31 +52,6 @@ use Themes\Rozier\Widgets\NodeTreeWidget;
  */
 class NodeTreeType extends AbstractType
 {
-    protected $field;
-    protected $nodeSource;
-    protected $controller;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param NodesSources  $source
-     * @param NodeTypeField $field
-     * @param Controller    $refereeController
-     */
-    public function __construct(
-        NodesSources $source,
-        NodeTypeField $field,
-        Controller $refereeController
-    ) {
-        $this->nodeSource = $source;
-        $this->field = $field;
-        $this->controller = $refereeController;
-
-        if (NodeTypeField::CHILDREN_T !== $this->field->getType()) {
-            throw new \RuntimeException("Given field is not a NodeTypeField::CHILDREN_T field.", 1);
-        }
-    }
-
     /**
      * {@inheritdoc}
      *
@@ -86,16 +63,20 @@ class NodeTreeType extends AbstractType
     {
         parent::finishView($view, $form, $options);
 
-        $view->vars['authorizationChecker'] = $this->controller->get('securityAuthorizationChecker');
+        if ($options['nodeTypeField']->getType() !== NodeTypeField::CHILDREN_T) {
+            throw new \RuntimeException("Given field is not a NodeTypeField::CHILDREN_T field.", 1);
+        }
+
+        $view->vars['authorizationChecker'] = $options['controller']->get('securityAuthorizationChecker');
         /*
          * Inject data as plain documents entities
          */
-        $view->vars['request'] = $this->controller->getRequest();
+        $view->vars['request'] = $options['controller']->getRequest();
         $view->vars['nodeTree'] = new NodeTreeWidget(
-            $this->controller->getRequest(),
-            $this->controller,
-            $this->nodeSource->getNode(),
-            $this->nodeSource->getTranslation()
+            $options['controller']->getRequest(),
+            $options['controller'],
+            $options['nodeSource']->getNode(),
+            $options['nodeSource']->getTranslation()
         );
         $view->vars['nodeStatuses'] = [
             Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
@@ -108,12 +89,12 @@ class NodeTreeType extends AbstractType
         /*
          * Linked types to create quick add buttons
          */
-        $defaultValues = explode(',', $this->field->getDefaultValues());
+        $defaultValues = explode(',', $options['nodeTypeField']->getDefaultValues());
         foreach ($defaultValues as $key => $value) {
             $defaultValues[$key] = trim($value);
         }
 
-        $nodeTypes = $this->controller->get('em')
+        $nodeTypes = $options['controller']->get('em')
             ->getRepository(NodeType::class)
             ->findBy(
                 ['name' => $defaultValues],
@@ -127,7 +108,7 @@ class NodeTreeType extends AbstractType
      */
     public function getParent()
     {
-        return 'hidden';
+        return HiddenType::class;
     }
     /**
      * {@inheritdoc}
@@ -135,5 +116,21 @@ class NodeTreeType extends AbstractType
     public function getBlockPrefix()
     {
         return 'childrennodes';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setRequired([
+            'nodeSource',
+            'nodeTypeField',
+            'controller',
+        ]);
+
+        $resolver->setAllowedTypes('nodeSource', [NodesSources::class]);
+        $resolver->setAllowedTypes('nodeTypeField', [NodeTypeField::class]);
+        $resolver->setAllowedTypes('controller', [Controller::class]);
     }
 }

@@ -32,6 +32,9 @@ namespace Themes\DefaultTheme\Controllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\File;
@@ -63,8 +66,8 @@ class ContactController extends DefaultThemeApp
      * @param Translation|null $translation
      * @param null $_locale
      * @param null $_route
+     *
      * @return null|\Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(
         Request $request,
@@ -97,11 +100,11 @@ class ContactController extends DefaultThemeApp
              * Create a custom contact form
              */
             $formBuilder = $contactFormManager->getFormBuilder();
-            $formBuilder->add('callMeBack', 'checkbox', [
+            $formBuilder->add('callMeBack', CheckboxType::class, [
                             'label' => 'call.me.back',
                             'required' => false,
                         ])
-                        ->add('document', 'file', [
+                        ->add('document', FileType::class, [
                             'label' => 'document',
                             'required' => false,
                             'constraints' => [
@@ -111,7 +114,7 @@ class ContactController extends DefaultThemeApp
                                 ]),
                             ],
                         ])
-                        ->add('send', 'submit', [
+                        ->add('send', SubmitType::class, [
                             'label' => 'send.contact.form',
                         ]);
 

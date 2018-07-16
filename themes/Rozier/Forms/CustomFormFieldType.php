@@ -35,6 +35,9 @@ use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -46,7 +49,7 @@ class CustomFormFieldType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('label', 'text', [
+        $builder->add('label', TextType::class, [
                 'label' => 'label',
                 'constraints' => [
                     new NotBlank(),
@@ -57,31 +60,31 @@ class CustomFormFieldType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('description', new MarkdownType(), [
+            ->add('description', MarkdownType::class, [
                 'label' => 'description',
                 'required' => false,
             ])
-            ->add('placeholder', 'text', [
+            ->add('placeholder', TextType::class, [
                 'label' => 'placeholder',
                 'required' => false,
                 'attr' => [
                     'data-desc' => 'label_for_field_with_empty_data'
                 ],
             ])
-            ->add('type', 'choice', [
+            ->add('type', ChoiceType::class, [
                 'label' => 'type',
                 'required' => true,
                 'choices' => array_flip(CustomFormField::$typeToHuman),
                 'choices_as_values' => true,
             ])
-            ->add('required', 'checkbox', [
+            ->add('required', CheckboxType::class, [
                 'label' => 'required',
                 'required' => false,
                 'attr' => [
                     'data-desc' => 'make_this_field_mandatory_for_users'
                 ],
             ])
-            ->add('expanded', 'checkbox', [
+            ->add('expanded', CheckboxType::class, [
                 'label' => 'expanded',
                 'attr' => [
                     'data-desc' => 'use_checkboxes_or_radio_buttons_instead_of_select_box'
@@ -90,7 +93,7 @@ class CustomFormFieldType extends AbstractType
             ])
             ->add(
                 'defaultValues',
-                'text',
+                TextType::class,
                 [
                     'label' => 'defaultValues',
                     'required' => false,
@@ -99,7 +102,7 @@ class CustomFormFieldType extends AbstractType
                     ],
                 ]
             )
-            ->add('groupName', 'text', [
+            ->add('groupName', TextType::class, [
                 'label' => 'groupName',
                 'required' => false,
                 'attr' => [

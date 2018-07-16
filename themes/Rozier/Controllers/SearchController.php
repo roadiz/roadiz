@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
 use RZ\Roadiz\CMS\Forms\CompareDateType;
 use RZ\Roadiz\CMS\Forms\ExtendedBooleanType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\CMS\Forms\NodeStatesType;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\SeparatorType;
@@ -41,7 +42,11 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
@@ -247,13 +252,12 @@ class SearchController extends RozierApp
     /**
      * @param Request $request
      * @param $nodetypeId
+     *
      * @return null|\Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function searchNodeSourceAction(Request $request, $nodetypeId)
     {
-        $nodetype = $this->get('em')
-                         ->find(NodeType::class, $nodetypeId);
+        $nodetype = $this->get('em')->find(NodeType::class, $nodetypeId);
 
         $builder = $this->buildSimpleForm("__node__");
         $this->extendForm($builder, $nodetype);
@@ -300,12 +304,14 @@ class SearchController extends RozierApp
                                 );
         $builderNodeType->add(
             "nodetype",
-            new NodeTypesType($this->get('em'), true),
+            NodeTypesType::class,
             [
                 'label' => 'nodeType',
                 'placeholder' => "ignore",
                 'required' => false,
                 'data' => $nodetypeId,
+                'entityManager' => $this->get('em'),
+                'showInvisible' => true,
             ]
         );
 
@@ -318,13 +324,12 @@ class SearchController extends RozierApp
      */
     protected function addButtons(FormBuilder $builder)
     {
-        $builder->add('search', 'submit', [
+        $builder->add('search', SubmitType::class, [
             'label' => 'search.a.node',
             'attr' => [
                 'class' => 'uk-button uk-button-primary',
             ]
-        ])->add('export', 'submit', [
-            'disabled' => true,
+        ])->add('export', SubmitType::class, [
             'label' => 'export.all.nodesSource',
             'attr' => [
                 'class' => 'uk-button rz-no-ajax',
@@ -358,6 +363,7 @@ class SearchController extends RozierApp
     /**
      * @param Form $form
      * @param NodeType $nodetype
+     *
      * @return null|Response
      */
     protected function handleNodeForm(Form $form, NodeType $nodetype)
@@ -428,10 +434,11 @@ class SearchController extends RozierApp
 
     /**
      * @param NodeType $nodetype
-     * @param array $entities
+     * @param array|\IteratorAggregate $entities
+     *
      * @return string
      */
-    protected function getXlsxResults(NodeType $nodetype, array $entities = [])
+    protected function getXlsxResults(NodeType $nodetype, $entities)
     {
         $fields = $nodetype->getFields();
         $keys = [];
@@ -467,47 +474,42 @@ class SearchController extends RozierApp
     protected function buildSimpleForm($prefix)
     {
         /** @var FormBuilder $builder */
-        $builder = $this->get('formFactory')
-                        ->createBuilder(
-                            'form',
-                            [],
-                            ["method" => "get"]
-                        )
-                        ->add($prefix . 'status', new NodeStatesType(), [
+        $builder = $this->createFormBuilder([], ["method" => "get"])
+                        ->add($prefix . 'status', NodeStatesType::class, [
                             'label' => 'node.status',
                             'required' => false,
                         ])
-                        ->add($prefix . 'visible', new ExtendedBooleanType(), [
+                        ->add($prefix . 'visible', ExtendedBooleanType::class, [
                             'label' => 'visible',
                         ])
-                        ->add($prefix . 'locked', new ExtendedBooleanType(), [
+                        ->add($prefix . 'locked', ExtendedBooleanType::class, [
                             'label' => 'locked',
                         ])
-                        ->add($prefix . 'sterile', new ExtendedBooleanType(), [
+                        ->add($prefix . 'sterile', ExtendedBooleanType::class, [
                             'label' => 'sterile-status',
                         ])
-                        ->add($prefix . 'hideChildren', new ExtendedBooleanType(), [
+                        ->add($prefix . 'hideChildren', ExtendedBooleanType::class, [
                             'label' => 'hiding-children',
                         ])
-                        ->add($prefix . 'nodeName', 'text', [
+                        ->add($prefix . 'nodeName', TextType::class, [
                             'label' => 'nodeName',
                             'required' => false,
                         ])
-                        ->add($prefix . 'parent', 'text', [
+                        ->add($prefix . 'parent', TextType::class, [
                             'label' => 'node.id.parent',
                             'required' => false,
                         ])
-                        ->add($prefix . "createdAt", new CompareDatetimeType(), [
+                        ->add($prefix . "createdAt", CompareDatetimeType::class, [
                             'label' => 'created.at',
                             'inherit_data' => false,
                             'required' => false,
                         ])
-                        ->add($prefix . "updatedAt", new CompareDatetimeType(), [
+                        ->add($prefix . "updatedAt", CompareDatetimeType::class, [
                             'label' => 'updated.at',
                             'inherit_data' => false,
                             'required' => false,
                         ])
-                        ->add($prefix . "limitResult", "number", [
+                        ->add($prefix . "limitResult", NumberType::class, [
                             'label' => 'node.limit.result',
                             'required' => false,
                             'constraints' => [
@@ -515,13 +517,13 @@ class SearchController extends RozierApp
                             ],
                         ])
                         // No need to prefix tags
-                        ->add('tags', 'text', [
+                        ->add('tags', TextType::class, [
                             'label' => 'node.tags',
                             'required' => false,
                             'attr' => ["class" => "rz-tag-autocomplete"],
                         ])
                         // No need to prefix tags
-                        ->add('tagExclusive', 'checkbox', [
+                        ->add('tagExclusive', CheckboxType::class, [
                             'label' => 'node.tag.exclusive',
                             'required' => false,
                         ]);
@@ -540,7 +542,7 @@ class SearchController extends RozierApp
 
         $builder->add(
             "nodetypefield",
-            new SeparatorType(),
+            SeparatorType::class,
             [
                 'label' => 'nodetypefield',
                 'attr' => ["class" => "label-separator"],
@@ -559,7 +561,7 @@ class SearchController extends RozierApp
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
-                $type = "choice";
+                $type = ChoiceType::class;
                 $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["expanded"] = false;
@@ -571,7 +573,7 @@ class SearchController extends RozierApp
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
-                $type = "choice";
+                $type = ChoiceType::class;
                 $option["choices"] = $choices;
                 $option['placeholder'] = 'ignore';
                 $option['required'] = false;
@@ -581,11 +583,11 @@ class SearchController extends RozierApp
                     $option["expanded"] = true;
                 }
             } elseif ($field->getType() === NodeTypeField::DATETIME_T) {
-                $type = new CompareDatetimeType();
+                $type = CompareDatetimeType::class;
             } elseif ($field->getType() === NodeTypeField::DATE_T) {
-                $type = new CompareDateType();
+                $type = CompareDateType::class;
             } else {
-                $type = NodeTypeField::$typeToForm[$field->getType()];
+                $type = NodeSourceType::getFormTypeFromFieldType($field);
             }
 
             if ($field->getType() === NodeTypeField::MARKDOWN_T ||

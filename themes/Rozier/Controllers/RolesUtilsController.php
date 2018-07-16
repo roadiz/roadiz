@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -195,7 +196,7 @@ class RolesUtilsController extends RozierApp
     private function buildImportJsonFileForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('role_file', 'file', [
+                        ->add('role_file', FileType::class, [
                             'label' => 'role.file',
                         ]);
 

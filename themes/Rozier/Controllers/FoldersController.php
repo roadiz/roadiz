@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FolderEvents;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,10 +77,9 @@ class FoldersController extends RozierApp
      * Return an creation form for requested folder.
      *
      * @param Request $request
-     * @param int     $parentFolderId
+     * @param int $parentFolderId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request, $parentFolderId = null)
     {
@@ -95,7 +95,7 @@ class FoldersController extends RozierApp
             }
         }
         /** @var Form $form */
-        $form = $this->createForm(new FolderType(), $folder, [
+        $form = $this->createForm(FolderType::class, $folder, [
             'em' => $this->get('em'),
         ]);
         $form->handleRequest($request);
@@ -211,7 +211,7 @@ class FoldersController extends RozierApp
 
         if ($folder !== null) {
             /** @var Form $form */
-            $form = $this->createForm(new FolderType(), $folder, [
+            $form = $this->createForm(FolderType::class, $folder, [
                 'em' => $this->get('em'),
                 'name' => $folder->getFolderName(),
             ]);
@@ -253,8 +253,8 @@ class FoldersController extends RozierApp
      * @param Request $request
      * @param $folderId
      * @param $translationId
+     *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editTranslationAction(Request $request, $folderId, $translationId)
     {
@@ -282,7 +282,7 @@ class FoldersController extends RozierApp
 
         if (null !== $folder && null !== $translation) {
             /** @var Form $form */
-            $form = $this->createForm(new FolderTranslationType(), $folderTranslation);
+            $form = $this->createForm(FolderTranslationType::class, $folderTranslation);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -391,7 +391,7 @@ class FoldersController extends RozierApp
     protected function buildDeleteForm(Folder $folder)
     {
         $builder = $this->createFormBuilder()
-                        ->add('folder_id', 'hidden', [
+                        ->add('folder_id', HiddenType::class, [
                             'data' => $folder->getId(),
                         ]);
 

@@ -31,6 +31,7 @@
 namespace Themes\Rozier\Controllers\Users;
 
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -51,7 +52,6 @@ class UsersController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -86,7 +86,6 @@ class UsersController extends RozierApp
      * @param int $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $userId)
     {
@@ -103,7 +102,7 @@ class UsersController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(new UserType(), $user, [
+            $form = $this->createForm(UserType::class, $user, [
                 'em' => $this->get('em'),
                 'username' => $user->getUsername(),
                 'email' => $user->getEmail(),
@@ -144,7 +143,6 @@ class UsersController extends RozierApp
      * @param int $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function editDetailsAction(Request $request, $userId)
     {
@@ -159,7 +157,7 @@ class UsersController extends RozierApp
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
-            $form = $this->createForm(new UserDetailsType(), $user);
+            $form = $this->createForm(UserDetailsType::class, $user);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
@@ -201,7 +199,6 @@ class UsersController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -213,7 +210,7 @@ class UsersController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(new UserType(), $user, [
+            $form = $this->createForm(UserType::class, $user, [
                 'em' => $this->get('em'),
             ]);
 
@@ -244,7 +241,6 @@ class UsersController extends RozierApp
      * @param int $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $userId)
     {
@@ -301,7 +297,7 @@ class UsersController extends RozierApp
         $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
-                            'hidden',
+                            HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [

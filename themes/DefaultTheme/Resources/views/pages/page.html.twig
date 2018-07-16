@@ -47,12 +47,12 @@
 
     {% if form %}
         <div class="edit-form">
-            <form id="edit-node-source-form" class="node-form " action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_start(form, { attr: { id: "edit-node-source-form" }}) }}
                 {{ form_widget(form) }}
                 <button class="btn btn-primary" type="submit">
                     <i class="fa fa-save"></i> {% trans %}save{% endtrans %}
                 </button>
-            </form>
+            {{ form_end(form) }}
         </div>
     {% endif %}
 {% endblock %}

@@ -20,7 +20,7 @@
         <div class="content-table-cont">
         {% if form %}
             {% form_theme form '@Rozier/forms.html.twig' %}
-            <form id="edit-node-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_start(form) }}
                 {{ form_widget(form) }}
                 <fieldset data-uk-margin>
                     {% spaceless %}
@@ -30,7 +30,7 @@
                         </button>
                     {% endspaceless %}
                 </fieldset>
-            </form>
+            {{ form_end(form) }}
         {% else %}
             <p class="uk-alert uk-alert-warning"><i class="uk-icon uk-icon-warning"></i> {% trans %}no_more_translation_available{% endtrans %}</p>
         {% endif %}

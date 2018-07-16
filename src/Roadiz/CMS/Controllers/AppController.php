@@ -398,9 +398,6 @@ abstract class AppController extends Controller
      * @param string $message Additionnal message to describe 404 error.
      *
      * @return Response
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
     public function throw404($message = "")
     {
@@ -443,7 +440,6 @@ abstract class AppController extends Controller
      * Append objects to the global dependency injection container.
      *
      * @param \Pimple\Container $container
-     * @throws \Twig_Error_Loader
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -452,7 +448,6 @@ abstract class AppController extends Controller
 
     /**
      * @param Container $container
-     * @throws \Twig_Error_Loader
      */
     public static function addThemeTemplatesPath(Container $container)
     {

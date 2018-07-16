@@ -28,7 +28,7 @@
             {% set returnPath = path('nodesHomePage') %}
         {% endif %}
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="{{ action }}" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.change-status.these.nodes{% endtrans %}</legend>
@@ -36,7 +36,7 @@
                 <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-rz-save"></i> <span
                         class="button-text">{% trans %}change.nodes.status.all{% endtrans %}</span></button>
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
 </section>
 {% endblock %}

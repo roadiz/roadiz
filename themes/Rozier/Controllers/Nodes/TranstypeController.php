@@ -55,8 +55,8 @@ class TranstypeController extends RozierApp
     /**
      * @param Request $request
      * @param $nodeId
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function transtypeAction(Request $request, $nodeId)
     {
@@ -71,7 +71,7 @@ class TranstypeController extends RozierApp
         }
 
         /** @var Form $form */
-        $form = $this->createForm(new TranstypeType(), null, [
+        $form = $this->createForm(TranstypeType::class, null, [
             'em' => $this->get('em'),
             'currentType' => $node->getNodeType(),
         ]);

@@ -40,7 +40,9 @@ use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Extension that allow render documents Url
@@ -97,7 +99,7 @@ class UrlExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('url', [$this, 'getUrl']),
+            new TwigFilter('url', [$this, 'getUrl']),
         ];
     }
 
@@ -123,13 +125,13 @@ class UrlExtension extends AbstractExtension
      * @param  AbstractEntity|null $mixed
      * @param  array $criteria
      * @return string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getUrl(AbstractEntity $mixed = null, array $criteria = [])
     {
         if (null === $mixed) {
             if ($this->throwExceptions) {
-                throw new \Twig_Error_Runtime("Twig “url” filter must be used with a not null object");
+                throw new RuntimeError("Twig “url” filter must be used with a not null object");
             } else {
                 return "";
             }
@@ -151,14 +153,14 @@ class UrlExtension extends AbstractExtension
                 );
                 return $urlGenerator->getUrl($absolute);
             } catch (InvalidArgumentException $e) {
-                throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+                throw new RuntimeError($e->getMessage(), -1, null, $e);
             }
         } elseif ($mixed instanceof NodesSources) {
             return $this->getNodesSourceUrl($mixed, $criteria);
         } elseif ($mixed instanceof Node) {
             return $this->getNodeUrl($mixed, $criteria);
         }
-        throw new \Twig_Error_Runtime("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
+        throw new RuntimeError("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
     }
 
     /**

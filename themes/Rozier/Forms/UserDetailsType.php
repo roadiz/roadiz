@@ -33,6 +33,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -46,7 +47,7 @@ class UserDetailsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstName', 'text', [
+            ->add('firstName', TextType::class, [
                 'label' => 'firstName',
                 'required' => false,
                 'constraints' => [
@@ -55,7 +56,7 @@ class UserDetailsType extends AbstractType
                     ])
                 ]
             ])
-            ->add('lastName', 'text', [
+            ->add('lastName', TextType::class, [
                 'label' => 'lastName',
                 'required' => false,
                 'constraints' => [
@@ -64,7 +65,7 @@ class UserDetailsType extends AbstractType
                     ])
                 ]
             ])
-            ->add('phone', 'text', [
+            ->add('phone', TextType::class, [
                 'label' => 'phone',
                 'required' => false,
                 'constraints' => [
@@ -73,14 +74,14 @@ class UserDetailsType extends AbstractType
                     ])
                 ]
             ])
-            ->add('facebookName', 'text', [
+            ->add('facebookName', TextType::class, [
                 'label' => 'facebookName',
                 'required' => false,
                 'constraints' => [
                     new ValidFacebookName(),
                 ],
             ])
-            ->add('company', 'text', [
+            ->add('company', TextType::class, [
                 'label' => 'company',
                 'required' => false,
                 'constraints' => [
@@ -89,7 +90,7 @@ class UserDetailsType extends AbstractType
                     ])
                 ]
             ])
-            ->add('job', 'text', [
+            ->add('job', TextType::class, [
                 'label' => 'job',
                 'required' => false,
                 'constraints' => [
@@ -98,9 +99,9 @@ class UserDetailsType extends AbstractType
                     ])
                 ]
             ])
-            ->add('birthday', 'date', [
+            ->add('birthday', DateType::class, [
                 'label' => 'birthday',
-                'empty_value' => [
+                'placeholder' => [
                     'year' => 'year',
                     'month' => 'month',
                     'day' => 'day'

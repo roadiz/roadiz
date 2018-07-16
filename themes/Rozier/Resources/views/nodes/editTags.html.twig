@@ -18,9 +18,8 @@
     <article class="content content-node-edit-tags">
         <h2 class="content-subtitle">{% trans %}tags{% endtrans %}</h2>
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-node-tags-form" class="node-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { attr: {id: 'edit-node-tags-form'}}) }}
             {{ form_widget(form) }}
-
             <fieldset data-uk-margin>
                 {% spaceless %}
                 <button data-action-save="#edit-node-tags-form" class="uk-button uk-button-primary rz-action-save" type="submit">
@@ -29,7 +28,7 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
 
     {% include '@Rozier/nodes/actionsMenu.html.twig' %}

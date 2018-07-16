@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -125,7 +126,7 @@ class TagMultiCreationController extends RozierApp
     private function buildAddForm()
     {
         $builder = $this->createFormBuilder()
-            ->add('names', 'textarea', [
+            ->add('names', TextareaType::class, [
                 'label' => 'tags.names',
                 'attr' => [
                     'placeholder' => 'write.every.tags.names.comma.separated',

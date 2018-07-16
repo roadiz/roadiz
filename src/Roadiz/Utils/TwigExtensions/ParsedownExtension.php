@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 class ParsedownExtension extends AbstractExtension
 {
@@ -51,9 +52,9 @@ class ParsedownExtension extends AbstractExtension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('markdown', [$this, 'markdown'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('inlineMarkdown', [$this, 'inlineMarkdown'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('markdownExtra', [$this, 'markdownExtra'], ['is_safe' => ['html']]),
+            new TwigFilter('markdown', [$this, 'markdown'], ['is_safe' => ['html']]),
+            new TwigFilter('inlineMarkdown', [$this, 'inlineMarkdown'], ['is_safe' => ['html']]),
+            new TwigFilter('markdownExtra', [$this, 'markdownExtra'], ['is_safe' => ['html']]),
         ];
     }
 

@@ -34,7 +34,10 @@ use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -47,6 +50,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Twig\Environment;
 
 /**
  * Class ContactFormManager
@@ -110,7 +114,7 @@ class ContactFormManager extends EmailManager
      * @param Request $request
      * @param FormFactoryInterface $formFactory
      * @param TranslatorInterface $translator
-     * @param \Twig_Environment $templating
+     * @param Environment $templating
      * @param \Swift_Mailer $mailer
      * @param Settings|null $settingsBag
      * @param DocumentUrlGenerator $documentUrlGenerator
@@ -119,7 +123,7 @@ class ContactFormManager extends EmailManager
         Request $request,
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
-        \Twig_Environment $templating,
+        Environment $templating,
         \Swift_Mailer $mailer,
         Settings $settingsBag,
         DocumentUrlGenerator $documentUrlGenerator
@@ -187,27 +191,28 @@ class ContactFormManager extends EmailManager
      */
     public function withDefaultFields()
     {
-        $this->getFormBuilder()->add('email', 'email', [
-            'label' => 'your.email',
-            'constraints' => [
-                new NotBlank(),
-                new Email([
-                    'message' => 'email.not.valid',
-                ]),
-            ],
-        ])
-            ->add('name', 'text', [
+        $this->getFormBuilder()->add('email', EmailType::class, [
+                'label' => 'your.email',
+                'constraints' => [
+                    new NotBlank(),
+                    new Email([
+                        'message' => 'email.not.valid',
+                    ]),
+                ],
+            ])
+            ->add('name', TextType::class, [
                 'label' => 'your.name',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('message', 'textarea', [
+            ->add('message', TextareaType::class, [
                 'label' => 'your.message',
                 'constraints' => [
                     new NotBlank(),
                 ],
-            ]);
+            ])
+        ;
 
         return $this;
     }
@@ -235,7 +240,7 @@ class ContactFormManager extends EmailManager
 
         if (!empty($publicKey) &&
             !empty($privateKey)) {
-            $this->getFormBuilder()->add('recaptcha', new RecaptchaType(), [
+            $this->getFormBuilder()->add('recaptcha', RecaptchaType::class, [
                 'label' => false,
                 'configs' => [
                     'publicKey' => $publicKey,

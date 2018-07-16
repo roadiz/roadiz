@@ -34,6 +34,8 @@ use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -62,14 +64,14 @@ class TranslateNodeType extends AbstractType
             $choices[$translation->getName()] = $translation->getId();
         }
 
-        $builder->add('translation', 'choice', [
+        $builder->add('translation', ChoiceType::class, [
             'label' => 'translation',
             'choices' => $choices,
             'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
         ])
-        ->add('translate_offspring', 'checkbox', [
+        ->add('translate_offspring', CheckboxType::class, [
             'label' => 'translate_offspring',
             'required' => false,
         ]);

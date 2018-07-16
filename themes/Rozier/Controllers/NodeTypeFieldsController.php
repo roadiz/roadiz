@@ -33,6 +33,8 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -57,8 +59,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
-        $nodeType = $this->get('em')
-                         ->find(NodeType::class, $nodeTypeId);
+        $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         if ($nodeType !== null) {
             $fields = $nodeType->getFields();
@@ -85,14 +86,13 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeTypeField $field */
-        $field = $this->get('em')
-                      ->find(NodeTypeField::class, $nodeTypeFieldId);
+        $field = $this->get('em')->find(NodeTypeField::class, $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['nodeType'] = $field->getNodeType();
             $this->assignation['field'] = $field;
 
-            $form = $this->createForm(new NodeTypeFieldType(), $field, [
+            $form = $this->createForm(NodeTypeFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'fieldName' => $field->getName(),
                 'nodeType' => $field->getNodeType(),
@@ -143,9 +143,7 @@ class NodeTypeFieldsController extends RozierApp
 
         $field = new NodeTypeField();
         /** @var NodeType $nodeType */
-        $nodeType = $this->get('em')
-                         ->find(NodeType::class, $nodeTypeId);
-
+        $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         if ($nodeType !== null &&
             $field !== null) {
@@ -154,11 +152,12 @@ class NodeTypeFieldsController extends RozierApp
                                    ->findLatestPositionInNodeType($nodeType);
             $field->setNodeType($nodeType);
             $field->setPosition($latestPosition + 1);
+            $field->setType(NodeTypeField::STRING_T);
 
             $this->assignation['nodeType'] = $nodeType;
             $this->assignation['field'] = $field;
 
-            $form = $this->createForm(new NodeTypeFieldType(), $field, [
+            $form = $this->createForm(NodeTypeFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'nodeType' => $field->getNodeType(),
             ]);
@@ -225,8 +224,7 @@ class NodeTypeFieldsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         /** @var NodeTypeField $field */
-        $field = $this->get('em')
-                      ->find(NodeTypeField::class, (int) $nodeTypeFieldId);
+        $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;
@@ -243,8 +241,7 @@ class NodeTypeFieldsController extends RozierApp
                  * Update Database
                  */
                 /** @var NodeType $nodeType */
-                $nodeType = $this->get('em')
-                                 ->find(NodeType::class, (int) $nodeTypeId);
+                $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
 
                 /** @var NodeTypeHandler $handler */
                 $handler = $this->get('node_type.handler');
@@ -279,12 +276,12 @@ class NodeTypeFieldsController extends RozierApp
     /**
      * @param NodeTypeField $field
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteForm(NodeTypeField $field)
     {
         $builder = $this->createFormBuilder()
-                        ->add('nodeTypeFieldId', 'hidden', [
+                        ->add('nodeTypeFieldId', HiddenType::class, [
                             'data' => $field->getId(),
                             'constraints' => [
                                 new NotBlank(),

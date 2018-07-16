@@ -34,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -179,7 +180,7 @@ class GroupsUtilsController extends RozierApp
     private function buildImportJsonFileForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('group_file', 'file', [
+                        ->add('group_file', FileType::class, [
                             'label' => 'group.file',
                         ]);
 

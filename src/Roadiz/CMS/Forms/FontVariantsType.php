@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -54,13 +55,13 @@ class FontVariantsType extends AbstractType
      */
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
     /**
      * {@inheritdoc}
      */
     public function getBlockPrefix()
     {
-        return 'fontVariants';
+        return 'font_variants';
     }
 }

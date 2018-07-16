@@ -41,8 +41,16 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Install\Forms\UserType;
 
 /**
  * Installation application
@@ -75,7 +83,6 @@ class InstallApp extends AppController
     public function prepareBaseAssignation()
     {
         $this->assignation = [
-            'request' => $this->getRequest(),
             'head' => [
                 'siteTitle' => 'welcome.title',
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
@@ -102,7 +109,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -131,7 +138,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function redirectIndexAction(Request $request)
     {
@@ -145,7 +152,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function requirementsAction(Request $request)
     {
@@ -160,11 +167,11 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function userAction(Request $request)
     {
-        $userForm = $this->buildUserForm($request);
+        $userForm = $this->createForm(UserType::class);
 
         if ($userForm !== null) {
             $userForm->handleRequest($request);
@@ -188,6 +195,7 @@ class InstallApp extends AppController
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
+                    /** @var User $user */
                     $user = $this->get('em')
                         ->getRepository(User::class)
                         ->findOneBy(['username' => $userForm->getData()['username']]);
@@ -213,10 +221,11 @@ class InstallApp extends AppController
      * @param Request $request
      * @param int     $userId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function userSummaryAction(Request $request, $userId)
     {
+        /** @var User $user */
         $user = $this->get('em')->find(User::class, $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
@@ -228,7 +237,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function doneAction(Request $request)
     {
@@ -320,7 +329,7 @@ class InstallApp extends AppController
      * After done and clearing caches.
      *
      * @param  Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function afterDoneAction(Request $request)
     {
@@ -339,12 +348,13 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildLanguageForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-            ->add('language', 'choice', [
+            ->add('language', ChoiceType::class, [
+                'choices_as_values' => true,
                 'choices' => [
                     'English' => 'en',
                     'Español' => 'es',
@@ -352,7 +362,6 @@ class InstallApp extends AppController
                     'Русский язык' => 'ru',
                     'Türkçe' => 'tr',
                 ],
-                'choices_as_values' => true,
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -367,30 +376,30 @@ class InstallApp extends AppController
     }
 
     /**
-     * Build forms
+     * Build form for theme and site information.
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildUserForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-            ->add('username', 'text', [
+            ->add('username', TextType::class, [
                 'required' => true,
                 'label' => $this->getTranslator()->trans('username'),
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('email', 'email', [
+            ->add('email', EmailType::class, [
                 'required' => true,
-                'label' => $this->getTranslator()->trans('email'),
+                'label' => 'email',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('password', 'repeated', [
+            ->add('password', RepeatedType::class, [
                 'type' => 'password',
                 'invalid_message' => 'password.must_match',
                 'first_options' => ['label' => 'password'],
@@ -400,7 +409,6 @@ class InstallApp extends AppController
                     new NotBlank(),
                 ],
             ]);
-
         return $builder->getForm();
     }
 
@@ -409,12 +417,12 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildDoneForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-            ->add('action', 'hidden', [
+            ->add('action', HiddenType::class, [
                 'data' => 'quit_install',
             ]);
 

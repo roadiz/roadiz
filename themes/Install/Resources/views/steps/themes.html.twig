@@ -33,21 +33,17 @@
             {% endif %}
 
             {% form_theme infosForm '@Install/forms.html.twig' %}
-            <form id="infosForm" class="install-form uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(infosForm) }}>
-
+            {{ form_start(infosForm, { attr: { id: "infosForm"}}) }}
                 <div class="content-text content-text-form">
                     {{ form_widget(infosForm) }}
                 </div>
-
                 {% spaceless %}
                     <div class="content-buttons">
                         <a class="content-button uk-button uk-button-success" href="{{ path('installDatabasePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.database{% endtrans %}</a>
                         <button class="content-button form-save-button uk-button uk-button-primary"><i class="uk-icon-rz-save-mini"></i> {% trans %}themes.save_informations{% endtrans %}</button>
                     </div>
                 {% endspaceless %}
-
-            </form>
-
+            {{ form_end(infosForm) }}
         </div>
 
     </article>

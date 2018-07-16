@@ -23,64 +23,52 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file HandlerExtension.php
+ * @file UserType.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Utils\TwigExtensions;
+namespace Themes\Install\Forms;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
-use Twig\Error\RuntimeError;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
-/**
- * Class HandlerExtension
- * @package RZ\Roadiz\Utils\TwigExtensions
- */
-class HandlerExtension extends AbstractExtension
+class UserType extends AbstractType
 {
     /**
-     * @var HandlerFactory
+     * {@inheritdoc}
      */
-    private $handlerFactory;
-
-    /**
-     * HandlerExtension constructor.
-     * @param HandlerFactory $handlerFactory
-     */
-    public function __construct(HandlerFactory $handlerFactory)
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->handlerFactory = $handlerFactory;
-    }
-
-    public function getFilters()
-    {
-        return [
-            new TwigFilter('handler', [$this, 'getHandler']),
-        ];
-    }
-
-    /**
-     * @param $mixed
-     * @return \RZ\Roadiz\Core\Handlers\AbstractHandler|null
-     * @throws RuntimeError
-     */
-    public function getHandler($mixed)
-    {
-        if (null === $mixed) {
-            return null;
-        }
-
-        if ($mixed instanceof AbstractEntity) {
-            try {
-                return $this->handlerFactory->getHandler($mixed);
-            } catch (\InvalidArgumentException $exception) {
-                throw new RuntimeError($exception->getMessage(), -1, null, $exception);
-            }
-        }
-
-        throw new RuntimeError('Handler filter only supports AbstractEntity objects.');
+        $builder
+            ->add('username', TextType::class, [
+                'required' => true,
+                'label' => 'username',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('email', EmailType::class, [
+                'required' => true,
+                'label' => 'email',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'password.must_match',
+                'first_options' => ['label' => 'password'],
+                'second_options' => ['label' => 'password.verify'],
+                'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+        ;
     }
 }

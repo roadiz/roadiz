@@ -17,7 +17,7 @@
             <form class="uk-form uk-form-stacked"
                   id="search-node-type-form"
                   action="#"
-                  method="get" {{ form_enctype(nodeTypeForm) }}>
+                  method="get">
                 {{ form_widget(nodeTypeForm) }}
                 <div class="data-uk-margin">
                     <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-filter"></i> {% trans %}select.nodetype{% endtrans %}</button>
@@ -28,7 +28,7 @@
             <form class="uk-form uk-form-stacked"
                   id="search-node-form"
                   action="#"
-                  method="get" {{ form_enctype(form) }}>
+                  method="get">
                 {{ form_widget(form) }}
             </form>
             <hr>

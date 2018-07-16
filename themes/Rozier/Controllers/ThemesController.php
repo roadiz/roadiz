@@ -51,7 +51,7 @@ class ThemesController extends RozierApp
      * Import theme screen.
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

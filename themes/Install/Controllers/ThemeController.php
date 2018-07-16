@@ -51,7 +51,6 @@ class ThemeController extends InstallApp
      * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function importThemeAction(Request $request, $id)
     {
@@ -101,7 +100,6 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function themeSummaryAction(Request $request)
     {
@@ -116,7 +114,6 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function themesAction(Request $request)
     {

@@ -31,6 +31,8 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -43,7 +45,7 @@ class NodeSourceBaseType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text', [
+        $builder->add('title', TextType::class, [
             'label' => 'title',
             'required' => false,
             'attr' => [
@@ -58,7 +60,7 @@ class NodeSourceBaseType extends AbstractType
         ]);
 
         if ($options['publishable'] === true) {
-            $builder->add('publishedAt', 'datetime', [
+            $builder->add('publishedAt', DateTimeType::class, [
                 'label' => 'publishedAt',
                 'required' => false,
                 'attr' => [
@@ -91,7 +93,7 @@ class NodeSourceBaseType extends AbstractType
     {
         $resolver->setDefaults([
             'label' => false,
-            'virtual' => true,
+            'inherit_data' => true,
             'publishable' => false,
         ]);
 

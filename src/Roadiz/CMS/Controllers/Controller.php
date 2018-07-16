@@ -44,7 +44,6 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +53,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * Base controller.
@@ -164,7 +165,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * @return \Twig_Environment
+     * @return Environment
      */
     public function getTwig()
     {
@@ -318,6 +319,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param array $parameters Twig assignation array
      * @param Response $response Optional Response object to customize response parameters
      * @param string $namespace Twig loader namespace
+     *
      * @return Response
      * @throws \Twig_Error_Runtime
      */
@@ -422,13 +424,12 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Creates and returns a Form instance from the type of the form.
      *
-     * @param string|FormTypeInterface $type    The built type of the form
-     * @param mixed $data The initial data for the form
+     * @param string $type    The built type of the form
+     * @param mixed $data    The initial data for the form
      * @param array $options Options for the form
-     *
      * @return Form
      */
-    protected function createForm($type, $data = null, array $options = [])
+    protected function createForm($type = FormType::class, $data = null, array $options = [])
     {
         return $this->get('formFactory')->create($type, $data, $options);
     }
@@ -443,13 +444,14 @@ abstract class Controller implements ContainerAwareInterface
      */
     protected function createFormBuilder($data = null, array $options = [])
     {
-        return $this->get('formFactory')->createBuilder('form', $data, $options);
+        return $this->get('formFactory')->createBuilder(FormType::class, $data, $options);
     }
 
     /**
      * Creates and returns a form builder instance.
      *
-     * @param mixed $data    The initial data for the form
+     * @param string $name Form name
+     * @param mixed $data The initial data for the form
      * @param array $options Options for the form
      *
      * @return FormBuilderInterface

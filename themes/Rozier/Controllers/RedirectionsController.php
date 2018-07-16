@@ -30,6 +30,7 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Redirection;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\RedirectionType;
@@ -85,7 +86,9 @@ class RedirectionsController extends RozierApp
             throw new ResourceNotFoundException();
         }
 
-        $form = $this->createForm(new RedirectionType($this->get('em')), $redirection);
+        $form = $this->createForm(RedirectionType::class, $redirection, [
+            'entityManager' => $this->get('em')
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -118,7 +121,7 @@ class RedirectionsController extends RozierApp
             throw new ResourceNotFoundException();
         }
 
-        $form = $this->createForm('form');
+        $form = $this->createForm(FormType::class);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -142,7 +145,9 @@ class RedirectionsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
 
         $redirection = new Redirection();
-        $form = $this->createForm(new RedirectionType($this->get('em')), $redirection);
+        $form = $this->createForm(RedirectionType::class, $redirection, [
+            'entityManager' => $this->get('em')
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
