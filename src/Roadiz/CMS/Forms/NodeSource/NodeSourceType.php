@@ -269,6 +269,9 @@ class NodeSourceType extends AbstractType
             case AbstractField::SINGLE_PROVIDER_T:
             case AbstractField::MULTI_PROVIDER_T:
                 return NodeSourceProviderType::class;
+
+            case AbstractField::COLLECTION_T:
+                return CollectionType::class;
         }
 
         return TextType::class;
