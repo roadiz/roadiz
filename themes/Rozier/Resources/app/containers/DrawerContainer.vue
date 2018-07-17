@@ -55,9 +55,10 @@
                 const nodeTypes = this.$refs.drawer.getAttribute('data-nodetypes')
                 const nodeTypeField = this.$refs.drawer.getAttribute('data-nodetypefield')
                 const providerClass = this.$refs.drawer.getAttribute('data-provider-class')
+                const providerOptions = JSON.parse(decodeURIComponent(this.$refs.drawer.getAttribute('data-provider-options')))
 
                 // Merge specific filter in one object
-                const filters = { nodeTypes, nodeTypeField, providerClass }
+                const filters = { nodeTypes, nodeTypeField, providerClass, providerOptions }
 
                 // Init data
                 this.drawersInitData({

@@ -53,6 +53,11 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
     private $provider;
 
     /**
+     * @var array
+     */
+    private $providerOptions;
+
+    /**
      * @inheritDoc
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -73,6 +78,11 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
             $options['nodeTypeField']->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
             $configuration = Yaml::parse($options['nodeTypeField']->getDefaultValues());
             $this->classname = $configuration['classname'];
+            if (isset($configuration['options'])) {
+                $this->providerOptions = $configuration['options'];
+            } else {
+                $this->providerOptions = [];
+            }
             $this->provider = new $configuration['classname'];
             $this->provider->setContainer($options['container']);
         }
@@ -137,6 +147,13 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
         }
 
         $view->vars['provider_class'] = $this->classname;
+
+        if (is_array($this->providerOptions) && count($this->providerOptions) > 0) {
+            $view->vars['provider_options'] = [];
+            foreach ($this->providerOptions as $providerOption) {
+                $view->vars['provider_options'][$providerOption['name']] = $providerOption['value'];
+            }
+        }
     }
 
     /**
