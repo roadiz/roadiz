@@ -1,32 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
-  ~
-  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
-  ~ of this software and associated documentation files (the "Software"), to deal
-  ~ in the Software without restriction, including without limitation the rights
-  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  ~ copies of the Software, and to permit persons to whom the Software is furnished
-  ~ to do so, subject to the following conditions:
-  ~ The above copyright notice and this permission notice shall be included in all
-  ~ copies or substantial portions of the Software.
-  ~
-  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-  ~ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-  ~ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  ~ IN THE SOFTWARE.
-  ~
-  ~ Except as contained in this notice, the name of the ROADIZ shall not
-  ~ be used in advertising or otherwise to promote the sale, use or other dealings
-  ~ in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
-  ~
-  ~ @file messages.en.xlf
-  ~ @author Ambroise Maupate <ambroise@rezo-zero.com>
-  -->
-
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="en">
     <body>
@@ -1093,7 +1065,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">561</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Il nodo% nome% è stato creato.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="child_node.%name%.created" approved="yes">
         <source>child_node.%name%.created</source>
         <target xml:lang="en">Child node %name% has been created.</target>
@@ -3810,7 +3782,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/9c/58/6b7377e4e0199f222b386af4ab53323fa8706432615c927d15d12a5c2b3a.php</context>
           <context context-type="linenumber">51</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">etichetta il contenuto </target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="376" approved="yes">
         <source>tag.settings</source>
         <target xml:lang="en">Tag settings</target>
@@ -3910,7 +3882,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/de/03/6cb30cfbaeddb9370c458b1694d8751a7c5e34716db56ef2a35604ef8003.php</context>
           <context context-type="linenumber">58</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Scollegare il documento</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="388" approved="yes">
         <source>edit.document</source>
         <target xml:lang="en">Edit document</target>
@@ -3974,7 +3946,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/41/8d/7960bb87be336f81a137e8312c241bf87671ced5b671a5a284994a30ec3b.php</context>
           <context context-type="linenumber">57</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">nome file</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="396" approved="yes">
         <source>document.createdAt</source>
         <target xml:lang="en">Created at</target>
@@ -4258,7 +4230,7 @@
       <trans-unit xml:space="preserve" id="%group%.settings" approved="yes">
         <source>%group%.settings</source>
         <target xml:lang="en">“%group%” settings</target>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Impostazioni "% gruppo%"</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="settingGroup.%name%.updated" approved="yes">
         <source>settingGroup.%name%.updated</source>
         <target xml:lang="en">Setting group %name% has been updated.</target>
@@ -4604,8 +4576,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="embedId.is_not_valid">
         <source>embedId.is_not_valid</source>
-        <target xml:lang="en" state="translated">Media identifier is not valid.</target>
-      <alt-trans><target xml:lang="en">L’identifiant du média n’est pas valide.</target></alt-trans></trans-unit>
+        <target xml:lang="en" state="translated">L'identificativo del supporto non è valido.</target>
+      <alt-trans><target xml:lang="en">Media identifier is not valid.</target></alt-trans><alt-trans><target xml:lang="en">L’identifiant du média n’est pas valide.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="document.metas" approved="yes">
         <source>document.metas</source>
         <target xml:lang="en">Metas</target>
@@ -6809,9 +6781,19 @@
             <target xml:lang="en" state="translated">-- Use website default language --</target>
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
-        <trans-unit xml:space="preserve" id="preview">
+      <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target xml:lang="en" state="translated">Sort ascendant</target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target xml:lang="en" state="translated">Sort descendant</target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="preview">
             <source>preview</source>
-            <target>Preview</target>
+            <target xml:lang="en" state="translated">Preview</target>
             <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file original="none" source-language="en" datatype="plaintext" target-language="ru">
+  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="ru">
     <body>
       <trans-unit xml:space="preserve" id="2">
         <source>node.%name%.updated</source>
@@ -550,6 +550,10 @@
           <context context-type="linenumber">835</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="phone">
+        <source>phone</source>
+        <target xml:lang="ru" state="translated">телефон</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="54">
         <source>company</source>
         <target xml:lang="ru" state="translated">Организация</target>
@@ -785,38 +789,10 @@
       <trans-unit xml:space="preserve" id="78">
         <source>visible</source>
         <target xml:lang="ru" state="translated">Видимый</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">699</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">730</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
-          <context context-type="linenumber">798</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypeFieldsController.php</context>
-          <context context-type="linenumber">340</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">337</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
-          <context context-type="linenumber">378</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
-          <context context-type="linenumber">375</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/SettingsController.php</context>
-          <context context-type="linenumber">437</context>
-        </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="invisible">
+        <source>invisible</source>
+        <target xml:lang="ru" state="translated">невидимый</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="79">
         <source>parent_tagId</source>
@@ -1401,6 +1377,10 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/6f/c0/7e2dda8cb4755b3a3010129d72d82a94eb499c4d676281020cec69b5d6fe.php</context>
           <context context-type="linenumber">55</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font.hash">
+        <source>font.hash</source>
+        <target xml:lang="ru" state="needs-translation">font.hash</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="143">
         <source>font.eotFile</source>
@@ -3146,6 +3126,11 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.activated">
+          <source>maintenance_mode.activated</source>
+          <target xml:lang="ru" state="needs-translation">maintenance_mode.activated</target>
+          <note>Message to notify that site is under maintenance.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="300">
         <source>help</source>
         <target xml:lang="ru" state="translated">Помощь</target>
@@ -3269,6 +3254,10 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/88/9a/f2a9ab31044ec747813125ad428def2be716184dc2d6462206038ed37577.php</context>
           <context context-type="linenumber">54</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="preview.page">
+        <source>preview.page</source>
+        <target xml:lang="ru" state="needs-translation">preview.page</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="314">
         <source>duplicate</source>
@@ -3775,6 +3764,10 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.color">
+        <source>tag.color</source>
+        <target xml:lang="ru" state="needs-translation">tag.color</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="374">
         <source>tag.tree</source>
         <target xml:lang="ru" state="translated">Дерево тегов</target>
@@ -4041,8 +4034,8 @@
       </trans-unit>
       <!-- Count translations -->
       <trans-unit xml:space="preserve" id="409">
-        <source>{0} no.item|{1} 1.item|]1,Inf] %count%.items</source>
-        <target xml:lang="ru" state="needs-translation">{0} no.item|{1} 1.item|]1,Inf] %count%.items</target>
+        <source><![CDATA[{0} no.item|{1} 1.item|]1,Inf] %count%.items]]></source>
+        <target xml:lang="ru" state="needs-translation"><![CDATA[{0} no.item|{1} 1.item|]1,Inf] %count%.items]]></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="410">
         <source>1.item</source>
@@ -4157,6 +4150,14 @@
         <source>markdown.type</source>
         <target xml:lang="ru" state="translated">Markdown разметка</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="json.type">
+        <source>json.type</source>
+        <target xml:lang="ru" state="needs-translation">json.type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css.type">
+        <source>css.type</source>
+        <target xml:lang="ru" state="needs-translation">css.type</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="437">
         <source>boolean.type</source>
         <target xml:lang="ru" state="translated">Да или нет</target>
@@ -4188,6 +4189,14 @@
       <trans-unit xml:space="preserve" id="444">
         <source>children-nodes.type</source>
         <target xml:lang="ru" state="translated">Дочерние узлы</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="country.type">
+        <source>country.type</source>
+        <target xml:lang="ru" state="needs-translation">country.type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target xml:lang="ru" state="needs-translation">collection.type</target>
       </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
@@ -4312,6 +4321,10 @@
         <source>google_client_id</source>
         <target xml:lang="ru" state="needs-translation">google_client_id</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="google_server_id">
+        <source>google_server_id</source>
+        <target xml:lang="ru" state="needs-translation">google_server_id</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_client_id">
         <source>twitter_client_id</source>
         <target xml:lang="ru" state="needs-translation">twitter_client_id</target>
@@ -4355,6 +4368,22 @@
       <trans-unit xml:space="preserve" id="twitter_account">
         <source>twitter_account</source>
         <target xml:lang="ru" state="translated">Имя учетной записи Twitter</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_public_key">
+        <source>recaptcha_public_key</source>
+        <target xml:lang="ru" state="needs-translation">recaptcha_public_key</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_private_key">
+        <source>recaptcha_private_key</source>
+        <target xml:lang="ru" state="needs-translation">recaptcha_private_key</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot">
+        <source>you_must_show_youre_not_robot</source>
+        <target xml:lang="ru" state="needs-translation">you_must_show_youre_not_robot</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="recaptcha_is_invalid.try_again">
+        <source>recaptcha_is_invalid.try_again</source>
+        <target xml:lang="ru" state="needs-translation">recaptcha_is_invalid.try_again</target>
       </trans-unit>
       <!-- document usage -->
       <trans-unit xml:space="preserve" id="document.%name%.usage">
@@ -4546,6 +4575,10 @@
         <source>embed.document.already_exists</source>
         <target xml:lang="ru" state="translated">Встраиваемый документ уже существует</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+        <source>embedId.is_not_valid</source>
+        <target xml:lang="ru" state="needs-translation">embedId.is_not_valid</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.metas">
         <source>document.metas</source>
         <target xml:lang="ru" state="translated">Меты</target>
@@ -4594,6 +4627,16 @@
         <source>back_to.folders</source>
         <target xml:lang="ru" state="translated">Назад к папкам</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.settings">
+        <source>folder.settings</source>
+        <target xml:lang="ru" state="needs-translation">folder.settings</target>
+        <note>Nav bar label for editing folder id and visibility state</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="folder.labels">
+        <source>folder.labels</source>
+        <target xml:lang="ru" state="needs-translation">folder.labels</target>
+        <note>Nav bar label for editing folder label in each translation.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="delete.folder.%name%">
           <source>delete.folder.%name%</source>
           <target xml:lang="ru" state="translated">Удалить папку "%name%"</target>
@@ -4626,6 +4669,10 @@
         <source>export.all.nodes</source>
         <target xml:lang="ru" state="needs-translation">export.all.nodes</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="export.all">
+        <source>export.all</source>
+        <target xml:lang="ru" state="needs-translation">export.all</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="drop.files.here.to.upload.or.click.to.open.your.explorer">
           <source>drop.files.here.to.upload.or.click.to.open.your.explorer</source>
           <target xml:lang="ru" state="needs-translation">drop.files.here.to.upload.or.click.to.open.your.explorer</target>
@@ -4646,9 +4693,9 @@
           <source>you.cant.upload.files.of.this.type</source>
           <target xml:lang="ru" state="needs-translation">you.cant.upload.files.of.this.type</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="server.responded.with.{{statuscode}}.code">
-          <source>server.responded.with.{{statuscode}}.code</source>
-          <target xml:lang="ru" state="needs-translation">server.responded.with.{{statuscode}}.code</target>
+      <trans-unit xml:space="preserve" id="server.responded.with.{{statusCode}}.code">
+          <source>server.responded.with.{{statusCode}}.code</source>
+          <target xml:lang="ru" state="needs-translation">server.responded.with.{{statusCode}}.code</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="cancel.upload">
           <source>cancel.upload</source>
@@ -5142,6 +5189,10 @@
           <source>geographic.coordinates.type</source>
           <target xml:lang="ru" state="needs-translation">geographic.coordinates.type</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple.geographic.coordinates.type">
+          <source>multiple.geographic.coordinates.type</source>
+          <target xml:lang="ru" state="needs-translation">multiple.geographic.coordinates.type</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="link.folders">
           <source>link.folders</source>
           <target xml:lang="ru" state="needs-translation">link.folders</target>
@@ -5181,6 +5232,14 @@
       <trans-unit xml:space="preserve" id="more.nodes">
           <source>more.nodes</source>
           <target xml:lang="ru" state="translated">Еще узлы</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types">
+          <source>more.node_types</source>
+          <target xml:lang="ru" state="needs-translation">more.node_types</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags">
+          <source>more.tags</source>
+          <target xml:lang="ru" state="needs-translation">more.tags</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>
@@ -5506,6 +5565,10 @@
           <source>maps_style</source>
           <target xml:lang="ru" state="needs-translation">maps_style</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="maps_default_location">
+        <source>maps_default_location</source>
+        <target xml:lang="ru" state="needs-translation">maps_default_location</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="user.status">
           <source>user.status</source>
           <target xml:lang="ru" state="needs-translation">user.status</target>
@@ -5817,6 +5880,54 @@
           <source>font_variant.light.italic</source>
           <target xml:lang="ru" state="needs-translation">font_variant.light.italic</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.thin</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.thin.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.extra_light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.extra_light.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.extra_bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.extra_bold.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.semi_bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.semi_bold.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.medium</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.medium.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.black</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target xml:lang="ru" state="needs-translation">font_variant.black.italic</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
           <target xml:lang="ru" state="needs-translation">update.roadiz</target>
@@ -6025,6 +6136,667 @@
           <source>overrideLocale</source>
           <target xml:lang="ru" state="needs-translation">overrideLocale</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="keep_me_logged_in">
+          <source>keep_me_logged_in</source>
+          <target xml:lang="ru" state="needs-translation">keep_me_logged_in</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="setting.theme">
+          <source>setting.theme</source>
+          <target xml:lang="ru" state="needs-translation">setting.theme</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="unused_documents">
+          <source>unused_documents</source>
+          <target xml:lang="ru" state="needs-translation">unused_documents</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.offspring.published">
+          <source>node.offspring.published</source>
+          <target xml:lang="ru" state="needs-translation">node.offspring.published</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.publish.node.offspring">
+          <source>are_you_sure.publish.node.offspring</source>
+          <target xml:lang="ru" state="needs-translation">are_you_sure.publish.node.offspring</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish.node.%name%.offspring">
+          <source>publish.node.%name%.offspring</source>
+          <target xml:lang="ru" state="needs-translation">publish.node.%name%.offspring</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish_node_offspring">
+          <source>publish_node_offspring</source>
+          <target xml:lang="ru" state="needs-translation">publish_node_offspring</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publish-all">
+          <source>publish-all</source>
+          <target xml:lang="ru" state="needs-translation">publish-all</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="groupName">
+          <source>groupName</source>
+          <target xml:lang="ru" state="needs-translation">groupName</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="embedId.does_not_exist">
+          <source>embedId.does_not_exist</source>
+          <target xml:lang="ru" state="needs-translation">embedId.does_not_exist</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_needs_a_key">
+          <source>YoutubeEmbedFinder needs a Google server key.</source>
+          <target xml:lang="ru" state="needs-translation">YoutubeEmbedFinder needs a Google server key.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.user_details.%name%">
+          <source>edit.user_details.%name%</source>
+          <target xml:lang="ru" state="needs-translation">edit.user_details.%name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="user.edit_details">
+          <source>user.edit_details</source>
+          <target xml:lang="ru" state="needs-translation">user.edit_details</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="new.version.release">
+          <source>new.version.release</source>
+          <target xml:lang="ru" state="needs-translation">new.version.release</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_valid_class_found">
+          <source>no_valid_class_found</source>
+          <target xml:lang="ru" state="needs-translation">no_valid_class_found</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="duplicated.custom.form.%name%">
+          <source>duplicated.custom.form.%name%</source>
+          <target xml:lang="ru" state="needs-translation">duplicated.custom.form.%name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="impossible.duplicate.custom.form.%name%">
+          <source>impossible.duplicate.custom.form.%name%</source>
+          <target xml:lang="ru" state="needs-translation">impossible.duplicate.custom.form.%name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.duplicate">
+          <source>customForm.duplicate</source>
+          <target xml:lang="ru" state="needs-translation">customForm.duplicate</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype">
+          <source>transtype</source>
+          <target xml:lang="ru" state="needs-translation">transtype</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.node">
+          <source>transtype.node</source>
+          <target xml:lang="ru" state="needs-translation">transtype.node</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype_will_copy_data_from_fields_existing_in_both_types_not_others">
+          <source>transtype_will_copy_data_from_fields_existing_in_both_types_not_others</source>
+          <target xml:lang="ru" state="needs-translation">transtype_will_copy_data_from_fields_existing_in_both_types_not_others</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="transtype.a.node">
+          <source>transtype.a.node</source>
+          <target xml:lang="ru" state="needs-translation">transtype.a.node</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="%node%.transtyped_to.%type%">
+          <source>%node%.transtyped_to.%type%</source>
+          <target xml:lang="ru" state="needs-translation">%node%.transtyped_to.%type%</target>
+      </trans-unit>
+      <!-- Tag multiple children creation -->
+      <trans-unit xml:space="preserve" id="add_all">
+          <source>add_all</source>
+          <target xml:lang="ru" state="needs-translation">add_all</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.multiple.tags">
+          <source>add.multiple.tags</source>
+          <target xml:lang="ru" state="needs-translation">add.multiple.tags</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="write.every.tags.names.comma.separated">
+          <source>write.every.tags.names.comma.separated</source>
+          <target xml:lang="ru" state="needs-translation">write.every.tags.names.comma.separated</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.names">
+          <source>tags.names</source>
+          <target xml:lang="ru" state="needs-translation">tags.names</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.tags">
+          <source>add.tags</source>
+          <target xml:lang="ru" state="needs-translation">add.tags</target>
+      </trans-unit>
+      <!-- Raw documents -->
+      <trans-unit xml:space="preserve" id="download.raw.document">
+          <source>download.raw.document</source>
+          <target xml:lang="ru" state="needs-translation">download.raw.document</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.raw_document">
+          <source>document.raw_document</source>
+          <target xml:lang="ru" state="needs-translation">document.raw_document</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.rzn">
+          <source>export_format.rzn</source>
+          <target xml:lang="ru" state="needs-translation">export_format.rzn</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="export_format.excel.%language%">
+          <source>export_format.excel.%language%</source>
+          <target xml:lang="ru" state="needs-translation">export_format.excel.%language%</target>
+      </trans-unit>
+      <!-- Bulk tags -->
+      <trans-unit xml:space="preserve" id="delete.tags">
+          <source>delete.tags</source>
+          <target xml:lang="ru" state="needs-translation">delete.tags</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.these.tags">
+          <source>are_you_sure.delete.these.tags</source>
+          <target xml:lang="ru" state="needs-translation">are_you_sure.delete.these.tags</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="bulk.delete.tags">
+          <source>bulk.delete.tags</source>
+          <target xml:lang="ru" state="needs-translation">bulk.delete.tags</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tags.bulk.deleted">
+          <source>tags.bulk.deleted</source>
+          <target xml:lang="ru" state="needs-translation">tags.bulk.deleted</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.childrenOrder">
+          <source>tag.childrenOrder</source>
+          <target xml:lang="ru" state="needs-translation">tag.childrenOrder</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.childrenOrderDirection">
+          <source>tag.childrenOrderDirection</source>
+          <target xml:lang="ru" state="needs-translation">tag.childrenOrderDirection</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%">
+          <source>node.%name%.status_changed_to.%status%</source>
+          <target xml:lang="ru" state="needs-translation">node.%name%.status_changed_to.%status%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%">
+          <source>node.%name%.visibility_changed_to.%visible%</source>
+          <target xml:lang="ru" state="needs-translation">node.%name%.visibility_changed_to.%visible%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
+          <source>stack_type.%type%.has_been_removed.%name%</source>
+          <target xml:lang="ru" state="needs-translation">stack_type.%type%.has_been_removed.%name%</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
+          <source>form_has_errors.check_you_fields</source>
+          <target xml:lang="ru" state="needs-translation">form_has_errors.check_you_fields</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_more_translation_available">
+          <source>no_more_translation_available</source>
+          <target xml:lang="ru" state="needs-translation">no_more_translation_available</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="translate_offspring">
+          <source>translate_offspring</source>
+          <target xml:lang="ru" state="needs-translation">translate_offspring</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node.%name%.undeleted">
+          <source>node.%name%.undeleted</source>
+          <target xml:lang="ru" state="needs-translation">node.%name%.undeleted</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal">
+          <source>universal</source>
+          <target xml:lang="ru" state="needs-translation">universal</target>
+          <note>Universal node-type fields are common over translations.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="value_is_not_a_valid_filename">
+          <source>value_is_not_a_valid_filename</source>
+          <target xml:lang="ru" state="needs-translation">value_is_not_a_valid_filename</target>
+          <note>In document edit page when you rename your file without file extension.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="filename.alreadyExists">
+          <source>filename.alreadyExists</source>
+          <target xml:lang="ru" state="needs-translation">filename.alreadyExists</target>
+          <note>In document edit page when you rename your file but filename already exists in folder.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="classname">
+          <source>classname</source>
+          <target xml:lang="ru" state="needs-translation">classname</target>
+          <note>In node-type edit page, label for the current node-type class name..</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="node-type.parameters">
+          <source>node-type.parameters</source>
+          <target xml:lang="ru" state="needs-translation">node-type.parameters</target>
+          <note>In node-type section, label for the parameters section.</note>
+      </trans-unit>
+      <!-- Custom form nav bar -->
+      <trans-unit xml:space="preserve" id="custom-form.parameters">
+          <source>custom-form.parameters</source>
+          <target xml:lang="ru" state="needs-translation">custom-form.parameters</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.fields">
+          <source>custom-form.fields</source>
+          <target xml:lang="ru" state="needs-translation">custom-form.fields</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="custom-form.answers">
+          <source>custom-form.answers</source>
+          <target xml:lang="ru" state="needs-translation">custom-form.answers</target>
+          <note>In custom form nav bar.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="markdown.preview">
+          <source>markdown.preview</source>
+          <target xml:lang="ru" state="needs-translation">markdown.preview</target>
+          <note>For markdown.preview button label</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.relative_url">
+        <source>document.relative_url</source>
+        <target xml:lang="ru" state="needs-translation">document.relative_url</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.absolute_url">
+        <source>document.absolute_url</source>
+        <target xml:lang="ru" state="needs-translation">document.absolute_url</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.unprocessed_url">
+        <source>document.unprocessed_url</source>
+        <target xml:lang="ru" state="needs-translation">document.unprocessed_url</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.source_url">
+        <source>document.source_url</source>
+        <target xml:lang="ru" state="needs-translation">document.source_url</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.width">
+        <source>document.width</source>
+        <target xml:lang="ru" state="needs-translation">document.width</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.height">
+        <source>document.height</source>
+        <target xml:lang="ru" state="needs-translation">document.height</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.filesize">
+        <source>document.filesize</source>
+        <target xml:lang="ru" state="needs-translation">document.filesize</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="reachable">
+        <source>reachable</source>
+        <target xml:lang="ru" state="needs-translation">reachable</target>
+        <note>For node-types, defines if produced nodes will be reachable with an URL or not (eg. just content blocks).</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.type">
+        <source>yaml.type</source>
+        <target xml:lang="ru" state="needs-translation">yaml.type</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="manage.redirections">
+        <source>manage.redirections</source>
+        <target xml:lang="ru" state="needs-translation">manage.redirections</target>
+        <note>Redirection section button label</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.redirection">
+        <source>delete.redirection</source>
+        <target xml:lang="ru" state="needs-translation">delete.redirection</target>
+        <note>Delete redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.redirection">
+        <source>are_you_sure.delete.redirection</source>
+        <target xml:lang="ru" state="needs-translation">are_you_sure.delete.redirection</target>
+        <note>Delete redirection page confirmation message</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.redirection">
+        <source>add.a.redirection</source>
+        <target xml:lang="ru" state="needs-translation">add.a.redirection</target>
+        <note>Add redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.redirections">
+        <source>back_to.redirections</source>
+        <target xml:lang="ru" state="needs-translation">back_to.redirections</target>
+        <note>Back button label for redirections</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.redirection">
+        <source>edit.redirection</source>
+        <target xml:lang="ru" state="needs-translation">edit.redirection</target>
+        <note>Edit redirection page title</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.query">
+        <source>redirection.query</source>
+        <target xml:lang="ru" state="needs-translation">redirection.query</target>
+        <note>Redirection field which stands for the query: the URL to listen for a redirection</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.redirect_uri">
+        <source>redirection.redirect_uri</source>
+        <target xml:lang="ru" state="needs-translation">redirection.redirect_uri</target>
+        <note>Redirection field which stands for the redirect URI: the destination URI</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.type">
+        <source>redirection.type</source>
+        <target xml:lang="ru" state="needs-translation">redirection.type</target>
+        <note>Redirection field which stands for HTTP code: 301 or 302</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_permanently">
+        <source>redirection.moved_permanently</source>
+        <target xml:lang="ru" state="needs-translation">redirection.moved_permanently</target>
+        <note>Redirection type description for 301 Moved Permanently</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="redirection.moved_temporarily">
+        <source>redirection.moved_temporarily</source>
+        <target xml:lang="ru" state="needs-translation">redirection.moved_temporarily</target>
+        <note>Redirection type description for 302 Moved Temporarily</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="login_image">
+        <source>login_image</source>
+        <target xml:lang="ru" state="needs-translation">login_image</target>
+        <note>Global parameter to customize login screen background image</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishedAt">
+        <source>publishedAt</source>
+        <target xml:lang="ru" state="needs-translation">publishedAt</target>
+        <note>Field label for node-source publication date and time.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="publishable">
+        <source>publishable</source>
+        <target xml:lang="ru" state="needs-translation">publishable</target>
+        <note>Field label for node-type publishable status.</note>
+      </trans-unit>
+      <!-- Node form help messages -->
+      <trans-unit xml:space="preserve" id="this_node_type_will_be_available_for_creating_root_nodes">
+        <source>this_node_type_will_be_available_for_creating_root_nodes</source>
+        <target xml:lang="ru" state="needs-translation">this_node_type_will_be_available_for_creating_root_nodes</target>
+        <note>Help message to explain node-type "visible" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="enables_published_at_field_for_time_based_publication">
+        <source>enables_published_at_field_for_time_based_publication</source>
+        <target xml:lang="ru" state="needs-translation">enables_published_at_field_for_time_based_publication</target>
+        <note>Help message to explain node-type "publishedAt" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="mark_this_typed_nodes_as_reachable_with_an_url">
+        <source>mark_this_typed_nodes_as_reachable_with_an_url</source>
+        <target xml:lang="ru" state="needs-translation">mark_this_typed_nodes_as_reachable_with_an_url</target>
+        <note>Help message to explain node-type "reachable" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="this_node_type_will_hide_all_children_nodes">
+        <source>this_node_type_will_hide_all_children_nodes</source>
+        <target xml:lang="ru" state="needs-translation">this_node_type_will_hide_all_children_nodes</target>
+        <note>Help message to explain node-type "hiding_nodes" field.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="dynamic_node_name_will_follow_any_title_change_on_default_translation">
+        <source>dynamic_node_name_will_follow_any_title_change_on_default_translation</source>
+        <target xml:lang="ru" state="needs-translation">dynamic_node_name_will_follow_any_title_change_on_default_translation</target>
+        <note>Help message to explain node dynamic-node-name field.</note>
+      </trans-unit>
+      <!-- Font form help messages -->
+      <trans-unit xml:space="preserve" id="font_name_should_be_the_same_for_all_variants">
+        <source>font_name_should_be_the_same_for_all_variants</source>
+        <target xml:lang="ru" state="needs-translation">font_name_should_be_the_same_for_all_variants</target>
+        <note>Help message to explain font name field should be the same over all variants.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="css_font_family_hash_is_automatically_generated_from_font_name">
+        <source>css_font_family_hash_is_automatically_generated_from_font_name</source>
+        <target xml:lang="ru" state="needs-translation">css_font_family_hash_is_automatically_generated_from_font_name</target>
+        <note>Help message to explain font css family field will be automatically generated from font name, it should be the same for all variants.</note>
+      </trans-unit>
+      <!-- Node type field form help messages -->
+      <trans-unit xml:space="preserve" id="technical_name_for_database_and_templating">
+        <source>technical_name_for_database_and_templating</source>
+        <target xml:lang="ru" state="needs-translation">technical_name_for_database_and_templating</target>
+        <note>Help message to explain node-type-field name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="human_readable_field_name">
+        <source>human_readable_field_name</source>
+        <target xml:lang="ru" state="needs-translation">human_readable_field_name</target>
+        <note>Help message to explain node-type-field label.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="use_the_same_group_names_over_fields_to_gather_them_in_tabs">
+        <source>use_the_same_group_names_over_fields_to_gather_them_in_tabs</source>
+        <target xml:lang="ru" state="needs-translation">use_the_same_group_names_over_fields_to_gather_them_in_tabs</target>
+        <note>Help message to explain node-type-field group name.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice">
+        <source>disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice</source>
+        <target xml:lang="ru" state="needs-translation">disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice</target>
+        <note>Help message to explain node-type-field visible switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="field_should_be_indexed_if_you_plan_to_query_or_order_by_it">
+        <source>field_should_be_indexed_if_you_plan_to_query_or_order_by_it</source>
+        <target xml:lang="ru" state="needs-translation">field_should_be_indexed_if_you_plan_to_query_or_order_by_it</target>
+        <note>Help message to explain node-type-field indexed switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="universal_fields_will_be_only_editable_from_default_translation">
+        <source>universal_fields_will_be_only_editable_from_default_translation</source>
+        <target xml:lang="ru" state="needs-translation">universal_fields_will_be_only_editable_from_default_translation</target>
+        <note>Help message to explain node-type-field universal switch.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="for_children_node_and_node_references_enter_node_type_names_comma_separated">
+        <source>for_children_node_and_node_references_enter_node_type_names_comma_separated</source>
+        <target xml:lang="ru" state="needs-translation">for_children_node_and_node_references_enter_node_type_names_comma_separated</target>
+        <note>Help message to explain node-type-field default values.</note>
+      </trans-unit>
+      <!-- Explorer and Widget translation -->
+      <trans-unit xml:space="preserve" id="document">
+        <source>document</source>
+        <target xml:lang="ru" state="needs-translation">document</target>
+        <note>Document label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="item">
+        <source>item</source>
+        <target xml:lang="ru" state="needs-translation">item</target>
+        <note>Item label in explorer panel.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="items">
+        <source>items</source>
+        <target xml:lang="ru" state="needs-translation">items</target>
+        <note>Items label in explorer panel.</note>
+      </trans-unit>
+      <!-- New Join node-type-field type -->
+      <trans-unit xml:space="preserve" id="join.toggle-explorer">
+            <source>join.toggle-explorer</source>
+            <target xml:lang="ru" state="needs-translation">join.toggle-explorer</target>
+            <note>Button label for join type explorer</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="many-to-many.type">
+            <source>many-to-many.type</source>
+            <target xml:lang="ru" state="needs-translation">many-to-many.type</target>
+            <note>Node-type field type for Doctrine Many-to-many relationship</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="many-to-one.type">
+            <source>many-to-one.type</source>
+            <target xml:lang="ru" state="needs-translation">many-to-one.type</target>
+            <note>Node-type field type for Doctrine Many-to-one relationship</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
+            <source>default_values_do_not_match_field_type</source>
+            <target xml:lang="ru" state="needs-translation">default_values_do_not_match_field_type</target>
+            <note>Validator message: when default value is not correct for choosen type</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
+            <source>default_values_should_not_be_empty_for_this_type</source>
+            <target xml:lang="ru" state="needs-translation">default_values_should_not_be_empty_for_this_type</target>
+            <note>Validator message: when default value is empty and it should not</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
+            <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
+            <target xml:lang="ru" state="needs-translation">default_values_should_be_a_yaml_configuration_for_this_type</target>
+            <note>Validator message: when default value is not a valid YAML text</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_does_not_exist">
+            <source>classname_%classname%_does_not_exist</source>
+            <target xml:lang="ru" state="needs-translation">classname_%classname%_does_not_exist</target>
+            <note>Validator message: when provided classname does not exist.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
+            <source>classname_%classname%_must_extend_abstract_entity_class</source>
+            <target xml:lang="ru" state="needs-translation">classname_%classname%_must_extend_abstract_entity_class</target>
+            <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target xml:lang="ru" state="needs-translation">classname_%classname%_must_extend_abstract_type_class</target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
+            <source>classname_%classname%_does_not_declare_%method%_method</source>
+            <target xml:lang="ru" state="needs-translation">classname_%classname%_does_not_declare_%method%_method</target>
+            <note>Validator message: when provided classname does not declare provided method.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="more.entities">
+            <source>more.entities</source>
+            <target xml:lang="ru" state="needs-translation">more.entities</target>
+            <note>Explorer more button label for entities.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
+            <source>drawer.sortable-not-enable</source>
+            <target xml:lang="ru" state="needs-translation">drawer.sortable-not-enable</target>
+            <note>Message info when the sortable drawer option is disable.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="explorer.create_tag">
+            <source>explorer.create_tag</source>
+            <target xml:lang="ru" state="needs-translation">explorer.create_tag</target>
+            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="min">
+            <source>min</source>
+            <target xml:lang="ru" state="needs-translation">min</target>
+            <note>Drawer message: when a minimum length is provided.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.adjust">
+            <source>document.adjust</source>
+            <target xml:lang="ru" state="needs-translation">document.adjust</target>
+            <note>Document navbar link text for document adjust page.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor">
+            <source>blanchetteEditor</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor</target>
+            <note>Blanchette Editorpage title</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.free">
+            <source>blanchetteEditor.free</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.free</target>
+            <note>Blanchette Editor message button label: free aspect ratio</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.move">
+            <source>blanchetteEditor.move</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.move</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
+            <source>blanchetteEditor.crop</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.crop</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
+            <source>blanchetteEditor.zoomIn</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.zoomIn</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
+            <source>blanchetteEditor.zoomOut</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.zoomOut</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
+            <source>blanchetteEditor.rotateLeft</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.rotateLeft</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
+            <source>blanchetteEditor.rotateRight</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.rotateRight</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
+            <source>blanchetteEditor.flipHorizontal</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.flipHorizontal</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
+            <source>blanchetteEditor.flipVertical</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.flipVertical</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.applyChange">
+            <source>blanchetteEditor.applyChange</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.applyChange</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.undo">
+            <source>blanchetteEditor.undo</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.undo</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.aspectRatio">
+            <source>blanchetteEditor.aspectRatio</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.aspectRatio</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.saveAndOverwrite">
+            <source>blanchetteEditor.saveAndOverwrite</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.saveAndOverwrite</target>
+            <note>Blanchette Editor message button label</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.other">
+            <source>blanchetteEditor.other</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.other</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.portrait">
+            <source>blanchetteEditor.portrait</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.portrait</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="blanchetteEditor.landscape">
+            <source>blanchetteEditor.landscape</source>
+            <target xml:lang="ru" state="needs-translation">blanchetteEditor.landscape</target>
+            <note>Blanchette Editor aspect ratio group name</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="make_this_field_mandatory_for_users">
+            <source>make_this_field_mandatory_for_users</source>
+            <target xml:lang="ru" state="needs-translation">make_this_field_mandatory_for_users</target>
+            <note>Form field description for Required switch</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="expanded">
+            <source>expanded</source>
+            <target xml:lang="ru" state="needs-translation">expanded</target>
+            <note>Form field label for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="use_checkboxes_or_radio_buttons_instead_of_select_box">
+            <source>use_checkboxes_or_radio_buttons_instead_of_select_box</source>
+            <target xml:lang="ru" state="needs-translation">use_checkboxes_or_radio_buttons_instead_of_select_box</target>
+            <note>Form field description for "expanded" boolean (expanded tells if list should be rendered as select-boxes or radio-button list)</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="placeholder">
+            <source>placeholder</source>
+            <target xml:lang="ru" state="needs-translation">placeholder</target>
+            <note>Label for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="label_for_field_with_empty_data">
+            <source>label_for_field_with_empty_data</source>
+            <target xml:lang="ru" state="needs-translation">label_for_field_with_empty_data</target>
+            <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="session.expire.title">
+            <source>session.expire.title</source>
+            <target xml:lang="ru" state="needs-translation">session.expire.title</target>
+            <note>Title for login check warning "modal".</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="session.expire.content">
+            <source>session.expire.content</source>
+            <target xml:lang="ru" state="needs-translation">session.expire.content</target>
+            <note>Description for login check warning "modal".</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="single-provider.type">
+            <source>single-provider.type</source>
+            <target xml:lang="ru" state="needs-translation">single-provider.type</target>
+            <note>Node-type field type for Provider manual many-to-one relationship.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="multiple-provider.type">
+            <source>multiple-provider.type</source>
+            <target xml:lang="ru" state="needs-translation">multiple-provider.type</target>
+            <note>Node-type field type for Provider manual many-to-many relationship.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="pictureUrl">
+            <source>pictureUrl</source>
+            <target xml:lang="ru" state="needs-translation">pictureUrl</target>
+            <note>User detail form field label for user portrait picture.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="user.backoffice.language">
+            <source>user.backoffice.language</source>
+            <target xml:lang="ru" state="needs-translation">user.backoffice.language</target>
+            <note>User detail form field label for user backoffice language.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="use.website.default_language">
+            <source>use.website.default_language</source>
+            <target xml:lang="ru" state="needs-translation">use.website.default_language</target>
+            <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target xml:lang="ru" state="needs-translation">sort_asc</target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target xml:lang="ru" state="needs-translation">sort_desc</target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target xml:lang="ru" state="needs-translation">preview</target>
+            <note>Preview mode label on warning sign.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

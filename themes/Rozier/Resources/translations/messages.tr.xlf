@@ -100,7 +100,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="12">
         <source>name</source>
-        <target xml:lang="tr" state="translated">İsim</target>
+        <target xml:lang="tr" state="translated">isim</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
           <context context-type="linenumber">284</context>
@@ -181,10 +181,10 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/6e/43/4aede74c657efdc6fdfe1b11f55e734ac870876f0cd5d9ba1e703650c009.php</context>
           <context context-type="linenumber">67</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="tr">İsim</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="13">
         <source>description</source>
-        <target xml:lang="tr" state="translated">Tanım</target>
+        <target xml:lang="tr" state="translated">açıklama</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
           <context context-type="linenumber">288</context>
@@ -213,15 +213,15 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
           <context context-type="linenumber">374</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="tr">Tanım</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="14">
         <source>copyright</source>
-        <target xml:lang="tr" state="translated">Copyright</target>
+        <target xml:lang="tr" state="translated">telif hakkı</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
           <context context-type="linenumber">292</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="tr">Copyright</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="15">
         <source>private</source>
         <target xml:lang="tr" state="translated">Gizli</target>
@@ -4193,6 +4193,10 @@
         <source>country.type</source>
         <target xml:lang="tr" state="translated">Ülke (ISO 3166-1 alpha-2)</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target xml:lang="tr" state="needs-translation">collection.type</target>
+      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
         <source>add.a.%nodeType%</source>
@@ -5228,6 +5232,14 @@
           <source>more.nodes</source>
           <target xml:lang="tr" state="translated">Daha fazla düğüm</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types">
+          <source>more.node_types</source>
+          <target xml:lang="tr" state="needs-translation">more.node_types</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags">
+          <source>more.tags</source>
+          <target xml:lang="tr" state="needs-translation">more.tags</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>
           <target xml:lang="tr" state="translated">Daha fazla özel form</target>
@@ -5866,6 +5878,54 @@
       <trans-unit xml:space="preserve" id="font_variant.light.italic">
           <source>font_variant.light.italic</source>
           <target xml:lang="tr" state="translated">Açık italik</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.thin</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.thin.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.extra_light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.extra_light.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.extra_bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.extra_bold.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.semi_bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.semi_bold.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.medium</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.medium.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.black</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target xml:lang="tr" state="needs-translation">font_variant.black.italic</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
@@ -6541,6 +6601,11 @@
             <target xml:lang="tr" state="needs-translation">classname_%classname%_must_extend_abstract_entity_class</target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target xml:lang="tr" state="needs-translation">classname_%classname%_must_extend_abstract_type_class</target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target xml:lang="tr" state="needs-translation">classname_%classname%_does_not_declare_%method%_method</target>
@@ -6705,6 +6770,31 @@
             <source>pictureUrl</source>
             <target xml:lang="tr" state="translated">Avatar resmi URL</target>
             <note>User detail form field label for user portrait picture.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="user.backoffice.language">
+            <source>user.backoffice.language</source>
+            <target xml:lang="tr" state="needs-translation">user.backoffice.language</target>
+            <note>User detail form field label for user backoffice language.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="use.website.default_language">
+            <source>use.website.default_language</source>
+            <target xml:lang="tr" state="needs-translation">use.website.default_language</target>
+            <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target xml:lang="tr" state="needs-translation">sort_asc</target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target xml:lang="tr" state="needs-translation">sort_desc</target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target xml:lang="tr" state="needs-translation">preview</target>
+            <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>
   </file>

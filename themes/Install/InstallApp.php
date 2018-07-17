@@ -361,6 +361,7 @@ class InstallApp extends AppController
                     'Français' => 'fr',
                     'Русский язык' => 'ru',
                     'Türkçe' => 'tr',
+                    'Italiano' => 'it',
                 ],
                 'constraints' => [
                     new NotBlank(),
@@ -372,43 +373,6 @@ class InstallApp extends AppController
                 'data' => $request->getLocale(),
             ]);
 
-        return $builder->getForm();
-    }
-
-    /**
-     * Build form for theme and site information.
-     *
-     * @param Request $request
-     *
-     * @return FormInterface
-     */
-    protected function buildUserForm(Request $request)
-    {
-        $builder = $this->createFormBuilder()
-            ->add('username', TextType::class, [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('username'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('email', EmailType::class, [
-                'required' => true,
-                'label' => 'email',
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('password', RepeatedType::class, [
-                'type' => 'password',
-                'invalid_message' => 'password.must_match',
-                'first_options' => ['label' => 'password'],
-                'second_options' => ['label' => 'password.verify'],
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]);
         return $builder->getForm();
     }
 

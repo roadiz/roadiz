@@ -132,6 +132,7 @@ class UserDetailsType extends AbstractType
                     'Français' => 'fr',
                     'Русский язык' => 'ru',
                     'Türkçe' => 'tr',
+                    'Italiano' => 'it',
                 ],
                 'choices_as_values' => true,
                 'placeholder' => 'use.website.default_language'
