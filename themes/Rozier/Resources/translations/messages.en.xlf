@@ -4354,38 +4354,38 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="facebook_url" approved="yes">
         <source>facebook_url</source>
-          <note>Setting name for social page url.</note>
         <target xml:lang="en">Facebook URL</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="instagram_url" approved="yes">
         <source>instagram_url</source>
-          <note>Setting name for social page url.</note>
         <target xml:lang="en">Instagram URL</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url" approved="yes">
         <source>twitter_url</source>
-          <note>Setting name for social page url.</note>
         <target xml:lang="en">Twitter URL</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="linkedin_url">
         <source>linkedin_url</source>
-          <note>Setting name for social page url.</note>
         <target xml:lang="en" state="translated">LinkedIn Url</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="youtube_url">
         <source>youtube_url</source>
-          <note>Setting name for social page url.</note>
         <target xml:lang="en" state="translated">Youtube Url</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="googleplus_url">
         <source>googleplus_url</source>
-          <note>Setting name for social page url.</note>
         <target xml:lang="en" state="translated">Google + Url</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account" approved="yes">
         <source>twitter_account</source>
-          <note>Setting name for social page url.</note>
         <target xml:lang="en">Twitter account name</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="recaptcha_public_key" approved="yes">
         <source>recaptcha_public_key</source>
