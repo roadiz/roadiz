@@ -56,6 +56,7 @@ class SettingJsonSerializer extends AbstractJsonSerializer
         $data['value'] = $setting->getValue();
         $data['type'] = $setting->getType();
         $data['visible'] = $setting->isVisible();
+        $data['default_values'] = $setting->getDefaultValues();
 
         return $data;
     }
@@ -79,9 +80,9 @@ class SettingJsonSerializer extends AbstractJsonSerializer
             'value',
             'type',
             'visible',
+            'defaultValues',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
-
         $serializer = new Serializer([$normalizer], [$encoder]);
 
         return $serializer->deserialize($jsonString, Setting::class, 'json');

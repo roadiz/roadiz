@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -76,6 +77,8 @@ class Setting extends AbstractEntity
         AbstractField::JSON_T => 'json.type',
         AbstractField::CSS_T => 'css.type',
         AbstractField::YAML_T => 'yaml.type',
+        AbstractField::ENUM_T => 'single-choice.type',
+        AbstractField::MULTIPLE_T => 'multiple-choice.type',
     ];
 
     /**
@@ -97,6 +100,8 @@ class Setting extends AbstractEntity
         AbstractField::JSON_T => JsonType::class,
         AbstractField::CSS_T => CssType::class,
         AbstractField::YAML_T => YamlType::class,
+        AbstractField::ENUM_T => ChoiceType::class,
+        AbstractField::MULTIPLE_T => ChoiceType::class,
     ];
 
     /**
@@ -231,6 +236,34 @@ class Setting extends AbstractEntity
     public function setType($type)
     {
         $this->type = (int) $type;
+
+        return $this;
+    }
+
+    /**
+     * Available values for ENUM and MULTIPLE setting types.
+     *
+     * @var string
+     * @ORM\Column(type="text", nullable=true)
+     */
+    private $defaultValues = "";
+
+    /**
+     * @return string
+     */
+    public function getDefaultValues()
+    {
+        return $this->defaultValues;
+    }
+
+    /**
+     * @param string $defaultValues
+     *
+     * @return Setting
+     */
+    public function setDefaultValues($defaultValues)
+    {
+        $this->defaultValues = $defaultValues;
 
         return $this;
     }

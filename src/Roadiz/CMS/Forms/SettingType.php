@@ -56,7 +56,6 @@ class SettingType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $groups = $options['entityManager']->getRepository(SettingGroup::class)->findAll();
-
         $choices = [];
         /** @var SettingGroup $group */
         foreach ($groups as $group) {
@@ -86,6 +85,10 @@ class SettingType extends AbstractType
                     'choices_as_values' => true,
                     'choices' => $choices,
                     'placeholder' => '---------',
+                ])
+                ->add('defaultValues', TextType::class, [
+                    'label' => 'defaultValues',
+                    'required' => false,
                 ])
             ;
 
@@ -163,10 +166,18 @@ class SettingType extends AbstractType
 
         switch ($setting->getType()) {
             case AbstractField::ENUM_T:
+            case AbstractField::MULTIPLE_T:
+                $values = explode(',', $setting->getDefaultValues());
+                $values = array_map(function ($item){
+                    return trim($item);
+                }, $values);
                 return [
                     'label' => $label,
                     'placeholder' => 'choose.value',
                     'required' => false,
+                    'choices_as_values' => true,
+                    'choices' => array_combine($values, $values),
+                    'multiple' => $setting->getType() === AbstractField::MULTIPLE_T ? true : false,
                 ];
             case AbstractField::EMAIL_T:
                 return [
