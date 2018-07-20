@@ -697,7 +697,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function getPrivateFilesPath()
     {
-        return $this->getRootDir() . $this->getPrivateFilesBasePath();
+        return $this->getProjectDir() . $this->getPrivateFilesBasePath();
     }
 
     /**
