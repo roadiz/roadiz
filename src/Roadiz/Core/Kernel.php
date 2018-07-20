@@ -224,8 +224,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         };
 
         $container['kernel'] = $this;
-        $container['stopwatch']->openSection();
-        $container['stopwatch']->start('registerServices');
+        /** @var Stopwatch $stopWatch */
+        $stopWatch = $container['stopwatch'];
+        $stopWatch->openSection();
+        $stopWatch->start('registerServices');
 
         $container->register(new YamlConfigurationServiceProvider());
 
@@ -287,7 +289,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             // Do nothing if no configuration file is found.
         }
 
-        $container['stopwatch']->stop('registerServices');
+        $stopWatch->stop('registerServices');
     }
 
     /**
@@ -629,16 +631,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      * @return bool
      */
     public function registerContainerConfiguration(LoaderInterface $loader)
-    {
-        return false;
-    }
-
-    /**
-     * @deprecated since version 2.6, to be removed in 3.0.
-     * @param string $class
-     * @return bool
-     */
-    public function isClassInActiveBundle($class)
     {
         return false;
     }
