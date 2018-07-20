@@ -1,3 +1,5 @@
+{% extends "form_div_layout.html.twig" %}
+
 {% block form_start -%}
     {% set method = method|upper %}
     {%- if method in ["GET", "POST"] -%}
