@@ -88,6 +88,9 @@ class SettingType extends AbstractType
                 ])
                 ->add('defaultValues', TextType::class, [
                     'label' => 'defaultValues',
+                    'attr' => [
+                        'placeholder' => 'enter_values_comma_separated',
+                    ],
                     'required' => false,
                 ])
             ;
