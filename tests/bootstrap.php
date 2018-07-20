@@ -29,8 +29,9 @@
  */
 
 date_default_timezone_set('Europe/Paris');
+/** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(dirname(__FILE__)));
 
 // Include Composer Autoload (relative to project root).
-require ROADIZ_ROOT . "/vendor/autoload.php";
+require dirname(dirname(__FILE__)) . "/vendor/autoload.php";
 

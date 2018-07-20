@@ -121,21 +121,24 @@ class ThemesCommand extends Command
      */
     protected function getThemePath($themeName)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
+
         if (false !== strpos($themeName, '\\')) {
             if (null !== $themePath = $this->getThemeReflectionClassPath($themeName)) {
                 return $themePath;
             }
         }
 
-        if ($this->filesystem->exists(ROADIZ_ROOT . '/themes/' . $themeName)) {
-            return ROADIZ_ROOT . '/themes/' . $themeName;
+        if ($this->filesystem->exists($kernel->getProjectDir() . '/themes/' . $themeName)) {
+            return $kernel->getProjectDir() . '/themes/' . $themeName;
         }
 
-        if ($this->filesystem->exists(ROADIZ_ROOT . '/vendor/roadiz/roadiz/themes/' . $themeName)) {
-            return ROADIZ_ROOT . '/vendor/roadiz/roadiz/themes/' . $themeName;
+        if ($this->filesystem->exists($kernel->getProjectDir() . '/vendor/roadiz/roadiz/themes/' . $themeName)) {
+            return $kernel->getProjectDir() . '/vendor/roadiz/roadiz/themes/' . $themeName;
         }
 
-        throw new \RuntimeException('Theme "'.$themeName.'" does not exist in "' . ROADIZ_ROOT . '/themes/" nor in ' . ROADIZ_ROOT . '/vendor/roadiz/roadiz/themes/ folders.');
+        throw new \RuntimeException('Theme "'.$themeName.'" does not exist in "' . $kernel->getProjectDir() . '/themes/" nor in ' . $kernel->getProjectDir() . '/vendor/roadiz/roadiz/themes/ folders.');
     }
 
     /**
@@ -144,7 +147,9 @@ class ThemesCommand extends Command
      */
     protected function getNewThemePath($themeName)
     {
-        return ROADIZ_ROOT . '/themes/' . $themeName;
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
+        return $kernel->getProjectDir() . '/themes/' . $themeName;
     }
 
     /**

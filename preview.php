@@ -43,6 +43,7 @@ if (version_compare(phpversion(), '5.6.0', '<')) {
  * This allows Backend users to preview nodes pages
  * that has not been published yet.
  */
+/** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(__FILE__));
 // Include Composer Autoload (relative to project root).
 require("vendor/autoload.php");

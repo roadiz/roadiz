@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use JBZoo\PimpleDumper\PimpleDumper;
 use Pimple\Container;
+use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -64,7 +65,10 @@ class PimpleDumperSubscriber implements EventSubscriberInterface
     public function onFinishRequest(FinishRequestEvent $event)
     {
         $dumper = new PimpleDumper();
-        $dumper->setRoot(ROADIZ_ROOT);
+        $kernel = $event->getKernel();
+        if ($kernel instanceof Kernel) {
+            $dumper->setRoot($kernel->getProjectDir());
+        }
         $dumper->dumpPimple($this->container, true); // Append to current pimple.json
     }
 }

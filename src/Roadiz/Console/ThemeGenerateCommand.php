@@ -72,6 +72,8 @@ class ThemeGenerateCommand extends ThemesCommand
      */
     public function validateThemeName($name)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
         if (1 !== preg_match('#^[A-Z][a-zA-Z]+$#', $name)) {
             throw new LogicException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
         }
@@ -80,7 +82,7 @@ class ThemeGenerateCommand extends ThemesCommand
             throw new LogicException('Theme name must not contain "Theme" suffix, it will be added automatically.');
         }
 
-        if ($this->filesystem->exists(ROADIZ_ROOT . '/themes/' . $name . 'Theme')) {
+        if ($this->filesystem->exists($kernel->getProjectDir() . '/themes/' . $name . 'Theme')) {
             throw new LogicException('Theme already exists.');
         }
 

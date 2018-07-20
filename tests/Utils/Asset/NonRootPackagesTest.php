@@ -77,7 +77,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
         $kernel->boot();
         $kernel->get('requestStack')->push($this->getRequest());
         $kernel->get('requestContext')->fromRequest($this->getRequest());
-        $kernel->container->offsetSet('request', $this->getRequest());
+        $kernel->getContainer()->offsetSet('request', $this->getRequest());
 
         $this->assertEquals('/test', $kernel->get('requestContext')->getBaseUrl());
         $this->assertEquals(

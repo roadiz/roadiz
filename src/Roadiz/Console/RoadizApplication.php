@@ -77,10 +77,10 @@ class RoadizApplication extends Application
         $this->kernel = $kernel;
         $this->kernel->boot();
 
-        if (!$this->kernel->container->offsetExists('request') ||
-            null === $this->kernel->container->offsetGet('request')) {
-            $this->kernel->container['request'] = Request::createFromGlobals();
-            $this->kernel->container['requestStack']->push($this->kernel->container['request']);
+        if (!$this->kernel->has('request') ||
+            null === $this->kernel->get('request')) {
+            $this->kernel->getContainer()->offsetSet('request', Request::createFromGlobals());
+            $this->kernel->get('requestStack')->push($this->kernel->get('request'));
         }
 
         parent::__construct('Roadiz Console Application', $kernel::$cmsVersion);
@@ -89,8 +89,8 @@ class RoadizApplication extends Application
          * Use the same dispatcher as Kernel
          * to dispatch ThemeResolver event
          */
-        $dispatcher = $this->kernel->container['dispatcher'];
-        $dispatcher->addSubscriber(new ThemesSubscriber($this->kernel, $this->kernel->container['stopwatch']));
+        $dispatcher = $this->kernel->get('dispatcher');
+        $dispatcher->addSubscriber(new ThemesSubscriber($this->kernel, $this->kernel->get('stopwatch')));
         $this->setDispatcher($dispatcher);
 
         $this->getDefinition()->addOption(new InputOption(
@@ -119,8 +119,8 @@ class RoadizApplication extends Application
             /*
              * Define a request wide timezone
              */
-            if (!empty($this->kernel->container['config']["timezone"])) {
-                date_default_timezone_set($this->kernel->container['config']["timezone"]);
+            if (!empty($this->kernel->get('config')["timezone"])) {
+                date_default_timezone_set($this->kernel->get('config')["timezone"]);
             } else {
                 date_default_timezone_set("Europe/Paris");
             }
@@ -203,8 +203,8 @@ class RoadizApplication extends Application
          * Add them in your config.yml
          */
         try {
-            if (isset($this->kernel->container['config']['additionalCommands'])) {
-                foreach ($this->kernel->container['config']['additionalCommands'] as $commandClass) {
+            if (isset($this->kernel->get('config')['additionalCommands'])) {
+                foreach ($this->kernel->get('config')['additionalCommands'] as $commandClass) {
                     if (class_exists($commandClass)) {
                         $commands[] = new $commandClass();
                     } else {
@@ -231,17 +231,17 @@ class RoadizApplication extends Application
 
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
-        $helperSet->set(new ThemeResolverHelper($this->kernel->container['themeResolver']));
-        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->container['config_handler']));
+        $helperSet->set(new ThemeResolverHelper($this->kernel->get('themeResolver')));
+        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get('config_handler')));
         $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
-        $helperSet->set(new CacheProviderHelper($this->kernel->container['nodesSourcesUrlCacheProvider']));
+        $helperSet->set(new CacheProviderHelper($this->kernel->get('nodesSourcesUrlCacheProvider')));
 
         /*
          * Configuration dependent helpers.
          */
         try {
-            $helperSet->set(new ConfigurationHelper($this->kernel->container['config']));
-            $helperSet->set(new MailerHelper($this->kernel->container['mailer']));
+            $helperSet->set(new ConfigurationHelper($this->kernel->get('config')));
+            $helperSet->set(new MailerHelper($this->kernel->get('mailer')));
         } catch (NoConfigurationFoundException $e) {
             $helperSet->set(new ConfigurationHelper([]));
         }
@@ -250,15 +250,15 @@ class RoadizApplication extends Application
          * Entity manager dependent helpers.
          */
         /** @var EntityManager $em */
-        $em = $this->kernel->container['em'];
+        $em = $this->kernel->get('em');
         if (null !== $em) {
             try {
                 $helperSet->set(new ConnectionHelper($em->getConnection()));
                 // We need to set «em» alias as Doctrine misnamed its Helper :-(
                 $helperSet->set(new EntityManagerHelper($em), 'em');
-                $helperSet->set(new SolrHelper($this->kernel->container['solr']));
-                $helperSet->set(new HandlerFactoryHelper($this->kernel->container['factory.handler']));
-                $helperSet->set(new RolesBagHelper($this->kernel->container['rolesBag']));
+                $helperSet->set(new SolrHelper($this->kernel->get('solr')));
+                $helperSet->set(new HandlerFactoryHelper($this->kernel->get('factory.handler')));
+                $helperSet->set(new RolesBagHelper($this->kernel->get('rolesBag')));
             } catch (ConnectionException $exception) {
             } catch (\PDOException $exception) {
             }
