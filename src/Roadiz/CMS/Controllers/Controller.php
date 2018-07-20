@@ -47,6 +47,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -67,13 +68,15 @@ abstract class Controller implements ContainerAwareInterface
     protected $container = null;
 
     /**
-     * Shortcut to return the request service.
+     * Get current request.
      *
      * @return Request
      */
     public function getRequest()
     {
-        return $this->get('request');
+        /** @var RequestStack $requestStack */
+        $requestStack = $this->get('requestStack');
+        return $requestStack->getCurrentRequest();
     }
 
     /**
@@ -385,7 +388,9 @@ abstract class Controller implements ContainerAwareInterface
     protected function forward($controller, array $path = [], array $query = [])
     {
         $path['_controller'] = $controller;
-        $subRequest = $this->get('request')->duplicate($query, null, $path);
+        /** @var RequestStack $requestStack */
+        $requestStack = $this->get('requestStack');
+        $subRequest = $requestStack->getCurrentRequest()->duplicate($query, null, $path);
         return $this->get('httpKernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
     }
 
@@ -475,8 +480,10 @@ abstract class Controller implements ContainerAwareInterface
      */
     public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
     {
+        /** @var RequestStack $requestStack */
+        $requestStack = $this->get('requestStack');
         return new EntityListManager(
-            $this->get('request'),
+            $requestStack->getCurrentRequest(),
             $this->get('em'),
             $entity,
             $criteria,

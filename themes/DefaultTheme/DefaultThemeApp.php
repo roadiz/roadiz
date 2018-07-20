@@ -112,8 +112,8 @@ class DefaultThemeApp extends FrontendController
     public function throw404($message = '')
     {
         $translation = $this->bindLocaleFromRoute(
-            $this->get('request'),
-            $this->get('request')->getLocale()
+            $this->get('requestStack')->getCurrentRequest(),
+            $this->get('requestStack')->getCurrentRequest()->getLocale()
         );
         $this->prepareThemeAssignation(null, $translation);
         $this->get('logger')->warn($message);

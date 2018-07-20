@@ -29,7 +29,6 @@
  */
 namespace Themes\Install;
 
-use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
@@ -42,10 +41,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -64,24 +60,14 @@ class InstallApp extends AppController
     protected static $backendTheme = false;
 
     /**
-     * Append objects to the global dependency injection container.
-     *
-     * @param Container $container
-     */
-    public static function setupDependencyInjection(Container $container)
-    {
-        parent::setupDependencyInjection($container);
-
-        $locale = $container['session']->get('_locale', 'en');
-        $container['request']->setLocale($locale);
-        \Locale::setDefault($locale);
-    }
-
-    /**
      * @return $this
      */
     public function prepareBaseAssignation()
     {
+        $locale = $this->get('session')->get('_locale', 'en');
+        $this->getRequest()->setLocale($locale);
+        \Locale::setDefault($locale);
+
         $this->assignation = [
             'head' => [
                 'siteTitle' => 'welcome.title',
@@ -92,12 +78,15 @@ class InstallApp extends AppController
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
-            ],
-            'session' => [
+            ]
+        ];
+
+        if (null !== $this->getRequest()->getSession()) {
+            $this->assignation['session'] = [
                 'id' => $this->getRequest()->getSession()->getId(),
                 'locale' => $this->getRequest()->getSession()->get('_locale', 'en'),
-            ],
-        ];
+            ];
+        }
 
         $this->assignation['head']['grunt'] = include dirname(__FILE__) . '/static/public/config/assets.config.php';
 
@@ -310,16 +299,16 @@ class InstallApp extends AppController
         $application = new RoadizApplication(new $kernelClass($env, $debug, $preview));
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array(
+        $input = new ArrayInput([
             'command' => 'cache:clear'
-        ));
+        ]);
         // You can use NullOutput() if you don't need the output
         $output = new BufferedOutput();
         $application->run($input, $output);
 
-        $inputFpm = new ArrayInput(array(
+        $inputFpm = new ArrayInput([
             'command' => 'cache:clear-fpm'
-        ));
+        ]);
         // You can use NullOutput() if you don't need the output
         $outputFpm = new BufferedOutput();
         $application->run($inputFpm, $outputFpm);

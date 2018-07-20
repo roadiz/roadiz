@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -71,8 +72,12 @@ class TranslationServiceProvider implements ServiceProviderInterface
          * @return string
          */
         $container['translator.locale'] = function ($c) {
-            if (null !== $c['request']->getLocale()) {
-                return $c['request']->getLocale();
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $request = $requestStack->getMasterRequest();
+
+            if (null !== $request->getLocale()) {
+                return $request->getLocale();
             } elseif (null !== $c['session']->get('_locale') &&
                 $c['session']->get('_locale') != "") {
                 return $c['session']->get('_locale');

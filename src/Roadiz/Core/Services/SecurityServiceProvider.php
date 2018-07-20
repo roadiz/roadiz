@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
 use RZ\Roadiz\Utils\Security\TimedFirewall;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
@@ -119,8 +120,13 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['session'] = function ($c) {
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $request = $requestStack->getCurrentRequest();
             $session = new Session($c['session.storage']);
-            $c['request']->setSession($session);
+            if (null !== $request) {
+                $request->setSession($session);
+            }
             return $session;
         };
 
@@ -196,15 +202,21 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['cookieClearingLogoutHandler'] = function ($c) {
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $request = $requestStack->getMasterRequest();
             return new CookieClearingLogoutHandler([
                 $c['rememberMeCookieName'] => [
-                    'path' => $c['request']->getBasePath(),
-                    'domain' => $c['request']->getHost(),
+                    'path' => $request->getBasePath(),
+                    'domain' => $request->getHost(),
                 ],
             ]);
         };
 
         $container['tokenBasedRememberMeServices'] = function ($c) {
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $request = $requestStack->getMasterRequest();
             return new TokenBasedRememberMeServices(
                 [$c['userProvider']],
                 $c['config']["security"]['secret'],
@@ -213,8 +225,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'name' => $c['rememberMeCookieName'],
                     'lifetime' => $c['rememberMeCookieLifetime'],
                     'remember_me_parameter' => '_remember_me',
-                    'path' => $c['request']->getBasePath(),
-                    'domain' => $c['request']->getHost(),
+                    'path' => $request->getBasePath(),
+                    'domain' => $request->getHost(),
                     'always_remember_me' => false,
                     'secure' => false,
                     'httponly' => false,

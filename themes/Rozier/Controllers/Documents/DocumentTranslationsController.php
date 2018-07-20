@@ -245,7 +245,7 @@ class DocumentTranslationsController extends RozierApp
 
         $builder = $this->createFormBuilder($defaults)
                         ->add('referer', HiddenType::class, [
-                            'data' => $this->get('request')->get('referer'),
+                            'data' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
                             'mapped' => false,
                         ])
                         ->add('name', TextType::class, [

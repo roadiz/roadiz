@@ -171,7 +171,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
                  * Get Install routes
                  */
                 call_user_func([Kernel::INSTALL_CLASSNAME, 'setupDependencyInjection'], $c);
-
                 return new InstallRouteCollection(Kernel::INSTALL_CLASSNAME);
             } else {
                 /*

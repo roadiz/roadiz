@@ -70,7 +70,7 @@ class SettingsProvider extends AbstractExplorerProvider
         $this->options = $resolver->resolve($options);
 
         $listManager = new EntityListManager(
-            $this->get('request'),
+            $this->get('requestStack')->getCurrentRequest(),
             $this->get('em'),
             Setting::class,
             [],
@@ -99,7 +99,7 @@ class SettingsProvider extends AbstractExplorerProvider
         $this->options = $resolver->resolve($options);
 
         $listManager = new EntityListManager(
-            $this->get('request'),
+            $this->get('requestStack')->getCurrentRequest(),
             $this->get('em'),
             Setting::class,
             [],
