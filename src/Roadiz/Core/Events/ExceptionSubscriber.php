@@ -112,52 +112,50 @@ class ExceptionSubscriber implements EventSubscriberInterface
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if ($event->isMasterRequest()) {
-            // You get the exception object from the received event
-            $exception = $event->getException();
+        // You get the exception object from the received event
+        $exception = $event->getException();
 
-            /*
-             * Get previous exception if thrown in Twig execution context.
-             */
-            if ($exception instanceof RuntimeError &&
-                null !== $exception->getPrevious()) {
-                $exception = $exception->getPrevious();
-            }
-
-            if (!$this->viewer->isFormatJson($event->getRequest())) {
-                /*
-                 * Themed exception pages…
-                 */
-                if ($exception instanceof MaintenanceModeException &&
-                    null !== $ctrl = $exception->getController()) {
-                    $response = $ctrl->maintenanceAction($event->getRequest());
-                    // Set http code according to status
-                    $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-                    $event->setResponse($response);
-                    return;
-                } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
-                    $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
-                    return;
-                }
-            }
-
-            // Customize your response object to display the exception details
-            $response = $this->getEmergencyResponse($exception, $event->getRequest());
-            // Set http code according to status
-            $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-
-            // HttpExceptionInterface is a special type of exception that
-            // holds status code and header details
-            if ($exception instanceof HttpExceptionInterface) {
-                $response->headers->replace($exception->getHeaders());
-            }
-
-            if ($response instanceof JsonResponse) {
-                $response->headers->set('Content-Type', 'application/problem+json');
-            }
-            // Send the modified response object to the event
-            $event->setResponse($response);
+        /*
+         * Get previous exception if thrown in Twig execution context.
+         */
+        if ($exception instanceof RuntimeError &&
+            null !== $exception->getPrevious()) {
+            $exception = $exception->getPrevious();
         }
+
+        if (!$this->viewer->isFormatJson($event->getRequest())) {
+            /*
+             * Themed exception pages…
+             */
+            if ($exception instanceof MaintenanceModeException &&
+                null !== $ctrl = $exception->getController()) {
+                $response = $ctrl->maintenanceAction($event->getRequest());
+                // Set http code according to status
+                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+                $event->setResponse($response);
+                return;
+            } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
+                $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
+                return;
+            }
+        }
+
+        // Customize your response object to display the exception details
+        $response = $this->getEmergencyResponse($exception, $event->getRequest());
+        // Set http code according to status
+        $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+
+        // HttpExceptionInterface is a special type of exception that
+        // holds status code and header details
+        if ($exception instanceof HttpExceptionInterface) {
+            $response->headers->replace($exception->getHeaders());
+        }
+
+        if ($response instanceof JsonResponse) {
+            $response->headers->set('Content-Type', 'application/problem+json');
+        }
+        // Send the modified response object to the event
+        $event->setResponse($response);
     }
 
     /**
