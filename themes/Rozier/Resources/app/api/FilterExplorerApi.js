@@ -46,7 +46,7 @@ export function getFilters ({ entity }) {
     case NODE_ENTITY:
         return TagExplorerApi.getTags()
     case TAG_ENTITY:
-        return TagExplorerApi.getTags()
+        return TagExplorerApi.getParentTags()
     default:
         return Promise.reject(new Error('Entity not found'))
     }
