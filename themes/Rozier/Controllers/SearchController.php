@@ -261,7 +261,7 @@ class SearchController extends RozierApp
 
         $builder = $this->buildSimpleForm("__node__");
         $this->extendForm($builder, $nodetype);
-        $this->addButtons($builder);
+        $this->addButtons($builder, true);
 
         /** @var Form $form */
         $form = $builder->getForm();
@@ -320,21 +320,28 @@ class SearchController extends RozierApp
 
     /**
      * @param FormBuilder $builder
+     * @param bool $exportXlsx
+     *
      * @return FormBuilder
      */
-    protected function addButtons(FormBuilder $builder)
+    protected function addButtons(FormBuilder $builder, $exportXlsx = false)
     {
         $builder->add('search', SubmitType::class, [
             'label' => 'search.a.node',
             'attr' => [
                 'class' => 'uk-button uk-button-primary',
             ]
-        ])->add('export', SubmitType::class, [
-            'label' => 'export.all.nodesSource',
-            'attr' => [
-                'class' => 'uk-button rz-no-ajax',
-            ]
         ]);
+
+        if ($exportXlsx) {
+            $builder->add('export', SubmitType::class, [
+                'label' => 'export.all.nodesSource',
+                'attr' => [
+                    'class' => 'uk-button rz-no-ajax',
+                ]
+            ]);
+        }
+
         return $builder;
     }
 
@@ -446,7 +453,7 @@ class SearchController extends RozierApp
         $keys[] = "title";
         /** @var NodeTypeField $field */
         foreach ($fields as $field) {
-            if (!$field->isVirtual()) {
+            if (!$field->isVirtual() && !$field->isCollection()) {
                 $keys[] = $field->getName();
             }
         }
@@ -569,12 +576,14 @@ class SearchController extends RozierApp
                     $option["expanded"] = true;
                 }
                 $option["choices"] = $choices;
+                $option["choices_as_values"] = true;
             } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = ChoiceType::class;
                 $option["choices"] = $choices;
+                $option["choices_as_values"] = true;
                 $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["multiple"] = true;
