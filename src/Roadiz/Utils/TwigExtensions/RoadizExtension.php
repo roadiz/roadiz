@@ -58,6 +58,7 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
         return [
             'cms_version' => Kernel::$cmsVersion,
             'cms_prefix' => Kernel::CMS_VERSION,
+            'help_external_url' => 'http://docs.roadiz.io',
             'request' => $this->kernel->get('requestStack')->getCurrentRequest(),
             'is_debug' => $this->kernel->isDebug(),
             'is_preview' => $this->kernel->isPreview(),
