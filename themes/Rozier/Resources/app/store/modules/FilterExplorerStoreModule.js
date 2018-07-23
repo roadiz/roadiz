@@ -12,7 +12,8 @@ import {
 
 import {
     DOCUMENT_ENTITY,
-    NODE_ENTITY
+    NODE_ENTITY,
+    TAG_ENTITY
 } from '../../types/entityTypes'
 
 const initialState = {
@@ -97,6 +98,10 @@ const mutations = {
             state.icons.active = 'uk-icon-folder-open'
             break
         case NODE_ENTITY:
+            state.icons.normal = 'uk-icon-tag'
+            state.icons.active = 'uk-icon-tag'
+            break
+        case TAG_ENTITY:
             state.icons.normal = 'uk-icon-tag'
             state.icons.active = 'uk-icon-tag'
             break

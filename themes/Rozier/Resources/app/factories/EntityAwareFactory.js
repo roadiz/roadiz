@@ -86,6 +86,8 @@ export default class EntityAwareFactory {
         case TAG_ENTITY:
             result.currentListingView = TagPreviewItem
             result.trans.moreItems = 'moreTags'
+            result.isFilterEnable = true
+            result.filterExplorerIcon = 'uk-icon-tags'
             break
         }
 

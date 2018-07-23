@@ -29,7 +29,7 @@
 import request from 'axios'
 
 /**
- * Fetch documents Folders.
+ * Fetch tags.
  *
  * @return Promise
  */
