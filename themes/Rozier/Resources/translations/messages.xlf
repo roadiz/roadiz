@@ -6191,6 +6191,10 @@
           <source>tagName.alreadyExists</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.%name%.alreadyExists">
+          <source>tagName.%name%.alreadyExists</source>
+          <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
           <source>nodeTypeField.name.alreadyExists</source>
           <target></target>

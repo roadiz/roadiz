@@ -631,6 +631,62 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * @param  array        $criteria
+     * @param  QueryBuilder $qb
+     * @param  string       $alias
+     * @return QueryBuilder
+     */
+    protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
+    {
+        $simpleQB = new SimpleQueryBuilder($qb);
+        foreach ($criteria as $key => $value) {
+            /*
+             * Search in node fields
+             */
+            if ($key == 'nodes') {
+                continue;
+            }
+
+            /*
+             * compute prefix for
+             * filtering node, and sources relation fields
+             */
+            $prefix = $alias;
+
+            // Dots are forbidden in field definitions
+            $baseKey = $simpleQB->getParameterKey($key);
+
+            if (false !== strpos($key, 'translation.')) {
+                /*
+                 * Search in translation fields
+                 */
+                $prefix = static::TRANSLATION_ALIAS . '.';
+                $key = str_replace('translation.', '', $key);
+            } elseif (false !== strpos($key, 'nodes.')) {
+                /*
+                 * Search in node fields
+                 */
+                $prefix = static::NODE_ALIAS . '.';
+                $key = str_replace('nodes.', '', $key);
+            } elseif (false !== strpos($key, 'translatedTag.')) {
+                /*
+                 * Search in translatedTags fields
+                 */
+                $prefix = 'tt.';
+                $key = str_replace('translatedTag.', '', $key);
+            } elseif ($key === 'translation') {
+                /*
+                 * Search in translation fields
+                 */
+                $prefix = 'tt.';
+            }
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
+        }
+
+        return $qb;
+    }
+
+    /**
      * Find a tag according to the given path or create it.
      *
      * @param string $tagPath

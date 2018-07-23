@@ -97,6 +97,7 @@ const actions = {
     },
     explorerClose ({ commit, dispatch }) {
         dispatch('filterExplorerClose')
+        dispatch('filterExplorerReset')
         commit(EXPLORER_RESET)
         commit(EXPLORER_CLOSE)
     },

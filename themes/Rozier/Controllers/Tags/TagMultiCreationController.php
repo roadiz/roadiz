@@ -50,8 +50,7 @@ class TagMultiCreationController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
-        $parentTag = $this->get('em')
-            ->find(Tag::class, (int) $parentTagId);
+        $parentTag = $this->get('em')->find(Tag::class, (int) $parentTagId);
 
         if (null !== $parentTag) {
             $form = $this->buildAddForm();

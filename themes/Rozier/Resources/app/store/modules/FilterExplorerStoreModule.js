@@ -6,7 +6,7 @@ import {
     FILTER_EXPLORER_SUCCESS,
     FILTER_EXPLORER_FAILED,
     FILTER_EXPLORER_UPDATE,
-
+    FILTER_EXPLORER_RESET,
     KEYBOARD_EVENT_ESCAPE
 } from '../../types/mutationTypes'
 
@@ -50,6 +50,9 @@ const actions = {
     },
     filterExplorerClose ({ commit }) {
         commit(FILTER_EXPLORER_CLOSE)
+    },
+    filterExplorerReset ({ commit }) {
+        commit(FILTER_EXPLORER_RESET)
     },
     filterExplorerToggle ({ dispatch, state }) {
         if (state.isOpen) {
@@ -109,6 +112,8 @@ const mutations = {
     },
     [FILTER_EXPLORER_CLOSE] (state) {
         state.isOpen = false
+    },
+    [FILTER_EXPLORER_RESET] (state) {
         state.selectedItem = null
         state.items = []
     },
