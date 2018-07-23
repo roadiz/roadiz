@@ -85,8 +85,13 @@ class BlockRenderExtension extends AbstractExtension
                         'source' => $nodeSource,
                         'assignation' => $assignation,
                     ]);
-
-                    return $this->handler->render($controllerReference, 'inline');
+                    /*
+                     * ignore_errors option MUST BE false in order to catch ForceResponseException
+                     * from Master request render method and redirect users.
+                     */
+                    return $this->handler->render($controllerReference, 'inline', [
+                        'ignore_errors' => false
+                    ]);
                 } else {
                     throw new RuntimeError($class . "::blockAction() action does not exist.");
                 }
