@@ -31,6 +31,10 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 'width' => 1440,
                 'progressive' => true,
                 'class' => 'img-responsive',
+                'autoplay' => true,
+                'muted' => true,
+                'loop' => true,
+                'controls' => false,
             ];
 
             $array['columnedImage'] = [

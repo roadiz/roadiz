@@ -8,12 +8,22 @@
 
 header {
     figure {
+        position: relative;
         overflow: hidden;
         background-image: url('../img/install_imgbg.jpg');
         height: 300px;
         background-size: cover;
         background-repeat: no-repeat;
         background-position: 50% 50%;
+
+        img,
+        video {
+            position: absolute;
+            width: 100%;
+            height: 100% !important;
+            object-fit: cover;
+            object-position: 50% 50%;
+        }
     }
 }
 
