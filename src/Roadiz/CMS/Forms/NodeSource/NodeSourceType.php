@@ -37,41 +37,44 @@ use RZ\Roadiz\CMS\Forms\JsonType;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\CMS\Forms\MultipleEnumerationType;
 use RZ\Roadiz\CMS\Forms\YamlType;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Forms\NodeTreeType;
 
 class NodeSourceType extends AbstractType
 {
-    /**
-     * @var NodeType
-     */
-    private $nodeType;
-
-    public function __construct(NodeType $nodeType)
-    {
-        $this->nodeType = $nodeType;
-    }
-
     /**
      * @param  FormBuilderInterface $builder
      * @param  array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager']);
+        $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager'], $options['nodeType']);
 
         if ($options['withTitle'] === true) {
-            $builder->add('base', new NodeSourceBaseType(), [
-                'publishable' => $this->nodeType->isPublishable(),
+            $builder->add('base', NodeSourceBaseType::class, [
+                'publishable' => $options['nodeType']->isPublishable(),
             ]);
         }
         /** @var NodeTypeField $field */
@@ -79,8 +82,8 @@ class NodeSourceType extends AbstractType
             if ($options['withVirtual'] === true || !$field->isVirtual()) {
                 $builder->add(
                     $field->getName(),
-                    $this->getFormTypeFromFieldType($builder->getData(), $field, $options),
-                    $this->getFormOptionsFromFieldType($field)
+                    static::getFormTypeFromFieldType($field),
+                    $this->getFormOptionsFromFieldType($builder->getData(), $field, $options)
                 );
             }
         }
@@ -92,21 +95,24 @@ class NodeSourceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => NodeType::getGeneratedEntitiesNamespace().'\\'.$this->nodeType->getSourceEntityClassName(),
             'property' => 'id',
             'withTitle' => true,
             'withVirtual' => true,
         ]);
         $resolver->setRequired([
+            'class',
             'entityManager',
             'controller',
             'container',
+            'nodeType',
         ]);
         $resolver->setAllowedTypes('container', Container::class);
         $resolver->setAllowedTypes('controller', Controller::class);
         $resolver->setAllowedTypes('entityManager', EntityManager::class);
         $resolver->setAllowedTypes('withTitle', 'boolean');
         $resolver->setAllowedTypes('withVirtual', 'boolean');
+        $resolver->setAllowedTypes('nodeType', NodeType::class);
+        $resolver->setAllowedTypes('class', 'string');
     }
 
     /**
@@ -120,12 +126,13 @@ class NodeSourceType extends AbstractType
     /**
      * @param NodesSources $source
      * @param EntityManager $entityManager
+     * @param NodeType $nodeType
      * @return array|null
      */
-    private function getFieldsForSource(NodesSources $source, EntityManager $entityManager)
+    private function getFieldsForSource(NodesSources $source, EntityManager $entityManager, NodeType $nodeType)
     {
         $criteria = [
-            'nodeType' => $this->nodeType,
+            'nodeType' => $nodeType,
             'visible' => true,
         ];
 
@@ -137,8 +144,7 @@ class NodeSourceType extends AbstractType
             $criteria = array_merge($criteria, ['universal' => false]);
         }
 
-        return $entityManager->getRepository(NodeTypeField::class)
-            ->findBy($criteria, $position);
+        return $entityManager->getRepository(NodeTypeField::class)->findBy($criteria, $position);
     }
 
     /**
@@ -176,125 +182,121 @@ class NodeSourceType extends AbstractType
     /**
      * Returns a Symfony Form type according to a node-type field.
      *
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $field
-     * @param array $options
-     * @return AbstractType
+     * @param AbstractField $field
+     * @return string AbstractType class name
      */
-    public function getFormTypeFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array $options)
+    public static function getFormTypeFromFieldType(AbstractField $field)
     {
-        switch ($field->getType()) {
-            case NodeTypeField::MULTI_PROVIDER_T:
-            case NodeTypeField::SINGLE_PROVIDER_T:
-                return new NodeSourceProviderType($nodeSource, $field, $options['entityManager'], $options['container']);
-            case NodeTypeField::MANY_TO_ONE_T:
-            case NodeTypeField::MANY_TO_MANY_T:
-                return new NodeSourceJoinType($nodeSource, $field, $options['entityManager']);
-            case NodeTypeField::DOCUMENTS_T:
-                return new NodeSourceDocumentType(
-                    $nodeSource,
-                    $field,
-                    $options['entityManager'],
-                    $options['container']->offsetGet('nodes_sources.handler')
-                );
-            case NodeTypeField::NODES_T:
-                return new NodeSourceNodeType(
-                    $nodeSource,
-                    $field,
-                    $options['entityManager'],
-                    $options['container']->offsetGet('node.handler')
-                );
-            case NodeTypeField::CUSTOM_FORMS_T:
-                return new NodeSourceCustomFormType(
-                    $nodeSource,
-                    $field,
-                    $options['entityManager'],
-                    $options['container']->offsetGet('node.handler')
-                );
-            case NodeTypeField::CHILDREN_T:
-                /*
-                 * NodeTreeType is a virtual type which is only available
-                 * with Rozier backend theme.
-                 */
-                return new NodeTreeType(
-                    $nodeSource,
-                    $field,
-                    $options['controller']
-                );
-            case NodeTypeField::JSON_T:
-                return new JsonType();
-            case NodeTypeField::CSS_T:
-                return new CssType();
-            case NodeTypeField::YAML_T:
-                return new YamlType();
-            case NodeTypeField::MARKDOWN_T:
-                return new MarkdownType();
-            case NodeTypeField::ENUM_T:
-                return new EnumerationType($field);
-            case NodeTypeField::MULTIPLE_T:
-                return new MultipleEnumerationType($field);
-            default:
-                return NodeTypeField::$typeToForm[$field->getType()];
-        }
+        return static::getFormTypeFromString($field->getType());
     }
 
     /**
-     * Get common options for your node-type field form components.
-     *
-     * @param  NodeTypeField $field
-     *
-     * @return array
+     * @param int $type
+     * @return string AbstractType class name
      */
-    public function getDefaultOptions(NodeTypeField $field)
+    public static function getFormTypeFromString($type)
     {
-        $label = $field->getLabel();
-        $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
-        $options = [
-            'label' => $label,
-            'required' => false,
-            'attr' => [
-                'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
-                'data-dev-name' => $devName,
-                'autocomplete' => 'off',
-            ],
-        ];
-        if ($field->isUniversal()) {
-            $options['attr']['data-universal'] = true;
-        }
-        if ('' !== $field->getDescription()) {
-            $options['attr']['data-desc'] = $field->getDescription();
-        }
-        if ('' !== $field->getPlaceholder()) {
-            $options['attr']['placeholder'] = $field->getPlaceholder();
-        }
-        if ($field->getMinLength() > 0) {
-            $options['attr']['data-min-length'] = $field->getMinLength();
-        }
-        if ($field->getMaxLength() > 0) {
-            $options['attr']['data-max-length'] = $field->getMaxLength();
-        }
-        if ($field->isVirtual() &&
-            $field->getType() !== NodeTypeField::MANY_TO_ONE_T &&
-            $field->getType() !== NodeTypeField::MANY_TO_MANY_T) {
-            $options['mapped'] = false;
+        switch ($type) {
+            case AbstractField::STRING_T:
+            case AbstractField::COLOUR_T:
+            case AbstractField::GEOTAG_T:
+            case AbstractField::MULTI_GEOTAG_T:
+                return TextType::class;
+
+            case AbstractField::DATETIME_T:
+                return DateTimeType::class;
+
+            case AbstractField::DATE_T:
+                return DateType::class;
+
+            case AbstractField::RICHTEXT_T:
+            case AbstractField::TEXT_T:
+                return TextareaType::class;
+
+            case AbstractField::MARKDOWN_T:
+                return MarkdownType::class;
+
+            case AbstractField::BOOLEAN_T:
+                return CheckboxType::class;
+
+            case AbstractField::INTEGER_T:
+                return IntegerType::class;
+
+            case AbstractField::DECIMAL_T:
+                return NumberType::class;
+
+            case AbstractField::EMAIL_T:
+                return EmailType::class;
+
+            case AbstractField::RADIO_GROUP_T:
+            case AbstractField::ENUM_T:
+                return EnumerationType::class;
+
+            case AbstractField::MULTIPLE_T:
+            case AbstractField::CHECK_GROUP_T:
+                return MultipleEnumerationType::class;
+
+            case AbstractField::DOCUMENTS_T:
+                return NodeSourceDocumentType::class;
+
+            case AbstractField::NODES_T:
+                return NodeSourceNodeType::class;
+
+            case AbstractField::CHILDREN_T:
+                return NodeTreeType::class;
+
+            case AbstractField::CUSTOM_FORMS_T:
+                return NodeSourceCustomFormType::class;
+
+            case AbstractField::JSON_T:
+                return JsonType::class;
+
+            case AbstractField::CSS_T:
+                return CssType::class;
+
+            case AbstractField::COUNTRY_T:
+                return CountryType::class;
+
+            case AbstractField::YAML_T:
+                return YamlType::class;
+
+            case AbstractField::PASSWORD_T:
+                return PasswordType::class;
+
+            case AbstractField::MANY_TO_MANY_T:
+            case AbstractField::MANY_TO_ONE_T:
+                return NodeSourceJoinType::class;
+
+            case AbstractField::SINGLE_PROVIDER_T:
+            case AbstractField::MULTI_PROVIDER_T:
+                return NodeSourceProviderType::class;
+
+            case AbstractField::COLLECTION_T:
+                return CollectionType::class;
         }
 
-        return $options;
+        return TextType::class;
     }
 
     /**
      * Returns an option array for creating a Symfony Form
      * according to a node-type field.
      *
-     * @param  NodeTypeField $field
-     *
+     * @param NodesSources $nodeSource
+     * @param NodeTypeField $field
+     * @param array $formOptions
      * @return array
      */
-    public function getFormOptionsFromFieldType(NodeTypeField $field)
+    public function getFormOptionsFromFieldType(NodesSources $nodeSource, NodeTypeField $field, array &$formOptions)
     {
-        $options = $this->getDefaultOptions($field);
+        $options = $this->getDefaultOptions($nodeSource, $field, $formOptions);
 
         switch ($field->getType()) {
+            case NodeTypeField::MULTIPLE_T:
+                $options = array_merge_recursive($options, [
+                    'nodeTypeField' => $field,
+                ]);
+                break;
             case NodeTypeField::MANY_TO_ONE_T:
             case NodeTypeField::MANY_TO_MANY_T:
                 $options = array_merge_recursive($options, [
@@ -305,9 +307,20 @@ class NodeSourceType extends AbstractType
                 break;
             case NodeTypeField::NODES_T:
                 $options = array_merge_recursive($options, [
+                    'nodeHandler' => $formOptions['container']->offsetGet('node.handler'),
                     'attr' => [
                         'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues()))
                     ],
+                ]);
+                break;
+            case NodeTypeField::CUSTOM_FORMS_T:
+                $options = array_merge_recursive($options, [
+                    'nodeHandler' => $formOptions['container']->offsetGet('node.handler'),
+                ]);
+                break;
+            case NodeTypeField::DOCUMENTS_T:
+                $options = array_merge_recursive($options, [
+                    'nodeSourceHandler' => $formOptions['container']->offsetGet('nodes_sources.handler'),
                 ]);
                 break;
             case NodeTypeField::DATETIME_T:
@@ -347,6 +360,11 @@ class NodeSourceType extends AbstractType
                     ],
                 ]);
                 break;
+            case NodeTypeField::ENUM_T:
+                $options = array_merge_recursive($options, [
+                    'nodeTypeField' => $field,
+                ]);
+                break;
             case NodeTypeField::DECIMAL_T:
                 $options = array_merge_recursive($options, [
                     'constraints' => [
@@ -382,6 +400,19 @@ class NodeSourceType extends AbstractType
                     ],
                 ]);
                 break;
+            case NodeTypeField::CHILDREN_T:
+                $options = array_merge_recursive($options, [
+                    'nodeSource' => $nodeSource,
+                    'nodeTypeField' => $field,
+                    'controller' => $formOptions['controller']
+                ]);
+                break;
+            case NodeTypeField::MULTI_PROVIDER_T:
+            case NodeTypeField::SINGLE_PROVIDER_T:
+                $options = array_merge_recursive($options, [
+                    'container' => $formOptions['container']
+                ]);
+                break;
             case NodeTypeField::COUNTRY_T:
                 $options = array_merge_recursive($options, [
                     'expanded' => $field->isExpanded(),
@@ -397,6 +428,85 @@ class NodeSourceType extends AbstractType
                     ]);
                 }
                 break;
+            case NodeTypeField::COLLECTION_T:
+                $configuration = Yaml::parse($field->getDefaultValues());
+                $collectionOptions = [
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'attr' => [
+                        'class' => 'rz-collection-form-type'
+                    ],
+                    'entry_options' => [
+                        'label' => false,
+                    ]
+                ];
+                if (isset($configuration['entry_type'])) {
+                    $reflectionClass = new \ReflectionClass($configuration['entry_type']);
+                    if ($reflectionClass->isSubclassOf(AbstractType::class)) {
+                        $collectionOptions['entry_type'] = $reflectionClass->getName();
+                    }
+                }
+                $options = array_merge_recursive($options, $collectionOptions);
+                break;
+        }
+
+        return $options;
+    }
+
+    /**
+     * Get common options for your node-type field form components.
+     *
+     * @param NodesSources $nodeSource
+     * @param NodeTypeField $field
+     * @param array $formOptions
+     * @return array
+     */
+    public function getDefaultOptions(NodesSources $nodeSource, NodeTypeField $field, array &$formOptions)
+    {
+        $label = $field->getLabel();
+        $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
+        $options = [
+            'label' => $label,
+            'required' => false,
+            'attr' => [
+                'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
+                'data-dev-name' => $devName,
+                'autocomplete' => 'off',
+            ],
+        ];
+        if ($field->isUniversal()) {
+            $options['attr']['data-universal'] = true;
+        }
+        if ('' !== $field->getDescription()) {
+            $options['attr']['data-desc'] = $field->getDescription();
+        }
+        if ('' !== $field->getPlaceholder()) {
+            $options['attr']['placeholder'] = $field->getPlaceholder();
+        }
+        if ($field->getMinLength() > 0) {
+            $options['attr']['data-min-length'] = $field->getMinLength();
+        }
+        if ($field->getMaxLength() > 0) {
+            $options['attr']['data-max-length'] = $field->getMaxLength();
+        }
+        if ($field->isVirtual() &&
+            $field->getType() !== NodeTypeField::MANY_TO_ONE_T &&
+            $field->getType() !== NodeTypeField::MANY_TO_MANY_T) {
+            $options['mapped'] = false;
+        }
+
+        if (in_array($field->getType(), [
+            NodeTypeField::MANY_TO_ONE_T,
+            NodeTypeField::MANY_TO_MANY_T,
+            NodeTypeField::DOCUMENTS_T,
+            NodeTypeField::NODES_T,
+            NodeTypeField::CUSTOM_FORMS_T,
+            NodeTypeField::MULTI_PROVIDER_T,
+            NodeTypeField::SINGLE_PROVIDER_T,
+        ])) {
+            $options['nodeTypeField'] = $field;
+            $options['entityManager'] = $formOptions['entityManager'];
+            $options['nodeSource'] = $nodeSource;
         }
 
         return $options;

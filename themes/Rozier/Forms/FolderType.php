@@ -15,6 +15,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFolderName;
 use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -27,7 +29,7 @@ class FolderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('folderName', 'text', [
+        $builder->add('folderName', TextType::class, [
             'label' => 'folder.name',
             'constraints' => [
                 new NotBlank(),
@@ -37,7 +39,7 @@ class FolderType extends AbstractType
                 ]),
             ],
         ])
-        ->add('visible', 'checkbox', [
+        ->add('visible', CheckboxType::class, [
             'label' => 'visible',
             'required' => false,
         ]);

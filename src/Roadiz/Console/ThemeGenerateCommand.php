@@ -28,6 +28,10 @@
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Roadiz\Config\ConfigurationHandler;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -68,20 +72,22 @@ class ThemeGenerateCommand extends ThemesCommand
      */
     public function validateThemeName($name)
     {
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
         if (1 !== preg_match('#^[A-Z][a-zA-Z]+$#', $name)) {
-            throw new \RuntimeException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
+            throw new LogicException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
         }
 
         if (1 === preg_match('#[Tt]heme$#', $name)) {
-            throw new \RuntimeException('Theme name must not contain "Theme" suffix, it will be added automatically.');
+            throw new LogicException('Theme name must not contain "Theme" suffix, it will be added automatically.');
         }
 
-        if ($this->filesystem->exists(ROADIZ_ROOT . '/themes/' . $name . 'Theme')) {
-            throw new \RuntimeException('Theme already exists.');
+        if ($this->filesystem->exists($kernel->getProjectDir() . '/themes/' . $name . 'Theme')) {
+            throw new LogicException('Theme already exists.');
         }
 
         if (in_array($name, ['Default', 'Debug', 'Base', 'Install', 'Rozier'])) {
-            throw new \RuntimeException('You cannot name your theme after system themes (Default, Install, Base, Rozier or Debug).');
+            throw new LogicException('You cannot name your theme after system themes (Default, Install, Base, Rozier or Debug).');
         }
 
         return $name;
@@ -179,7 +185,34 @@ class ThemeGenerateCommand extends ThemesCommand
         $output->writeln('Rename every occurrences of BaseTheme in your theme.');
 
         $this->generateThemeSymlink($themeName, $expectedMethod);
+        $this->registerTheme($themeName);
 
         $output->writeln('<info>Your new theme is ready to install, have fun!</info>');
+    }
+
+    /**
+     * @param string $className
+     */
+    protected function registerTheme($themeName)
+    {
+        $className = '\\Themes\\'.$themeName.'\\'.$themeName. 'App';
+        /** @var ConfigurationHandler $configHandler */
+        $configHandler = $this->getHelper('configurationHandler')->getConfigurationHandler();
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
+        /** @var array $config */
+        $config = $configHandler->getConfiguration();
+        $config['themes'][] = [
+            'classname' => $className,
+            'hostname' => '*',
+            'routePrefix' => '',
+        ];
+        $configHandler->setConfiguration($config);
+        $configHandler->writeConfiguration();
+        /*
+         * Need to clear configuration cache.
+         */
+        $configurationClearer = new ConfigurationCacheClearer($kernel->getCacheDir());
+        $configurationClearer->clear();
     }
 }

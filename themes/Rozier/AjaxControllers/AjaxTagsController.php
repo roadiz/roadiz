@@ -49,6 +49,13 @@ use Themes\Rozier\Models\TagModel;
  */
 class AjaxTagsController extends AbstractAjaxController
 {
+    /**
+     * @return TagRepository
+     */
+    protected function getRepository()
+    {
+        return $this->get('em')->getRepository(Tag::class);
+    }
 
     /**
      * @param Request $request
@@ -58,19 +65,23 @@ class AjaxTagsController extends AbstractAjaxController
     public function indexAction(Request $request)
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $onlyParents = false;
 
-        $tags = $this->get('em')
-            ->getRepository(Tag::class)
-            ->findBy([
-                    'parent' => null,
-                ], [
-                    'position' => 'ASC',
-                ]);
+        if ($request->query->has('onlyParents') &&
+            $request->query->get('onlyParents') == true) {
+            $onlyParents = true;
+        }
+
+        if ($onlyParents) {
+            $tags = $this->getRepository()->findByParentWithChildrenAndDefaultTranslation();
+        } else {
+            $tags = $this->getRepository()->findByParentWithDefaultTranslation();
+        }
 
         $responseArray = [
             'status' => 'confirm',
             'statusCode' => 200,
-            'tags' => $this->recurseTags($tags),
+            'tags' => $this->recurseTags($tags, $onlyParents),
         ];
 
         return new JsonResponse(
@@ -93,10 +104,7 @@ class AjaxTagsController extends AbstractAjaxController
         }
 
         $cleanTagIds = array_filter($request->query->get('ids'));
-
-        /** @var EntityManager $em */
-        $em = $this->get('em');
-        $tags = $em->getRepository(Tag::class)->findBy([
+        $tags = $this->getRepository()->findBy([
             'id' => $cleanTagIds,
         ]);
 
@@ -123,15 +131,34 @@ class AjaxTagsController extends AbstractAjaxController
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
+        $arrayFilter = [
+            'translation' => $this->get('defaultTranslation')
+        ];
+        $defaultOrder = [
+            'createdAt' => 'DESC'
+        ];
+
+        if ($request->get('tagId') > 0) {
+            $parentTag = $this->get('em')
+                ->find(
+                    Tag::class,
+                    $request->get('tagId')
+                );
+
+            $arrayFilter['parent'] = $parentTag;
+        }
+
+        if ($request->query->has('onlyParents')) {
+            $arrayFilter['children'] = ['NOT NULL'];
+        }
+
         /*
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
             Tag::class,
-            [],
-            [
-                'createdAt' => 'DESC'
-            ]
+            $arrayFilter,
+            $defaultOrder
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(30);
@@ -169,17 +196,28 @@ class AjaxTagsController extends AbstractAjaxController
         return $tagsArray;
     }
 
-    protected function recurseTags($tags = null)
+    /**
+     * @param Tag[]|null $tags
+     * @param bool $onlyParents
+     *
+     * @return array
+     */
+    protected function recurseTags($tags = null, $onlyParents = false)
     {
         $tagsArray = [];
         if ($tags !== null) {
             /** @var Tag $tag */
             foreach ($tags as $tag) {
-                $children = $this->recurseTags($tag->getChildren());
+                if ($onlyParents) {
+                    $children = $this->getRepository()->findByParentWithChildrenAndDefaultTranslation($tag);
+                } else {
+                    $children = $this->getRepository()->findByParentWithDefaultTranslation($tag);
+                }
+
                 $tagsArray[] = [
                     'id' => $tag->getId(),
-                    'name' => $tag->getTagName(),
-                    'children' => $children,
+                    'name' => $tag->getTranslatedTags()->first() ? $tag->getTranslatedTags()->first()->getName() : $tag->getTagName(),
+                    'children' => $this->recurseTags($children, $onlyParents),
                 ];
             }
         }
@@ -200,8 +238,7 @@ class AjaxTagsController extends AbstractAjaxController
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
-        $tag = $this->get('em')
-                    ->find(Tag::class, (int) $tagId);
+        $tag = $this->get('em')->find(Tag::class, (int) $tagId);
 
         if ($tag !== null) {
             $responseArray = null;
@@ -246,8 +283,7 @@ class AjaxTagsController extends AbstractAjaxController
 
             $pattern = strip_tags($request->get('search'));
 
-            $tags = $this->get('em')
-                         ->getRepository(Tag::class)
+            $tags = $this->getRepository()
                          ->searchBy($pattern, [], [], 10);
 
             if (0 === count($tags)) {
@@ -255,8 +291,7 @@ class AjaxTagsController extends AbstractAjaxController
                  * Try again using tag slug
                  */
                 $pattern = StringHandler::slugify($pattern);
-                $tags = $this->get('em')
-                             ->getRepository(Tag::class)
+                $tags = $this->getRepository()
                              ->searchBy($pattern, [], [], 10);
             }
 
@@ -353,13 +388,8 @@ class AjaxTagsController extends AbstractAjaxController
             throw new BadRequestHttpException();
         }
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->get('em');
-        /** @var TagRepository $tagRepository */
-        $tagRepository = $entityManager->getRepository(Tag::class);
-
         /** @var Tag $tag */
-        $tag = $tagRepository->findOrCreateByPath($request->get('tagName'));
+        $tag = $this->getRepository()->findOrCreateByPath($request->get('tagName'));
         $tagModel = new TagModel($tag, $this->getContainer());
 
         return new JsonResponse(

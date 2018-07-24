@@ -323,6 +323,11 @@ class NodeTypeHandler extends AbstractHandler
                         $oldField->setDefaultValues($newField->getDefaultValues());
                         $oldField->setDescription($newField->getDescription());
                         $oldField->setLabel($newField->getLabel());
+                        $oldField->setGroupName($newField->getGroupName());
+                        $oldField->setMinLength($newField->getMinLength());
+                        $oldField->setMaxLength($newField->getMaxLength());
+                        $oldField->setExpanded($newField->isExpanded());
+                        $oldField->setPlaceholder($newField->getPlaceholder());
                         $oldField->setPosition($position);
                     }
                 }

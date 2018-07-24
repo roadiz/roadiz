@@ -32,6 +32,9 @@ namespace Themes\DefaultTheme\Controllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\File;
@@ -63,8 +66,8 @@ class ContactController extends DefaultThemeApp
      * @param Translation|null $translation
      * @param null $_locale
      * @param null $_route
+     *
      * @return null|\Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(
         Request $request,
@@ -82,18 +85,26 @@ class ContactController extends DefaultThemeApp
             $this->prepareThemeAssignation($node, $translation);
 
             $contactFormManager = $this->createContactFormManager()
+                                       /*
+                                        * Disable CSRF protection if using Varnish
+                                        */
+                                       ->disableCsrfProtection()
                                        ->withDefaultFields()
-                                       ->withGoogleRecaptcha();
+                                       ->withGoogleRecaptcha()
+                                       ->setRedirectUrl($this->generateUrl('thanksPageLocale', [
+                                           '_locale' => $request->getLocale()
+                                       ]))
+            ;
 
             /*
              * Create a custom contact form
              */
             $formBuilder = $contactFormManager->getFormBuilder();
-            $formBuilder->add('callMeBack', 'checkbox', [
+            $formBuilder->add('callMeBack', CheckboxType::class, [
                             'label' => 'call.me.back',
                             'required' => false,
                         ])
-                        ->add('document', 'file', [
+                        ->add('document', FileType::class, [
                             'label' => 'document',
                             'required' => false,
                             'constraints' => [
@@ -103,7 +114,7 @@ class ContactController extends DefaultThemeApp
                                 ]),
                             ],
                         ])
-                        ->add('send', 'submit', [
+                        ->add('send', SubmitType::class, [
                             'label' => 'send.contact.form',
                         ]);
 
@@ -118,10 +129,41 @@ class ContactController extends DefaultThemeApp
              * Assign route to check current menu entry in navigation.html.twig
              */
             $this->assignation['route'] = $_route;
+            $response = $this->render('pages/contact.html.twig', $this->assignation);
 
-            return $this->render('pages/contact.html.twig', $this->assignation);
+            if (!$this->get('kernel')->isDebug() &&
+                !$this->get('kernel')->isPreview()) {
+                $response->setPublic();
+                $response->setSharedMaxAge(60*2);
+            }
+
+            return $response;
         } catch (NoTranslationAvailableException $e) {
             throw new ResourceNotFoundException($e->getMessage(), 0, $e);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param string $_locale
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function thankAction(
+        Request $request,
+        $_locale = "en"
+    ) {
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
+        $this->prepareThemeAssignation(null, $translation);
+
+        $response = $this->render('pages/thank.html.twig', $this->assignation);
+
+        if (!$this->get('kernel')->isDebug() &&
+            !$this->get('kernel')->isPreview()) {
+            $response->setPublic();
+            $response->setSharedMaxAge(60*2);
+        }
+
+        return $response;
     }
 }

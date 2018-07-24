@@ -85,7 +85,7 @@ class LocaleSubscriber implements EventSubscriberInterface
                 $locale = $request->attributes->get('_locale');
                 $event->getRequest()->setLocale($locale);
                 \Locale::setDefault($locale);
-            } elseif (null !== $translation = $this->kernel->container['defaultTranslation']) {
+            } elseif (null !== $translation = $this->kernel->get('defaultTranslation')) {
                 $shortLocale = $translation->getLocale();
                 $event->getRequest()->setLocale($shortLocale);
                 \Locale::setDefault($shortLocale);

@@ -31,13 +31,13 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -51,7 +51,7 @@ class TagRepository extends EntityRepository
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByNodes(&$criteria, &$qb)
+    protected function filterByNodes($criteria, QueryBuilder $qb)
     {
         if (in_array('nodes', array_keys($criteria))) {
             if (is_array($criteria['nodes']) ||
@@ -78,18 +78,18 @@ class TagRepository extends EntityRepository
      * Bind node parameter to final query
      *
      * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      */
-    protected function applyFilterByNodes(array &$criteria, &$finalQuery)
+    protected function applyFilterByNodes(array &$criteria, QueryBuilder $qb)
     {
         if (in_array('nodes', array_keys($criteria))) {
             if ($criteria['nodes'] instanceof Node) {
-                $finalQuery->setParameter('nodes', $criteria['nodes']->getId());
+                $qb->setParameter('nodes', $criteria['nodes']->getId());
             } elseif (is_array($criteria['nodes']) ||
                 $criteria['nodes'] instanceof Collection) {
-                $finalQuery->setParameter('nodes', $criteria['nodes']);
+                $qb->setParameter('nodes', $criteria['nodes']);
             } elseif (is_integer($criteria['nodes'])) {
-                $finalQuery->setParameter('nodes', (int) $criteria['nodes']);
+                $qb->setParameter('nodes', (int) $criteria['nodes']);
             }
             unset($criteria['nodes']);
         }
@@ -115,8 +115,9 @@ class TagRepository extends EntityRepository
      * @param array        $criteria
      * @param QueryBuilder $qb
      */
-    protected function filterByCriteria(&$criteria, &$qb)
+    protected function filterByCriteria($criteria, QueryBuilder $qb)
     {
+        $simpleQB = new SimpleQueryBuilder($qb);
         /*
          * Reimplementing findBy features…
          */
@@ -135,54 +136,50 @@ class TagRepository extends EntityRepository
             $prefix = static::TAG_ALIAS . '.';
 
             // Dots are forbidden in field definitions
-            $baseKey = str_replace('.', '_', $key);
-            /*
-             * Search in translation fields
-             */
+            $baseKey = $simpleQB->getParameterKey($key);
+
             if (false !== strpos($key, 'translation.')) {
+                /*
+                 * Search in translation fields
+                 */
                 $prefix = static::TRANSLATION_ALIAS . '.';
                 $key = str_replace('translation.', '', $key);
-            }
-
-            /*
-             * Search in node fields
-             */
-            if (false !== strpos($key, 'nodes.')) {
+            } elseif (false !== strpos($key, 'nodes.')) {
+                /*
+                 * Search in node fields
+                 */
                 $prefix = static::NODE_ALIAS . '.';
                 $key = str_replace('nodes.', '', $key);
-            }
-
-            /*
-             * Search in translatedTags fields
-             */
-            if (false !== strpos($key, 'translatedTag.')) {
+            } elseif (false !== strpos($key, 'translatedTag.')) {
+                /*
+                 * Search in translatedTags fields
+                 */
                 $prefix = 'tt.';
                 $key = str_replace('translatedTag.', '', $key);
-            }
-
-            /*
-             * Search in translation fields
-             */
-            if ($key == 'translation') {
+            } elseif ($key === 'translation') {
+                /*
+                 * Search in translation fields
+                 */
                 $prefix = 'tt.';
             }
 
-            $qb->andWhere($this->buildComparison($value, $prefix, $key, $baseKey, $qb));
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
         }
     }
     /**
      * Bind parameters to generated query.
      *
      * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      */
-    protected function applyFilterByCriteria(&$criteria, &$finalQuery)
+    protected function applyFilterByCriteria(array &$criteria, QueryBuilder $qb)
     {
         /*
          * Reimplementing findBy features…
          */
+        $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
-            $this->applyComparison($key, $value, $finalQuery);
+            $simpleQB->bindValue($key, $value);
         }
     }
 
@@ -193,19 +190,19 @@ class TagRepository extends EntityRepository
      * @param QueryBuilder $qb
      * @param Translation  $translation
      */
-    protected function filterByTranslation(&$criteria, &$qb, &$translation = null)
+    protected function filterByTranslation($criteria, QueryBuilder $qb, Translation $translation = null)
     {
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
             isset($criteria['translation.id'])) {
-            $qb->innerJoin('tg.translatedTags', 'tt');
-            $qb->innerJoin('tt.translation', static::TRANSLATION_ALIAS);
+            $qb->leftJoin('tg.translatedTags', 'tt');
+            $qb->leftJoin('tt.translation', static::TRANSLATION_ALIAS);
         } else {
             if (null !== $translation) {
                 /*
                  * With a given translation
                  */
-                $qb->innerJoin(
+                $qb->leftJoin(
                     'tg.translatedTags',
                     'tt',
                     'WITH',
@@ -215,8 +212,8 @@ class TagRepository extends EntityRepository
                 /*
                  * With a null translation, just take the default one.
                  */
-                $qb->innerJoin('tg.translatedTags', 'tt');
-                $qb->innerJoin(
+                $qb->leftJoin('tg.translatedTags', 'tt');
+                $qb->leftJoin(
                     'tt.translation',
                     static::TRANSLATION_ALIAS,
                     'WITH',
@@ -229,17 +226,15 @@ class TagRepository extends EntityRepository
     /**
      * Bind translation parameter to final query
      *
-     * @param array $criteria
-     * @param Query $finalQuery
+     * @param QueryBuilder $qb
      * @param Translation|null $translation
      */
     protected function applyTranslationByTag(
-        array &$criteria,
-        &$finalQuery,
-        Translation &$translation = null
+        QueryBuilder $qb,
+        Translation $translation = null
     ) {
         if (null !== $translation) {
-            $finalQuery->setParameter('translation', $translation);
+            $qb->setParameter('translation', $translation);
         }
     }
 
@@ -255,7 +250,7 @@ class TagRepository extends EntityRepository
      * @return QueryBuilder
      */
     protected function getContextualQueryWithTranslation(
-        array $criteria,
+        array &$criteria,
         array $orderBy = null,
         $limit = null,
         $offset = null,
@@ -294,28 +289,21 @@ class TagRepository extends EntityRepository
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
-        array $criteria,
+        array &$criteria,
         Translation $translation = null
     ) {
-
-        $qb = $this->createQueryBuilder('tg');
-        $qb->select($qb->expr()->countDistinct('tg.id'));
-
-        $this->filterByNodes($criteria, $qb);
-        $this->filterByTranslation($criteria, $qb, $translation);
-        $this->filterByCriteria($criteria, $qb);
-
-        return $qb;
+        $qb = $this->getContextualQueryWithTranslation($criteria, null, null, null, $translation);
+        return $qb->select($qb->expr()->countDistinct('tg.id'));
     }
 
     /**
      * Just like the findBy method but with relational criteria.
      *
      * @param array                                   $criteria
-     * @param array|null                              $orderBy
+     * @param array|string[]|null                     $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param Translation|null $translation
+     * @param Translation|null                        $translation
      *
      * @return array|Paginator
      */
@@ -335,11 +323,9 @@ class TagRepository extends EntityRepository
         );
 
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByNodes($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyFilterByNodes($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -347,10 +333,10 @@ class TagRepository extends EntityRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($finalQuery);
+            return new Paginator($query);
         } else {
             try {
-                return $finalQuery->getResult();
+                return $query->getQuery()->getResult();
             } catch (NoResultException $e) {
                 return [];
             }
@@ -380,14 +366,12 @@ class TagRepository extends EntityRepository
         );
 
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByNodes($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyFilterByNodes($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         try {
-            return $finalQuery->getSingleResult();
+            return $query->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -409,14 +393,12 @@ class TagRepository extends EntityRepository
         );
 
         $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $finalQuery = $query->getQuery();
-
-        $this->applyFilterByNodes($criteria, $finalQuery);
-        $this->applyFilterByCriteria($criteria, $finalQuery);
-        $this->applyTranslationByTag($criteria, $finalQuery, $translation);
+        $this->applyFilterByNodes($criteria, $query);
+        $this->applyFilterByCriteria($criteria, $query);
+        $this->applyTranslationByTag($query, $translation);
 
         try {
-            return (int) $finalQuery->getSingleScalarResult();
+            return (int) $query->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return 0;
         }
@@ -430,17 +412,18 @@ class TagRepository extends EntityRepository
      */
     public function findWithTranslation($tagId, Translation $translation)
     {
-        $query = $this->_em->createQuery('
-            SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
-            INNER JOIN t.translatedTags tt
-            WHERE t.id = :tag_id
-            AND tt.translation = :translation')
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t, tt')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->andWhere($qb->expr()->eq('tt.translation', ':translation'))
+            ->andWhere($qb->expr()->eq('t.id', ':id'))
+            ->setParameter(':translation', $translation)
+            ->setParameter(':id', $tagId)
             ->setMaxResults(1)
-            ->setParameter('tag_id', (int) $tagId)
-            ->setParameter('translation', $translation);
+        ;
 
         try {
-            return $query->getSingleResult();
+            return $qb->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
@@ -448,19 +431,19 @@ class TagRepository extends EntityRepository
 
     /**
      * @param Translation $translation
-     *
-     * @return array
+     * @return Tag[]
      */
     public function findAllWithTranslation(Translation $translation)
     {
-        $query = $this->_em->createQuery('
-            SELECT tg, tt FROM RZ\Roadiz\Core\Entities\Tag tg
-            INNER JOIN tg.translatedTags tt
-            WHERE tt.translation = :translation')
-            ->setParameter('translation', $translation);
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t, tt')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->andWhere($qb->expr()->eq('tt.translation', ':translation'))
+            ->setParameter(':translation', $translation)
+        ;
 
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
             return [];
         }
@@ -473,34 +456,40 @@ class TagRepository extends EntityRepository
      */
     public function findWithDefaultTranslation($tagId)
     {
-        $query = $this->_em->createQuery('
-            SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
-            INNER JOIN t.translatedTags tt
-            INNER JOIN tt.translation tr
-            WHERE t.id = :tag_id
-            AND tr.defaultTranslation = true')
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t, tt')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->leftJoin('tt.translation', 'tr')
+            ->andWhere($qb->expr()->eq('tr.defaultTranslation', ':defaultTranslation'))
+            ->andWhere($qb->expr()->eq('t.id', ':id'))
+            ->setParameter(':defaultTranslation', true)
+            ->setParameter(':id', $tagId)
             ->setMaxResults(1)
-            ->setParameter('tag_id', (int) $tagId);
+        ;
 
         try {
-            return $query->getSingleResult();
+            return $qb->getQuery()->getSingleResult();
         } catch (NoResultException $e) {
             return null;
         }
     }
 
     /**
-     * @return array
+     * @return Tag[]
      */
     public function findAllWithDefaultTranslation()
     {
-        $query = $this->_em->createQuery('
-            SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
-            INNER JOIN t.translatedTags tt
-            INNER JOIN tt.translation tr
-            WHERE tr.defaultTranslation = true');
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t, tt')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->leftJoin('tt.translation', 'tr')
+            ->addOrderBy('t.tagName', 'ASC')
+            ->andWhere($qb->expr()->eq('tr.defaultTranslation', ':defaultTranslation'))
+            ->setParameter(':defaultTranslation', true)
+        ;
+
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
             return [];
         }
@@ -508,69 +497,92 @@ class TagRepository extends EntityRepository
 
     /**
      * @param Translation $translation
-     * @param Tag         $parent
+     * @param Tag $parent
      *
-     * @return array
+     * @return Tag[]
      */
     public function findByParentWithTranslation(Translation $translation, Tag $parent = null)
     {
-        $query = null;
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t, tt')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->andWhere($qb->expr()->eq('tt.translation', ':translation'))
+            ->addOrderBy('t.position', 'ASC')
+            ->setParameter(':translation', $translation)
+        ;
 
-        if ($parent === null) {
-            $query = $this->_em->createQuery('
-            SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
-            INNER JOIN t.translatedTags tt
-            INNER JOIN tt.translation tr
-            WHERE t.parent IS NULL AND tr.id = :translation_id
-            ORDER BY t.position ASC')
-                ->setParameter('translation_id', (int) $translation->getId());
+        if (null !== $parent) {
+            $qb->andWhere($qb->expr()->eq('t.parent', ':parent'))
+                ->setParameter(':parent', $parent);
         } else {
-            $query = $this->_em->createQuery('
-                SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
-                INNER JOIN t.translatedTags tt
-                INNER JOIN tt.translation tr
-                INNER JOIN t.parent pt
-                WHERE pt.id = :parent AND tr.id = :translation_id
-                ORDER BY t.position ASC')
-                ->setParameter('parent', $parent->getId())
-                ->setParameter('translation_id', (int) $translation->getId());
+            $qb->andWhere($qb->expr()->isNull('t.parent'));
         }
 
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
             return [];
         }
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Tag $parent
+     * @param Tag $parent
      *
-     * @return array
+     * @return Tag[]
      */
     public function findByParentWithDefaultTranslation(Tag $parent = null)
     {
-        $query = null;
-        if ($parent === null) {
-            $query = $this->_em->createQuery('
-            SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
-            INNER JOIN t.translatedTags tt
-            INNER JOIN tt.translation tr
-            WHERE t.parent IS NULL AND tr.defaultTranslation = true
-            ORDER BY t.position ASC');
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t, tt')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->leftJoin('tt.translation', 'tr')
+            ->addOrderBy('t.position', 'ASC')
+            ->andWhere($qb->expr()->eq('tr.defaultTranslation', ':defaultTranslation'))
+            ->setParameter(':defaultTranslation', true)
+        ;
+
+        if (null !== $parent) {
+            $qb->andWhere($qb->expr()->eq('t.parent', ':parent'))
+                ->setParameter(':parent', $parent);
         } else {
-            $query = $this->_em->createQuery('
-                SELECT t, tt FROM RZ\Roadiz\Core\Entities\Tag t
-                INNER JOIN t.translatedTags tt
-                INNER JOIN tt.translation tr
-                INNER JOIN t.parent pt
-                WHERE pt.id = :parent AND tr.defaultTranslation = true
-                ORDER BY t.position ASC')
-                ->setParameter('parent', $parent->getId());
+            $qb->andWhere($qb->expr()->isNull('t.parent'));
         }
 
         try {
-            return $query->getResult();
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Returns only Tags that have children.
+     *
+     * @param Tag|null $parent
+     * @return Tag[]
+     */
+    public function findByParentWithChildrenAndDefaultTranslation(Tag $parent = null)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t, tt')
+            ->leftJoin('t.translatedTags', 'tt')
+            ->leftJoin('tt.translation', 'tr')
+            ->innerJoin('t.children', 'ct')
+            ->andWhere($qb->expr()->eq('tr.defaultTranslation', ':defaultTranslation'))
+            ->andWhere($qb->expr()->isNotNull('ct.id'))
+            ->addOrderBy('t.position', 'ASC')
+            ->setParameter(':defaultTranslation', true)
+        ;
+
+        if (null !== $parent) {
+            $qb->andWhere($qb->expr()->eq('t.parent', ':parent'))
+                ->setParameter(':parent', $parent);
+        } else {
+            $qb->andWhere($qb->expr()->isNull('t.parent'));
+        }
+
+        try {
+            return $qb->getQuery()->getResult();
         } catch (NoResultException $e) {
             return [];
         }
@@ -592,7 +604,6 @@ class TagRepository extends EntityRepository
         array &$criteria = [],
         $alias = "obj"
     ) {
-
         $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*
@@ -615,6 +626,62 @@ class TagRepository extends EntityRepository
         }
 
         $qb = $this->prepareComparisons($criteria, $qb, $alias);
+
+        return $qb;
+    }
+
+    /**
+     * @param  array        $criteria
+     * @param  QueryBuilder $qb
+     * @param  string       $alias
+     * @return QueryBuilder
+     */
+    protected function prepareComparisons(array &$criteria, QueryBuilder $qb, $alias)
+    {
+        $simpleQB = new SimpleQueryBuilder($qb);
+        foreach ($criteria as $key => $value) {
+            /*
+             * Search in node fields
+             */
+            if ($key == 'nodes') {
+                continue;
+            }
+
+            /*
+             * compute prefix for
+             * filtering node, and sources relation fields
+             */
+            $prefix = $alias;
+
+            // Dots are forbidden in field definitions
+            $baseKey = $simpleQB->getParameterKey($key);
+
+            if (false !== strpos($key, 'translation.')) {
+                /*
+                 * Search in translation fields
+                 */
+                $prefix = static::TRANSLATION_ALIAS . '.';
+                $key = str_replace('translation.', '', $key);
+            } elseif (false !== strpos($key, 'nodes.')) {
+                /*
+                 * Search in node fields
+                 */
+                $prefix = static::NODE_ALIAS . '.';
+                $key = str_replace('nodes.', '', $key);
+            } elseif (false !== strpos($key, 'translatedTag.')) {
+                /*
+                 * Search in translatedTags fields
+                 */
+                $prefix = 'tt.';
+                $key = str_replace('translatedTag.', '', $key);
+            } elseif ($key === 'translation') {
+                /*
+                 * Search in translation fields
+                 */
+                $prefix = 'tt.';
+            }
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
+        }
 
         return $qb;
     }
@@ -696,7 +763,6 @@ class TagRepository extends EntityRepository
         $tags = explode('/', $tagPath);
         $tags = array_filter($tags);
         $lastToken = count($tags) - 1;
-
         $tagName = count($tags) > 0 ? $tags[$lastToken] : $tagPath;
 
         $tag = $this->findOneByTagName(StringHandler::slugify($tagName));
@@ -716,19 +782,23 @@ class TagRepository extends EntityRepository
      *
      * Parent can be null for tag root
      *
-     * @param  Tag|null $parentTag [description]
+     * @param  Tag|null $parent
      * @return int
      */
-    public function findLatestPositionInParent(Tag $parentTag = null)
+    public function findLatestPositionInParent(Tag $parent = null)
     {
-        $query = $this->_em->createQuery('
-            SELECT MAX(t.position)
-            FROM RZ\Roadiz\Core\Entities\Tag t
-            WHERE t.parent = :parent')
-            ->setParameter('parent', $parentTag);
+        $qb = $this->createQueryBuilder('t');
+        $qb->select($qb->expr()->max('t.position'));
+
+        if (null !== $parent) {
+            $qb->andWhere($qb->expr()->eq('t.parent', ':parent'))
+                ->setParameter(':parent', $parent);
+        } else {
+            $qb->andWhere($qb->expr()->isNull('t.parent'));
+        }
 
         try {
-            return $query->getSingleScalarResult();
+            return $qb->getQuery()->getSingleScalarResult();
         } catch (NoResultException $e) {
             return null;
         }

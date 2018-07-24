@@ -33,7 +33,6 @@ use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -112,10 +111,12 @@ class DefaultThemeApp extends FrontendController
      */
     public function throw404($message = '')
     {
-        $this->translation = $this->get('defaultTranslation');
-
-        $this->prepareThemeAssignation(null, $this->translation);
-        $this->get('logger')->error($message);
+        $translation = $this->bindLocaleFromRoute(
+            $this->get('requestStack')->getCurrentRequest(),
+            $this->get('requestStack')->getCurrentRequest()->getLocale()
+        );
+        $this->prepareThemeAssignation(null, $translation);
+        $this->get('logger')->warn($message);
 
         $this->assignation['nodeName'] = 'error-404';
         $this->assignation['nodeTypeName'] = 'error404';

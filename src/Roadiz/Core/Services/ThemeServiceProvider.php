@@ -31,7 +31,8 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\StaticThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 
 /**
  * Register Theme services for dependency injection container.
@@ -40,16 +41,13 @@ class ThemeServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
+        /**
+         * @param Container $c
+         *
+         * @return ThemeResolverInterface
+         */
         $container['themeResolver'] = function ($c) {
-            return new ThemeResolver($c['em'], $c['stopwatch'], $c['kernel']->isInstallMode());
-        };
-
-        $container['backendTheme'] = function ($c) {
-            return $c['themeResolver']->getBackendTheme();
-        };
-
-        $container['frontendThemes'] = function ($c) {
-            return $c['themeResolver']->getFrontendThemes();
+            return new StaticThemeResolver($c['config'], $c['stopwatch'], $c['kernel']->isInstallMode());
         };
 
         return $container;

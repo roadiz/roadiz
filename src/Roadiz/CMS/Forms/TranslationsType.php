@@ -32,6 +32,8 @@ namespace RZ\Roadiz\CMS\Forms;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -40,43 +42,39 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TranslationsType extends AbstractType
 {
     /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    /**
-     * TranslationsType constructor.
-     * @param EntityManager $entityManager
-     */
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $translations = $this->entityManager->getRepository(Translation::class)->findAll();
-
-        $choices = [];
-        /** @var Translation $translation */
-        foreach ($translations as $translation) {
-            $choices[$translation->getName()] = $translation->getId();
-        }
-
         $resolver->setDefaults([
-            'choices' => $choices,
             'choices_as_values' => true,
         ]);
+        $resolver->setRequired(['entityManager']);
+        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
+
+        /*
+         * Use normalizer to populate choices from ChoiceType
+         */
+        $resolver->setNormalizer('choices', function (Options $options, $choices) {
+            /** @var EntityManager $entityManager */
+            $entityManager = $options['entityManager'];
+            $translations = $entityManager->getRepository(Translation::class)->findAll();
+
+            /** @var Translation $translation */
+            foreach ($translations as $translation) {
+                $choices[$translation->getName()] = $translation->getId();
+            }
+
+            return $choices;
+        });
     }
+
     /**
      * {@inheritdoc}
      */
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
     /**
      * {@inheritdoc}

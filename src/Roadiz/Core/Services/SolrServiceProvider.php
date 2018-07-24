@@ -46,8 +46,14 @@ class SolrServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        /**
+         * @param $c
+         *
+         * @return null|Client
+         */
         $container['solr'] = function ($c) {
             if (isset($c['config']['solr']['endpoint'])) {
+                // Do not pass $c['dispatcher'] - it can cause dependency infinite loop
                 $solrService = new Client($c['config']['solr']);
                 $solrService->setDefaultEndpoint('localhost');
                 return $solrService;
@@ -56,15 +62,23 @@ class SolrServiceProvider implements ServiceProviderInterface
             }
         };
 
+        /**
+         * @param $c
+         *
+         * @return bool
+         */
         $container['solr.ready'] = function ($c) {
             if (null !== $c['solr']) {
+                $c['stopwatch']->start('Ping Solr');
                 // create a ping query
                 $ping = $c['solr']->createPing();
                 // execute the ping query
                 try {
                     $c['solr']->ping($ping);
+                    $c['stopwatch']->stop('Ping Solr');
                     return true;
                 } catch (\Exception $e) {
+                    $c['stopwatch']->stop('Ping Solr');
                     return false;
                 }
             } else {

@@ -36,6 +36,7 @@ use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Install\InstallApp;
@@ -199,12 +200,14 @@ class ImportController extends AppController
     {
         $data = [];
         $data['status'] = false;
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->get('themeResolver');
         try {
             if (null === $themeId) {
                 $path = $pathFile;
             } else {
                 /** @var Theme $theme */
-                $theme = $this->get('em')->find(Theme::class, $themeId);
+                $theme = $themeResolver->findById($themeId);
 
                 if ($theme === null) {
                     throw new \Exception('Theme don\'t exist in database.');

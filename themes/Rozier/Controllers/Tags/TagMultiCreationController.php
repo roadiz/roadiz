@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -49,8 +50,7 @@ class TagMultiCreationController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
-        $parentTag = $this->get('em')
-            ->find(Tag::class, (int) $parentTagId);
+        $parentTag = $this->get('em')->find(Tag::class, (int) $parentTagId);
 
         if (null !== $parentTag) {
             $form = $this->buildAddForm();
@@ -59,6 +59,9 @@ class TagMultiCreationController extends RozierApp
             if ($form->isValid()) {
                 $data = $form->getData();
                 $names = explode(',', $data['names']);
+                $names = array_map('trim', $names);
+                $names = array_filter($names);
+                $names = array_unique($names);
 
                 /*
                  * Get latest position to add tags after.
@@ -122,7 +125,7 @@ class TagMultiCreationController extends RozierApp
     private function buildAddForm()
     {
         $builder = $this->createFormBuilder()
-            ->add('names', 'textarea', [
+            ->add('names', TextareaType::class, [
                 'label' => 'tags.names',
                 'attr' => [
                     'placeholder' => 'write.every.tags.names.comma.separated',

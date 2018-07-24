@@ -34,6 +34,10 @@ use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -46,6 +50,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Twig\Environment;
 
 /**
  * Class ContactFormManager
@@ -73,6 +78,16 @@ class ContactFormManager extends EmailManager
     /**
      * @var array
      */
+    protected $options = [];
+
+    /**
+     * @var string
+     */
+    protected $method = Request::METHOD_POST;
+
+    /**
+     * @var array
+     */
     protected $allowedMimeTypes = [
         'application/pdf',
         'application/x-pdf',
@@ -84,7 +99,11 @@ class ContactFormManager extends EmailManager
     /**
      * @var int
      */
-    protected $maxFileSize = 5242880; // 5MB
+    protected $maxFileSize = 5242880;
+    /**
+     * @var FormFactoryInterface
+     */
+    protected $formFactory; // 5MB
 
     /**
      * ContactFormManager constructor.
@@ -95,7 +114,7 @@ class ContactFormManager extends EmailManager
      * @param Request $request
      * @param FormFactoryInterface $formFactory
      * @param TranslatorInterface $translator
-     * @param \Twig_Environment $templating
+     * @param Environment $templating
      * @param \Swift_Mailer $mailer
      * @param Settings|null $settingsBag
      * @param DocumentUrlGenerator $documentUrlGenerator
@@ -104,19 +123,19 @@ class ContactFormManager extends EmailManager
         Request $request,
         FormFactoryInterface $formFactory,
         TranslatorInterface $translator,
-        \Twig_Environment $templating,
+        Environment $templating,
         \Swift_Mailer $mailer,
         Settings $settingsBag,
         DocumentUrlGenerator $documentUrlGenerator
     ) {
         parent::__construct($request, $translator, $templating, $mailer, $settingsBag, $documentUrlGenerator);
 
-        $this->formBuilder = $formFactory->createBuilder('form', null, [
-                 'attr' => [
-                     'id' => 'contactForm',
-                 ],
-             ])
-             ->setMethod('POST');
+        $this->formFactory = $formFactory;
+        $this->options = [
+            'attr' => [
+                'id' => 'contactForm',
+            ],
+        ];
 
         $this->successMessage = 'form.successfully.sent';
         $this->failMessage = 'form.has.errors';
@@ -135,10 +154,25 @@ class ContactFormManager extends EmailManager
     }
 
     /**
+     * @return $this
+     */
+    public function disableCsrfProtection()
+    {
+        $this->options['csrf_protection'] = false;
+
+        return $this;
+    }
+
+    /**
      * @return FormBuilderInterface
      */
     public function getFormBuilder()
     {
+        if (null === $this->formBuilder) {
+            $this->formBuilder = $this->formFactory
+                ->createBuilder(FormType::class, null, $this->options)
+                ->setMethod($this->method);
+        }
         return $this->formBuilder;
     }
 
@@ -157,27 +191,28 @@ class ContactFormManager extends EmailManager
      */
     public function withDefaultFields()
     {
-        $this->formBuilder->add('email', 'email', [
-            'label' => 'your.email',
-            'constraints' => [
-                new NotBlank(),
-                new Email([
-                    'message' => 'email.not.valid',
-                ]),
-            ],
-        ])
-            ->add('name', 'text', [
+        $this->getFormBuilder()->add('email', EmailType::class, [
+                'label' => 'your.email',
+                'constraints' => [
+                    new NotBlank(),
+                    new Email([
+                        'message' => 'email.not.valid',
+                    ]),
+                ],
+            ])
+            ->add('name', TextType::class, [
                 'label' => 'your.name',
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('message', 'textarea', [
+            ->add('message', TextareaType::class, [
                 'label' => 'your.message',
                 'constraints' => [
                     new NotBlank(),
                 ],
-            ]);
+            ])
+        ;
 
         return $this;
     }
@@ -205,7 +240,7 @@ class ContactFormManager extends EmailManager
 
         if (!empty($publicKey) &&
             !empty($privateKey)) {
-            $this->formBuilder->add('recaptcha', new RecaptchaType(), [
+            $this->getFormBuilder()->add('recaptcha', RecaptchaType::class, [
                 'label' => false,
                 'configs' => [
                     'publicKey' => $publicKey,
@@ -229,7 +264,7 @@ class ContactFormManager extends EmailManager
      */
     public function handle()
     {
-        $this->form = $this->formBuilder->getForm();
+        $this->form = $this->getFormBuilder()->getForm();
         $this->form->handleRequest($this->request);
         $returnJson = $this->request->isXmlHttpRequest() ||
             ($this->request->attributes->has('_format') && $this->request->attributes->get('_format') == 'json');
@@ -509,5 +544,25 @@ class ContactFormManager extends EmailManager
         return (null !== parent::getReceiver() && parent::getReceiver() != "") ?
             (parent::getReceiver()) :
             ($this->settingsBag->get('email_sender'));
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     *
+     * @return ContactFormManager
+     */
+    public function setOptions($options)
+    {
+        $this->options = $options;
+
+        return $this;
     }
 }

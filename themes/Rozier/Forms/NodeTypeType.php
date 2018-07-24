@@ -35,6 +35,8 @@ use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeName;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -48,7 +50,7 @@ class NodeTypeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         if (empty($options['name'])) {
-            $builder->add('name', 'text', [
+            $builder->add('name', TextType::class, [
                 'label' => 'name',
                 'constraints' => [
                     new NotBlank(),
@@ -61,45 +63,45 @@ class NodeTypeType extends AbstractType
                 ],
             ]);
         }
-        $builder->add('displayName', 'text', [
+        $builder->add('displayName', TextType::class, [
                     'label' => 'nodeType.displayName',
                     'constraints' => [
                         new NotBlank(),
                     ],
                 ])
-                ->add('description', 'text', [
+                ->add('description', TextType::class, [
                     'label' => 'description',
                     'required' => false,
                 ])
-                ->add('visible', 'checkbox', [
+                ->add('visible', CheckboxType::class, [
                     'label' => 'visible',
                     'required' => false,
                     'attr' => [
                         'data-desc' => 'this_node_type_will_be_available_for_creating_root_nodes',
                     ]
                 ])
-                ->add('publishable', 'checkbox', [
+                ->add('publishable', CheckboxType::class, [
                     'label' => 'publishable',
                     'required' => false,
                     'attr' => [
                         'data-desc' => 'enables_published_at_field_for_time_based_publication'
                     ]
                 ])
-                ->add('reachable', 'checkbox', [
+                ->add('reachable', CheckboxType::class, [
                     'label' => 'reachable',
                     'required' => false,
                     'attr' => [
                         'data-desc' => 'mark_this_typed_nodes_as_reachable_with_an_url'
                     ]
                 ])
-                ->add('hidingNodes', 'checkbox', [
+                ->add('hidingNodes', CheckboxType::class, [
                     'label' => 'nodeType.hidingNodes',
                     'required' => false,
                     'attr' => [
                         'data-desc' => 'this_node_type_will_hide_all_children_nodes'
                     ]
                 ])
-                ->add('color', 'text', [
+                ->add('color', TextType::class, [
                     'label' => 'nodeType.color',
                     'required' => false,
                     'attr' => ['class' => 'colorpicker-input'],
@@ -107,7 +109,7 @@ class NodeTypeType extends AbstractType
                         new HexadecimalColor(),
                     ],
                 ])
-                ->add('newsletterType', 'checkbox', [
+                ->add('newsletterType', CheckboxType::class, [
                     'label' => 'nodeType.newsletterType',
                     'required' => false,
                 ]);

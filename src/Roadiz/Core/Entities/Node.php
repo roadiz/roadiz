@@ -66,6 +66,14 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     const ARCHIVED = 40;
     const DELETED = 50;
 
+    public static $orderingFields = [
+        'position' => 'position',
+        'nodeName' => 'nodeName',
+        'createdAt' => 'createdAt',
+        'updatedAt' => 'updatedAt',
+        'publishedAt' => 'ns.publishedAt',
+    ];
+
     /**
      * @param int $status
      * @return string

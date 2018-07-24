@@ -29,7 +29,13 @@
             <table class="content-table settings uk-table">
                 <thead>
                     <tr>
-                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>
+                            {% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th class="mobile-hidden">{% trans %}value{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
@@ -37,16 +43,20 @@
                 <tbody>
                     {% for setting in settings %}
                     <tr class="setting-row">
-                        <td><a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">{{ setting.setting.getName|trans() }}</a></td>
+                        <td>
+                            <a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">
+                                {{- setting.setting.name|trans|inlineMarkdown -}}
+                            </a>
+                        </td>
                         <td class="mobile-hidden">
                             {% if setting.document %}
-                            <figure>{{ setting.document|display({height:30}) }}</figure>
+                            <figure>{{- setting.document|display({height:30}) -}}</figure>
                             {% endif %}
                             {% form_theme setting.form 'horizontalForms.html.twig' %}
-                            <form class="uk-form uk-form-settings uk-form-horizontal" action="#" method="post" {{ form_enctype(setting.form) }}>
+                            {{ form_start(setting.form) }}
                                 {{ form_widget(setting.form) }}
                                 <button class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button>
-                            </form>
+                            {{ form_end(setting.form) }}
                         </td>
                         <td class="table-actions-row">
                         {% spaceless %}

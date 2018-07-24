@@ -134,6 +134,27 @@ class NodeTreeWidget extends AbstractWidget
 
     /**
      * @param Node|null $parent
+     * @param bool $subRequest
+     *
+     * @return bool
+     */
+    protected function canOrderByParent(Node $parent = null, $subRequest = false)
+    {
+        if (true === $subRequest || null === $parent) {
+            return false;
+        }
+
+        if ($parent->getChildrenOrder() !== 'position' &&
+            in_array($parent->getChildrenOrder(), Node::$orderingFields) &&
+            in_array($parent->getChildrenOrderDirection(), ['ASC', 'DESC'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @return \RZ\Roadiz\Core\ListManagers\EntityListManager
      */
@@ -152,16 +173,12 @@ class NodeTreeWidget extends AbstractWidget
             'position' => 'ASC',
         ];
 
-        if (null !== $parent &&
-            $parent->getChildrenOrder() !== 'order' &&
-            $parent->getChildrenOrder() !== 'position') {
+        if ($this->canOrderByParent($parent, $subRequest)) {
             $ordering = [
                 $parent->getChildrenOrder() => $parent->getChildrenOrderDirection(),
             ];
-
             $this->canReorder = false;
         }
-
         /*
          * Manage get request to filter list
          */

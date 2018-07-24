@@ -212,10 +212,12 @@
         }
 
         &.required {
-            &:after {
-                content: "*";
-                color:#ADADAD;
-                padding: 0px 2px;
+            .uk-form-label-title {
+                &:after {
+                    content: "*";
+                    color:#ADADAD;
+                    padding: 0px 2px;
+                }
             }
         }
     }
@@ -235,7 +237,7 @@
     }
 
     // Date
-    .form-col-datetime{
+    .form-col-datetime {
         display: inline-block;
 
         .rz-datetime-field {
@@ -269,6 +271,7 @@
         line-height: 17px;
         color: #b0b0b0;
         margin: 5px 0 10px;
+        display: block;
     }
 
     .datetime-separator{

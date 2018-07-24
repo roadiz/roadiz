@@ -11,7 +11,7 @@
     <node-type-field-form-container inline-template data-vuejs>
         <article class="content">
             {% form_theme form '@Rozier/forms.html.twig' %}
-            <form id="add-node-type-field-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_start(form, { attr: { id: 'add-node-type-field-form'}}) }}
                 {{ form_widget(form) }}
                 <fieldset data-uk-margin>
                     {% spaceless %}
@@ -21,8 +21,7 @@
                     </button>
                     {% endspaceless %}
                 </fieldset>
-                {#<node-types-drawer-container entity="document"></node-types-drawer-container>#}
-            </form>
+            {{ form_end(form) }}
         </article>
     </node-type-field-form-container>
 

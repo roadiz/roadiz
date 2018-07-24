@@ -31,6 +31,7 @@ namespace Themes\Rozier\Forms;
 
 use RZ\Roadiz\Core\Entities\FolderTranslation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -42,7 +43,7 @@ class FolderTranslationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
+        $builder->add('name', TextType::class, [
             'label' => 'name',
         ]);
     }

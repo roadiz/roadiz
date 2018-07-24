@@ -3,7 +3,6 @@
 {% block inner_content %}
     <h1 class="page-title">{{ nodeSource.title }}</h1>
     <div class="page-text">{{ nodeSource.content|markdown }}</div>
-
     <div class="page-blocks row">
         {#
          # Use a loop over children to display blocks
@@ -14,6 +13,7 @@
             'node.nodeType' : ['!=', bags.nodeTypes.get('Page')]
         }) %}
         {% for singleBlock in blocks %}
+            {#{{ singleBlock|render('DefaultTheme') }}#}
             {% include '@DefaultTheme/blocks/' ~ singleBlock.node.nodeType.name|lower ~ '.html.twig' ignore missing with {
                 'nodeSource': singleBlock,
                 'parentNodeSource': nodeSource,
@@ -22,11 +22,18 @@
                 'node': singleBlock.node,
                 'nodeType': singleBlock.node.nodeType,
                 'loop': loop,
-                'blocksLength':blocks|length,
-                'bags': bags
+                'blocksLength':blocks|length
             } only %}
         {% endfor %}
     </div>
+
+    {# Test render #}
+    {#<pre>
+        {{ render(controller(
+            'Themes\\DefaultTheme\\Controllers\\PageController::embedAction',
+            { 'name': 'Roadiz' }
+        )) }}
+    </pre>#}
 
     <div class="images row">
         {% for image in nodeSource.pictures %}
@@ -40,12 +47,12 @@
 
     {% if form %}
         <div class="edit-form">
-            <form id="edit-node-source-form" class="node-form " action="#" method="post" {{ form_enctype(form) }}>
+            {{ form_start(form, { attr: { id: "edit-node-source-form" }}) }}
                 {{ form_widget(form) }}
                 <button class="btn btn-primary" type="submit">
                     <i class="fa fa-save"></i> {% trans %}save{% endtrans %}
                 </button>
-            </form>
+            {{ form_end(form) }}
         </div>
     {% endif %}
 {% endblock %}

@@ -22,7 +22,13 @@
                 <thead>
                     <tr>
                         <th class="table-id-row">{% trans %}id{% endtrans %}</th>
-                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>
+                            {% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'tagName',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>

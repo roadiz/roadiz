@@ -33,6 +33,8 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -167,6 +169,7 @@ class RolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
+        /** @var Role $role */
         $role = $this->get('em')
                      ->find(Role::class, (int) $roleId);
 
@@ -210,7 +213,7 @@ class RolesController extends RozierApp
     protected function buildAddForm()
     {
         $builder = $this->createFormBuilder()
-                        ->add('name', 'text', [
+                        ->add('name', TextType::class, [
                             'label' => 'name',
                             'constraints' => [
                                 new Regex([
@@ -233,7 +236,7 @@ class RolesController extends RozierApp
     protected function buildDeleteForm(Role $role)
     {
         $builder = $this->createFormBuilder()
-                        ->add('roleId', 'hidden', [
+                        ->add('roleId', HiddenType::class, [
                             'data' => $role->getId(),
                             'constraints' => [
                                 new NotBlank(),
@@ -256,13 +259,13 @@ class RolesController extends RozierApp
             'name' => $role->getName(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add('roleId', 'hidden', [
+                        ->add('roleId', HiddenType::class, [
                             'data' => $role->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('name', 'text', [
+                        ->add('name', TextType::class, [
                             'data' => $role->getName(),
                             'label' => 'name',
                             'constraints' => [

@@ -34,6 +34,8 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -77,7 +79,7 @@ class NodesTagsController extends RozierApp
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $source;
 
-            $form = $this->createForm(new NodeTagsType(), $node, [
+            $form = $this->createForm(NodeTagsType::class, $node, [
                 'entityManager' => $this->get('em'),
             ]);
 
@@ -212,18 +214,18 @@ class NodesTagsController extends RozierApp
      * @param Node $node
      * @param Tag  $tag
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildRemoveTagForm(Node $node, Tag $tag)
     {
         $builder = $this->createFormBuilder()
-                        ->add('nodeId', 'hidden', [
+                        ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('tagId', 'hidden', [
+                        ->add('tagId', HiddenType::class, [
                             'data' => $tag->getId(),
                             'constraints' => [
                                 new NotBlank(),

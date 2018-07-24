@@ -8,12 +8,12 @@
         <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename})|truncate(25, true, '[…]') }}</h1>
         {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'metas'} %}
         {% include '@Rozier/document-translations/translationBar.html.twig' with {"current": translation.getId} %}
-        {% include '@Rozier/documents/backLink.html.twig' with { 'request': request } only %}
+        {% include '@Rozier/documents/backLink.html.twig' %}
     </header>
 
     <article class="content content-document-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-document-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { attr: { id: "edit-document-form"}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
@@ -23,7 +23,7 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
 
     {% include '@Rozier/documents/actionsMenu.html.twig' %}

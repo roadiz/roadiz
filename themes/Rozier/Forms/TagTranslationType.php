@@ -32,9 +32,10 @@ namespace Themes\Rozier\Forms;
 use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
-use RZ\Roadiz\CMS\Forms\TagTranslationDocumentType;
 use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\CMS\Forms\TagTranslationDocumentType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -46,7 +47,7 @@ class TagTranslationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
+        $builder->add('name', TextType::class, [
                 'label' => 'name',
                 'constraints' => [
                     new NotBlank(),
@@ -56,7 +57,7 @@ class TagTranslationType extends AbstractType
                     ])
                 ],
             ])
-            ->add('description', new MarkdownType(), [
+            ->add('description', MarkdownType::class, [
                 'label' => 'description',
                 'required' => false,
             ])

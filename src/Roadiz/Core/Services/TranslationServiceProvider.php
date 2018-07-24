@@ -35,6 +35,8 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -70,8 +72,12 @@ class TranslationServiceProvider implements ServiceProviderInterface
          * @return string
          */
         $container['translator.locale'] = function ($c) {
-            if (null !== $c['request']->getLocale()) {
-                return $c['request']->getLocale();
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $request = $requestStack->getMasterRequest();
+
+            if (null !== $request->getLocale()) {
+                return $request->getLocale();
             } elseif (null !== $c['session']->get('_locale') &&
                 $c['session']->get('_locale') != "") {
                 return $c['session']->get('_locale');
@@ -88,6 +94,8 @@ class TranslationServiceProvider implements ServiceProviderInterface
             $c['stopwatch']->start('initTranslator');
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
+            /** @var ThemeResolverInterface $themeResolver */
+            $themeResolver = $c['themeResolver'];
 
             $translator = new Translator(
                 $c['translator.locale'],
@@ -98,8 +106,10 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
             $translator->addLoader('xlf', new XliffFileLoader());
             $translator->addLoader('yml', new YamlFileLoader());
-            $classes = [$c['backendTheme']];
-            $classes = array_merge($classes, $c['frontendThemes']);
+            $classes = array_merge(
+                [$themeResolver->getBackendTheme()],
+                $themeResolver->getFrontendThemes()
+            );
 
             /*
              * DO NOT wake up entity manager in Install
@@ -110,7 +120,6 @@ class TranslationServiceProvider implements ServiceProviderInterface
                 } else {
                     $availableTranslations = $c['em']->getRepository(Translation::class)->findAllAvailable();
                 }
-
                 /** @var Translation $availableTranslation */
                 foreach ($availableTranslations as $availableTranslation) {
                     $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);
@@ -129,7 +138,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
     /**
      * @param string $locale
      * @param Translator $translator
-     * @param array $classes
+     * @param Theme[] $classes
      * @param Kernel $kernel
      */
     protected function addResourcesForLocale($locale, Translator $translator, array &$classes, Kernel $kernel)

@@ -41,10 +41,9 @@ class LoginResetController extends RozierApp
 
     /**
      * @param Request $request
-     * @param string  $token
+     * @param string $token
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function resetAction(Request $request, $token)
     {
@@ -52,7 +51,7 @@ class LoginResetController extends RozierApp
         $user = $this->getUserByToken($this->get('em'), $token);
 
         if (null !== $user) {
-            $form = $this->createForm(new LoginResetForm(), null, [
+            $form = $this->createForm(LoginResetForm::class, null, [
                 'token' => $token,
                 'confirmationTtl' => User::CONFIRMATION_TTL,
                 'entityManager' => $this->get('em'),

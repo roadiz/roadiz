@@ -4203,6 +4203,10 @@
         <source>country.type</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target></target>
+      </trans-unit>
 
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
@@ -4371,18 +4375,37 @@
       <trans-unit xml:space="preserve" id="facebook_url">
         <source>facebook_url</source>
         <target></target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="instagram_url">
         <source>instagram_url</source>
         <target></target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url">
         <source>twitter_url</source>
         <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="linkedin_url">
+        <source>linkedin_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_url">
+        <source>youtube_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="googleplus_url">
+        <source>googleplus_url</source>
+        <target></target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account">
         <source>twitter_account</source>
         <target></target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="recaptcha_public_key">
@@ -5293,11 +5316,19 @@
 
       <trans-unit xml:space="preserve" id="more.documents">
           <source>more.documents</source>
-          <target></target>
+          <target>Document drawer explorer button label</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.nodes">
           <source>more.nodes</source>
-          <target></target>
+          <target>Nodes drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types">
+          <source>more.node_types</source>
+          <target>Node Types drawer explorer button label</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags">
+          <source>more.tags</source>
+          <target>Tag drawer explorer button label</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>
@@ -6160,6 +6191,10 @@
           <source>tagName.alreadyExists</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="tagName.%name%.alreadyExists">
+          <source>tagName.%name%.alreadyExists</source>
+          <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
           <source>nodeTypeField.name.alreadyExists</source>
           <target></target>
@@ -6728,6 +6763,13 @@
             <target></target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target></target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
+
         <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target></target>
@@ -6899,17 +6941,6 @@
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
 
-        <trans-unit xml:space="preserve" id="collection.type">
-            <source>collection.type</source>
-            <target></target>
-        </trans-unit>
-        <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
-            <source>classname_%classname%_must_extend_abstract_type_class</source>
-            <target></target>
-            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
-        </trans-unit>
-
-
         <trans-unit xml:space="preserve" id="pictureUrl">
             <source>pictureUrl</source>
             <target></target>
@@ -6926,6 +6957,17 @@
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
 
+
+        <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target></target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target></target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
         <trans-unit xml:space="preserve" id="preview">
             <source>preview</source>
             <target></target>

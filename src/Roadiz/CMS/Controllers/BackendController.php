@@ -44,10 +44,14 @@ abstract class BackendController extends AppController
     protected static $backendTheme = true;
 
     /**
+     * {@inheritdoc}
+     */
+    public static $priority = -10;
+
+    /**
      * Append objects to global container.
      *
      * @param Container $container
-     * @throws \Twig_Error_Loader
      */
     public static function setupDependencyInjection(Container $container)
     {

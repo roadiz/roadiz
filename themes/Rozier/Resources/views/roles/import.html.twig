@@ -10,10 +10,10 @@
 
     <article class="content content-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form) }}
             {{ form_widget(form) }}
             <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
-        </form>
+        {{ form_end(form) }}
     </article>
 
     {% include '@Rozier/roles/actionsMenu.html.twig' %}

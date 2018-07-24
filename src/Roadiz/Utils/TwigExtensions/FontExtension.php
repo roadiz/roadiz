@@ -31,11 +31,14 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Font;
+use Twig\Error\RuntimeError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Extension that allow render fonts.
  */
-class FontExtension extends \Twig_Extension
+class FontExtension extends AbstractExtension
 {
     /**
      * @var Container
@@ -52,37 +55,29 @@ class FontExtension extends \Twig_Extension
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'fontExtension';
-    }
-
-    /**
      * @return array
      */
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('eotPath', [$this, 'getEotFilePath']),
-            new \Twig_SimpleFilter('ttfPath', [$this, 'getTtfFilePath']),
-            new \Twig_SimpleFilter('otfPath', [$this, 'getTtfFilePath']),
-            new \Twig_SimpleFilter('svgPath', [$this, 'getSvgFilePath']),
-            new \Twig_SimpleFilter('woffPath', [$this, 'getWoffFilePath']),
-            new \Twig_SimpleFilter('woff2Path', [$this, 'getWoff2FilePath']),
+            new TwigFilter('eotPath', [$this, 'getEotFilePath']),
+            new TwigFilter('ttfPath', [$this, 'getTtfFilePath']),
+            new TwigFilter('otfPath', [$this, 'getTtfFilePath']),
+            new TwigFilter('svgPath', [$this, 'getSvgFilePath']),
+            new TwigFilter('woffPath', [$this, 'getWoffFilePath']),
+            new TwigFilter('woff2Path', [$this, 'getWoff2FilePath']),
         ];
     }
 
     /**
      * @param Font $font
      * @return string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getEotFilePath(Font $font = null)
     {
         if (null === $font) {
-            throw new \Twig_Error_Runtime('Font can’t be null.');
+            throw new RuntimeError('Font can’t be null.');
         }
         return $this->container['assetPackages']->getFontsPath($font->getEOTRelativeUrl());
     }
@@ -90,12 +85,12 @@ class FontExtension extends \Twig_Extension
     /**
      * @param Font $font
      * @return string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getTtfFilePath(Font $font = null)
     {
         if (null === $font) {
-            throw new \Twig_Error_Runtime('Font can’t be null.');
+            throw new RuntimeError('Font can’t be null.');
         }
         return $this->container['assetPackages']->getFontsPath($font->getOTFRelativeUrl());
     }
@@ -103,12 +98,12 @@ class FontExtension extends \Twig_Extension
     /**
      * @param Font $font
      * @return string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getSvgFilePath(Font $font = null)
     {
         if (null === $font) {
-            throw new \Twig_Error_Runtime('Font can’t be null.');
+            throw new RuntimeError('Font can’t be null.');
         }
         return $this->container['assetPackages']->getFontsPath($font->getSVGRelativeUrl());
     }
@@ -116,12 +111,12 @@ class FontExtension extends \Twig_Extension
     /**
      * @param Font $font
      * @return string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getWoffFilePath(Font $font = null)
     {
         if (null === $font) {
-            throw new \Twig_Error_Runtime('Font can’t be null.');
+            throw new RuntimeError('Font can’t be null.');
         }
         return $this->container['assetPackages']->getFontsPath($font->getWOFFRelativeUrl());
     }
@@ -129,12 +124,12 @@ class FontExtension extends \Twig_Extension
     /**
      * @param Font $font
      * @return string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getWoff2FilePath(Font $font = null)
     {
         if (null === $font) {
-            throw new \Twig_Error_Runtime('Font can’t be null.');
+            throw new RuntimeError('Font can’t be null.');
         }
         return $this->container['assetPackages']->getFontsPath($font->getWOFF2RelativeUrl());
     }

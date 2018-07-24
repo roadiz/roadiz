@@ -31,6 +31,8 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Events\CacheEvents;
+use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
@@ -46,6 +48,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Command line utils for managing Cache from terminal.
@@ -189,12 +192,20 @@ class CacheCommand extends Command
                     $output->writeln('— ' . $nodeSourcesUrlsClearer->getOutput());
                 }
             } else {
-                /** @var ClearerInterface $clearer */
-                foreach ($clearers as $clearer) {
-                    $clearer->clear();
+
+                /** @var EventDispatcher $dispatcher */
+                $dispatcher = $kernel->get('dispatcher');
+                $event = new FilterCacheEvent($kernel);
+                $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
+                $dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
+
+                foreach ($event->getMessages() as $message) {
                     if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                        $output->writeln($clearer->getOutput());
+                        $output->writeln(sprintf('<info>%s</info>: %s', $message['description'], $message['message']));
                     }
+                }
+                foreach ($event->getErrors() as $message) {
+                    $output->writeln(sprintf('<info>%s</info>: <error>%s</error>', $message['description'], $message['message']));
                 }
                 $output->writeln('<info>All caches have been been purged…</info>');
             }

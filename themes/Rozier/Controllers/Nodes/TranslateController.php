@@ -51,8 +51,8 @@ class TranslateController extends RozierApp
     /**
      * @param Request $request
      * @param int $nodeId
+     *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function translateAction(Request $request, $nodeId)
     {

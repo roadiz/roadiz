@@ -62,10 +62,13 @@ class AdminController extends RozierApp
          * this AbstractType will convert your entities to form
          * and display a beautiful widget and its ajax explorer.
          */
-        $form = $this->createForm(new ExplorerProviderItemType($explorerProvider), [
+        $form = $this->createForm(ExplorerProviderItemType::class, [
             $this->get('em')->getRepository(Setting::class)->findOneByName('admin_image'),
             $this->get('em')->getRepository(Setting::class)->findOneByName('display_debug_panel')
-        ], ['label' => 'Choose your settings']);
+        ], [
+            'label' => 'Choose your settings',
+            'explorerProvider' => $explorerProvider,
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {

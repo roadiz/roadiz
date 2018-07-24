@@ -3,7 +3,7 @@
 export DEBIAN_FRONTEND=noninteractive
 
 echo -e "\n--- Add some repos to update our distro ---\n"
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash -
 
 echo -e "\n--- Installing NodeJS and NPM ---\n"
 sudo apt-get -y install nodejs > /dev/null 2>&1

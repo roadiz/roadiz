@@ -49,6 +49,7 @@ use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
 use RZ\Roadiz\Core\Services\DebugServiceProvider;
+use RZ\Roadiz\Core\Services\DoctrineFiltersServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
@@ -64,6 +65,16 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\NodesSourcesUrlsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\OPCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\ReverseProxyCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -76,6 +87,7 @@ use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
@@ -83,26 +95,30 @@ use Themes\Install\InstallApp;
 /**
  *
  */
-class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
+class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
-    const CMS_VERSION = 'beta';
+    const CMS_VERSION = 'master';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
-
     public static $cmsBuild = null;
-    public static $cmsVersion = "0.22.20";
+    public static $cmsVersion = "1.0.0";
+
 
     /**
-     * @var Container|null
+     * @var null|Container
      */
-    public $container = null;
+    protected $container = null;
     protected $environment;
     protected $debug;
     protected $preview;
     protected $booted = false;
-    protected $rootDir;
     protected $name;
+    protected $rootDir;
     protected $startTime;
+
+    private $warmupDir;
+    private $projectDir;
+    private $requestStackSize = 0;
 
     /**
      * @param string $environment
@@ -116,10 +132,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $this->debug = (boolean) $debug;
         $this->rootDir = $this->getRootDir();
         $this->name = $this->getName();
+    }
 
-        if ($this->debug) {
-            $this->startTime = microtime(true);
-        }
+    public function __clone()
+    {
+        $this->booted = false;
+        $this->container = null;
+        $this->requestStackSize = 0;
     }
 
     /**
@@ -131,26 +150,63 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return;
         }
 
+        if ($this->debug) {
+            $this->startTime = microtime(true);
+        }
+        if ($this->debug && !isset($_ENV['SHELL_VERBOSITY']) && !isset($_SERVER['SHELL_VERBOSITY'])) {
+            putenv('SHELL_VERBOSITY=3');
+            $_ENV['SHELL_VERBOSITY'] = 3;
+            $_SERVER['SHELL_VERBOSITY'] = 3;
+        }
+
         try {
-            /*
-             * Register current Kernel as a service provider.
-             */
-            $this->container = new Container();
-            $this->container->register($this);
-            /*
-             * Following PHP customization should only use
-             * not-required configuration elements.
-             */
-            @date_default_timezone_set($this->container['config']["timezone"]);
-            @ini_set('session.name', $this->container['config']["security"]["session_name"]);
-            @ini_set('session.cookie_secure', $this->container['config']["security"]["session_cookie_secure"]);
-            @ini_set('session.cookie_httponly', $this->container['config']["security"]["session_cookie_httponly"]);
+            $this->initializeContainer();
             $this->booted = true;
         } catch (InvalidConfigurationException $e) {
             $view = new ExceptionViewer();
             $response = $view->getResponse($e, Request::createFromGlobals(), $this->isDebug());
             $response->send();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reboot($warmupDir)
+    {
+        $this->shutdown();
+        $this->warmupDir = $warmupDir;
+        $this->boot();
+    }
+
+    /**
+     *
+     */
+    public function initializeContainer()
+    {
+        foreach (['cache' => $this->warmupDir ?: $this->getCacheDir(), 'logs' => $this->getLogDir()] as $name => $dir) {
+            if (!is_dir($dir)) {
+                if (false === @mkdir($dir, 0777, true) && !is_dir($dir)) {
+                    throw new \RuntimeException(sprintf("Unable to create the %s directory (%s)\n", $name, $dir));
+                }
+            } elseif (!is_writable($dir)) {
+                throw new \RuntimeException(sprintf("Unable to write in the %s directory (%s)\n", $name, $dir));
+            }
+        }
+        /*
+         * Register current Kernel as a service provider.
+         */
+        $this->container = new Container();
+        $this->container->register($this);
+
+        /*
+         * Following PHP customization should only use
+         * not-required configuration elements.
+         */
+        @date_default_timezone_set($this->container['config']["timezone"]);
+        @ini_set('session.name', $this->container['config']["security"]["session_name"]);
+        @ini_set('session.cookie_secure', $this->container['config']["security"]["session_cookie_secure"]);
+        @ini_set('session.cookie_httponly', $this->container['config']["security"]["session_cookie_httponly"]);
     }
 
     /**
@@ -167,18 +223,42 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             return new NullStopwatch();
         };
 
-        $container['dispatcher'] = function () {
-            return new EventDispatcher();
-        };
-
         $container['kernel'] = $this;
-        $container['stopwatch']->openSection();
-        $container['stopwatch']->start('registerServices');
+        /** @var Stopwatch $stopWatch */
+        $stopWatch = $container['stopwatch'];
+        $stopWatch->openSection();
+        $stopWatch->start('registerServices');
 
         $container->register(new YamlConfigurationServiceProvider());
+
+        $container['dispatcher'] = function ($c) {
+            $dispatcher = new EventDispatcher();
+            $dispatcher->addSubscriber(new SaveSessionListener());
+            $dispatcher->addSubscriber(new AppCacheEventSubscriber());
+            $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());
+            $dispatcher->addSubscriber(new DoctrineCacheEventSubscriber());
+            $dispatcher->addSubscriber(new NodesSourcesUrlsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new OPCacheEventSubscriber());
+            $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
+            $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
+            $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
+
+            if (isset($c['config']['reverseProxyCache']) &&
+                count($c['config']['reverseProxyCache']['frontend']) > 0) {
+                $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
+            }
+
+            $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
+            $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
+            $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
+            return $dispatcher;
+        };
+
         $container->register(new AssetsServiceProvider());
         $container->register(new BackofficeServiceProvider());
         $container->register(new DoctrineServiceProvider());
+        $container->register(new DoctrineFiltersServiceProvider());
         $container->register(new EmbedDocumentsServiceProvider());
         $container->register(new EntityApiServiceProvider());
         $container->register(new FormServiceProvider());
@@ -209,7 +289,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
             // Do nothing if no configuration file is found.
         }
 
-        $container['stopwatch']->stop('registerServices');
+        $stopWatch->stop('registerServices');
     }
 
     /**
@@ -227,6 +307,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         if (false === $this->booted) {
             $this->boot();
         }
+        ++$this->requestStackSize;
 
         /*
          * Bypass Roadiz kernel handling to directly serve images assets
@@ -250,7 +331,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
         $this->container['requestContext']->fromRequest($request);
         $this->initEvents();
 
-        return $this->container['httpKernel']->handle($request, $type, $catch);
+        try {
+            return $this->getHttpKernel()->handle($request, $type, $catch);
+        } finally {
+            --$this->requestStackSize;
+        }
     }
 
     /**
@@ -263,9 +348,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
 
         $dispatcher->addSubscriber($this->container['routeListener']);
         $dispatcher->addSubscriber($this->container['firewall']);
-        $dispatcher->addSubscriber(new SaveSessionListener());
-        $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
-        $dispatcher->addSubscriber(new ExceptionSubscriber($this, $this->container['themeResolver'], $this->container['logger'], $this->isDebug()));
+        $dispatcher->addSubscriber(new ExceptionSubscriber(
+            $this,
+            $this->container['themeResolver'],
+            $this->container['logger'],
+            $this->isDebug()
+        ));
         $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
         $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
 
@@ -278,9 +366,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
                 $dispatcher->addSubscriber(new PreviewBarSubscriber($this->container));
             }
         }
-
-        $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
-        $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
 
         /*
          * If debug, alter HTML responses to append Debug panel to view
@@ -412,7 +497,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getBundles()
     {
-        return false;
+        return [];
     }
 
     /**
@@ -420,7 +505,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getBundle($name, $first = true)
     {
-        return false;
+        return [];
     }
     /**
      * {@inheritdoc}
@@ -442,15 +527,40 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getRootDir()
     {
-        return ROADIZ_ROOT;
+        if (null === $this->rootDir) {
+            $this->rootDir = $this->getProjectDir();
+        }
+        return $this->rootDir;
     }
+
+    /**
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir()
+    {
+        if (null === $this->projectDir) {
+            $r = new \ReflectionObject($this);
+            $dir = $rootDir = dirname($r->getFileName());
+            while (!file_exists($dir.'/composer.json')) {
+                if ($dir === dirname($dir)) {
+                    return $this->projectDir = $rootDir;
+                }
+                $dir = dirname($dir);
+            }
+            $this->projectDir = $dir;
+        }
+        return $this->projectDir;
+    }
+
 
     /**
      * @return string Return web public root.
      */
     public function getPublicDir()
     {
-        return ROADIZ_ROOT;
+        return $this->getProjectDir();
     }
 
     /**
@@ -458,7 +568,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getVendorDir()
     {
-        return $this->getRootDir() . '/vendor';
+        return $this->getProjectDir() . '/vendor';
     }
 
     /**
@@ -507,6 +617,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
+     *
+     */
+    public function initializeBundles()
+    {
+        return;
+    }
+
+    /**
      * Loads the container configuration.
      *
      * @param LoaderInterface $loader A LoaderInterface instance
@@ -518,21 +636,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
     }
 
     /**
-     * @deprecated since version 2.6, to be removed in 3.0.
-     * @param string $class
-     * @return bool
-     */
-    public function isClassInActiveBundle($class)
-    {
-        return false;
-    }
-
-    /**
      * @return string
      */
     public function serialize()
     {
-        return serialize(array($this->environment, $this->debug, $this->preview));
+        return serialize([$this->environment, $this->debug, $this->preview]);
     }
 
     /**
@@ -581,7 +689,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, TerminableInt
      */
     public function getPrivateFilesPath()
     {
-        return $this->getRootDir() . $this->getPrivateFilesBasePath();
+        return $this->getProjectDir() . $this->getPrivateFilesBasePath();
     }
 
     /**

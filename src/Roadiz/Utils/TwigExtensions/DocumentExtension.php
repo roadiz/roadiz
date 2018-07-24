@@ -36,11 +36,14 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
+use Twig\Error\RuntimeError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 
 /**
  * Extension that allow render document images.
  */
-class DocumentExtension extends \Twig_Extension
+class DocumentExtension extends AbstractExtension
 {
     /**
      * @var Container
@@ -63,39 +66,31 @@ class DocumentExtension extends \Twig_Extension
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'documentExtension';
-    }
-
-    /**
      * @return array
      */
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('display', [$this, 'display'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('imageRatio', [$this, 'getImageRatio']),
-            new \Twig_SimpleFilter('imageSize', [$this, 'getImageSize']),
-            new \Twig_SimpleFilter('imageOrientation', [$this, 'getImageOrientation']),
-            new \Twig_SimpleFilter('path', [$this, 'getPath']),
-            new \Twig_SimpleFilter('exists', [$this, 'exists']),
-            new \Twig_SimpleFilter('embedFinder', [$this, 'getEmbedFinder']),
+            new TwigFilter('display', [$this, 'display'], ['is_safe' => ['html']]),
+            new TwigFilter('imageRatio', [$this, 'getImageRatio']),
+            new TwigFilter('imageSize', [$this, 'getImageSize']),
+            new TwigFilter('imageOrientation', [$this, 'getImageOrientation']),
+            new TwigFilter('path', [$this, 'getPath']),
+            new TwigFilter('exists', [$this, 'exists']),
+            new TwigFilter('embedFinder', [$this, 'getEmbedFinder']),
         ];
     }
 
     /**
      * @param Document|null $document
      * @return bool|\RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getEmbedFinder(Document $document = null)
     {
         if (null === $document) {
             if ($this->throwExceptions) {
-                throw new \Twig_Error_Runtime('Document can’t be null to get its EmbedFinder.');
+                throw new RuntimeError('Document can’t be null to get its EmbedFinder.');
             } else {
                 return false;
             }
@@ -110,16 +105,15 @@ class DocumentExtension extends \Twig_Extension
     /**
      * @param Document|null $document
      * @param array $criteria
+     *
      * @return string
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
+     * @throws RuntimeError
      */
     public function display(Document $document = null, array $criteria = [])
     {
         if (null === $document) {
             if ($this->throwExceptions) {
-                throw new \Twig_Error_Runtime('Document can’t be null to be displayed.');
+                throw new RuntimeError('Document can’t be null to be displayed.');
             } else {
                 return "";
             }
@@ -130,7 +124,7 @@ class DocumentExtension extends \Twig_Extension
             $documentViewer->setDocument($document);
             return $documentViewer->getDocumentByArray($criteria);
         } catch (InvalidArgumentException $e) {
-            throw new \Twig_Error_Runtime($e->getMessage(), -1, null, $e);
+            throw new RuntimeError($e->getMessage(), -1, null, $e);
         }
     }
 
@@ -143,13 +137,13 @@ class DocumentExtension extends \Twig_Extension
      *
      * @param Document $document
      * @return null|string
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getImageOrientation(Document $document = null)
     {
         if (null === $document) {
             if ($this->throwExceptions) {
-                throw new \Twig_Error_Runtime('Document can’t be null to get its orientation.');
+                throw new RuntimeError('Document can’t be null to get its orientation.');
             } else {
                 return null;
             }
@@ -165,13 +159,13 @@ class DocumentExtension extends \Twig_Extension
     /**
      * @param Document $document
      * @return array
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getImageSize(Document $document = null)
     {
         if (null === $document) {
             if ($this->throwExceptions) {
-                throw new \Twig_Error_Runtime('Document can’t be null to get its size.');
+                throw new RuntimeError('Document can’t be null to get its size.');
             } else {
                 return [
                     'width' => 0,
@@ -205,13 +199,13 @@ class DocumentExtension extends \Twig_Extension
     /**
      * @param Document $document
      * @return float
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function getImageRatio(Document $document = null)
     {
         if (null === $document) {
             if ($this->throwExceptions) {
-                throw new \Twig_Error_Runtime('Document can’t be null to get its ratio.');
+                throw new RuntimeError('Document can’t be null to get its ratio.');
             } else {
                 return 0.0;
             }

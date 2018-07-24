@@ -28,7 +28,6 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
-use Doctrine\ORM\QueryBuilder;
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
@@ -45,8 +44,8 @@ class SearchController extends DefaultThemeApp
      *
      * @param Request $request
      * @param string $_locale
+     *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function defaultAction(
         Request $request,

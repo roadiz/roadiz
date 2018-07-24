@@ -209,6 +209,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
         $container['em'] = function (Container $c) {
             $c['stopwatch']->start('initDoctrine');
+
             try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];

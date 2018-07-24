@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,6 +46,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Twig\Error\RuntimeError;
 
 /**
  * Class ExceptionSubscriber
@@ -68,7 +69,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
      */
     protected $viewer;
     /**
-     * @var ThemeResolver
+     * @var ThemeResolverInterface
      */
     private $themeResolver;
     /**
@@ -79,11 +80,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
     /**
      * ExceptionSubscriber constructor.
      * @param Kernel $kernel
-     * @param ThemeResolver $themeResolver
+     * @param ThemeResolverInterface $themeResolver
      * @param LoggerInterface $logger
      * @param bool $debug
      */
-    public function __construct(Kernel $kernel, ThemeResolver $themeResolver, LoggerInterface $logger, $debug = false)
+    public function __construct(Kernel $kernel, ThemeResolverInterface $themeResolver, LoggerInterface $logger, $debug = false)
     {
         $this->logger = $logger;
         $this->debug = $debug;
@@ -111,52 +112,50 @@ class ExceptionSubscriber implements EventSubscriberInterface
      */
     public function onKernelException(GetResponseForExceptionEvent $event)
     {
-        if ($event->isMasterRequest()) {
-            // You get the exception object from the received event
-            $exception = $event->getException();
+        // You get the exception object from the received event
+        $exception = $event->getException();
 
-            /*
-             * Get previous exception if thrown in Twig execution context.
-             */
-            if ($exception instanceof \Twig_Error_Runtime &&
-                null !== $exception->getPrevious()) {
-                $exception = $exception->getPrevious();
-            }
-
-            if (!$this->viewer->isFormatJson($event->getRequest())) {
-                /*
-                 * Themed exception pages…
-                 */
-                if ($exception instanceof MaintenanceModeException &&
-                    null !== $ctrl = $exception->getController()) {
-                    $response = $ctrl->maintenanceAction($event->getRequest());
-                    // Set http code according to status
-                    $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-                    $event->setResponse($response);
-                    return;
-                } elseif (false !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
-                    $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
-                    return;
-                }
-            }
-
-            // Customize your response object to display the exception details
-            $response = $this->getEmergencyResponse($exception, $event->getRequest());
-            // Set http code according to status
-            $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-
-            // HttpExceptionInterface is a special type of exception that
-            // holds status code and header details
-            if ($exception instanceof HttpExceptionInterface) {
-                $response->headers->replace($exception->getHeaders());
-            }
-
-            if ($response instanceof JsonResponse) {
-                $response->headers->set('Content-Type', 'application/problem+json');
-            }
-            // Send the modified response object to the event
-            $event->setResponse($response);
+        /*
+         * Get previous exception if thrown in Twig execution context.
+         */
+        if ($exception instanceof RuntimeError &&
+            null !== $exception->getPrevious()) {
+            $exception = $exception->getPrevious();
         }
+
+        if (!$this->viewer->isFormatJson($event->getRequest())) {
+            /*
+             * Themed exception pages…
+             */
+            if ($exception instanceof MaintenanceModeException &&
+                null !== $ctrl = $exception->getController()) {
+                $response = $ctrl->maintenanceAction($event->getRequest());
+                // Set http code according to status
+                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+                $event->setResponse($response);
+                return;
+            } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
+                $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
+                return;
+            }
+        }
+
+        // Customize your response object to display the exception details
+        $response = $this->getEmergencyResponse($exception, $event->getRequest());
+        // Set http code according to status
+        $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+
+        // HttpExceptionInterface is a special type of exception that
+        // holds status code and header details
+        if ($exception instanceof HttpExceptionInterface) {
+            $response->headers->replace($exception->getHeaders());
+        }
+
+        if ($response instanceof JsonResponse) {
+            $response->headers->set('Content-Type', 'application/problem+json');
+        }
+        // Send the modified response object to the event
+        $event->setResponse($response);
     }
 
     /**
@@ -184,7 +183,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     /**
      * @param GetResponseForExceptionEvent $event
-     * @return bool|Theme
+     * @return null|Theme
      */
     protected function isNotFoundExceptionWithTheme(GetResponseForExceptionEvent $event)
     {
@@ -207,7 +206,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
             }
         }
 
-        return false;
+        return null;
     }
 
     /**

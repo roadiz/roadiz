@@ -15,7 +15,7 @@
 
     <article class="content content-first content-node-types-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form id="edit-node-type-form" class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { attr: {id: "edit-node-type-form"}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% spaceless %}
@@ -25,12 +25,11 @@
                 </button>
                 {% endspaceless %}
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
     <article class="content content-node-types-edit">
         <div class="content-table-cont">
             <table class="node-types content-table uk-table">
-
                 <tr>
                     <td>{% trans %}name{% endtrans %}</td>
                     <td>{{ nodeType.name }}</td>

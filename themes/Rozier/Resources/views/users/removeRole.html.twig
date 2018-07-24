@@ -9,7 +9,7 @@
 
     <article class="content content-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        <form class="uk-form uk-form-stacked" action="#" method="post">
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.remove.user.role{% endtrans %}</legend>

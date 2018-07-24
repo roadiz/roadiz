@@ -34,7 +34,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Utils\Theme\ThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -55,7 +55,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     protected $preview;
 
     /**
-     * @var ThemeResolver
+     * @var ThemeResolverInterface
      */
     private $themeResolver;
 
@@ -70,7 +70,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * NodeRouter constructor.
      *
      * @param EntityManager $em
-     * @param ThemeResolver $themeResolver
+     * @param ThemeResolverInterface $themeResolver
      * @param Settings $settingsBag
      * @param array $options
      * @param RequestContext|null $context
@@ -80,7 +80,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     public function __construct(
         EntityManager $em,
-        ThemeResolver $themeResolver,
+        ThemeResolverInterface $themeResolver,
         Settings $settingsBag,
         array $options = [],
         RequestContext $context = null,
@@ -224,19 +224,21 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     protected function getResourcePath(NodesSources $source)
     {
-        $cacheKey = $source->getId();
+        $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost();
         if (null !== $this->nodeSourceUrlCacheProvider) {
             if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
+                $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
                 $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
                 $this->nodeSourceUrlCacheProvider->save(
                     $cacheKey,
-                    $urlGenerator->getNonContextualUrl($this->themeResolver->findTheme($this->getContext()->getHost()))
+                    $urlGenerator->getNonContextualUrl($theme)
                 );
             }
             return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
         } else {
+            $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
             $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
-            return $urlGenerator->getNonContextualUrl($this->themeResolver->findTheme($this->getContext()->getHost()));
+            return $urlGenerator->getNonContextualUrl($theme);
         }
     }
 

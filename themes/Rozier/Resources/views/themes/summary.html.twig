@@ -102,11 +102,11 @@
 
             {% spaceless %}
             <div class="content-buttons">
-                <a class="content-button uk-button" href="{{ path('themesAddPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme {% endtrans %}</a>
+                <a class="content-button uk-button" href="{{ path('themesHomePage') }}"><i class="uk-icon-rz-back-parent"></i> {% trans %}back_to.themes{% endtrans %}</a>
                 {% if not status.version or not status.locale or false in status.import %}
-                <button class="content-button uk-button uk-button-primary" data-uk-modal="{target:'#error'}">{% trans %}goto.import{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
+                    <button class="content-button uk-button uk-button-primary" data-uk-modal="{target:'#error'}">{% trans %}goto.import{% endtrans %} <i class="uk-icon-arrow-circle-right"></i></button>
                 {% else %}
-                <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right" ></i></a>
+                    <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right" ></i></a>
                 {% endif %}
             </div>
             {% endspaceless %}
@@ -114,30 +114,30 @@
         </div>
 
     </article>
-</section>
-<div id="error" class="uk-modal">
-    <div class="uk-modal-dialog">
-        <h3 class="import-nodetypes-part">{% trans %}error.modal.title{% endtrans %}</h3>
-        <ul class="import-nodetypes-part">
-            {% if not status.version %}
-                <li>{% trans %}error.version.message{% endtrans %}</li>
-            {% endif %}
-            {% if not status.locale %}
-                <li>{% trans %}error.locale.message{% endtrans %}</li>
-            {% endif %}
-            {% for name, filenames in theme.imports %}
-                {% for filename in filenames %}
-                    {% if not status.import[filename] %}
-                    <li>{{ "file.not.exist.%filename%"|trans({"%filename%": filename}) }}</li>
-                    {% endif %}
+    <div id="error" class="uk-modal">
+        <div class="uk-modal-dialog">
+            <h3 class="import-nodetypes-part">{% trans %}error.modal.title{% endtrans %}</h3>
+            <ul class="import-nodetypes-part">
+                {% if not status.version %}
+                    <li>{% trans %}error.version.message{% endtrans %}</li>
+                {% endif %}
+                {% if not status.locale %}
+                    <li>{% trans %}error.locale.message{% endtrans %}</li>
+                {% endif %}
+                {% for name, filenames in theme.imports %}
+                    {% for filename in filenames %}
+                        {% if not status.import[filename] %}
+                            <li>{{ "file.not.exist.%filename%"|trans({"%filename%": filename}) }}</li>
+                        {% endif %}
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-        </ul>
-        <p>{% trans %}warning.theme.continue{% endtrans %}</p>
-        <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage') ~ '?classname=' ~ classname|url_encode }}">
-            <span class="label"><span class="label-text">{% trans %}install.theme{% endtrans %} </span></span>
-            <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
-        </a>
+            </ul>
+            <p>{% trans %}warning.theme.continue{% endtrans %}</p>
+            <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage', { classname: classname }) }}">
+                <span class="label"><span class="label-text">{% trans %}install.theme{% endtrans %} </span></span>
+                <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
+            </a>
+        </div>
     </div>
-</div>
+</section>
 {% endblock %}

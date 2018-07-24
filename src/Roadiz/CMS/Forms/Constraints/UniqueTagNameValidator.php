@@ -71,7 +71,9 @@ class UniqueTagNameValidator extends ConstraintValidator
 
         if (null !== $constraint->entityManager) {
             if (true === $this->tagNameExists($value, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message);
+                $this->context->addViolation($constraint->message, [
+                    '%name%' => $value,
+                ]);
             }
         } else {
             $this->context->addViolation('UniqueTagNameValidator constraint requires a valid EntityManager');

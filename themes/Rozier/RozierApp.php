@@ -181,8 +181,11 @@ class RozierApp extends BackendController
 
         /*
          * Add custom event subscribers to the general dispatcher.
+         *
+         * Important: do not check here if Solr respond, not to request
+         * solr server at each HTTP request.
          */
-        if ($container['solr.ready']) {
+        if (isset($container['config']['solr']['endpoint'])) {
             $container['dispatcher']->addSubscriber(
                 new SolariumSubscriber($container['solr'], $container['dispatcher'], $container['logger'], $container['factory.handler'])
             );

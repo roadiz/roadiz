@@ -50,6 +50,7 @@
 @grey-form-submit-icon:         #777777;
 @grey-form-submit-icon-hover:   #555555;
 @grey-form-submit-textsimple:   #999999;
+@form-col-gutter:               7px;
 
 
 /* -------- STYLES -------- */
@@ -317,7 +318,7 @@
 
     .data-uk-margin,
     .field-group {
-        margin-bottom: 12px;
+        margin: 0 (@form-col-gutter * -1) 12px;
 
         & > div {
             //margin-bottom: 20px;

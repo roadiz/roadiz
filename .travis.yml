@@ -3,8 +3,6 @@
 language: php
 sudo: required
 php:
-  - 5.6
-  - 7.0
   - 7.1
   - 7.2
 
@@ -24,7 +22,6 @@ install:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev --no-interaction
 
-
 script:
   - php bin/roadiz orm:schema-tool:create -n --env=install
   - php bin/roadiz install -n --env=install
@@ -38,12 +35,5 @@ script:
   - php bin/roadiz users:create -n --email=test@test.com --password=secret --super-admin test
   - php bin/roadiz users:create -n --email=test2@test.com --password=secret2 --back-end test2
   - php bin/roadiz orm:schema-tool:drop --force
-  - ENABLE_SECOND_LEVEL_CACHE=0 php bin/phpunit -v --bootstrap=tests/bootstrap.php --coverage-clover ./build/logs/clover.xml tests/
+  - php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/
   - bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore="*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/*,*/themes/*" -p ./
-
-after_success:
-  - travis_retry php bin/coveralls -v
-
-notifications:
-  webhooks: https://coveralls.io/webhook?repo_token=auwcnYiFOeFFp0vxd4Tx158ToE5YvMAHg
-

@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -97,9 +98,11 @@ class NodesSourcesController extends RozierApp
                 $this->assignation['source'] = $source;
 
                 $form = $this->createForm(
-                    new NodeSourceType($node->getNodeType()),
+                    NodeSourceType::class,
                     $source,
                     [
+                        'class' => $node->getNodeType()->getSourceEntityFullQualifiedClassName(),
+                        'nodeType' => $node->getNodeType(),
                         'controller' => $this,
                         'entityManager' => $this->get('em'),
                         'container' => $this->getContainer(),
@@ -188,7 +191,7 @@ class NodesSourcesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
 
         $builder = $this->createFormBuilder()
-                        ->add('nodeId', 'hidden', [
+                        ->add('nodeId', HiddenType::class, [
                             'data' => $nodeSourceId,
                             'constraints' => [
                                 new NotBlank(),

@@ -62,7 +62,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
     {
         $container['emailManager'] = $container->factory(function ($c) {
             return new EmailManager(
-                $c['request'],
+                $c['requestStack']->getMasterRequest(),
                 $c['translator'],
                 $c['twig.environment'],
                 $c['mailer'],
@@ -73,7 +73,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
 
         $container['contactFormManager'] = $container->factory(function ($c) {
             return new ContactFormManager(
-                $c['request'],
+                $c['requestStack']->getMasterRequest(),
                 $c['formFactory'],
                 $c['translator'],
                 $c['twig.environment'],

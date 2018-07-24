@@ -30,6 +30,8 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -37,7 +39,7 @@ class CompareDateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('compareOp', 'choice', [
+        $builder->add('compareOp', ChoiceType::class, [
             'label' => false,
             'choices_as_values' => true,
             'choices' => [
@@ -48,7 +50,7 @@ class CompareDateType extends AbstractType
                 '=' => '='
             ]
         ])
-        ->add('compareDate', 'date', [
+        ->add('compareDate', DateType::class, [
             'label' => false,
             'required' => false,
             'widget' => 'single_text',

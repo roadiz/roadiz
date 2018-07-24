@@ -29,26 +29,24 @@
  */
 namespace Themes\Install;
 
-use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\CMS\Forms\SeparatorType;
-use RZ\Roadiz\CMS\Forms\ThemesType;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Events\CacheEvents;
+use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Type;
+use Themes\Install\Forms\UserType;
 
 /**
  * Installation application
@@ -62,26 +60,15 @@ class InstallApp extends AppController
     protected static $backendTheme = false;
 
     /**
-     * Append objects to the global dependency injection container.
-     *
-     * @param Container $container
-     */
-    public static function setupDependencyInjection(Container $container)
-    {
-        parent::setupDependencyInjection($container);
-
-        $locale = $container['session']->get('_locale', 'en');
-        $container['request']->setLocale($locale);
-        \Locale::setDefault($locale);
-    }
-
-    /**
      * @return $this
      */
     public function prepareBaseAssignation()
     {
+        $locale = $this->get('session')->get('_locale', 'en');
+        $this->getRequest()->setLocale($locale);
+        \Locale::setDefault($locale);
+
         $this->assignation = [
-            'request' => $this->getRequest(),
             'head' => [
                 'siteTitle' => 'welcome.title',
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
@@ -91,12 +78,15 @@ class InstallApp extends AppController
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'ajaxToken' => $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION),
                 'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
-            ],
-            'session' => [
+            ]
+        ];
+
+        if (null !== $this->getRequest()->getSession()) {
+            $this->assignation['session'] = [
                 'id' => $this->getRequest()->getSession()->getId(),
                 'locale' => $this->getRequest()->getSession()->get('_locale', 'en'),
-            ],
-        ];
+            ];
+        }
 
         $this->assignation['head']['grunt'] = include dirname(__FILE__) . '/static/public/config/assets.config.php';
 
@@ -108,7 +98,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -137,7 +127,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function redirectIndexAction(Request $request)
     {
@@ -151,7 +141,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function requirementsAction(Request $request)
     {
@@ -166,11 +156,11 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function userAction(Request $request)
     {
-        $userForm = $this->buildUserForm($request);
+        $userForm = $this->createForm(UserType::class);
 
         if ($userForm !== null) {
             $userForm->handleRequest($request);
@@ -194,6 +184,7 @@ class InstallApp extends AppController
                     /*
                      * Force redirect to avoid resending form when refreshing page
                      */
+                    /** @var User $user */
                     $user = $this->get('em')
                         ->getRepository(User::class)
                         ->findOneBy(['username' => $userForm->getData()['username']]);
@@ -219,10 +210,11 @@ class InstallApp extends AppController
      * @param Request $request
      * @param int     $userId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function userSummaryAction(Request $request, $userId)
     {
+        /** @var User $user */
         $user = $this->get('em')->find(User::class, $userId);
         $this->assignation['name'] = $user->getUsername();
         $this->assignation['email'] = $user->getEmail();
@@ -234,7 +226,7 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function doneAction(Request $request)
     {
@@ -246,7 +238,7 @@ class InstallApp extends AppController
             if ($doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {
                 /*
-                 * Save informations
+                 * Save information
                  */
                 try {
                     /*
@@ -254,18 +246,28 @@ class InstallApp extends AppController
                      */
                     $this->get('session')->invalidate();
 
-                    $clearers = [
-                        new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
-                        new TranslationsCacheClearer($this->get('kernel')->getCacheDir()),
-                        new RoutingCacheClearer($this->get('kernel')->getCacheDir()),
-                        new ConfigurationCacheClearer($this->get('kernel')->getCacheDir()),
-                        // Force clear prod configuration too
-                        new ConfigurationCacheClearer(ROADIZ_ROOT . '/cache/prod'),
-                        new OPCacheClearer(),
-                    ];
-                    foreach ($clearers as $clearer) {
-                        $clearer->clear();
-                    }
+                    /** @var EventDispatcher $dispatcher */
+                    $dispatcher = $this->get('dispatcher');
+                    // Get real kernel class if Standard edition
+                    $kernelClass = get_class($this->get('kernel'));
+
+                    // Clear cache for install
+                    $installEvent = new FilterCacheEvent($this->get('kernel'));
+                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $installEvent);
+
+                    // Clear cache for prod
+                    /** @var Kernel $prodKernel */
+                    $prodKernel = new $kernelClass('prod', false);
+                    $prodKernel->boot();
+                    $prodEvent = new FilterCacheEvent($prodKernel);
+                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodEvent);
+
+                    // Clear cache for prod preview
+                    /** @var Kernel $prodPreviewKernel */
+                    $prodPreviewKernel = new $kernelClass('prod', false, true);
+                    $prodPreviewKernel->boot();
+                    $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
+                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);
 
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -297,16 +299,16 @@ class InstallApp extends AppController
         $application = new RoadizApplication(new $kernelClass($env, $debug, $preview));
         $application->setAutoExit(false);
 
-        $input = new ArrayInput(array(
+        $input = new ArrayInput([
             'command' => 'cache:clear'
-        ));
+        ]);
         // You can use NullOutput() if you don't need the output
         $output = new BufferedOutput();
         $application->run($input, $output);
 
-        $inputFpm = new ArrayInput(array(
+        $inputFpm = new ArrayInput([
             'command' => 'cache:clear-fpm'
-        ));
+        ]);
         // You can use NullOutput() if you don't need the output
         $outputFpm = new BufferedOutput();
         $application->run($inputFpm, $outputFpm);
@@ -316,7 +318,7 @@ class InstallApp extends AppController
      * After done and clearing caches.
      *
      * @param  Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function afterDoneAction(Request $request)
     {
@@ -335,20 +337,21 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildLanguageForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-            ->add('language', 'choice', [
+            ->add('language', ChoiceType::class, [
+                'choices_as_values' => true,
                 'choices' => [
                     'English' => 'en',
                     'Español' => 'es',
                     'Français' => 'fr',
                     'Русский язык' => 'ru',
                     'Türkçe' => 'tr',
+                    'Italiano' => 'it',
                 ],
-                'choices_as_values' => true,
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -367,136 +370,12 @@ class InstallApp extends AppController
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildUserForm(Request $request)
-    {
-        $builder = $this->createFormBuilder()
-            ->add('username', 'text', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('username'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('email', 'email', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('email'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('password', 'repeated', [
-                'type' => 'password',
-                'invalid_message' => 'password.must_match',
-                'first_options' => ['label' => 'password'],
-                'second_options' => ['label' => 'password.verify'],
-                'required' => true,
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * Build form for theme and site informations.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildInformationsForm(Request $request)
-    {
-        $siteName = $this->get('settingsBag')->get('site_name');
-        $metaDescription = $this->get('settingsBag')->get('seo_description');
-        $emailSender = $this->get('settingsBag')->get('email_sender');
-        $emailSenderName = $this->get('settingsBag')->get('email_sender_name');
-        $timeZone = $this->get('config')['timezone'];
-
-        $timeZoneList = include dirname(__FILE__) . '/Resources/import/timezones.php';
-
-        $defaults = [
-            'site_name' => $siteName != '' ? $siteName : "My website",
-            'seo_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
-            'email_sender' => $emailSender != '' ? $emailSender : "",
-            'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
-            'install_frontend' => true,
-            'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
-        ];
-        $builder = $this->createFormBuilder($defaults)
-            ->add('site_name', 'text', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('site_name'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('email_sender', 'email', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('email_sender'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('email_sender_name', 'text', [
-                'required' => true,
-                'label' => $this->getTranslator()->trans('email_sender_name'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('seo_description', 'text', [
-                'required' => false,
-                'label' => $this->getTranslator()->trans('meta_description'),
-            ])
-            ->add('timezone', 'choice', [
-                'choices' => $timeZoneList,
-                'choices_as_values' => true,
-                'label' => $this->getTranslator()->trans('timezone'),
-                'required' => true,
-            ]);
-
-        $themesType = new ThemesType($this->get('em'));
-
-        if ($themesType->getSize() > 0) {
-            $builder->add('separator_1', new SeparatorType(), [
-                'label' => $this->getTranslator()->trans('themes.frontend.description'),
-            ])
-                ->add('install_theme', 'checkbox', [
-                    'required' => false,
-                    'label' => $this->getTranslator()->trans('install_theme'),
-                    'data' => true,
-                ])
-                ->add(
-                    'className',
-                    $themesType,
-                    [
-                        'label' => $this->getTranslator()->trans('theme.selector'),
-                        'required' => true,
-                        'constraints' => [
-                            new NotNull(),
-                            new Type('string'),
-                        ],
-                    ]
-                );
-        }
-
-        return $builder->getForm();
-    }
-
-    /**
-     * Build forms
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildDoneForm(Request $request)
     {
         $builder = $this->createFormBuilder()
-            ->add('action', 'hidden', [
+            ->add('action', HiddenType::class, [
                 'data' => 'quit_install',
             ]);
 

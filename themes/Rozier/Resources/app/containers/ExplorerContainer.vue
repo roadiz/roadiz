@@ -13,6 +13,7 @@
                         v-if="isFilterEnable"
                         :entity="entity"
                         :icon="filterExplorerIcon"
+                        :filter-explorer-selected-items="filterExplorerSelectedItems"
                         :is-filter-explorer-open="isFilterExplorerOpen"
                         :on-click="filterExplorerToggle">
                     </filter-explorer-button>
@@ -103,6 +104,7 @@
                 translations: state => state.translations,
                 entity: state => state.explorer.entity,
                 isFilterExplorerOpen: state => state.filterExplorer.isOpen,
+                filterExplorerSelectedItems: state => state.filterExplorer.selectedItem,
                 currentListingView: state => state.explorer.currentListingView,
                 widgetView: state => state.explorer.widgetView,
                 isFilterEnable: state => state.explorer.isFilterEnable,

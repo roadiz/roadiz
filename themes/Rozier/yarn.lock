@@ -3803,9 +3803,13 @@ isstream@~0.1.2:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/isstream/-/isstream-0.1.2.tgz#47e63f7af55afa6f92e1500e690eb8b8529c099a"
 
-jquery-ui@^1.12.1:
+jquery-ui@>=1.0, jquery-ui@^1.12.1:
   version "1.12.1"
   resolved "https://registry.yarnpkg.com/jquery-ui/-/jquery-ui-1.12.1.tgz#bcb4045c8dd0539c134bc1488cdd3e768a7a9e51"
+
+jquery@>=1.7:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
 
 js-base64@^2.1.8, js-base64@^2.1.9:
   version "2.4.0"
@@ -5395,6 +5399,10 @@ qs@6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.1.tgz#349cdf6eef89ec45c12d7d5eb3fc0c870343a6d8"
 
+qs@^6.5.2:
+  version "6.5.2"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
+
 qs@~6.3.0:
   version "6.3.2"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.3.2.tgz#e75bd5f6e268122a2a0e0bda630b2550c166502c"
@@ -6322,6 +6330,13 @@ svgo@^0.7.0:
     mkdirp "~0.5.1"
     sax "~1.2.1"
     whet.extend "~0.9.9"
+
+symfony-collection@^2.1.26:
+  version "2.1.26"
+  resolved "https://registry.yarnpkg.com/symfony-collection/-/symfony-collection-2.1.26.tgz#09956758183de4b766bead7542ae701168d5dbe1"
+  dependencies:
+    jquery ">=1.7"
+    jquery-ui ">=1.0"
 
 table@^3.7.8:
   version "3.8.3"

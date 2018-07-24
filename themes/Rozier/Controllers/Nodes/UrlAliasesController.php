@@ -43,6 +43,8 @@ use RZ\Roadiz\Core\Events\UrlAliasEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -234,8 +236,7 @@ class UrlAliasesController extends RozierApp
     {
         if ($data['nodeId'] == $node->getId()) {
             /** @var Translation $translation */
-            $translation = $this->get('em')
-                                ->find(Translation::class, (int) $data['translationId']);
+            $translation = $this->get('em')->find(Translation::class, (int) $data['translationId']);
 
             /** @var NodesSources $nodeSource */
             $nodeSource = $this->get('em')
@@ -266,7 +267,9 @@ class UrlAliasesController extends RozierApp
                     throw new EntityAlreadyExistsException($msg);
                 }
             } else {
-                $msg = $this->getTranslator()->trans('url_alias.no_translation.%translation%', ['%translation%' => $translation->getName()]);
+                $msg = $this->getTranslator()->trans('url_alias.no_translation.%translation%', [
+                    '%translation%' => $translation->getName()
+                ]);
 
                 throw new NoTranslationAvailableException($msg);
             }
@@ -344,14 +347,15 @@ class UrlAliasesController extends RozierApp
         $defaults = [
             'nodeId' => $node->getId(),
         ];
+
         $builder = $this->createNamedFormBuilder('add_url_alias', $defaults)
-                        ->add('nodeId', 'hidden', [
+                        ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('alias', 'text', [
+                        ->add('alias', TextType::class, [
                             'label' => false,
                             'attr' => [
                                 'placeholder' => 'urlAlias',
@@ -360,8 +364,9 @@ class UrlAliasesController extends RozierApp
                                 new NotBlank(),
                             ]
                         ])
-                        ->add('translationId', new TranslationsType($this->get('em')), [
+                        ->add('translationId', TranslationsType::class, [
                             'label' => false,
+                            'entityManager' => $this->get('em'),
                         ]);
 
         return $builder->getForm();
@@ -378,14 +383,15 @@ class UrlAliasesController extends RozierApp
             'urlaliasId' => $ua->getId(),
             'alias' => $ua->getAlias(),
         ];
+
         $builder = $this->createNamedFormBuilder('edit_urlalias_'.$ua->getId(), $defaults)
-                        ->add('urlaliasId', 'hidden', [
+                        ->add('urlaliasId', HiddenType::class, [
                             'data' => $ua->getId(),
                             'constraints' => [
                                 new NotBlank(),
                             ],
                         ])
-                        ->add('alias', 'text', [
+                        ->add('alias', TextType::class, [
                             'label' => false,
                             'constraints' => [
                                 new NotBlank(),

@@ -19,9 +19,7 @@
         </div>
 
         <div class="content-text-cont">
-
             <div class="content-text">
-
                 <div class="content-intro content-intro-only">
                     <h3>{% trans %}welcome.subtitle{% endtrans %}</h3>
                     {% trans %}welcome.message{% endtrans %}
@@ -36,12 +34,14 @@
                 {% endif %}
 
                 {% form_theme form 'horizontalForms.html.twig' %}
-                <form id="language-form" class="uk-form uk-form-horizontal" action="#" method="post" {{ form_enctype(form) }}>
-                    <div class="content-text content-text-form">
-                        {{ form_widget(form) }}
-                        <button class="content-button form-save-button uk-button"><i class="uk-icon-flag"></i> {% trans %}choose.language{% endtrans %}</button>
+                {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    <div class="uk-form-row">
+                        <button class="content-button form-save-button uk-button">
+                            <i class="uk-icon-flag"></i> {% trans %}choose.language{% endtrans %}
+                        </button>
                     </div>
-                </form>
+                {{ form_end(form) }}
             </div>
 
             {% spaceless %}

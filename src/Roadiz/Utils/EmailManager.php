@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
+use Twig\Environment;
 
 /**
  * Class EmailManager
@@ -67,7 +68,7 @@ class EmailManager
     /** @var TranslatorInterface */
     protected $translator;
 
-    /** @var \Twig_Environment */
+    /** @var Environment */
     protected $templating;
 
     /** @var \Swift_Mailer */
@@ -115,7 +116,7 @@ class EmailManager
      *
      * @param Request $request
      * @param TranslatorInterface $translator
-     * @param \Twig_Environment $templating
+     * @param Environment $templating
      * @param \Swift_Mailer $mailer
      * @param Settings|null $settingsBag
      * @param DocumentUrlGenerator|null $documentUrlGenerator
@@ -123,7 +124,7 @@ class EmailManager
     public function __construct(
         Request $request,
         TranslatorInterface $translator,
-        \Twig_Environment $templating,
+        Environment $templating,
         \Swift_Mailer $mailer,
         Settings $settingsBag = null,
         DocumentUrlGenerator $documentUrlGenerator = null
@@ -208,9 +209,8 @@ class EmailManager
     {
         $this->appendWebsiteIcon();
 
-        $this->message = \Swift_Message::newInstance()
-            // Give the message a subject
-            ->setSubject($this->getSubject())
+        $this->message = new \Swift_Message();
+        $this->message->setSubject($this->getSubject())
             ->setFrom($this->getOrigin())
             ->setTo($this->getReceiver())
             // Force using string and only one email
@@ -450,7 +450,7 @@ class EmailManager
     }
 
     /**
-     * @return \Twig_Environment
+     * @return Environment
      */
     public function getTemplating()
     {
@@ -458,10 +458,10 @@ class EmailManager
     }
 
     /**
-     * @param \Twig_Environment $templating
+     * @param Environment $templating
      * @return EmailManager
      */
-    public function setTemplating($templating)
+    public function setTemplating(Environment $templating)
     {
         $this->templating = $templating;
         return $this;

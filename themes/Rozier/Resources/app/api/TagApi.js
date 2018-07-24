@@ -33,10 +33,11 @@ import request from 'axios'
  *
  * @param {String} searchTerms
  * @param {Object} filters
+ * @param filterExplorerSelection
  * @param {Boolean} moreData
  * @returns {Promise<R>|Promise.<T>}
  */
-export function getTags ({ searchTerms, filters, moreData }) {
+export function getTags ({ searchTerms, filters, filterExplorerSelection, moreData }) {
     const postData = {
         _token: window.RozierRoot.ajaxToken,
         _action: 'getTags',
@@ -46,6 +47,10 @@ export function getTags ({ searchTerms, filters, moreData }) {
 
     if (moreData) {
         postData.page = filters ? filters.nextPage : 1
+    }
+
+    if (filterExplorerSelection && filterExplorerSelection.id) {
+        postData.tagId = filterExplorerSelection.id
     }
 
     return request({

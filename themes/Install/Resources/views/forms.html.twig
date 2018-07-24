@@ -1,3 +1,5 @@
+{% extends "form_div_layout.html.twig" %}
+
 {% block form_start -%}
     {% set method = method|upper %}
     {%- if method in ["GET", "POST"] -%}
@@ -13,7 +15,7 @@
 
 
 {% block form_label -%}
-    {% if label is not sameas(false) -%}
+    {% if label is not same as(false) -%}
         {% if not compound -%}
             {% set label_attr = label_attr|merge({'for': id}) %}
         {%- endif %}
@@ -64,7 +66,7 @@
 {% block separator_widget %}
     {% spaceless %}
         {# just let the textarea widget render the select tag #}
-        <p {{ block('widget_attributes') }}>{{label}}</p>
+        <p {{ block('widget_attributes') }}>{{ label|trans }}</p>
     {% endspaceless %}
 {% endblock separator_widget %}
 

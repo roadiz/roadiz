@@ -82,7 +82,10 @@ export default class NodeEditSource {
                 }
 
                 $formSwitcherNav.on('show.uk.switcher', () => {
-                    window.Rozier.$window.trigger('resize')
+                    window.setTimeout(() => {
+                        window.Rozier.$window.trigger('resize')
+                        window.Rozier.lazyload.refreshCodemirrorEditor()
+                    }, 100)
                 })
             }
         }

@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterTranslationEvent;
 use RZ\Roadiz\Core\Events\TranslationEvents;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -61,10 +62,6 @@ class TranslationsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
 
-        $translations = $this->get('em')
-                             ->getRepository(Translation::class)
-                             ->findAll();
-
         $this->assignation['translations'] = [];
 
         $listManager = $this->createEntityListManager(
@@ -74,6 +71,7 @@ class TranslationsController extends RozierApp
         $listManager->handle();
 
         $this->assignation['filters'] = $listManager->getAssignation();
+        $translations = $listManager->getEntities();
 
         /** @var Translation $translation */
         foreach ($translations as $translation) {
@@ -131,7 +129,7 @@ class TranslationsController extends RozierApp
         if ($translation !== null) {
             $this->assignation['translation'] = $translation;
 
-            $form = $this->createForm(new TranslationType(), $translation, [
+            $form = $this->createForm(TranslationType::class, $translation, [
                 'em' => $this->get('em'),
                 'locale' => $translation->getLocale(),
                 'overrideLocale' => $translation->getOverrideLocale(),
@@ -180,7 +178,7 @@ class TranslationsController extends RozierApp
         $translation = new Translation();
         $this->assignation['translation'] = $translation;
 
-        $form = $this->createForm(new TranslationType(), $translation, [
+        $form = $this->createForm(TranslationType::class, $translation, [
             'em' => $this->get('em'),
         ]);
         $form->handleRequest($request);
@@ -292,7 +290,7 @@ class TranslationsController extends RozierApp
         $builder = $this->createFormBuilder()
                         ->add(
                             'translationId',
-                            'hidden',
+                            HiddenType::class,
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [
@@ -314,7 +312,7 @@ class TranslationsController extends RozierApp
         $builder = $this->createFormBuilder()
                         ->add(
                             'translationId',
-                            'hidden',
+                            HiddenType::class,
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [

@@ -86,7 +86,7 @@ class CustomFormsController extends RozierApp
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
-            $form = $this->createForm(new CustomFormType(), $customForm, [
+            $form = $this->createForm(CustomFormType::class, $customForm, [
                 'em' => $this->get('em'),
                 'name' => $customForm->getName(),
             ]);
@@ -118,7 +118,7 @@ class CustomFormsController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request)
     {
@@ -128,7 +128,10 @@ class CustomFormsController extends RozierApp
         if (null !== $customForm) {
             $this->assignation['customForm'] = $customForm;
 
-            $form = $this->createForm(new CustomFormType(), $customForm, [
+            /*
+             * form
+             */
+            $form = $this->createForm(CustomFormType::class, $customForm, [
                 'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);

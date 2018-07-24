@@ -19,9 +19,24 @@
             <table class="translations content-table uk-table">
                 <thead>
                     <tr>
-                        <th>{% trans %}name{% endtrans %}</th>
-                        <th>{% trans %}translation.locale{% endtrans %}</th>
-                        <th>{% trans %}overrideLocale{% endtrans %}</th>
+                        <th>{% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
+                        </th>
+                        <th>{% trans %}translation.locale{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'locale',
+                                'filters': filters,
+                            } only %}
+                        </th>
+                        <th>{% trans %}overrideLocale{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'overrideLocale',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th>{% trans %}status{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
@@ -43,7 +58,7 @@
                             <a class="uk-button uk-button-content uk-button-small" title="{% trans %}edit{% endtrans %}" href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             {% if t.translation.isDefaultTranslation == false %}
                                 {% form_theme t.defaultForm 'forms.html.twig' %}
-                                <form class="uk-form-translation-default" action="#" method="post" {{ form_enctype(t.defaultForm) }}>
+                                <form class="uk-form-translation-default" action="#" method="post">
                                     {{ form_widget(t.defaultForm) }}
                                     <button class="uk-button uk-button-content uk-button-small" title="{% trans %}set.default{% endtrans %}" type="submit" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></button>
                                 </form>

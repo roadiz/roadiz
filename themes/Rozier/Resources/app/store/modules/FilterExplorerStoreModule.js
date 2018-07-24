@@ -6,13 +6,14 @@ import {
     FILTER_EXPLORER_SUCCESS,
     FILTER_EXPLORER_FAILED,
     FILTER_EXPLORER_UPDATE,
-
+    FILTER_EXPLORER_RESET,
     KEYBOARD_EVENT_ESCAPE
 } from '../../types/mutationTypes'
 
 import {
     DOCUMENT_ENTITY,
-    NODE_ENTITY
+    NODE_ENTITY,
+    TAG_ENTITY
 } from '../../types/entityTypes'
 
 const initialState = {
@@ -49,6 +50,9 @@ const actions = {
     },
     filterExplorerClose ({ commit }) {
         commit(FILTER_EXPLORER_CLOSE)
+    },
+    filterExplorerReset ({ commit }) {
+        commit(FILTER_EXPLORER_RESET)
     },
     filterExplorerToggle ({ dispatch, state }) {
         if (state.isOpen) {
@@ -100,10 +104,16 @@ const mutations = {
             state.icons.normal = 'uk-icon-tag'
             state.icons.active = 'uk-icon-tag'
             break
+        case TAG_ENTITY:
+            state.icons.normal = 'uk-icon-tag'
+            state.icons.active = 'uk-icon-tag'
+            break
         }
     },
     [FILTER_EXPLORER_CLOSE] (state) {
         state.isOpen = false
+    },
+    [FILTER_EXPLORER_RESET] (state) {
         state.selectedItem = null
         state.items = []
     },

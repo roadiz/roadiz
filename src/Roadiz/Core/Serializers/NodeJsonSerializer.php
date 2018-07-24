@@ -82,7 +82,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             $data['children_order'] = $node->getChildrenOrder();
             $data['children_order_direction'] = $node->getChildrenOrderDirection();
             $data['position'] = $node->getPosition();
-
+            $data['dynamic_node_name'] = $node->isDynamicNodeName();
             $data['children'] = [];
             $data['nodes_sources'] = [];
             $data['tags'] = [];
@@ -129,8 +129,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     protected function makeNodeRec($data)
     {
         /** @var NodeType $nodetype */
-        $nodetype = $this->em->getRepository(NodeType::class)
-                         ->findOneByName($data["node_type"]);
+        $nodetype = $this->em->getRepository(NodeType::class)->findOneByName($data["node_type"]);
 
         /*
          * Check if node-type exists before importing nodes
@@ -159,6 +158,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         $node->setChildrenOrderDirection($data['children_order_direction']);
         if (isset($data['position'])) {
             $node->setPosition($data['position']);
+        }
+        if (isset($data['dynamic_node_name'])) {
+            $node->setDynamicNodeName((boolean) $data['dynamic_node_name']);
         }
 
         foreach ($data["nodes_sources"] as $source) {

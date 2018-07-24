@@ -31,8 +31,11 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Doctrine\Common\Util\Debug;
 use Pimple\Container;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
-class DumpExtension extends \Twig_Extension
+class DumpExtension extends AbstractExtension
 {
     /**
      * @var Container
@@ -51,7 +54,7 @@ class DumpExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new \Twig_SimpleFunction('dump', function (\Twig_Environment $env) {
+            new TwigFunction('dump', function (Environment $env) {
                 if (!$env->isDebug()) {
                     return;
                 }
@@ -62,10 +65,5 @@ class DumpExtension extends \Twig_Extension
                 }
             }, ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
         );
-    }
-
-    public function getName()
-    {
-        return 'dump';
     }
 }

@@ -30,11 +30,16 @@
 namespace RZ\Roadiz\CMS\Forms;
 
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
+use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
@@ -46,43 +51,30 @@ use Symfony\Component\Validator\Constraints\NotBlank;
  */
 class CustomFormsType extends AbstractType
 {
-    protected $customForm;
-    protected $forceExpanded;
-
-    /**
-     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
-     * @param boolean $forceExpanded
-     */
-    public function __construct(CustomForm $customForm, $forceExpanded = false)
-    {
-        $this->customForm = $customForm;
-        $this->forceExpanded = (boolean) $forceExpanded;
-    }
-
     /**
      * @param  FormBuilderInterface $builder
      * @param  array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $fieldsArray = $this->getFieldsByGroups();
+        $fieldsArray = $this->getFieldsByGroups($options);
 
         /** @var CustomFormField|array $field */
         foreach ($fieldsArray as $group => $field) {
             if ($field instanceof CustomFormField) {
-                $this->addSingleField($builder, $field);
+                $this->addSingleField($builder, $field, $options);
             } elseif (is_array($field)) {
                 $groupCanonical = StringHandler::slugify($group);
-                $subBuilder = $builder->create($groupCanonical, 'form', [
+                $subBuilder = $builder->create($groupCanonical, FormType::class, [
                     'label' => $group,
-                    'virtual' => true,
+                    'inherit_data' => true,
                     'attr' => [
                         'data-group-wrapper' => $groupCanonical,
                     ]
                 ]);
                 /** @var CustomFormField $subfield */
                 foreach ($field as $subfield) {
-                    $this->addSingleField($subBuilder, $subfield);
+                    $this->addSingleField($subBuilder, $subfield, $options);
                 }
                 $builder->add($subBuilder);
             }
@@ -98,7 +90,7 @@ class CustomFormsType extends AbstractType
                 $options['recaptcha_verifyurl'] :
                 'https://www.google.com/recaptcha/api/siteverify';
 
-            $builder->add('recaptcha', new RecaptchaType(), [
+            $builder->add('recaptcha', RecaptchaType::class, [
                 'label' => false,
                 'configs' => [
                     'publicKey' => $options['recaptcha_public_key'],
@@ -114,12 +106,13 @@ class CustomFormsType extends AbstractType
     }
 
     /**
+     * @param array $options
      * @return array
      */
-    protected function getFieldsByGroups()
+    protected function getFieldsByGroups(array $options)
     {
         $fieldsArray = [];
-        $fields = $this->customForm->getFields();
+        $fields = $options['customForm']->getFields();
 
         /** @var CustomFormField $field */
         foreach ($fields as $field) {
@@ -139,11 +132,12 @@ class CustomFormsType extends AbstractType
     /**
      * @param FormBuilderInterface $builder
      * @param CustomFormField $field
+     * @param array $formOptions
      * @return $this
      */
-    protected function addSingleField(FormBuilderInterface $builder, CustomFormField $field)
+    protected function addSingleField(FormBuilderInterface $builder, CustomFormField $field, array $formOptions)
     {
-        $builder->add($field->getName(), $this->getTypeForField($field), $this->getOptionsForField($field));
+        $builder->add($field->getName(), $this->getTypeForField($field), $this->getOptionsForField($field, $formOptions));
         return $this;
     }
 
@@ -156,27 +150,25 @@ class CustomFormsType extends AbstractType
         switch ($field->getType()) {
             case AbstractField::ENUM_T:
             case AbstractField::MULTIPLE_T:
-                $type = "choice";
+                return ChoiceType::class;
                 break;
             case AbstractField::DOCUMENTS_T:
-                $type = "file";
+                return FileType::class;
                 break;
             case AbstractField::MARKDOWN_T:
-                $type = new MarkdownType();
+                return MarkdownType::class;
                 break;
             default:
-                $type = CustomFormField::$typeToForm[$field->getType()];
-                break;
+                return NodeSourceType::getFormTypeFromFieldType($field);
         }
-
-        return $type;
     }
 
     /**
      * @param CustomFormField $field
+     * @param array $formOptions
      * @return array
      */
-    protected function getOptionsForField(CustomFormField $field)
+    protected function getOptionsForField(CustomFormField $field, array $formOptions)
     {
         $option = [
             "label" => $field->getLabel(),
@@ -211,7 +203,7 @@ class CustomFormsType extends AbstractType
                 $option["expanded"] = $field->isExpanded();
                 $option["choices_as_values"] = true;
 
-                if ($this->forceExpanded) {
+                if ($formOptions['forceExpanded']) {
                     $option["expanded"] = true;
                 }
                 if ($field->isRequired() === false) {
@@ -227,7 +219,7 @@ class CustomFormsType extends AbstractType
                 $option["choices_as_values"] = true;
                 $option["expanded"] = $field->isExpanded();
 
-                if ($this->forceExpanded) {
+                if ($formOptions['forceExpanded']) {
                     $option["expanded"] = true;
                 }
                 if ($field->isRequired() === false) {
@@ -275,21 +267,26 @@ class CustomFormsType extends AbstractType
     }
 
     /**
-     * @param OptionsResolver $optionsResolver
+     * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $optionsResolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $optionsResolver->setDefaults([
+        $resolver->setDefaults([
             'recaptcha_public_key' => null,
             'recaptcha_private_key' => null,
             'recaptcha_verifyurl' => null,
             'request' => null,
+            'forceExpanded' => false,
         ]);
 
-        $optionsResolver->setAllowedTypes('request', ['Symfony\Component\HttpFoundation\Request', 'null']);
-        $optionsResolver->setAllowedTypes('recaptcha_public_key', ['string', 'null', 'boolean']);
-        $optionsResolver->setAllowedTypes('recaptcha_private_key', ['string', 'null', 'boolean']);
-        $optionsResolver->setAllowedTypes('recaptcha_verifyurl', ['string', 'null', 'boolean']);
+        $resolver->setRequired('customForm');
+
+        $resolver->setAllowedTypes('customForm', [CustomForm::class]);
+        $resolver->setAllowedTypes('forceExpanded', ['boolean']);
+        $resolver->setAllowedTypes('request', [Request::class, 'null']);
+        $resolver->setAllowedTypes('recaptcha_public_key', ['string', 'null', 'boolean']);
+        $resolver->setAllowedTypes('recaptcha_private_key', ['string', 'null', 'boolean']);
+        $resolver->setAllowedTypes('recaptcha_verifyurl', ['string', 'null', 'boolean']);
     }
 
     /**
@@ -297,6 +294,6 @@ class CustomFormsType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'custom_form_'.$this->customForm->getId();
+        return 'custom_form_public';
     }
 }

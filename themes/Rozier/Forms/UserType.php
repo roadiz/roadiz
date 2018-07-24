@@ -34,6 +34,10 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -46,7 +50,7 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('email', 'email', [
+        $builder->add('email', EmailType::class, [
                 'label' => 'email',
                 'constraints' => [
                     new NotBlank(),
@@ -56,7 +60,7 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('username', 'text', [
+            ->add('username', TextType::class, [
                 'label' => 'username',
                 'constraints' => [
                     new NotBlank(),
@@ -69,8 +73,8 @@ class UserType extends AbstractType
                     ])
                 ],
             ])
-            ->add('plainPassword', 'repeated', [
-                'type' => 'password',
+            ->add('plainPassword', RepeatedType::class, [
+                'type' => PasswordType::class,
                 'invalid_message' => 'password.must.match',
                 'first_options' => [
                     'label' => 'password',

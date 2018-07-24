@@ -232,6 +232,24 @@
                 "visible": true
             },
             {
+                "name": "linkedin_url",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "youtube_url",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
+                "name": "googleplus_url",
+                "value": "",
+                "type": 0,
+                "visible": true
+            },
+            {
                 "name": "twitter_account",
                 "value": "",
                 "type": 0,

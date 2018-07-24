@@ -30,16 +30,10 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Events\CacheEvents;
+use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
-use RZ\Roadiz\Utils\Clearer\AssetsClearer;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -52,7 +46,6 @@ class CacheController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteDoctrineCache(Request $request)
     {
@@ -62,24 +55,34 @@ class CacheController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            /** @var Kernel $kernel */
-            $kernel = $this->get('kernel');
-            $clearers = [
-                new DoctrineCacheClearer($this->get('em'), $kernel),
-                new NodesSourcesUrlsCacheClearer($this->get('nodesSourcesUrlCacheProvider')),
-                new TranslationsCacheClearer($kernel->getCacheDir()),
-                new RoutingCacheClearer($kernel->getCacheDir()),
-                new TemplatesCacheClearer($kernel->getCacheDir()),
-                new ConfigurationCacheClearer($kernel->getCacheDir()),
-                new AppCacheClearer($kernel->getCacheDir()),
-                new OPCacheClearer(),
-            ];
-            foreach ($clearers as $clearer) {
-                $clearer->clear();
-            }
+            /** @var EventDispatcher $dispatcher */
+            $dispatcher = $this->get('dispatcher');
+            $event = new FilterCacheEvent($this->get('kernel'));
+            $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
+
+            // Clear cache for prod preview
+            $kernelClass = get_class($this->get('kernel'));
+            /** @var Kernel $prodPreviewKernel */
+            $prodPreviewKernel = new $kernelClass('prod', false, true);
+            $prodPreviewKernel->boot();
+            $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
+            $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
+
+            foreach ($event->getMessages() as $message) {
+                $this->get('logger')->info(sprintf('Cache cleared: %s', $message['description']));
+            }
+            foreach ($event->getErrors() as $message) {
+                $this->publishErrorMessage($request, sprintf('Could not clear cache: %s', $message['description']));
+            }
+            foreach ($prodPreviewEvent->getMessages() as $message) {
+                $this->get('logger')->info(sprintf('Preview cache cleared: %s', $message['description']));
+            }
+            foreach ($prodPreviewEvent->getErrors() as $message) {
+                $this->publishErrorMessage($request, sprintf('Could not clear creview cache: %s', $message['description']));
+            }
 
             /*
              * Force redirect to avoid resending form when refreshing page
@@ -131,11 +134,19 @@ class CacheController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $clearer = new AssetsClearer($this->get('kernel')->getPublicCachePath());
-            $clearer->clear();
+            /** @var EventDispatcher $dispatcher */
+            $dispatcher = $this->get('dispatcher');
+            $event = new FilterCacheEvent($this->get('kernel'));
+            $dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
+            foreach ($event->getMessages() as $message) {
+                $this->get('logger')->info(sprintf('Cache cleared: %s', $message['description']));
+            }
+            foreach ($event->getErrors() as $message) {
+                $this->publishErrorMessage($request, sprintf('Could not clear cache: %s', $message['description']));
+            }
 
             /*
              * Force redirect to avoid resending form when refreshing page

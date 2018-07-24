@@ -61,7 +61,7 @@ class MailerServiceProvider implements ServiceProviderInterface
     {
         $container['mailer.transport'] = function ($c) {
             if ($c['config']['mailer']['type'] == "smtp") {
-                $transport = \Swift_SmtpTransport::newInstance();
+                $transport = new \Swift_SmtpTransport();
 
                 if (!empty($c['config']['mailer']['host'])) {
                     $transport->setHost($c['config']['mailer']['host']);
@@ -84,12 +84,12 @@ class MailerServiceProvider implements ServiceProviderInterface
 
                 return $transport;
             } else {
-                return \Swift_MailTransport::newInstance();
+                return new \Swift_SendmailTransport();
             }
         };
 
         $container['mailer'] = function ($c) {
-            return \Swift_Mailer::newInstance($c['mailer.transport']);
+            return new \Swift_Mailer($c['mailer.transport']);
         };
 
         return $container;

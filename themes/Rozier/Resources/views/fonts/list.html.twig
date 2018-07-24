@@ -18,10 +18,24 @@
             <table class="fonts content-table uk-table">
                 <thead>
                     <tr>
-                        <th>{% trans %}name{% endtrans %}</th>
-                        <th>{% trans %}font.variant{% endtrans %}</th>
+                        <th>
+                            {% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
+                        </th>
+                        <th>
+                            {% trans %}font.variant{% endtrans %}
+                        </th>
                         <th class="mobile-hidden">{% trans %}font.files{% endtrans %}</th>
-                        <th class="mobile-hidden">{% trans %}font.cssfamily{% endtrans %}</th>
+                        <th class="mobile-hidden">
+                            {% trans %}font.cssfamily{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'hash',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>

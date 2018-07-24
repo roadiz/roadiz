@@ -31,6 +31,8 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
@@ -48,7 +50,7 @@ class NodeSourceSeoType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('metaTitle', 'text', [
+        $builder->add('metaTitle', TextType::class, [
                 'label' => 'metaTitle',
                 'required' => false,
                 'attr' => [
@@ -60,7 +62,7 @@ class NodeSourceSeoType extends AbstractType
                     ])
                 ]
             ])
-            ->add('metaKeywords', 'text', [
+            ->add('metaKeywords', TextType::class, [
                 'label' => 'metaKeywords',
                 'required' => false,
                 'constraints' => [
@@ -69,7 +71,7 @@ class NodeSourceSeoType extends AbstractType
                     ])
                 ]
             ])
-            ->add('metaDescription', 'textarea', [
+            ->add('metaDescription', TextareaType::class, [
                 'label' => 'metaDescription',
                 'required' => false,
             ])

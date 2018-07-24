@@ -1065,7 +1065,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">561</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Il nodo% nome% è stato creato.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="child_node.%name%.created" approved="yes">
         <source>child_node.%name%.created</source>
         <target xml:lang="en">Child node %name% has been created.</target>
@@ -3782,7 +3782,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/9c/58/6b7377e4e0199f222b386af4ab53323fa8706432615c927d15d12a5c2b3a.php</context>
           <context context-type="linenumber">51</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">etichetta il contenuto </target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="376" approved="yes">
         <source>tag.settings</source>
         <target xml:lang="en">Tag settings</target>
@@ -3882,7 +3882,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/de/03/6cb30cfbaeddb9370c458b1694d8751a7c5e34716db56ef2a35604ef8003.php</context>
           <context context-type="linenumber">58</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Scollegare il documento</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="388" approved="yes">
         <source>edit.document</source>
         <target xml:lang="en">Edit document</target>
@@ -3946,7 +3946,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/41/8d/7960bb87be336f81a137e8312c241bf87671ced5b671a5a284994a30ec3b.php</context>
           <context context-type="linenumber">57</context>
         </context-group>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">nome file</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="396" approved="yes">
         <source>document.createdAt</source>
         <target xml:lang="en">Created at</target>
@@ -4193,6 +4193,10 @@
         <source>country.type</source>
         <target xml:lang="en">Country (ISO 3166-1 alpha-2)</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target xml:lang="en" state="translated">Custom collection</target>
+      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445" approved="yes">
         <source>add.a.%nodeType%</source>
@@ -4226,7 +4230,7 @@
       <trans-unit xml:space="preserve" id="%group%.settings" approved="yes">
         <source>%group%.settings</source>
         <target xml:lang="en">“%group%” settings</target>
-      </trans-unit>
+      <alt-trans><target xml:lang="en">Impostazioni "% gruppo%"</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="settingGroup.%name%.updated" approved="yes">
         <source>settingGroup.%name%.updated</source>
         <target xml:lang="en">Setting group %name% has been updated.</target>
@@ -4351,18 +4355,37 @@
       <trans-unit xml:space="preserve" id="facebook_url" approved="yes">
         <source>facebook_url</source>
         <target xml:lang="en">Facebook URL</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="instagram_url" approved="yes">
         <source>instagram_url</source>
         <target xml:lang="en">Instagram URL</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url" approved="yes">
         <source>twitter_url</source>
         <target xml:lang="en">Twitter URL</target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="linkedin_url">
+        <source>linkedin_url</source>
+        <target xml:lang="en" state="translated">LinkedIn Url</target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_url">
+        <source>youtube_url</source>
+        <target xml:lang="en" state="translated">Youtube Url</target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="googleplus_url">
+        <source>googleplus_url</source>
+        <target xml:lang="en" state="translated">Google + Url</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account" approved="yes">
         <source>twitter_account</source>
         <target xml:lang="en">Twitter account name</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="recaptcha_public_key" approved="yes">
         <source>recaptcha_public_key</source>
@@ -4572,8 +4595,8 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="embedId.is_not_valid">
         <source>embedId.is_not_valid</source>
-        <target xml:lang="en" state="translated">Media identifier is not valid.</target>
-      <alt-trans><target xml:lang="en">L’identifiant du média n’est pas valide.</target></alt-trans></trans-unit>
+        <target xml:lang="en" state="translated">L'identificativo del supporto non è valido.</target>
+      <alt-trans><target xml:lang="en">Media identifier is not valid.</target></alt-trans><alt-trans><target xml:lang="en">L’identifiant du média n’est pas valide.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="document.metas" approved="yes">
         <source>document.metas</source>
         <target xml:lang="en">Metas</target>
@@ -5227,6 +5250,14 @@
       <trans-unit xml:space="preserve" id="more.nodes" approved="yes">
           <source>more.nodes</source>
           <target xml:lang="en">More nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types" approved="yes">
+          <source>more.node_types</source>
+          <target xml:lang="en">More node-types</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags" approved="yes">
+          <source>more.tags</source>
+          <target xml:lang="en">More tags</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms" approved="yes">
           <source>more.custom_forms</source>
@@ -6589,14 +6620,19 @@
             <target xml:lang="en" state="translated">PHP Class "%classname%" must extend AbstractEntity class.</target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target xml:lang="en" state="translated">PHP class %classname% must extend AbstractType class.</target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target xml:lang="en" state="translated">PHP Class "%classname%" does not implement "%method%" method.</target>
             <note>Validator message: when provided classname does not declare provided method.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="more.entities">
+      <trans-unit xml:space="preserve" id="more.entities" approved="yes">
             <source>more.entities</source>
-            <target xml:lang="en" state="translated">More items</target>
+            <target xml:lang="en">More items</target>
             <note>Explorer more button label for entities.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
@@ -6749,15 +6785,6 @@
             <target xml:lang="en" state="translated">Multiple relationship using a Provider</target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="collection.type">
-            <source>collection.type</source>
-            <target xml:lang="en" state="translated">Custom collection</target>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
-            <source>classname_%classname%_must_extend_abstract_type_class</source>
-            <target xml:lang="en" state="translated">PHP class %classname% must extend AbstractType class.</target>
-            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
-        </trans-unit>
       <trans-unit xml:space="preserve" id="pictureUrl">
             <source>pictureUrl</source>
             <target xml:lang="en" state="translated">Avatar picture URL</target>
@@ -6773,9 +6800,19 @@
             <target xml:lang="en" state="translated">-- Use website default language --</target>
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
-        <trans-unit xml:space="preserve" id="preview">
+      <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target xml:lang="en" state="translated">Sort ascendant</target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target xml:lang="en" state="translated">Sort descendant</target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="preview">
             <source>preview</source>
-            <target>Preview</target>
+            <target xml:lang="en" state="translated">Preview</target>
             <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>

@@ -29,14 +29,13 @@
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManager;
 use Pimple\Container;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Explorer\AbstractExplorerItem;
 use Themes\Rozier\Explorer\AbstractExplorerProvider;
@@ -53,30 +52,20 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
      */
     private $provider;
 
+    /**
+     * @var array
+     */
+    private $providerOptions;
 
     /**
-     * NodeSourceDocumentType constructor.
-     * @param NodesSources $nodeSource
-     * @param NodeTypeField $nodeTypeField
-     * @param EntityManager $entityManager
-     * @param Container $container
+     * @inheritDoc
      */
-    public function __construct(
-        NodesSources $nodeSource,
-        NodeTypeField $nodeTypeField,
-        EntityManager $entityManager,
-        Container $container
-    ) {
-        parent::__construct($nodeSource, $nodeTypeField, $entityManager);
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
 
-        if ($this->nodeTypeField->getType() === NodeTypeField::MULTI_PROVIDER_T ||
-            $this->nodeTypeField->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
-            $configuration = Yaml::parse($this->nodeTypeField->getDefaultValues());
-            $reflectionClass = new \ReflectionClass($configuration['classname']);
-            $this->classname = $reflectionClass->getName();
-            $this->provider = new $configuration['classname'];
-            $this->provider->setContainer($container);
-        }
+        $resolver->setRequired('container');
+        $resolver->setAllowedTypes('container', [Container::class]);
     }
 
     /**
@@ -85,23 +74,36 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        if ($options['nodeTypeField']->getType() === NodeTypeField::MULTI_PROVIDER_T ||
+            $options['nodeTypeField']->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
+            $configuration = Yaml::parse($options['nodeTypeField']->getDefaultValues());
+            $this->classname = $configuration['classname'];
+            if (isset($configuration['options'])) {
+                $this->providerOptions = $configuration['options'];
+            } else {
+                $this->providerOptions = [];
+            }
+            $this->provider = new $configuration['classname'];
+            $this->provider->setContainer($options['container']);
+        }
+
         $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) {
-                if ($this->nodeTypeField->getType() === NodeTypeField::MULTI_PROVIDER_T && is_array($entitiesToForm)) {
+            function ($entitiesToForm) use ($options) {
+                if ($options['nodeTypeField']->getType() === NodeTypeField::MULTI_PROVIDER_T && is_array($entitiesToForm)) {
                     if (count($entitiesToForm) > 0) {
                         return $this->provider->getItemsById($entitiesToForm);
                     }
                     return [];
                 }
-                if ($this->nodeTypeField->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
+                if ($options['nodeTypeField']->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
                     if (isset($entitiesToForm)) {
                         return $this->provider->getItemsById($entitiesToForm);
                     }
                 }
                 return null;
             },
-            function ($formToEntities) {
-                if (is_array($formToEntities) && $this->nodeTypeField->isSingleProvider()) {
+            function ($formToEntities) use ($options) {
+                if (is_array($formToEntities) && $options['nodeTypeField']->isSingleProvider()) {
                     return $formToEntities[0];
                 }
                 return $formToEntities;
@@ -121,7 +123,7 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
         parent::buildView($view, $form, $options);
 
         $displayableData = [];
-        $ids = call_user_func([$this->nodeSource, $this->nodeTypeField->getGetterName()]);
+        $ids = call_user_func([$options['nodeSource'], $options['nodeTypeField']->getGetterName()]);
         if (!is_array($ids)) {
             $entities = $this->provider->getItemsById([$ids]);
         } else {
@@ -145,6 +147,13 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
         }
 
         $view->vars['provider_class'] = $this->classname;
+
+        if (is_array($this->providerOptions) && count($this->providerOptions) > 0) {
+            $view->vars['provider_options'] = [];
+            foreach ($this->providerOptions as $providerOption) {
+                $view->vars['provider_options'][$providerOption['name']] = $providerOption['value'];
+            }
+        }
     }
 
     /**

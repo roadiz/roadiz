@@ -42,9 +42,10 @@ if (version_compare(phpversion(), '5.4.3', '<')) {
     exit(1);
 }
 
+/** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(__DIR__));
 // Include Composer Autoload (relative to project root).
-require ROADIZ_ROOT . "/vendor/autoload.php";
+require dirname(__DIR__) . "/vendor/autoload.php";
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(array('--env', '-e'), getenv('ROADIZ_ENV') ?: 'dev');

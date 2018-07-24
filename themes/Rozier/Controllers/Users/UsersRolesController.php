@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Users;
 use RZ\Roadiz\CMS\Forms\RolesType;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -197,7 +198,7 @@ class UsersRolesController extends RozierApp
         $builder = $this->createFormBuilder($defaults)
                         ->add(
                             'userId',
-                            'hidden',
+                            HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -207,8 +208,12 @@ class UsersRolesController extends RozierApp
                         )
                         ->add(
                             'roleId',
-                            new RolesType($this->get('em'), $user->getRolesEntities()),
-                            ['label' => 'Role']
+                            RolesType::class,
+                            [
+                                'label' => 'Role',
+                                'entityManager' => $this->get('em'),
+                                'roles' => $user->getRolesEntities(),
+                            ]
                         );
 
         return $builder->getForm();
@@ -225,7 +230,7 @@ class UsersRolesController extends RozierApp
         $builder = $this->createFormBuilder()
                         ->add(
                             'userId',
-                            'hidden',
+                            HiddenType::class,
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
@@ -235,7 +240,7 @@ class UsersRolesController extends RozierApp
                         )
                         ->add(
                             'roleId',
-                            'hidden',
+                            HiddenType::class,
                             [
                                 'data' => $role->getId(),
                                 'constraints' => [

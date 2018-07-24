@@ -2,9 +2,9 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="es-ES">
     <body>
-      <trans-unit xml:space="preserve" id="2">
+      <trans-unit xml:space="preserve" id="2" approved="yes">
         <source>node.%name%.updated</source>
-        <target xml:lang="es-ES" state="translated">La fuente %name% ha sido actualizada.</target>
+        <target xml:lang="es-ES">El nodo %name% ha sido actualizado.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/AjaxControllers/AjaxNodesController.php</context>
           <context context-type="linenumber">74</context>
@@ -13,7 +13,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">195</context>
         </context-group>
-      <alt-trans><target xml:lang="es-ES">El nodo %name% ha sido actualizado.</target></alt-trans></trans-unit>
+      <alt-trans><target xml:lang="es-ES">La fuente %name% ha sido actualizada.</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="3">
         <source>node.%nodeId%.not_exists</source>
         <target xml:lang="es-ES" state="translated">El nodo %nodeId% no existe.</target>
@@ -4193,6 +4193,10 @@
         <source>country.type</source>
         <target xml:lang="es-ES" state="translated">País (ISO 3166-1 alpha-2)</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target xml:lang="es-ES" state="needs-translation">collection.type</target>
+      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
         <source>add.a.%nodeType%</source>
@@ -5228,6 +5232,14 @@
           <source>more.nodes</source>
           <target xml:lang="es-ES" state="translated">Más nodos</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types">
+          <source>more.node_types</source>
+          <target xml:lang="es-ES" state="needs-translation">more.node_types</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags">
+          <source>more.tags</source>
+          <target xml:lang="es-ES" state="needs-translation">more.tags</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>
           <target xml:lang="es-ES" state="translated">Más formularios personalizados</target>
@@ -5866,6 +5878,54 @@
       <trans-unit xml:space="preserve" id="font_variant.light.italic">
           <source>font_variant.light.italic</source>
           <target xml:lang="es-ES" state="translated">Cursivas light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin">
+          <source>font_variant.thin</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.thin</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
+          <source>font_variant.thin.italic</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.thin.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light">
+          <source>font_variant.extra_light</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.extra_light</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
+          <source>font_variant.extra_light.italic</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.extra_light.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
+          <source>font_variant.extra_bold</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.extra_bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
+          <source>font_variant.extra_bold.italic</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.extra_bold.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
+          <source>font_variant.semi_bold</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.semi_bold</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
+          <source>font_variant.semi_bold.italic</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.semi_bold.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium">
+          <source>font_variant.medium</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.medium</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
+          <source>font_variant.medium.italic</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.medium.italic</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black">
+          <source>font_variant.black</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.black</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="font_variant.black.italic">
+          <source>font_variant.black.italic</source>
+          <target xml:lang="es-ES" state="needs-translation">font_variant.black.italic</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
@@ -6541,6 +6601,11 @@
             <target xml:lang="es-ES" state="translated">La clase PHP "%classname%" debe extenderse a clase AbstractEntity.</target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target xml:lang="es-ES" state="needs-translation">classname_%classname%_must_extend_abstract_type_class</target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target xml:lang="es-ES" state="translated">La clase PHP "%classname%" no implementa para el método "%method%"</target>
@@ -6715,6 +6780,21 @@
             <source>use.website.default_language</source>
             <target xml:lang="es-ES" state="translated">-- Usar el idioma predeterminado del sitio web --</target>
             <note>User detail form field choice for using website default language.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target xml:lang="es-ES" state="needs-translation">sort_asc</target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target xml:lang="es-ES" state="needs-translation">sort_desc</target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="preview">
+            <source>preview</source>
+            <target xml:lang="es-ES" state="needs-translation">preview</target>
+            <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>
   </file>

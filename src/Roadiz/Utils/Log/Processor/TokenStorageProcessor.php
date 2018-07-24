@@ -45,9 +45,11 @@ class TokenStorageProcessor
         if (null !== $this->tokenStorage->getToken() &&
             null !== $user = $this->tokenStorage->getToken()->getUser()) {
             if (is_object($user)) {
-                $record['extra']['user'] = [];
-                $record['extra']['user']['username'] = $user->getUsername();
-                $record['extra']['user']['roles'] = $user->getRoles();
+                $record['context']['user'] = [
+                    'username' => $user->getUsername(),
+                    'email' => $user->getEmail(),
+                    'roles' => $user->getRoles(),
+                ];
             }
         }
 

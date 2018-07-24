@@ -22,7 +22,8 @@
              {% if entity %}data-accept-entity="{{ entity }}"{% endif %}
              data-entity-types="[]"
              data-is-sortable="{{ isSortable }}"
-             {% if provider_class %}data-provider-class="{{ provider_class }}" {% endif %}
+            {% if provider_class %}data-provider-class="{{ provider_class }}" {% endif %}
+            {% if provider_options %}data-provider-options="{{ provider_options|json_encode }}" {% endif %}
              data-initial-items="{{ entityIds|json_encode }}">
             {% if label is empty -%}
                 {% set label = name|humanize %}

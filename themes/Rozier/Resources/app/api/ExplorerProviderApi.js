@@ -27,6 +27,7 @@
  */
 
 import request from 'axios'
+import qs from 'qs'
 
 /**
  * Fetch Joins from an array of node id.
@@ -78,6 +79,7 @@ export function getItems ({ searchTerms, preFilters, filters, filterExplorerSele
         _token: window.RozierRoot.ajaxToken,
         _action: 'toggleExplorer',
         providerClass: preFilters ? preFilters.providerClass : null,
+        options: preFilters ? preFilters.providerOptions : null,
         search: searchTerms,
         page: 1
     }
@@ -88,8 +90,7 @@ export function getItems ({ searchTerms, preFilters, filters, filterExplorerSele
 
     return request({
         method: 'GET',
-        url: window.RozierRoot.routes.providerAjaxExplorer,
-        params: postData
+        url: window.RozierRoot.routes.providerAjaxExplorer + '?' + qs.stringify(postData) // need to use QS to compile array parameters
     })
         .then((response) => {
             if (typeof response.data !== 'undefined' && response.data.entities) {

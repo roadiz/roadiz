@@ -45,6 +45,12 @@ use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -75,8 +81,8 @@ class DocumentsController extends RozierApp
     /**
      * @param Request $request
      * @param null $folderId
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $folderId = null)
     {
@@ -513,10 +519,9 @@ class DocumentsController extends RozierApp
      * Embed external document page.
      *
      * @param Request $request
-     * @param int     $folderId
+     * @param int $folderId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function embedAction(Request $request, $folderId = null)
     {
@@ -751,7 +756,7 @@ class DocumentsController extends RozierApp
             'documentId' => $doc->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-            ->add('documentId', 'hidden', [
+            ->add('documentId', HiddenType::class, [
                 'data' => $doc->getId(),
                 'constraints' => [
                     new NotBlank(),
@@ -769,7 +774,7 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-            ->add('checksum', 'hidden', [
+            ->add('checksum', HiddenType::class, [
                 'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
@@ -788,7 +793,7 @@ class DocumentsController extends RozierApp
     {
         $defaults = [];
         $builder = $this->createFormBuilder($defaults)
-            ->add('checksum', 'hidden', [
+            ->add('checksum', HiddenType::class, [
                 'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
@@ -808,7 +813,7 @@ class DocumentsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-            ->add('editDocument', 'file', [
+            ->add('editDocument', FileType::class, [
                 'label' => 'overwrite.document',
                 'required' => false,
                 'constraints' => [
@@ -833,11 +838,11 @@ class DocumentsController extends RozierApp
         ];
 
         $builder = $this->createFormBuilder($defaults)
-            ->add('referer', 'hidden', [
-                'data' => $this->get('request')->get('referer'),
+            ->add('referer', HiddenType::class, [
+                'data' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
                 'mapped' => false,
             ])
-            ->add('filename', 'text', [
+            ->add('filename', TextType::class, [
                 'label' => 'filename',
                 'required' => false,
                 'constraints' => [
@@ -853,11 +858,11 @@ class DocumentsController extends RozierApp
                     ]),
                 ],
             ])
-            ->add('private', 'checkbox', [
+            ->add('private', CheckboxType::class, [
                 'label' => 'private',
                 'required' => false,
             ])
-            ->add('newDocument', 'file', [
+            ->add('newDocument', FileType::class, [
                 'label' => 'overwrite.document',
                 'required' => false,
                 'constraints' => [
@@ -875,14 +880,10 @@ class DocumentsController extends RozierApp
      */
     private function buildUploadForm($folderId = null)
     {
-        $builder = $this->get('formFactory')
-            ->createBuilder('form', [], [
+        $builder = $this->createFormBuilder([], [
                 'csrf_protection' => false,
-                'csrf_field_name' => '_token',
-                // a unique key to help generate the secret token
-                'intention' => static::AJAX_TOKEN_INTENTION,
             ])
-            ->add('attachment', 'file', [
+            ->add('attachment', FileType::class, [
                 'label' => 'choose.documents.to_upload',
                 'constraints' => [
                     new File(),
@@ -891,7 +892,7 @@ class DocumentsController extends RozierApp
 
         if (null !== $folderId &&
             $folderId > 0) {
-            $builder->add('folderId', 'hidden', [
+            $builder->add('folderId', HiddenType::class, [
                 'data' => $folderId,
             ]);
         }
@@ -906,15 +907,16 @@ class DocumentsController extends RozierApp
     {
         $services = [];
         foreach (array_keys($this->get('document.platforms')) as $value) {
-            $services[$value] = ucwords($value);
+            $services[ucwords($value)] = $value;
         }
 
         $builder = $this->createFormBuilder()
-            ->add('embedId', 'text', [
+            ->add('embedId', TextType::class, [
                 'label' => 'document.embedId',
             ])
-            ->add('embedPlatform', 'choice', [
+            ->add('embedPlatform', ChoiceType::class, [
                 'label' => 'document.platform',
+                'choices_as_values' => true,
                 'choices' => $services,
             ]);
 
@@ -928,13 +930,13 @@ class DocumentsController extends RozierApp
     {
         $builder = $this->get('formFactory')
             ->createNamedBuilder('folderForm')
-            ->add('documentsId', 'hidden', [
+            ->add('documentsId', HiddenType::class, [
                 'attr' => ['class' => 'document-id-bulk-folder'],
                 'constraints' => [
                     new NotBlank(),
                 ],
             ])
-            ->add('folderPaths', 'text', [
+            ->add('folderPaths', TextType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'rz-folder-autocomplete',
@@ -944,7 +946,7 @@ class DocumentsController extends RozierApp
                     new NotBlank(),
                 ],
             ])
-            ->add('submitFolder', 'submit', [
+            ->add('submitFolder', SubmitType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'uk-button uk-button-primary',
@@ -952,7 +954,7 @@ class DocumentsController extends RozierApp
                     'data-uk-tooltip' => "{animation:true}",
                 ],
             ])
-            ->add('submitUnfolder', 'submit', [
+            ->add('submitUnfolder', SubmitType::class, [
                 'label' => false,
                 'attr' => [
                     'class' => 'uk-button',

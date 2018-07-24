@@ -31,6 +31,10 @@ mailer:
     encryption: ~
     username: ""
     password: ""
+themes:
+    - classname: \Themes\DefaultTheme\DefaultThemeApp
+      hostname: '*'
+      routePrefix: ''
 # Doctrine entities search paths
 # Append yours here if you want to create custom
 # entities in your theme.
@@ -64,3 +68,16 @@ assetsProcessing:
 #            timeout: 3
 #            username: ""
 #            password: ""
+
+#
+# Reverse proxy invalidation
+#
+#reverseProxyCache:
+#    frontend:
+#        localhost:
+#            host: localhost
+#            domainName: roadiz.test
+#
+#        external:
+#            host: 127.0.0.1
+#            domainName: roadiz.test

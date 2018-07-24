@@ -32,12 +32,16 @@
 namespace Themes\Rozier\Controllers;
 
 use InlineStyle\InlineStyle;
+use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Utils\DomHandler;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\DefaultTheme\NewsletterControllers\BasicNewsletterController;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -103,29 +107,39 @@ class NewslettersUtilsController extends RozierApp
         }
     }
 
+    /**
+     * @return string
+     */
     private function getBaseNamespace()
     {
-        // get first not static frontend
-        $theme = $this->get("em")
-                      ->getRepository(Theme::class)
-                      ->findFirstAvailableNonStaticFrontend();
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->get('themeResolver');
+        $frontendThemes = $themeResolver->getFrontendThemes();
+        if (count($frontendThemes) > 0) {
+            // get first not static frontend
+            $theme = $themeResolver->getFrontendThemes()[0];
+            $baseNamespace = explode("\\", $theme->getClassName());
+            // remove last elem of the array
+            array_pop($baseNamespace);
 
-        $baseNamespace = explode("\\", $theme->getClassName());
-
-        // remove last elem of the array
-        array_pop($baseNamespace);
-
-        $baseNamespace = implode("\\", $baseNamespace);
-        return $baseNamespace;
+            return implode("\\", $baseNamespace);
+        }
+        throw new \RuntimeException('There is no theme registered to render newsletters.');
     }
 
-    private function getNewsletterHTML(Request $request, $newsletter)
+    /**
+     * @param Request $request
+     * @param Newsletter $newsletter
+     *
+     * @return mixed
+     */
+    private function getNewsletterHTML(Request $request, Newsletter $newsletter)
     {
         $baseNamespace = $this->getBaseNamespace();
 
         // make namespace of the newsletter from the default dynamic theme namespace and newsletter notetype
         $classname = $baseNamespace
-        . "\NewsletterControllers\\"
+        . "\\NewsletterControllers\\"
         . $newsletter->getNode()->getNodeType()->getName()
         . "Controller";
         // force the twig path
@@ -133,9 +147,18 @@ class NewslettersUtilsController extends RozierApp
 
         // get html from the controller
         $front = new $classname();
-        $front->setContainer($this->getContainer());
-        $front->prepareBaseAssignation();
-        return $front->makeHtml($request, $newsletter);
+        if ($front instanceof AppController && method_exists($front, 'makeHtml')) {
+            $front->setContainer($this->getContainer());
+            $front->prepareBaseAssignation();
+            return $front->makeHtml($request, $newsletter);
+        }
+
+        throw new \RuntimeException(sprintf(
+            '""%s" class does not inherit "%s" or does not implements "%s" method.',
+            $classname,
+            AppController::class,
+            'makeHtml'
+        ));
     }
 
     /**

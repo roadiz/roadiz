@@ -38,8 +38,9 @@ use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Yaml\Yaml;
+use Themes\Install\Forms\DatabaseType;
 use Themes\Install\InstallApp;
 
 /**
@@ -52,70 +53,67 @@ class DatabaseController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
      */
     public function databaseAction(Request $request)
     {
-        $databaseForm = $this->buildDatabaseForm($request, $this->get('config'));
+        $databaseForm = $this->createForm(DatabaseType::class, $this->get('config')['doctrine']);
         /** @var YamlConfigurationHandler $yamlConfigHandler */
         $yamlConfigHandler = $this->get('config_handler');
+        $databaseForm->handleRequest($request);
 
-        if ($databaseForm !== null) {
-            $databaseForm->handleRequest($request);
+        if ($databaseForm->isValid()) {
+            try {
+                $yamlConfigHandler->testDoctrineConnexion($databaseForm->getData());
 
-            if ($databaseForm->isValid()) {
-                try {
-                    $yamlConfigHandler->testDoctrineConnexion($databaseForm->getData());
-
-                    $tempConf = $yamlConfigHandler->getConfiguration();
-                    foreach ($databaseForm->getData() as $key => $value) {
-                        $tempConf['doctrine'][$key] = $value;
-                    }
-                    $yamlConfigHandler->setConfiguration($tempConf);
-
-                    /*
-                     * Test connexion
-                     */
-                    /** @var Kernel $kernel */
-                    $kernel = $this->get('kernel');
-                    $fixtures = new Fixtures(
-                        $this->get('em'),
-                        $kernel->getCacheDir(),
-                        $kernel->getRootDir() . '/conf/config.yml',
-                        $kernel->getRootDir(),
-                        $kernel->isDebug(),
-                        $request
-                    );
-                    $fixtures->createFolders();
-                    $yamlConfigHandler->writeConfiguration();
-
-                    /*
-                     * Need to clear configuration cache.
-                     */
-                    $configurationClearer = new ConfigurationCacheClearer($this->get('kernel')->getCacheDir());
-                    $configurationClearer->clear();
-
-                    /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
-                    return $this->redirect($this->generateUrl(
-                        'installDatabaseSchemaPage'
-                    ));
-                } catch (\PDOException $e) {
-                    if (strstr($e->getMessage(), 'SQLSTATE[')) {
-                        preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
-                        $message = $matches[3];
-                    } else {
-                        $message = $e->getMessage();
-                    }
-                    $databaseForm->addError(new FormError(ucfirst($message)));
-                } catch (\Exception $e) {
-                    $databaseForm->addError(new FormError($e->getMessage()));
+                $tempConf = $yamlConfigHandler->getConfiguration();
+                foreach ($databaseForm->getData() as $key => $value) {
+                    $tempConf['doctrine'][$key] = $value;
                 }
+                $yamlConfigHandler->setConfiguration($tempConf);
+
+                /*
+                 * Test connexion
+                 */
+                /** @var Kernel $kernel */
+                $kernel = $this->get('kernel');
+                $fixtures = new Fixtures(
+                    $this->get('em'),
+                    $kernel->getCacheDir(),
+                    $kernel->getRootDir() . '/conf/config.yml',
+                    $kernel->getRootDir(),
+                    $kernel->isDebug(),
+                    $request
+                );
+                $fixtures->createFolders();
+                $yamlConfigHandler->writeConfiguration();
+
+                /*
+                 * Need to clear configuration cache.
+                 */
+                $configurationClearer = new ConfigurationCacheClearer($this->get('kernel')->getCacheDir());
+                $configurationClearer->clear();
+
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                return $this->redirect($this->generateUrl(
+                    'installDatabaseSchemaPage'
+                ));
+            } catch (\PDOException $e) {
+                if (strstr($e->getMessage(), 'SQLSTATE[')) {
+                    preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);
+                    $message = $matches[3];
+                } else {
+                    $message = $e->getMessage();
+                }
+                $databaseForm->addError(new FormError(ucfirst($message)));
+            } catch (\Exception $e) {
+                $databaseForm->addError(new FormError($e->getMessage()));
             }
-            $this->assignation['databaseForm'] = $databaseForm->createView();
         }
+        $this->assignation['databaseForm'] = $databaseForm->createView();
+
 
         return $this->render('steps/database.html.twig', $this->assignation);
     }
@@ -125,8 +123,7 @@ class DatabaseController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -175,9 +172,7 @@ class DatabaseController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Twig_Error_Runtime
+     * @return Response
      */
     public function databaseFixturesAction(Request $request)
     {
@@ -194,11 +189,14 @@ class DatabaseController extends InstallApp
         );
         $fixtures->installFixtures();
 
+        $this->assignation['imports'] = [];
         /*
          * files to import
          */
-        $installData = Yaml::parse(file_get_contents(InstallApp::getThemeFolder() . "/config.yml"));
-        $this->assignation['imports'] = $installData['importFiles'];
+        if (file_exists(InstallApp::getThemeFolder() . "/config.yml")) {
+            $installData = Yaml::parse(file_get_contents(InstallApp::getThemeFolder() . "/config.yml"));
+            $this->assignation['imports'] = $installData['importFiles'];
+        }
 
         return $this->render('steps/databaseFixtures.html.twig', $this->assignation);
     }
@@ -228,95 +226,5 @@ class DatabaseController extends InstallApp
         $doctrineClearer->clear();
 
         return new JsonResponse(['status' => true]);
-    }
-
-    /**
-     * Build forms
-     *
-     * @param Request       $request
-     * @param array $conf
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildDatabaseForm(Request $request, array $conf)
-    {
-        $defaults = $conf['doctrine'];
-
-        $builder = $this->createFormBuilder($defaults)
-            ->add('driver', 'choice', [
-                'choices' => [
-                    'pdo_mysql' => 'pdo_mysql',
-                    'pdo_pgsql' => 'pdo_pgsql',
-                    'pdo_sqlite' => 'pdo_sqlite',
-                ],
-                'choices_as_values' => true,
-                'label' => $this->getTranslator()->trans('driver'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-                'attr' => [
-                    "id" => "choice",
-                ],
-            ])
-            ->add('host', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('host'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "host",
-                ],
-            ])
-            ->add('port', 'integer', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('port'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "port",
-                ],
-            ])
-            ->add('unix_socket', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('unix_socket'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "unix_socket",
-                ],
-            ])
-            ->add('path', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('path'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "path",
-                ],
-            ])
-            ->add('user', 'text', [
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => "user",
-                ],
-                'label' => $this->getTranslator()->trans('username'),
-                'constraints' => [
-                    new NotBlank(),
-                ],
-            ])
-            ->add('password', 'password', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('password'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => 'password',
-                ],
-            ])
-            ->add('dbname', 'text', [
-                "required" => false,
-                'label' => $this->getTranslator()->trans('dbname'),
-                'attr' => [
-                    "autocomplete" => "off",
-                    'id' => 'dbname',
-                ],
-            ]);
-
-        return $builder->getForm();
     }
 }

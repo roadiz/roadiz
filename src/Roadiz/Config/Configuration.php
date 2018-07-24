@@ -30,6 +30,8 @@
  */
 namespace RZ\Roadiz\Config;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -47,7 +49,7 @@ class Configuration implements ConfigurationInterface
             ->scalarNode('timezone')
                 ->defaultValue('Europe/Paris')
             ->end()
-            ->arrayNode('doctrine')
+            ->arrayNode('doctrine')->addDefaultsIfNotSet()
                 ->children()
                     ->enumNode('driver')
                         ->isRequired()
@@ -159,12 +161,14 @@ EOF
             ->append($this->addMailerNode())
             ->append($this->addAssetsNode())
             ->append($this->addSolrNode())
+            ->append($this->addReverseProxyCacheNode())
+            ->append($this->addThemesNode())
         ;
         return $builder;
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addMailerNode()
     {
@@ -201,7 +205,7 @@ EOF
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addAssetsNode()
     {
@@ -241,7 +245,7 @@ EOF
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addSolrNode()
     {
@@ -272,7 +276,71 @@ EOF
     }
 
     /**
-     * @return \Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition|\Symfony\Component\Config\Definition\Builder\NodeDefinition
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addReverseProxyCacheNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('reverseProxyCache');
+
+        $node->children()
+                ->arrayNode('frontend')
+                    ->isRequired()
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                    ->children()
+                        ->scalarNode('host')
+                            ->isRequired()
+                            ->defaultValue('localhost')
+                        ->end()
+                        ->scalarNode('domainName')
+                            ->isRequired()
+                            ->defaultValue('localhost')
+                        ->end()
+                        ->scalarNode('timeout')->defaultValue(3)->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addThemesNode()
+    {
+        $builder = new TreeBuilder();
+        $node = $builder->root('themes');
+
+        $node->isRequired()
+            ->prototype('array')
+            ->children()
+                ->scalarNode('classname')
+                    ->info('Full qualified theme class (this must start with \ character and ends with App suffix)')
+                    ->isRequired()
+                    ->validate()
+                        ->ifTrue(function ($s) {
+                            return preg_match('/^\\\[a-zA-Z\\\]+App$/', trim($s)) !== 1 || !class_exists($s);
+                        })
+                        ->thenInvalid('Theme class does not exist or classname is invalid: must start with \ character and ends with App suffix.')
+                    ->end()
+                ->end()
+                ->scalarNode('hostname')
+                    ->defaultValue('*')
+                ->end()
+                ->scalarNode('routePrefix')
+                    ->defaultValue('')
+                ->end()
+            ->end()
+            ->end();
+
+        return $node;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
      */
     protected function addMonologNode()
     {
@@ -290,6 +358,7 @@ EOF
                                     'stream',
                                     'syslog',
                                     'gelf',
+                                    'sentry',
                                 ])
                                 ->isRequired()
                                 ->cannotBeEmpty()

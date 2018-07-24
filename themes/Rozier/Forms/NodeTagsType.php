@@ -53,7 +53,7 @@ class NodeTagsType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tags', new TagsType());
+        $builder->add('tags', TagsType::class);
         $builder->get('tags')
             ->addModelTransformer(new TagTransformer($options['entityManager']));
     }
@@ -72,8 +72,6 @@ class NodeTagsType extends AbstractType
 
     /**
      * {@inheritdoc}
-     *
-     * @return string
      */
     public function getBlockPrefix()
     {

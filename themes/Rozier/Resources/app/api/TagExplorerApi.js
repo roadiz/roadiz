@@ -29,7 +29,7 @@
 import request from 'axios'
 
 /**
- * Fetch documents Folders.
+ * Fetch tags.
  *
  * @return Promise
  */
@@ -58,4 +58,37 @@ export function getTags () {
             // Log request error or display a message
             throw new Error(error)
         })
+}
+
+/**
+ * Fetch tags.
+ *
+ * @return Promise
+ */
+export function getParentTags () {
+    const postData = {
+        _token: window.RozierRoot.ajaxToken,
+        _action: 'tagsExplorer',
+        onlyParents: true
+    }
+
+    return request({
+        method: 'GET',
+        url: window.RozierRoot.routes.tagsAjaxExplorer,
+        params: postData
+    })
+    .then((response) => {
+        if (typeof response.data !== 'undefined' && response.data.tags) {
+            return {
+                items: response.data.tags
+            }
+        } else {
+            return {}
+        }
+    })
+    .catch((error) => {
+        // TODO
+        // Log request error or display a message
+        throw new Error(error)
+    })
 }

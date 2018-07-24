@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +45,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms;
+use Themes\Rozier\Forms\Node\AddNodeType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -58,15 +60,13 @@ class NodesController extends RozierApp
     use NodesTrait;
 
 
-
     /**
      * List every nodes.
      *
      * @param Request $request
-     * @param string  $filter
+     * @param string $filter
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $filter = null)
     {
@@ -206,7 +206,7 @@ class NodesController extends RozierApp
              * Handle main form
              */
             /** @var Form $form */
-            $form = $this->createForm(new Forms\NodeType(), $node, [
+            $form = $this->createForm(Forms\NodeType::class, $node, [
                 'em' => $this->get('em'),
                 'nodeName' => $node->getNodeName(),
             ]);
@@ -305,7 +305,7 @@ class NodesController extends RozierApp
             $node = new Node($type);
 
             /** @var Form $form */
-            $form = $this->createForm(new Forms\Node\AddNodeType(), $node, [
+            $form = $this->createForm(AddNodeType::class, $node, [
                 'nodeName' => '',
                 'em' => $this->get('em'),
             ]);
@@ -389,7 +389,7 @@ class NodesController extends RozierApp
             }
 
             /** @var Form $form */
-            $form = $this->createForm(new Forms\Node\AddNodeType(), $node, [
+            $form = $this->createForm(AddNodeType::class, $node, [
                 'nodeName' => '',
                 'em' => $this->get('em'),
             ]);
@@ -642,7 +642,7 @@ class NodesController extends RozierApp
 
         if (null !== $node) {
             $form = $this->createFormBuilder()
-                ->add('nodeId', 'hidden', [
+                ->add('nodeId', HiddenType::class, [
                     'data' => $node->getId(),
                     'constraints' => [
                         new NotBlank(),

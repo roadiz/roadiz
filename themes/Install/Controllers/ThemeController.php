@@ -33,7 +33,9 @@ use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Themes\Install\Forms\SiteInformationType;
 use Themes\Install\InstallApp;
 
 /**
@@ -49,15 +51,15 @@ class ThemeController extends InstallApp
      * @param int $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function importThemeAction(Request $request, $id)
     {
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->get('themeResolver');
+
         /** @var Theme|null $result */
-        $result = $this->get('em')->find(Theme::class, $id);
-
+        $result = $themeResolver->findById($id);
         $data = ThemeInstaller::getThemeInformation($result->getClassName());
-
         $this->assignation = array_merge($this->assignation, $data["importFiles"]);
         $this->assignation["themeId"] = $id;
 
@@ -73,11 +75,12 @@ class ThemeController extends InstallApp
      */
     public function themeInstallAction(Request $request)
     {
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->get('themeResolver');
         $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->get("em"));
         /** @var Theme $theme */
-        $theme = $this->get("em")
-                      ->getRepository(Theme::class)
-                      ->findOneByClassName($request->get("classname"));
+        $theme = $themeResolver->findThemeByClass($request->get("classname"));
+
         if ($importFile === false) {
             return $this->redirect($this->generateUrl(
                 'installUserPage',
@@ -97,7 +100,6 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function themeSummaryAction(Request $request)
     {
@@ -112,51 +114,63 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function themesAction(Request $request)
     {
-        $infosForm = $this->buildInformationsForm($request);
+        $siteName = $this->get('settingsBag')->get('site_name');
+        $metaDescription = $this->get('settingsBag')->get('seo_description');
+        $emailSender = $this->get('settingsBag')->get('email_sender');
+        $emailSenderName = $this->get('settingsBag')->get('email_sender_name');
+        $timeZone = $this->get('config')['timezone'];
+        $defaults = [
+            'site_name' => $siteName != '' ? $siteName : "My website",
+            'seo_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
+            'email_sender' => $emailSender != '' ? $emailSender : "",
+            'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
+            'install_frontend' => true,
+            'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
+        ];
+        $informationForm = $this->createForm(SiteInformationType::class, $defaults, [
+            'themes_config' => $this->get('config')['themes'],
+        ]);
+        $informationForm->handleRequest($request);
 
-        if ($infosForm !== null) {
-            $infosForm->handleRequest($request);
+        if ($informationForm->isValid()) {
+            $informationData = $informationForm->getData();
+            /*
+             * Save information
+             */
+            try {
+                /** @var Kernel $kernel */
+                $kernel = $this->get('kernel');
+                $fixtures = new Fixtures(
+                    $this->get('em'),
+                    $kernel->getCacheDir(),
+                    $kernel->getRootDir() . '/conf/config.yml',
+                    $kernel->getRootDir(),
+                    $kernel->isDebug(),
+                    $request
+                );
+                $fixtures->saveInformations($informationData);
 
-            if ($infosForm->isValid()) {
-                /*
-                 * Save information
-                 */
-                try {
-                    /** @var Kernel $kernel */
-                    $kernel = $this->get('kernel');
-                    $fixtures = new Fixtures(
-                        $this->get('em'),
-                        $kernel->getCacheDir(),
-                        $kernel->getRootDir() . '/conf/config.yml',
-                        $kernel->getRootDir(),
-                        $kernel->isDebug(),
-                        $request
-                    );
-                    $fixtures->saveInformations($infosForm->getData());
-
-                    if (!empty($infosForm->getData()["install_theme"])) {
-                        /*
-                         * Force redirect to avoid resending form when refreshing page
-                         */
-                        return $this->redirect($this->generateUrl('installThemeSummaryPage', [
-                            'classname' => $infosForm->getData()['className'],
-                        ]));
-                    } else {
-                        return $this->redirect($this->generateUrl(
-                            'installUserPage'
-                        ));
-                    }
-                } catch (\Exception $e) {
-                    $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                if (!empty($informationData["install_theme"])) {
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($this->generateUrl('installThemeSummaryPage', [
+                        'classname' => $informationData['className'],
+                    ]));
+                } else {
+                    return $this->redirect($this->generateUrl(
+                        'installUserPage'
+                    ));
                 }
+            } catch (\Exception $e) {
+                $this->assignation['error'] = true;
+                $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
             }
-            $this->assignation['infosForm'] = $infosForm->createView();
         }
+        $this->assignation['infosForm'] = $informationForm->createView();
 
         return $this->render('steps/themes.html.twig', $this->assignation);
     }

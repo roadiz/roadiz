@@ -29,8 +29,12 @@
  */
 namespace Themes\Rozier\Controllers\Users;
 
+use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\User;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -53,8 +57,7 @@ class UsersSecurityController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
         /** @var User $user */
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -108,17 +111,17 @@ class UsersSecurityController extends RozierApp
 
         /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
-                        ->createNamedBuilder('source', 'form', $defaults);
+                        ->createNamedBuilder('source', FormType::class, $defaults);
 
-        $builder->add('enabled', 'checkbox', [
+        $builder->add('enabled', CheckboxType::class, [
                     'label' => 'user.enabled',
                     'required' => false,
                 ])
-                ->add('locked', 'checkbox', [
+                ->add('locked', CheckboxType::class, [
                     'label' => 'user.locked',
                     'required' => false,
                 ])
-                ->add('expiresAt', 'datetime', [
+                ->add('expiresAt', DateTimeType::class, [
                     'label' => 'user.expiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
@@ -132,11 +135,11 @@ class UsersSecurityController extends RozierApp
                         'minute' => 'minute',
                     ],
                 ])
-                ->add('expired', 'checkbox', [
+                ->add('expired', CheckboxType::class, [
                     'label' => 'user.force.expired',
                     'required' => false,
                 ])
-                ->add('credentialsExpiresAt', 'datetime', [
+                ->add('credentialsExpiresAt', DateTimeType::class, [
                     'label' => 'user.credentialsExpiresAt',
                     'required' => false,
                     'years' => range(date('Y'), date('Y') + 2),
@@ -150,7 +153,7 @@ class UsersSecurityController extends RozierApp
                         'minute' => 'minute',
                     ],
                 ])
-                ->add('credentialsExpired', 'checkbox', [
+                ->add('credentialsExpired', CheckboxType::class, [
                     'label' => 'user.force.credentialsExpired',
                     'required' => false,
                 ]);
@@ -158,9 +161,11 @@ class UsersSecurityController extends RozierApp
         if ($this->isGranted("ROLE_SUPERADMIN")) {
             $n = $user->getChroot();
             $n = ($n !== null) ? [$n] : [];
-            $builder->add('chroot', new \RZ\Roadiz\CMS\Forms\NodesType($n, $this->get('em')), [
+            $builder->add('chroot', NodesType::class, [
                 'label' => 'chroot',
                 'required' => false,
+                'nodes' => $n,
+                'entityManager' => $this->get('em'),
             ]);
         }
 

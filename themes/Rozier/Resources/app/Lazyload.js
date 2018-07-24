@@ -67,9 +67,7 @@ import {
 export default class Lazyload {
     constructor () {
         this.$linksSelector = null
-        this.$textareasMarkdown = null
         this.$canvasLoaderContainer = null
-
         this.documentsList = null
         this.mainColor = null
         this.currentRequest = null
@@ -248,6 +246,22 @@ export default class Lazyload {
         }, 100)
     }
 
+    refreshCodemirrorEditor () {
+        console.log('Refreshing all codemirror instances…')
+        for (let editor of this.markdownEditors) {
+            editor.forceEditorUpdate()
+        }
+        for (let editor of this.yamlEditors) {
+            editor.forceEditorUpdate()
+        }
+        for (let editor of this.cssEditors) {
+            editor.forceEditorUpdate()
+        }
+        for (let editor of this.jsonEditors) {
+            editor.forceEditorUpdate()
+        }
+    }
+
     /**
      * Apply content to main content
      * @param {[type]} data [description]
@@ -305,6 +319,33 @@ export default class Lazyload {
             this.customFormFieldEdit
         ])
         this.bindAjaxLink()
+        this.markdownEditors = []
+        this.jsonEditors = []
+        this.cssEditors = []
+        this.yamlEditors = []
+
+        const _this = this
+        $('.rz-collection-form-type').collection({
+            up: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-up"></i></a>',
+            down: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-down"></i></a>',
+            add: '<a class="uk-button-primary uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
+            remove: '<a class="uk-button-danger uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
+            after_add: function (collection, element) {
+                _this.initMarkdownEditors(element)
+                _this.initJsonEditors(element)
+                _this.initCssEditors(element)
+                _this.initYamlEditors(element)
+                _this.initBootstrapSwitches(element)
+                _this.initColorPickers(element)
+
+                let $vueComponents = element.find('[data-vuejs]')
+                // Create each component
+                $vueComponents.each((i, el) => {
+                    window.Rozier.vueApp.mainContentComponents.push(window.Rozier.vueApp.buildComponent(el))
+                })
+                return true
+            }
+        })
 
         this.documentsBulk = new DocumentsBulk()
         this.nodesBulk = new NodesBulk()
@@ -341,13 +382,7 @@ export default class Lazyload {
         this.initCssEditors()
         this.initYamlEditors()
         this.initFilterBars()
-
-        const $colorPickerInput = $('.colorpicker-input')
-
-        // Init colorpicker
-        if ($colorPickerInput.length) {
-            $colorPickerInput.minicolors()
-        }
+        this.initColorPickers()
 
         // Animate actions menu
         if ($('.actions-menu').length && isMobile.any() === null) {
@@ -378,8 +413,24 @@ export default class Lazyload {
         }
     }
 
-    initBootstrapSwitches () {
+    initColorPickers ($scope) {
+        let $colorPickerInput = $('.colorpicker-input')
+
+        if ($scope && $scope.length) {
+            $colorPickerInput = $scope.find('.colorpicker-input')
+        }
+
+        // Init colorpicker
+        if ($colorPickerInput.length) {
+            $colorPickerInput.minicolors()
+        }
+    }
+
+    initBootstrapSwitches ($scope) {
         let $checkboxes = $('.rz-boolean-checkbox')
+        if ($scope && $scope.length) {
+            $checkboxes = $scope.find('.rz-boolean-checkbox')
+        }
 
         // Switch checkboxes
         $checkboxes.bootstrapSwitch({
@@ -387,67 +438,70 @@ export default class Lazyload {
         })
     }
 
-    initMarkdownEditors () {
+    initMarkdownEditors ($scope) {
         // Init markdown-preview
-        this.$textareasMarkdown = $('textarea[data-rz-markdowneditor]')
-        let editorCount = this.$textareasMarkdown.length
+        let $textareasMarkdown = []
+        if ($scope && $scope.length) {
+            $textareasMarkdown = $scope.find('textarea[data-rz-markdowneditor]')
+        } else {
+            $textareasMarkdown = $('textarea[data-rz-markdowneditor]')
+        }
+        let editorCount = $textareasMarkdown.length
 
         if (editorCount) {
-            this.markdownEditors = []
-
-            window.setTimeout(() => {
-                for (let i = 0; i < editorCount; i++) {
-                    this.markdownEditors.push(new MarkdownEditor(this.$textareasMarkdown.eq(i), i))
-                }
-            }, 100)
+            for (let i = 0; i < editorCount; i++) {
+                this.markdownEditors.push(new MarkdownEditor($textareasMarkdown.eq(i), i))
+            }
         }
     }
 
-    initJsonEditors () {
-        // Init markdown-preview
-        this.$textareasJson = $('textarea[data-rz-jsoneditor]')
-        let editorCount = this.$textareasJson.length
-
+    initJsonEditors ($scope) {
+        // Init json-preview
+        let $textareasJson = []
+        if ($scope && $scope.length) {
+            $textareasJson = $scope.find('textarea[data-rz-jsoneditor]')
+        } else {
+            $textareasJson = $('textarea[data-rz-jsoneditor]')
+        }
+        let editorCount = $textareasJson.length
         if (editorCount) {
-            this.jsonEditors = []
-
-            window.setTimeout(() => {
-                for (let i = 0; i < editorCount; i++) {
-                    this.jsonEditors.push(new JsonEditor(this.$textareasJson.eq(i), i))
-                }
-            }, 100)
+            for (let i = 0; i < editorCount; i++) {
+                this.jsonEditors.push(new JsonEditor($textareasJson.eq(i), i))
+            }
         }
     }
 
-    initCssEditors () {
-        // Init markdown-preview
-        this.$textareasCss = $('textarea[data-rz-csseditor]')
-        let editorCount = this.$textareasCss.length
+    initCssEditors ($scope) {
+        // Init css-preview
+        let $textareasCss = []
+        if ($scope && $scope.length) {
+            $textareasCss = $scope.find('textarea[data-rz-csseditor]')
+        } else {
+            $textareasCss = $('textarea[data-rz-csseditor]')
+        }
+        let editorCount = $textareasCss.length
 
         if (editorCount) {
-            this.cssEditors = []
-
-            window.setTimeout(() => {
-                for (let i = 0; i < editorCount; i++) {
-                    this.cssEditors.push(new CssEditor(this.$textareasCss.eq(i), i))
-                }
-            }, 100)
+            for (let i = 0; i < editorCount; i++) {
+                this.cssEditors.push(new CssEditor($textareasCss.eq(i), i))
+            }
         }
     }
 
-    initYamlEditors () {
-        // Init markdown-preview
-        this.$textareasYaml = $('textarea[data-rz-yamleditor]')
-        let editorCount = this.$textareasYaml.length
+    initYamlEditors ($scope) {
+        // Init yaml-preview
+        let $textareasYaml = []
+        if ($scope && $scope.length) {
+            $textareasYaml = $scope.find('textarea[data-rz-yamleditor]')
+        } else {
+            $textareasYaml = $('textarea[data-rz-yamleditor]')
+        }
+        let editorCount = $textareasYaml.length
 
         if (editorCount) {
-            this.yamlEditors = []
-
-            window.setTimeout(() => {
-                for (let i = 0; i < editorCount; i++) {
-                    this.yamlEditors.push(new YamlEditor(this.$textareasYaml.eq(i), i))
-                }
-            }, 100)
+            for (let i = 0; i < editorCount; i++) {
+                this.yamlEditors.push(new YamlEditor($textareasYaml.eq(i), i))
+            }
         }
     }
 

@@ -41,8 +41,8 @@
                 <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-tags" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
                 {# Links #}
                 {% if deleteTagsForm %}
-                {% form_theme deleteTagsForm '@Rozier/forms.html.twig' %}
-                <form class="uk-form uk-form-horizontal tag-bulk-delete-form" action="{{ path('tagsBulkDeletePage') }}" method="get" {{ form_enctype(deleteTagsForm) }}>
+                {% form_theme deleteTagsForm '@Rozier/horizontalForms.html.twig' %}
+                <form class="uk-form uk-form-horizontal tag-bulk-delete-form" action="{{ path('tagsBulkDeletePage') }}" method="get">
                     {{ form_widget(deleteTagsForm) }}
                     <button type="submit"
                         class="uk-button uk-button-bulk uk-button-danger uk-button-bulk-delete uk-button-bulk-delete-tags"

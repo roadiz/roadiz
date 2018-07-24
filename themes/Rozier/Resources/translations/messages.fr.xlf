@@ -4193,6 +4193,10 @@
         <source>country.type</source>
         <target xml:lang="fr">Pays (ISO 3166-1 alpha-2)</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="collection.type">
+        <source>collection.type</source>
+        <target xml:lang="fr" state="translated">Collection sur-mesure</target>
+      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445" approved="yes">
         <source>add.a.%nodeType%</source>
@@ -4351,18 +4355,37 @@
       <trans-unit xml:space="preserve" id="facebook_url" approved="yes">
         <source>facebook_url</source>
         <target xml:lang="fr">Url Facebook</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="instagram_url" approved="yes">
         <source>instagram_url</source>
         <target xml:lang="fr">Url Instagram</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url" approved="yes">
         <source>twitter_url</source>
         <target xml:lang="fr">Url Twitter</target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="linkedin_url">
+        <source>linkedin_url</source>
+        <target xml:lang="fr" state="translated">Url LinkedIn</target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="youtube_url">
+        <source>youtube_url</source>
+        <target xml:lang="fr" state="translated">Url Youtube</target>
+        <note>Setting name for social page url.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="googleplus_url">
+        <source>googleplus_url</source>
+        <target xml:lang="fr" state="translated">Url Google +</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account" approved="yes">
         <source>twitter_account</source>
         <target xml:lang="fr">Compte Twitter</target>
+        <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="recaptcha_public_key" approved="yes">
         <source>recaptcha_public_key</source>
@@ -5227,6 +5250,14 @@
       <trans-unit xml:space="preserve" id="more.nodes" approved="yes">
           <source>more.nodes</source>
           <target xml:lang="fr">Plus de nœuds</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.node_types" approved="yes">
+          <source>more.node_types</source>
+          <target xml:lang="fr">Plus de types de nœuds</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="more.tags" approved="yes">
+          <source>more.tags</source>
+          <target xml:lang="fr">Plus d’étiquettes</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms" approved="yes">
           <source>more.custom_forms</source>
@@ -6589,14 +6620,19 @@
             <target xml:lang="fr" state="translated">La classe PHP « %classname% » doit hériter de AbstractEntity.</target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
+            <source>classname_%classname%_must_extend_abstract_type_class</source>
+            <target xml:lang="fr" state="translated">La classe PHP « %classname% » doit hériter de la classe AbstractType.</target>
+            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target xml:lang="fr" state="translated">La classe PHP « %classname% » n’implémente pas la méthode « %method% ».</target>
             <note>Validator message: when provided classname does not declare provided method.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="more.entities">
+      <trans-unit xml:space="preserve" id="more.entities" approved="yes">
             <source>more.entities</source>
-            <target xml:lang="fr" state="translated">Plus d’éléments</target>
+            <target xml:lang="fr">Plus d’éléments</target>
             <note>Explorer more button label for entities.</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
@@ -6749,15 +6785,6 @@
             <target xml:lang="fr" state="translated">Relation multiple via un provider</target>
             <note>Node-type field type for Provider manual many-to-many relationship.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="collection.type">
-            <source>collection.type</source>
-            <target xml:lang="fr" state="translated">Collection sur-mesure</target>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
-            <source>classname_%classname%_must_extend_abstract_type_class</source>
-            <target xml:lang="fr" state="translated">La classe PHP « %classname% » doit hériter de la classe AbstractType.</target>
-            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
-        </trans-unit>
       <trans-unit xml:space="preserve" id="pictureUrl">
             <source>pictureUrl</source>
             <target xml:lang="fr" state="translated">Url de l’image d’avatar</target>
@@ -6773,10 +6800,19 @@
             <target xml:lang="fr" state="translated">-- Utiliser la langue par défaut --</target>
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
-
-        <trans-unit xml:space="preserve" id="preview">
+      <trans-unit xml:space="preserve" id="sort_asc">
+            <source>sort_asc</source>
+            <target xml:lang="fr" state="translated">Tri ascendant</target>
+            <note>Table column link to sort data ascendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="sort_desc">
+            <source>sort_desc</source>
+            <target xml:lang="fr" state="translated">Tri descendant</target>
+            <note>Table column link to sort data descendently</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="preview">
             <source>preview</source>
-            <target>Preview</target>
+            <target xml:lang="fr" state="translated">Prévisualisation</target>
             <note>Preview mode label on warning sign.</note>
         </trans-unit>
     </body>

@@ -33,6 +33,7 @@ namespace Themes\DefaultTheme\Controllers;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -43,6 +44,21 @@ use Themes\DefaultTheme\DefaultThemeApp;
  */
 class PageController extends DefaultThemeApp
 {
+    /**
+     * @param Request $request
+     * @param string $_locale
+     *
+     * @return JsonResponse
+     */
+    public function embedAction(Request $request, $name, $_locale = 'en')
+    {
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
+        $this->prepareThemeAssignation(null, $translation);
+
+        return new JsonResponse([
+            'message' => 'Hello '. $name. '!'
+        ]);
+    }
 
     /**
      * Default action for any Page node.
@@ -52,7 +68,6 @@ class PageController extends DefaultThemeApp
      * @param Translation $translation
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(
         Request $request,
@@ -74,8 +89,15 @@ class PageController extends DefaultThemeApp
          * right into your front page.
          * Awesome isn’t it ?
          */
+        $response = $this->render('pages/page.html.twig', $this->assignation);
 
-        return $this->render('pages/page.html.twig', $this->assignation);
+        if (!$this->get('kernel')->isDebug() &&
+            !$this->get('kernel')->isPreview()) {
+            $response->setPublic();
+            $response->setSharedMaxAge(60*2);
+        }
+
+        return $response;
     }
 
     /**
@@ -88,9 +110,11 @@ class PageController extends DefaultThemeApp
          * Current page edition form
          */
         $form = $this->createForm(
-            new NodeSourceType($this->node->getNodeType()),
+            NodeSourceType::class,
             $this->nodeSource,
             [
+                'class' => $this->node->getNodeType()->getSourceEntityFullQualifiedClassName(),
+                'nodeType' => $this->node->getNodeType(),
                 'controller' => $this,
                 'entityManager' => $this->get('em'),
                 'container' => $this->getContainer(),

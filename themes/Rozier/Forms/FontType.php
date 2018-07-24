@@ -33,7 +33,10 @@ use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\FontVariantsType;
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
@@ -50,7 +53,7 @@ class FontType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', [
+        $builder->add('name', TextType::class, [
                 'label' => 'font.name',
                 'attr' => [
                     'data-desc' => 'font_name_should_be_the_same_for_all_variants'
@@ -62,19 +65,19 @@ class FontType extends AbstractType
                     ])
                 ],
             ])
-            ->add('hash', 'text', [
+            ->add('hash', TextType::class, [
                 'label' => 'font.cssfamily',
                 'attr' => [
                     'data-desc' => 'css_font_family_hash_is_automatically_generated_from_font_name'
                 ]
             ])
-            ->add('variant', new FontVariantsType(), [
+            ->add('variant', FontVariantsType::class, [
                 'label' => 'font.variant',
             ])
-            ->add('eotFile', 'file', [
+            ->add('eotFile', FileType::class, [
                 'label' => 'font.eotFile',
                 'required' => false,
-                'data_class' => 'Symfony\Component\HttpFoundation\File\UploadedFile',
+                'data_class' => UploadedFile::class,
                 'constraints' => [
                     new File([
                         'mimeTypes' => [
@@ -85,7 +88,7 @@ class FontType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('svgFile', 'file', [
+            ->add('svgFile', FileType::class, [
                 'label' => 'font.svgFile',
                 'required' => false,
                 'multiple' => false,
@@ -98,7 +101,7 @@ class FontType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('otfFile', 'file', [
+            ->add('otfFile', FileType::class, [
                 'label' => 'font.otfFile',
                 'required' => false,
                 'multiple' => false,
@@ -119,7 +122,7 @@ class FontType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('woffFile', 'file', [
+            ->add('woffFile', FileType::class, [
                 'label' => 'font.woffFile',
                 'required' => false,
                 'multiple' => false,
@@ -134,7 +137,7 @@ class FontType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('woff2File', 'file', [
+            ->add('woff2File', FileType::class, [
                 'label' => 'font.woff2File',
                 'required' => false,
                 'multiple' => false,

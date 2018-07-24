@@ -44,11 +44,19 @@
                 <p class="dev-mode"><i class="uk-icon-exclamation-triangle"></i> {% trans %}maintenance_mode.activated{% endtrans %}</p>
             {% endif %}
         </nav>
-
     </div>
     <footer id="cms-version">
-        <a target="_blank" title="{% trans %}help{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-help" href="http://docs.roadiz.io"></a>
-        <a title="{% trans %}about.cms{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-refresh" href="{{ path("aboutPage") }}"></a>
+        {% if help_external_url is defined %}
+            <a target="_blank" rel="noopener"
+               title="{% trans %}help{% endtrans %}"
+               data-uk-tooltip="{animation:true}"
+               class="uk-icon-button uk-icon-rz-help"
+               href="{{ help_external_url }}"></a>
+        {% endif %}
+        <a title="{% trans %}about.cms{% endtrans %}"
+           data-uk-tooltip="{animation:true}"
+           class="uk-icon-button uk-icon-refresh"
+           href="{{ path("aboutPage") }}"></a>
         <p class="cms-version"><i class="uk-icon-rz-rezozero"></i></p>
         <p>{{ cms_prefix }} {{ cms_version }}</p>
     </footer>

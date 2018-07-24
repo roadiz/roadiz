@@ -23,6 +23,10 @@ mailer:
     encryption: ~
     username: ""
     password: ""
+themes:
+    - classname: \Themes\DefaultTheme\DefaultThemeApp
+      hostname: '*'
+      routePrefix: ''
 entities:
     - "src/Roadiz/Core/Entities"
     - "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities"

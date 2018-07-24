@@ -21,7 +21,13 @@
             <table class="content-table roles uk-table">
                 <thead>
                     <tr>
-                        <th>{% trans %}name{% endtrans %}</th>
+                        <th>
+                            {% trans %}name{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'name',
+                                'filters': filters,
+                            } only %}
+                        </th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>

@@ -41,6 +41,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -115,12 +116,26 @@ abstract class AppController extends Controller
      * @var string
      */
     protected static $themeDir = '';
+
     /**
      * @return string
      */
     public static function getThemeDir()
     {
         return static::$themeDir;
+    }
+
+    /**
+     * @var int Theme priority to load templates and translation in the right order.
+     */
+    public static $priority = 0;
+
+    /**
+     * @return int
+     */
+    public static function getPriority()
+    {
+        return static::$priority;
     }
 
     /**
@@ -352,7 +367,6 @@ abstract class AppController extends Controller
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
         $this->assignation = [
-            'request' => $this->getRequest(),
             'head' => [
                 'ajax' => $this->getRequest()->isXmlHttpRequest(),
                 'devMode' => $kernel->isDevMode(),
@@ -368,11 +382,6 @@ abstract class AppController extends Controller
             'session' => [
                 'id' => $this->getRequest()->getSession()->getId(),
                 'user' => $this->getUser(),
-            ],
-            'bags' => [
-                'settings' => $this->get('settingsBag'),
-                'roles' => $this->get('rolesBag'),
-                'nodeTypes' => $this->get('nodeTypesBag'),
             ]
         ];
 
@@ -389,9 +398,6 @@ abstract class AppController extends Controller
      * @param string $message Additionnal message to describe 404 error.
      *
      * @return Response
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
     public function throw404($message = "")
     {
@@ -413,6 +419,8 @@ abstract class AppController extends Controller
     public function getTheme()
     {
         $this->container['stopwatch']->start('getTheme');
+        /** @var ThemeResolverInterface $themeResolver */
+        $themeResolver = $this->get('themeResolver');
         if (null === $this->theme) {
             $className = static::getCalledClass();
             while (!StringHandler::endsWith($className, "App")) {
@@ -421,13 +429,8 @@ abstract class AppController extends Controller
                     $className = "";
                     break;
                 }
-                if (strpos($className, "\\") !== 0) {
-                    $className = "\\" . $className;
-                }
             }
-            $this->theme = $this->get('em')
-                ->getRepository(Theme::class)
-                ->findOneByClassName($className);
+            $this->theme = $themeResolver->findThemeByClass($className);
         }
         $this->container['stopwatch']->stop('getTheme');
         return $this->theme;
@@ -437,7 +440,6 @@ abstract class AppController extends Controller
      * Append objects to the global dependency injection container.
      *
      * @param \Pimple\Container $container
-     * @throws \Twig_Error_Loader
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -446,17 +448,18 @@ abstract class AppController extends Controller
 
     /**
      * @param Container $container
-     * @throws \Twig_Error_Loader
      */
     public static function addThemeTemplatesPath(Container $container)
     {
+        /** @var \Twig_Loader_Filesystem $loader */
+        $loader = $container['twig.loaderFileSystem'];
         /*
          * Enable theme templates in main namespace and in its own theme namespace.
          */
-        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder());
+        $loader->prependPath(static::getViewsFolder());
         // Add path into a namespaced loader to enable using same template name
         // over different static themes.
-        $container['twig.loaderFileSystem']->addPath(static::getViewsFolder(), static::getThemeDir());
+        $loader->prependPath(static::getViewsFolder(), static::getThemeDir());
     }
 
     /**
@@ -467,20 +470,9 @@ abstract class AppController extends Controller
     {
         $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {
-            $theme = $this->getTheme();
             /** @var NodeRepository $nodeRepository */
             $nodeRepository = $this->get('em')->getRepository(Node::class);
 
-            if ($theme !== null) {
-                $home = $theme->getHomeNode();
-                if ($home !== null) {
-                    if ($translation !== null) {
-                        $this->homeNode = $nodeRepository->findWithTranslation($home->getId(), $translation);
-                    } else {
-                        $this->homeNode = $nodeRepository->findWithDefaultTranslation($home->getId());
-                    }
-                }
-            }
             if ($translation !== null) {
                 $this->homeNode = $nodeRepository->findHomeWithTranslation($translation);
             } else {
@@ -493,12 +485,16 @@ abstract class AppController extends Controller
     }
 
     /**
-     * @return Node
+     * @return Node|null
+     * @deprecated Theme root has never been used and will be removed.
      */
     protected function getRoot()
     {
         $theme = $this->getTheme();
-        return $theme->getRoot();
+        if (null !== $theme) {
+            return $theme->getRoot();
+        }
+        return null;
     }
 
     /**
@@ -651,5 +647,35 @@ abstract class AppController extends Controller
             }
         }
         return $errors;
+    }
+
+    /**
+     * Make current response cachable by reverse proxy and browsers.
+     *
+     * Pay attention that, some reverse proxies systems will need to remove your response
+     * cookies header to actually save your response.
+     *
+     * @param Request $request
+     * @param Response $response
+     * @param int $minutes TTL in minutes
+     *
+     * @return Response
+     */
+    public function makeResponseCachable(Request $request, Response $response, $minutes)
+    {
+        $kernel = $this->get('kernel');
+        if (!$kernel->isPreview() && !$kernel->isDebug() && $request->isMethodCacheable()) {
+            $response->setPublic();
+            $response->setMaxAge(60 * $minutes);
+            $response->setSharedMaxAge(60 * $minutes);
+            $response->setVary('Accept-Encoding, X-Partial, x-requested-with');
+            if ($request->isXmlHttpRequest()) {
+                $response->headers->add([
+                    'X-Partial' => true
+                ]);
+            }
+        }
+
+        return $response;
     }
 }

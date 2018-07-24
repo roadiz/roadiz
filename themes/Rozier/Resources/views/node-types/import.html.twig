@@ -10,12 +10,11 @@
 
     <article class="content content-node-types-import content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        <form class="uk-form uk-form-stacked" action="#" method="post" {{ form_enctype(form) }}>
+        {{ form_start(form, { attr: {id: "import-node-type-form"}}) }}
             {{ form_widget(form) }}
-            <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
             <a href="{{ path('nodeTypesHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-        </form>
+            <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-upload"></i> {% trans %}import{% endtrans %}</button>
+        {{ form_end(form) }}
     </article>
-
 </section>
 {% endblock %}

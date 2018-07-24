@@ -29,7 +29,10 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-class ParsedownExtension extends \Twig_Extension
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
+class ParsedownExtension extends AbstractExtension
 {
     /**
      * @var \Parsedown
@@ -46,17 +49,12 @@ class ParsedownExtension extends \Twig_Extension
         $this->parsedownExtra = new \ParsedownExtra();
     }
 
-    public function getName()
-    {
-        return 'parsedownExtension';
-    }
-
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('markdown', [$this, 'markdown'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('inlineMarkdown', [$this, 'inlineMarkdown'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFilter('markdownExtra', [$this, 'markdownExtra'], ['is_safe' => ['html']]),
+            new TwigFilter('markdown', [$this, 'markdown'], ['is_safe' => ['html']]),
+            new TwigFilter('inlineMarkdown', [$this, 'inlineMarkdown'], ['is_safe' => ['html']]),
+            new TwigFilter('markdownExtra', [$this, 'markdownExtra'], ['is_safe' => ['html']]),
         ];
     }
 
