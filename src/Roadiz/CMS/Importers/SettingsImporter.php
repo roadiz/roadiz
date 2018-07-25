@@ -52,7 +52,6 @@ class SettingsImporter implements ImporterInterface
     public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
         $serializer = new SettingCollectionJsonSerializer();
-
         /** @var \RZ\Roadiz\Core\Entities\SettingGroup[] $settingGroups */
         $settingGroups = $serializer->deserialize($serializedData);
 
@@ -68,22 +67,16 @@ class SettingsImporter implements ImporterInterface
              */
             /** @var Setting $setting */
             foreach ($settingGroup->getSettings() as $setting) {
-                if (!in_array($setting->getName(), $settingsNames)) {
-                    // do nothing
-                } else {
-                    $existingValue = null;
-
-                    if ($setting->getValue() !== "") {
-                        $existingValue = $setting->getValue();
-                    }
-                    $setting = $em->getRepository(Setting::class)
-                        ->findOneByName($setting->getName());
-
+                // Existing settings will be updated
+                if (in_array($setting->getName(), $settingsNames)) {
+                    $importValue = $setting->getValue();
+                    $setting = $em->getRepository(Setting::class)->findOneByName($setting->getName());
                     /*
-                     * Force setting value defined in Imported file.
+                     * Replace setting value if defined in imported file, only if
+                     * not null, not zero, not empty string.
                      */
-                    if (null !== $existingValue) {
-                        $setting->setValue($existingValue);
+                    if (null !== $importValue && $importValue !== 0 && $importValue !== '') {
+                        $setting->setValue($importValue);
                     }
                 }
                 /*
@@ -98,7 +91,6 @@ class SettingsImporter implements ImporterInterface
         foreach ($newSettings as $settingArray) {
             /** @var \RZ\Roadiz\Core\Entities\SettingGroup $settingGroup */
             $settingGroup = $settingArray[1];
-
             /** @var \RZ\Roadiz\Core\Entities\Setting $setting */
             $setting = $settingArray[0];
 
