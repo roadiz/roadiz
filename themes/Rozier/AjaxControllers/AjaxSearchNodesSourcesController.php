@@ -68,10 +68,9 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             $this->get('defaultTranslation')
         );
 
-        if (null !== $nodesSources &&
-            count($nodesSources) > 0) {
+        if (null !== $nodesSources && count($nodesSources) > 0) {
             $responseArray = [
-                'statusCode' => '200',
+                'statusCode' => Response::HTTP_OK,
                 'status' => 'success',
                 'data' => [],
                 'responseText' => count($nodesSources) . ' results found.',
@@ -99,6 +98,11 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             );
         }
 
-        throw $this->createNotFoundException('No results found.');
+        return new JsonResponse([
+            'statusCode' => Response::HTTP_OK,
+            'status' => 'success',
+            'data' => [],
+            'responseText' => 'No results found.',
+        ]);
     }
 }
