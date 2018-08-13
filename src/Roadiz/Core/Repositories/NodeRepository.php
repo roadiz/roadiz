@@ -384,10 +384,8 @@ class NodeRepository extends StatusAwareRepository
         $offset = null,
         Translation $translation = null
     ) {
-
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->addSelect(static::NODESSOURCES_ALIAS);
-
         $this->filterByTranslation($criteria, $qb, $translation);
 
         /*
@@ -401,6 +399,11 @@ class NodeRepository extends StatusAwareRepository
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
                 if (strpos($key, static::NODESSOURCES_ALIAS . '.') === 0) {
+                    $qb->addOrderBy($key, $value);
+                } elseif (strpos($key, static::NODETYPE_ALIAS . '.') === 0) {
+                    if (!$this->hasJoinedNodeType($qb, static::NODE_ALIAS)) {
+                        $qb->innerJoin(static::NODE_ALIAS . '.nodeType', static::NODETYPE_ALIAS);
+                    }
                     $qb->addOrderBy($key, $value);
                 } else {
                     $qb->addOrderBy(static::NODE_ALIAS . '.' . $key, $value);
