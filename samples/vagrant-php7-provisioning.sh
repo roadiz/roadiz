@@ -9,12 +9,18 @@ DBHOST="localhost"
 DBNAME="roadiz"
 DBUSER="roadiz"
 DBPASSWD="roadiz"
+MARIADB_VERSION="10.3"
 
 echo -e "\n--- Okay, installing now... ---\n"
 sudo apt-get -qq update;
 
+echo -e "\n---Install locales ---\n"
+sudo locale-gen en_GB.UTF-8 en_US.UTF-8 fr_FR.UTF-8 it_IT.UTF-8 es_ES.UTF-8 pt_PT.UTF-8 ru_RU.UTF-8 de_DE.UTF-8 tr_TR.UTF-8 ja_JP.UTF-8 zh_CN.UTF-8;
+
 echo -e "\n--- Install base packages ---\n"
-sudo locale-gen fr_FR.utf8;
+# Signing key for MariaDB
+# @see https://mariadb.com/kb/en/mariadb/installing-mariadb-deb-files/
+sudo apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xF1656F24C74CD1D8;
 
 echo -e "\n--- Add some repos to update our distro ---\n"
 LC_ALL=C.UTF-8 sudo add-apt-repository ppa:ondrej/php > /dev/null 2>&1;
@@ -25,7 +31,14 @@ else
    echo -e "${RED}\t!!! Please destroy your vagrant and provision again.${NC}\n"
    exit 1;
 fi
-
+LC_ALL=C.UTF-8 sudo add-apt-repository "deb [arch=amd64,i386,ppc64el] http://ftp.igh.cnrs.fr/pub/mariadb/repo/${MARIADB_VERSION}/ubuntu xenial main" > /dev/null 2>&1;
+if [ $? -eq 0 ]; then
+   echo -e "\t--- OK\n"
+else
+   echo -e "${RED}\t!!! FAIL${NC}\n"
+   echo -e "${RED}\t!!! Please destroy your vagrant and provision again.${NC}\n"
+   exit 1;
+fi
 
 # Use latest nginx for HTTP/2
 sudo cp -a /var/www/samples/vagrant/sources.list.d/nginx.list /etc/apt/sources.list.d/nginx.list;
@@ -56,11 +69,11 @@ else
    exit 1;
 fi
 
-echo -e "\n--- Install php7.2 and all extensions ---\n"
-sudo apt-get -qq -f -y install php7.2 php7.2-cli php7.2-fpm php7.2-common php7.2-opcache php7.2-cli php7.2-mysql  \
-                               php7.2-xml php7.2-gd php7.2-intl php7.2-imap php7.2-pspell \
-                               php7.2-curl php7.2-recode php7.2-sqlite3 php7.2-mbstring php7.2-tidy \
-                               php7.2-xsl php7.2-apcu php7.2-gd php7.2-apcu-bc php7.2-xdebug php7.2-zip > /dev/null 2>&1;
+echo -e "\n--- Install all php7.2 extensions ---\n"
+sudo apt-get -qq -y install php7.2 php7.2-cli php7.2-fpm php7.2-common php7.2-opcache php7.2-cli php7.2-mysql  \
+                               php7.2-xml php7.2-gd php7.2-intl php7.2-imap php-mcrypt \
+                               php7.2-curl php7.2-sqlite3 php7.2-mbstring php7.2-tidy \
+                               php7.2-xsl php-apcu php-apcu-bc php7.2-zip php-xdebug;
 if [ $? -eq 0 ]; then
    echo -e "\t--- OK\n"
 else
