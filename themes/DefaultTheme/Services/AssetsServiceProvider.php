@@ -47,6 +47,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 'fit' => '600x338',
                 'controls' => true,
                 'embed' => true,
+                'autoplay' => true,
                 'progressive' => true,
                 'class' => 'img-responsive',
             ];
