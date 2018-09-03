@@ -58,7 +58,7 @@ class LoginRequestForm extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getBlockPrefix()
     {
         return 'login_request';
     }

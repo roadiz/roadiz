@@ -32,8 +32,8 @@ Vagrant.configure(2) do |config|
 
     config.vm.provider "virtualbox" do |vb|
         # Enable IO APIC for allocating more than 1 core
-        vb.customize ["modifyvm", :id, "--ioapic", "on"]
-        vb.memory = 1024
+        vb.customize ["modifyvm", :id, "--ioapic", "on", "--uartmode1", "disconnected"]
+        vb.memory = 2048
         vb.cpus = 1
     end
 
