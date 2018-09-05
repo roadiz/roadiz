@@ -346,7 +346,6 @@ class DocumentRepository extends EntityRepository
         $offset = null,
         Translation $translation = null
     ) {
-
         $qb = $this->createQueryBuilder('d');
         $qb->andWhere($qb->expr()->eq('d.raw', ':raw'))
             ->setParameter('raw', false);

@@ -34,5 +34,4 @@ namespace RZ\Roadiz\Core\Exceptions;
  */
 class EmbedPlatformNotSupportedException extends \Exception
 {
-
 }

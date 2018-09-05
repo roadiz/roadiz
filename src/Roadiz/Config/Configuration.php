@@ -102,7 +102,8 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                     ->end()
                     ->scalarNode('session_name')
-                        ->info(<<<EOF
+                        ->info(
+                            <<<EOF
 Name of the session (used as cookie name).
 http://php.net/session.name
 EOF
@@ -117,7 +118,8 @@ EOF
                         ->end()
                     ->end()
                     ->booleanNode('session_cookie_secure')
-                        ->info(<<<EOF
+                        ->info(
+                            <<<EOF
 Enable session cookie_secure ONLY if your website is served with HTTPS only
 http://php.net/session.cookie-secure
 EOF
@@ -125,7 +127,8 @@ EOF
                         ->defaultValue(false)
                     ->end()
                     ->booleanNode('session_cookie_httponly')
-                        ->info(<<<EOF
+                        ->info(
+                            <<<EOF
 Whether or not to add the httpOnly flag to the cookie, which makes it inaccessible to browser scripting languages such as JavaScript.
 http://php.net/session.cookie-httponly
 EOF

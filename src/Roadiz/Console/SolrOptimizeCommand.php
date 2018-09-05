@@ -37,7 +37,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class SolrOptimizeCommand extends SolrCommand
 {
-
     protected function configure()
     {
         $this->setName('solr:optimize')

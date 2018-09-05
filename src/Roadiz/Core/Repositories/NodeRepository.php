@@ -1065,7 +1065,6 @@ class NodeRepository extends StatusAwareRepository
         $offset = null,
         Translation $translation = null
     ) {
-
         $parentsId = $this->findAllParentsIdByNode($node);
         if (count($parentsId) > 0) {
             $criteria['id'] = $parentsId;

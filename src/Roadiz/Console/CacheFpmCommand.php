@@ -43,7 +43,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CacheFpmCommand extends Command
 {
-
     protected function configure()
     {
         $this->setName('cache:clear-fpm')

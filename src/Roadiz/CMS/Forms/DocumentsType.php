@@ -66,7 +66,6 @@ class DocumentsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $callback = function ($object, ExecutionContextInterface $context) {
-
             if (is_array($object)) {
                 $documents = $this->entityManager->getRepository(Document::class)
                 ->findBy(['id' => $object]);

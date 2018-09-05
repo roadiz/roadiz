@@ -226,7 +226,6 @@ class FolderRepository extends EntityRepository
         array &$criteria = [],
         $alias = "obj"
     ) {
-
         $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*

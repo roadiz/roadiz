@@ -66,7 +66,6 @@ class CustomFormsNodesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $callback = function ($object, ExecutionContextInterface $context) {
-
             if (is_array($object)) {
                 $customForms = $this->entityManager->getRepository(CustomForm::class)
                                                    ->findBy(['id' => $object]);

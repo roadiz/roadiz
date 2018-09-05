@@ -44,7 +44,6 @@ use Themes\Rozier\RozierApp;
  */
 class HistoryController extends RozierApp
 {
-
     public static $levelToHuman = [
         Log::EMERGENCY => "emergency",
         Log::CRITICAL => "critical",

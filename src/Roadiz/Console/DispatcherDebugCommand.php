@@ -52,7 +52,8 @@ class DispatcherDebugCommand extends Command
                 new InputArgument('event', InputArgument::OPTIONAL, 'An event name'),
             ))
             ->setDescription('Displays configured listeners for an application')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 The <info>%command.name%</info> command displays all configured listeners:
   <info>php %command.full_name%</info>
 To get specific listeners for an event, specify its name:

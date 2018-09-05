@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Utils\Security;
 
 class SaltGenerator extends RandomGenerator implements SaltGeneratorInterface
 {
-
     public function generateSalt()
     {
         return strtr(base64_encode($this->getRandomNumber()), '{}', '-_');

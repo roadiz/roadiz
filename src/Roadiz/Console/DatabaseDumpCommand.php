@@ -45,7 +45,8 @@ class DatabaseDumpCommand extends Command
         $this
             ->setName('database:dump')
             ->setDescription('Use system mysqldump to export your database contents to STDOUT.')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 Use <info>bin/roadiz database:dump > my-file.sql</info> command to generate a custom named .sql file.
 Or <info>bin/roadiz database:dump -c</info> command to generate an automatically named .sql file in root dir.
 <info>mysqldump</info> MUST be installed on your system (via mysql-client packages), this command uses system processes.
