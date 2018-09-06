@@ -46,6 +46,7 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
@@ -378,12 +379,17 @@ abstract class AppController extends Controller
                 'filesUrl' => $this->getRequest()->getBaseUrl() . $kernel->getPublicFilesBasePath(),
                 'resourcesUrl' => $this->getStaticResourcesUrl(),
                 'absoluteResourcesUrl' => $this->getAbsoluteStaticResourceUrl(),
-            ],
-            'session' => [
-                'id' => $this->getRequest()->getSession()->getId(),
-                'user' => $this->getUser(),
             ]
         ];
+
+        /** @var RequestStack $requestStack */
+        $requestStack = $this->get('requestStack');
+        if (null !== $requestStack->getMasterRequest()->getSession()) {
+            $this->assignation['session'] = [
+                'id' => $requestStack->getMasterRequest()->getSession()->getId(),
+                'user' => $this->getUser(),
+            ];
+        }
 
         if ('' != $this->get('settingsBag')->get('static_domain_name')) {
             $this->assignation['head']['staticDomainName'] = $this->get('settingsBag')->get('static_domain_name');
