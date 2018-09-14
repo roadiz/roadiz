@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -43,11 +44,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var CustomForm[]
-     */
-    private $selectedCustomForms;
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -103,14 +99,12 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
         /** @var NodesSources $nodeSource */
         $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
 
-        /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
+        /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
-        $this->selectedCustomForms = $entityManager
+        $event->setData($entityManager
             ->getRepository(CustomForm::class)
-            ->findByNodeAndFieldName($nodeSource->getNode(), $nodeTypeField->getName());
-
-        $event->setData($this->selectedCustomForms);
+            ->findByNodeAndFieldName($nodeSource->getNode(), $nodeTypeField->getName()));
     }
 
     /**
@@ -127,7 +121,7 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
         /** @var NodeHandler $nodeHandler */
         $nodeHandler = $event->getForm()->getConfig()->getOption('nodeHandler');
 
-        /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
+        /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
         $nodeHandler->setNode($nodeSource->getNode());

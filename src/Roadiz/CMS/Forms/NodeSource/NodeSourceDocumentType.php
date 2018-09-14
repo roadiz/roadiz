@@ -45,11 +45,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NodeSourceDocumentType extends AbstractNodeSourceFieldType
 {
     /**
-     * @var Document[]
-     */
-    private $selectedDocuments;
-
-    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -109,13 +104,12 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
         /** @var EntityManager $entityManager */
         $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
 
-        $this->selectedDocuments = $entityManager->getRepository(Document::class)
-                                                 ->findByNodeSourceAndFieldName(
-                                                     $nodeSource,
-                                                     $nodeTypeField->getName()
-                                                 );
-
-        $event->setData($this->selectedDocuments);
+        $event->setData($entityManager->getRepository(Document::class)
+            ->findByNodeSourceAndFieldName(
+                $nodeSource,
+                $nodeTypeField->getName()
+            )
+        );
     }
 
     /**
