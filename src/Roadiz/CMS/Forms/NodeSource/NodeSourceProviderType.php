@@ -40,23 +40,8 @@ use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Explorer\AbstractExplorerItem;
 use Themes\Rozier\Explorer\AbstractExplorerProvider;
 
-class NodeSourceProviderType extends AbstractNodeSourceFieldType
+class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
 {
-    /**
-     * @var string
-     */
-    private $classname;
-
-    /**
-     * @var AbstractExplorerProvider
-     */
-    private $provider;
-
-    /**
-     * @var array
-     */
-    private $providerOptions;
-
     /**
      * @inheritDoc
      */
@@ -74,30 +59,22 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['nodeTypeField']->getType() === NodeTypeField::MULTI_PROVIDER_T ||
-            $options['nodeTypeField']->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
-            $configuration = Yaml::parse($options['nodeTypeField']->getDefaultValues());
-            $this->classname = $configuration['classname'];
-            if (isset($configuration['options'])) {
-                $this->providerOptions = $configuration['options'];
-            } else {
-                $this->providerOptions = [];
-            }
-            $this->provider = new $configuration['classname'];
-            $this->provider->setContainer($options['container']);
-        }
+        $configuration = $this->getFieldConfiguration($options);
+        /** @var AbstractExplorerProvider $provider */
+        $provider = new $configuration['classname'];
+        $provider->setContainer($options['container']);
 
         $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) use ($options) {
+            function ($entitiesToForm) use ($options, $provider) {
                 if ($options['nodeTypeField']->getType() === NodeTypeField::MULTI_PROVIDER_T && is_array($entitiesToForm)) {
                     if (count($entitiesToForm) > 0) {
-                        return $this->provider->getItemsById($entitiesToForm);
+                        return $provider->getItemsById($entitiesToForm);
                     }
                     return [];
                 }
                 if ($options['nodeTypeField']->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
                     if (isset($entitiesToForm)) {
-                        return $this->provider->getItemsById($entitiesToForm);
+                        return $provider->getItemsById($entitiesToForm);
                     }
                 }
                 return null;
@@ -122,12 +99,22 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
     {
         parent::buildView($view, $form, $options);
 
+        $configuration = $this->getFieldConfiguration($options);
+        if (isset($configuration['options'])) {
+            $providerOptions = $configuration['options'];
+        } else {
+            $providerOptions = [];
+        }
+        /** @var AbstractExplorerProvider $provider */
+        $provider = new $configuration['classname'];
+        $provider->setContainer($options['container']);
+
         $displayableData = [];
         $ids = call_user_func([$options['nodeSource'], $options['nodeTypeField']->getGetterName()]);
         if (!is_array($ids)) {
-            $entities = $this->provider->getItemsById([$ids]);
+            $entities = $provider->getItemsById([$ids]);
         } else {
-            $entities = $this->provider->getItemsById($ids);
+            $entities = $provider->getItemsById($ids);
         }
 
         if (is_array($entities)) {
@@ -146,11 +133,11 @@ class NodeSourceProviderType extends AbstractNodeSourceFieldType
             $view->vars['attr']['data-min-length'] = $options['min_length'];
         }
 
-        $view->vars['provider_class'] = $this->classname;
+        $view->vars['provider_class'] = $configuration['classname'];
 
-        if (is_array($this->providerOptions) && count($this->providerOptions) > 0) {
+        if (is_array($providerOptions) && count($providerOptions) > 0) {
             $view->vars['provider_options'] = [];
-            foreach ($this->providerOptions as $providerOption) {
+            foreach ($providerOptions as $providerOption) {
                 $view->vars['provider_options'][$providerOption['name']] = $providerOption['value'];
             }
         }

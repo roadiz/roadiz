@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
@@ -43,11 +44,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NodeSourceNodeType extends AbstractNodeSourceFieldType
 {
-    /**
-     * @var Node[]
-     */
-    private $selectedNodes;
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -103,17 +99,16 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
         /** @var NodesSources $nodeSource */
         $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
 
-        /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
+        /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
-        $this->selectedNodes = $entityManager
+        $event->setData($entityManager
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findByNodeAndFieldName(
                 $nodeSource->getNode(),
                 $nodeTypeField->getName()
-            );
-        $event->setData($this->selectedNodes);
+            ));
     }
 
     /**
@@ -130,7 +125,7 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
         /** @var NodeHandler $nodeHandler */
         $nodeHandler = $event->getForm()->getConfig()->getOption('nodeHandler');
 
-        /** @var \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField */
+        /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
         $nodeHandler->setNode($nodeSource->getNode());

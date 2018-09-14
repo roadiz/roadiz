@@ -38,33 +38,18 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Yaml\Yaml;
 
-class NodeSourceJoinType extends AbstractNodeSourceFieldType
+class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 {
-    /**
-     * @var string
-     */
-    private $classname;
-
-    /**
-     * @var string
-     */
-    private $displayableMethod;
-
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_MANY_T ||
-            $options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_ONE_T) {
-            $configuration = Yaml::parse($options['nodeTypeField']->getDefaultValues());
-            $this->classname = $configuration['classname'];
-            $this->displayableMethod = $configuration['displayable'];
-        }
+        $configuration = $this->getFieldConfiguration($options);
 
         $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) use ($options) {
+            function ($entitiesToForm) use ($options, $configuration) {
                 /*
                  * If model is already an AbstractEntity
                  */
@@ -87,14 +72,14 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
                 }
                 return '';
             },
-            function ($formToEntities) use ($options) {
+            function ($formToEntities) use ($options, $configuration) {
                 if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_MANY_T) {
-                    return $options['entityManager']->getRepository($this->classname)->findBy([
+                    return $options['entityManager']->getRepository($configuration['classname'])->findBy([
                         'id' => $formToEntities,
                     ]);
                 }
                 if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_ONE_T) {
-                    return $options['entityManager']->getRepository($this->classname)->findOneBy([
+                    return $options['entityManager']->getRepository($configuration['classname'])->findOneBy([
                         'id' => $formToEntities,
                     ]);
                 }
@@ -114,6 +99,7 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
     {
         parent::buildView($view, $form, $options);
 
+        $configuration = $this->getFieldConfiguration($options);
         $displayableData = [];
 
         $entities = call_user_func([$options['nodeSource'], $options['nodeTypeField']->getGetterName()]);
@@ -126,10 +112,10 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
                 }
                 $data = [
                     'id' => $entity->getId(),
-                    'classname' => $this->classname,
+                    'classname' => $configuration['classname'],
                 ];
-                if (is_callable([$entity, $this->displayableMethod])) {
-                    $data['name'] = call_user_func([$entity, $this->displayableMethod]);
+                if (is_callable([$entity, $configuration['displayable']])) {
+                    $data['name'] = call_user_func([$entity, $configuration['displayable']]);
                 }
                 $displayableData[] = $data;
             }
@@ -139,10 +125,10 @@ class NodeSourceJoinType extends AbstractNodeSourceFieldType
             }
             $data = [
                 'id' => $entities->getId(),
-                'classname' => $this->classname,
+                'classname' => $configuration['classname'],
             ];
-            if (is_callable([$entities, $this->displayableMethod])) {
-                $data['name'] = call_user_func([$entities, $this->displayableMethod]);
+            if (is_callable([$entities, $configuration['displayable']])) {
+                $data['name'] = call_user_func([$entities, $configuration['displayable']]);
             }
             $displayableData[] = $data;
         }
