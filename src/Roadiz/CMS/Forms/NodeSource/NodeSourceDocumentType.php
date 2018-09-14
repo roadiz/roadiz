@@ -108,8 +108,7 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
             ->findByNodeSourceAndFieldName(
                 $nodeSource,
                 $nodeTypeField->getName()
-            )
-        );
+            ));
     }
 
     /**
