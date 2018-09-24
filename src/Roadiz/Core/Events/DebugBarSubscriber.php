@@ -35,9 +35,17 @@ use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class DebugBarSubscriber implements EventSubscriberInterface
+final class DebugBarSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var null|Container
+     */
     protected $container = null;
+
+    /**
+     * @var bool
+     */
+    protected $alreadyRendered = false;
 
     /**
      * DebugPanel constructor.
@@ -68,7 +76,8 @@ class DebugBarSubscriber implements EventSubscriberInterface
     protected function supports(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
-        if ($event->isMasterRequest() &&
+        if ($this->alreadyRendered === false &&
+            $event->isMasterRequest() &&
             $this->container['settingsBag']->get('display_debug_panel') == true &&
             false !== strpos($response->headers->get('Content-Type'), 'text/html')) {
             return true;
@@ -98,7 +107,6 @@ class DebugBarSubscriber implements EventSubscriberInterface
                 $stopWatch->stopSection('runtime');
             }
 
-
             if (false !== strpos($response->getContent(), '</body>') &&
                 false !== strpos($response->getContent(), '</head>')) {
                 $content = str_replace(
@@ -113,6 +121,7 @@ class DebugBarSubscriber implements EventSubscriberInterface
                 );
                 $response->setContent($content);
                 $event->setResponse($response);
+                $this->alreadyRendered = true;
             }
         }
     }
@@ -127,7 +136,7 @@ class DebugBarSubscriber implements EventSubscriberInterface
     }
     /**
      * Stop request-handling stopwatch event and
-     * start a new stopwatch event when a controller is instanciated.
+     * start a new stopwatch event when a controller is instantiated.
      */
     public function onControllerMatched()
     {
