@@ -43,11 +43,6 @@ final class DebugBarSubscriber implements EventSubscriberInterface
     protected $container = null;
 
     /**
-     * @var bool
-     */
-    protected $alreadyRendered = false;
-
-    /**
      * DebugPanel constructor.
      * @param Container $container
      */
@@ -76,9 +71,7 @@ final class DebugBarSubscriber implements EventSubscriberInterface
     protected function supports(FilterResponseEvent $event)
     {
         $response = $event->getResponse();
-        if ($this->alreadyRendered === false &&
-            $event->isMasterRequest() &&
-            $this->container['settingsBag']->get('display_debug_panel') == true &&
+        if ($this->container['settingsBag']->get('display_debug_panel') == true &&
             false !== strpos($response->headers->get('Content-Type'), 'text/html')) {
             return true;
         }
@@ -91,6 +84,10 @@ final class DebugBarSubscriber implements EventSubscriberInterface
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
+        if (!$event->isMasterRequest()) {
+            return;
+        }
+
         if ($this->supports($event)) {
             /** @var Stopwatch $stopWatch */
             $stopWatch = $this->container['stopwatch'];
@@ -121,7 +118,6 @@ final class DebugBarSubscriber implements EventSubscriberInterface
                 );
                 $response->setContent($content);
                 $event->setResponse($response);
-                $this->alreadyRendered = true;
             }
         }
     }

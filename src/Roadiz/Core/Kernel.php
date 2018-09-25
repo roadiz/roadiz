@@ -289,6 +289,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             // Do nothing if no configuration file is found.
         }
 
+        $this->initEvents();
+
         $stopWatch->stop('registerServices');
     }
 
@@ -309,29 +311,28 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         }
         ++$this->requestStackSize;
 
-        /*
-         * Bypass Roadiz kernel handling to directly serve images assets
-         * -----
-         * this is useful in preview mode in order to allow at least assets
-         * to be viewed (e.g. PDF generation which loads images in preview mode)
-         */
-        if (0 === strpos($request->getPathInfo(), '/assets') &&
-            preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
-        ) {
-            $ctrl = new AssetsController();
-            $ctrl->setContainer($this->getContainer());
-            $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
-            $response->headers->add(['X-ByPass-Kernel' => true]);
-            $response->prepare($request);
-
-            return $response;
-        }
-
-        $this->container['request'] = $request;
-        $this->container['requestContext']->fromRequest($request);
-        $this->initEvents();
-
         try {
+            /*
+             * Bypass Roadiz kernel handling to directly serve images assets
+             * -----
+             * this is useful in preview mode in order to allow at least assets
+             * to be viewed (e.g. PDF generation which loads images in preview mode)
+             */
+            if (0 === strpos($request->getPathInfo(), '/assets') &&
+                preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
+            ) {
+                $ctrl = new AssetsController();
+                $ctrl->setContainer($this->getContainer());
+                $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
+                $response->headers->add(['X-ByPass-Kernel' => true]);
+                $response->prepare($request);
+
+                return $response;
+            }
+
+            $this->container['request'] = $request;
+            $this->container['requestContext']->fromRequest($request);
+
             return $this->getHttpKernel()->handle($request, $type, $catch);
         } finally {
             --$this->requestStackSize;

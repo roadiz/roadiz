@@ -28,12 +28,12 @@
     </div>
 
     {# Test render #}
-    {#<pre>
+    <pre>
         {{ render(controller(
             'Themes\\DefaultTheme\\Controllers\\PageController::embedAction',
             { 'name': 'Roadiz' }
         )) }}
-    </pre>#}
+    </pre>
 
     <div class="images row">
         {% for image in nodeSource.pictures %}
