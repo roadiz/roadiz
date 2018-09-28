@@ -191,9 +191,6 @@ class RoadizApplication extends Application
             new DatabaseDumpCommand(),
             new FilesExportCommand(),
             new FilesImportCommand(),
-            new ComposerPostCreateProjectCommand(),
-            new ComposerPostInstallCommand(),
-            new ComposerPostUpdateCommand(),
             new LogsCleanupCommand(),
         );
 
