@@ -90,7 +90,6 @@ class RoadizApplication extends Application
          * to dispatch ThemeResolver event
          */
         $dispatcher = $this->kernel->get('dispatcher');
-        $dispatcher->addSubscriber(new ThemesSubscriber($this->kernel, $this->kernel->get('stopwatch')));
         $this->setDispatcher($dispatcher);
 
         $this->getDefinition()->addOption(new InputOption(
