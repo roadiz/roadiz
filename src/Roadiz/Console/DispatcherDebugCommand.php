@@ -42,7 +42,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Class DispatcherDebugCommand
  * @package RZ\Roadiz\Console
  */
-class DispatcherDebugCommand extends Command
+class DispatcherDebugCommand extends Command implements ThemeAwareCommandInterface
 {
     protected function configure()
     {
@@ -83,10 +83,17 @@ EOF
         foreach ($dispatcher->getListeners() as $eventName => $listeners) {
             /** @var EventSubscriberInterface $listener */
             foreach ($listeners as $priority => $listener) {
+                if ($listener instanceof \Closure) {
+                    $listenerClass = '\Closure';
+                    $listenerMethod = '…';
+                } else {
+                    $listenerClass = get_class($listener[0]);
+                    $listenerMethod = $listener[1];
+                }
                 $tableContent[] = [
                     $eventName,
-                    get_class($listener[0]),
-                    $listener[1],
+                    $listenerClass,
+                    $listenerMethod,
                     $priority,
                 ];
             }

@@ -41,7 +41,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Class DispatcherDebugCommand
  * @package RZ\Roadiz\Console
  */
-class ConfigurationDebugCommand extends Command
+class ConfigurationDebugCommand extends Command implements ThemeAwareCommandInterface
 {
     protected function configure()
     {
