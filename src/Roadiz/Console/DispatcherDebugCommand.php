@@ -72,10 +72,6 @@ EOF
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-        /*
-         * Force kernel to register subscribers
-         */
-        $kernel->initEvents();
 
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $kernel->get('dispatcher');

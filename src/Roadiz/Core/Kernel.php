@@ -342,7 +342,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * Register KernelEvents subscribers.
      */
-    public function initEvents()
+    protected function initEvents()
     {
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $this->container['dispatcher'];

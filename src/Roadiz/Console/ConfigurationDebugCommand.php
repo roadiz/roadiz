@@ -60,10 +60,6 @@ class ConfigurationDebugCommand extends Command
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-        /*
-         * Force kernel to register subscribers
-         */
-        $kernel->initEvents();
 
         $configuration = $kernel->get('config');
 
