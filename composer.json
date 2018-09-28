@@ -83,7 +83,8 @@
         "phpunit/phpunit": "~5.7.27",
         "php-coveralls/php-coveralls": "~2.1",
         "squizlabs/php_codesniffer": "@stable",
-        "sentry/sentry": "^1.9"
+        "sentry/sentry": "^1.9",
+        "friendsofphp/php-cs-fixer": "^2.13"
     },
     "autoload": {
         "psr-4": {

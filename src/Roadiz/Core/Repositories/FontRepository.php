@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Repositories;
 
 class FontRepository extends EntityRepository
 {
-
     public function getLatestUpdateDate()
     {
         $query = $this->_em->createQuery('

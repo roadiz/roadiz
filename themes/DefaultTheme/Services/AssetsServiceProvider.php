@@ -24,7 +24,6 @@ class AssetsServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['imageFormats'] = function ($c) {
-
             $array = [];
 
             $array['headerImage'] = [

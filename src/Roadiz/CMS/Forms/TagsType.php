@@ -48,7 +48,7 @@ class TagsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-         $resolver->setDefaults([
+        $resolver->setDefaults([
             'allow_add' => true,
             'allow_delete' => true,
             'entry_type' => HiddenType::class,

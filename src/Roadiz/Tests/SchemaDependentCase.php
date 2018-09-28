@@ -44,7 +44,6 @@ use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
 
-
 /**
  * Class SchemaDependentCase for UnitTest which need EntityManager.
  *
@@ -57,7 +56,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
     /**
      * @var EntityManager
      */
-    static $entityManager;
+    public static $entityManager;
 
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException

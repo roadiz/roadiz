@@ -148,11 +148,22 @@ class TranslationViewer
         } else {
             $node = null;
         }
-
+        /*
+         * If using a static route (routes.yml)…
+         */
         if ($node === null && !empty($attr["_route"])) {
             $translations = $this->getRepository()->findAllAvailable();
-            $attr["_route"] = RouteHandler::getBaseRoute($attr["_route"]);
+            /*
+             * Search for a route without Locale suffix
+             */
+            $baseRoute = RouteHandler::getBaseRoute($attr["_route"]);
+            if (null !== $this->router->getRouteCollection()->get($baseRoute)) {
+                $attr["_route"] = $baseRoute;
+            }
         } elseif (null !== $node) {
+            /*
+             * If using dynamic routing…
+             */
             if ($this->preview === true) {
                 $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
             } else {
@@ -184,8 +195,7 @@ class TranslationViewer
                  * Use suffixed route if locales are forced or
                  * if it’s not default translation.
                  */
-                if (true === $forceLocale ||
-                    !$translation->isDefaultTranslation()) {
+                if (true === $forceLocale || !$translation->isDefaultTranslation()) {
                     /*
                      * Search for a Locale suffixed route
                      */

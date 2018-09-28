@@ -42,7 +42,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Class DispatcherDebugCommand
  * @package RZ\Roadiz\Console
  */
-class DispatcherDebugCommand extends Command
+class DispatcherDebugCommand extends Command implements ThemeAwareCommandInterface
 {
     protected function configure()
     {
@@ -52,7 +52,8 @@ class DispatcherDebugCommand extends Command
                 new InputArgument('event', InputArgument::OPTIONAL, 'An event name'),
             ))
             ->setDescription('Displays configured listeners for an application')
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 The <info>%command.name%</info> command displays all configured listeners:
   <info>php %command.full_name%</info>
 To get specific listeners for an event, specify its name:
@@ -71,10 +72,6 @@ EOF
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-        /*
-         * Force kernel to register subscribers
-         */
-        $kernel->initEvents();
 
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $kernel->get('dispatcher');
@@ -86,10 +83,17 @@ EOF
         foreach ($dispatcher->getListeners() as $eventName => $listeners) {
             /** @var EventSubscriberInterface $listener */
             foreach ($listeners as $priority => $listener) {
+                if ($listener instanceof \Closure) {
+                    $listenerClass = '\Closure';
+                    $listenerMethod = '…';
+                } else {
+                    $listenerClass = get_class($listener[0]);
+                    $listenerMethod = $listener[1];
+                }
                 $tableContent[] = [
                     $eventName,
-                    get_class($listener[0]),
-                    $listener[1],
+                    $listenerClass,
+                    $listenerMethod,
                     $priority,
                 ];
             }

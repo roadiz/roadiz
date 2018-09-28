@@ -180,7 +180,6 @@ trait NodesTrait
      */
     protected function buildDeleteForm(Node $node)
     {
-
         $builder = $this->createNamedFormBuilder('remove_stack_type_'.$node->getId())
                         ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),

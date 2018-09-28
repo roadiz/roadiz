@@ -44,7 +44,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
     /**
      * @var Kernel
      */
-    static $kernel;
+    public static $kernel;
 
     /**
      * @return Request

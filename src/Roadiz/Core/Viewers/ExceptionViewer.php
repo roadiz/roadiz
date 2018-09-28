@@ -231,7 +231,8 @@ class ExceptionViewer
                 $html = str_replace('{{ smiley }}', '🤔', $html);
             } elseif ($this->getHttpStatusCode($e) === Response::HTTP_NOT_FOUND) {
                 $html = str_replace('{{ smiley }}', '🧐', $html);
-            } {
+            }
+            {
                 $html = str_replace('{{ smiley }}', '🤕', $html);
             }
 

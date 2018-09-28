@@ -65,7 +65,6 @@ class TagApi extends AbstractApi
         $limit = null,
         $offset = null
     ) {
-
         if (null === $order) {
             $order = [
                 'position' => 'ASC',

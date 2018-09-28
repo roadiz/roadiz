@@ -35,5 +35,4 @@ namespace RZ\Roadiz\Core\Exceptions;
  */
 class EntityAlreadyExistsException extends \RuntimeException
 {
-
 }

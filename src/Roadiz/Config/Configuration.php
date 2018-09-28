@@ -102,7 +102,8 @@ class Configuration implements ConfigurationInterface
                         ->cannotBeEmpty()
                     ->end()
                     ->scalarNode('session_name')
-                        ->info(<<<EOF
+                        ->info(
+                            <<<EOF
 Name of the session (used as cookie name).
 http://php.net/session.name
 EOF
@@ -117,7 +118,8 @@ EOF
                         ->end()
                     ->end()
                     ->booleanNode('session_cookie_secure')
-                        ->info(<<<EOF
+                        ->info(
+                            <<<EOF
 Enable session cookie_secure ONLY if your website is served with HTTPS only
 http://php.net/session.cookie-secure
 EOF
@@ -125,7 +127,8 @@ EOF
                         ->defaultValue(false)
                     ->end()
                     ->booleanNode('session_cookie_httponly')
-                        ->info(<<<EOF
+                        ->info(
+                            <<<EOF
 Whether or not to add the httpOnly flag to the cookie, which makes it inaccessible to browser scripting languages such as JavaScript.
 http://php.net/session.cookie-httponly
 EOF
@@ -257,16 +260,17 @@ EOF
                     ->useAttributeAsKey('name')
                     ->prototype('array')
                         ->children()
-                            ->scalarNode('host')
-                                ->isRequired()
-                                ->defaultValue('localhost')
-                            ->end()
+                            ->scalarNode('host')->defaultValue('127.0.0.1')->end()
                             ->scalarNode('username')->end()
                             ->scalarNode('password')->end()
                             ->scalarNode('core')->isRequired()->end()
-                            ->scalarNode('timeout')->isRequired()->defaultValue(3)->end()
-                            ->scalarNode('port')->isRequired()->defaultValue(8983)->end()
-                            ->scalarNode('path')->isRequired()->defaultValue('/solr')->end()
+                            ->enumNode('scheme')
+                                ->values(['http', 'https'])
+                                ->defaultValue('http')
+                            ->end()
+                            ->scalarNode('timeout')->defaultValue(3)->end()
+                            ->scalarNode('port')->defaultValue(8983)->end()
+                            ->scalarNode('path')->defaultValue('/solr')->end()
                         ->end()
                     ->end()
                 ->end()

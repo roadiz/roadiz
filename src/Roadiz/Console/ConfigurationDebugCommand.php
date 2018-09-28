@@ -41,7 +41,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  * Class DispatcherDebugCommand
  * @package RZ\Roadiz\Console
  */
-class ConfigurationDebugCommand extends Command
+class ConfigurationDebugCommand extends Command implements ThemeAwareCommandInterface
 {
     protected function configure()
     {
@@ -60,10 +60,6 @@ class ConfigurationDebugCommand extends Command
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-        /*
-         * Force kernel to register subscribers
-         */
-        $kernel->initEvents();
 
         $configuration = $kernel->get('config');
 

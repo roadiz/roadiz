@@ -38,7 +38,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
  *
  * @package RZ\Roadiz\Core\Events
  */
-class SignatureListener implements EventSubscriberInterface
+final class SignatureListener implements EventSubscriberInterface
 {
     private $version;
     private $debug;
@@ -74,8 +74,8 @@ class SignatureListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
+        return [
             KernelEvents::RESPONSE => 'onKernelResponse',
-        );
+        ];
     }
 }

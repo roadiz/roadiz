@@ -256,7 +256,6 @@ class TagRepository extends EntityRepository
         $offset = null,
         Translation $translation = null
     ) {
-
         $qb = $this->createQueryBuilder('tg');
         $qb->addSelect('tt');
 
@@ -356,7 +355,6 @@ class TagRepository extends EntityRepository
         array $orderBy = null,
         Translation $translation = null
     ) {
-
         $query = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,

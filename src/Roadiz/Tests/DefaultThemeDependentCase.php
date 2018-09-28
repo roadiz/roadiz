@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Tests;
+
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Entities\Node;
@@ -51,7 +52,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     /**
      * @var RoadizApplication
      */
-    static $application;
+    public static $application;
 
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException

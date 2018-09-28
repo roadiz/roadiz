@@ -31,5 +31,4 @@ namespace RZ\Roadiz\Console;
 
 interface ThemeAwareCommandInterface
 {
-
 }

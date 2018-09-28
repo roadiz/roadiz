@@ -35,5 +35,4 @@ namespace RZ\Roadiz\Utils\Doctrine\Generators;
  */
 class CollectionFieldGenerator extends NonVirtualFieldGenerator
 {
-
 }

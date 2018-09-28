@@ -35,5 +35,4 @@ namespace RZ\Roadiz\Core\SearchEngine;
  */
 class FullTextSearchHandler extends NodeSourceSearchHandler
 {
-
 }
