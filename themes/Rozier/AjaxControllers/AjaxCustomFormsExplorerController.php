@@ -58,7 +58,8 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
          */
         $listManager = $this->createEntityListManager(
             CustomForm::class,
-            $arrayFilter
+            $arrayFilter,
+            ['createdAt' => 'DESC']
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->setItemPerPage(40);
