@@ -62,7 +62,9 @@ class FontsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_FONTS');
 
         $listManager = $this->createEntityListManager(
-            Font::class
+            Font::class,
+            [],
+            ['name' => 'ASC']
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();

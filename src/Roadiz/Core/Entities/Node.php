@@ -772,6 +772,8 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
                 $this->getNodeSources()->first()->getTitle() :
                 $this->nodeName;
             $this->setNodeName($namePrefix . "-" . uniqid());
+            $this->setCreatedAt(new \DateTime());
+            $this->setUpdatedAt(new \DateTime());
         }
     }
 
