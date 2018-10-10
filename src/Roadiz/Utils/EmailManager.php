@@ -327,12 +327,16 @@ class EmailManager
     {
         if (is_string($receiver)) {
             if (false === filter_var($receiver, FILTER_VALIDATE_EMAIL)) {
-                throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+                throw new \InvalidArgumentException(sprintf("Sender (%s) must be a valid email address.", $receiver), 1);
             }
         } elseif (is_array($receiver)) {
             foreach ($receiver as $email => $name) {
-                if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+                if (false === filter_var($email, FILTER_VALIDATE_EMAIL) &&
+                    false === filter_var($name, FILTER_VALIDATE_EMAIL)) {
+                    throw new \InvalidArgumentException(
+                        sprintf("Sender (%s - %s) must be a valid email address.", $email, $name),
+                        1
+                    );
                 }
             }
         }
@@ -380,12 +384,12 @@ class EmailManager
     {
         if (is_string($sender)) {
             if (false === filter_var($sender, FILTER_VALIDATE_EMAIL)) {
-                throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+                throw new \InvalidArgumentException(sprintf("Sender (%s) must be a valid email address.", $sender), 1);
             }
         } elseif (is_array($sender)) {
             foreach ($sender as $email => $name) {
                 if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                    throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
+                    throw new \InvalidArgumentException(sprintf("Sender (%s) must be a valid email address.", $email), 1);
                 }
             }
         }
