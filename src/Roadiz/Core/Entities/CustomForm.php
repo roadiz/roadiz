@@ -389,6 +389,8 @@ class CustomForm extends AbstractDateTimed
                 }
             }
             $this->nodes = new ArrayCollection();
+            $this->setCreatedAt(new \DateTime());
+            $this->setUpdatedAt(new \DateTime());
         }
     }
 }
