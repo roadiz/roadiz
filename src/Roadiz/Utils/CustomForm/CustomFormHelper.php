@@ -142,8 +142,12 @@ class CustomFormHelper
      * @param array $options Options passed to final form
      * @return \Symfony\Component\Form\FormInterface
      */
-    public function getFormFromAnswer(FormFactory $formFactory, CustomFormAnswer $answer = null, $forceExpanded = false, array $options = [])
-    {
+    public function getFormFromAnswer(
+        FormFactory $formFactory,
+        CustomFormAnswer $answer = null,
+        $forceExpanded = false,
+        array $options = []
+    ) {
         $data = null;
 
         if (null !== $answer) {
@@ -171,7 +175,10 @@ class CustomFormHelper
             }
         }
 
-        return $formFactory->create(new CustomFormsType($this->customForm, $forceExpanded), $data, $options);
+        return $formFactory->create(CustomFormsType::class, $data, array_merge($options, [
+            'customForm' => $this->customForm,
+            'forceExpanded' => $forceExpanded,
+        ]));
     }
 
     /**
