@@ -57,7 +57,11 @@ class CustomFormsController extends RozierApp
          * Manage get request to filter list
          */
         $listManager = $this->createEntityListManager(
-            CustomForm::class
+            CustomForm::class,
+            [],
+            [
+                'createdAt' => 'DESC'
+            ]
         );
         $listManager->setDisplayingNotPublishedNodes(true);
         $listManager->handle();

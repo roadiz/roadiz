@@ -20,8 +20,20 @@
                     <table class="custom-forms content-table uk-table">
                         <thead>
                         <tr>
-                            <th>{% trans %}customForm.displayName{% endtrans %}</th>
-                            {# <th>{% trans %}nodeType.entityName{% endtrans %}</th> #}
+                            <th>{% trans %}customForm.displayName{% endtrans %}
+                                {% if request.query.get("field") == 'displayName' and request.query.get("ordering") == "ASC" %}
+                                    <a href="?field=displayName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                                {% else %}
+                                    <a href="?field=displayName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+                                {% endif %}
+                            </th>
+                            <th class="mobile-hidden">{% trans %}createdAt{% endtrans %}
+                                {% if request.query.get("field") == 'createdAt' and request.query.get("ordering") == "ASC" %}
+                                    <a href="?field=createdAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
+                                {% else %}
+                                    <a href="?field=createdAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
+                                {% endif %}
+                            </th>
                             <th class="mobile-hidden"></th>
                             <th class="table-actions-row table-actions-row-6">{% trans %}actions{% endtrans %}</th>
                         </tr>
@@ -31,7 +43,7 @@
                             <tr>
                                 <td class="name"><a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}">
                                         <span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.getDisplayName }}</a></td>
-                                {# <td>{{ type.getSourceEntityClassName }}</td> #}
+                                <td class="mobile-hidden">{{ type.createdAt|localizeddate('short', 'short') }}</td>
                                 <td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
                                 <td class="table-actions-row table-actions-row-6">
                                     {% spaceless %}
