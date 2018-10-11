@@ -33,8 +33,10 @@ use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\MemcachedCache;
+use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\Common\EventSubscriber;
@@ -66,13 +68,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
      *
      * @param array $cacheConfig
      * @param Kernel $kernel
-     * @param string $namespace
      * @return Cache
      */
     protected function getManuallyDefinedCache(
         array $cacheConfig,
-        Kernel $kernel,
-        $namespace = 'dc2'
+        Kernel $kernel
     ) {
         if ($kernel->isProdMode()) {
             if (extension_loaded('apcu') &&
@@ -85,6 +85,14 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 $cacheConfig['type'] == 'apc'
             ) {
                 $cache = new ApcuCache();
+            } elseif (!empty($cacheConfig['type']) &&
+                $cacheConfig['type'] == 'php'
+            ) {
+                $cache = new PhpFileCache($kernel->getCacheDir().'/doctrine');
+            } elseif (!empty($cacheConfig['type']) &&
+                $cacheConfig['type'] == 'file'
+            ) {
+                $cache = new FilesystemCache($kernel->getCacheDir().'/doctrine');
             } elseif (extension_loaded('xcache') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'xcache'
@@ -134,13 +142,6 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             $cache = new ArrayCache();
         }
 
-        /*
-         * Set namespace
-         */
-        if ($cache instanceof CacheProvider) {
-            $cache->setNamespace($this->getNamespace($namespace, $kernel->isPreview(), $kernel->getEnvironment()));
-        }
-
         return $cache;
     }
 
@@ -175,14 +176,26 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
-                $cache = null;
+                /*
+                 * Use ArrayCache if no cache type is explicitly defined.
+                 */
+                $cache = new ArrayCache();
 
                 if ($c['config']['cacheDriver']['type'] !== null) {
                     $cache = $this->getManuallyDefinedCache(
                         $c['config']['cacheDriver'],
-                        $kernel,
-                        $c['config']["appNamespace"]
+                        $kernel
                     );
+                }
+                /*
+                 * Set namespace
+                 */
+                if ($cache instanceof CacheProvider) {
+                    $cache->setNamespace($this->getNamespace(
+                        $c['config']["appNamespace"],
+                        $kernel->isPreview(),
+                        $kernel->getEnvironment()
+                    ));
                 }
 
                 $proxyFolder = $kernel->getRootDir() . '/gen-src/Proxies';
@@ -217,33 +230,6 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 $evm = $em->getEventManager();
 
                 $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
-                $namespace = $this->getNamespace(
-                    $c['config']["appNamespace"],
-                    $kernel->isPreview(),
-                    $kernel->getEnvironment()
-                );
-
-                /** @var CacheProvider $resultCacheDriver */
-                $resultCacheDriver = $em->getConfiguration()->getResultCacheImpl();
-                if ($resultCacheDriver !== null) {
-                    $resultCacheDriver->setNamespace($namespace);
-                }
-                /** @var CacheProvider $hydratationCacheDriver */
-                $hydratationCacheDriver = $em->getConfiguration()->getHydrationCacheImpl();
-                if ($hydratationCacheDriver !== null) {
-                    $hydratationCacheDriver->setNamespace($namespace);
-                }
-                /** @var CacheProvider $queryCacheDriver */
-                $queryCacheDriver = $em->getConfiguration()->getQueryCacheImpl();
-                if ($queryCacheDriver !== null) {
-                    $queryCacheDriver->setNamespace($namespace);
-                }
-                /** @var CacheProvider $metadataCacheDriver */
-                $metadataCacheDriver = $em->getConfiguration()->getMetadataCacheImpl();
-                if (null !== $metadataCacheDriver) {
-                    $metadataCacheDriver->setNamespace($namespace);
-                }
-
                 /*
                  * Create dynamic discriminator map for our Node system
                  */
