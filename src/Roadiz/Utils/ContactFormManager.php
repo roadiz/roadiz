@@ -444,10 +444,15 @@ class ContactFormManager extends EmailManager
                 ];
                 $fields = $this->flattenFormData($value, $fields);
             } elseif (!empty($value)) {
-                $name = is_numeric($key) ? null : strip_tags($key);
+                if ($value instanceof \DateTimeInterface) {
+                    $displayValue = $value->format('Y-m-d H:i:s');
+                } else {
+                    $displayValue = strip_tags(trim($value));
+                }
+                $name = is_numeric($key) ? null : strip_tags(trim($key));
                 $fields[] = [
                     'name' => $name,
-                    'value' => (strip_tags($value)),
+                    'value' => $displayValue,
                 ];
             }
         }
