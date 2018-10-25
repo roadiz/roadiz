@@ -51,6 +51,9 @@ class EmailManager
     protected $emailTitle = null;
 
     /** @var string|null  */
+    protected $emailType = null;
+
+    /** @var string|null  */
     private $receiver = null;
 
     /** @var string|null  */
@@ -608,6 +611,25 @@ class EmailManager
     public function setAssignation($assignation)
     {
         $this->assignation = $assignation;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getEmailType()
+    {
+        return $this->emailType;
+    }
+
+    /**
+     * @param null|string $emailType
+     *
+     * @return EmailManager
+     */
+    public function setEmailType($emailType)
+    {
+        $this->emailType = $emailType;
         return $this;
     }
 }
