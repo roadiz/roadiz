@@ -335,21 +335,47 @@ class ContactFormManager extends EmailManager
              */
             foreach ($files as $name => $uploadedFile) {
                 if (null !== $uploadedFile) {
-                    if (!$uploadedFile->isValid() ||
-                        !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
-                        $uploadedFile->getClientSize() > $this->maxFileSize) {
-                        throw new BadFormRequestException(
-                            $this->translator->trans('file.not.accepted'),
-                            Response::HTTP_FORBIDDEN,
-                            'danger',
-                            $name
-                        );
+                    if (is_array($uploadedFile)) {
+                        foreach ($uploadedFile as $singleName => $singleUploadedFile) {
+                            if (is_array($singleUploadedFile)) {
+                                foreach ($singleUploadedFile as $singleName2 => $singleUploadedFile2) {
+                                    $this->addUploadedFile($singleName2, $singleUploadedFile2);
+                                }
+                            } else {
+                                $this->addUploadedFile($singleName, $singleUploadedFile);
+                            }
+                        }
                     } else {
-                        $this->uploadedFiles[$name] = $uploadedFile;
+                        $this->addUploadedFile($name, $uploadedFile);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @param string $name
+     * @param UploadedFile $uploadedFile
+     *
+     * @return $this
+     * @throws BadFormRequestException
+     */
+    protected function addUploadedFile($name, UploadedFile $uploadedFile)
+    {
+        if (!$uploadedFile->isValid() ||
+            !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
+            $uploadedFile->getClientSize() > $this->maxFileSize) {
+            throw new BadFormRequestException(
+                $this->translator->trans('file.not.accepted'),
+                Response::HTTP_FORBIDDEN,
+                'danger',
+                $name
+            );
+        } else {
+            $this->uploadedFiles[$name] = $uploadedFile;
+        }
+
+        return $this;
     }
 
     /**
