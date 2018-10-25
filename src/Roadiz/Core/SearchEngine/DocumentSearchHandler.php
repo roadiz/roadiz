@@ -186,7 +186,7 @@ class DocumentSearchHandler extends AbstractSearchHandler
 
     /**
      * @param $response
-     * @return array|null
+     * @return array
      */
     protected function parseSolrResponse($response)
     {
@@ -210,7 +210,6 @@ class DocumentSearchHandler extends AbstractSearchHandler
 
             return $doc;
         }
-
-        return null;
+        return [];
     }
 }
