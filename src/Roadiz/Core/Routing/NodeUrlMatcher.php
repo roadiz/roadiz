@@ -79,6 +79,29 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $tokens = explode('/', $decodedUrl);
             // Remove empty tokens (especially when a trailing slash is present)
             $tokens = array_values(array_filter($tokens));
+
+            $_format = 'html';
+            $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
+            $supportedFormats = ['json', 'xml', 'html'];
+            $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
+
+            /*
+             * Prevent searching nodes with special characters.
+             */
+            if (0 === preg_match('#'.$nodeNamePattern.'#', $identifier)) {
+                return false;
+            }
+
+            /*
+             * Look for any supported format extension after last token.
+             */
+            if (0 !== preg_match('#^('.$nodeNamePattern.')\.('.implode('|', $supportedFormats).')$#', $identifier, $matches)) {
+                $realIdentifier = $matches[1];
+                $_format = $matches[2];
+                // replace last token with real node-name without extension.
+                $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
+            }
+
             /*
              * Try with URL Aliases
              */
@@ -113,6 +136,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     'node' => $node,
                     'translation' => $translation,
                     '_route' => null,
+                    '_format' => $_format,
                 ];
             } else {
                 /*
@@ -158,6 +182,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         'node' => $node,
                         'translation' => $translation,
                         '_route' => null,
+                        '_format' => $_format,
                     ];
 
                     if (null !== $translation) {

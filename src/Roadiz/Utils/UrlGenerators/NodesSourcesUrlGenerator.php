@@ -108,9 +108,11 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * It returns a relative url to Roadiz, not relative to your server root.
      *
      * @param \RZ\Roadiz\Core\Entities\Theme $theme
+     * @param array                          $parameters
+     *
      * @return string
      */
-    public function getNonContextualUrl(Theme $theme = null)
+    public function getNonContextualUrl(Theme $theme = null, $parameters = [])
     {
         if (null !== $this->nodeSource) {
             if ($this->isNodeSourceHome($this->nodeSource)) {
@@ -123,7 +125,11 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             }
 
             $urlTokens = [];
-            $urlTokens[] = $this->nodeSource->getIdentifier();
+            if (isset($parameters['_format']) && in_array($parameters['_format'], ['xml', 'json'])) {
+                $urlTokens[] = $this->nodeSource->getIdentifier() . '.' . $parameters['_format'];
+            } else {
+                $urlTokens[] = $this->nodeSource->getIdentifier();
+            }
 
             $parent = $this->nodeSource->getParent();
             if ($parent !== null && !$parent->getNode()->isHome()) {

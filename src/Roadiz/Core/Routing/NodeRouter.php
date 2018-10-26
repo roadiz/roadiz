@@ -195,7 +195,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             throw new RouteNotFoundException();
         }
 
-        $resourcePath = $this->getResourcePath($name);
+        $resourcePath = $this->getResourcePath($name, $parameters);
 
         if (!empty($parameters['canonicalScheme'])) {
             $schemeAuthority = trim($parameters['canonicalScheme']);
@@ -205,6 +205,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         }
 
         $queryString = '';
+        if (isset($parameters['_format'])) {
+            unset($parameters['_format']);
+        }
         if (count($parameters) > 0) {
             $queryString = '?' . http_build_query($parameters);
         }
@@ -220,9 +223,11 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
 
     /**
      * @param NodesSources $source
+     * @param array        $parameters
+     *
      * @return string
      */
-    protected function getResourcePath(NodesSources $source)
+    protected function getResourcePath(NodesSources $source, $parameters = [])
     {
         $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost();
         if (null !== $this->nodeSourceUrlCacheProvider) {
@@ -231,14 +236,14 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
                 $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
                 $this->nodeSourceUrlCacheProvider->save(
                     $cacheKey,
-                    $urlGenerator->getNonContextualUrl($theme)
+                    $urlGenerator->getNonContextualUrl($theme, $parameters)
                 );
             }
             return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
         } else {
             $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
             $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
-            return $urlGenerator->getNonContextualUrl($theme);
+            return $urlGenerator->getNonContextualUrl($theme, $parameters);
         }
     }
 
