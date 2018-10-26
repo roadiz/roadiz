@@ -7,10 +7,10 @@ doctrine:
     user: "postgres"
     password: ""
     dbname: "roadiz_tests"
-    charset: utf8mb4
+    charset: utf8
     default_table_options:
-        charset: utf8mb4
-        collate: utf8mb4_unicode_ci
+        charset: utf8
+        collate: utf8_unicode_ci
 security:
     secret: "pgsql_travis_test"
 cacheDriver:

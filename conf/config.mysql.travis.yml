@@ -11,6 +11,7 @@ doctrine:
     default_table_options:
         charset: utf8mb4
         collate: utf8mb4_unicode_ci
+        row_format: DYNAMIC
 security:
     secret: "mysql_travis_test"
 cacheDriver:
