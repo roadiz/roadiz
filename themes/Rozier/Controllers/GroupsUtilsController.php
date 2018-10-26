@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -175,7 +176,7 @@ class GroupsUtilsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildImportJsonFileForm()
     {

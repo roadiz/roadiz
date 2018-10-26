@@ -113,7 +113,7 @@ class CustomFormController extends CmsController
      * Send an answer form by Email.
      *
      * @param array $assignation
-     * @param string $receiver
+     * @param string|array $receiver
      * @return bool
      * @throws \Exception
      */
@@ -301,6 +301,7 @@ class CustomFormController extends CmsController
                 /*
                  * Send answer notification
                  */
+                $receiver = array_map('trim', explode(',', $customFormsEntity->getEmail()));
                 $this->sendAnswer(
                     [
                         'mailContact' => $assignation['mailContact'],
@@ -311,7 +312,7 @@ class CustomFormController extends CmsController
                             ['%site%' => $customFormsEntity->getDisplayName()]
                         ),
                     ],
-                    $customFormsEntity->getEmail()
+                    $receiver
                 );
 
                 return $redirection;

@@ -229,7 +229,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
 
     /**
      * @param $response
-     * @return array|null
+     * @return array
      */
     protected function parseSolrResponse($response)
     {
@@ -256,6 +256,6 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             return $doc;
         }
 
-        return null;
+        return [];
     }
 }

@@ -6,7 +6,7 @@
     <table width="100%" cellpadding="0" cellspacing="0">
         <tr>
             <td class="content-block">
-                <h1>{% trans %}contact.form{% endtrans %}</h1>
+                <h1>{{ (emailType|default('contact.form'))|trans }}</h1>
             </td>
         </tr>
         <tr>

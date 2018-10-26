@@ -51,6 +51,9 @@ class EmailManager
     protected $emailTitle = null;
 
     /** @var string|null  */
+    protected $emailType = null;
+
+    /** @var string|null  */
     private $receiver = null;
 
     /** @var string|null  */
@@ -331,7 +334,12 @@ class EmailManager
             }
         } elseif (is_array($receiver)) {
             foreach ($receiver as $email => $name) {
-                if (false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                /*
+                 * Allow simple array with email as value as well as assoc. array
+                 * with email as key and name as value.
+                 */
+                if (false === filter_var($name, FILTER_VALIDATE_EMAIL) &&
+                    false === filter_var($email, FILTER_VALIDATE_EMAIL)) {
                     throw new \InvalidArgumentException("Sender must be a valid email address.", 1);
                 }
             }
@@ -603,6 +611,25 @@ class EmailManager
     public function setAssignation($assignation)
     {
         $this->assignation = $assignation;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getEmailType()
+    {
+        return $this->emailType;
+    }
+
+    /**
+     * @param null|string $emailType
+     *
+     * @return EmailManager
+     */
+    public function setEmailType($emailType)
+    {
+        $this->emailType = $emailType;
         return $this;
     }
 }

@@ -115,6 +115,8 @@ class CustomFormsUtilsController extends RozierApp
             }
 
             $newCustomForm = clone $existingCustomForm;
+            $newCustomForm->setCreatedAt(new \DateTime());
+            $newCustomForm->setUpdatedAt(new \DateTime());
             $em = $this->get("em");
 
             foreach ($newCustomForm->getFields() as $field) {

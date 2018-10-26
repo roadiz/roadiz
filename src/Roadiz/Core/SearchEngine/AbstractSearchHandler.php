@@ -60,7 +60,7 @@ abstract class AbstractSearchHandler
 
     /**
      * @param $response
-     * @return array|null
+     * @return array
      */
     abstract protected function parseSolrResponse($response);
 

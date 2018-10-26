@@ -6,7 +6,7 @@
 * {
     margin: 0;
     padding: 0;
-    font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
     font-size: 14px;
 }
@@ -17,6 +17,7 @@ img {
 
 .header-image {
     max-height: 150px;
+    max-width: 200px;
     width: auto;
     height: auto;
 }

@@ -335,21 +335,47 @@ class ContactFormManager extends EmailManager
              */
             foreach ($files as $name => $uploadedFile) {
                 if (null !== $uploadedFile) {
-                    if (!$uploadedFile->isValid() ||
-                        !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
-                        $uploadedFile->getClientSize() > $this->maxFileSize) {
-                        throw new BadFormRequestException(
-                            $this->translator->trans('file.not.accepted'),
-                            Response::HTTP_FORBIDDEN,
-                            'danger',
-                            $name
-                        );
+                    if (is_array($uploadedFile)) {
+                        foreach ($uploadedFile as $singleName => $singleUploadedFile) {
+                            if (is_array($singleUploadedFile)) {
+                                foreach ($singleUploadedFile as $singleName2 => $singleUploadedFile2) {
+                                    $this->addUploadedFile($singleName2, $singleUploadedFile2);
+                                }
+                            } else {
+                                $this->addUploadedFile($singleName, $singleUploadedFile);
+                            }
+                        }
                     } else {
-                        $this->uploadedFiles[$name] = $uploadedFile;
+                        $this->addUploadedFile($name, $uploadedFile);
                     }
                 }
             }
         }
+    }
+
+    /**
+     * @param string $name
+     * @param UploadedFile $uploadedFile
+     *
+     * @return $this
+     * @throws BadFormRequestException
+     */
+    protected function addUploadedFile($name, UploadedFile $uploadedFile)
+    {
+        if (!$uploadedFile->isValid() ||
+            !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
+            $uploadedFile->getClientSize() > $this->maxFileSize) {
+            throw new BadFormRequestException(
+                $this->translator->trans('file.not.accepted'),
+                Response::HTTP_FORBIDDEN,
+                'danger',
+                $name
+            );
+        } else {
+            $this->uploadedFiles[$name] = $uploadedFile;
+        }
+
+        return $this;
     }
 
     /**
@@ -395,6 +421,7 @@ class ContactFormManager extends EmailManager
 
         $this->assignation = [
             'mailContact' => $this->settingsBag->get('email_sender'),
+            'emailType' => $this->getEmailType(),
             'title' => $this->getEmailTitle(),
             'email' => $this->getSender(),
             'fields' => $fields,
@@ -418,10 +445,15 @@ class ContactFormManager extends EmailManager
                 ];
                 $fields = $this->flattenFormData($value, $fields);
             } elseif (!empty($value)) {
-                $name = is_numeric($key) ? null : strip_tags($key);
+                if ($value instanceof \DateTimeInterface) {
+                    $displayValue = $value->format('Y-m-d H:i:s');
+                } else {
+                    $displayValue = strip_tags(trim($value));
+                }
+                $name = is_numeric($key) ? null : strip_tags(trim($key));
                 $fields[] = [
                     'name' => $name,
-                    'value' => (strip_tags($value)),
+                    'value' => $displayValue,
                 ];
             }
         }
