@@ -14,7 +14,7 @@ doctrine:
 # http://symfony.com/doc/current/reference/configuration/doctrine.html#caching-drivers
 # If null or empty, Roadiz will try to detect best cache driver available
 cacheDriver:
-    type: ~
+    type: array
     host: ~
     port: ~
 security:
