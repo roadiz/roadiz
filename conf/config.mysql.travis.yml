@@ -1,5 +1,5 @@
 ---
-appNamespace: "chooseAnUniqueNameForYourAppMySQL"
+appNamespace: "mysql_travis_test"
 timezone: "Europe/Paris"
 doctrine:
     driver: "pdo_mysql"
@@ -7,13 +7,15 @@ doctrine:
     user: "root"
     password: ""
     dbname: "roadiz_tests"
-    charset: 'utf8'
-    options:
-        1002: "SET NAMES 'UTF8'"
+    # Do not use utf8mb4 before MySQL 5.7
+    charset: utf8
+    default_table_options:
+        charset: utf8
+        collate: utf8_unicode_ci
 security:
-    secret: "change#this#secret#very#important"
+    secret: "mysql_travis_test"
 cacheDriver:
-    type: ~
+    type: array
     host: ~
     port: ~
 mailer:
@@ -34,7 +36,8 @@ entities:
 # Lifetime of remember-me cookie in seconds (30 days)
 rememberMeLifetime: 2592000
 additionalServiceProviders: []
-additionalCommands: []
+additionalCommands:
+    - \Themes\DefaultTheme\Commands\DefaultThemeCommand
 assetsProcessing:
     driver: gd
     defaultQuality: 90

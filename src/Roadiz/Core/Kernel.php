@@ -97,11 +97,11 @@ use Themes\Install\InstallApp;
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
-    const CMS_VERSION = 'develop';
+    const CMS_VERSION = 'master';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.0.5";
+    public static $cmsVersion = "1.0.6";
 
 
     /**
