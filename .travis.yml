@@ -10,7 +10,7 @@ env:
   - DB=mysql
   - DB=pgsql
 
-before_script:
+install:
   - |
       echo -e "[mysqld]
       character_set_server=utf8mb4
@@ -19,8 +19,6 @@ before_script:
       innodb_file_format=Barracuda
       innodb_file_format_max=Barracuda" | sudo tee /etc/mysql/conf.d/travis.cnf
   - sudo /etc/init.d/mysql restart
-
-install:
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests_tmp;' -U postgres; fi"
   - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests;' -U postgres; fi"
