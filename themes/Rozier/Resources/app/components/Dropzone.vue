@@ -151,8 +151,9 @@ export default {
                 }
             })
 
-            let $dzMessage = $(element) // .find('.dz-message')
-
+            let $dropzone = $(element)
+            $dropzone.append(`<div class="dz-default dz-message"><span>${this.language.dictDefaultMessage}</span></div>`)
+            let $dzMessage = $dropzone.find('.dz-message')
             $dzMessage.append(`<div class="circles-icons"><div class="circle circle-1"></div><div class="circle circle-2"></div><div class="circle circle-3"></div><div class="circle circle-4"></div><div class="circle circle-5"></div><i class="uk-icon-rz-file"></i></div>`)
         } else {
             this.dropzone = new Dropzone(element, this.dropzoneOptions)
