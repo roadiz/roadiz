@@ -10,6 +10,7 @@ export default class DocumentUploader {
      * @param {Object} options
      */
     constructor (options) {
+        this.attached = false
         this.options = {
             'onSuccess': (data) => {},
             'onError': (data) => {},
@@ -19,6 +20,7 @@ export default class DocumentUploader {
             'paramName': 'form[attachment]',
             'uploadMultiple': false,
             'maxFilesize': 64,
+            'timeout': 0, // no timeout
             'autoDiscover': false,
             'headers': {'_token': window.Rozier.ajaxToken},
             'dictDefaultMessage': 'Drop files here to upload or click to open your explorer',
@@ -38,7 +40,7 @@ export default class DocumentUploader {
             $.extend(this.options, options)
         }
 
-        if ($(this.options.selector).length) {
+        if ($(this.options.selector).length && !this.attached) {
             this.init()
         }
     }
@@ -60,6 +62,7 @@ export default class DocumentUploader {
             headers: this.options.headers,
             paramName: this.options.paramName,
             uploadMultiple: this.options.uploadMultiple,
+            timeout: this.options.timeout,
             maxFilesize: this.options.maxFilesize,
             dictDefaultMessage: this.options.dictDefaultMessage,
             dictFallbackMessage: this.options.dictFallbackMessage,
@@ -103,25 +106,36 @@ export default class DocumentUploader {
                 this.on('error', function (file, errorMessage, xhr) {
                     console.log(errorMessage)
                 })
+
+                this.on('sending', function (file, xhr, formData) {
+                    xhr.ontimeout = () => {
+                        _self.options.onError('Server Timeout')
+                        console.error('Server Timeout')
+                    }
+                })
             }
         }
 
         Dropzone.autoDiscover = this.options.autoDiscover
 
-        /* eslint-disable no-new */
-        new Dropzone(this.options.selector, Dropzone.options.uploadDropzoneDocument)
+        try {
+            /* eslint-disable no-new */
+            new Dropzone(this.options.selector, Dropzone.options.uploadDropzoneDocument)
+            let $dzMessage = $(this.options.selector) // .find('.dz-message')
 
-        let $dzMessage = $(this.options.selector).find('.dz-message')
-
-        $dzMessage.append(`
-        <div class="circles-icons">
-            <div class="circle circle-1"></div>
-            <div class="circle circle-2"></div>
-            <div class="circle circle-3"></div>
-            <div class="circle circle-4"></div>
-            <div class="circle circle-5"></div>
-            <i class="uk-icon-rz-file"></i>
-        </div>`)
+            $dzMessage.append(`
+            <div class="circles-icons">
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+                <div class="circle circle-3"></div>
+                <div class="circle circle-4"></div>
+                <div class="circle circle-5"></div>
+                <i class="uk-icon-rz-file"></i>
+            </div>`)
+            this.attached = true
+        } catch (e) {
+            console.error(e)
+        }
     }
 
     unbind () {

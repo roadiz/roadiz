@@ -1,5 +1,5 @@
 <template>
-    <div :action="url" class="vue-dropzone dropzone" :id="id"></div>
+    <div :action="url" class="vue-dropzone dropzone-container" :id="id"></div>
 </template>
 
 <script>
@@ -114,6 +114,7 @@ export default {
                 maxFilesize: this.maxFileSizeInMB,
                 uploadMultiple: false,
                 acceptedFiles: this.acceptedFileTypes,
+                timeout: 0, // no timeout
                 autoProcessQueue: this.autoProcessQueue,
                 paramName: 'form[attachment]',
                 headers: { _token: window.Rozier.ajaxToken, ...this.headers },
@@ -150,7 +151,7 @@ export default {
                 }
             })
 
-            let $dzMessage = $(element).find('.dz-message')
+            let $dzMessage = $(element) // .find('.dz-message')
 
             $dzMessage.append(`<div class="circles-icons"><div class="circle circle-1"></div><div class="circle circle-2"></div><div class="circle circle-3"></div><div class="circle circle-4"></div><div class="circle circle-5"></div><i class="uk-icon-rz-file"></i></div>`)
         } else {
@@ -197,6 +198,10 @@ export default {
 
         this.dropzone.on('sending', function (file, xhr, formData) {
             vm.$emit('vdropzone-sending', file, xhr, formData)
+
+            xhr.ontimeout = () => {
+                console.error('Server Timeout')
+            }
         })
 
         this.dropzone.on('sendingmultiple', function (file, xhr, formData) {
