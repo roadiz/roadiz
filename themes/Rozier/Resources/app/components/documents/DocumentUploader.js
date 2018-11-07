@@ -121,8 +121,10 @@ export default class DocumentUploader {
         try {
             /* eslint-disable no-new */
             new Dropzone(this.options.selector, Dropzone.options.uploadDropzoneDocument)
-            let $dzMessage = $(this.options.selector) // .find('.dz-message')
 
+            let $dropzone = $(this.options.selector)
+            $dropzone.append(`<div class="dz-default dz-message"><span>${this.options.dictDefaultMessage}</span></div>`)
+            let $dzMessage = $dropzone.find('.dz-message')
             $dzMessage.append(`
             <div class="circles-icons">
                 <div class="circle circle-1"></div>
