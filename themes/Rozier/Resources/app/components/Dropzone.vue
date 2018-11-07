@@ -114,6 +114,7 @@ export default {
                 maxFilesize: this.maxFileSizeInMB,
                 uploadMultiple: false,
                 acceptedFiles: this.acceptedFileTypes,
+                timeout: 0, // no timeout
                 autoProcessQueue: this.autoProcessQueue,
                 paramName: 'form[attachment]',
                 headers: { _token: window.Rozier.ajaxToken, ...this.headers },
