@@ -19,6 +19,7 @@ export default class DocumentUploader {
             'paramName': 'form[attachment]',
             'uploadMultiple': false,
             'maxFilesize': 64,
+            'timeout': 0, // no timeout
             'autoDiscover': false,
             'headers': {'_token': window.Rozier.ajaxToken},
             'dictDefaultMessage': 'Drop files here to upload or click to open your explorer',
@@ -60,6 +61,7 @@ export default class DocumentUploader {
             headers: this.options.headers,
             paramName: this.options.paramName,
             uploadMultiple: this.options.uploadMultiple,
+            timeout: this.options.timeout,
             maxFilesize: this.options.maxFilesize,
             dictDefaultMessage: this.options.dictDefaultMessage,
             dictFallbackMessage: this.options.dictFallbackMessage,
