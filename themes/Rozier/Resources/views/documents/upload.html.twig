@@ -4,7 +4,7 @@
 {% block content %}
 <section class="content-global upload-document">
 
-	<header class="content-header header-document header-document-upload">
+    <header class="content-header header-document header-document-upload">
         <h1 class="content-title document-upload-title">{% trans %}upload.document{% endtrans %}</h1>
         <a class="content-header-nav-back uk-navbar-content"
            href="{{ path('documentsHomePage', {folderId: folder.id}) }}"
@@ -17,7 +17,7 @@
             {% form_theme form '@Rozier/forms.html.twig' %}
             <form id="upload-dropzone-document"
                   {% if folder.id %}data-folder-id="{{ folder.id }}"{% endif %}
-                  class="uk-form uk-form-stacked dropzone"
+                  class="uk-form uk-form-stacked dropzone-container"
                   action="#"
                   method="post"
                   {{ form_enctype(form) }}>
@@ -28,6 +28,6 @@
                 {{ form_rest(form) }}
             </form>
         </div>
-	</article>
+    </article>
 </section>
 {% endblock %}

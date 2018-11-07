@@ -11,24 +11,23 @@
 
 /* -------- STYLES -------- */
 
-.dropzone{
+.dropzone-container {
     .rounded(0);
     overflow: hidden;
-}
 
-.dropzone .dz-default.dz-message{
-    position: absolute;
-    top:0; right:0; bottom:0; left:0;
-    width:100%; height:100%;
-    margin:0;
-    background: none;
+    .circles-icons {
+        cursor: pointer;
+        pointer-events: none;
+    }
 
-    .circle{
+    .circle {
         position: absolute;
-        top:50%; left:50%;
+        top:50%;
+        left:50%;
         .rounded(200px);
         background:none;
         border:1px solid @circle-border-color;
+        pointer-events: none;
 
         &.circle-1{
             width:100px; height:100px;
@@ -69,23 +68,32 @@
         font-size:28px; line-height:28px;
     }
 
-    span{
+    .dz-default.dz-message {
         position: absolute;
-        display: block;
-        right: 0; bottom: 0; left: 0;
-        height:50px;
-        border-top:1px dashed #D2D2D2;
-        text-align: center;
-        font-size: 12px; line-height:50px;
-        background:#ECECEC;
-        color: @grey-medium;
-        letter-spacing: 0.05em;
-        text-shadow: 0 0 4px #fff;
-        z-index: 2;
+        top:0; right:0; bottom:0; left:0;
+        width:100%; height:100%;
+        margin:0;
+        background: none;
+
+        span {
+            position: absolute;
+            display: block;
+            right: 0; bottom: 0; left: 0;
+            height:50px;
+            border-top:1px dashed #D2D2D2;
+            text-align: center;
+            font-size: 12px; line-height:50px;
+            background:#ECECEC;
+            color: @grey-medium;
+            letter-spacing: 0.05em;
+            text-shadow: 0 0 4px #fff;
+            z-index: 2;
+        }
     }
 }
 
-.dropzone .dz-preview,
+
+.dropzone-container .dz-preview,
 .dropzone-previews .dz-preview {
     margin:0 12px 12px 0;
     padding:0;
@@ -188,12 +196,11 @@
 
 
 // Leave message when an upload has been done
-.dropzone.dz-started .dz-message{
+.dropzone-container.dz-started .dz-message{
     display: block;
     .opacity(1);
 
     .circles-icons{
         display: none;
     }
-
 }
