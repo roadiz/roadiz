@@ -1,9 +1,5 @@
-{% extends '@Rozier/simple.html.twig' %}
+{% extends '@Rozier/login/base.html.twig' %}
 
-
-{% block content %}
-<section id="login">
-	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
-	<p>{% trans %}wait_for.authentification{% endtrans %}</p>
-</section>
+{% block login_content %}
+    <p>{% trans %}wait_for.authentification{% endtrans %}</p>
 {% endblock %}

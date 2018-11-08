@@ -1,33 +1,10 @@
-{% extends '@Rozier/simple.html.twig' %}
+{% extends '@Rozier/login/base.html.twig' %}
 
-{% block content %}
-<section id="login">
-    <div id="login-infos">
-        <div id="login-logo">
-            {% if themeServices.adminImage %}
-                {{ themeServices.adminImage|display({width:150}) }}
-            {% else %}
-                <i class="uk-icon-rz-roadiz-icon"></i>
-            {% endif %}
-        </div>
-        <div id="login-credit">
-            <i class="uk-icon-rz-rezozero"></i>
-            <span id="login-version">{{ cms_prefix }} {{ cms_version }}</span>
-        </div>
-    </div>
-    <div id="login-formGlobal">
-    	<h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
+{% block login_content %}
+    <p class="login-desc">{% trans %}your.new.password.has.been.saved{% endtrans %}</p>
+    <p class="login-desc">{% trans %}go_back_to.login.page.to.connect{% endtrans %}</p>
+{% endblock %}
 
-        <p class="login-desc">{% trans %}your.new.password.has.been.saved{% endtrans %}</p>
-        <p class="login-desc">{% trans %}go_back_to.login.page.to.connect{% endtrans %}</p>
-
-        <div id="login-link">
-            <a id="frontend-home-link"
-               title="{% trans %}see.website{% endtrans %}" target="_blank" href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>
-               <span class="text">{% trans %}view.site{% endtrans %}</span>
-            </a>
-            <a href="{{ path('loginPage') }}" class="login-link">{% trans %}back_to.login{% endtrans %}</a>
-        </div>
-    </div>
-</section>
+{% block login_links %}
+    <a href="{{ path('loginPage') }}" class="login-link">{% trans %}back_to.login{% endtrans %}</a>
 {% endblock %}

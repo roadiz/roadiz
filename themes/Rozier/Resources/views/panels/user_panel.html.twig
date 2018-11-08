@@ -7,13 +7,8 @@
         <div class="menu-mobile-bar" id="menu-mobile-bar-3"></div>
     </div>
 
-    <div id="company">
-        {% if themeServices.adminImage %}
-            <a class="admin-image" href="{{ path('adminHomePage') }}">{{ themeServices.adminImage|display({width:150}) }}</a>
-        {% else %}
-            <a class="uk-icon-rz-roadiz-icon" href="{{ path('adminHomePage') }}"></a>
-        {% endif %}
-    </div>
+    {# Make this block overidable from themes. #}
+    {% include 'admin/blocks/adminImage.html.twig' %}
     <div id="user">
         {% if session.user %}
             <a id="user-picture" href="{{ path('usersEditPage', {'userId':session.user.id }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.pictureUrl }}" alt="{{ session.user.identifier }}" /></a>

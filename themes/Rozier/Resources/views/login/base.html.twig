@@ -1,0 +1,33 @@
+{% extends '@Rozier/simple.html.twig' %}
+
+{% block content %}
+<section id="login">
+    <div class="login-inner{% if error or (form and not form.vars.valid) %} uk-animation-shake{% endif %}">
+        <div id="login-infos">
+            {# Make this block overidable from themes. #}
+            {% include 'admin/blocks/loginImage.html.twig' %}
+            <div id="login-credit">
+                <i class="uk-icon-rz-rezozero"></i>
+                <span id="login-version">{{ cms_prefix }} {{ cms_version }}</span>
+            </div>
+        </div>
+        <div id="login-formGlobal">
+            <h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
+            {% block login_content %}
+                
+            {% endblock %}
+            <div id="login-link">
+                <a id="frontend-home-link"
+                   title="{% trans %}see.website{% endtrans %}"
+                   target="_blank"
+                   href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>
+                    <span class="text">{% trans %}view.site{% endtrans %}</span>
+                </a>
+                {% block login_links %}
+                    <a href="{{ path('loginRequestPage') }}" class="login-link">{% trans %}forgot.password{% endtrans %}</a>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

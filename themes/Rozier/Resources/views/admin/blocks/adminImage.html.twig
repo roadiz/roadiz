@@ -1,0 +1,7 @@
+<div id="company">
+    {% if themeServices.adminImage %}
+        <a class="admin-image" href="{{ path('adminHomePage') }}">{{ themeServices.adminImage|display({width:150}) }}</a>
+    {% else %}
+        <a class="uk-icon-rz-roadiz-icon" href="{{ path('adminHomePage') }}"></a>
+    {% endif %}
+</div>
