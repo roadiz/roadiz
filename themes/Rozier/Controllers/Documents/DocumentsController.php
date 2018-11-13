@@ -350,6 +350,35 @@ class DocumentsController extends RozierApp
             $this->assignation['thumbnailFormat'] = [
                 'width' => 750,
                 'controls' => true,
+                'picture' => true,
+                'srcset' => [
+                        [
+                            'format' => [
+                                'width' => 480,
+                                'quality' => 80
+                            ],
+                            'rule' => '480w',
+                        ],
+                        [
+                            'format' => [
+                                'width' => 768,
+                                'quality' => 80
+                            ],
+                            'rule' => '768w',
+                        ],
+                        [
+                            'format' => [
+                                'width' => 1400,
+                                'quality' => 80
+                            ],
+                            'rule' => '1400w',
+                        ],
+                ],
+                'sizes' => [
+                    '(min-width: 1380px) 1200px',
+                    '(min-width: 768px) 768px',
+                    '(min-width: 480px) 480px',
+                ],
             ];
             if (file_exists($documentPath)) {
                 $this->assignation['infos'] = [
