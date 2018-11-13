@@ -510,6 +510,13 @@ class NodeSourceType extends AbstractType
             $options['nodeTypeField'] = $field;
             $options['entityManager'] = $formOptions['entityManager'];
             $options['nodeSource'] = $nodeSource;
+            unset($options['attr']['dir']);
+        }
+
+        if (in_array($field->getType(), [
+            NodeTypeField::CHILDREN_T
+        ])){
+            unset($options['attr']['dir']);
         }
 
         return $options;
