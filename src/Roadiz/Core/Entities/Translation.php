@@ -490,6 +490,34 @@ class Translation extends AbstractDateTimed
         'zu' => "Zulu",
     ];
 
+    public static $rtlLanguages = [
+        'ar_DZ' => "Arabic (Algeria)",
+        'ar_BH' => "Arabic (Bahrain)",
+        'ar_EG' => "Arabic (Egypt)",
+        'ar_IQ' => "Arabic (Iraq)",
+        'ar_JO' => "Arabic (Jordan)",
+        'ar_KW' => "Arabic (Kuwait)",
+        'ar_LB' => "Arabic (Lebanon)",
+        'ar_LY' => "Arabic (Libya)",
+        'ar_MA' => "Arabic (Morocco)",
+        'ar_OM' => "Arabic (Oman)",
+        'ar_QA' => "Arabic (Qatar)",
+        'ar_SA' => "Arabic (Saudi Arabia)",
+        'ar_SD' => "Arabic (Sudan)",
+        'ar_SY' => "Arabic (Syria)",
+        'ar_TN' => "Arabic (Tunisia)",
+        'ar_AE' => "Arabic (United Arab Emirates)",
+        'ar_YE' => "Arabic (Yemen)",
+        'ar' => "Arabic",
+        'he_IL' => "Hebrew (Israel)",
+        'he' => "Hebrew",
+        'ur_IN' => "Urdu (India)",
+        'ur_PK' => "Urdu (Pakistan)",
+        'fa_AF' => "Persian (Afghanistan)",
+        'fa_IR' => "Persian (Iran)",
+        'fa' => "Persian",
+    ];
+
     /**
      * Language locale
      *
@@ -618,6 +646,14 @@ class Translation extends AbstractDateTimed
     }
 
     /**
+     * @return array
+     */
+    public static function getRightToLeftLocales()
+    {
+        return array_keys(static::$rtlLanguages);
+    }
+
+    /**
      * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var ArrayCollection
      */
@@ -698,5 +734,13 @@ class Translation extends AbstractDateTimed
     public function getPreferredLocale()
     {
         return !empty($this->overrideLocale) ? $this->overrideLocale : $this->locale;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRtl()
+    {
+        return in_array($this->getLocale(), static::getRightToLeftLocales());
     }
 }

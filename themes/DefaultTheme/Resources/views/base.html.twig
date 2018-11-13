@@ -16,11 +16,10 @@
 {% endif %}
 {# No whitespace before DOCTYPE #}
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html itemscope itemtype="http://schema.org/WebPage" class="no-js lt-ie9 lt-ie8 lt-ie7" lang="{{ formattedLocale }}"> <![endif]-->
-<!--[if IE 7]>         <html itemscope itemtype="http://schema.org/WebPage" class="no-js lt-ie9 lt-ie8" lang="{{ formattedLocale }}"> <![endif]-->
-<!--[if IE 8]>         <html itemscope itemtype="http://schema.org/WebPage" class="no-js lt-ie9" lang="{{ formattedLocale }}"> <![endif]-->
-<!--[if IE 9]>         <html itemscope itemtype="http://schema.org/WebPage" class="no-js ie9" lang="{{ formattedLocale }}"> <![endif]-->
-<!--[if gt IE 9]><!--> <html itemscope itemtype="http://schema.org/WebPage" class="no-js" lang="{{ formattedLocale }}"> <!--<![endif]-->
+<html itemscope
+      itemtype="http://schema.org/WebPage"
+      class="no-js"
+      lang="{{ formattedLocale }}"{% if request.locale is rtl %} dir="rtl"{% endif %}>
 <head>
     <meta charset="utf-8">
     <title>{{ pageMetaTitle }}</title>
@@ -52,7 +51,6 @@
      # Share metas -------------------------------------------------------------
      #}
     {% block share_metas %}
-
         {% if headerImage %}
             {% set previewImageUrl = headerImage|url(themeServices.imageFormats.shareImage) %}
         {% else %}
@@ -99,6 +97,11 @@
     nodeTypeName|lower,
     nodeName,
     formattedLocale
+    ]) %}
+{% endif %}
+{% if request.locale is rtl %}
+    {% set bodyClasses = bodyClasses|merge([
+        'rtl'
     ]) %}
 {% endif %}
 

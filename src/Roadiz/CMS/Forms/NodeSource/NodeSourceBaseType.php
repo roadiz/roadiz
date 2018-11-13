@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -51,6 +52,8 @@ class NodeSourceBaseType extends AbstractType
             'attr' => [
                 'data-desc' => '',
                 'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
+                'lang' => strtolower(str_replace('_', '-', $options['translation']->getLocale())),
+                'dir' => $options['translation']->isRtl() ? 'rtl' : 'ltr',
             ],
             'constraints' => [
                 new Length([
@@ -97,6 +100,9 @@ class NodeSourceBaseType extends AbstractType
             'publishable' => false,
         ]);
 
+        $resolver->setRequired('translation');
+
         $resolver->setAllowedTypes('publishable', 'boolean');
+        $resolver->setAllowedTypes('translation', Translation::class);
     }
 }

@@ -9,7 +9,7 @@
             "node": node,
             "source": source,
         } only %}
-        <h1 class="content-title node-edit-source-title">
+        <h1 class="content-title node-edit-source-title"{% if source.translation.locale is rtl %} dir="rtl"{% endif %}>
             {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|truncate(30, false, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
