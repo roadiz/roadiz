@@ -285,6 +285,20 @@
                         color: #BEBEBE;
                     }
                 }
+
+                &[dir=rtl] {
+                    a {
+                        &:before {
+                            content: none;
+                        }
+                        &:after {
+                            content: "—";
+                            display: inline-block;
+                            padding-right: 8px;
+                            color: #BEBEBE;
+                        }
+                    }
+                }
             }
             & > .non-nestable-handle:before,
             & > .uk-nestable-handle:before {
