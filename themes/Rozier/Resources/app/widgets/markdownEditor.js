@@ -30,7 +30,8 @@ export default class MarkdownEditor {
             indentWithTabs: false,
             lineWrapping: true,
             viewportMargin: Infinity,
-            enterMode: 'keep'
+            enterMode: 'keep',
+            direction: (this.textarea.hasAttribute('dir') && this.textarea.getAttribute('dir') === 'rtl') ? ('rtl') : ('ltr')
         })
 
         this.editor.addKeyMap({
