@@ -81,9 +81,15 @@ type|lower,
 
         <div class="tree-element-name nodetree-element-name"{% if nodeTree.translation is rtl %} dir="rtl"{% endif %}>
             {% if node.isHidingChildren %}
-                <a href="{{ path('nodesTreePage', { nodeId:node.getId }) }}">{{- name -}}</a>
+                <a href="{{ path('nodesTreePage', {
+                    nodeId: node.id,
+                    translationId: nodeTree.translation.id
+                }) }}">{{- name -}}</a>
             {% else %}
-                <a href="{{ path('nodesEditSourcePage', { nodeId:node.getId, translationId:nodeTree.getTranslation.getId}) }}">{{- name -}}</a>
+                <a href="{{ path('nodesEditSourcePage', {
+                    nodeId:node.id,
+                    translationId: nodeTree.translation.id
+                }) }}">{{- name -}}</a>
             {% endif %}
         </div>
 
@@ -93,7 +99,7 @@ type|lower,
                     {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
                     {% set tagName = ttag[0].name|default(tag.tagName) %}
 
-                    <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName }}</a>
+                    <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName -}}</a>
                 {% endfor %}
             </div>
         {% endif %}
