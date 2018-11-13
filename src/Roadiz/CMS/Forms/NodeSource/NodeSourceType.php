@@ -75,6 +75,7 @@ class NodeSourceType extends AbstractType
         if ($options['withTitle'] === true) {
             $builder->add('base', NodeSourceBaseType::class, [
                 'publishable' => $options['nodeType']->isPublishable(),
+                'translation' => $builder->getData()->getTranslation(),
             ]);
         }
         /** @var NodeTypeField $field */
@@ -472,6 +473,8 @@ class NodeSourceType extends AbstractType
                 'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
                 'data-dev-name' => $devName,
                 'autocomplete' => 'off',
+                'lang' => strtolower(str_replace('_', '-', $nodeSource->getTranslation()->getLocale())),
+                'dir' => $nodeSource->getTranslation()->isRtl() ? 'rtl' : 'ltr',
             ],
         ];
         if ($field->isUniversal()) {

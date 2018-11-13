@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigTest;
 
 /**
  * Extension that allow render document images
@@ -66,6 +67,31 @@ class TranslationExtension extends AbstractExtension
             new TwigFilter('menu', [$this, 'getMenuAssignation']),
             new TwigFilter('country_iso', [$this, 'getCountryName']),
         ];
+    }
+
+    public function getTests()
+    {
+        return [
+            new TwigTest('rtl', [$this, 'isLocaleRtl'])
+        ];
+    }
+
+    /**
+     * @param string|Translation $mixed
+     *
+     * @return bool
+     */
+    public function isLocaleRtl($mixed)
+    {
+        if (is_object($mixed) && $mixed instanceof Translation) {
+            return $mixed->isRtl();
+        }
+
+        if (is_string($mixed)) {
+            return in_array($mixed, Translation::getRightToLeftLocales());
+        }
+
+        return false;
     }
 
     /**

@@ -1,5 +1,6 @@
+{% set formattedLocale = request.locale|replace({'_': '-'})|lower %}
 <!DOCTYPE html>
-<html class="no-js">
+<html class="no-js" lang="{{ formattedLocale }}"{% if request.locale is rtl %} dir="rtl"{% endif %}>
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
