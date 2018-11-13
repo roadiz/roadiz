@@ -101,7 +101,7 @@ class NodesTreesController extends RozierApp
 
         if (null !== $node) {
             $this->assignation['node'] = $node;
-            $this->assignation['source'] = $node->getNodeSources()->first();
+            $this->assignation['source'] = $node->getNodeSourcesByTranslation($translation)->first();
         }
         $this->assignation['translation'] = $translation;
         $this->assignation['specificNodeTree'] = $widget;
