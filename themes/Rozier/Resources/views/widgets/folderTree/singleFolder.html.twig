@@ -7,8 +7,8 @@
     <div class="foldertree-element-inner uk-nestable-panel uk-nestable-item-folder">
         <div class="uk-nestable-handle uk-nestable-handle-folder"><i class="{% if folder.children.count > 0 %}uk-icon-rz-folder-tree-mini{% else %}uk-icon-rz-folder-tree-mini{% endif %}"></i></div>
         <div data-nestable-action="toggle"></div>
-        <div class="tree-element-name foldertree-element-name">
-            <a href="{{ editUrl }}">{{ folderName }}</a>
+        <div class="tree-element-name foldertree-element-name"{% if folderTree.translation is rtl %} dir="rtl"{% endif %}>
+            <a href="{{ editUrl }}">{{- folderName -}}</a>
         </div>
 
         <div class="tree-contextualmenu foldertree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
