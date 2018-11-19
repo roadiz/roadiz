@@ -151,7 +151,7 @@ class TranslationViewer
         /*
          * If using a static route (routes.yml)…
          */
-        if ($node === null && !empty($attr["_route"])) {
+        if (!empty($attr["_route"]) && is_string($attr["_route"])) {
             $translations = $this->getRepository()->findAllAvailable();
             /*
              * Search for a route without Locale suffix
@@ -180,16 +180,7 @@ class TranslationViewer
         foreach ($translations as $translation) {
             $url = null;
 
-            if ($node) {
-                $nodesSources = $this->entityManager
-                    ->getRepository(NodesSources::class)
-                    ->findOneBy(["node" => $node, "translation" => $translation]);
-                $url = $this->router->generate(
-                    $nodesSources,
-                    $query,
-                    $absolute
-                );
-            } elseif (!empty($attr["_route"])) {
+            if (!empty($attr["_route"]) && is_string($attr["_route"])) {
                 $name = $attr["_route"];
                 /*
                  * Use suffixed route if locales are forced or
@@ -219,6 +210,15 @@ class TranslationViewer
                 $url = $this->router->generate(
                     $name,
                     array_merge($attr["_route_params"], $query),
+                    $absolute
+                );
+            } elseif ($node) {
+                $nodesSources = $this->entityManager
+                    ->getRepository(NodesSources::class)
+                    ->findOneBy(["node" => $node, "translation" => $translation]);
+                $url = $this->router->generate(
+                    $nodesSources,
+                    $query,
                     $absolute
                 );
             }
