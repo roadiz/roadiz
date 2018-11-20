@@ -70,7 +70,6 @@ export default class NodeEditSource {
 
                 for (let index in fieldGroups) {
                     let fieldGroup = fieldGroups[index]
-                    console.debug(fieldGroup)
                     let groupName2Safe = fieldGroup.id.replace(/[\s_]/g, '-').replace(/[^\w-]+/g, '')
                     let groupId = 'group-' + groupName2Safe
 
