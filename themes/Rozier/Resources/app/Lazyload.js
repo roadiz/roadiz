@@ -247,7 +247,7 @@ export default class Lazyload {
     }
 
     refreshCodemirrorEditor () {
-        console.log('Refreshing all codemirror instances…')
+        console.debug('Refreshing all codemirror instances…')
         for (let editor of this.markdownEditors) {
             editor.forceEditorUpdate()
         }

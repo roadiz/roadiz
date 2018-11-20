@@ -231,7 +231,7 @@ export default class GeotagField {
                 if (status === window.google.maps.GeocoderStatus.OK) {
                     this.setMarker(marker, $input, $geocodeReset, map, results[0].geometry.location)
                 } else {
-                    console.err('Geocode was not successful for the following reason: ' + status)
+                    console.error('Geocode was not successful for the following reason: ' + status)
                 }
             })
 

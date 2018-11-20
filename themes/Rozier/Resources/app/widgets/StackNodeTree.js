@@ -120,7 +120,7 @@ export default class StackNodeTree {
                     })
                 })
                 .always(() => {
-                    console.log('complete')
+                    console.debug('complete')
                 })
         }
 

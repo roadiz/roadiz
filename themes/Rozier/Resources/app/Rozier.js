@@ -471,7 +471,7 @@ export default class Rozier {
          * It will destroy the Internet !
          */
         if (nodeId === parentNodeId) {
-            console.log('You cannot move a node inside itself!')
+            console.error('You cannot move a node inside itself!')
             window.location.reload()
             return false
         }
@@ -554,7 +554,7 @@ export default class Rozier {
          * It will destroy the Internet !
          */
         if (tagId === parentTagId) {
-            console.log('You cannot move a tag inside itself!')
+            console.error('You cannot move a tag inside itself!')
             alert('You cannot move a tag inside itself!')
             window.location.reload()
             return false
@@ -630,7 +630,7 @@ export default class Rozier {
          * It will destroy the Internet !
          */
         if (folderId === parentFolderId) {
-            console.log('You cannot move a folder inside itself!')
+            console.error('You cannot move a folder inside itself!')
             alert('You cannot move a folder inside itself!')
             window.location.reload()
             return false

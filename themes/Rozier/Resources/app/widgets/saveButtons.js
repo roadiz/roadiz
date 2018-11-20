@@ -30,7 +30,7 @@ export default class SaveButtons {
             this.$button.on('click', this.onClick)
 
             window.Mousetrap.bind(['mod+s'], () => {
-                console.log('Save requested')
+                console.debug('Save requested')
                 this.formToSave.submit()
 
                 return false
