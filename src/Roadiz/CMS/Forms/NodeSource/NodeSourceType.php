@@ -471,6 +471,7 @@ class NodeSourceType extends AbstractType
             'required' => false,
             'attr' => [
                 'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
+                'data-field-group-canonical' => (null !== $field->getGroupNameCanonical() && '' != $field->getGroupNameCanonical()) ? $field->getGroupNameCanonical() : 'default',
                 'data-dev-name' => $devName,
                 'autocomplete' => 'off',
                 'lang' => strtolower(str_replace('_', '-', $nodeSource->getTranslation()->getLocale())),
