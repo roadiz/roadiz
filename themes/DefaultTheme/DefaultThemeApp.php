@@ -27,6 +27,8 @@
  * @file DefaultThemeApp.php
  * @author Ambroise Maupate
  */
+declare(strict_types=1);
+
 namespace Themes\DefaultTheme;
 
 use Pimple\Container;
@@ -36,8 +38,8 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\DefaultTheme\Services\AssetsServiceProvider;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
+use Themes\DefaultTheme\Twig\ImageFormatsExtension;
 
 /**
  * Class DefaultThemeApp
@@ -86,20 +88,24 @@ class DefaultThemeApp extends FrontendController
          * Register services
          */
         $this->themeContainer->register(new NodeServiceProvider($this->getContainer(), $this->translation));
-        $this->themeContainer->register(new AssetsServiceProvider());
 
         $this->assignation['themeServices'] = $this->themeContainer;
-
-        $this->assignation['head']['facebookUrl'] = $this->get('settingsBag')->get('facebook_url');
-        $this->assignation['head']['pinterest_url'] = $this->get('settingsBag')->get('pinterest_url');
-        $this->assignation['head']['facebookClientId'] = $this->get('settingsBag')->get('facebook_client_id');
-        $this->assignation['head']['instagramUrl'] = $this->get('settingsBag')->get('instagram_url');
-        $this->assignation['head']['twitterUrl'] = $this->get('settingsBag')->get('twitter_url');
-        $this->assignation['head']['googleplusUrl'] = $this->get('settingsBag')->get('googleplus_url');
-        $this->assignation['head']['googleClientId'] = $this->get('settingsBag')->get('google_client_id');
-        $this->assignation['head']['twitterAccount'] = $this->get('settingsBag')->get('twitter_account');
-        $this->assignation['head']['mapsStyle'] = $this->get('settingsBag')->get('maps_style');
         $this->assignation['head']['themeName'] = static::$themeName;
+        /*
+         * Get social networks url from Roadiz parameters.
+         */
+        $socials = ['Twitter', 'Facebook', 'Instagram', 'YouTube', 'LinkedIn', 'GooglePlus', 'Pinterest'];
+        $this->assignation['head']['socials'] = [];
+        foreach ($socials as $social) {
+            $setting = $this->get('settingsBag')->get(strtolower($social) . '_url');
+            if ($setting) {
+                $this->assignation['head']['socials'][strtolower($social)] = [
+                    'name'  => $social,
+                    'slug'  => strtolower($social),
+                    'url'   => $setting,
+                ];
+            }
+        }
     }
 
     /**
@@ -123,7 +129,6 @@ class DefaultThemeApp extends FrontendController
         $this->assignation['errorMessage'] = $message;
         $this->assignation['title'] = $this->get('translator')->trans('error404.title');
         $this->assignation['content'] = $this->get('translator')->trans('error404.message');
-
 
         $this->get('stopwatch')->start('twigRender');
         return new Response(
@@ -162,6 +167,11 @@ class DefaultThemeApp extends FrontendController
     {
         parent::setupDependencyInjection($container);
 
+        $container->extend('twig.extensions', function ($extensions, $c) {
+            $extensions->add(new ImageFormatsExtension());
+            return $extensions;
+        });
+
         $container->extend('backoffice.entries', function (array $entries, $c) {
             /*
              * Add a test entry in your Backoffice
@@ -185,7 +195,9 @@ class DefaultThemeApp extends FrontendController
          */
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $container['dispatcher'];
-        $dispatcher->addListener(NodesSourcesEvents::NODE_SOURCE_INDEXING, function (FilterSolariumNodeSourceEvent $event) {
+        $dispatcher->addListener(
+            NodesSourcesEvents::NODE_SOURCE_INDEXING,
+            function (FilterSolariumNodeSourceEvent $event) {
             $assoc = $event->getAssociations();
             $assoc['defaulttheme_txt'] = 'This is injected by Default theme during indexing.';
             $event->setAssociations($assoc);
