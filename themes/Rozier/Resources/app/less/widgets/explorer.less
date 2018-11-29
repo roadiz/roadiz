@@ -12,10 +12,17 @@
     left: 0px;
     top: 0px;
     bottom: 0px;
-    width: @user-panel-width + @entries-panel-width + @trees-panel-width;
+    width: @user-panel-sm-width + @entries-panel-width + @trees-panel-width;
     overflow-y: auto;
     overflow-x: hidden;
-    z-index:10;
+    z-index: 99998;
+
+    @media (min-width: @screen-lg-min) {
+        width: @user-panel-lg-width + @entries-panel-width + @trees-panel-width;
+    }
+    @media (min-width: @screen-xl-min) {
+        width: @user-panel-xl-width + @entries-panel-width + @trees-panel-width;
+    }
 
     a {
         outline: none;
@@ -42,8 +49,28 @@
 
     .uk-sortable {
         width: calc(~'100% - 84px');
-        padding: 0 @sortable-margin;
+        padding: 32px @sortable-margin 0;
         margin: 0;
+
+        &:after {
+            content: '';
+            clear: both;
+            display: block;
+        }
+
+        .drawer-item.type-label {
+            width: 48%;
+            margin: 0 2% 10px 0;
+            overflow: hidden;
+        }
+    }
+
+    .sortable-inner {
+        min-height: 80px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: 0 -5px;
     }
 
     .widget-explorer-header{
@@ -157,12 +184,12 @@
         }
     }
 
-    .documents-widget-sortable-list-item{
+    .documents-widget-sortable-list-item {
         cursor: default;
         overflow: initial;
         background: #4f4f4f;
         list-style-type: none;
-        margin-bottom: 22px;
+        margin: 8px 5px 22px;
 
         &:hover{
             .link-button-inner{
@@ -181,11 +208,14 @@
 
         .document-overflow{
             position: absolute;
-            top: 0; left: 0;
-            width:80px; height:80px;
+            top: 0;
+            left: 0;
+            width:80px;
+            height:80px;
             overflow: hidden;
         }
-        .document-links, .document-mime-type{
+        .document-links,
+        .document-mime-type{
             display: none;
         }
 
@@ -230,8 +260,10 @@
 
         .link-button-inner{
             position: absolute;
-            width:80px; height:30px;
-            bottom:-30px; left:0;
+            width:80px;
+            height:30px;
+            bottom:-30px;
+            left:0;
             background:#BBBBBB;
             .transition(0.4s bottom @easeOutExpo);
             .transition-timing-function(@easeOutExpo);
@@ -308,17 +340,5 @@
         }
     }
 
-    .uk-sortable {
-        padding-top: 32px;
 
-        &:after {
-            content: '';
-            clear: both;
-            display: block;
-        }
-
-        .drawer-item.type-label {
-            width: 205px;
-        }
-    }
 }

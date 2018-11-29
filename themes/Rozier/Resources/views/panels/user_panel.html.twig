@@ -1,6 +1,5 @@
 {%  spaceless %}
 <div id="user-panel-container">
-
     <div id="menu-mobile">
         <div class="menu-mobile-bar" id="menu-mobile-bar-1"></div>
         <div class="menu-mobile-bar" id="menu-mobile-bar-2"></div>
@@ -9,7 +8,7 @@
 
     {# Make this block overidable from themes. #}
     {% include 'admin/blocks/adminImage.html.twig' %}
-    <div id="user">
+    <div class="user-actions-menu">
         {% if session.user %}
             <a id="user-picture" href="{{ path('usersEditPage', {'userId':session.user.id }) }}"><img width="200" height="200" class="uk-thumbnail" src="{{ session.user.pictureUrl }}" alt="{{ session.user.identifier }}" /></a>
             <h3>{{ "hello.%name%"|trans({'%name%': session.user.identifier}) }}</h3>
@@ -30,15 +29,14 @@
             {% else %}
                 <a title="{% trans %}logout{% endtrans %}" data-uk-tooltip="{animation:true}" class="uk-icon-button uk-icon-rz-turn-off rz-no-ajax-link" href="{{ path('logoutPage') }}"><span class="user-action-label">{% trans %}logout{% endtrans %}</span></a>
             {% endif %}
-
-
-            {% if head.devMode %}
-                <p class="dev-mode"><i class="uk-icon-rz-devmode"></i> {% trans %}dev_mode.activated{% endtrans %}</p>
-            {% endif %}
-            {% if head.maintenanceMode %}
-                <p class="dev-mode"><i class="uk-icon-exclamation-triangle"></i> {% trans %}maintenance_mode.activated{% endtrans %}</p>
-            {% endif %}
         </nav>
+
+        {% if head.devMode %}
+            <p class="dev-mode"><i class="uk-icon-rz-devmode"></i> {% trans %}dev_mode.activated{% endtrans %}</p>
+        {% endif %}
+        {% if head.maintenanceMode %}
+            <p class="dev-mode"><i class="uk-icon-exclamation-triangle"></i> {% trans %}maintenance_mode.activated{% endtrans %}</p>
+        {% endif %}
     </div>
     <footer id="cms-version">
         {% if help_external_url is defined %}

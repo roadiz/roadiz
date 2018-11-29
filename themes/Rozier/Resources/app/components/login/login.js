@@ -14,7 +14,7 @@ import $ from 'jquery'
             url: window.RozierRoot.routes.splashRequest,
             async: true,
             type: 'GET',
-            cache: false,
+            cache: true,
             dataType: 'json'
         })
         .done(function (data) {

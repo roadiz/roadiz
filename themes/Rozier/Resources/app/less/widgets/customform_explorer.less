@@ -12,12 +12,19 @@
     left: 0px;
     top: 0px;
     bottom: 0px;
-    width: @user-panel-width + @entries-panel-width + @trees-panel-width;
+    width: @user-panel-sm-width + @entries-panel-width + @trees-panel-width;
     .transform(~"translate3D(-100%,0,0)");
     .transform-transition(ease 0.5s);
     .transition-timing-function(@easeOutExpo);
     overflow-y: auto;
     z-index:12;
+
+    @media (min-width: @screen-lg-min) {
+        width: @user-panel-lg-width + @entries-panel-width + @trees-panel-width;
+    }
+    @media (min-width: @screen-xl-min) {
+        width: @user-panel-xl-width + @entries-panel-width + @trees-panel-width;
+    }
 
     .custom-form-widget-explorer-header{
         height:60px;
