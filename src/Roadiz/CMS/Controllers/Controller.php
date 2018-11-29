@@ -410,6 +410,23 @@ abstract class Controller implements ContainerAwareInterface
     {
         return new ResourceNotFoundException($message, $previous);
     }
+
+    /**
+     * Throw a NotFoundException if request format is not accepted.
+     *
+     * @param Request $request
+     * @param array $acceptableFormats
+     */
+    protected function denyResourceExceptForFormats(Request $request, $acceptableFormats = ['html'])
+    {
+        if (!in_array($request->get('_format', 'html'), $acceptableFormats)) {
+            throw $this->createNotFoundException(sprintf(
+                'Resource not found for %s format',
+                $request->get('_format', 'html'
+            )));
+        }
+    }
+
     /**
      * Returns an AccessDeniedException.
      *
