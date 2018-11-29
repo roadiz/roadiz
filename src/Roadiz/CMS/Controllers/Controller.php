@@ -422,8 +422,8 @@ abstract class Controller implements ContainerAwareInterface
         if (!in_array($request->get('_format', 'html'), $acceptableFormats)) {
             throw $this->createNotFoundException(sprintf(
                 'Resource not found for %s format',
-                $request->get('_format', 'html'
-            )));
+                $request->get('_format', 'html')
+            ));
         }
     }
 
