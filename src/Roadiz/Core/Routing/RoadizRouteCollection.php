@@ -81,7 +81,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
     /**
      * {@inheritdoc}
      */
-    public function parseResources()
+    public function parseResources(): void
     {
         if (null !== $this->stopwatch) {
             $this->stopwatch->start('routeCollection');
@@ -133,7 +133,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
         }
     }
 
-    protected function addBackendCollection()
+    protected function addBackendCollection(): void
     {
         $class = $this->themeResolver->getBackendClassName();
         if (class_exists($class)) {
@@ -146,7 +146,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
         }
     }
 
-    protected function addThemesCollections()
+    protected function addThemesCollections(): void
     {
         $frontendThemes = $this->themeResolver->getFrontendThemes();
         foreach ($frontendThemes as $theme) {

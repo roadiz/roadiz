@@ -92,7 +92,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * @param NodesSources $nodeSource
      * @return bool
      */
-    protected function isNodeSourceHome(NodesSources $nodeSource)
+    protected function isNodeSourceHome(NodesSources $nodeSource): bool
     {
         if ($nodeSource->getNode()->isHome()) {
             return true;
@@ -112,7 +112,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      *
      * @return string
      */
-    public function getNonContextualUrl(Theme $theme = null, $parameters = [])
+    public function getNonContextualUrl(Theme $theme = null, $parameters = []): string
     {
         if (null !== $this->nodeSource) {
             if ($this->isNodeSourceHome($this->nodeSource)) {
@@ -125,7 +125,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             }
 
             $urlTokens = [];
-            if (isset($parameters['_format']) && in_array($parameters['_format'], ['xml', 'json'])) {
+            if (isset($parameters['_format']) && in_array($parameters['_format'], ['xml', 'json', 'pdf'])) {
                 $urlTokens[] = $this->nodeSource->getIdentifier() . '.' . $parameters['_format'];
             } else {
                 $urlTokens[] = $this->nodeSource->getIdentifier();

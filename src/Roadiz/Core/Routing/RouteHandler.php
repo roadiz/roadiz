@@ -37,7 +37,7 @@ use RZ\Roadiz\Utils\StringHandler;
  */
 class RouteHandler
 {
-    public static function getBaseRoute($path)
+    public static function getBaseRoute($path): string
     {
         if (StringHandler::endsWith($path, "Locale")) {
             $path = StringHandler::replaceLast("Locale", "", $path);

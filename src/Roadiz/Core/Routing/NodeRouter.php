@@ -61,6 +61,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
 
     /** @var CacheProvider */
     private $nodeSourceUrlCacheProvider;
+
     /**
      * @var Settings
      */
@@ -101,7 +102,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollection()
+    public function getRouteCollection(): RouteCollection
     {
         return new RouteCollection();
     }
@@ -109,7 +110,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * @return CacheProvider
      */
-    public function getNodeSourceUrlCacheProvider()
+    public function getNodeSourceUrlCacheProvider(): CacheProvider
     {
         return $this->nodeSourceUrlCacheProvider;
     }
@@ -117,7 +118,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * @param CacheProvider $nodeSourceUrlCacheProvider
      */
-    public function setNodeSourceUrlCacheProvider(CacheProvider $nodeSourceUrlCacheProvider)
+    public function setNodeSourceUrlCacheProvider(CacheProvider $nodeSourceUrlCacheProvider): void
     {
         $this->nodeSourceUrlCacheProvider = $nodeSourceUrlCacheProvider;
     }
@@ -125,9 +126,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * Gets the UrlMatcher instance associated with this Router.
      *
-     * @return UrlMatcherInterface A UrlMatcherInterface instance
+     * @return NodeUrlMatcher
      */
-    public function getMatcher()
+    public function getMatcher(): NodeUrlMatcher
     {
         if (null !== $this->matcher) {
             return $this->matcher;
@@ -163,7 +164,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      *
      * @return bool
      */
-    public function supports($name)
+    public function supports($name): bool
     {
         return ($name instanceof NodesSources);
     }
@@ -178,10 +179,13 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      *
      * @return string
      */
-    public function getRouteDebugMessage($name, array $parameters = [])
+    public function getRouteDebugMessage($name, array $parameters = []): string
     {
         if ($name instanceof NodesSources) {
-            return '['.$name->getTranslation()->getLocale().']' . $name->getTitle() . ' - ' . $name->getNode()->getNodeName() . '['.$name->getNode()->getId().']';
+            return '['.$name->getTranslation()->getLocale().']' .
+                $name->getTitle() . ' - ' .
+                $name->getNode()->getNodeName() .
+                '['.$name->getNode()->getId().']';
         }
         return (string) $name;
     }
@@ -189,7 +193,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
         if (null === $name || !$name instanceof NodesSources) {
             throw new RouteNotFoundException();
@@ -205,7 +209,8 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         }
 
         $queryString = '';
-        if (isset($parameters['_format'])) {
+        if (isset($parameters['_format']) &&
+            in_array($parameters['_format'], $this->getMatcher()->getSupportedFormatExtensions())) {
             unset($parameters['_format']);
         }
         if (count($parameters) > 0) {
@@ -224,16 +229,19 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * @param NodesSources $source
      * @param array        $parameters
-     *
      * @return string
      */
-    protected function getResourcePath(NodesSources $source, $parameters = [])
+    protected function getResourcePath(NodesSources $source, $parameters = []): string
     {
-        $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost();
+        $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost() . '_' . serialize($parameters);
         if (null !== $this->nodeSourceUrlCacheProvider) {
             if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
                 $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
-                $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
+                $urlGenerator = new NodesSourcesUrlGenerator(
+                    null,
+                    $source,
+                    (boolean) $this->settingsBag->get('force_locale')
+                );
                 $this->nodeSourceUrlCacheProvider->save(
                     $cacheKey,
                     $urlGenerator->getNonContextualUrl($theme, $parameters)
@@ -242,7 +250,11 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
         } else {
             $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
-            $urlGenerator = new NodesSourcesUrlGenerator(null, $source, (boolean) $this->settingsBag->get('force_locale'));
+            $urlGenerator = new NodesSourcesUrlGenerator(
+                null,
+                $source,
+                (boolean) $this->settingsBag->get('force_locale')
+            );
             return $urlGenerator->getNonContextualUrl($theme, $parameters);
         }
     }
@@ -254,7 +266,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      *
      * @return string
      */
-    private function getHttpHost()
+    private function getHttpHost(): string
     {
         $scheme = $this->getContext()->getScheme();
 
