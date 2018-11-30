@@ -24,6 +24,13 @@
         position: relative;
         width: @entries-panel-width;
         flex-shrink: 0;
+
+        @media (min-width: @screen-lg-min) {
+            width: @entries-panel-lg-width;
+        }
+        @media (min-width: @screen-xl-min) {
+            width: @entries-panel-xl-width;
+        }
     }
     #main-trees {
         position: relative;
