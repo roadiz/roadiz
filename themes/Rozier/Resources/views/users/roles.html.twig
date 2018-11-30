@@ -31,15 +31,15 @@
                 <thead>
                     <tr>
                         <th>{% trans %}specific.roles{% endtrans %}</th>
-                        <th>{% trans %}actions{% endtrans %}</th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for role in user.getRolesEntities %}
                     <tr>
                         <td>{{ role.getName }}</td>
-                        <td>
-                            <a class="uk-button uk-button-small uk-button-danger" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</a>
+                        <td class="table-actions-row table-actions-row-3">
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}" title="{% trans %}remove{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                         </td>
                     </tr>
                     {% endfor %}

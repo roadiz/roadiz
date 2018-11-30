@@ -19,7 +19,7 @@
             <div class="tree-scroll">
             {% endif %}
                 {% if nodeTree.availableTranslations and nodeTree.availableTranslations|length > 1 %}
-                <ul class="nodetree-langs">
+                <ul class="nodetree-langs{% if nodeTree.availableTranslations|length <= 5 %} few-langs{% endif %}">
                     {% spaceless %}
                     {% for lang in nodeTree.availableTranslations %}
                     <li class="{% if lang.id == nodeTree.translation.id %}active{% endif %}">
