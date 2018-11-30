@@ -56,7 +56,7 @@
     }
 }
 
-.content-header{ // header
+.content-header { // header
     position: relative;
     height: 220px;
     padding: 0px 30px;
@@ -74,6 +74,11 @@
         }
 
         @media (min-width: @screen-xl-min) {
+            left:0;
+            right:0;
+        }
+
+        &:not(.has-translations) {
             left:0;
             right:0;
         }
