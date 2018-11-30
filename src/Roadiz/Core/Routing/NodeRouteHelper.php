@@ -72,7 +72,7 @@ class NodeRouteHelper
      *
      * @return string
      */
-    public function getController()
+    public function getController(): string
     {
         if (null === $this->controller) {
             $refl = new \ReflectionClass($this->theme->getClassName());
@@ -86,7 +86,7 @@ class NodeRouteHelper
         return $this->controller;
     }
 
-    public function getMethod()
+    public function getMethod(): string
     {
         return 'indexAction';
     }
@@ -96,7 +96,7 @@ class NodeRouteHelper
      *
      * @return boolean
      */
-    public function isViewable()
+    public function isViewable(): bool
     {
         if (!class_exists($this->getController())) {
             return false;

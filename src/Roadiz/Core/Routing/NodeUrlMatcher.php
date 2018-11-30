@@ -40,6 +40,22 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class NodeUrlMatcher extends DynamicUrlMatcher
 {
     /**
+     * @return array
+     */
+    public function getSupportedFormatExtensions(): array
+    {
+        return ['xml', 'json', 'pdf', 'html'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultSupportedFormatExtension(): string
+    {
+        return 'html';
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function match($pathinfo)
@@ -82,7 +98,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
             $_format = 'html';
             $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
-            $supportedFormats = ['json', 'xml', 'html'];
+            $supportedFormats = $this->getSupportedFormatExtensions();
             $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
             /*
@@ -204,9 +220,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      *
      * @param array &$tokens
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
-    protected function parseFromUrlAlias(&$tokens)
+    protected function parseFromUrlAlias(&$tokens): ?Node
     {
         if (count($tokens) > 0) {
             $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
@@ -229,9 +245,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param array       &$tokens
      * @param Translation $translation
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
-    protected function parseNode(array &$tokens, Translation $translation)
+    protected function parseNode(array &$tokens, Translation $translation): ?Node
     {
         if (!empty($tokens[0])) {
             /*

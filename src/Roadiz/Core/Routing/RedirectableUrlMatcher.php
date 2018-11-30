@@ -43,7 +43,7 @@ class RedirectableUrlMatcher extends BaseMatcher
      *
      * @return array An array of parameters
      */
-    public function redirect($path, $route, $scheme = null)
+    public function redirect($path, $route, $scheme = null): array
     {
         return [
             '_controller' => RedirectionController::class . '::redirectToRouteAction',
