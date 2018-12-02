@@ -198,9 +198,10 @@ class DefaultThemeApp extends FrontendController
         $dispatcher->addListener(
             NodesSourcesEvents::NODE_SOURCE_INDEXING,
             function (FilterSolariumNodeSourceEvent $event) {
-            $assoc = $event->getAssociations();
-            $assoc['defaulttheme_txt'] = 'This is injected by Default theme during indexing.';
-            $event->setAssociations($assoc);
-        });
+                $assoc = $event->getAssociations();
+                $assoc['defaulttheme_txt'] = 'This is injected by Default theme during indexing.';
+                $event->setAssociations($assoc);
+            }
+        );
     }
 }

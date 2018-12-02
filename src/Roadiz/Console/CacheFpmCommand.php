@@ -74,7 +74,7 @@ class CacheFpmCommand extends Command
 
         try {
             $client = new Client();
-            $res = $client->get($url, [
+            $client->get($url, [
                 'headers' => [
                     'Accept' => 'application/json',
                     'User-Agent' => 'Roadiz_CLI/'.Kernel::$cmsVersion,

@@ -29,11 +29,11 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -41,7 +41,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Yaml\Yaml;
 use Themes\Install\InstallApp;
-use Themes\Rozier\RozierApp;
 
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
@@ -74,23 +73,6 @@ class InstallCommand extends Command
         if ($input->getOption('no-interaction') ||
             $helper->ask($input, $output, $question)
         ) {
-            /*
-             * Create backend theme
-             */
-            if (!$this->hasDefaultBackend()) {
-                $theme = new Theme();
-                $theme->setAvailable(true)
-                    ->setBackendTheme(true)
-                    ->setClassName(RozierApp::class);
-
-                $this->entityManager->persist($theme);
-                $this->entityManager->flush();
-
-                $text .= '<info>Rozier back-end theme installed…</info>' . PHP_EOL;
-            } else {
-                $text .= '<error>A back-end theme is already installed.</error>' . PHP_EOL;
-            }
-
             /**
              * Import default data
              */
@@ -147,6 +129,7 @@ class InstallCommand extends Command
             }
 
             // Clear result cache
+            /** @var CacheProvider $cacheDriver */
             $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
@@ -154,11 +137,6 @@ class InstallCommand extends Command
         }
 
         $output->writeln($text);
-    }
-
-    private function hasDefaultBackend()
-    {
-        return true;
     }
 
     /**

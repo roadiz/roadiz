@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Utils\StringHandler;
@@ -523,6 +524,7 @@ class Translation extends AbstractDateTimed
      *
      * fr or en for example
      *
+     * @var string
      * @ORM\Column(type="string", unique=true, length=10)
      */
     private $locale;
@@ -530,7 +532,7 @@ class Translation extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->locale;
     }
@@ -540,19 +542,20 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setLocale($locale)
+    public function setLocale($locale): Translation
     {
         $this->locale = $locale;
-
         return $this;
     }
 
     /**
+     * @var string|null
      * @ORM\Column(type="string", name="override_locale", length=10, unique=true, nullable=true)
      */
     private $overrideLocale = null;
 
     /**
+     * @var string
      * @ORM\Column(type="string", unique=true)
      */
     private $name;
@@ -560,7 +563,7 @@ class Translation extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -570,21 +573,21 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName($name): Translation
     {
         $this->name = $name;
-
         return $this;
     }
 
     /**
+     * @var bool
      * @ORM\Column(name="default_translation", type="boolean", nullable=false, options={"default" = false})
      */
     private $defaultTranslation = false;
     /**
      * @return boolean
      */
-    public function isDefaultTranslation()
+    public function isDefaultTranslation(): bool
     {
         return $this->defaultTranslation;
     }
@@ -593,14 +596,14 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setDefaultTranslation($defaultTranslation)
+    public function setDefaultTranslation($defaultTranslation): Translation
     {
         $this->defaultTranslation = (boolean) $defaultTranslation;
-
         return $this;
     }
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      */
     private $available = true;
@@ -608,7 +611,7 @@ class Translation extends AbstractDateTimed
     /**
      * @return boolean
      */
-    public function isAvailable()
+    public function isAvailable(): bool
     {
         return $this->available;
     }
@@ -618,17 +621,16 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setAvailable($available)
+    public function setAvailable($available): Translation
     {
         $this->available = $available;
-
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getOneLineSummary()
+    public function __toString(): string
     {
         return $this->getId() . " — " . $this->getName() . " (" . $this->getLocale() . ')' .
         " — " . ($this->isAvailable() ? 'Enabled' : 'Disabled') .
@@ -636,11 +638,19 @@ class Translation extends AbstractDateTimed
     }
 
     /**
+     * @return string
+     */
+    public function getOneLineSummary(): string
+    {
+        return $this->__toString();
+    }
+
+    /**
      * Return available locales in an array.
      *
      * @return array
      */
-    public static function getAvailableLocales()
+    public static function getAvailableLocales(): array
     {
         return array_keys(static::$availableLocales);
     }
@@ -648,46 +658,46 @@ class Translation extends AbstractDateTimed
     /**
      * @return array
      */
-    public static function getRightToLeftLocales()
+    public static function getRightToLeftLocales(): array
     {
         return array_keys(static::$rtlLanguages);
     }
 
     /**
      * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var ArrayCollection
+     * @var Collection
      */
-    private $nodeSources = null;
+    private $nodeSources;
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getNodeSources()
+    public function getNodeSources(): Collection
     {
         return $this->nodeSources;
     }
 
     /**
      * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var ArrayCollection
+     * @var Collection
      */
-    private $tagTranslations = null;
+    private $tagTranslations;
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getTagTranslations()
+    public function getTagTranslations(): Collection
     {
         return $this->tagTranslations;
     }
 
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var ArrayCollection
+     * @var Collection
      */
     protected $documentTranslations;
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getDocumentTranslations()
+    public function getDocumentTranslations(): Collection
     {
         return $this->documentTranslations;
     }
@@ -707,7 +717,7 @@ class Translation extends AbstractDateTimed
      *
      * @return string
      */
-    public function getOverrideLocale()
+    public function getOverrideLocale(): ?string
     {
         return $this->overrideLocale;
     }
@@ -719,7 +729,7 @@ class Translation extends AbstractDateTimed
      *
      * @return self
      */
-    public function setOverrideLocale($overrideLocale)
+    public function setOverrideLocale($overrideLocale): Translation
     {
         $this->overrideLocale = StringHandler::slugify($overrideLocale);
 
@@ -731,7 +741,7 @@ class Translation extends AbstractDateTimed
      *
      * @return string
      */
-    public function getPreferredLocale()
+    public function getPreferredLocale(): string
     {
         return !empty($this->overrideLocale) ? $this->overrideLocale : $this->locale;
     }
@@ -739,7 +749,7 @@ class Translation extends AbstractDateTimed
     /**
      * @return bool
      */
-    public function isRtl()
+    public function isRtl(): bool
     {
         return in_array($this->getLocale(), static::getRightToLeftLocales());
     }

@@ -36,7 +36,6 @@ use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Yaml\Yaml;
 
 class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 {

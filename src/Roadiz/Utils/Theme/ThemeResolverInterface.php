@@ -34,21 +34,21 @@ use RZ\Roadiz\Core\Entities\Theme;
 interface ThemeResolverInterface
 {
     /**
-     * @return Theme|null
+     * @return Theme
      */
-    public function getBackendTheme();
+    public function getBackendTheme(): Theme;
 
     /**
      * @return string
      */
-    public function getBackendClassName();
+    public function getBackendClassName(): string;
 
     /**
      * @param string $host
      *
      * @return Theme|null
      */
-    public function findTheme($host);
+    public function findTheme(string $host): ?Theme;
 
 
     /**
@@ -56,22 +56,22 @@ interface ThemeResolverInterface
      *
      * @return Theme|null
      */
-    public function findThemeByClass($classname);
+    public function findThemeByClass(string $classname): ?Theme;
 
     /**
      * @return Theme[]
      */
-    public function findAll();
+    public function findAll(): array;
 
     /**
      * @param integer $id
      *
      * @return Theme|null
      */
-    public function findById($id);
+    public function findById($id): ?Theme;
 
     /**
      * @return Theme[]
      */
-    public function getFrontendThemes();
+    public function getFrontendThemes(): array;
 }

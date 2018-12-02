@@ -57,7 +57,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with Group entity.
      *
-     * @param \RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      *
      * @return array
      */
@@ -77,9 +77,10 @@ class GroupJsonSerializer extends AbstractJsonSerializer
 
     /**
      * Deserializes a Json into readable datas
+     *
      * @param string $string
      *
-     * @return \RZ\Roadiz\Core\Entities\Group
+     * @return Group[]
      * @throws \Exception
      */
     public function deserialize($string)

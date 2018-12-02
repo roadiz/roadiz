@@ -36,11 +36,9 @@ use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
-use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
 use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
@@ -131,18 +129,6 @@ class CacheCommand extends Command
         $configurationClearer = new ConfigurationCacheClearer($kernel->getCacheDir());
         $appCacheClearer = new AppCacheClearer($kernel->getCacheDir());
         $nodeSourcesUrlsClearer = new NodesSourcesUrlsCacheClearer($this->nsCacheHelper->getCacheProvider());
-
-        $clearers = [
-            $configurationClearer,
-            $appCacheClearer,
-            $assetsClearer,
-            $routingClearer,
-            $templatesClearer,
-            $translationsClearer,
-            $nodeSourcesUrlsClearer,
-            new OPCacheClearer(),
-            $doctrineClearer,
-        ];
 
         $output->write('Clearing cache for <info>' . $kernel->getEnvironment() . '</info> environment. ');
         if ($kernel->isPreview()) {

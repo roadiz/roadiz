@@ -65,7 +65,7 @@ abstract class AppController extends Controller
     /**
      * Theme entity.
      *
-     * @var \RZ\Roadiz\Core\Entities\Theme;
+     * @var Theme
      */
     protected $theme = null;
     /**
@@ -422,7 +422,7 @@ abstract class AppController extends Controller
      *
      * @return Theme|null
      */
-    public function getTheme()
+    public function getTheme(): ?Theme
     {
         $this->container['stopwatch']->start('getTheme');
         /** @var ThemeResolverInterface $themeResolver */

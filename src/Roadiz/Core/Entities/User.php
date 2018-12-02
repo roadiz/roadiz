@@ -31,6 +31,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
 use RZ\Roadiz\Utils\Security\SaltGenerator;
@@ -64,11 +65,13 @@ class User extends AbstractHuman implements AdvancedUserInterface
     protected $sendCreationConfirmationEmail;
 
     /**
+     * @var string
      * @ORM\Column(type="string", name="facebook_name", unique=false, nullable=true)
      */
     protected $facebookName = null;
 
     /**
+     * @var string
      * @ORM\Column(type="text", name="picture_url", nullable=true)
      */
     protected $pictureUrl = '';
@@ -102,6 +105,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * Encrypted password.
      *
+     * @var string
      * @ORM\Column(type="string", nullable=false)
      */
     private $password;
@@ -118,6 +122,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      */
     private $lastLogin;
     /**
+     * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
      * @ORM\JoinTable(name="users_roles",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -169,7 +174,6 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
-     *
      * @var Node
      */
     private $chroot;
@@ -200,7 +204,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @param bool $sendCreationConfirmationEmail
      * @return User
      */
-    public function sendCreationConfirmationEmail($sendCreationConfirmationEmail)
+    public function sendCreationConfirmationEmail($sendCreationConfirmationEmail): User
     {
         $this->sendCreationConfirmationEmail = $sendCreationConfirmationEmail;
         return $this;
@@ -212,7 +216,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return bool
      */
-    public function willSendCreationConfirmationEmail()
+    public function willSendCreationConfirmationEmail(): bool
     {
         return $this->sendCreationConfirmationEmail;
     }
@@ -223,7 +227,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         if ($this->getFirstName() != "" && $this->getLastName() != "") {
             return $this->getFirstName() . " " . $this->getLastName();
@@ -237,108 +241,100 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @return string $username
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
 
     /**
-     * @param string $username
+     * @param $username
      *
-     * @return string $username
+     * @return $this
      */
-    public function setUsername($username)
+    public function setUsername($username): User
     {
         $this->username = $username;
-
         return $this;
     }
 
     /**
      * Get facebook profile name to grab public infos such as picture
      *
-     * @return string
+     * @return string|null
      */
-    public function getFacebookName()
+    public function getFacebookName(): ?string
     {
         return $this->facebookName;
     }
 
     /**
-     * @param string $facebookName
-     *
-     * @return string $facebookName
+     * @param $facebookName
+     * @return $this
      */
-    public function setFacebookName($facebookName)
+    public function setFacebookName($facebookName): User
     {
         $this->facebookName = $facebookName;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPictureUrl()
+    public function getPictureUrl(): ?string
     {
         return $this->pictureUrl;
     }
 
     /**
-     * @param string $pictureUrl
-     *
-     * @return string $pictureURL
+     * @param $pictureUrl
+     * @return $this
      */
-    public function setPictureUrl($pictureUrl)
+    public function setPictureUrl($pictureUrl): User
     {
         $this->pictureUrl = $pictureUrl;
-
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getSalt()
+    public function getSalt(): ?string
     {
         return $this->salt;
     }
 
     /**
-     * @param string $salt
-     *
-     * @return string $salt
+     * @param $salt
+     * @return $this
      */
-    public function setSalt($salt)
+    public function setSalt($salt): User
     {
         $this->salt = $salt;
-
         return $this;
     }
 
     /**
      * @return string $password
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
 
     /**
-     * @param string $password
-     *
-     * @return string $password
+     * @param $password
+     * @return $this
      */
-    public function setPassword($password)
+    public function setPassword($password): User
     {
         $this->password = $password;
         return $this;
     }
 
     /**
-     * @return string $plainPassword
+     * @return string|null $plainPassword
      */
-    public function getPlainPassword()
+    public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
@@ -347,7 +343,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @param string $plainPassword
      * @return User
      */
-    public function setPlainPassword($plainPassword)
+    public function setPlainPassword($plainPassword): User
     {
         $this->plainPassword = $plainPassword;
         if (null !== $plainPassword && $plainPassword != '') {
@@ -362,20 +358,18 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @return \DateTime $lastLogin
      */
-    public function getLastLogin()
+    public function getLastLogin(): ?\DateTime
     {
         return $this->lastLogin;
     }
 
     /**
      * @param \DateTime $lastLogin
-     *
      * @return User
      */
-    public function setLastLogin($lastLogin)
+    public function setLastLogin($lastLogin): User
     {
         $this->lastLogin = $lastLogin;
-
         return $this;
     }
 
@@ -384,7 +378,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return string
      */
-    public function getConfirmationToken()
+    public function getConfirmationToken(): ?string
     {
         return $this->confirmationToken;
     }
@@ -395,7 +389,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @param string $confirmationToken
      * @return $this
      */
-    public function setConfirmationToken($confirmationToken)
+    public function setConfirmationToken($confirmationToken): User
     {
         $this->confirmationToken = $confirmationToken;
 
@@ -409,7 +403,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function isPasswordRequestNonExpired($ttl)
+    public function isPasswordRequestNonExpired($ttl): bool
     {
         return $this->getPasswordRequestedAt() instanceof \DateTime &&
             $this->getPasswordRequestedAt()->getTimestamp() + $ttl > time();
@@ -420,7 +414,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return null|\DateTime
      */
-    public function getPasswordRequestedAt()
+    public function getPasswordRequestedAt(): ?\DateTime
     {
         return $this->passwordRequestedAt;
     }
@@ -431,10 +425,9 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @param \DateTime|null $date
      * @return $this
      */
-    public function setPasswordRequestedAt(\DateTime $date = null)
+    public function setPasswordRequestedAt(\DateTime $date = null): User
     {
         $this->passwordRequestedAt = $date;
-
         return $this;
     }
 
@@ -445,7 +438,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return $this
      */
-    public function addRole(Role $role)
+    public function addRole(Role $role): User
     {
         if (!$this->getRolesEntities()->contains($role)) {
             $this->getRolesEntities()->add($role);
@@ -457,9 +450,9 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * Get roles entities
      *
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getRolesEntities()
+    public function getRolesEntities(): Collection
     {
         return $this->roles;
     }
@@ -471,7 +464,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return $this
      */
-    public function removeRole(Role $role)
+    public function removeRole(Role $role): User
     {
         if ($this->getRolesEntities()->contains($role)) {
             $this->getRolesEntities()->removeElement($role);
@@ -483,11 +476,11 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * Removes sensitive data from the user.
      *
-     * @return void
+     * @return User
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): User
     {
-        $this->setPlainPassword('');
+        return $this->setPlainPassword('');
     }
 
     /**
@@ -497,7 +490,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return $this
      */
-    public function addGroup(Group $group)
+    public function addGroup(Group $group): User
     {
         if (!$this->getGroups()->contains($group)) {
             $this->getGroups()->add($group);
@@ -507,9 +500,9 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getGroups()
+    public function getGroups(): Collection
     {
         return $this->groups;
     }
@@ -521,7 +514,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return $this
      */
-    public function removeGroup(Group $group)
+    public function removeGroup(Group $group): User
     {
         if ($this->getGroups()->contains($group)) {
             $this->getGroups()->removeElement($group);
@@ -535,7 +528,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return array Array of strings
      */
-    public function getGroupNames()
+    public function getGroupNames(): array
     {
         $names = [];
         foreach ($this->getGroups() as $group) {
@@ -550,7 +543,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function getExpired()
+    public function getExpired(): bool
     {
         return $this->expired;
     }
@@ -559,7 +552,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @param boolean $expired
      * @return $this
      */
-    public function setExpired($expired)
+    public function setExpired($expired): User
     {
         $this->expired = $expired;
 
@@ -578,7 +571,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @see AccountExpiredException
      */
-    public function isAccountNonExpired()
+    public function isAccountNonExpired(): bool
     {
         if ($this->expiresAt !== null &&
             $this->expiresAt->getTimestamp() < time()) {
@@ -598,7 +591,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @see LockedException
      */
-    public function isAccountNonLocked()
+    public function isAccountNonLocked(): bool
     {
         return !$this->locked;
     }
@@ -617,7 +610,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function equals(User $user)
+    public function equals(User $user): bool
     {
         return (
             $this->username == $user->getUsername() ||
@@ -628,7 +621,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @return \DateTime
      */
-    public function getCredentialsExpiresAt()
+    public function getCredentialsExpiresAt(): ?\DateTime
     {
         return $this->credentialsExpiresAt;
     }
@@ -638,7 +631,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return User
      */
-    public function setCredentialsExpiresAt(\DateTime $date = null)
+    public function setCredentialsExpiresAt(\DateTime $date = null): User
     {
         $this->credentialsExpiresAt = $date;
 
@@ -650,18 +643,18 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return boolean
      */
-    public function getCredentialsExpired()
+    public function getCredentialsExpired(): bool
     {
         return $this->credentialsExpired;
     }
 
     /**
-     * @param boolean $newcredentialsExpired
+     * @param boolean $credentialsExpired
      * @return $this
      */
-    public function setCredentialsExpired($newcredentialsExpired)
+    public function setCredentialsExpired($credentialsExpired): User
     {
-        $this->credentialsExpired = $newcredentialsExpired;
+        $this->credentialsExpired = $credentialsExpired;
 
         return $this;
     }
@@ -669,7 +662,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @return \DateTime
      */
-    public function getExpiresAt()
+    public function getExpiresAt(): ?\DateTime
     {
         return $this->expiresAt;
     }
@@ -679,7 +672,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return User
      */
-    public function setExpiresAt(\DateTime $date = null)
+    public function setExpiresAt(\DateTime $date = null): User
     {
         $this->expiresAt = $date;
 
@@ -687,18 +680,18 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * @return Node
+     * @return Node|null
      */
-    public function getChroot()
+    public function getChroot(): ?Node
     {
         return $this->chroot;
     }
 
     /**
-     * @param Node $chroot
+     * @param Node|null $chroot
      * @return User
      */
-    public function setChroot(Node $chroot = null)
+    public function setChroot(Node $chroot = null): User
     {
         $this->chroot = $chroot;
 
@@ -706,19 +699,22 @@ class User extends AbstractHuman implements AdvancedUserInterface
     }
 
     /**
-     * Get prototype abstract gravatar url.
+     * Get prototype abstract Gravatar url.
+     *
+     * @param string $type Default: "identicon"
+     * @param string $size Default: "200"
      *
      * @return string
      */
-    public function getGravatarUrl()
+    public function getGravatarUrl($type = "identicon", $size = "200"): string
     {
-        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=identicon&s=200";
+        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=".$type."&s=".$size;
     }
 
     /**
      * @return string $text
      */
-    public function __toString()
+    public function __toString(): string
     {
         $text = $this->getUsername() . ' <' . $this->getEmail() . '>' . PHP_EOL;
         $text .= '— Enabled: ' . ($this->isEnabled() ? 'Yes' : 'No') . PHP_EOL;
@@ -738,7 +734,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @see DisabledException
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return $this->enabled;
     }
@@ -748,7 +744,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return User
      */
-    public function setEnabled($enabled)
+    public function setEnabled($enabled): User
     {
         $this->enabled = (boolean)$enabled;
 
@@ -767,7 +763,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @see CredentialsExpiredException
      */
-    public function isCredentialsNonExpired()
+    public function isCredentialsNonExpired(): bool
     {
         if ($this->credentialsExpiresAt !== null &&
             $this->credentialsExpiresAt->getTimestamp() < time()) {
@@ -782,7 +778,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         $this->rolesNames = [];
         foreach ($this->getRolesEntities() as $role) {
@@ -808,7 +804,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @return null|string
      */
-    public function getLocale()
+    public function getLocale(): ?string
     {
         return $this->locale;
     }
@@ -817,7 +813,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @param null|string $locale
      * @return User
      */
-    public function setLocale($locale)
+    public function setLocale($locale): User
     {
         $this->locale = $locale;
         return $this;

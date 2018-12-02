@@ -59,7 +59,7 @@ class NodeTypes extends ParameterBag
     /**
      * @return NodeTypeRepository
      */
-    public function getRepository()
+    public function getRepository(): NodeTypeRepository
     {
         if (null === $this->repository) {
             $this->repository = $this->entityManager->getRepository(NodeType::class);
@@ -84,22 +84,21 @@ class NodeTypes extends ParameterBag
     /**
      * @param string $key
      * @param null $default
-     * @param bool $deep
      * @return bool|mixed
      */
-    public function get($key, $default = null, $deep = false)
+    public function get($key, $default = null)
     {
         if (!is_array($this->parameters)) {
             $this->populateParameters();
         }
 
-        return parent::get($key, null, false);
+        return parent::get($key, null);
     }
 
     /**
      * @return array
      */
-    public function all()
+    public function all(): array
     {
         if (!is_array($this->parameters)) {
             $this->populateParameters();

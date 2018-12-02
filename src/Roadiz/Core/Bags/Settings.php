@@ -89,16 +89,15 @@ class Settings extends ParameterBag
     /**
      * @param string $key
      * @param null $default
-     * @param bool $deep
      * @return bool|mixed
      */
-    public function get($key, $default = null, $deep = false)
+    public function get($key, $default = null)
     {
         if (!is_array($this->parameters)) {
             $this->populateParameters();
         }
 
-        return parent::get($key, false, false);
+        return parent::get($key, false);
     }
 
     /**
@@ -107,7 +106,7 @@ class Settings extends ParameterBag
      * @param string $key
      * @return Document|null
      */
-    public function getDocument($key)
+    public function getDocument($key): ?Document
     {
         if (null !== $this->entityManager) {
             try {
@@ -124,7 +123,7 @@ class Settings extends ParameterBag
     /**
      * @return array
      */
-    public function all()
+    public function all(): array
     {
         if (!is_array($this->parameters)) {
             $this->populateParameters();

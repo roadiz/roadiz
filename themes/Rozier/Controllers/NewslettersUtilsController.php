@@ -33,15 +33,12 @@ namespace Themes\Rozier\Controllers;
 
 use InlineStyle\InlineStyle;
 use RZ\Roadiz\CMS\Controllers\AppController;
-use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Entities\Newsletter;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Utils\DomHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\DefaultTheme\NewsletterControllers\BasicNewsletterController;
 use Themes\Rozier\RozierApp;
 
 /**

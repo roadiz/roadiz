@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Utils\Installer;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,7 +38,7 @@ use Symfony\Component\Yaml\Yaml;
 class ThemeInstaller
 {
     /**
-     * Get Theme informations from its config.yml file.
+     * Get Theme information from its config.yml file.
      *
      * @param string $classname
      * @return array
@@ -63,23 +62,14 @@ class ThemeInstaller
      * Install theme.
      *
      * @param \Symfony\Component\HttpFoundation\Request  $request
-     * @param string                                    $classname
-     * @param \Doctrine\ORM\EntityManager                $em
+     * @param string $classname
+     * @param \Doctrine\ORM\EntityManager $em
      *
      * @return bool
      */
-    public static function install(Request $request, $classname, EntityManager $em)
+    public static function install(Request $request, string $classname, EntityManager $em)
     {
         $data = static::getThemeInformation($classname);
-
-        $fix = new Fixtures(
-            $em,
-            "",
-            "",
-            "",
-            false,
-            $request
-        );
         $data["className"] = $classname;
         $installedLanguage = $em->getRepository(Translation::class)->findAll();
 
@@ -119,7 +109,7 @@ class ThemeInstaller
     }
 
     /**
-     * assign summary theme informations.
+     * Assign summary theme information.
      *
      * @param string $classname
      * @param array $assignation

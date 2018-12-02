@@ -51,12 +51,14 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @var bool
      */
-    protected $installMode;
+    protected $installMode = false;
 
     /**
      * StaticThemeResolver constructor.
      *
-     * @param array $configuration
+     * @param array     $configuration
+     * @param Stopwatch $stopwatch
+     * @param bool      $installMode
      */
     public function __construct(array $configuration, Stopwatch $stopwatch, $installMode = false)
     {
@@ -77,7 +79,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function getBackendTheme()
+    public function getBackendTheme(): Theme
     {
         $theme = new Theme();
         $theme->setAvailable(true);
@@ -89,7 +91,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function getBackendClassName()
+    public function getBackendClassName(): string
     {
         return RozierApp::class;
     }
@@ -97,7 +99,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function findTheme($host)
+    public function findTheme(string $host): ?Theme
     {
         $default = null;
         /*
@@ -120,7 +122,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function findThemeByClass($classname)
+    public function findThemeByClass(string $classname): ?Theme
     {
         foreach ($this->getFrontendThemes() as $theme) {
             if ($theme->getClassName() === $classname) {
@@ -133,7 +135,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function findAll()
+    public function findAll(): array
     {
         return array_merge([
             $this->getBackendTheme(),
@@ -143,7 +145,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function findById($id)
+    public function findById($id): ?Theme
     {
         if (isset($this->getFrontendThemes()[$id])) {
             return $this->getFrontendThemes()[$id];
@@ -154,7 +156,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function getFrontendThemes()
+    public function getFrontendThemes(): array
     {
         return $this->frontendThemes;
     }
@@ -162,10 +164,9 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @param array $themeConfig
      * @param int $id
-     *
      * @return Theme
      */
-    private function getThemeFromConfig(array $themeConfig, $id = 0)
+    private function getThemeFromConfig(array $themeConfig, $id = 0): Theme
     {
         $theme = new Theme();
         $theme->setId($id);
@@ -184,7 +185,7 @@ class StaticThemeResolver implements ThemeResolverInterface
      *
      * @return int
      */
-    public static function compareThemePriority(Theme $themeA, Theme $themeB)
+    public static function compareThemePriority(Theme $themeA, Theme $themeB): int
     {
         $classA = $themeA->getClassName();
         $classB = $themeB->getClassName();
