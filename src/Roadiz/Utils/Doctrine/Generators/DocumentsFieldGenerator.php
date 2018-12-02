@@ -38,7 +38,7 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldGetter()
+    public function getFieldGetter(): string
     {
         return '
     /**

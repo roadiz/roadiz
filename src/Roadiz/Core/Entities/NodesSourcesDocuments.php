@@ -91,7 +91,7 @@ class NodesSourcesDocuments extends AbstractPositioned
      *
      * @return NodesSources
      */
-    public function getNodeSource()
+    public function getNodeSource(): NodesSources
     {
         return $this->nodeSource;
     }
@@ -103,7 +103,7 @@ class NodesSourcesDocuments extends AbstractPositioned
      *
      * @return self
      */
-    public function setNodeSource(NodesSources $nodeSource)
+    public function setNodeSource(NodesSources $nodeSource): NodesSourcesDocuments
     {
         $this->nodeSource = $nodeSource;
 
@@ -115,7 +115,7 @@ class NodesSourcesDocuments extends AbstractPositioned
      *
      * @return Document
      */
-    public function getDocument()
+    public function getDocument(): Document
     {
         return $this->document;
     }
@@ -127,7 +127,7 @@ class NodesSourcesDocuments extends AbstractPositioned
      *
      * @return self
      */
-    public function setDocument(Document $document)
+    public function setDocument(Document $document): NodesSourcesDocuments
     {
         $this->document = $document;
 
@@ -139,7 +139,7 @@ class NodesSourcesDocuments extends AbstractPositioned
      *
      * @return NodeTypeField
      */
-    public function getField()
+    public function getField(): NodeTypeField
     {
         return $this->field;
     }
@@ -151,7 +151,7 @@ class NodesSourcesDocuments extends AbstractPositioned
      *
      * @return self
      */
-    public function setField(NodeTypeField $field)
+    public function setField(NodeTypeField $field): NodesSourcesDocuments
     {
         $this->field = $field;
 

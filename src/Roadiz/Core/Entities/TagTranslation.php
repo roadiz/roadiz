@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
@@ -53,7 +54,7 @@ class TagTranslation extends AbstractEntity
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -62,7 +63,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName($name): TagTranslation
     {
         $this->name = $name;
 
@@ -77,7 +78,7 @@ class TagTranslation extends AbstractEntity
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -87,7 +88,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription($description): TagTranslation
     {
         $this->description = $description;
 
@@ -136,7 +137,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return Tag
      */
-    public function getTag()
+    public function getTag(): Tag
     {
         return $this->tag;
     }
@@ -148,7 +149,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return self
      */
-    public function setTag(Tag $tag)
+    public function setTag(Tag $tag): TagTranslation
     {
         $this->tag = $tag;
 
@@ -160,7 +161,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return Translation
      */
-    public function getTranslation()
+    public function getTranslation(): Translation
     {
         return $this->translation;
     }
@@ -172,7 +173,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return self
      */
-    public function setTranslation(Translation $translation)
+    public function setTranslation(Translation $translation): TagTranslation
     {
         $this->translation = $translation;
 
@@ -180,9 +181,9 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * @return ArrayCollection|null
+     * @return Collection
      */
-    public function getTagTranslationDocuments()
+    public function getTagTranslationDocuments(): Collection
     {
         return $this->tagTranslationDocuments;
     }
@@ -191,7 +192,7 @@ class TagTranslation extends AbstractEntity
      * @param ArrayCollection|null $tagTranslationDocuments
      * @return TagTranslation
      */
-    public function setTagTranslationDocuments($tagTranslationDocuments)
+    public function setTagTranslationDocuments($tagTranslationDocuments): TagTranslation
     {
         $this->tagTranslationDocuments = $tagTranslationDocuments;
         return $this;
@@ -200,7 +201,7 @@ class TagTranslation extends AbstractEntity
     /**
      * @return array
      */
-    public function getDocuments()
+    public function getDocuments(): array
     {
         return array_map(function (TagTranslationDocuments $tagTranslationDocument) {
             return $tagTranslationDocument->getDocument();

@@ -58,7 +58,6 @@ class XlsxExporter
      * @param  \IteratorAggregate|array $data
      * @param  array $keys
      * @return string
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      */
     public function exportXlsx($data, $keys = [])
     {

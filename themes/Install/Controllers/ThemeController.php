@@ -77,7 +77,8 @@ class ThemeController extends InstallApp
     {
         /** @var ThemeResolverInterface $themeResolver */
         $themeResolver = $this->get('themeResolver');
-        $importFile = ThemeInstaller::install($request, $request->get("classname"), $this->get("em"));
+        $importFile = ThemeInstaller::install($request->get("classname"), $this->get("em"));
+
         /** @var Theme $theme */
         $theme = $themeResolver->findThemeByClass($request->get("classname"));
 

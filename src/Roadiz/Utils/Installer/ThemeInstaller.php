@@ -43,7 +43,7 @@ class ThemeInstaller
      * @param string $classname
      * @return array
      */
-    public static function getThemeInformation($classname)
+    public static function getThemeInformation(string $classname)
     {
         $themeFolder = call_user_func([$classname, 'getThemeFolder']);
         $file = $themeFolder . "/config.yml";
@@ -61,13 +61,12 @@ class ThemeInstaller
     /**
      * Install theme.
      *
-     * @param \Symfony\Component\HttpFoundation\Request  $request
      * @param string $classname
      * @param \Doctrine\ORM\EntityManager $em
      *
      * @return bool
      */
-    public static function install(Request $request, string $classname, EntityManager $em)
+    public static function install(string $classname, EntityManager $em)
     {
         $data = static::getThemeInformation($classname);
         $data["className"] = $classname;

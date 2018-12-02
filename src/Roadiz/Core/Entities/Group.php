@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
@@ -46,10 +47,11 @@ class Group extends AbstractEntity
      * @var string
      */
     private $name;
+
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -58,7 +60,7 @@ class Group extends AbstractEntity
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
 
@@ -72,9 +74,9 @@ class Group extends AbstractEntity
     private $users;
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getUsers()
+    public function getUsers(): Collection
     {
         return $this->users;
     }
@@ -88,14 +90,17 @@ class Group extends AbstractEntity
      * @var ArrayCollection
      */
     private $roles;
+    /**
+     * @var array|null
+     */
     private $rolesNames = null;
 
     /**
      * Get roles entities.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getRolesEntities()
+    public function getRolesEntities(): Collection
     {
         return $this->roles;
     }
@@ -104,13 +109,12 @@ class Group extends AbstractEntity
      *
      * @return array
      */
-    public function getRoles()
+    public function getRoles(): array
     {
         if ($this->rolesNames === null) {
-            $this->rolesNames = [];
-            foreach ($this->getRolesEntities() as $role) {
-                $this->rolesNames[] = $role->getName();
-            }
+            $this->rolesNames = array_map(function (Role $role) {
+                return $role->getRole();
+            }, $this->getRolesEntities()->toArray());
         }
 
         return $this->rolesNames;
@@ -120,7 +124,7 @@ class Group extends AbstractEntity
      *
      * @return $this
      */
-    public function addRole(Role $role)
+    public function addRole(Role $role): Group
     {
         if (!$this->getRolesEntities()->contains($role)) {
             $this->getRolesEntities()->add($role);
@@ -133,7 +137,7 @@ class Group extends AbstractEntity
      *
      * @return $this
      */
-    public function removeRole(Role $role)
+    public function removeRole(Role $role): Group
     {
         if ($this->getRolesEntities()->contains($role)) {
             $this->getRolesEntities()->removeElement($role);

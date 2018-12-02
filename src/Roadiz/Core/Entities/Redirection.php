@@ -45,13 +45,13 @@ class Redirection extends AbstractEntity
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
-    private $query;
+    private $query = "";
 
     /**
      * @ORM\Column(type="string")
      * @var string
      */
-    private $redirectUri;
+    private $redirectUri = "";
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources")
@@ -69,7 +69,7 @@ class Redirection extends AbstractEntity
     /**
      * @return string
      */
-    public function getQuery()
+    public function getQuery(): string
     {
         return $this->query;
     }
@@ -78,7 +78,7 @@ class Redirection extends AbstractEntity
      * @param string $query
      * @return Redirection
      */
-    public function setQuery($query)
+    public function setQuery($query): Redirection
     {
         $this->query = $query;
         return $this;
@@ -87,7 +87,7 @@ class Redirection extends AbstractEntity
     /**
      * @return string
      */
-    public function getRedirectUri()
+    public function getRedirectUri(): string
     {
         return $this->redirectUri;
     }
@@ -96,16 +96,16 @@ class Redirection extends AbstractEntity
      * @param string $redirectUri
      * @return Redirection
      */
-    public function setRedirectUri($redirectUri)
+    public function setRedirectUri($redirectUri): Redirection
     {
         $this->redirectUri = $redirectUri;
         return $this;
     }
 
     /**
-     * @return mixed
+     * @return NodesSources|null
      */
-    public function getRedirectNodeSource()
+    public function getRedirectNodeSource(): ?NodesSources
     {
         return $this->redirectNodeSource;
     }
@@ -114,7 +114,7 @@ class Redirection extends AbstractEntity
      * @param mixed $redirectNodeSource
      * @return Redirection
      */
-    public function setRedirectNodeSource(NodesSources $redirectNodeSource = null)
+    public function setRedirectNodeSource(NodesSources $redirectNodeSource = null): Redirection
     {
         $this->redirectNodeSource = $redirectNodeSource;
         return $this;
@@ -123,7 +123,7 @@ class Redirection extends AbstractEntity
     /**
      * @return int
      */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
@@ -131,7 +131,7 @@ class Redirection extends AbstractEntity
     /**
      * @return string
      */
-    public function getTypeAsString()
+    public function getTypeAsString(): string
     {
         $types = [
             Response::HTTP_MOVED_PERMANENTLY => 'redirection.moved_permanently',
@@ -145,7 +145,7 @@ class Redirection extends AbstractEntity
      * @param int $type
      * @return Redirection
      */
-    public function setType($type)
+    public function setType(int $type): Redirection
     {
         $this->type = $type;
         return $this;

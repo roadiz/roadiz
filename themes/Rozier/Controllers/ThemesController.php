@@ -120,7 +120,7 @@ class ThemesController extends RozierApp
         }
 
         $classname = $request->get("classname");
-        $importFile = ThemeInstaller::install($request, $classname, $this->get("em"));
+        $importFile = ThemeInstaller::install($classname, $this->get("em"));
         /** @var ThemeResolverInterface $themeResolver */
         $themeResolver = $this->get('themeResolver');
         $theme = $themeResolver->findThemeByClass($classname) ;

@@ -40,7 +40,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldAnnotation()
+    public function getFieldAnnotation(): string
     {
         /*
          *
@@ -67,7 +67,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldGetter()
+    public function getFieldGetter(): string
     {
         return '
     /**
@@ -82,7 +82,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldSetter()
+    public function getFieldSetter(): string
     {
         return '
     /**

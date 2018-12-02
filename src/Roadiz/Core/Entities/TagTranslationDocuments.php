@@ -84,7 +84,7 @@ class TagTranslationDocuments extends AbstractPositioned
      *
      * @return Document
      */
-    public function getDocument()
+    public function getDocument(): Document
     {
         return $this->document;
     }
@@ -96,7 +96,7 @@ class TagTranslationDocuments extends AbstractPositioned
      *
      * @return self
      */
-    public function setDocument(Document $document)
+    public function setDocument(Document $document): TagTranslationDocuments
     {
         $this->document = $document;
 
@@ -106,7 +106,7 @@ class TagTranslationDocuments extends AbstractPositioned
     /**
      * @return TagTranslation
      */
-    public function getTagTranslation()
+    public function getTagTranslation(): TagTranslation
     {
         return $this->tagTranslation;
     }
@@ -115,7 +115,7 @@ class TagTranslationDocuments extends AbstractPositioned
      * @param TagTranslation $tagTranslation
      * @return TagTranslationDocuments
      */
-    public function setTagTranslation(TagTranslation $tagTranslation)
+    public function setTagTranslation(TagTranslation $tagTranslation): TagTranslationDocuments
     {
         $this->tagTranslation = $tagTranslation;
         return $this;

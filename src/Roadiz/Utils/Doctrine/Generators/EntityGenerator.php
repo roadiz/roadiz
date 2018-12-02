@@ -69,7 +69,7 @@ class EntityGenerator
      * @param NodeTypeField $field
      * @return AbstractFieldGenerator|null
      */
-    protected function getFieldGenerator(NodeTypeField $field)
+    protected function getFieldGenerator(NodeTypeField $field): ?AbstractFieldGenerator
     {
         if ($field->getType() === AbstractField::YAML_T) {
             return new YamlFieldGenerator($field);
@@ -102,7 +102,7 @@ class EntityGenerator
     /**
      * @return string
      */
-    public function getClassContent()
+    public function getClassContent(): string
     {
         return $this->getClassHeader().
             $this->getClassAnnotations().
@@ -112,7 +112,7 @@ class EntityGenerator
     /**
      * @return string
      */
-    protected function getClassBody()
+    protected function getClassBody(): string
     {
         return 'class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 {
@@ -123,7 +123,7 @@ class EntityGenerator
     /**
      * @return string
      */
-    protected function getClassHeader()
+    protected function getClassHeader(): string
     {
         /*
          * BE CAREFUL, USE statements are required for field generators which
@@ -148,7 +148,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
     /**
      * @return string
      */
-    protected function getClassAnnotations()
+    protected function getClassAnnotations(): string
     {
         $indexes = [];
         /** @var AbstractFieldGenerator $fieldGenerator */
@@ -158,7 +158,8 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
         $indexes = array_filter($indexes);
         return '
 /**
- * Generated custom node-source type from Roadiz backoffice.
+ * DO NOT EDIT
+ * Generated custom node-source type by Roadiz.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
  * @ORM\Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
@@ -168,7 +169,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
     /**
      * @return string
      */
-    protected function getClassProperties()
+    protected function getClassProperties(): string
     {
         $fieldsArray = [];
         /** @var AbstractFieldGenerator $fieldGenerator */
@@ -183,7 +184,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
     /**
      * @return string
      */
-    protected function getClassConstructor()
+    protected function getClassConstructor(): string
     {
         $constructorArray = [];
         /** @var AbstractFieldGenerator $fieldGenerator */
@@ -208,7 +209,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
     /**
      * @return string
      */
-    protected function getClassMethods()
+    protected function getClassMethods(): string
     {
         return '    
     public function __toString()

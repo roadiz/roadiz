@@ -318,9 +318,6 @@ class ContactFormManager extends EmailManager
         return null;
     }
 
-    /**
-     * @throws BadFormRequestException
-     */
     protected function handleFiles()
     {
         $this->uploadedFiles = [];
@@ -360,7 +357,7 @@ class ContactFormManager extends EmailManager
      * @return $this
      * @throws BadFormRequestException
      */
-    protected function addUploadedFile($name, UploadedFile $uploadedFile)
+    protected function addUploadedFile(string $name, UploadedFile $uploadedFile)
     {
         if (!$uploadedFile->isValid() ||
             !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
@@ -433,7 +430,7 @@ class ContactFormManager extends EmailManager
      * @param array $fields
      * @return array
      */
-    protected function flattenFormData(array $formData, array $fields)
+    protected function flattenFormData(array $formData, array $fields): array
     {
         foreach ($formData as $key => $value) {
             if ($key[0] == '_' || $value instanceof UploadedFile) {
@@ -464,10 +461,11 @@ class ContactFormManager extends EmailManager
 
     /**
      * Send contact form data by email.
-     * @return int
+     *
+     * @return int The number of successful recipients. Can be 0 which indicates failure
      * @throws \RuntimeException
      */
-    public function send()
+    public function send(): int
     {
         if (empty($this->assignation)) {
             throw new \RuntimeException("Can’t send a contact form without data.");

@@ -30,10 +30,11 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role as BaseRole;
 
 /**
  * Roles are persisted version of string Symfony's roles.
@@ -41,11 +42,36 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\RoleRepository")
  * @ORM\Table(name="roles")
  */
-class Role extends AbstractEntity implements RoleInterface
+class Role extends BaseRole implements PersistableInterface
 {
     const ROLE_DEFAULT = 'ROLE_USER';
     const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
     const ROLE_BACKEND_USER = 'ROLE_BACKEND_USER';
+
+    /**
+     * @ORM\Id
+     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue
+     */
+    protected $id;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     * @return Role
+     */
+    public function setId($id): Role
+    {
+        $this->id = $id;
+        return $this;
+    }
 
     /**
      * @ORM\Column(type="string", unique=true)
@@ -54,32 +80,40 @@ class Role extends AbstractEntity implements RoleInterface
     private $name;
 
     /**
-     * @return string
+     * @param string $role
+     * @return Role
      */
-    public function getName()
+    public function setRole(string $role): Role
+    {
+        $this->name = static::cleanName($role);
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRole(): string
     {
         return $this->name;
     }
+
     /**
-     * {@inheritdoc}
-     *
      * @return string
+     * @deprecated Use getRole method
      */
-    public function getRole()
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
      * @param string $name
-     *
      * @return $this
+     * @deprecated Use setRole method
      */
-    public function setName($name)
+    public function setName(string $name): Role
     {
-        $this->name = static::cleanName($name);
-
-        return $this;
+        return $this->setRole($name);
     }
 
     /**
@@ -87,10 +121,9 @@ class Role extends AbstractEntity implements RoleInterface
      *
      * @return string $name
      */
-    public static function cleanName($name)
+    public static function cleanName(string $name): string
     {
         $name = StringHandler::variablize($name);
-
         if (0 === preg_match("/^role_/i", $name)) {
             $name = "ROLE_" . $name;
         }
@@ -100,24 +133,23 @@ class Role extends AbstractEntity implements RoleInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles")
-     *
-     * @var ArrayCollection
+     * @var Collection
      */
     private $groups;
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return Collection
      */
-    public function getGroups()
+    public function getGroups(): Collection
     {
         return $this->groups;
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      * @return $this
      */
-    public function addGroup(Group $group)
+    public function addGroup(Group $group): Role
     {
         if (!$this->getGroups()->contains($group)) {
             $this->getGroups()->add($group);
@@ -130,7 +162,7 @@ class Role extends AbstractEntity implements RoleInterface
      * @param \RZ\Roadiz\Core\Entities\Group $group
      * @return $this
      */
-    public function removeGroup(Group $group)
+    public function removeGroup(Group $group): Role
     {
         if ($this->getGroups()->contains($group)) {
             $this->getGroups()->removeElement($group);
@@ -146,18 +178,19 @@ class Role extends AbstractEntity implements RoleInterface
      *
      * @return string
      */
-    public function getClassName()
+    public function getClassName(): string
     {
-        return str_replace('_', '-', strtolower($this->getName()));
+        return str_replace('_', '-', strtolower($this->getRole()));
     }
+
     /**
      * @return boolean
      */
     public function required()
     {
-        if ($this->getName() == static::ROLE_DEFAULT ||
-            $this->getName() == static::ROLE_SUPERADMIN ||
-            $this->getName() == static::ROLE_BACKEND_USER) {
+        if ($this->getRole() == static::ROLE_DEFAULT ||
+            $this->getRole() == static::ROLE_SUPERADMIN ||
+            $this->getRole() == static::ROLE_BACKEND_USER) {
             return true;
         }
 
@@ -169,8 +202,11 @@ class Role extends AbstractEntity implements RoleInterface
      *
      * @param string $name Role name
      */
-    public function __construct($name = null)
+    public function __construct($name)
     {
-        $this->setName($name);
+        $name = static::cleanName($name);
+        parent::__construct($name);
+
+        $this->groups = new ArrayCollection();
     }
 }

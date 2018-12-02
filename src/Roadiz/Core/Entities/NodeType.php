@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
@@ -53,22 +54,21 @@ class NodeType extends AbstractEntity
      * @ORM\Column(type="string", unique=true)
      */
     private $name;
+
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
     /**
      * @param string $name
-     *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): NodeType
     {
         $this->name = StringHandler::classify($name);
-
         return $this;
     }
 
@@ -81,7 +81,7 @@ class NodeType extends AbstractEntity
     /**
      * @return string
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return $this->displayName;
     }
@@ -91,10 +91,9 @@ class NodeType extends AbstractEntity
      *
      * @return $this
      */
-    public function setDisplayName($displayName)
+    public function setDisplayName(string $displayName): NodeType
     {
         $this->displayName = $displayName;
-
         return $this;
     }
 
@@ -107,20 +106,18 @@ class NodeType extends AbstractEntity
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
      * @param string $description
-     *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription(string $description = null)
     {
         $this->description = $description;
-
         return $this;
     }
 
@@ -133,19 +130,18 @@ class NodeType extends AbstractEntity
     /**
      * @return boolean
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }
+
     /**
      * @param boolean $visible
-     *
      * @return $this
      */
-    public function setVisible($visible)
+    public function setVisible(bool $visible): NodeType
     {
         $this->visible = $visible;
-
         return $this;
     }
 
@@ -158,7 +154,7 @@ class NodeType extends AbstractEntity
     /**
      * @return bool
      */
-    public function isPublishable()
+    public function isPublishable(): bool
     {
         return $this->publishable;
     }
@@ -167,7 +163,7 @@ class NodeType extends AbstractEntity
      * @param bool $publishable
      * @return NodeType
      */
-    public function setPublishable($publishable)
+    public function setPublishable(bool $publishable): NodeType
     {
         $this->publishable = $publishable;
         return $this;
@@ -187,7 +183,7 @@ class NodeType extends AbstractEntity
     /**
      * @return bool
      */
-    public function getReachable()
+    public function getReachable(): bool
     {
         return $this->reachable;
     }
@@ -195,7 +191,7 @@ class NodeType extends AbstractEntity
     /**
      * @return bool
      */
-    public function isReachable()
+    public function isReachable(): bool
     {
         return $this->getReachable();
     }
@@ -204,9 +200,9 @@ class NodeType extends AbstractEntity
      * @param bool $reachable
      * @return NodeType
      */
-    public function setReachable($reachable)
+    public function setReachable(bool $reachable): NodeType
     {
-        $this->reachable = (boolean) $reachable;
+        $this->reachable = $reachable;
         return $this;
     }
 
@@ -215,10 +211,11 @@ class NodeType extends AbstractEntity
      * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
      */
     private $newsletterType = false;
+
     /**
      * @return boolean
      */
-    public function isNewsletterType()
+    public function isNewsletterType(): bool
     {
         return $this->newsletterType;
     }
@@ -227,7 +224,7 @@ class NodeType extends AbstractEntity
      *
      * @return $this
      */
-    public function setNewsletterType($newsletterType)
+    public function setNewsletterType(bool $newsletterType): NodeType
     {
         $this->newsletterType = $newsletterType;
 
@@ -241,7 +238,7 @@ class NodeType extends AbstractEntity
     /**
      * @return boolean
      */
-    public function isHidingNodes()
+    public function isHidingNodes(): bool
     {
         return $this->hidingNodes;
     }
@@ -250,10 +247,9 @@ class NodeType extends AbstractEntity
      *
      * @return $this
      */
-    public function setHidingNodes($hidingNodes)
+    public function setHidingNodes(bool $hidingNodes): NodeType
     {
         $this->hidingNodes = $hidingNodes;
-
         return $this;
     }
     /**
@@ -266,7 +262,7 @@ class NodeType extends AbstractEntity
      *
      * @return string
      */
-    public function getColor()
+    public function getColor(): string
     {
         return $this->color;
     }
@@ -278,7 +274,7 @@ class NodeType extends AbstractEntity
      *
      * @return $this
      */
-    public function setColor($color)
+    public function setColor(string $color): NodeType
     {
         $this->color = $color;
 
@@ -288,13 +284,14 @@ class NodeType extends AbstractEntity
     /**
      * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
      * @ORM\OrderBy({"position" = "ASC"})
+     * @var ArrayCollection
      */
     private $fields;
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return Collection
      */
-    public function getFields()
+    public function getFields(): Collection
     {
         return $this->fields;
     }
@@ -304,15 +301,11 @@ class NodeType extends AbstractEntity
      *
      * @return array
      */
-    public function getFieldsNames()
+    public function getFieldsNames(): array
     {
-        $namesArray = [];
-
-        foreach ($this->getFields() as $field) {
-            $namesArray[] = $field->getName();
-        }
-
-        return $namesArray;
+        return array_map(function(NodeTypeField $field) {
+            return $field->getName();
+        }, $this->getFields()->toArray());
     }
 
     /**
@@ -320,7 +313,7 @@ class NodeType extends AbstractEntity
      *
      * @return NodeType
      */
-    public function addField(NodeTypeField $field)
+    public function addField(NodeTypeField $field): NodeType
     {
         if (!$this->getFields()->contains($field)) {
             $this->getFields()->add($field);
@@ -334,7 +327,7 @@ class NodeType extends AbstractEntity
      *
      * @return NodeType
      */
-    public function removeField(NodeTypeField $field)
+    public function removeField(NodeTypeField $field): NodeType
     {
         if ($this->getFields()->contains($field)) {
             $this->getFields()->removeElement($field);
@@ -356,7 +349,7 @@ class NodeType extends AbstractEntity
      *
      * @return string
      */
-    public function getSourceEntityClassName()
+    public function getSourceEntityClassName(): string
     {
         return 'NS' . ucwords($this->getName());
     }
@@ -364,7 +357,7 @@ class NodeType extends AbstractEntity
     /**
      * @return string
      */
-    public function getSourceEntityFullQualifiedClassName()
+    public function getSourceEntityFullQualifiedClassName(): string
     {
         return static::getGeneratedEntitiesNamespace() . '\\' . $this->getSourceEntityClassName();
     }
@@ -374,7 +367,7 @@ class NodeType extends AbstractEntity
      *
      * @return string
      */
-    public function getSourceEntityTableName()
+    public function getSourceEntityTableName(): string
     {
         return 'ns_' . strtolower($this->getName());
     }
@@ -382,7 +375,7 @@ class NodeType extends AbstractEntity
     /**
      * @return string
      */
-    public static function getGeneratedEntitiesNamespace()
+    public static function getGeneratedEntitiesNamespace(): string
     {
         return 'GeneratedNodeSources';
     }
@@ -390,7 +383,7 @@ class NodeType extends AbstractEntity
     /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return '[#' . $this->getId() . '] ' . $this->getName() . ' ('.$this->getDisplayName().')';
     }
@@ -398,9 +391,9 @@ class NodeType extends AbstractEntity
     /**
      * Get every searchable node-type fields as a Doctrine ArrayCollection.
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
-    public function getSearchableFields()
+    public function getSearchableFields(): ArrayCollection
     {
         $searchable = new ArrayCollection();
         /** @var NodeTypeField $field */
@@ -409,7 +402,6 @@ class NodeType extends AbstractEntity
                 $searchable->add($field);
             }
         }
-
         return $searchable;
     }
 }
