@@ -98,7 +98,6 @@ class TranslateController extends RozierApp
 
             $this->assignation['node'] = $node;
             $this->assignation['translation'] = $this->get('defaultTranslation');
-
             $this->assignation['available_translations'] = [];
 
             foreach ($node->getNodeSources() as $ns) {

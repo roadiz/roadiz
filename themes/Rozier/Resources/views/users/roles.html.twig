@@ -1,13 +1,11 @@
-{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% extends '@Rozier/layout.html.twig' %}
 
 {% block content %}
 <section class="content-global edit-user">
-
     <header class="content-header header-user header-user-edit">
         <h1 class="content-title user-add-title">{{ "edit.user.%name%.roles"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
         {% include '@Rozier/users/navBar.html.twig' with {'user':user, current:'roles'} %}
     </header>
-
     <article class="content content-user-roles">
         <div class="content-table-cont">
             <table class="content-table users--inherited-roles uk-table">

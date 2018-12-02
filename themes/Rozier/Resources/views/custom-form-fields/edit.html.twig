@@ -1,7 +1,6 @@
 {% if not head.ajax %}{% set baseTemplate = 'custom-form-fields/editBase.html.twig' %}{% else %}{% set baseTemplate = 'custom-form-fields/ajaxEditBase.html.twig' %}{% endif %}{% extends baseTemplate %}
 
 {% block subcontent %}
-
     <article class="content content-node-type-field-edit">
         {% form_theme form '@Rozier/forms.html.twig' %}
         {{ form_start(form, { 'attr': {'id': "edit-custom-form-field-form"}}) }}
@@ -16,5 +15,4 @@
             </fieldset>
         {{ form_end(form) }}
     </article>
-
 {% endblock %}

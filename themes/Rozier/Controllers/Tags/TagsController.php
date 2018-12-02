@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\TagHandler;
+use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,13 +101,15 @@ class TagsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_TAGS');
 
+        /** @var TranslationRepository $translationRepository */
+        $translationRepository = $this->get('em')->getRepository(Translation::class);
+
         if (null === $translationId) {
             /** @var Translation $translation */
             $translation = $this->get('defaultTranslation');
         } else {
             /** @var Translation $translation */
-            $translation = $this->get('em')
-                ->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, (int) $translationId);
         }
 
         if (null !== $translation) {
@@ -132,9 +135,8 @@ class TagsController extends RozierApp
                 $this->assignation['tag'] = $tag;
                 $this->assignation['translatedTag'] = $tt;
                 $this->assignation['translation'] = $translation;
-                $this->assignation['available_translations'] = $this->get('em')
-                    ->getRepository(Translation::class)
-                    ->findAllAvailable();
+                $this->assignation['available_translations'] = $translationRepository->findAllAvailable();
+                $this->assignation['translations'] = $translationRepository->findAvailableTranslationsForTag($tag);
 
                 $form = $this->createForm(TagTranslationType::class, $tt, [
                     'em' => $this->get('em'),
@@ -147,7 +149,8 @@ class TagsController extends RozierApp
                      * Update tag slug if not locked
                      * only from default translation.
                      */
-                    if (!$tag->isLocked() && $translation->isDefaultTranslation()) {
+                    if (!$tag->isLocked() &&
+                        $translation->isDefaultTranslation()) {
                         $tag->setTagName($tt->getName());
                     }
 

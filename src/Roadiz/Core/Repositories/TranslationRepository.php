@@ -30,7 +30,9 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NoResultException;
+use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
@@ -318,6 +320,46 @@ class TranslationRepository extends EntityRepository
             ->addOrderBy('t.locale', 'ASC')
             ->setParameter('node', $node)
             ->setCacheable(true);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Tag $tag
+     * @return Translation[]
+     */
+    public function findAvailableTranslationsForTag(Tag $tag)
+    {
+        $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
+        $qb->innerJoin('t.tagTranslations', 'tt')
+            ->andWhere($qb->expr()->eq('tt.tag', ':tag'))
+            ->addOrderBy('t.defaultTranslation', 'DESC')
+            ->addOrderBy('t.locale', 'ASC')
+            ->setParameter('tag', $tag);
+
+        try {
+            return $qb->getQuery()->getResult();
+        } catch (NoResultException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * @param Folder $folder
+     * @return Translation[]
+     */
+    public function findAvailableTranslationsForFolder(Folder $folder)
+    {
+        $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
+        $qb->innerJoin('t.folderTranslations', 'ft')
+            ->andWhere($qb->expr()->eq('ft.folder', ':folder'))
+            ->addOrderBy('t.defaultTranslation', 'DESC')
+            ->addOrderBy('t.locale', 'ASC')
+            ->setParameter('folder', $folder);
 
         try {
             return $qb->getQuery()->getResult();

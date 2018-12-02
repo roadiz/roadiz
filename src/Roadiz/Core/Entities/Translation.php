@@ -518,7 +518,16 @@ class Translation extends AbstractDateTimed
         'fa_IR' => "Persian (Iran)",
         'fa' => "Persian",
     ];
-
+    /**
+     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var Collection
+     */
+    protected $documentTranslations;
+    /**
+     * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var Collection
+     */
+    protected $folderTranslations;
     /**
      * Language locale
      *
@@ -528,37 +537,75 @@ class Translation extends AbstractDateTimed
      * @ORM\Column(type="string", unique=true, length=10)
      */
     private $locale;
-
-    /**
-     * @return string
-     */
-    public function getLocale(): string
-    {
-        return $this->locale;
-    }
-
-    /**
-     * @param string $locale
-     *
-     * @return $this
-     */
-    public function setLocale($locale): Translation
-    {
-        $this->locale = $locale;
-        return $this;
-    }
-
     /**
      * @var string|null
      * @ORM\Column(type="string", name="override_locale", length=10, unique=true, nullable=true)
      */
     private $overrideLocale = null;
-
     /**
      * @var string
      * @ORM\Column(type="string", unique=true)
      */
     private $name;
+    /**
+     * @var bool
+     * @ORM\Column(name="default_translation", type="boolean", nullable=false, options={"default" = false})
+     */
+    private $defaultTranslation = false;
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     */
+    private $available = true;
+    /**
+     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var Collection
+     */
+    private $nodeSources;
+    /**
+     * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @var Collection
+     */
+    private $tagTranslations;
+
+    /**
+     * Create a new Translation
+     */
+    public function __construct()
+    {
+        $this->nodeSources = new ArrayCollection();
+        $this->tagTranslations = new ArrayCollection();
+        $this->folderTranslations = new ArrayCollection();
+        $this->documentTranslations = new ArrayCollection();
+    }
+
+    /**
+     * Return available locales in an array.
+     *
+     * @return array
+     */
+    public static function getAvailableLocales(): array
+    {
+        return array_keys(static::$availableLocales);
+    }
+
+    /**
+     * @return string
+     */
+    public function getOneLineSummary(): string
+    {
+        return $this->__toString();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getId() . " — " . $this->getName() . " (" . $this->getLocale() . ')' .
+        " — " . ($this->isAvailable() ? 'Enabled' : 'Disabled') .
+        ($this->isDefaultTranslation() ? ' - Default' : '') .  PHP_EOL;
+    }
 
     /**
      * @return string
@@ -580,33 +627,23 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @var bool
-     * @ORM\Column(name="default_translation", type="boolean", nullable=false, options={"default" = false})
+     * @return string
      */
-    private $defaultTranslation = false;
-    /**
-     * @return boolean
-     */
-    public function isDefaultTranslation(): bool
+    public function getLocale(): string
     {
-        return $this->defaultTranslation;
-    }
-    /**
-     * @param boolean $defaultTranslation
-     *
-     * @return $this
-     */
-    public function setDefaultTranslation($defaultTranslation): Translation
-    {
-        $this->defaultTranslation = (boolean) $defaultTranslation;
-        return $this;
+        return $this->locale;
     }
 
     /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @param string $locale
+     *
+     * @return $this
      */
-    private $available = true;
+    public function setLocale($locale): Translation
+    {
+        $this->locale = $locale;
+        return $this;
+    }
 
     /**
      * @return boolean
@@ -628,46 +665,24 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return boolean
      */
-    public function __toString(): string
+    public function isDefaultTranslation(): bool
     {
-        return $this->getId() . " — " . $this->getName() . " (" . $this->getLocale() . ')' .
-        " — " . ($this->isAvailable() ? 'Enabled' : 'Disabled') .
-        ($this->isDefaultTranslation() ? ' - Default' : '') .  PHP_EOL;
+        return $this->defaultTranslation;
     }
 
     /**
-     * @return string
-     */
-    public function getOneLineSummary(): string
-    {
-        return $this->__toString();
-    }
-
-    /**
-     * Return available locales in an array.
+     * @param boolean $defaultTranslation
      *
-     * @return array
+     * @return $this
      */
-    public static function getAvailableLocales(): array
+    public function setDefaultTranslation($defaultTranslation): Translation
     {
-        return array_keys(static::$availableLocales);
+        $this->defaultTranslation = (boolean) $defaultTranslation;
+        return $this;
     }
 
-    /**
-     * @return array
-     */
-    public static function getRightToLeftLocales(): array
-    {
-        return array_keys(static::$rtlLanguages);
-    }
-
-    /**
-     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var Collection
-     */
-    private $nodeSources;
     /**
      * @return Collection
      */
@@ -677,11 +692,6 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var Collection
-     */
-    private $tagTranslations;
-    /**
      * @return Collection
      */
     public function getTagTranslations(): Collection
@@ -690,26 +700,11 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var Collection
-     */
-    protected $documentTranslations;
-    /**
      * @return Collection
      */
     public function getDocumentTranslations(): Collection
     {
         return $this->documentTranslations;
-    }
-
-    /**
-     * Create a new Translation
-     */
-    public function __construct()
-    {
-        $this->nodeSources = new ArrayCollection();
-        $this->tagTranslations = new ArrayCollection();
-        $this->documentTranslations = new ArrayCollection();
     }
 
     /**
@@ -752,5 +747,21 @@ class Translation extends AbstractDateTimed
     public function isRtl(): bool
     {
         return in_array($this->getLocale(), static::getRightToLeftLocales());
+    }
+
+    /**
+     * @return array
+     */
+    public static function getRightToLeftLocales(): array
+    {
+        return array_keys(static::$rtlLanguages);
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getFolderTranslations(): Collection
+    {
+        return $this->folderTranslations;
     }
 }

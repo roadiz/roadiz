@@ -1,9 +1,8 @@
-{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% extends '@Rozier/layout.html.twig' %}
 
 
 {% block content %}
 <section class="content-global edit-user">
-
     <header class="content-header header-user header-user-edit">
         <h1 class="content-title user-add-title">{{ "edit.user_details.%name%"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('usersHomePage') }}" title="{% trans %}back_to.users{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>

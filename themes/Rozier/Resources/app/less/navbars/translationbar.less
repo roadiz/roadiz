@@ -48,7 +48,7 @@
                 height:100%;
                 padding: 0 15px 0 6px;
                 font-family: @main-font;
-                color:@translation-nav-color;
+                color: @translation-nav-color;
                 text-transform: capitalize;
                 font-size:11px; line-height:30px;
                 box-shadow: none;
@@ -81,6 +81,18 @@
                     background: @translation-nav-active-color;
                 }
             }
+
+            &.unavailable {
+                opacity: 0.6;
+
+                &:after {
+                    background: transparent;
+                }
+
+                &.uk-active {
+                    background: @translation-nav-color;
+                }
+            }
         }
     }
 }
@@ -99,8 +111,6 @@
                 }
 
                 &:after{
-                    position: absolute;
-                    content:'';
                     top:100%;
                     left:0; right: auto;
                     bottom: auto;

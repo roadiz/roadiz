@@ -1,9 +1,8 @@
-{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% extends '@Rozier/layout.html.twig' %}
 {% set tTag = tag.getTranslatedTags.first %}
 
 {% block content %}
 <section class="content-global content-nav-and-filters">
-
     <header class="content-header header-tags header-tags-nodes">
         <h1 class="content-title tags-nodes-title">{{ tTag.getName }}</h1>
         {% include '@Rozier/tags/navBack.html.twig' with {} only %}

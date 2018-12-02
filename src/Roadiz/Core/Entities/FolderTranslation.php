@@ -76,7 +76,7 @@ class FolderTranslation extends AbstractEntity
     protected $folder = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Translation", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Translation", inversedBy="folderTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Translation
      */

@@ -1,0 +1,6 @@
+{% if not head.ajax %}
+    {% set baseTemplate = '@Rozier/base.html.twig' %}
+{% else %}
+    {% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}
+{% endif %}
+{% extends baseTemplate %}
