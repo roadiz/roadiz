@@ -55,25 +55,51 @@ class Log extends AbstractEntity
     const LOG =       8;
 
     /**
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="SET NULL")
+     * @var User|null
+     */
+    protected $user = null;
+    /**
+     * @ORM\Column(type="text", name="message")
+     * @var string
+     */
+    protected $message = '';
+    /**
+     * @ORM\Column(type="integer", name="level", nullable=false)
+     * @var int
+     */
+    protected $level;
+    /**
+     * @ORM\Column(type="datetime", name="datetime", nullable=false)
+     * @var \DateTime
+     */
+    protected $datetime;
+    /**
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="logs")
+     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id", onDelete="SET NULL")
+     */
+    protected $nodeSource = null;
+    /**
+     * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
+     * @var string
+     */
+    protected $clientIp = null;
+
+    /**
      * @param mixed  $level
      * @param string $message
      */
-    public function __construct($level, $message)
+    public function __construct(int $level, string $message)
     {
         $this->level = $level;
         $this->message = $message;
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="SET NULL")
-     */
-    protected $user = null;
-
-    /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -83,100 +109,71 @@ class Log extends AbstractEntity
      *
      * @return Log
      */
-    public function setUser(User $user)
+    public function setUser(User $user): Log
     {
         $this->user = $user;
         return $this;
     }
 
     /**
-     * @ORM\Column(type="text", name="message")
-     */
-    protected $message = '';
-
-    /**
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
-     * @ORM\Column(type="integer", name="level", nullable=false)
+     * @return int
      */
-    protected $level = null;
-
-    /**
-     * @return integer
-     */
-    public function getLevel()
+    public function getLevel(): int
     {
         return $this->level;
     }
 
     /**
-     * @ORM\Column(type="datetime", name="datetime", nullable=false)
-     */
-    protected $datetime = null;
-
-    /**
      * @return \DateTime
      */
-    public function getDatetime()
+    public function getDatetime(): \DateTime
     {
         return $this->datetime;
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="logs")
-     * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    protected $nodeSource;
-
-    /**
      * Get log related node-source.
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources|null
      */
-    public function getNodeSource()
+    public function getNodeSource(): ?NodesSources
     {
         return $this->nodeSource;
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $newnodeSource
+     * @param NodesSources $nodeSource
      * @return $this
      */
-    public function setNodeSource($newnodeSource)
+    public function setNodeSource(NodesSources $nodeSource): Log
     {
-        $this->nodeSource = $newnodeSource;
-
+        $this->nodeSource = $nodeSource;
         return $this;
     }
 
     /**
-     * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
-     */
-    protected $clientIp = null;
-
-    /**
      * @return string
      */
-    public function getClientIp()
+    public function getClientIp(): ?string
     {
         return $this->clientIp;
     }
 
     /**
      * @param string $clientIp
-     *
-     * @return string $clientIP
+     * @return Log
      */
-    public function setClientIp($clientIp)
+    public function setClientIp(string $clientIp): Log
     {
         $this->clientIp = $clientIp;
-
         return $this;
     }
 

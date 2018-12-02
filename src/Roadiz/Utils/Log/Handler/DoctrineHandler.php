@@ -44,13 +44,13 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class DoctrineHandler extends AbstractProcessingHandler
 {
     /**
-     * @var EntityManager|null
+     * @var EntityManager
      */
-    protected $em = null;
+    protected $em;
     /**
-     * @var null|TokenStorageInterface
+     * @var TokenStorageInterface
      */
-    protected $tokenStorage = null;
+    protected $tokenStorage;
     /**
      * @var null|User
      */
@@ -77,7 +77,7 @@ class DoctrineHandler extends AbstractProcessingHandler
     /**
      * @return TokenStorageInterface
      */
-    public function getTokenStorage()
+    public function getTokenStorage(): TokenStorageInterface
     {
         return $this->tokenStorage;
     }
@@ -86,56 +86,52 @@ class DoctrineHandler extends AbstractProcessingHandler
      *
      * @return $this
      */
-    public function setTokenStorage(TokenStorageInterface $tokenStorage)
+    public function setTokenStorage(TokenStorageInterface $tokenStorage): DoctrineHandler
     {
         $this->tokenStorage = $tokenStorage;
-
         return $this;
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\User
+     * @return User|null
      */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\User $user
+     * @param User|null $user
      * @return $this
      */
-    public function setUser(User $user)
+    public function setUser(User $user = null): DoctrineHandler
     {
         $this->user = $user;
-
         return $this;
     }
 
     /**
      * @return RequestStack
      */
-    public function getRequestStack()
+    public function getRequestStack(): RequestStack
     {
         return $this->requestStack;
     }
 
     /**
      * @param RequestStack $requestStack
-     *
      * @return DoctrineHandler
      */
-    public function setRequestStack($requestStack)
+    public function setRequestStack(RequestStack $requestStack): DoctrineHandler
     {
         $this->requestStack = $requestStack;
-
         return $this;
     }
 
     /**
      * @param array  $record
      */
-    public function write(array $record)
+    public function write(array $record): void
     {
         try {
             if ($this->em->isOpen()) {

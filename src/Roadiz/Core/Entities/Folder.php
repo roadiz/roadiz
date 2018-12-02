@@ -249,7 +249,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
      *
      * @return string
      */
-    public function getFullPath()
+    public function getFullPath(): string
     {
         $parents = $this->getParents();
         $path = [];

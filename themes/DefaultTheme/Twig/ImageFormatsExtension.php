@@ -63,7 +63,8 @@ class ImageFormatsExtension extends AbstractExtension implements GlobalsInterfac
                     'controls' => true,
                     'picture' => true,
                     'embed' => true,
-                    'progressive' => true
+                    'progressive' => true,
+                    'class' => 'img-fluid img-responsive',
                 ],
                 'shareImage' => [
                     'fit' => '1200x630',
