@@ -122,11 +122,8 @@ class SolrWrapperTest extends KernelDependentCase
 
                 // this executes the query and returns the result
                 $result = $solr->update($update);
-
             } catch (SolrServerNotConfiguredException $e) {
-
             } catch (HttpException $e) {
-
             }
         }
 
