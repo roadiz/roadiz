@@ -110,7 +110,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
             foreach ($tempArray['roles'] as $roleAssoc) {
                 $role = $this->roleSerializer->deserialize(json_encode($roleAssoc));
                 $role = $this->em->getRepository(Role::class)
-                             ->findOneByName($role->getName());
+                             ->findOneByName($role->getRole());
                 $group->addRole($role);
             }
             $data[] = $group;

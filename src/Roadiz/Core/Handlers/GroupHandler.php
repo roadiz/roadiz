@@ -63,7 +63,7 @@ class GroupHandler extends AbstractHandler
     /**
      * This method does not flush ORM. You'll need to manually call it.
      *
-     * @param \RZ\Roadiz\Core\Entities\Group $newGroup
+     * @param Group $newGroup
      *
      * @throws \RuntimeException If newGroup param is null
      */

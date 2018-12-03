@@ -68,7 +68,7 @@ class RolesType extends AbstractType
             /** @var Role $role */
             foreach ($roles as $role) {
                 if (!$options['roles']->contains($role)) {
-                    $choices[$role->getName()] = $role->getId();
+                    $choices[$role->getRole()] = $role->getId();
                 }
             }
             return $choices;

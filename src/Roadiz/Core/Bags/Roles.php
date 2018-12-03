@@ -74,7 +74,7 @@ class Roles extends ParameterBag
             $this->parameters = [];
             /** @var Role $role */
             foreach ($roles as $role) {
-                $this->parameters[$role->getName()] = $role;
+                $this->parameters[$role->getRole()] = $role;
             }
         } catch (DBALException $e) {
             $this->parameters = [];
@@ -96,8 +96,7 @@ class Roles extends ParameterBag
         $role = parent::get($key, null);
 
         if (null === $role) {
-            $role = new Role();
-            $role->setName($key);
+            $role = new Role($key);
             $this->entityManager->persist($role);
             $this->entityManager->flush($role);
         }

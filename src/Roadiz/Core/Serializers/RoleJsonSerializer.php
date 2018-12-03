@@ -51,7 +51,7 @@ class RoleJsonSerializer extends AbstractJsonSerializer
     public function toArray($role)
     {
         $data = [];
-        $data['name'] = $role->getName();
+        $data['name'] = $role->getRole();
 
         return $data;
     }
