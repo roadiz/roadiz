@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,18 +23,19 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file SettingJsonSerializerTest.php
- * @author Ambroise Maupate
+ * @file RoleJsonSerializerTest.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Core\Serializers\RoleJsonSerializer;
 use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**
  * Description.
  */
-class SettingJsonSerializerTest extends SchemaDependentCase
+class RoleJsonSerializerTest extends SchemaDependentCase
 {
 
     /**
@@ -45,14 +45,17 @@ class SettingJsonSerializerTest extends SchemaDependentCase
      */
     public function testDeserialize($json)
     {
-        $serializer = new SettingJsonSerializer();
-        $setting = $serializer->deserialize($json);
+        $serializer = new RoleJsonSerializer();
+        $role = $serializer->deserialize($json);
 
-        $this->get('em')->persist($setting);
+        $this->assertEquals(Role::class, get_class($role));
+        $this->assertNotNull($role->getRole());
+
+        $this->get('em')->persist($role);
         $this->get('em')->flush();
 
         // Assert
-        $this->assertNotNull($setting->getId());
+        $this->assertNotNull($role->getId());
     }
 
     /**
@@ -65,26 +68,28 @@ class SettingJsonSerializerTest extends SchemaDependentCase
      */
     public static function deserializeProvider()
     {
-        return array(
-            array(
-                file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
-            ),
-        );
+        return [
+            [
+                '{"name": "ROLE_TEST"}',
+            ],
+        ];
     }
 
     /**
      * @dataProvider deserializeReturnTypeProvider
+     *
      * @param $json
      * @param $expected
-     * @throws Exception
+     * @param $expectedRole
      */
-    public function testDeserializeReturnType($json, $expected)
+    public function testDeserializeReturnType($json, $expected, $expectedRole)
     {
-        $serializer = new SettingJsonSerializer();
+        $serializer = new RoleJsonSerializer();
         $output = $serializer->deserialize($json);
 
         // Assert
         $this->assertEquals($expected, get_class($output));
+        $this->assertEquals($expectedRole, $output->getRole());
     }
     /**
      * Provider for testDeserializeReturnType.
@@ -96,11 +101,12 @@ class SettingJsonSerializerTest extends SchemaDependentCase
      */
     public static function deserializeReturnTypeProvider()
     {
-        return array(
-            array(
-                file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
-                Setting::class,
-            ),
-        );
+        return [
+            [
+                '{"name": "ROLE_TEST"}',
+                Role::class,
+                'ROLE_TEST'
+            ],
+        ];
     }
 }

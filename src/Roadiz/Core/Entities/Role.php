@@ -204,8 +204,8 @@ class Role extends BaseRole implements PersistableInterface
      */
     public function __construct($name)
     {
-        $name = static::cleanName($name);
-        parent::__construct($name);
+        $this->name = static::cleanName($name);
+        parent::__construct($this->name);
 
         $this->groups = new ArrayCollection();
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,55 +23,59 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RoleJsonSerializer.php
- * @author Thomas Aufresne
+ * @file RoleNormalizer.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
+
 namespace RZ\Roadiz\Core\Serializers;
 
 use RZ\Roadiz\Core\Entities\Role;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use Symfony\Component\Serializer\Serializer;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\SerializerAwareInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
-/**
- * Serialization class for Role.
- */
-class RoleJsonSerializer extends AbstractJsonSerializer
+class RoleNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
+    /** @var SerializerInterface */
+    private $serializer;
 
     /**
-     * Create a simple associative array with Role entity.
-     *
-     * @param \RZ\Roadiz\Core\Entities\Role $role
-     *
-     * @return array
+     * @inheritDoc
      */
-    public function toArray($role)
+    public function setSerializer(SerializerInterface $serializer)
     {
-        $data = [];
-        $data['name'] = $role->getRole();
-
-        return $data;
+        $this->serializer = $serializer;
     }
 
     /**
-     * Deserialize a json file into a readable array of data.
-     *
-     * @param string $jsonString
-     * @return \RZ\Roadiz\Core\Entities\Role
-     *
-     * @throws \Exception
+     * @inheritDoc
      */
-    public function deserialize($jsonString)
+    public function normalize($role, $format = null, array $context = [])
     {
-        if ($jsonString == "") {
-            throw new \Exception('File is empty.');
-        }
+        return [
+            'name' => $role->getRole(),
+        ];
+    }
 
-        $serializer = new Serializer([
-            new RoleNormalizer()
-        ], [new JsonEncoder()]);
+    public function supportsNormalization($data, $format = null)
+    {
+        return $data instanceof Role;
+    }
 
-        return $serializer->deserialize($jsonString, Role::class, 'json');
+    /**
+     * @inheritDoc
+     */
+    public function denormalize($data, $class, $format = null, array $context = [])
+    {
+        return new Role($data['name']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function supportsDenormalization($data, $type, $format = null)
+    {
+        return $type == Role::class && !empty($data['name']);
     }
 }
