@@ -30,6 +30,7 @@
  */
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 /**
@@ -70,7 +71,7 @@ class NodeTest extends DefaultThemeDependentCase
     public function testNodePositions()
     {
         $translation = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findDefault();
 
         $collection = new ArrayCollection();

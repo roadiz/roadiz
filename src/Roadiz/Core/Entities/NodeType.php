@@ -342,6 +342,8 @@ class NodeType extends AbstractEntity
     public function __construct()
     {
         $this->fields = new ArrayCollection();
+        $this->name = 'Untitled';
+        $this->displayName = 'Untitled node-type';
     }
 
     /**
