@@ -303,7 +303,7 @@ class NodeType extends AbstractEntity
      */
     public function getFieldsNames(): array
     {
-        return array_map(function(NodeTypeField $field) {
+        return array_map(function (NodeTypeField $field) {
             return $field->getName();
         }, $this->getFields()->toArray());
     }
