@@ -109,7 +109,7 @@ class PrefixAwareRepository extends EntityRepository
         foreach ($criteria as $key => $value) {
             $baseKey = $simpleQB->getParameterKey($key);
             $realKey = $this->getRealKey($qb, $key);
-            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $realKey['prefix'].'.', $realKey['key'], $baseKey));
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $realKey['prefix'], $realKey['key'], $baseKey));
         }
 
         return $qb;
@@ -265,11 +265,12 @@ class PrefixAwareRepository extends EntityRepository
     }
 
     /**
-     * @param string  $pattern  Search pattern
+     * @param string  $pattern Search pattern
      * @param array   $criteria Additionnal criteria
      * @param array   $orders
      * @param integer $limit
      * @param integer $offset
+     * @param string  $alias
      *
      * @return array|Paginator
      */
@@ -278,11 +279,12 @@ class PrefixAwareRepository extends EntityRepository
         array $criteria = [],
         array $orders = [],
         $limit = null,
-        $offset = null
+        $offset = null,
+        $alias = EntityRepository::DEFAULT_ALIAS
     ) {
-        $qb = $this->createQueryBuilder($this->getDefaultPrefix());
-        $qb->select($this->getDefaultPrefix());
-        $qb = $this->createSearchBy($pattern, $qb, $criteria, $this->getDefaultPrefix());
+        $qb = $this->createQueryBuilder($alias);
+        $qb->select($alias);
+        $qb = $this->createSearchBy($pattern, $qb, $criteria, $alias);
 
         // Add ordering
         if (null !== $orders) {
@@ -328,7 +330,6 @@ class PrefixAwareRepository extends EntityRepository
      * @param string $pattern Search pattern
      * @param array $criteria Additionnal criteria
      * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
