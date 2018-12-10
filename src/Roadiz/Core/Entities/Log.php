@@ -69,7 +69,7 @@ class Log extends AbstractEntity
      * @ORM\Column(type="integer", name="level", nullable=false)
      * @var int
      */
-    protected $level;
+    protected $level = Log::DEBUG;
     /**
      * @ORM\Column(type="datetime", name="datetime", nullable=false)
      * @var \DateTime
@@ -82,7 +82,7 @@ class Log extends AbstractEntity
     protected $nodeSource = null;
     /**
      * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
-     * @var string
+     * @var string|null
      */
     protected $clientIp = null;
 
@@ -94,6 +94,7 @@ class Log extends AbstractEntity
     {
         $this->level = $level;
         $this->message = $message;
+        $this->datetime = new \DateTime("now");
     }
 
     /**
@@ -150,10 +151,10 @@ class Log extends AbstractEntity
     }
 
     /**
-     * @param NodesSources $nodeSource
+     * @param NodesSources|null $nodeSource
      * @return $this
      */
-    public function setNodeSource(NodesSources $nodeSource): Log
+    public function setNodeSource(?NodesSources $nodeSource): Log
     {
         $this->nodeSource = $nodeSource;
         return $this;
@@ -171,7 +172,7 @@ class Log extends AbstractEntity
      * @param string $clientIp
      * @return Log
      */
-    public function setClientIp(string $clientIp): Log
+    public function setClientIp(?string $clientIp): Log
     {
         $this->clientIp = $clientIp;
         return $this;

@@ -48,7 +48,7 @@ class CustomFormAnswer extends AbstractEntity
      * @ORM\Column(type="string", name="ip")
      * @var string
      */
-    private $ip;
+    private $ip = '';
     /**
      * @ORM\Column(type="datetime", name="submitted_at")
      * @var \DateTime|null

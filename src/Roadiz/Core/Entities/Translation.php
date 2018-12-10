@@ -536,7 +536,7 @@ class Translation extends AbstractDateTimed
      * @var string
      * @ORM\Column(type="string", unique=true, length=10)
      */
-    private $locale;
+    private $locale = '';
     /**
      * @var string|null
      * @ORM\Column(type="string", name="override_locale", length=10, unique=true, nullable=true)
@@ -546,7 +546,7 @@ class Translation extends AbstractDateTimed
      * @var string
      * @ORM\Column(type="string", unique=true)
      */
-    private $name;
+    private $name = '';
     /**
      * @var bool
      * @ORM\Column(name="default_translation", type="boolean", nullable=false, options={"default" = false})
@@ -620,7 +620,7 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setName($name): Translation
+    public function setName(string $name): Translation
     {
         $this->name = $name;
         return $this;
@@ -639,7 +639,7 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setLocale($locale): Translation
+    public function setLocale(string $locale): Translation
     {
         $this->locale = $locale;
         return $this;
@@ -658,7 +658,7 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setAvailable($available): Translation
+    public function setAvailable(bool $available): Translation
     {
         $this->available = $available;
         return $this;
@@ -677,7 +677,7 @@ class Translation extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setDefaultTranslation($defaultTranslation): Translation
+    public function setDefaultTranslation(bool $defaultTranslation): Translation
     {
         $this->defaultTranslation = (boolean) $defaultTranslation;
         return $this;
@@ -724,7 +724,7 @@ class Translation extends AbstractDateTimed
      *
      * @return self
      */
-    public function setOverrideLocale($overrideLocale): Translation
+    public function setOverrideLocale(?string $overrideLocale): Translation
     {
         $this->overrideLocale = StringHandler::slugify($overrideLocale);
 

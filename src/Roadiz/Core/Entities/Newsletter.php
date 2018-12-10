@@ -52,7 +52,7 @@ class Newsletter extends AbstractDateTimed
     /**
      * @ORM\Column(type="integer", unique=false)
      */
-    private $status;
+    private $status = Newsletter::DRAFT;
 
     /**
      * @return integer

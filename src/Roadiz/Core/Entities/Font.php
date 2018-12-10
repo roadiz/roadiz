@@ -101,59 +101,59 @@ class Font extends AbstractDateTimed
      * @var int
      */
     protected $variant = Font::REGULAR;
-    /** @var UploadedFile */
+    /** @var UploadedFile|null */
     protected $eotFile = null;
-    /** @var UploadedFile */
+    /** @var UploadedFile|null */
     protected $woffFile = null;
-    /** @var UploadedFile */
+    /** @var UploadedFile|null */
     protected $woff2File = null;
-    /** @var UploadedFile */
+    /** @var UploadedFile|null */
     protected $otfFile = null;
-    /** @var UploadedFile */
+    /** @var UploadedFile|null */
     protected $svgFile = null;
     /**
      * @ORM\Column(type="string", nullable=true, name="eot_filename")
-     * @var string
+     * @var string|null
      */
     private $eotFilename;
     /**
      * @ORM\Column(type="string", nullable=true, name="woff_filename")
-     * @var string
+     * @var string|null
      */
     private $woffFilename;
     /**
      * @ORM\Column(type="string", nullable=true, name="woff2_filename")
-     * @var string
+     * @var string|null
      */
     private $woff2Filename;
     /**
      * @ORM\Column(type="string", nullable=true, name="otf_filename")
-     * @var string
+     * @var string|null
      */
     private $otfFilename;
     /**
      * @ORM\Column(type="string", nullable=true, name="svg_filename")
-     * @var string
+     * @var string|null
      */
     private $svgFilename;
     /**
      * @ORM\Column(type="string", nullable=false, unique=false)
      * @var string
      */
-    private $name;
+    private $name = '';
     /**
      * @ORM\Column(type="string", nullable=false, unique=false)
      * @var string
      */
-    private $hash = "";
+    private $hash = '';
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=false)
      * @var string
      */
     private $folder;
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @var string
+     * @var string|null
      */
     private $description;
 
@@ -330,7 +330,7 @@ class Font extends AbstractDateTimed
      * @param string $name
      * @return $this
      */
-    public function setName($name): Font
+    public function setName(string $name): Font
     {
         $this->name = $name;
         return $this;
@@ -349,7 +349,7 @@ class Font extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setHash($hash): Font
+    public function setHash(string $hash): Font
     {
         $this->hash = $hash;
 
@@ -370,7 +370,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getEOTRelativeUrl(): string
+    public function getEOTRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getEOTFilename();
     }
@@ -386,7 +386,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getEOTFilename(): string
+    public function getEOTFilename(): ?string
     {
         return $this->eotFilename;
     }
@@ -395,7 +395,7 @@ class Font extends AbstractDateTimed
      * @param string $eotFilename
      * @return $this
      */
-    public function setEOTFilename(string $eotFilename): Font
+    public function setEOTFilename(?string $eotFilename): Font
     {
         $this->eotFilename = StringHandler::cleanForFilename($eotFilename);
         return $this;
@@ -404,7 +404,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getWOFFRelativeUrl(): string
+    public function getWOFFRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getWOFFFilename();
     }
@@ -412,7 +412,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getWOFFFilename(): string
+    public function getWOFFFilename(): ?string
     {
         return $this->woffFilename;
     }
@@ -421,7 +421,7 @@ class Font extends AbstractDateTimed
      * @param string $woffFilename
      * @return $this
      */
-    public function setWOFFFilename($woffFilename): Font
+    public function setWOFFFilename(?string $woffFilename): Font
     {
         $this->woffFilename = StringHandler::cleanForFilename($woffFilename);
         return $this;
@@ -430,7 +430,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getWOFF2RelativeUrl(): string
+    public function getWOFF2RelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getWOFF2Filename();
     }
@@ -438,7 +438,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getWOFF2Filename(): string
+    public function getWOFF2Filename(): ?string
     {
         return $this->woff2Filename;
     }
@@ -448,7 +448,7 @@ class Font extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setWOFF2Filename($woff2Filename): Font
+    public function setWOFF2Filename(?string $woff2Filename): Font
     {
         $this->woff2Filename = StringHandler::cleanForFilename($woff2Filename);
         return $this;
@@ -457,7 +457,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getOTFRelativeUrl(): string
+    public function getOTFRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getOTFFilename();
     }
@@ -465,7 +465,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getOTFFilename(): string
+    public function getOTFFilename(): ?string
     {
         return $this->otfFilename;
     }
@@ -474,7 +474,7 @@ class Font extends AbstractDateTimed
      * @param string $otfFilename
      * @return $this
      */
-    public function setOTFFilename($otfFilename): Font
+    public function setOTFFilename(?string $otfFilename): Font
     {
         $this->otfFilename = StringHandler::cleanForFilename($otfFilename);
         return $this;
@@ -483,7 +483,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getSVGRelativeUrl(): string
+    public function getSVGRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getSVGFilename();
     }
@@ -491,7 +491,7 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getSVGFilename(): string
+    public function getSVGFilename(): ?string
     {
         return $this->svgFilename;
     }
@@ -500,7 +500,7 @@ class Font extends AbstractDateTimed
      * @param string $svgFilename
      * @return $this
      */
-    public function setSVGFilename($svgFilename): Font
+    public function setSVGFilename(?string $svgFilename): Font
     {
         $this->svgFilename = StringHandler::cleanForFilename($svgFilename);
         return $this;
@@ -519,7 +519,7 @@ class Font extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setDescription(string $description): Font
+    public function setDescription(?string $description): Font
     {
         $this->description = $description;
         return $this;
@@ -541,7 +541,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $eotFile the eot file
      * @return Font
      */
-    public function setEotFile(UploadedFile $eotFile = null): Font
+    public function setEotFile(?UploadedFile $eotFile): Font
     {
         $this->eotFile = $eotFile;
         return $this;
@@ -563,7 +563,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $woffFile the woff file
      * @return Font
      */
-    public function setWoffFile(UploadedFile $woffFile = null): Font
+    public function setWoffFile(?UploadedFile $woffFile): Font
     {
         $this->woffFile = $woffFile;
         return $this;
@@ -585,7 +585,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $woff2File the woff2 file
      * @return Font
      */
-    public function setWoff2File(UploadedFile $woff2File = null): Font
+    public function setWoff2File(?UploadedFile $woff2File): Font
     {
         $this->woff2File = $woff2File;
         return $this;
@@ -607,7 +607,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $otfFile the otf file
      * @return Font
      */
-    public function setOtfFile(UploadedFile $otfFile = null): Font
+    public function setOtfFile(?UploadedFile $otfFile): Font
     {
         $this->otfFile = $otfFile;
         return $this;
@@ -629,7 +629,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $svgFile the svg file
      * @return Font
      */
-    public function setSvgFile(UploadedFile $svgFile = null): Font
+    public function setSvgFile(?UploadedFile $svgFile): Font
     {
         $this->svgFile = $svgFile;
         return $this;

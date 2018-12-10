@@ -54,12 +54,12 @@ class CustomForm extends AbstractDateTimed
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
-    private $name;
+    private $name = 'Untitled';
     /**
      * @ORM\Column(name="display_name", type="string")
      * @var string
      */
-    private $displayName;
+    private $displayName = 'Untitled';
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string

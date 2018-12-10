@@ -46,41 +46,12 @@ class Group extends AbstractEntity
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
-    private $name;
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName(string $name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
+    private $name = '';
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
      * @var ArrayCollection
      */
     private $users;
-
-    /**
-     * @return Collection
-     */
-    public function getUsers(): Collection
-    {
-        return $this->users;
-    }
-
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups")
      * @ORM\JoinTable(name="groups_roles",
@@ -96,14 +67,43 @@ class Group extends AbstractEntity
     private $rolesNames = null;
 
     /**
-     * Get roles entities.
+     * Create a new Group.
+     */
+    public function __construct()
+    {
+        $this->roles = new ArrayCollection();
+        $this->users = new ArrayCollection();
+        $this->rolesNames = null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
      *
+     * @return $this
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
      * @return Collection
      */
-    public function getRolesEntities(): Collection
+    public function getUsers(): Collection
     {
-        return $this->roles;
+        return $this->users;
     }
+
     /**
      * Get roles names as a simple array.
      *
@@ -119,6 +119,17 @@ class Group extends AbstractEntity
 
         return $this->rolesNames;
     }
+
+    /**
+     * Get roles entities.
+     *
+     * @return Collection
+     */
+    public function getRolesEntities(): Collection
+    {
+        return $this->roles;
+    }
+
     /**
      * @param \RZ\Roadiz\Core\Entities\Role $role
      *
@@ -132,6 +143,7 @@ class Group extends AbstractEntity
 
         return $this;
     }
+
     /**
      * @param \RZ\Roadiz\Core\Entities\Role $role
      *
@@ -144,15 +156,5 @@ class Group extends AbstractEntity
         }
 
         return $this;
-    }
-
-    /**
-     * Create a new Group.
-     */
-    public function __construct()
-    {
-        $this->roles = new ArrayCollection();
-        $this->users = new ArrayCollection();
-        $this->rolesNames = null;
     }
 }

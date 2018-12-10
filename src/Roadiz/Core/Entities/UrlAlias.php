@@ -45,12 +45,12 @@ class UrlAlias extends AbstractEntity
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
-    private $alias;
+    private $alias = '';
 
     /**
      * @return string
      */
-    public function getAlias(): ?string
+    public function getAlias(): string
     {
         return $this->alias;
     }
@@ -59,14 +59,14 @@ class UrlAlias extends AbstractEntity
      *
      * @return $this
      */
-    public function setAlias($alias): UrlAlias
+    public function setAlias(string $alias): UrlAlias
     {
         $this->alias = StringHandler::slugify($alias);
         return $this;
     }
 
     /**
-     * @var NodesSources
+     * @var NodesSources|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="urlAliases")
      * @ORM\JoinColumn(name="ns_id", referencedColumnName="id")
      */
@@ -83,7 +83,7 @@ class UrlAlias extends AbstractEntity
      * @param NodesSources $nodeSource
      * @return $this
      */
-    public function setNodeSource(NodesSources $nodeSource): UrlAlias
+    public function setNodeSource(?NodesSources $nodeSource): UrlAlias
     {
         $this->nodeSource = $nodeSource;
         return $this;

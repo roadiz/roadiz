@@ -43,12 +43,13 @@ class DocumentTranslation extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @var string|null
      */
-    protected $name;
+    protected $name = null;
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -57,7 +58,7 @@ class DocumentTranslation extends AbstractEntity
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(?string $name): DocumentTranslation
     {
         $this->name = $name;
 
@@ -71,7 +72,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -80,7 +81,7 @@ class DocumentTranslation extends AbstractEntity
      *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription(?string $description): DocumentTranslation
     {
         $this->description = $description;
 
@@ -94,7 +95,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @return string
      */
-    public function getCopyright()
+    public function getCopyright(): ?string
     {
         return $this->copyright;
     }
@@ -103,7 +104,7 @@ class DocumentTranslation extends AbstractEntity
      *
      * @return $this
      */
-    public function setCopyright($copyright)
+    public function setCopyright(?string $copyright): DocumentTranslation
     {
         $this->copyright = $copyright;
 
@@ -120,7 +121,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @return Translation
      */
-    public function getTranslation()
+    public function getTranslation(): Translation
     {
         return $this->translation;
     }
@@ -129,7 +130,7 @@ class DocumentTranslation extends AbstractEntity
      * @param Translation $translation
      * @return $this
      */
-    public function setTranslation(Translation $translation)
+    public function setTranslation(Translation $translation): DocumentTranslation
     {
         $this->translation = $translation;
 
@@ -139,14 +140,14 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Document", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Document
+     * @var DocumentInterface
      */
     protected $document;
 
     /**
      * @return Document
      */
-    public function getDocument()
+    public function getDocument(): DocumentInterface
     {
         return $this->document;
     }

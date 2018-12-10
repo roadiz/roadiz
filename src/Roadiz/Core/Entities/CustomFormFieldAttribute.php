@@ -58,14 +58,14 @@ class CustomFormFieldAttribute extends AbstractEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @var string
+     * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     /**
      * @return string $value
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
@@ -75,7 +75,7 @@ class CustomFormFieldAttribute extends AbstractEntity
      *
      * @return $this
      */
-    public function setValue($value)
+    public function setValue(?string $value)
     {
         $this->value = $value;
 
