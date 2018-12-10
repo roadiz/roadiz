@@ -94,28 +94,28 @@ class User extends AbstractHuman implements AdvancedUserInterface
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
-    private $username;
+    private $username = '';
     /**
      * The salt to use for hashing
      *
      * @ORM\Column(name="salt", type="string")
      * @var string
      */
-    private $salt;
+    private $salt = '';
     /**
      * Encrypted password.
      *
      * @var string
      * @ORM\Column(type="string", nullable=false)
      */
-    private $password;
+    private $password = '';
     /**
      * Plain password. Used for model validation.
      * **Must not be persisted.**
      *
-     * @var string
+     * @var string|null
      */
-    private $plainPassword;
+    private $plainPassword = null;
     /**
      * @var \DateTime
      * @ORM\Column(name="last_login", type="datetime", nullable=true)
