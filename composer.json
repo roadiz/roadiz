@@ -34,6 +34,9 @@
     },
     "require": {
         "php":                         ">=7.1",
+        "ext-curl":                    "*",
+        "ext-json":                    "*",
+        "ext-zip":                     "*",
         "roadiz/models":               "dev-develop",
         "roadiz/documents":            "dev-develop",
         "doctrine/orm":                "~2.6.2",

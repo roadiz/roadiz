@@ -48,9 +48,9 @@ class DispatcherDebugCommand extends Command implements ThemeAwareCommandInterfa
     {
         $this
             ->setName('debug:event-dispatcher')
-            ->setDefinition(array(
+            ->setDefinition([
                 new InputArgument('event', InputArgument::OPTIONAL, 'An event name'),
-            ))
+            ])
             ->setDescription('Displays configured listeners for an application')
             ->setHelp(
                 <<<'EOF'

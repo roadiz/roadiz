@@ -129,13 +129,13 @@ class RoadizApplication extends Application
 
     protected function addDoctrineCommands()
     {
-        $this->addCommands(array(
+        $this->addCommands([
             new CreateCommand(),
             new UpdateCommand(),
             new DropCommand(),
             new ValidateSchemaCommand(),
             new InfoCommand(),
-        ));
+        ]);
     }
 
     /**
@@ -145,7 +145,7 @@ class RoadizApplication extends Application
      */
     protected function getDefaultCommands()
     {
-        $commands = array(
+        $commands = [
             new DispatcherDebugCommand(),
             new ConfigurationDebugCommand(),
             new TranslationsCommand(),
@@ -191,7 +191,7 @@ class RoadizApplication extends Application
             new FilesExportCommand(),
             new FilesImportCommand(),
             new LogsCleanupCommand(),
-        );
+        ];
 
         /*
          * Register user defined Commands

@@ -46,7 +46,7 @@ class RoadizRepositoryFactory implements RepositoryFactory
      *
      * @var \Doctrine\Common\Persistence\ObjectRepository[]
      */
-    private $repositoryList = array();
+    private $repositoryList = [];
     /**
      * @var Container
      */

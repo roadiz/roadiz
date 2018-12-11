@@ -76,7 +76,7 @@ class XlsxExporter
         $headerStyles = [
             'font' => [
                 'bold' => true,
-                'color' => array('rgb' => 'FF0000'),
+                'color' => ['rgb' => 'FF0000'],
                 'size' => 11,
                 'name' => 'Verdana',
             ],

@@ -86,9 +86,9 @@ class TimedFirewall extends Firewall
          * to be able to get preview mode working
          * based on User token.
          */
-        return array(
+        return [
             KernelEvents::REQUEST => ['onKernelRequest', 33],
             KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
-        );
+        ];
     }
 }

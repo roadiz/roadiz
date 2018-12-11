@@ -57,7 +57,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         HttpUtils $httpUtils,
         EntityManager $em,
         RememberMeServicesInterface $rememberMeServices = null,
-        array $options = array()
+        array $options = []
     ) {
         parent::__construct($httpUtils, $options);
         $this->em = $em;

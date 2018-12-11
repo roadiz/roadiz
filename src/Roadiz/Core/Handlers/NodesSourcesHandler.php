@@ -83,6 +83,14 @@ class NodesSourcesHandler extends AbstractHandler
     }
 
     /**
+     * @return NodesSourcesRepository
+     */
+    protected function getRepository()
+    {
+        return $this->objectManager->getRepository(NodesSources::class);
+    }
+
+    /**
      * @return NodesSources
      */
     public function getNodeSource()
@@ -224,9 +232,7 @@ class NodesSourcesHandler extends AbstractHandler
                         'translation' => $this->nodeSource->getTranslation(),
                     ]
                 );
-                $currentParent = $this->objectManager
-                    ->getRepository(NodesSources::class)
-                    ->findOneBy(
+                $currentParent = $this->getRepository()->findOneBy(
                         $criteria,
                         []
                     );
@@ -313,9 +319,7 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->objectManager
-            ->getRepository(NodesSources::class)
-            ->findOneBy(
+        return $this->getRepository()->findOneBy(
                 $defaultCrit,
                 $defaultOrder
             );
@@ -352,9 +356,7 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->objectManager
-            ->getRepository(NodesSources::class)
-            ->findOneBy(
+        return $this->getRepository()->findOneBy(
                 $defaultCrit,
                 $defaultOrder
             );
@@ -498,9 +500,7 @@ class NodesSourcesHandler extends AbstractHandler
 
         $order['node.position'] = 'ASC';
 
-        return $this->objectManager
-            ->getRepository(NodesSources::class)
-            ->findOneBy(
+        return $this->getRepository()->findOneBy(
                 $defaultCrit,
                 $order
             );

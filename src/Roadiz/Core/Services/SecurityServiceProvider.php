@@ -48,6 +48,8 @@ use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -265,8 +267,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['securityAuthentificationTrustResolver'] = function ($c) {
             return new AuthenticationTrustResolver(
-                'Symfony\Component\Security\Core\Authentication\Token\AnonymousToken',
-                'Symfony\Component\Security\Core\Authentication\Token\RememberMeToken'
+                AnonymousToken::class,
+                RememberMeToken::class
             );
         };
 

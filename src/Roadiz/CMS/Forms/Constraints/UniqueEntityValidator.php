@@ -164,7 +164,7 @@ class UniqueEntityValidator extends ConstraintValidator
             } else {
                 // this case might happen if the non unique column has a custom doctrine type and its value is an object
                 // in which case we cannot get any identifiers for it
-                $identifiers = array();
+                $identifiers = [];
             }
         } else {
             $identifiers = $class->getIdentifierValues($value);

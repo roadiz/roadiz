@@ -53,7 +53,7 @@ class DumpExtension extends AbstractExtension
 
     public function getFunctions()
     {
-        return array(
+        return [
             new TwigFunction('dump', function (Environment $env) {
                 if (!$env->isDebug()) {
                     return;
@@ -64,6 +64,6 @@ class DumpExtension extends AbstractExtension
                     $this->container['messagescollector']->debug($var);
                 }
             }, ['is_safe' => ['html'], 'needs_context' => true, 'needs_environment' => true]),
-        );
+        ];
     }
 }
