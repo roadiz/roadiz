@@ -233,9 +233,9 @@ class NodesSourcesHandler extends AbstractHandler
                     ]
                 );
                 $currentParent = $this->getRepository()->findOneBy(
-                        $criteria,
-                        []
-                    );
+                    $criteria,
+                    []
+                );
 
                 if (null !== $currentParent) {
                     $this->parentsNodeSources[] = $currentParent;
@@ -320,9 +320,9 @@ class NodesSourcesHandler extends AbstractHandler
         }
 
         return $this->getRepository()->findOneBy(
-                $defaultCrit,
-                $defaultOrder
-            );
+            $defaultCrit,
+            $defaultOrder
+        );
     }
     /**
      * Get last node-source among current node-source children.
@@ -357,9 +357,9 @@ class NodesSourcesHandler extends AbstractHandler
         }
 
         return $this->getRepository()->findOneBy(
-                $defaultCrit,
-                $defaultOrder
-            );
+            $defaultCrit,
+            $defaultOrder
+        );
     }
 
     /**
@@ -501,9 +501,9 @@ class NodesSourcesHandler extends AbstractHandler
         $order['node.position'] = 'ASC';
 
         return $this->getRepository()->findOneBy(
-                $defaultCrit,
-                $order
-            );
+            $defaultCrit,
+            $order
+        );
     }
 
     /**
