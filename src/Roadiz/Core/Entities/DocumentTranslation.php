@@ -147,7 +147,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @return Document
      */
-    public function getDocument(): DocumentInterface
+    public function getDocument(): DocumentInterface
     {
         return $this->document;
     }
