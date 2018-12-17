@@ -145,9 +145,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
              * If using node-name, we must use shortLocale when current
              * translation is not the default one.
              */
-            if (($urlTokens[0] === $this->nodeSource->getNode()->getNodeName() &&
-                 !$this->nodeSource->getTranslation()->isDefaultTranslation()) ||
-                  true === $this->forceLocale) {
+            if ($this->urlNeedsLocalePrefix($this->nodeSource, $this->forceLocale)) {
                 $urlTokens[] = $this->nodeSource->getTranslation()->getPreferredLocale();
             }
 
@@ -161,5 +159,40 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
         } else {
             throw new \RuntimeException("Cannot generate Url for a NULL NodesSources", 1);
         }
+    }
+
+    /**
+     * @param NodesSources $nodesSources
+     *
+     * @return bool
+     */
+    protected function useUrlAlias(NodesSources $nodesSources): bool
+    {
+        if ($nodesSources->getIdentifier() !== $nodesSources->getNode()->getNodeName()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param NodesSources $nodesSources
+     * @param bool         $forceLocale
+     *
+     * @return bool
+     */
+    protected function urlNeedsLocalePrefix(NodesSources $nodesSources, bool $forceLocale): bool
+    {
+        /*
+         * Needs a prefix only if translation is not default AND nodeSource does not have an Url alias
+         * for this translation.
+         * Of course we force prefix if admin said so…
+         */
+        if ((!$this->useUrlAlias($nodesSources) && !$nodesSources->getTranslation()->isDefaultTranslation()) ||
+            true === $forceLocale) {
+            return true;
+        }
+
+        return false;
     }
 }
