@@ -44,14 +44,14 @@ class RouteHandlerTest extends PHPUnit_Framework_TestCase
 
     public function getBaseRouteProvider()
     {
-        return array(
-            array("testPage", "testPage"),
-            array("localePage", "localePage"),
-            array("testLocalePage", "testLocalePage"),
-            array("testPageLocale", "testPage"),
-            array("testPagelocale", "testPagelocale"),
-            array("testPageGateau", "testPageGateau"),
-            array("LocaletestPage", "LocaletestPage"),
-        );
+        return [
+            ["testPage", "testPage"],
+            ["localePage", "localePage"],
+            ["testLocalePage", "testLocalePage"],
+            ["testPageLocale", "testPage"],
+            ["testPagelocale", "testPagelocale"],
+            ["testPageGateau", "testPageGateau"],
+            ["LocaletestPage", "LocaletestPage"],
+        ];
     }
 };
