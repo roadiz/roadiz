@@ -515,7 +515,7 @@ class NodeSourceType extends AbstractType
 
         if (in_array($field->getType(), [
             NodeTypeField::CHILDREN_T
-        ])){
+        ])) {
             unset($options['attr']['dir']);
         }
 
