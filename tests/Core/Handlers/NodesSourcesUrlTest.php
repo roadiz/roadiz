@@ -86,7 +86,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns3 = $n3->getNodeSources()->first();
         $n3->setHome(true);
 
-        static::$nodesSources[] = [$ns3, '/', '/page-3.json'];
+        static::$nodesSources[] = [$ns3, '/', '/'];
 
         /*
          * Test 4 - home node non-default
@@ -95,7 +95,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns4 = $n4->getNodeSources()->first();
         $n4->setHome(true);
 
-        static::$nodesSources[] = [$ns4, '/en', '/en/page-4.json'];
+        static::$nodesSources[] = [$ns4, '/en', '/en'];
 
         /*
          * Test 5  - regular node with alias
