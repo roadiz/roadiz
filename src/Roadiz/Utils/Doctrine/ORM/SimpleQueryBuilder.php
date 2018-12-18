@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Utils\Doctrine\ORM;
 
+use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
@@ -232,5 +233,18 @@ class SimpleQueryBuilder
     public function getQueryBuilder()
     {
         return $this->queryBuilder;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getRootAlias(): ?string
+    {
+        $fromArray = $this->getQueryBuilder()->getDQLPart('from');
+        if (isset($fromArray[0]) && $fromArray[0] instanceof From) {
+            return $fromArray[0]->getAlias();
+        }
+
+        return null;
     }
 }

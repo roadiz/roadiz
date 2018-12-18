@@ -92,14 +92,20 @@ class ANodesFilter implements EventSubscriberInterface
                 $qb = $event->getQueryBuilder();
                 $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
-                if (!$simpleQB->joinExists(EntityRepository::NODE_ALIAS, $this->getNodeJoinAlias())) {
+                if (!$simpleQB->joinExists(
+                    $simpleQB->getRootAlias(),
+                    $this->getNodeJoinAlias()
+                )) {
                     $qb->innerJoin(
-                        EntityRepository::NODE_ALIAS . '.' . $this->getProperty(),
+                        $simpleQB->getRootAlias() . '.' . $this->getProperty(),
                         $this->getNodeJoinAlias()
                     );
                 }
                 if (false !== strpos($event->getProperty(), $this->getProperty() . '.field.')) {
-                    if (!$simpleQB->joinExists(EntityRepository::NODE_ALIAS, $this->getNodeFieldJoinAlias())) {
+                    if (!$simpleQB->joinExists(
+                        $simpleQB->getRootAlias(),
+                        $this->getNodeFieldJoinAlias()
+                    )) {
                         $qb->innerJoin(
                             $this->getNodeJoinAlias() . '.field',
                             $this->getNodeFieldJoinAlias()
@@ -132,24 +138,30 @@ class ANodesFilter implements EventSubscriberInterface
                 $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODESSOURCES_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::NODE_ALIAS
                 )
                 ) {
                     $qb->innerJoin(
-                        EntityRepository::NODESSOURCES_ALIAS . '.node',
+                        $simpleQB->getRootAlias() . '.node',
                         EntityRepository::NODE_ALIAS
                     );
                 }
 
-                if (!$simpleQB->joinExists(EntityRepository::NODESSOURCES_ALIAS, $this->getNodeJoinAlias())) {
+                if (!$simpleQB->joinExists(
+                    $simpleQB->getRootAlias(),
+                    $this->getNodeJoinAlias()
+                )) {
                     $qb->innerJoin(
                         EntityRepository::NODE_ALIAS . '.' . $this->getProperty(),
                         $this->getNodeJoinAlias()
                     );
                 }
                 if (false !== strpos($event->getProperty(), 'node.' . $this->getProperty() . '.field.')) {
-                    if (!$simpleQB->joinExists(EntityRepository::NODESSOURCES_ALIAS, $this->getNodeFieldJoinAlias())) {
+                    if (!$simpleQB->joinExists(
+                        $simpleQB->getRootAlias(),
+                        $this->getNodeFieldJoinAlias()
+                    )) {
                         $qb->innerJoin(
                             $this->getNodeJoinAlias() . '.field',
                             $this->getNodeFieldJoinAlias()

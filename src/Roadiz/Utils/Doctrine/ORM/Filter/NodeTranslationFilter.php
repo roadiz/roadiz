@@ -85,18 +85,18 @@ class NodeTranslationFilter implements EventSubscriberInterface
                 $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODE_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::NODESSOURCES_ALIAS
                 )
                 ) {
                     $qb->innerJoin(
-                        EntityRepository::NODE_ALIAS . '.nodeSources',
+                        $simpleQB->getRootAlias() . '.nodeSources',
                         EntityRepository::NODESSOURCES_ALIAS
                     );
                 }
 
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODE_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::TRANSLATION_ALIAS
                 )
                 ) {
@@ -127,12 +127,12 @@ class NodeTranslationFilter implements EventSubscriberInterface
                 $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODE_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::NODESSOURCES_ALIAS
                 )
                 ) {
                     $qb->innerJoin(
-                        EntityRepository::NODE_ALIAS . '.nodeSources',
+                        $simpleQB->getRootAlias() . '.nodeSources',
                         EntityRepository::NODESSOURCES_ALIAS
                     );
                 }
