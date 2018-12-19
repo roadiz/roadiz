@@ -314,7 +314,7 @@ class DocumentRepository extends EntityRepository
                 );
             } else {
                 /*
-                 * With a null translation, just take the default one optionaly
+                 * With a null translation, just take the default one optionally
                  * Using left join instead of inner join.
                  */
                 $qb->leftJoin('d.documentTranslations', 'dt');
@@ -612,7 +612,9 @@ class DocumentRepository extends EntityRepository
          */
         $qb->select('d')
             ->leftJoin('d.nodesSourcesByFields', 'ns')
-            ->having('COUNT(ns.id) = 0')
+            ->leftJoin('d.tagTranslations', 'ttd')
+            ->andHaving('COUNT(ns.id) = 0')
+            ->andHaving('COUNT(ttd.id) = 0')
             ->groupBy('d')
             ->where($qb->expr()->eq('d.raw', ':raw'))
             ->setParameter('raw', false);

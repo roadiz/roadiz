@@ -30,6 +30,7 @@
  */
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 /**
@@ -56,21 +57,21 @@ class NodeTest extends DefaultThemeDependentCase
 
     public function nodeNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "ligula-egestas-mattis-nullam"),
-            array("Véèsti_buœlum Rïsus", "veesti-buoelum-risus"),
-            array("J'aime les sushis", "j-aime-les-sushis"),
-            array("J’aime les sushis", "j-aime-les-sushis"),
-            array("Éditeur", "editeur"),
-            array("À propos", "a-propos"),
-            array("Ébène", "ebene"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "ligula-egestas-mattis-nullam"],
+            ["Véèsti_buœlum Rïsus", "veesti-buoelum-risus"],
+            ["J'aime les sushis", "j-aime-les-sushis"],
+            ["J’aime les sushis", "j-aime-les-sushis"],
+            ["Éditeur", "editeur"],
+            ["À propos", "a-propos"],
+            ["Ébène", "ebene"],
+        ];
     }
 
     public function testNodePositions()
     {
         $translation = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findDefault();
 
         $collection = new ArrayCollection();

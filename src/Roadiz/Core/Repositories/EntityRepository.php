@@ -42,6 +42,7 @@ use Pimple\Container;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
 use RZ\Roadiz\Core\Events\QueryBuilderEvents;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
@@ -159,6 +160,40 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
+     * @param QueryBuilder $qb
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return FilterQueryBuilderCriteriaEvent
+     */
+    protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        $event = new FilterQueryBuilderCriteriaEvent($qb, $this->getEntityName(), $property, $value, $this->getEntityName());
+        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
+
+        return $event;
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param string $property
+     * @param mixed $value
+     *
+     * @return FilterQueryBuilderCriteriaEvent
+     */
+    protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        $event = new FilterQueryBuilderCriteriaEvent($qb, $this->getEntityName(), $property, $value, $this->getEntityName());
+        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
+
+        return $event;
+    }
+
+    /**
      * Build a query comparison.
      *
      * @param mixed $value
@@ -208,10 +243,33 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     {
         $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
-            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key));
+            /*
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
+             */
+            $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
+
+            if (!$event->isPropagationStopped()) {
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key));
+            }
         }
 
         return $qb;
+    }
+
+    /**
+     * @param array        $criteria
+     * @param QueryBuilder $qb
+     */
+    protected function applyFilterByCriteria(array &$criteria, QueryBuilder $qb)
+    {
+        $simpleQB = new SimpleQueryBuilder($qb);
+        foreach ($criteria as $key => $value) {
+            $event = $this->dispatchQueryBuilderApplyEvent($qb, $key, $value);
+            if (!$event->isPropagationStopped()) {
+                $simpleQB->bindValue($key, $value);
+            }
+        }
     }
 
     /**
@@ -389,7 +447,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param Criteria|mixed|array $criteria or array
      *
      * @return integer
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy($criteria)
     {
@@ -401,11 +458,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
             $qb->select($qb->expr()->countDistinct(static::DEFAULT_ALIAS . '.id'));
             $qb = $this->prepareComparisons($criteria, $qb, static::DEFAULT_ALIAS);
             $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-            $simpleQB = new SimpleQueryBuilder($qb);
-
-            foreach ($criteria as $key => $value) {
-                $simpleQB->bindValue($key, $value);
-            }
+            $this->applyFilterByCriteria($criteria, $qb);
 
             try {
                 return (int) $qb->getQuery()->getSingleScalarResult();
@@ -426,7 +479,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     protected function classicLikeComparison(
         $pattern,
         QueryBuilder $qb,
-        $alias = "obj"
+        $alias = EntityRepository::DEFAULT_ALIAS
     ) {
         /*
          * Get fields needed for a search query
@@ -452,11 +505,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
-     * Create a Criteria object from a search pattern and additionnal fields.
+     * Create a Criteria object from a search pattern and additional fields.
      *
      * @param string $pattern Search pattern
      * @param QueryBuilder $qb QueryBuilder to pass
-     * @param array $criteria Additionnal criteria
+     * @param array $criteria Additional criteria
      * @param string $alias SQL query table alias
      * @return QueryBuilder
      */
@@ -464,7 +517,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         $pattern,
         QueryBuilder $qb,
         array &$criteria = [],
-        $alias = "obj"
+        $alias = EntityRepository::DEFAULT_ALIAS
     ) {
         $this->classicLikeComparison($pattern, $qb, $alias);
         $this->prepareComparisons($criteria, $qb, $alias);
@@ -513,10 +566,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         }
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $simpleQB = new SimpleQueryBuilder($qb);
-        foreach ($criteria as $key => $value) {
-            $simpleQB->bindValue($key, $value);
-        }
+        $this->applyFilterByCriteria($criteria, $qb);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -537,7 +587,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     /**
      * @param string $pattern Search pattern
      * @param array $criteria Additional criteria
-     *
      * @return int
      */
     public function countSearchBy($pattern, array $criteria = [])
@@ -547,10 +596,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $simpleQB = new SimpleQueryBuilder($qb);
-        foreach ($criteria as $key => $value) {
-            $simpleQB->bindValue($key, $value);
-        }
+        $this->applyFilterByCriteria($criteria, $qb);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();
@@ -677,7 +723,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param QueryBuilder $qb
      * @param string $rootAlias
      * @param string $joinAlias
-     *
      * @return bool
      */
     protected function joinExists(QueryBuilder $qb, $rootAlias, $joinAlias)

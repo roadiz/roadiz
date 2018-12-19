@@ -73,13 +73,13 @@ class NodeTypeFilter implements EventSubscriberInterface
                 $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODE_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::NODETYPE_ALIAS
                 )
                 ) {
                     $qb->addSelect(EntityRepository::NODETYPE_ALIAS);
                     $qb->innerJoin(
-                        EntityRepository::NODE_ALIAS . '.nodeType',
+                        $simpleQB->getRootAlias() . '.nodeType',
                         EntityRepository::NODETYPE_ALIAS
                     );
                 }
@@ -106,17 +106,17 @@ class NodeTypeFilter implements EventSubscriberInterface
                 $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODESSOURCES_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::NODE_ALIAS
                 )
                 ) {
                     $qb->innerJoin(
-                        EntityRepository::NODESSOURCES_ALIAS . '.node',
+                        $simpleQB->getRootAlias() . '.node',
                         EntityRepository::NODE_ALIAS
                     );
                 }
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODESSOURCES_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::NODETYPE_ALIAS
                 )
                 ) {

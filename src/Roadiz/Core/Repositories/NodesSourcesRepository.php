@@ -222,28 +222,36 @@ class NodesSourcesRepository extends StatusAwareRepository
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
-            $qb->innerJoin(
-                $prefix . '.node',
-                static::NODE_ALIAS,
-                'WITH',
-                $qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED)
-            );
+            if (!$this->hasJoinedNode($qb, $prefix)) {
+                $qb->innerJoin(
+                    $prefix . '.node',
+                    static::NODE_ALIAS,
+                    'WITH',
+                    $qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED)
+                );
+            } else {
+                $qb->andWhere($qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED));
+            }
         } else {
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
-            $qb->innerJoin(
-                $prefix . '.node',
-                static::NODE_ALIAS,
-                'WITH',
-                $qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED)
-            );
+            if (!$this->hasJoinedNode($qb, $prefix)) {
+                $qb->innerJoin(
+                    $prefix . '.node',
+                    static::NODE_ALIAS,
+                    'WITH',
+                    $qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED)
+                );
+            } else {
+                $qb->andWhere($qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED));
+            }
         }
         return $qb;
     }
 
     /**
-     * Create a securized query with node.published = true if user is
+     * Create a secure query with node.published = true if user is
      * not a Backend user.
      *
      * @param array $criteria
@@ -441,7 +449,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param integer $limit Result number to fetch (default: all)
-     *
      * @return array
      */
     public function findBySearchQuery($query, $limit = 25)
@@ -465,7 +472,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param Translation $translation Current translation
-     *
      * @param int $limit
      * @return array
      */
@@ -548,7 +554,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      * Find latest updated NodesSources using Log table.
      *
      * @param integer $maxResult
-     *
      * @return Paginator
      */
     public function findByLatestUpdated($maxResult = 5)
@@ -598,7 +603,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param Node $node
      * @param Translation $translation
      * @return mixed|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByNodeAndTranslation(Node $node, Translation $translation)
     {
@@ -630,27 +634,34 @@ class NodesSourcesRepository extends StatusAwareRepository
         $simpleQB = new SimpleQueryBuilder($qb);
 
         foreach ($criteria as $key => $value) {
-            $baseKey = $simpleQB->getParameterKey($key);
+            /*
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
+             */
+            $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
 
-            if (false !== strpos($key, 'node.nodeType.')) {
-                if (!$this->hasJoinedNode($qb, $alias)) {
-                    $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+            if (!$event->isPropagationStopped()) {
+                $baseKey = $simpleQB->getParameterKey($key);
+                if (false !== strpos($key, 'node.nodeType.')) {
+                    if (!$this->hasJoinedNode($qb, $alias)) {
+                        $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+                    }
+                    if (!$this->hasJoinedNodeType($qb, $alias)) {
+                        $qb->innerJoin(static::NODE_ALIAS . '.nodeType', static::NODETYPE_ALIAS);
+                    }
+                    $prefix = static::NODETYPE_ALIAS . '.';
+                    $simpleKey = str_replace('node.nodeType.', '', $key);
+                    $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
+                } elseif (false !== strpos($key, 'node.')) {
+                    if (!$this->hasJoinedNode($qb, $alias)) {
+                        $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+                    }
+                    $prefix = static::NODE_ALIAS . '.';
+                    $simpleKey = str_replace('node.', '', $key);
+                    $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
+                } else {
+                    $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $baseKey));
                 }
-                if (!$this->hasJoinedNodeType($qb, $alias)) {
-                    $qb->innerJoin(static::NODE_ALIAS . '.nodeType', static::NODETYPE_ALIAS);
-                }
-                $prefix = static::NODETYPE_ALIAS . '.';
-                $simpleKey = str_replace('node.nodeType.', '', $key);
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
-            } elseif (false !== strpos($key, 'node.')) {
-                if (!$this->hasJoinedNode($qb, $alias)) {
-                    $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
-                }
-                $prefix = static::NODE_ALIAS . '.';
-                $simpleKey = str_replace('node.', '', $key);
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
-            } else {
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $baseKey));
             }
         }
 
@@ -664,7 +675,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $pattern,
         QueryBuilder $qb,
         array &$criteria = [],
-        $alias = "obj"
+        $alias = EntityRepository::DEFAULT_ALIAS
     ) {
         $qb = parent::createSearchBy($pattern, $qb, $criteria, $alias);
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $alias);
