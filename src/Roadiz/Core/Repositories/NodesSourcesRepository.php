@@ -222,28 +222,36 @@ class NodesSourcesRepository extends StatusAwareRepository
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
-            $qb->innerJoin(
-                $prefix . '.node',
-                static::NODE_ALIAS,
-                'WITH',
-                $qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED)
-            );
+            if (!$this->hasJoinedNode($qb, $prefix)) {
+                $qb->innerJoin(
+                    $prefix . '.node',
+                    static::NODE_ALIAS,
+                    'WITH',
+                    $qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED)
+                );
+            } else {
+                $qb->andWhere($qb->expr()->lte(static::NODE_ALIAS . '.status', Node::PUBLISHED));
+            }
         } else {
             /*
              * Forbid unpublished node for anonymous and not backend users.
              */
-            $qb->innerJoin(
-                $prefix . '.node',
-                static::NODE_ALIAS,
-                'WITH',
-                $qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED)
-            );
+            if (!$this->hasJoinedNode($qb, $prefix)) {
+                $qb->innerJoin(
+                    $prefix . '.node',
+                    static::NODE_ALIAS,
+                    'WITH',
+                    $qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED)
+                );
+            } else {
+                $qb->andWhere($qb->expr()->eq(static::NODE_ALIAS . '.status', Node::PUBLISHED));
+            }
         }
         return $qb;
     }
 
     /**
-     * Create a securized query with node.published = true if user is
+     * Create a secure query with node.published = true if user is
      * not a Backend user.
      *
      * @param array $criteria
@@ -441,7 +449,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param integer $limit Result number to fetch (default: all)
-     *
      * @return array
      */
     public function findBySearchQuery($query, $limit = 25)
@@ -465,7 +472,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param Translation $translation Current translation
-     *
      * @param int $limit
      * @return array
      */
@@ -548,7 +554,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      * Find latest updated NodesSources using Log table.
      *
      * @param integer $maxResult
-     *
      * @return Paginator
      */
     public function findByLatestUpdated($maxResult = 5)
@@ -598,7 +603,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param Node $node
      * @param Translation $translation
      * @return mixed|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByNodeAndTranslation(Node $node, Translation $translation)
     {
@@ -664,7 +668,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $pattern,
         QueryBuilder $qb,
         array &$criteria = [],
-        $alias = "obj"
+        $alias = EntityRepository::DEFAULT_ALIAS
     ) {
         $qb = parent::createSearchBy($pattern, $qb, $criteria, $alias);
         $this->alterQueryBuilderWithAuthorizationChecker($qb, $alias);

@@ -129,8 +129,7 @@ class NodeTranslationFilter implements EventSubscriberInterface
                 if (!$simpleQB->joinExists(
                     $simpleQB->getRootAlias(),
                     EntityRepository::NODESSOURCES_ALIAS
-                )
-                ) {
+                )) {
                     $qb->innerJoin(
                         $simpleQB->getRootAlias() . '.nodeSources',
                         EntityRepository::NODESSOURCES_ALIAS
