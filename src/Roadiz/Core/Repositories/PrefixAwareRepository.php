@@ -107,9 +107,17 @@ class PrefixAwareRepository extends EntityRepository
     {
         $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
-            $baseKey = $simpleQB->getParameterKey($key);
-            $realKey = $this->getRealKey($qb, $key);
-            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $realKey['prefix'], $realKey['key'], $baseKey));
+            /*
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
+             */
+            $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
+
+            if (!$event->isPropagationStopped()) {
+                $baseKey = $simpleQB->getParameterKey($key);
+                $realKey = $this->getRealKey($qb, $key);
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $realKey['prefix'], $realKey['key'], $baseKey));
+            }
         }
 
         return $qb;
@@ -199,13 +207,7 @@ class PrefixAwareRepository extends EntityRepository
         }
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $simpleQB = new SimpleQueryBuilder($qb);
-        /*
-         * Reimplementing findBy features…
-         */
-        foreach ($criteria as $key => $value) {
-            $simpleQB->bindValue($key, $value);
-        }
+        $this->applyFilterByCriteria($criteria, $qb);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -247,15 +249,8 @@ class PrefixAwareRepository extends EntityRepository
         }
 
         $qb->setMaxResults(1);
-
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $simpleQB = new SimpleQueryBuilder($qb);
-        /*
-         * Reimplementing findBy features…
-         */
-        foreach ($criteria as $key => $value) {
-            $simpleQB->bindValue($key, $value);
-        }
+        $this->applyFilterByCriteria($criteria, $qb);
 
         try {
             return $qb->getQuery()->getSingleResult();
@@ -302,13 +297,7 @@ class PrefixAwareRepository extends EntityRepository
         }
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $simpleQB = new SimpleQueryBuilder($qb);
-        /*
-         * Reimplementing findBy features…
-         */
-        foreach ($criteria as $key => $value) {
-            $simpleQB->bindValue($key, $value);
-        }
+        $this->applyFilterByCriteria($criteria, $qb);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -338,13 +327,7 @@ class PrefixAwareRepository extends EntityRepository
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
-        $simpleQB = new SimpleQueryBuilder($qb);
-        /*
-         * Reimplementing findBy features…
-         */
-        foreach ($criteria as $key => $value) {
-            $simpleQB->bindValue($key, $value);
-        }
+        $this->applyFilterByCriteria($criteria, $qb);
 
         try {
             return (int) $qb->getQuery()->getSingleScalarResult();

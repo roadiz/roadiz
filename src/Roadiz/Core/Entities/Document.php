@@ -49,9 +49,76 @@ use RZ\Roadiz\Utils\StringHandler;
 class Document extends AbstractDocument
 {
     /**
+     * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
+     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
+     */
+    protected $rawDocument = null;
+    /**
+     * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
+     */
+    protected $raw = false;
+    /**
+     * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
+     */
+    protected $embedId = null;
+    /**
+     * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
+     */
+    protected $embedPlatform = null;
+    /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="document")
+     * @var ArrayCollection
+     */
+    protected $nodesSourcesByFields = null;
+    /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="document")
+     * @var ArrayCollection
+     */
+    protected $tagTranslations = null;
+    /**
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
+     * @ORM\JoinTable(name="documents_folders")
+     */
+    protected $folders;
+    /**
+     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
+     * @var ArrayCollection
+     */
+    protected $documentTranslations;
+    /**
      * @ORM\Column(type="string", nullable=true)
      */
     private $filename;
+    /**
+     * @ORM\Column(name="mime_type", type="string", nullable=true)
+     */
+    private $mimeType;
+    /**
+     * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
+     */
+    private $downscaledDocument = null;
+    /**
+     * @ORM\Column(type="string")
+     */
+    private $folder;
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     */
+    private $private = false;
+
+    /**
+     * Document constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->folders = new ArrayCollection();
+        $this->documentTranslations = new ArrayCollection();
+        $this->nodesSourcesByFields = new ArrayCollection();
+        $this->tagTranslations = new ArrayCollection();
+    }
+
     /**
      * @return string
      */
@@ -59,6 +126,7 @@ class Document extends AbstractDocument
     {
         return $this->filename;
     }
+
     /**
      * @param string $filename
      *
@@ -72,16 +140,13 @@ class Document extends AbstractDocument
     }
 
     /**
-     * @ORM\Column(name="mime_type", type="string", nullable=true)
-     */
-    private $mimeType;
-    /**
      * @return string
      */
     public function getMimeType()
     {
         return $this->mimeType;
     }
+
     /**
      * @param string $mimeType
      *
@@ -93,28 +158,6 @@ class Document extends AbstractDocument
 
         return $this;
     }
-
-    /**
-     * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
-     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
-     */
-    protected $rawDocument = null;
-
-    /**
-     * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
-     */
-    private $downscaledDocument = null;
-
-    /**
-     * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
-     */
-    protected $raw = false;
-
-
-    /**
-     * @ORM\Column(type="string")
-     */
-    private $folder;
 
     /**
      * @return string
@@ -137,11 +180,6 @@ class Document extends AbstractDocument
     }
 
     /**
-     * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
-     */
-    protected $embedId = null;
-
-    /**
      * @return string
      */
     public function getEmbedId()
@@ -159,11 +197,6 @@ class Document extends AbstractDocument
 
         return $this;
     }
-
-    /**
-     * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
-     */
-    protected $embedPlatform = null;
 
     /**
      * @return string
@@ -185,11 +218,6 @@ class Document extends AbstractDocument
     }
 
     /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     */
-    private $private = false;
-
-    /**
      * @return boolean
      */
     public function isPrivate()
@@ -209,12 +237,6 @@ class Document extends AbstractDocument
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="document")
-     * @var ArrayCollection
-     */
-    protected $nodesSourcesByFields = null;
-
-    /**
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getNodesSourcesByFields()
@@ -223,31 +245,11 @@ class Document extends AbstractDocument
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="document")
-     * @var ArrayCollection
-     */
-    protected $tagTranslations = null;
-
-    /**
      * @return ArrayCollection
      */
     public function getTagTranslations()
     {
         return $this->tagTranslations;
-    }
-
-    /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
-     * @ORM\JoinTable(name="documents_folders")
-     */
-    protected $folders;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getFolders()
-    {
-        return $this->folders;
     }
 
     /**
@@ -264,6 +266,14 @@ class Document extends AbstractDocument
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getFolders()
+    {
+        return $this->folders;
+    }
+
+    /**
      * @param FolderInterface $folder
      * @return $this
      */
@@ -274,20 +284,6 @@ class Document extends AbstractDocument
         }
 
         return $this;
-    }
-
-    /**
-     * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
-     * @var ArrayCollection
-     */
-    protected $documentTranslations;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getDocumentTranslations()
-    {
-        return $this->documentTranslations;
     }
 
     /**
@@ -316,24 +312,19 @@ class Document extends AbstractDocument
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getDocumentTranslations()
+    {
+        return $this->documentTranslations;
+    }
+
+    /**
      * @return bool
      */
     public function hasTranslations()
     {
         return (boolean) $this->getDocumentTranslations()->count();
-    }
-
-    /**
-     * Document constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->folders = new ArrayCollection();
-        $this->documentTranslations = new ArrayCollection();
-        $this->nodesSourcesByFields = new ArrayCollection();
-        $this->tagTranslations = new ArrayCollection();
     }
 
     /**

@@ -96,77 +96,6 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * Reimplementing findBy features… with extra things
-     *
-     * * key => array('<=', $value)
-     * * key => array('<', $value)
-     * * key => array('>=', $value)
-     * * key => array('>', $value)
-     * * key => array('BETWEEN', $value, $value)
-     * * key => array('LIKE', $value)
-     * * key => array('NOT IN', $array)
-     * * key => 'NOT NULL'
-     *
-     * You can filter with translations relation, examples:
-     *
-     * * `translation => $object`
-     * * `translation.locale => 'fr_FR'`
-     *
-     * @param array        $criteria
-     * @param QueryBuilder $qb
-     */
-    protected function filterByCriteria($criteria, QueryBuilder $qb)
-    {
-        $simpleQB = new SimpleQueryBuilder($qb);
-        /*
-         * Reimplementing findBy features…
-         */
-        foreach ($criteria as $key => $value) {
-            /*
-             * Search in node fields
-             */
-            if ($key == 'nodes') {
-                continue;
-            }
-
-            /*
-             * compute prefix for
-             * filtering node, and sources relation fields
-             */
-            $prefix = static::TAG_ALIAS . '.';
-
-            // Dots are forbidden in field definitions
-            $baseKey = $simpleQB->getParameterKey($key);
-
-            if (false !== strpos($key, 'translation.')) {
-                /*
-                 * Search in translation fields
-                 */
-                $prefix = static::TRANSLATION_ALIAS . '.';
-                $key = str_replace('translation.', '', $key);
-            } elseif (false !== strpos($key, 'nodes.')) {
-                /*
-                 * Search in node fields
-                 */
-                $prefix = static::NODE_ALIAS . '.';
-                $key = str_replace('nodes.', '', $key);
-            } elseif (false !== strpos($key, 'translatedTag.')) {
-                /*
-                 * Search in translatedTags fields
-                 */
-                $prefix = 'tt.';
-                $key = str_replace('translatedTag.', '', $key);
-            } elseif ($key === 'translation') {
-                /*
-                 * Search in translation fields
-                 */
-                $prefix = 'tt.';
-            }
-
-            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
-        }
-    }
-    /**
      * Bind parameters to generated query.
      *
      * @param array $criteria
@@ -179,7 +108,10 @@ class TagRepository extends EntityRepository
          */
         $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
-            $simpleQB->bindValue($key, $value);
+            $event = $this->dispatchQueryBuilderApplyEvent($qb, $key, $value);
+            if (!$event->isPropagationStopped()) {
+                $simpleQB->bindValue($key, $value);
+            }
         }
     }
 
@@ -256,17 +188,16 @@ class TagRepository extends EntityRepository
         $offset = null,
         Translation $translation = null
     ) {
-        $qb = $this->createQueryBuilder('tg');
+        $qb = $this->createQueryBuilder(EntityRepository::TAG_ALIAS);
         $qb->addSelect('tt');
-
         $this->filterByNodes($criteria, $qb);
         $this->filterByTranslation($criteria, $qb, $translation);
-        $this->filterByCriteria($criteria, $qb);
+        $this->prepareComparisons($criteria, $qb, EntityRepository::TAG_ALIAS);
 
         // Add ordering
         if (null !== $orderBy) {
             foreach ($orderBy as $key => $value) {
-                $qb->addOrderBy(static::TAG_ALIAS . '.' . $key, $value);
+                $qb->addOrderBy(EntityRepository::TAG_ALIAS . '.' . $key, $value);
             }
         }
 
@@ -291,7 +222,13 @@ class TagRepository extends EntityRepository
         array &$criteria,
         Translation $translation = null
     ) {
-        $qb = $this->getContextualQueryWithTranslation($criteria, null, null, null, $translation);
+        $qb = $this->getContextualQueryWithTranslation(
+            $criteria,
+            null,
+            null,
+            null,
+            $translation
+        );
         return $qb->select($qb->expr()->countDistinct('tg.id'));
     }
 
@@ -600,14 +537,14 @@ class TagRepository extends EntityRepository
         $pattern,
         QueryBuilder $qb,
         array &$criteria = [],
-        $alias = "obj"
+        $alias = EntityRepository::DEFAULT_ALIAS
     ) {
         $this->classicLikeComparison($pattern, $qb, $alias);
 
         /*
          * Search in translations
          */
-        $qb->leftJoin('obj.translatedTags', 'tt');
+        $qb->leftJoin($alias . '.translatedTags', 'tt');
         $criteriaFields = [];
         $metadatas = $this->_em->getClassMetadata(TagTranslation::class);
         $cols = $metadatas->getColumnNames();
@@ -639,46 +576,54 @@ class TagRepository extends EntityRepository
         $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
             /*
-             * Search in node fields
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
              */
-            if ($key == 'nodes') {
-                continue;
-            }
+            $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
 
-            /*
-             * compute prefix for
-             * filtering node, and sources relation fields
-             */
-            $prefix = $alias;
-
-            // Dots are forbidden in field definitions
-            $baseKey = $simpleQB->getParameterKey($key);
-
-            if (false !== strpos($key, 'translation.')) {
-                /*
-                 * Search in translation fields
-                 */
-                $prefix = static::TRANSLATION_ALIAS . '.';
-                $key = str_replace('translation.', '', $key);
-            } elseif (false !== strpos($key, 'nodes.')) {
+            if (!$event->isPropagationStopped()) {
                 /*
                  * Search in node fields
                  */
-                $prefix = static::NODE_ALIAS . '.';
-                $key = str_replace('nodes.', '', $key);
-            } elseif (false !== strpos($key, 'translatedTag.')) {
+                if ($key == 'nodes') {
+                    continue;
+                }
+
                 /*
-                 * Search in translatedTags fields
+                 * compute prefix for
+                 * filtering node, and sources relation fields
                  */
-                $prefix = 'tt.';
-                $key = str_replace('translatedTag.', '', $key);
-            } elseif ($key === 'translation') {
-                /*
-                 * Search in translation fields
-                 */
-                $prefix = 'tt.';
+                $prefix = $alias;
+
+                // Dots are forbidden in field definitions
+                $baseKey = $simpleQB->getParameterKey($key);
+
+                if (false !== strpos($key, 'translation.')) {
+                    /*
+                     * Search in translation fields
+                     */
+                    $prefix = static::TRANSLATION_ALIAS . '.';
+                    $key = str_replace('translation.', '', $key);
+                } elseif (false !== strpos($key, 'nodes.')) {
+                    /*
+                     * Search in node fields
+                     */
+                    $prefix = static::NODE_ALIAS . '.';
+                    $key = str_replace('nodes.', '', $key);
+                } elseif (false !== strpos($key, 'translatedTag.')) {
+                    /*
+                     * Search in translatedTags fields
+                     */
+                    $prefix = 'tt.';
+                    $key = str_replace('translatedTag.', '', $key);
+                } elseif ($key === 'translation') {
+                    /*
+                     * Search in translation fields
+                     */
+                    $prefix = 'tt.';
+                }
+                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
             }
-            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
         }
 
         return $qb;

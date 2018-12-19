@@ -84,12 +84,12 @@ class NodesSourcesNodeFilter implements EventSubscriberInterface
                 $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
                 if (!$simpleQB->joinExists(
-                    EntityRepository::NODESSOURCES_ALIAS,
+                    $simpleQB->getRootAlias(),
                     EntityRepository::NODE_ALIAS
                 )
                 ) {
                     $qb->innerJoin(
-                        EntityRepository::NODESSOURCES_ALIAS . '.node',
+                        $simpleQB->getRootAlias() . '.node',
                         EntityRepository::NODE_ALIAS
                     );
                 }
