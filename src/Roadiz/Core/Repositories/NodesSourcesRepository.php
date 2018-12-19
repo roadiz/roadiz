@@ -634,27 +634,34 @@ class NodesSourcesRepository extends StatusAwareRepository
         $simpleQB = new SimpleQueryBuilder($qb);
 
         foreach ($criteria as $key => $value) {
-            $baseKey = $simpleQB->getParameterKey($key);
+            /*
+             * Main QueryBuilder dispatch loop for
+             * custom properties criteria.
+             */
+            $event = $this->dispatchQueryBuilderBuildEvent($qb, $key, $value);
 
-            if (false !== strpos($key, 'node.nodeType.')) {
-                if (!$this->hasJoinedNode($qb, $alias)) {
-                    $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+            if (!$event->isPropagationStopped()) {
+                $baseKey = $simpleQB->getParameterKey($key);
+                if (false !== strpos($key, 'node.nodeType.')) {
+                    if (!$this->hasJoinedNode($qb, $alias)) {
+                        $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+                    }
+                    if (!$this->hasJoinedNodeType($qb, $alias)) {
+                        $qb->innerJoin(static::NODE_ALIAS . '.nodeType', static::NODETYPE_ALIAS);
+                    }
+                    $prefix = static::NODETYPE_ALIAS . '.';
+                    $simpleKey = str_replace('node.nodeType.', '', $key);
+                    $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
+                } elseif (false !== strpos($key, 'node.')) {
+                    if (!$this->hasJoinedNode($qb, $alias)) {
+                        $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
+                    }
+                    $prefix = static::NODE_ALIAS . '.';
+                    $simpleKey = str_replace('node.', '', $key);
+                    $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
+                } else {
+                    $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $baseKey));
                 }
-                if (!$this->hasJoinedNodeType($qb, $alias)) {
-                    $qb->innerJoin(static::NODE_ALIAS . '.nodeType', static::NODETYPE_ALIAS);
-                }
-                $prefix = static::NODETYPE_ALIAS . '.';
-                $simpleKey = str_replace('node.nodeType.', '', $key);
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
-            } elseif (false !== strpos($key, 'node.')) {
-                if (!$this->hasJoinedNode($qb, $alias)) {
-                    $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
-                }
-                $prefix = static::NODE_ALIAS . '.';
-                $simpleKey = str_replace('node.', '', $key);
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $simpleKey, $baseKey));
-            } else {
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $alias . '.', $key, $baseKey));
             }
         }
 
