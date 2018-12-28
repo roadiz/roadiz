@@ -1,6 +1,6 @@
 <article class="col-md-4 basic-block" data-index="{{ loop.index }}">
     <h3 class="block-title">{{ loop.index }}. {{ nodeSource.title }}</h3>
-    <div class="block-content">{{ nodeSource.content|markdown }}</div>
+    <div class="block-content">{{ nodeSource.content|markdownExtra }}</div>
     <div class="block-images">
         {% for image in nodeSource.images %}
             {{ image|display({
