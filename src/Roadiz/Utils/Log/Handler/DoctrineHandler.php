@@ -145,9 +145,10 @@ class DoctrineHandler extends AbstractProcessingHandler
                  */
                 if (null !== $this->getTokenStorage() &&
                     null !== $this->getTokenStorage()->getToken() &&
-                    is_object($this->getTokenStorage()->getToken()->getUser()) &&
-                    $this->getTokenStorage()->getToken()->getUser() instanceof User) {
-                    $log->setUser($this->getTokenStorage()->getToken()->getUser());
+                    null !== $user = $this->getTokenStorage()->getToken()->getUser()) {
+                    if ($user instanceof User) {
+                        $log->setUser($user);
+                    }
                 }
                 /*
                  * Use manually set user
