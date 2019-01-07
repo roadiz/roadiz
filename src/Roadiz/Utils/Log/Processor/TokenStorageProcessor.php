@@ -29,7 +29,9 @@
  */
 namespace RZ\Roadiz\Utils\Log\Processor;
 
+use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TokenStorageProcessor
 {
@@ -44,10 +46,15 @@ class TokenStorageProcessor
     {
         if (null !== $this->tokenStorage->getToken() &&
             null !== $user = $this->tokenStorage->getToken()->getUser()) {
-            if (is_object($user)) {
+            if ($user instanceof AbstractHuman && $user instanceof UserInterface) {
                 $record['context']['user'] = [
                     'username' => $user->getUsername(),
                     'email' => $user->getEmail(),
+                    'roles' => $user->getRoles(),
+                ];
+            } elseif ($user instanceof UserInterface) {
+                $record['context']['user'] = [
+                    'username' => $user->getUsername(),
                     'roles' => $user->getRoles(),
                 ];
             }
