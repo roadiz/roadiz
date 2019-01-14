@@ -91,6 +91,7 @@ class ProviderDataTransformer implements DataTransformerInterface
             isset($formToEntities[0])) {
             return $formToEntities[0];
         }
-        return array_values($formToEntities);
+
+        return $formToEntities;
     }
 }

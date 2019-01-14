@@ -118,7 +118,7 @@ class UsersProvider extends AbstractExplorerProvider
      */
     public function getItemsById($ids = [])
     {
-        if (count($ids) > 0) {
+        if (is_array($ids) && count($ids) > 0) {
             $entities = $this->get('em')->getRepository(User::class)->findBy([
                 'id' => $ids
             ]);

@@ -30,15 +30,14 @@
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\Proxy\Proxy;
+use RZ\Roadiz\CMS\Forms\DataTransformer\JoinDataTransformer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 {
@@ -69,45 +68,10 @@ class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
     {
         $configuration = $this->getFieldConfiguration($options);
 
-        $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) use ($options, $configuration) {
-                /*
-                 * If model is already an AbstractEntity
-                 */
-                if (!empty($entitiesToForm) &&
-                    $entitiesToForm instanceof AbstractEntity) {
-                    return $entitiesToForm->getId();
-                } elseif (!empty($entitiesToForm) && is_array($entitiesToForm)) {
-                    /*
-                     * If model is a collection of AbstractEntity
-                     */
-                    $idArray = [];
-                    foreach ($entitiesToForm as $entity) {
-                        if ($entity instanceof AbstractEntity) {
-                            $idArray[] = $entity->getId();
-                        }
-                    }
-                    return $idArray;
-                } elseif (!empty($entitiesToForm)) {
-                    return $entitiesToForm;
-                }
-                return '';
-            },
-            function ($formToEntities) use ($options, $configuration) {
-                /** @var NodeTypeField $nodeTypeField */
-                $nodeTypeField = $options['nodeTypeField'];
-                if ($nodeTypeField->isManyToMany()) {
-                    return $options['entityManager']->getRepository($configuration['classname'])->findBy([
-                        'id' => $formToEntities,
-                    ]);
-                }
-                if ($nodeTypeField->isManyToOne()) {
-                    return $options['entityManager']->getRepository($configuration['classname'])->findOneBy([
-                        'id' => $formToEntities,
-                    ]);
-                }
-                return null;
-            }
+        $builder->addModelTransformer(new JoinDataTransformer(
+            $options['nodeTypeField'],
+            $options['entityManager'],
+            $configuration['classname']
         ));
     }
 

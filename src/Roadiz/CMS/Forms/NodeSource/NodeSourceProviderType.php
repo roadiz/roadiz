@@ -32,13 +32,11 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Forms\DataTransformer\ProviderDataTransformer;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Explorer\AbstractExplorerItem;
 use Themes\Rozier\Explorer\AbstractExplorerProvider;
 
