@@ -232,7 +232,11 @@ export default class NodeEditSource {
                 this.displayErrors(errors[key], true)
             } else {
                 classKey = key.replace('_', '-')
-                errorMessage = errors[key][0]
+                if (errors[key] instanceof Array) {
+                    errorMessage = errors[key][0]
+                } else {
+                    errorMessage = errors[key]
+                }
                 let $field = $('.form-col-' + classKey)
                 if ($field.length) {
                     $field.addClass('form-errored')
