@@ -30,13 +30,13 @@
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Pimple\Container;
+use RZ\Roadiz\CMS\Forms\DataTransformer\ProviderDataTransformer;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Explorer\AbstractExplorerItem;
 use Themes\Rozier\Explorer\AbstractExplorerProvider;
 
@@ -49,8 +49,18 @@ class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
     {
         parent::configureOptions($resolver);
 
+        $resolver->setDefault('multiple', false);
         $resolver->setRequired('container');
         $resolver->setAllowedTypes('container', [Container::class]);
+        $resolver->setAllowedTypes('multiple', ['bool']);
+        $resolver->setNormalizer('multiple', function (Options $options) {
+            /** @var NodeTypeField $nodeTypeField */
+            $nodeTypeField = $options['nodeTypeField'];
+            if ($nodeTypeField->isMultipleProvider()) {
+                return true;
+            }
+            return false;
+        });
     }
 
     /**
@@ -64,28 +74,7 @@ class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
         $provider = new $configuration['classname'];
         $provider->setContainer($options['container']);
 
-        $builder->addModelTransformer(new CallbackTransformer(
-            function ($entitiesToForm) use ($options, $provider) {
-                if ($options['nodeTypeField']->getType() === NodeTypeField::MULTI_PROVIDER_T && is_array($entitiesToForm)) {
-                    if (count($entitiesToForm) > 0) {
-                        return $provider->getItemsById($entitiesToForm);
-                    }
-                    return [];
-                }
-                if ($options['nodeTypeField']->getType() === NodeTypeField::SINGLE_PROVIDER_T) {
-                    if (isset($entitiesToForm)) {
-                        return $provider->getItemsById($entitiesToForm);
-                    }
-                }
-                return null;
-            },
-            function ($formToEntities) use ($options) {
-                if (is_array($formToEntities) && $options['nodeTypeField']->isSingleProvider()) {
-                    return $formToEntities[0];
-                }
-                return $formToEntities;
-            }
-        ));
+        $builder->addModelTransformer(new ProviderDataTransformer($options['nodeTypeField'], $provider));
     }
 
     /**

@@ -52,6 +52,7 @@ use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\Translator;
+use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * Base class for Roadiz themes.
@@ -635,14 +636,25 @@ abstract class AppController extends Controller
         $errors = [];
         /** @var FormError $error */
         foreach ($form->getErrors() as $error) {
+            $errorFieldName = $error->getOrigin()->getName();
             if (count($error->getMessageParameters()) > 0) {
                 if (null !== $error->getMessagePluralization()) {
-                    $errors[] = $translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters());
+                    $errors[$errorFieldName] = $translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters());
                 } else {
-                    $errors[] = $translator->trans($error->getMessageTemplate(), $error->getMessageParameters());
+                    $errors[$errorFieldName] = $translator->trans($error->getMessageTemplate(), $error->getMessageParameters());
                 }
             } else {
-                $errors[] = $error->getMessage();
+                $errors[$errorFieldName] = $error->getMessage();
+            }
+            $cause = $error->getCause();
+            if (null !== $cause) {
+                if ($cause instanceof ConstraintViolation) {
+                    $cause = $cause->getCause();
+                }
+                if ($cause instanceof \Exception) {
+                    $errors[$errorFieldName . '_cause_message'] = $cause->getMessage();
+                }
+                $errors[$errorFieldName . '_cause'] = get_class($cause);
             }
         }
 
