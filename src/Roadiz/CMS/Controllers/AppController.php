@@ -651,7 +651,6 @@ abstract class AppController extends Controller
                 if ($cause instanceof ConstraintViolation) {
                     $cause = $cause->getCause();
                 }
-
                 if ($cause instanceof \Exception) {
                     $errors[$errorFieldName . '_cause_message'] = $cause->getMessage();
                 }

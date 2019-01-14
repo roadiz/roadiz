@@ -34,12 +34,33 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Options;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\Yaml\Yaml;
 
 class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 {
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setDefault('multiple', false);
+        $resolver->setAllowedTypes('multiple', ['bool']);
+        $resolver->setNormalizer('multiple', function (Options $options) {
+            /** @var NodeTypeField $nodeTypeField */
+            $nodeTypeField = $options['nodeTypeField'];
+            if ($nodeTypeField->isManyToMany()) {
+                return true;
+            }
+            return false;
+        });
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -73,12 +94,14 @@ class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
                 return '';
             },
             function ($formToEntities) use ($options, $configuration) {
-                if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_MANY_T) {
+                /** @var NodeTypeField $nodeTypeField */
+                $nodeTypeField = $options['nodeTypeField'];
+                if ($nodeTypeField->isManyToMany()) {
                     return $options['entityManager']->getRepository($configuration['classname'])->findBy([
                         'id' => $formToEntities,
                     ]);
                 }
-                if ($options['nodeTypeField']->getType() === NodeTypeField::MANY_TO_ONE_T) {
+                if ($nodeTypeField->isManyToOne()) {
                     return $options['entityManager']->getRepository($configuration['classname'])->findOneBy([
                         'id' => $formToEntities,
                     ]);
