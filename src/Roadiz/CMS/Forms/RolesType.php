@@ -51,9 +51,11 @@ class RolesType extends AbstractType
         $resolver->setDefaults([
             'choices_as_values' => true,
             'roles' => new ArrayCollection(),
+            'multiple' => false,
         ]);
 
         $resolver->setRequired('entityManager');
+        $resolver->setAllowedTypes('multiple', ['bool']);
         $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
         $resolver->setAllowedTypes('roles', [Collection::class]);
 
