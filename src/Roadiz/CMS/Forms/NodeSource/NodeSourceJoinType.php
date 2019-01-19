@@ -36,11 +36,8 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-<<<<<<< HEAD
-=======
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
->>>>>>> hotfix/v1.0.18
 
 class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 {
