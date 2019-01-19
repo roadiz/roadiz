@@ -26,7 +26,6 @@
  * @file NodeSourceJoinType.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\Proxy\Proxy;
