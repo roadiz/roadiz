@@ -40,9 +40,10 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $builder = new TreeBuilder();
-        $root = $builder->root('roadiz')->addDefaultsIfNotSet();
+        $root = $builder->root('roadiz');
 
-        $root->children()
+        $root->addDefaultsIfNotSet()
+            ->children()
             ->scalarNode('appNamespace')
                 ->defaultValue('roadiz_app')
             ->end()
@@ -104,11 +105,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('encode_as_base64')
                         ->defaultValue(true)
-                        ->info('When using sha512 algorithm')
+                        ->info('When using sha512 or pbkdf2 algorithm')
                     ->end()
                     ->scalarNode('iterations')
                         ->defaultValue(5000)
-                        ->info('When using sha512 algorithm')
+                        ->info('When using sha512 or pbkdf2 algorithm')
                     ->end()
                     ->scalarNode('hash_algorithm')
                         ->defaultValue('sha512')
@@ -249,12 +250,13 @@ EOF
                     ->info('GD does not support TIFF and PSD formats, but iMagick must be installed')
                 ->end()
                 ->integerNode('defaultQuality')
-                    ->min(10)->max(100)
-                    ->defaultValue(90)
+                    ->min(10)
+                    ->max(100)
+                    ->defaultValue(95)
                 ->end()
                 ->integerNode('maxPixelSize')
                     ->min(600)
-                    ->defaultValue(1920)
+                    ->defaultValue(2500)
                     ->info('Pixel width limit after Roadiz should create a smaller copy')
                 ->end()
                 ->scalarNode('jpegoptimPath')->end()
