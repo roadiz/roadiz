@@ -324,29 +324,6 @@ export default class Lazyload {
         this.cssEditors = []
         this.yamlEditors = []
 
-        const _this = this
-        $('.rz-collection-form-type').collection({
-            up: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-up"></i></a>',
-            down: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-down"></i></a>',
-            add: '<a class="uk-button-primary uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
-            remove: '<a class="uk-button-danger uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
-            after_add: function (collection, element) {
-                _this.initMarkdownEditors(element)
-                _this.initJsonEditors(element)
-                _this.initCssEditors(element)
-                _this.initYamlEditors(element)
-                _this.initBootstrapSwitches(element)
-                _this.initColorPickers(element)
-
-                let $vueComponents = element.find('[data-vuejs]')
-                // Create each component
-                $vueComponents.each((i, el) => {
-                    window.Rozier.vueApp.mainContentComponents.push(window.Rozier.vueApp.buildComponent(el))
-                })
-                return true
-            }
-        })
-
         this.documentsBulk = new DocumentsBulk()
         this.nodesBulk = new NodesBulk()
         this.tagsBulk = new TagsBulk()
@@ -383,6 +360,7 @@ export default class Lazyload {
         this.initYamlEditors()
         this.initFilterBars()
         this.initColorPickers()
+        this.initCollectionsForms()
 
         // Animate actions menu
         if ($('.actions-menu').length && isMobile.any() === null) {
@@ -411,6 +389,32 @@ export default class Lazyload {
                 object.unbind()
             }
         }
+    }
+
+    initCollectionsForms () {
+        const _this = this
+
+        $('.rz-collection-form-type').collection({
+            up: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-up"></i></a>',
+            down: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-down"></i></a>',
+            add: '<a class="uk-button-primary uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
+            remove: '<a class="uk-button-danger uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
+            after_add: (collection, element) => {
+                _this.initMarkdownEditors(element)
+                _this.initJsonEditors(element)
+                _this.initCssEditors(element)
+                _this.initYamlEditors(element)
+                _this.initBootstrapSwitches(element)
+                _this.initColorPickers(element)
+
+                let $vueComponents = element.find('[data-vuejs]')
+                // Create each component
+                $vueComponents.each((i, el) => {
+                    window.Rozier.vueApp.mainContentComponents.push(window.Rozier.vueApp.buildComponent(el))
+                })
+                return true
+            }
+        })
     }
 
     initColorPickers ($scope) {

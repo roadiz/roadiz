@@ -273,7 +273,7 @@ class NodeSourceType extends AbstractType
                 return NodeSourceProviderType::class;
 
             case AbstractField::COLLECTION_T:
-                return CollectionType::class;
+                return \RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceCollectionType::class;
         }
 
         return TextType::class;
