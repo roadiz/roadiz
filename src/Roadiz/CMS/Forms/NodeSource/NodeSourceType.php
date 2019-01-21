@@ -45,7 +45,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -273,7 +272,7 @@ class NodeSourceType extends AbstractType
                 return NodeSourceProviderType::class;
 
             case AbstractField::COLLECTION_T:
-                return \RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceCollectionType::class;
+                return NodeSourceCollectionType::class;
         }
 
         return TextType::class;

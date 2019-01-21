@@ -1,10 +1,4 @@
 <?php
-/**
- * nitidae.org - NodeSourceCollectionType.php
- *
- * Initial version by: ambroisemaupate
- * Initial version created on: 2019-01-21
- */
 declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
