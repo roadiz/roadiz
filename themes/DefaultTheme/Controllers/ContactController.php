@@ -89,7 +89,8 @@ class ContactController extends DefaultThemeApp
                                         * Disable CSRF protection if using Varnish
                                         */
                                        ->disableCsrfProtection()
-                                       ->withDefaultFields()
+                                       // Use Honeypot
+                                       ->withDefaultFields(true)
                                        ->withGoogleRecaptcha()
                                        ->setRedirectUrl($this->generateUrl('thanksPageLocale', [
                                            '_locale' => $request->getLocale()

@@ -79,6 +79,10 @@
                 <source>error404.message</source>
                 <target></target>
             </trans-unit>
+            <trans-unit id=" email.successfully.sent">
+                <source>email.successfully.sent</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
