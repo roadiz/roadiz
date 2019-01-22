@@ -56,7 +56,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
-use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 use Symfony\Component\Security\Core\User\UserChecker;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
@@ -324,8 +323,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new FirewallMap();
         };
 
-        $container['passwordEncoder'] = function () {
-            return new MessageDigestPasswordEncoder('sha512', true, 5000);
+        $container['passwordEncoder'] = function ($c) {
+            return $c['config']['security'];
         };
 
         $container['userImplementations'] = function ($c) {

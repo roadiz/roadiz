@@ -25,6 +25,8 @@ security:
     # website is served with HTTPS only
     session_cookie_secure: false
     session_cookie_httponly: true
+    # Change default password algorithm from sha512 to argon2i
+    # algorithm: argon2i
 mailer:
     type: ~
     host: "localhost"

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
