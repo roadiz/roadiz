@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Utils;
 
+use RZ\Roadiz\CMS\Forms\HoneypotType;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
@@ -189,9 +190,11 @@ class ContactFormManager extends EmailManager
     /**
      * Adds a email, name and message fields with their constraints.
      *
+     * @param bool $useHoneypot
+     *
      * @return ContactFormManager $this
      */
-    public function withDefaultFields()
+    public function withDefaultFields($useHoneypot = true)
     {
         $this->getFormBuilder()->add('email', EmailType::class, [
                 'label' => 'your.email',
@@ -216,6 +219,21 @@ class ContactFormManager extends EmailManager
             ])
         ;
 
+        if ($useHoneypot) {
+            $this->withHoneypot();
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param string $honeypotName
+     *
+     * @return $this
+     */
+    public function withHoneypot($honeypotName = 'eml')
+    {
+        $this->getFormBuilder()->add($honeypotName, HoneypotType::class);
         return $this;
     }
 
