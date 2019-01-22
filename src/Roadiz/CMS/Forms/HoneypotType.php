@@ -60,11 +60,11 @@ class HoneypotType extends AbstractType
             'required' => false,
             'mapped'   => false,
             'data'     => '',
-            'attr'     => array(
+            'attr'     => [
                 'autocomplete' => 'nope',
                 'tabindex' => -1,
                 'style' => 'position: fixed; left: -100vw; top: -100vh;'
-            )
+            ]
         ]);
     }
 
