@@ -42,7 +42,6 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  */
 class CustomFormFieldAttribute extends AbstractEntity
 {
-
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer", inversedBy="answerFields")
      * @ORM\JoinColumn(name="custom_form_answer_id", referencedColumnName="id", onDelete="CASCADE")
@@ -51,7 +50,7 @@ class CustomFormFieldAttribute extends AbstractEntity
     protected $customFormAnswer;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttribute")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttributes")
      * @ORM\JoinColumn(name="custom_form_field_id", referencedColumnName="id", onDelete="CASCADE")
      * @var CustomFormField
      */
@@ -59,14 +58,14 @@ class CustomFormFieldAttribute extends AbstractEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @var string
+     * @var string|null
      */
-    protected $value;
+    protected $value = null;
 
     /**
      * @return string $value
      */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
@@ -76,7 +75,7 @@ class CustomFormFieldAttribute extends AbstractEntity
      *
      * @return $this
      */
-    public function setValue($value)
+    public function setValue(?string $value)
     {
         $this->value = $value;
 

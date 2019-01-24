@@ -28,6 +28,7 @@
  * @author Ambroise Maupate
  */
 
+use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
@@ -98,7 +99,7 @@ class SettingJsonSerializerTest extends SchemaDependentCase
         return array(
             array(
                 file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Serializers/settingJsonSerializer01.json'),
-                'RZ\Roadiz\Core\Entities\Setting',
+                Setting::class,
             ),
         );
     }

@@ -31,13 +31,14 @@
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Tests\SchemaDependentCase;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 
 /**
  * Class NodesSourcesUrlTest
  */
 class NodesSourcesUrlTest extends SchemaDependentCase
 {
+    protected static $nodesSources = [];
+
     /**
      * Nothing special to do except init collection
      * array.
@@ -60,41 +61,6 @@ class NodesSourcesUrlTest extends SchemaDependentCase
 
         static::getManager()->persist($fr);
         static::getManager()->persist($en);
-        static::getManager()->flush();
-    }
-
-
-    public function testGetUrl()
-    {
-        $sources = $this->getUrlProvider();
-
-        foreach ($sources as $index => $sourceTuple) {
-            $nodeSource = $sourceTuple[0];
-            $expectedUrl = $sourceTuple[1];
-
-            /*
-             * Test current syntax
-             */
-            $this->assertEquals($expectedUrl, $this->get('urlGenerator')->generate($nodeSource));
-        }
-    }
-
-
-    /**
-     * @return array
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function getUrlProvider()
-    {
-        $sources = [];
-
-        $fr = static::getManager()
-            ->getRepository(Translation::class)
-            ->findOneByLocale('fr');
-
-        $en = static::getManager()
-            ->getRepository(Translation::class)
-            ->findOneByLocale('en');
 
         /*
          * Test 1 - regular node
@@ -103,7 +69,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $n1->setVisible(true);
         $ns1 = $n1->getNodeSources()->first();
 
-        $sources[] = [$ns1, '/page'];
+        static::$nodesSources[] = [$ns1, '/page', '/page.json'];
 
         /*
          * Test 2  - regular node
@@ -111,7 +77,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $n2 = static::createNode("Page 2", $en);
         $ns2 = $n2->getNodeSources()->first();
 
-        $sources[] = [$ns2, '/en/page-2'];
+        static::$nodesSources[] = [$ns2, '/en/page-2', '/en/page-2.json'];
 
         /*
          * Test 3 - home node
@@ -120,7 +86,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns3 = $n3->getNodeSources()->first();
         $n3->setHome(true);
 
-        $sources[] = [$ns3, '/'];
+        static::$nodesSources[] = [$ns3, '/', '/'];
 
         /*
          * Test 4 - home node non-default
@@ -129,7 +95,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns4 = $n4->getNodeSources()->first();
         $n4->setHome(true);
 
-        $sources[] = [$ns4, '/en'];
+        static::$nodesSources[] = [$ns4, '/en', '/en'];
 
         /*
          * Test 5  - regular node with alias
@@ -142,7 +108,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         static::getManager()->persist($a5);
         $ns5->getUrlAliases()->add($a5);
 
-        $sources[] = [$ns5, '/tralala-en'];
+        static::$nodesSources[] = [$ns5, '/tralala-en', '/tralala-en.json'];
 
         /*
          * Test 6  - regular node with 1 parent
@@ -151,7 +117,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns6 = $n6->getNodeSources()->first();
         $n6->setParent($n1);
 
-        $sources[] = [$ns6, '/page/page-6'];
+        static::$nodesSources[] = [$ns6, '/page/page-6', '/page/page-6.json'];
 
         /*
          * Test 7  - regular node with 2 parents
@@ -160,7 +126,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns7 = $n7->getNodeSources()->first();
         $n7->setParent($n6);
 
-        $sources[] = [$ns7, '/page/page-6/page-7'];
+        static::$nodesSources[] = [$ns7, '/page/page-6/page-7', '/page/page-6/page-7.json'];
 
         /*
          * Test 8  - regular node with 1 parent and 2 alias
@@ -174,7 +140,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns8->getUrlAliases()->add($a8);
         static::getManager()->persist($a8);
 
-        $sources[] = [$ns8, '/tralala-en/other-tralala-en'];
+        static::$nodesSources[] = [$ns8, '/tralala-en/other-tralala-en', '/tralala-en/other-tralala-en.json'];
 
         /*
          * Test 9 - hidden node
@@ -183,7 +149,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns9 = $n9->getNodeSources()->first();
         $n9->setVisible(false);
 
-        $sources[] = [$ns9, '/hidden-page'];
+        static::$nodesSources[] = [$ns9, '/hidden-page', '/hidden-page.json'];
 
         /*
          * Test 10 - regular node with hidden parent
@@ -192,10 +158,41 @@ class NodesSourcesUrlTest extends SchemaDependentCase
         $ns10 = $n10->getNodeSources()->first();
         $n10->setParent($n9);
 
-        $sources[] = [$ns10, '/page-with-hidden-parent'];
+        static::$nodesSources[] = [$ns10, '/page-with-hidden-parent', '/page-with-hidden-parent.json'];
 
         static::getManager()->flush();
+    }
 
-        return $sources;
+    public function testGetUrl()
+    {
+        foreach (static::$nodesSources as $data) {
+            $nodeSource = $data[0];
+            $expectedUrl = $data[1];
+
+            /*
+             * Test current syntax
+             */
+            $this->assertEquals($expectedUrl, $this->get('urlGenerator')->generate($nodeSource));
+            $this->assertEquals($expectedUrl, $this->get('urlGenerator')->generate(
+                $nodeSource,
+                ['_format' => 'html']
+            ));
+        }
+    }
+
+    public function testGetJsonUrl()
+    {
+        foreach (static::$nodesSources as $data) {
+            $nodeSource = $data[0];
+            $expectedJsonUrl = $data[2];
+
+            /*
+             * Test current syntax
+             */
+            $this->assertEquals($expectedJsonUrl, $this->get('urlGenerator')->generate(
+                $nodeSource,
+                ['_format' => 'json']
+            ));
+        }
     }
 }

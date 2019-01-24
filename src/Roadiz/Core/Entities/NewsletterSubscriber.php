@@ -36,7 +36,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  * Describes a simple ManyToMany relation
  * between Newsletter and Subscriber
  *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesDocumentsRepository")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="newsletter_subscriber")
  */
 class NewsletterSubscriber extends AbstractEntity
@@ -46,43 +46,55 @@ class NewsletterSubscriber extends AbstractEntity
     const OPENED = 30;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", inversedBy="newsletterSubscriber")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", inversedBy="newsletterSubscribers")
      * @ORM\JoinColumn(name="newsletter_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var \RZ\Roadiz\Core\Entities\Newsletter
+     * @var Newsletter
      */
     private $newsletter;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Newsletter
+     * @return Newsletter
      */
-    public function getNewsletter()
+    public function getNewsletter(): Newsletter
     {
         return $this->newsletter;
     }
 
-    public function setNewsletter($ns)
+    /**
+     * @param Newsletter $ns
+     *
+     * @return NewsletterSubscriber
+     */
+    public function setNewsletter(Newsletter $ns): NewsletterSubscriber
     {
         $this->newsletter = $ns;
+        return $this;
     }
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Subscriber", inversedBy="newsletterSubscriber")
      * @ORM\JoinColumn(name="subscriber_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var \RZ\Roadiz\Core\Entities\Subscriber
+     * @var Subscriber
      */
     private $subscriber;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Subscriber
+     * @return Subscriber
      */
-    public function getSubscriber()
+    public function getSubscriber(): Subscriber
     {
         return $this->subscriber;
     }
 
-    public function setSubscriber($sub)
+    /**
+     * @param Subscriber $sub
+     *
+     * @return NewsletterSubscriber
+     */
+    public function setSubscriber(Subscriber $sub): NewsletterSubscriber
     {
         $this->subscriber = $sub;
+        return $this;
     }
 
     /**
@@ -91,9 +103,9 @@ class NewsletterSubscriber extends AbstractEntity
     private $status = NewsletterSubscriber::QUEUED;
 
     /**
-     * @return integer
+     * @return int
      */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }
@@ -102,7 +114,7 @@ class NewsletterSubscriber extends AbstractEntity
      * @param integer $status
      * @return $this
      */
-    public function setStatus($status)
+    public function setStatus(int $status): NewsletterSubscriber
     {
         $this->status = $status;
         return $this;
@@ -111,8 +123,8 @@ class NewsletterSubscriber extends AbstractEntity
     /**
      * Create a new relation between Newsletter, a Subscriber.
      *
-     * @param \RZ\Roadiz\Core\Entities\Newsletter $newsletter
-     * @param \RZ\Roadiz\Core\Entities\Subscriber $subscriber
+     * @param Newsletter $newsletter
+     * @param Subscriber $subscriber
      */
     public function __construct(Newsletter $newsletter, Subscriber $subscriber)
     {

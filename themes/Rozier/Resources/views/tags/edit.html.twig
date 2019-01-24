@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% extends '@Rozier/layout.html.twig' %}
 
 {% block content %}
 <section class="content-global edit-tag">
@@ -7,7 +7,7 @@
         <h1 class="content-title tag-edit-title">{{ "edit.tag.%name%"|trans({'%name%': tag.getTagName })|truncate(25, true, '[…]') }}</h1>
         {% include '@Rozier/tags/navBack.html.twig' with {} only %}
         {% include '@Rozier/tags/navBar.html.twig' with {"tag": tag, "current": 'edit'} only %}
-        {% include '@Rozier/tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId} %}
+        {% include '@Rozier/tags/translationBar.html.twig' with {"tag": tag, "current":translation.getId } %}
     </header>
 
     <article class="content content-tag-edit">

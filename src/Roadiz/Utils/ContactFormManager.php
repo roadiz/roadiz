@@ -59,9 +59,10 @@ use Twig\Environment;
  */
 class ContactFormManager extends EmailManager
 {
+    /** @var string  */
+    protected $formName = 'contact_form';
     /** @var array|null  */
     protected $uploadedFiles = null;
-
     /**
      * @var string
      */
@@ -70,22 +71,18 @@ class ContactFormManager extends EmailManager
      * @var FormBuilder
      */
     protected $formBuilder = null;
-
     /**
      * @var Form
      */
     protected $form = null;
-
     /**
      * @var array
      */
     protected $options = [];
-
     /**
      * @var string
      */
     protected $method = Request::METHOD_POST;
-
     /**
      * @var array
      */
@@ -96,15 +93,14 @@ class ContactFormManager extends EmailManager
         'image/png',
         'image/gif',
     ];
-
     /**
      * @var int
      */
     protected $maxFileSize = 5242880;
-    /**
+/**
      * @var FormFactoryInterface
      */
-    protected $formFactory; // 5MB
+    protected $formFactory;
 
     /**
      * ContactFormManager constructor.
@@ -155,6 +151,25 @@ class ContactFormManager extends EmailManager
     }
 
     /**
+     * @return string
+     */
+    public function getFormName(): string
+    {
+        return $this->formName;
+    } // 5MB
+
+    /**
+     * @param string $formName
+     *
+     * @return ContactFormManager
+     */
+    public function setFormName(string $formName): ContactFormManager
+    {
+        $this->formName = $formName;
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function disableCsrfProtection()
@@ -162,19 +177,6 @@ class ContactFormManager extends EmailManager
         $this->options['csrf_protection'] = false;
 
         return $this;
-    }
-
-    /**
-     * @return FormBuilderInterface
-     */
-    public function getFormBuilder()
-    {
-        if (null === $this->formBuilder) {
-            $this->formBuilder = $this->formFactory
-                ->createBuilder(FormType::class, null, $this->options)
-                ->setMethod($this->method);
-        }
-        return $this->formBuilder;
     }
 
     /**
@@ -233,6 +235,19 @@ class ContactFormManager extends EmailManager
     {
         $this->getFormBuilder()->add($honeypotName, HoneypotType::class);
         return $this;
+    }
+
+    /**
+     * @return FormBuilderInterface
+     */
+    public function getFormBuilder()
+    {
+        if (null === $this->formBuilder) {
+            $this->formBuilder = $this->formFactory
+                ->createNamedBuilder($this->getFormName(), FormType::class, null, $this->options)
+                ->setMethod($this->method);
+        }
+        return $this->formBuilder;
     }
 
     /**
@@ -336,9 +351,6 @@ class ContactFormManager extends EmailManager
         return null;
     }
 
-    /**
-     * @throws BadFormRequestException
-     */
     protected function handleFiles()
     {
         $this->uploadedFiles = [];
@@ -378,7 +390,7 @@ class ContactFormManager extends EmailManager
      * @return $this
      * @throws BadFormRequestException
      */
-    protected function addUploadedFile($name, UploadedFile $uploadedFile)
+    protected function addUploadedFile(string $name, UploadedFile $uploadedFile)
     {
         if (!$uploadedFile->isValid() ||
             !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
@@ -451,7 +463,7 @@ class ContactFormManager extends EmailManager
      * @param array $fields
      * @return array
      */
-    protected function flattenFormData(array $formData, array $fields)
+    protected function flattenFormData(array $formData, array $fields): array
     {
         foreach ($formData as $key => $value) {
             if ($key[0] == '_' || $value instanceof UploadedFile) {
@@ -482,10 +494,11 @@ class ContactFormManager extends EmailManager
 
     /**
      * Send contact form data by email.
-     * @return int
+     *
+     * @return int The number of successful recipients. Can be 0 which indicates failure
      * @throws \RuntimeException
      */
-    public function send()
+    public function send(): int
     {
         if (empty($this->assignation)) {
             throw new \RuntimeException("Can’t send a contact form without data.");
@@ -512,6 +525,16 @@ class ContactFormManager extends EmailManager
 
         // Send the message
         return $this->mailer->send($this->message);
+    }
+
+    /**
+     * @return bool|null|string
+     */
+    public function getReceiver()
+    {
+        return (null !== parent::getReceiver() && parent::getReceiver() != "") ?
+            (parent::getReceiver()) :
+            ($this->settingsBag->get('email_sender'));
     }
 
     /**
@@ -584,16 +607,6 @@ class ContactFormManager extends EmailManager
         $this->allowedMimeTypes = $allowedMimeTypes;
 
         return $this;
-    }
-
-    /**
-     * @return bool|null|string
-     */
-    public function getReceiver()
-    {
-        return (null !== parent::getReceiver() && parent::getReceiver() != "") ?
-            (parent::getReceiver()) :
-            ($this->settingsBag->get('email_sender'));
     }
 
     /**

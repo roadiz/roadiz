@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -70,9 +71,9 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     private $node;
 
     /**
-     * @return Node
+     * @return Node|null
      */
-    public function getNode()
+    public function getNode(): ?Node
     {
         return $this->node;
     }
@@ -82,7 +83,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      *
      * @return $this
      */
-    public function setNode(Node $node = null)
+    public function setNode(Node $node = null): NodesSources
     {
         $this->node = $node;
         if (null !== $node) {
@@ -107,10 +108,11 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $translation;
+
     /**
      * @return Translation
      */
-    public function getTranslation()
+    public function getTranslation(): Translation
     {
         return $this->translation;
     }
@@ -119,22 +121,22 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      *
      * @return $this
      */
-    public function setTranslation($translation)
+    public function setTranslation(Translation $translation): NodesSources
     {
         $this->translation = $translation;
-
         return $this;
     }
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource")
+     * @var ArrayCollection
      */
-    private $urlAliases = null;
+    private $urlAliases;
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getUrlAliases()
+    public function getUrlAliases(): Collection
     {
         return $this->urlAliases;
     }
@@ -143,7 +145,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      * @param UrlAlias $urlAlias
      * @return $this
      */
-    public function addUrlAlias(UrlAlias $urlAlias)
+    public function addUrlAlias(UrlAlias $urlAlias): NodesSources
     {
         if (!$this->urlAliases->contains($urlAlias)) {
             $this->urlAliases->add($urlAlias);
@@ -155,13 +157,14 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, cascade={"persist"})
+     * @var ArrayCollection
      */
-    private $documentsByFields = null;
+    private $documentsByFields;
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getDocumentsByFields()
+    public function getDocumentsByFields(): Collection
     {
         return $this->documentsByFields;
     }
@@ -170,7 +173,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      * @param $fieldName
      * @return Document[]
      */
-    public function getDocumentsByFieldsWithName($fieldName)
+    public function getDocumentsByFieldsWithName($fieldName): array
     {
         $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);
@@ -195,24 +198,25 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Log", mappedBy="nodeSource")
      * @ORM\OrderBy({"datetime" = "DESC"})
+     * @var ArrayCollection
      */
     protected $logs;
 
     /**
      * Logs related to this node-source.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getLogs()
+    public function getLogs(): Collection
     {
         return $this->logs;
     }
 
     /**
-     * @param ArrayCollection|array $logs
+     * @param Collection $logs
      * @return $this
      */
-    public function setLogs($logs)
+    public function setLogs(Collection $logs): NodesSources
     {
         $this->logs = $logs;
 
@@ -227,7 +231,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @return string
      */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
@@ -237,7 +241,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      *
      * @return $this
      */
-    public function setTitle($title)
+    public function setTitle($title): NodesSources
     {
         $this->title = trim($title);
 
@@ -253,7 +257,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @return \DateTime|null
      */
-    public function getPublishedAt()
+    public function getPublishedAt(): ?\DateTime
     {
         return $this->publishedAt;
     }
@@ -262,7 +266,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      * @param \DateTime|null $publishedAt
      * @return NodesSources
      */
-    public function setPublishedAt(\DateTime $publishedAt = null)
+    public function setPublishedAt(\DateTime $publishedAt = null): NodesSources
     {
         $this->publishedAt = $publishedAt;
         return $this;
@@ -276,7 +280,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @return string
      */
-    public function getMetaTitle()
+    public function getMetaTitle(): string
     {
         return $this->metaTitle;
     }
@@ -286,7 +290,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      *
      * @return $this
      */
-    public function setMetaTitle($metaTitle)
+    public function setMetaTitle($metaTitle): NodesSources
     {
         $this->metaTitle = trim($metaTitle);
 
@@ -300,7 +304,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @return string
      */
-    public function getMetaKeywords()
+    public function getMetaKeywords(): string
     {
         return $this->metaKeywords;
     }
@@ -310,7 +314,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      *
      * @return $this
      */
-    public function setMetaKeywords($metaKeywords)
+    public function setMetaKeywords($metaKeywords): NodesSources
     {
         $this->metaKeywords = trim($metaKeywords);
 
@@ -324,7 +328,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @return string
      */
-    public function getMetaDescription()
+    public function getMetaDescription(): string
     {
         return $this->metaDescription;
     }
@@ -334,7 +338,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      *
      * @return $this
      */
-    public function setMetaDescription($metaDescription)
+    public function setMetaDescription($metaDescription): NodesSources
     {
         $this->metaDescription = trim($metaDescription);
 
@@ -359,7 +363,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         $urlAlias = $this->getUrlAliases()->first();
         if (is_object($urlAlias)) {
@@ -374,9 +378,10 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      *
      * @return NodesSources|null
      */
-    public function getParent()
+    public function getParent(): ?NodesSources
     {
         if (null !== $this->getNode()->getParent()) {
+            /** @var ArrayCollection $nodeSources */
             $nodeSources = $this->getNode()->getParent()->getNodeSourcesByTranslation($this->translation);
             return $nodeSources->count() > 0 ? $nodeSources->first() : null;
         } else {

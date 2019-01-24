@@ -41,7 +41,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldAnnotation()
+    public function getFieldAnnotation(): string
     {
         /*
          * Many Users have Many Groups.
@@ -79,7 +79,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldGetter()
+    public function getFieldGetter(): string
     {
         return '
     /**
@@ -94,7 +94,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldSetter()
+    public function getFieldSetter(): string
     {
         return '
     /**
@@ -112,7 +112,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldConstructorInitialization()
+    public function getFieldConstructorInitialization(): string
     {
         return '$this->' . $this->field->getName() . ' = new \Doctrine\Common\Collections\ArrayCollection();';
     }

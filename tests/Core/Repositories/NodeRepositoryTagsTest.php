@@ -158,6 +158,5 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
             }
         }
         static::getManager()->flush();
-
     }
 }

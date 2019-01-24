@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
@@ -55,35 +56,37 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     use LeafTrait;
 
     /**
-     * @ORM\Column(name="folder_name", type="string", unique=true, nullable=false)
-     * @var string
-     */
-    private $folderName;
-
-    /**
-     * @var string
-     */
-    private $dirtyFolderName;
-
-    /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
-     * @var boolean
-     */
-    private $visible = true;
-
-    /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Folder", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Folder|null
      */
     protected $parent = null;
-
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
     protected $children;
-
+    /**
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders")
+     * @ORM\JoinTable(name="documents_folders")
+     * @var ArrayCollection
+     */
+    protected $documents;
+    /**
+     * @ORM\Column(name="folder_name", type="string", unique=true, nullable=false)
+     * @var string
+     */
+    private $folderName = '';
+    /**
+     * @var string
+     */
+    private $dirtyFolderName = '';
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @var boolean
+     */
+    private $visible = true;
     /**
      * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true)
      * @var ArrayCollection
@@ -91,17 +94,13 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     private $translatedFolders;
 
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders")
-     * @ORM\JoinTable(name="documents_folders")
+     * Create a new Folder.
      */
-    protected $documents;
-
-    /**
-     * @return ArrayCollection<DocumentInterface>
-     */
-    public function getDocuments()
+    public function __construct()
     {
-        return $this->documents;
+        $this->children = new ArrayCollection();
+        $this->documents = new ArrayCollection();
+        $this->translatedFolders = new ArrayCollection();
     }
 
     /**
@@ -115,6 +114,14 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection<DocumentInterface>
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
     }
 
     /**
@@ -149,51 +156,33 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * Create a new Folder.
-     */
-    public function __construct()
-    {
-        $this->children = new ArrayCollection();
-        $this->documents = new ArrayCollection();
-        $this->translatedFolders = new ArrayCollection();
-    }
-
-    /**
      * @return mixed
      */
-    public function getTranslatedFolders()
+    public function getTranslatedFolders(): Collection
     {
         return $this->translatedFolders;
-    }
-
-    /**
-     * @param Translation $translation
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getTranslatedFoldersByTranslation(Translation $translation)
-    {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('translation', $translation));
-
-        return $this->translatedFolders->matching($criteria);
     }
 
     /**
      * @param mixed $translatedFolders
      * @return Folder
      */
-    public function setTranslatedFolders($translatedFolders)
+    public function setTranslatedFolders(Collection $translatedFolders)
     {
         $this->translatedFolders = $translatedFolders;
         return $this;
     }
 
     /**
-     * @return string
+     * @param Translation $translation
+     * @return \Doctrine\Common\Collections\Collection
      */
-    public function getFolderName()
+    public function getTranslatedFoldersByTranslation(Translation $translation): Collection
     {
-        return $this->folderName;
+        $criteria = Criteria::create();
+        $criteria->where(Criteria::expr()->eq('translation', $translation));
+
+        return $this->translatedFolders->matching($criteria);
     }
 
     /**
@@ -203,6 +192,14 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     public function getName()
     {
         return $this->getFolderName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getFolderName()
+    {
+        return $this->folderName;
     }
 
     /**
@@ -249,7 +246,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
      *
      * @return string
      */
-    public function getFullPath()
+    public function getFullPath(): string
     {
         $parents = $this->getParents();
         $path = [];

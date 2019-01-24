@@ -104,7 +104,7 @@ export default class DocumentUploader {
                 })
 
                 this.on('error', function (file, errorMessage, xhr) {
-                    console.log(errorMessage)
+                    console.error(errorMessage)
                 })
 
                 this.on('sending', function (file, xhr, formData) {

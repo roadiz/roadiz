@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 
@@ -50,12 +52,12 @@ class Newsletter extends AbstractDateTimed
     /**
      * @ORM\Column(type="integer", unique=false)
      */
-    private $status;
+    private $status = Newsletter::DRAFT;
 
     /**
      * @return integer
      */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }
@@ -64,30 +66,42 @@ class Newsletter extends AbstractDateTimed
      * @param integer $status
      * @return $this
      */
-    public function setStatus($status)
+    public function setStatus(int $status): Newsletter
     {
         $this->status = $status;
         return $this;
     }
 
-    public function isDraft()
+    /**
+     * @return bool
+     */
+    public function isDraft(): bool
     {
-        return ($this->status == static::DRAFT ? true : false);
+        return ($this->status === static::DRAFT);
     }
 
-    public function isPending()
+    /**
+     * @return bool
+     */
+    public function isPending(): bool
     {
-        return ($this->status == static::PENDING ? true : false);
+        return ($this->status === static::PENDING);
     }
 
-    public function isSending()
+    /**
+     * @return bool
+     */
+    public function isSending(): bool
     {
-        return ($this->status == static::SENDING ? true : false);
+        return ($this->status === static::SENDING);
     }
 
-    public function isSent()
+    /**
+     * @return bool
+     */
+    public function isSent(): bool
     {
-        return ($this->status == static::SENT ? true : false);
+        return ($this->status === static::SENT);
     }
 
     /**
@@ -99,7 +113,7 @@ class Newsletter extends AbstractDateTimed
     /**
      * @return \RZ\Roadiz\Core\Entities\Node
      */
-    public function getNode()
+    public function getNode(): ?Node
     {
         return $this->node;
     }
@@ -109,7 +123,7 @@ class Newsletter extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setNode($node)
+    public function setNode(Node $node): Newsletter
     {
         $this->node = $node;
         return $this;
@@ -117,31 +131,38 @@ class Newsletter extends AbstractDateTimed
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NewsletterSubscriber", mappedBy="newsletter")
+     * @var ArrayCollection
      */
-    private $newsletterSubscriber;
+    private $newsletterSubscribers;
 
     /**
-     * @return NewsletterSubscriber
+     * @return Collection
      */
-    public function getNewsletterSubscriber()
+    public function getNewsletterSubscribers(): Collection
     {
-        return $this->newsletterSubscriber;
+        return $this->newsletterSubscribers;
     }
 
     /**
-     * @param NewsletterSubscriber $newsletterSubscriber
-     * @return NewsletterSubscriber
+     * @param Collection $newsletterSubscribers
+     * @return Newsletter
      */
-    public function setNewsletterSubscriber($newsletterSubscriber)
+    public function setNewsletterSubscriber(Collection $newsletterSubscribers): Newsletter
     {
-        $this->newsletterSubscriber = $newsletterSubscriber;
-        return $this->newsletterSubscriber;
+        $this->newsletterSubscribers = $newsletterSubscribers;
+        return $this;
     }
 
-    public function __construct($node)
+    /**
+     * Newsletter constructor.
+     *
+     * @param Node $node
+     */
+    public function __construct(Node $node)
     {
         $this->status = static::DRAFT;
         $this->node = $node;
+        $this->newsletterSubscribers = new ArrayCollection();
     }
 
     public function __clone()
@@ -149,7 +170,7 @@ class Newsletter extends AbstractDateTimed
         if ($this->id) {
             $this->id = null;
             $this->node = null;
-            $this->newsletterSubscriber = null;
+            $this->newsletterSubscribers = new ArrayCollection();
         }
     }
 }

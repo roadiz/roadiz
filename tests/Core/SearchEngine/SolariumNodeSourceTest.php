@@ -116,7 +116,6 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 );
 
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
-
             } catch (SolrServerNotConfiguredException $e) {
                 $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
@@ -152,7 +151,6 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $solrDoc->cleanAndCommit();
 
                 $this->assertFalse($solrDoc->getDocumentFromIndex());
-
             } catch (SolrServerNotConfiguredException $e) {
                 $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {
@@ -207,9 +205,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $solr->update($update);
             }
         } catch (SolrServerNotConfiguredException $e) {
-
         } catch (HttpException $e) {
-
         }
 
         parent::tearDownAfterClass();

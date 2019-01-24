@@ -71,11 +71,11 @@ class RecaptchaValidator extends ConstraintValidator
     {
         $server = $constraint->request->server;
 
-        $data = array(
+        $data = [
             'secret' => $constraint->privateKey,
             'remoteip' => $server->get('REMOTE_ADDR'),
             'response' => $responseField,
-        );
+        ];
 
         $curl = curl_init($constraint->verifyUrl);
         curl_setopt($curl, CURLOPT_POST, true);

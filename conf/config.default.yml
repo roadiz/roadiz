@@ -25,6 +25,8 @@ security:
     # website is served with HTTPS only
     session_cookie_secure: false
     session_cookie_httponly: true
+    # Change default password algorithm from sha512 to argon2i
+    # algorithm: argon2i
 mailer:
     type: ~
     host: "localhost"
@@ -53,10 +55,10 @@ additionalCommands:
 assetsProcessing:
     # gd or imagick (gd does not support TIFF and PSD formats)
     driver: gd
-    defaultQuality: 90
+    defaultQuality: 95
     # pixel size limit () after roadiz
     # should create a smaller copy.
-    maxPixelSize: 1920
+    maxPixelSize: 2500
     jpegoptimPath: ~
     pngquantPath: ~
 #solr:

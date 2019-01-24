@@ -36,10 +36,14 @@ class UniqueNodeGeneratorTest extends DefaultThemeDependentCase
             ->findOneByName('Page');
         $collection = new ArrayCollection();
 
-        $nodeSourceRoot = $generator->generate($nodeType, $translation); $collection->add($nodeSourceRoot);
-        $nodeSource1 = $generator->generate($nodeType, $translation, $nodeSourceRoot->getNode()); $collection->add($nodeSource1);
-        $nodeSource2 = $generator->generate($nodeType, $translation, $nodeSourceRoot->getNode()); $collection->add($nodeSource2);
-        $nodeSource3 = $generator->generate($nodeType, $translation, $nodeSourceRoot->getNode()); $collection->add($nodeSource3);
+        $nodeSourceRoot = $generator->generate($nodeType, $translation);
+        $collection->add($nodeSourceRoot);
+        $nodeSource1 = $generator->generate($nodeType, $translation, $nodeSourceRoot->getNode());
+        $collection->add($nodeSource1);
+        $nodeSource2 = $generator->generate($nodeType, $translation, $nodeSourceRoot->getNode());
+        $collection->add($nodeSource2);
+        $nodeSource3 = $generator->generate($nodeType, $translation, $nodeSourceRoot->getNode());
+        $collection->add($nodeSource3);
 
         static::getManager()->flush();
 

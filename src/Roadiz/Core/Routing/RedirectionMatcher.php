@@ -111,7 +111,7 @@ class RedirectionMatcher extends UrlMatcher
      * @param $decodedUrl
      * @return Redirection
      */
-    protected function matchRedirection($decodedUrl)
+    protected function matchRedirection($decodedUrl): ?Redirection
     {
         /** @var Redirection|null $redirection */
         return $this->repository->findOneByQuery($decodedUrl);

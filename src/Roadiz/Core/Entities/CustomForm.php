@@ -46,45 +46,84 @@ use RZ\Roadiz\Utils\StringHandler;
 class CustomForm extends AbstractDateTimed
 {
     /**
+     * @ORM\Column(type="string", name="color", unique=false, nullable=true)
+     * @var string
+     */
+    protected $color = '#000000';
+    /**
      * @ORM\Column(type="string", unique=true)
+     * @var string
      */
-    private $name;
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = StringHandler::slugify($name);
-
-        return $this;
-    }
-
+    private $name = 'Untitled';
     /**
      * @ORM\Column(name="display_name", type="string")
+     * @var string
      */
-    private $displayName;
+    private $displayName = 'Untitled';
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
+    private $description;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string
+     */
+    private $email;
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @var bool
+     */
+    private $open = true;
+    /**
+     * @ORM\Column(name="close_date", type="datetime", nullable=true)
+     * @var \DateTime|null
+     */
+    private $closeDate = null;
+    /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", mappedBy="customForm", cascade={"ALL"})
+     * @ORM\OrderBy({"position" = "ASC"})
+     * @var ArrayCollection
+     */
+    private $fields;
+    /**
+     * @ORM\OneToMany(
+     *    targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer",
+     *    mappedBy="customForm",
+     *    cascade={"ALL"}
+     * )
+     * @var ArrayCollection
+     */
+    private $customFormAnswers;
+    /**
+     * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
+     * @var ArrayCollection
+     */
+    private $nodes = null;
+
+    /**
+     * Create a new CustomForm.
+     */
+    public function __construct()
+    {
+        $this->fields = new ArrayCollection();
+        $this->customFormAnswers = new ArrayCollection();
+        $this->nodes = new ArrayCollection();
+    }
+
     /**
      * @return string
      */
-    public function getDisplayName()
+    public function getDisplayName(): string
     {
         return $this->displayName;
     }
+
     /**
      * @param string $displayName
-     *
      * @return $this
      */
-    public function setDisplayName($displayName)
+    public function setDisplayName(string $displayName): CustomForm
     {
         $this->displayName = $displayName;
         $this->setName($displayName);
@@ -93,94 +132,69 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
-    /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
+
     /**
      * @param string $description
-     *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription(string $description): CustomForm
     {
         $this->description = $description;
-
         return $this;
     }
 
     /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $email;
-    /**
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
+
     /**
      * @param string $email
      *
      * @return $this
      */
-    public function setEmail($email)
+    public function setEmail(string $email): CustomForm
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
-     */
-    private $open = true;
-    /**
-     * @return boolean
-     */
-    public function isOpen()
-    {
-        return $this->open;
-    }
     /**
      * @param boolean $open
      *
      * @return $this
      */
-    public function setOpen($open)
+    public function setOpen(bool $open): CustomForm
     {
         $this->open = $open;
-
         return $this;
     }
 
     /**
-     * @ORM\Column(name="close_date", type="datetime", nullable=true)
-     */
-    private $closeDate = null;
-    /**
      * @return \DateTime
      */
-    public function getCloseDate()
+    public function getCloseDate(): ?\DateTime
     {
         return $this->closeDate;
     }
+
     /**
      * @param \DateTime $closeDate
      *
      * @return $this
      */
-    public function setCloseDate($closeDate)
+    public function setCloseDate(\DateTime $closeDate = null): CustomForm
     {
         $this->closeDate = $closeDate;
-
         return $this;
     }
 
@@ -190,7 +204,7 @@ class CustomForm extends AbstractDateTimed
      *
      * @return boolean
      */
-    public function isFormStillOpen()
+    public function isFormStillOpen(): bool
     {
         $nowDate = new \DateTime();
 
@@ -203,16 +217,11 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="string", name="color", unique=false, nullable=true)
-     */
-    protected $color = '#000000';
-
-    /**
      * Gets the value of color.
      *
      * @return string
      */
-    public function getColor()
+    public function getColor(): string
     {
         return $this->color;
     }
@@ -224,25 +233,10 @@ class CustomForm extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setColor($color)
+    public function setColor(string $color): CustomForm
     {
         $this->color = $color;
-
         return $this;
-    }
-
-    /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", mappedBy="customForm", cascade={"ALL"})
-     * @ORM\OrderBy({"position" = "ASC"})
-     */
-    private $fields;
-
-    /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
-     */
-    public function getFields()
-    {
-        return $this->fields;
     }
 
     /**
@@ -251,7 +245,7 @@ class CustomForm extends AbstractDateTimed
      *
      * @return array
      */
-    public function getFieldsNames()
+    public function getFieldsNames(): array
     {
         $namesArray = [];
 
@@ -263,12 +257,20 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
+     * @return Collection
+     */
+    public function getFields(): Collection
+    {
+        return $this->fields;
+    }
+
+    /**
      * Get every node-type fields names in
      * a simple array.
      *
      * @return array
      */
-    public function getFieldsLabels()
+    public function getFieldsLabels(): array
     {
         $namesArray = [];
 
@@ -297,7 +299,7 @@ class CustomForm extends AbstractDateTimed
      * @param CustomFormField $field
      * @return CustomForm
      */
-    public function removeField(CustomFormField $field)
+    public function removeField(CustomFormField $field): CustomForm
     {
         if ($this->getFields()->contains($field)) {
             $this->getFields()->removeElement($field);
@@ -308,45 +310,53 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToMany(
-     *    targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer",
-     *    mappedBy="customForm",
-     *    cascade={"ALL"}
-     * )
-     */
-    private $customFormAnswers;
-
-    /**
      * @return Collection
      */
-    public function getCustomFormAnswers()
+    public function getCustomFormAnswers(): Collection
     {
         return $this->customFormAnswers;
     }
 
     /**
-     * Create a new CustomForm.
-     */
-    public function __construct()
-    {
-        $this->fields = new ArrayCollection();
-        $this->customFormAnswers = new ArrayCollection();
-        $this->nodes = new ArrayCollection();
-    }
-
-    /**
      * @return string
      */
-    public function getOneLineSummary()
+    public function getOneLineSummary(): string
     {
         return $this->getId() . " — " . $this->getName() .
             " — Open : " . ($this->isOpen() ? 'true' : 'false') . PHP_EOL;
     }
 
     /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName(string $name): CustomForm
+    {
+        $this->name = StringHandler::slugify($name);
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isOpen(): bool
+    {
+        return $this->open;
+    }
+
+    /**
      * @return string $text
      */
-    public function getFieldsSummary()
+    public function getFieldsSummary(): string
     {
         $text = "|" . PHP_EOL;
         foreach ($this->getFields() as $field) {
@@ -357,14 +367,9 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
-     * @var ArrayCollection
+     * @return Collection
      */
-    private $nodes = null;
-    /**
-     * @return ArrayCollection
-     */
-    public function getNodes()
+    public function getNodes(): Collection
     {
         return $this->nodes;
     }

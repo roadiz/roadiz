@@ -44,11 +44,6 @@ abstract class AbstractJsonSerializer implements SerializerInterface
     public function serialize($obj)
     {
         $data = $this->toArray($obj);
-
-        if (defined('JSON_PRETTY_PRINT')) {
-            return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        } else {
-            return json_encode($data, JSON_NUMERIC_CHECK);
-        }
+        return json_encode($data, JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
@@ -70,6 +71,29 @@ class CustomFormField extends AbstractField
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
         AbstractField::COUNTRY_T => 'country.type',
     ];
+    /**
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
+     * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $customForm = null;
+    /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
+     * @var ArrayCollection
+     */
+    private $customFormFieldAttributes;
+    /**
+     * @ORM\Column(name="field_required", type="boolean", nullable=false, options={"default" = false})
+     * @var bool
+     */
+    private $required = false;
+
+    /**
+     * CustomFormField constructor.
+     */
+    public function __construct()
+    {
+        $this->customFormFieldAttributes = new ArrayCollection();
+    }
 
     /**
      * @param string $label
@@ -85,15 +109,9 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
-     * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $customForm = null;
-
-    /**
      * @return CustomForm|null
      */
-    public function getCustomForm()
+    public function getCustomForm(): ?CustomForm
     {
         return $this->customForm;
     }
@@ -103,7 +121,7 @@ class CustomFormField extends AbstractField
      *
      * @return $this
      */
-    public function setCustomForm(CustomForm $customForm = null)
+    public function setCustomForm(CustomForm $customForm = null): CustomFormField
     {
         $this->customForm = $customForm;
         if (null !== $customForm) {
@@ -114,35 +132,17 @@ class CustomFormField extends AbstractField
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
+     * @return Collection
      */
-    private $customFormFieldAttribute;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getCustomFormFieldAttribute()
+    public function getCustomFormFieldAttribute(): Collection
     {
-        return $this->customFormFieldAttribute;
+        return $this->customFormFieldAttributes;
     }
-
-    /**
-     * CustomFormField constructor.
-     */
-    public function __construct()
-    {
-        $this->customFormFieldAttribute = new ArrayCollection();
-    }
-
-    /**
-     * @ORM\Column(name="field_required", type="boolean", nullable=false, options={"default" = false})
-     */
-    private $required = false;
 
     /**
      * @return boolean $isRequired
      */
-    public function isRequired()
+    public function isRequired(): bool
     {
         return $this->required;
     }
@@ -152,17 +152,24 @@ class CustomFormField extends AbstractField
      *
      * @return $this
      */
-    public function setRequired($required)
+    public function setRequired(bool $required): CustomFormField
     {
         $this->required = $required;
-
         return $this;
     }
 
     /**
      * @return string
      */
-    public function getOneLineSummary()
+    public function getOneLineSummary(): string
+    {
+        return $this->__toString();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString(): string
     {
         return $this->getId() . " — " . $this->getName() . " — " . $this->getLabel() . PHP_EOL;
     }
@@ -172,7 +179,7 @@ class CustomFormField extends AbstractField
         if ($this->id) {
             $this->id = null;
             $this->customForm = null;
-            $this->customFormFieldAttribute = new ArrayCollection();
+            $this->customFormFieldAttributes = new ArrayCollection();
         }
     }
 }

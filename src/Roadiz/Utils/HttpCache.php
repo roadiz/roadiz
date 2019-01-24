@@ -47,6 +47,7 @@ abstract class HttpCache extends BaseHttpCache
      * @var null|string
      */
     protected $cacheDir;
+
     /**
      * @var Kernel
      */
@@ -58,24 +59,29 @@ abstract class HttpCache extends BaseHttpCache
      * @param Kernel $kernel An Kernel instance
      * @param string $cacheDir The cache directory (default used if null)
      */
-    public function __construct(Kernel $kernel, $cacheDir = null)
+    public function __construct(Kernel $kernel, string $cacheDir = null)
     {
         $this->kernel = $kernel;
         $this->cacheDir = $cacheDir;
 
-        parent::__construct($kernel, $this->createStore(), $this->createSurrogate(), array_merge(['debug' => $kernel->isDebug()], $this->getOptions()));
+        parent::__construct(
+            $kernel,
+            $this->createStore(),
+            $this->createSurrogate(),
+            array_merge(['debug' => $kernel->isDebug()], $this->getOptions())
+        );
     }
 
     /**
      * Forwards the Request to the backend and returns the Response.
      *
      * @param Request  $request A Request instance
-     * @param bool     $raw     Whether to catch exceptions or not
+     * @param bool     $catch     Whether to catch exceptions or not
      * @param Response $entry   A Response instance (the stale entry if present, null otherwise)
      *
      * @return Response A Response instance
      */
-    protected function forward(Request $request, $raw = false, Response $entry = null)
+    protected function forward(Request $request, $catch = false, Response $entry = null): Response
     {
         if ($this->kernel instanceof Kernel) {
             $this->kernel->boot();
@@ -83,7 +89,7 @@ abstract class HttpCache extends BaseHttpCache
             $this->kernel->getContainer()->offsetSet($this->getSurrogate()->getName(), $this->getSurrogate());
         }
 
-        return parent::forward($request, $raw, $entry);
+        return parent::forward($request, $catch, $entry);
     }
 
     /**

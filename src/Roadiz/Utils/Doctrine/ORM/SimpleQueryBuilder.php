@@ -29,6 +29,8 @@
 
 namespace RZ\Roadiz\Utils\Doctrine\ORM;
 
+use Doctrine\ORM\Query\Expr\Comparison;
+use Doctrine\ORM\Query\Expr\Func;
 use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
@@ -56,7 +58,7 @@ class SimpleQueryBuilder
      *
      * @return string
      */
-    public function getParameterKey($key)
+    public function getParameterKey($key): string
     {
         return strtolower(str_replace('.', '_', $key));
     }
@@ -68,7 +70,7 @@ class SimpleQueryBuilder
      *
      * @return QueryBuilder
      */
-    public function buildExpressionWithBinding($value, $prefix, $key)
+    public function buildExpressionWithBinding($value, string $prefix, string $key): QueryBuilder
     {
         $this->buildExpressionWithoutBinding($value, $prefix, $key);
         return $this->bindValue($key, $value);
@@ -80,9 +82,9 @@ class SimpleQueryBuilder
      * @param string $key
      * @param string $baseKey
      *
-     * @return \Doctrine\ORM\Query\Expr\Comparison|string
+     * @return Comparison|Func|string
      */
-    public function buildExpressionWithoutBinding($value, $prefix, $key, $baseKey = null)
+    public function buildExpressionWithoutBinding($value, string $prefix, string $key, string $baseKey = null)
     {
         if (strlen($prefix) > 0 && substr($prefix, -strlen('.')) !== '.') {
             $prefix .= '.';
@@ -163,7 +165,7 @@ class SimpleQueryBuilder
      *
      * @return QueryBuilder
      */
-    public function bindValue($key, $value)
+    public function bindValue(string $key, $value): QueryBuilder
     {
         $key = $this->getParameterKey($key);
 
@@ -184,7 +186,7 @@ class SimpleQueryBuilder
                         return $this->queryBuilder->setParameter($key . '_1', $value[1])
                                                   ->setParameter($key . '_2', $value[2]);
                     case 'LIKE':
-                        // param is setted in filterBy
+                        // param is set in filterBy
                         return $this->queryBuilder;
                     default:
                         return $this->queryBuilder->setParameter($key, $value);
@@ -212,7 +214,7 @@ class SimpleQueryBuilder
      *
      * @return bool
      */
-    public function joinExists($rootAlias, $joinAlias)
+    public function joinExists(string $rootAlias, string $joinAlias): bool
     {
         if (isset($this->queryBuilder->getDQLPart('join')[$rootAlias])) {
             foreach ($this->queryBuilder->getDQLPart('join')[$rootAlias] as $join) {
@@ -230,7 +232,7 @@ class SimpleQueryBuilder
     /**
      * @return QueryBuilder
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder() :QueryBuilder
     {
         return $this->queryBuilder;
     }

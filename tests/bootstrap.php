@@ -34,4 +34,3 @@ define('ROADIZ_ROOT', dirname(dirname(__FILE__)));
 
 // Include Composer Autoload (relative to project root).
 require dirname(dirname(__FILE__)) . "/vendor/autoload.php";
-

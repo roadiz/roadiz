@@ -78,7 +78,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param int $status
      * @return string
      */
-    public static function getStatusLabel($status)
+    public static function getStatusLabel($status): string
     {
         $nodeStatuses = [
             static::DRAFT => 'draft',
@@ -103,20 +103,18 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @return string
      */
-    public function getNodeName()
+    public function getNodeName(): string
     {
         return $this->nodeName;
     }
 
     /**
      * @param string $nodeName
-     *
      * @return $this
      */
-    public function setNodeName($nodeName)
+    public function setNodeName($nodeName): Node
     {
         $this->nodeName = StringHandler::slugify($nodeName);
-
         return $this;
     }
 
@@ -134,7 +132,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      *
      * @return boolean
      */
-    public function isDynamicNodeName()
+    public function isDynamicNodeName(): bool
     {
         return $this->dynamicNodeName;
     }
@@ -143,10 +141,9 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param boolean $dynamicNodeName
      * @return $this
      */
-    public function setDynamicNodeName($dynamicNodeName)
+    public function setDynamicNodeName($dynamicNodeName): Node
     {
         $this->dynamicNodeName = (boolean) $dynamicNodeName;
-
         return $this;
     }
 
@@ -158,20 +155,18 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @return boolean
      */
-    public function isHome()
+    public function isHome(): bool
     {
-        return (boolean) $this->home;
+        return $this->home;
     }
 
     /**
      * @param boolean $home
-     *
      * @return $this
      */
-    public function setHome($home)
+    public function setHome(bool $home): Node
     {
-        $this->home = (boolean) $home;
-
+        $this->home = $home;
         return $this;
     }
 
@@ -183,20 +178,18 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @return boolean
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }
 
     /**
      * @param boolean $visible
-     *
      * @return $this
      */
-    public function setVisible($visible)
+    public function setVisible(bool $visible): Node
     {
-        $this->visible = (boolean) $visible;
-
+        $this->visible = $visible;
         return $this;
     }
 
@@ -208,7 +201,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @return int
      */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }

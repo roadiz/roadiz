@@ -31,8 +31,7 @@ namespace RZ\Roadiz\Core\Serializers;
 
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
-use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Serializer\Serializer;
 
 /**
@@ -51,13 +50,13 @@ class RoleJsonSerializer extends AbstractJsonSerializer
     public function toArray($role)
     {
         $data = [];
-        $data['name'] = $role->getName();
+        $data['name'] = $role->getRole();
 
         return $data;
     }
 
     /**
-     * Deserializes a json file into a readable array of datas.
+     * Deserialize a json file into a readable array of data.
      *
      * @param string $jsonString
      * @return \RZ\Roadiz\Core\Entities\Role
@@ -69,11 +68,10 @@ class RoleJsonSerializer extends AbstractJsonSerializer
         if ($jsonString == "") {
             throw new \Exception('File is empty.');
         }
-        $encoder = new JsonEncoder();
-        $nameConverter = new CamelCaseToSnakeCaseNameConverter(['name']);
-        $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
-        $serializer = new Serializer([$normalizer], [$encoder]);
+        $serializer = new Serializer([
+            new RoleNormalizer()
+        ], [new JsonEncoder()]);
 
         return $serializer->deserialize($jsonString, Role::class, 'json');
     }

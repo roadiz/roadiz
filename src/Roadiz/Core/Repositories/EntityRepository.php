@@ -436,8 +436,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
             // param is not needed
         } elseif (isset($value)) {
             $finalQuery->setParameter($key, $value);
-        } elseif (null === $value) {
-            // param is not needed
         }
     }
 

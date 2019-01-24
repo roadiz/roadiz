@@ -1,4 +1,4 @@
-{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% extends '@Rozier/layout.html.twig' %}
 
 {% block content %}
 <section class="content-global manage-themes">
@@ -10,11 +10,8 @@
     </header>
 
     <article id="content-import-node-type" class="content install-theme-content">
-
         <div class="content-text-cont">
-
             <div class="content-text">
-
                 {% if roles|length > 0 %}
                 <h4 class="import-nodetypes-part">{% trans %}import_roles{% endtrans %}</h4>
                 <table class="install-table import-nodetypes-part1-table uk-table">

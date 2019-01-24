@@ -40,6 +40,22 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 class NodeUrlMatcher extends DynamicUrlMatcher
 {
     /**
+     * @return array
+     */
+    public function getSupportedFormatExtensions(): array
+    {
+        return ['xml', 'json', 'pdf', 'html'];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultSupportedFormatExtension(): string
+    {
+        return 'html';
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function match($pathinfo)
@@ -79,6 +95,29 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $tokens = explode('/', $decodedUrl);
             // Remove empty tokens (especially when a trailing slash is present)
             $tokens = array_values(array_filter($tokens));
+
+            $_format = 'html';
+            $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
+            $supportedFormats = $this->getSupportedFormatExtensions();
+            $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
+
+            /*
+             * Prevent searching nodes with special characters.
+             */
+            if (0 === preg_match('#'.$nodeNamePattern.'#', $identifier)) {
+                return false;
+            }
+
+            /*
+             * Look for any supported format extension after last token.
+             */
+            if (0 !== preg_match('#^('.$nodeNamePattern.')\.('.implode('|', $supportedFormats).')$#', $identifier, $matches)) {
+                $realIdentifier = $matches[1];
+                $_format = $matches[2];
+                // replace last token with real node-name without extension.
+                $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
+            }
+
             /*
              * Try with URL Aliases
              */
@@ -113,6 +152,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     'node' => $node,
                     'translation' => $translation,
                     '_route' => null,
+                    '_format' => $_format,
                 ];
             } else {
                 /*
@@ -158,6 +198,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         'node' => $node,
                         'translation' => $translation,
                         '_route' => null,
+                        '_format' => $_format,
                     ];
 
                     if (null !== $translation) {
@@ -179,9 +220,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      *
      * @param array &$tokens
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
-    protected function parseFromUrlAlias(&$tokens)
+    protected function parseFromUrlAlias(&$tokens): ?Node
     {
         if (count($tokens) > 0) {
             $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
@@ -204,9 +245,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param array       &$tokens
      * @param Translation $translation
      *
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
-    protected function parseNode(array &$tokens, Translation $translation)
+    protected function parseNode(array &$tokens, Translation $translation): ?Node
     {
         if (!empty($tokens[0])) {
             /*

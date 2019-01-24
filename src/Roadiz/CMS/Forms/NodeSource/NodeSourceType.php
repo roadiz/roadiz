@@ -45,7 +45,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -273,7 +272,7 @@ class NodeSourceType extends AbstractType
                 return NodeSourceProviderType::class;
 
             case AbstractField::COLLECTION_T:
-                return CollectionType::class;
+                return NodeSourceCollectionType::class;
         }
 
         return TextType::class;
@@ -471,6 +470,7 @@ class NodeSourceType extends AbstractType
             'required' => false,
             'attr' => [
                 'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
+                'data-field-group-canonical' => (null !== $field->getGroupNameCanonical() && '' != $field->getGroupNameCanonical()) ? $field->getGroupNameCanonical() : 'default',
                 'data-dev-name' => $devName,
                 'autocomplete' => 'off',
                 'lang' => strtolower(str_replace('_', '-', $nodeSource->getTranslation()->getLocale())),

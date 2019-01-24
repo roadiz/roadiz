@@ -1,8 +1,6 @@
 <nav class="uk-navbar" id="uk-navbar-filter">
     <div class="uk-navbar-content-cont">
-
         {% if filters.description %}<a class="uk-navbar-brand">{{ filters.description }}</a>{% endif %}
-
         <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-search">
             <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
                 <div class="uk-form-icon">
@@ -11,7 +9,10 @@
                 </div>
             </form>
 
-            <a class="uk-button uk-button-select-all uk-button-bulk-select-tags" href="#" title="{% trans %}select.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-check-square-o"></i> {% trans %}select.all{% endtrans %}</a>
+            <a class="uk-button uk-button-select-all uk-button-bulk-select-tags"
+               href="#"
+               title="{% trans %}select.all{% endtrans %}"
+               data-uk-tooltip="{animation:true}"><i class="uk-icon-check-square-o"></i> {% trans %}select.all{% endtrans %}</a>
         </div>
 
         {% if filters.itemCount > filters.itemPerPage %}
@@ -19,7 +20,6 @@
             <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
 
                 {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
-
                 {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-rz-prev-page"></i></a>{% endif %}
 
                 <span class="filter-form-text pageTitle">{% trans %}page{% endtrans %}</span>

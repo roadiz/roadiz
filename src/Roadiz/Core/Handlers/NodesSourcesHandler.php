@@ -83,6 +83,14 @@ class NodesSourcesHandler extends AbstractHandler
     }
 
     /**
+     * @return NodesSourcesRepository
+     */
+    protected function getRepository()
+    {
+        return $this->objectManager->getRepository(NodesSources::class);
+    }
+
+    /**
      * @return NodesSources
      */
     public function getNodeSource()
@@ -224,12 +232,10 @@ class NodesSourcesHandler extends AbstractHandler
                         'translation' => $this->nodeSource->getTranslation(),
                     ]
                 );
-                $currentParent = $this->objectManager
-                    ->getRepository(NodesSources::class)
-                    ->findOneBy(
-                        $criteria,
-                        []
-                    );
+                $currentParent = $this->getRepository()->findOneBy(
+                    $criteria,
+                    []
+                );
 
                 if (null !== $currentParent) {
                     $this->parentsNodeSources[] = $currentParent;
@@ -313,12 +319,10 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->objectManager
-            ->getRepository(NodesSources::class)
-            ->findOneBy(
-                $defaultCrit,
-                $defaultOrder
-            );
+        return $this->getRepository()->findOneBy(
+            $defaultCrit,
+            $defaultOrder
+        );
     }
     /**
      * Get last node-source among current node-source children.
@@ -352,12 +356,10 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->objectManager
-            ->getRepository(NodesSources::class)
-            ->findOneBy(
-                $defaultCrit,
-                $defaultOrder
-            );
+        return $this->getRepository()->findOneBy(
+            $defaultCrit,
+            $defaultOrder
+        );
     }
 
     /**
@@ -498,12 +500,10 @@ class NodesSourcesHandler extends AbstractHandler
 
         $order['node.position'] = 'ASC';
 
-        return $this->objectManager
-            ->getRepository(NodesSources::class)
-            ->findOneBy(
-                $defaultCrit,
-                $order
-            );
+        return $this->getRepository()->findOneBy(
+            $defaultCrit,
+            $order
+        );
     }
 
     /**

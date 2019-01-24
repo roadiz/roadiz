@@ -144,9 +144,9 @@
                 this.addItem(response.document)
             },
             showError: function (file, error, xhr) {
-                console.log(file)
-                console.log(error)
-                console.log(xhr)
+                console.error(file)
+                console.error(error)
+                console.error(xhr)
             }
         },
         components: {

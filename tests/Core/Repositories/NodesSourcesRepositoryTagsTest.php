@@ -27,11 +27,9 @@
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 class NodesSourcesRepositoryTagsTest extends NodeRepositoryTagsTest
 {

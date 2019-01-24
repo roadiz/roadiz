@@ -96,37 +96,101 @@ class Font extends AbstractDateTimed
         Font::BLACK => 'font_variant.black',                    // 900
         Font::BLACK_ITALIC => 'font_variant.black.italic',      // 900
     ];
+    /**
+     * @ORM\Column(type="integer", name="variant", unique=false, nullable=false)
+     * @var int
+     */
+    protected $variant = Font::REGULAR;
+    /** @var UploadedFile|null */
+    protected $eotFile = null;
+    /** @var UploadedFile|null */
+    protected $woffFile = null;
+    /** @var UploadedFile|null */
+    protected $woff2File = null;
+    /** @var UploadedFile|null */
+    protected $otfFile = null;
+    /** @var UploadedFile|null */
+    protected $svgFile = null;
+    /**
+     * @ORM\Column(type="string", nullable=true, name="eot_filename")
+     * @var string|null
+     */
+    private $eotFilename;
+    /**
+     * @ORM\Column(type="string", nullable=true, name="woff_filename")
+     * @var string|null
+     */
+    private $woffFilename;
+    /**
+     * @ORM\Column(type="string", nullable=true, name="woff2_filename")
+     * @var string|null
+     */
+    private $woff2Filename;
+    /**
+     * @ORM\Column(type="string", nullable=true, name="otf_filename")
+     * @var string|null
+     */
+    private $otfFilename;
+    /**
+     * @ORM\Column(type="string", nullable=true, name="svg_filename")
+     * @var string|null
+     */
+    private $svgFilename;
+    /**
+     * @ORM\Column(type="string", nullable=false, unique=false)
+     * @var string
+     */
+    private $name = '';
+    /**
+     * @ORM\Column(type="string", nullable=false, unique=false)
+     * @var string
+     */
+    private $hash = '';
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     * @var string
+     */
+    private $folder;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @var string|null
+     */
+    private $description;
+
+    /**
+     * Create a new Font and generate a random folder name.
+     */
+    public function __construct()
+    {
+        $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);
+    }
 
     /**
      * Get a readable string to describe current font variant.
      *
      * @return string
      */
-    public function getReadableVariant()
+    public function getReadableVariant(): string
     {
         return static::$variantToHuman[$this->getVariant()];
     }
 
     /**
-     * @ORM\Column(type="integer", name="variant", unique=false, nullable=false)
+     * @return int
      */
-    protected $variant = Font::REGULAR;
-    /**
-     * @return integer
-     */
-    public function getVariant()
+    public function getVariant(): int
     {
         return $this->variant;
     }
+
     /**
-     * @param integer $variant
+     * @param int $variant
      *
      * @return $this
      */
-    public function setVariant($variant)
+    public function setVariant(int $variant): Font
     {
         $this->variant = $variant;
-
         return $this;
     }
 
@@ -140,7 +204,7 @@ class Font extends AbstractDateTimed
      * @see https://developer.mozilla.org/fr/docs/Web/CSS/font-weight
      * @return array
      */
-    public function getFontVariantInfos()
+    public function getFontVariantInfos(): array
     {
         switch ($this->getVariant()) {
             case static::SEMI_BOLD_ITALIC:
@@ -254,167 +318,28 @@ class Font extends AbstractDateTimed
         }
     }
 
-    /** @var UploadedFile */
-    protected $eotFile;
-
-    /** @var UploadedFile */
-    protected $woffFile;
-
-    /** @var UploadedFile */
-    protected $woff2File;
-
-    /** @var UploadedFile */
-    protected $otfFile;
-
-    /** @var UploadedFile */
-    protected $svgFile;
-
-    /**
-     * @ORM\Column(type="string", nullable=true, name="eot_filename")
-     */
-    private $eotFilename;
     /**
      * @return string
      */
-    public function getEOTFilename()
-    {
-        return $this->eotFilename;
-    }
-    /**
-     * @param string $eotFilename
-     *
-     * @return $this
-     */
-    public function setEOTFilename($eotFilename)
-    {
-        $this->eotFilename = StringHandler::cleanForFilename($eotFilename);
-
-        return $this;
-    }
-
-    /**
-     * @ORM\Column(type="string", nullable=true, name="woff_filename")
-     */
-    private $woffFilename;
-    /**
-     * @return string
-     */
-    public function getWOFFFilename()
-    {
-        return $this->woffFilename;
-    }
-    /**
-     * @param string $woffFilename
-     *
-     * @return $this
-     */
-    public function setWOFFFilename($woffFilename)
-    {
-        $this->woffFilename = StringHandler::cleanForFilename($woffFilename);
-
-        return $this;
-    }
-
-    /**
-     * @ORM\Column(type="string", nullable=true, name="woff2_filename")
-     */
-    private $woff2Filename;
-    /**
-     * @return string
-     */
-    public function getWOFF2Filename()
-    {
-        return $this->woff2Filename;
-    }
-    /**
-     * @param string $woff2Filename
-     *
-     * @return $this
-     */
-    public function setWOFF2Filename($woff2Filename)
-    {
-        $this->woff2Filename = StringHandler::cleanForFilename($woff2Filename);
-
-        return $this;
-    }
-
-    /**
-     * @ORM\Column(type="string", nullable=true, name="otf_filename")
-     */
-    private $otfFilename;
-    /**
-     * @return string
-     */
-    public function getOTFFilename()
-    {
-        return $this->otfFilename;
-    }
-    /**
-     * @param string $otfFilename
-     *
-     * @return $this
-     */
-    public function setOTFFilename($otfFilename)
-    {
-        $this->otfFilename = StringHandler::cleanForFilename($otfFilename);
-
-        return $this;
-    }
-
-    /**
-     * @ORM\Column(type="string", nullable=true, name="svg_filename")
-     */
-    private $svgFilename;
-    /**
-     * @return string
-     */
-    public function getSVGFilename()
-    {
-        return $this->svgFilename;
-    }
-    /**
-     * @param string $svgFilename
-     *
-     * @return $this
-     */
-    public function setSVGFilename($svgFilename)
-    {
-        $this->svgFilename = StringHandler::cleanForFilename($svgFilename);
-
-        return $this;
-    }
-
-    /**
-     * @ORM\Column(type="string", nullable=false, unique=false)
-     */
-    private $name;
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
+
     /**
      * @param string $name
-     *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): Font
     {
         $this->name = $name;
-
         return $this;
     }
 
     /**
-     * @ORM\Column(type="string", nullable=false, unique=false)
-     */
-    private $hash = "";
-    /**
      * @return string
      */
-    public function getHash()
+    public function getHash(): string
     {
         return $this->hash;
     }
@@ -424,7 +349,7 @@ class Font extends AbstractDateTimed
      *
      * @return $this
      */
-    public function setHash($hash)
+    public function setHash(string $hash): Font
     {
         $this->hash = $hash;
 
@@ -433,10 +358,9 @@ class Font extends AbstractDateTimed
 
     /**
      * @param string $secret
-     *
      * @return $this
      */
-    public function generateHashWithSecret($secret)
+    public function generateHashWithSecret(string $secret): Font
     {
         $this->hash = substr(hash("crc32b", $this->name . $secret), 0, 12);
 
@@ -444,21 +368,9 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @ORM\Column(type="string")
-     */
-    private $folder;
-    /**
      * @return string
      */
-    public function getFolder()
-    {
-        return $this->folder;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEOTRelativeUrl()
+    public function getEOTRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getEOTFilename();
     }
@@ -466,7 +378,33 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getWOFFRelativeUrl()
+    public function getFolder(): string
+    {
+        return $this->folder;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEOTFilename(): ?string
+    {
+        return $this->eotFilename;
+    }
+
+    /**
+     * @param string $eotFilename
+     * @return $this
+     */
+    public function setEOTFilename(?string $eotFilename): Font
+    {
+        $this->eotFilename = StringHandler::cleanForFilename($eotFilename);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWOFFRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getWOFFFilename();
     }
@@ -474,7 +412,25 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getWOFF2RelativeUrl()
+    public function getWOFFFilename(): ?string
+    {
+        return $this->woffFilename;
+    }
+
+    /**
+     * @param string $woffFilename
+     * @return $this
+     */
+    public function setWOFFFilename(?string $woffFilename): Font
+    {
+        $this->woffFilename = StringHandler::cleanForFilename($woffFilename);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWOFF2RelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getWOFF2Filename();
     }
@@ -482,7 +438,26 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getOTFRelativeUrl()
+    public function getWOFF2Filename(): ?string
+    {
+        return $this->woff2Filename;
+    }
+
+    /**
+     * @param string $woff2Filename
+     *
+     * @return $this
+     */
+    public function setWOFF2Filename(?string $woff2Filename): Font
+    {
+        $this->woff2Filename = StringHandler::cleanForFilename($woff2Filename);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getOTFRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getOTFFilename();
     }
@@ -490,40 +465,64 @@ class Font extends AbstractDateTimed
     /**
      * @return string
      */
-    public function getSVGRelativeUrl()
+    public function getOTFFilename(): ?string
+    {
+        return $this->otfFilename;
+    }
+
+    /**
+     * @param string $otfFilename
+     * @return $this
+     */
+    public function setOTFFilename(?string $otfFilename): Font
+    {
+        $this->otfFilename = StringHandler::cleanForFilename($otfFilename);
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSVGRelativeUrl(): ?string
     {
         return $this->getFolder() . '/' . $this->getSVGFilename();
     }
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @return string
      */
-    private $description;
+    public function getSVGFilename(): ?string
+    {
+        return $this->svgFilename;
+    }
+
+    /**
+     * @param string $svgFilename
+     * @return $this
+     */
+    public function setSVGFilename(?string $svgFilename): Font
+    {
+        $this->svgFilename = StringHandler::cleanForFilename($svgFilename);
+        return $this;
+    }
+
     /**
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
+
     /**
      * @param string $description
      *
      * @return $this
      */
-    public function setDescription($description)
+    public function setDescription(?string $description): Font
     {
         $this->description = $description;
-
         return $this;
-    }
-
-    /**
-     * Create a new Font and generate a random folder name.
-     */
-    public function __construct()
-    {
-        $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);
     }
 
     /**
@@ -531,7 +530,7 @@ class Font extends AbstractDateTimed
      *
      * @return UploadedFile
      */
-    public function getEotFile()
+    public function getEotFile(): ?UploadedFile
     {
         return $this->eotFile;
     }
@@ -542,10 +541,9 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $eotFile the eot file
      * @return Font
      */
-    public function setEotFile(UploadedFile $eotFile = null)
+    public function setEotFile(?UploadedFile $eotFile): Font
     {
         $this->eotFile = $eotFile;
-
         return $this;
     }
 
@@ -554,7 +552,7 @@ class Font extends AbstractDateTimed
      *
      * @return UploadedFile
      */
-    public function getWoffFile()
+    public function getWoffFile(): ?UploadedFile
     {
         return $this->woffFile;
     }
@@ -565,7 +563,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $woffFile the woff file
      * @return Font
      */
-    public function setWoffFile(UploadedFile $woffFile = null)
+    public function setWoffFile(?UploadedFile $woffFile): Font
     {
         $this->woffFile = $woffFile;
         return $this;
@@ -576,7 +574,7 @@ class Font extends AbstractDateTimed
      *
      * @return UploadedFile
      */
-    public function getWoff2File()
+    public function getWoff2File(): ?UploadedFile
     {
         return $this->woff2File;
     }
@@ -587,7 +585,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $woff2File the woff2 file
      * @return Font
      */
-    public function setWoff2File(UploadedFile $woff2File = null)
+    public function setWoff2File(?UploadedFile $woff2File): Font
     {
         $this->woff2File = $woff2File;
         return $this;
@@ -598,7 +596,7 @@ class Font extends AbstractDateTimed
      *
      * @return UploadedFile
      */
-    public function getOtfFile()
+    public function getOtfFile(): ?UploadedFile
     {
         return $this->otfFile;
     }
@@ -609,7 +607,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $otfFile the otf file
      * @return Font
      */
-    public function setOtfFile(UploadedFile $otfFile = null)
+    public function setOtfFile(?UploadedFile $otfFile): Font
     {
         $this->otfFile = $otfFile;
         return $this;
@@ -620,7 +618,7 @@ class Font extends AbstractDateTimed
      *
      * @return UploadedFile
      */
-    public function getSvgFile()
+    public function getSvgFile(): ?UploadedFile
     {
         return $this->svgFile;
     }
@@ -631,7 +629,7 @@ class Font extends AbstractDateTimed
      * @param UploadedFile $svgFile the svg file
      * @return Font
      */
-    public function setSvgFile(UploadedFile $svgFile = null)
+    public function setSvgFile(?UploadedFile $svgFile): Font
     {
         $this->svgFile = $svgFile;
         return $this;

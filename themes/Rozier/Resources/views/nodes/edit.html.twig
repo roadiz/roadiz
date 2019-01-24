@@ -4,7 +4,7 @@
 {% set currentTitle = node.getNodeName %}
 {% endif %}
 
-{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% extends '@Rozier/layout.html.twig' %}
 
 {% block content %}
 <section class="content-global manage-node">

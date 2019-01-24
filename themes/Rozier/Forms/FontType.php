@@ -67,6 +67,7 @@ class FontType extends AbstractType
             ])
             ->add('hash', TextType::class, [
                 'label' => 'font.cssfamily',
+                'empty_data' => '',
                 'attr' => [
                     'data-desc' => 'css_font_family_hash_is_automatically_generated_from_font_name'
                 ]

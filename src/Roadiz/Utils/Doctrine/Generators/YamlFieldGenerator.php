@@ -38,7 +38,7 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
     /**
      * @return string
      */
-    public function getFieldAlternativeGetter()
+    public function getFieldAlternativeGetter(): string
     {
         $assignation = '$this->'.$this->field->getName();
         return '

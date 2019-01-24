@@ -44,13 +44,10 @@ class RoleTest extends PHPUnit_Framework_TestCase
     public function testRoleName($roleName, $expected)
     {
         // Arrange
-        $a = new Role();
-
-        // Act
-        $a->setName($roleName);
+        $a = new Role($roleName);
 
         // Assert
-        $this->assertEquals($expected, $a->getName());
+        $this->assertEquals($expected, $a->getRole());
     }
 
     public function roleNameProvider()

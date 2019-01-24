@@ -47,9 +47,9 @@ class FilesImportCommand extends Command
         $this
             ->setName('files:import')
             ->setDescription('Import public files, private files and fonts from a single ZIP archive.')
-            ->setDefinition(array(
+            ->setDefinition([
                 new InputArgument('input', InputArgument::REQUIRED, 'ZIP file path to import.'),
-            ));
+            ]);
     }
 
     /**

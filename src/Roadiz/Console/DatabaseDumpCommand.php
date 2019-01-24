@@ -52,10 +52,10 @@ Or <info>bin/roadiz database:dump -c</info> command to generate an automatically
 <info>mysqldump</info> MUST be installed on your system (via mysql-client packages), this command uses system processes.
 EOF
             )
-            ->setDefinition(array(
+            ->setDefinition([
                 new InputOption('gzip', 'g', InputOption::VALUE_NONE, 'Compress file with gzip'),
                 new InputOption('create-file', 'c', InputOption::VALUE_NONE, 'Let Roadiz create a dump file in root-dir with automatic naming for you.'),
-            ))
+            ])
         ;
     }
 

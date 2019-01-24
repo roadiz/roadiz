@@ -42,7 +42,7 @@
                 <transition name="fade">
                     <ul class="uk-sortable" v-if="!isLoading">
                         <draggable v-model="items" :options="{ group: { name: entity, put: false } }">
-                            <transition-group style="display:block; min-height: 80px;">
+                            <transition-group class="sortable-inner">
                                 <component
                                     v-bind:is="currentListingView"
                                     v-for="(item, index) in items"

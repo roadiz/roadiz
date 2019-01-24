@@ -52,11 +52,11 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
     {
         $builder->addEventListener(
             FormEvents::PRE_SET_DATA,
-            array($this, 'onPreSetData')
+            [$this, 'onPreSetData']
         )
             ->addEventListener(
                 FormEvents::POST_SUBMIT,
-                array($this, 'onPostSubmit')
+                [$this, 'onPostSubmit']
             )
         ;
     }

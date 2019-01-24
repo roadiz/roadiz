@@ -27,6 +27,8 @@
  * @file NodesSourcesParentTest.php
  * @author Ambroise Maupate
  */
+
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
@@ -38,7 +40,7 @@ class NodesSourcesParentTest extends SchemaDependentCase
     public function tearDown()
     {
         $nodes = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Node')
+            ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findAll();
 
@@ -100,7 +102,7 @@ class NodesSourcesParentTest extends SchemaDependentCase
         $sources = [];
 
         $fr = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findOneByLocale('fr');
 
         $n1 = static::createNode(uniqid(), $fr);
@@ -118,10 +120,10 @@ class NodesSourcesParentTest extends SchemaDependentCase
         $n4->setParent($n3);
         $ns4 = $n4->getNodeSources()->first();
 
-        $sources[] = array($ns1, null);
-        $sources[] = array($ns2, $ns1);
-        $sources[] = array($ns3, $ns1);
-        $sources[] = array($ns4, $ns3);
+        $sources[] = [$ns1, null];
+        $sources[] = [$ns2, $ns1];
+        $sources[] = [$ns3, $ns1];
+        $sources[] = [$ns4, $ns3];
 
         static::getManager()->flush();
 

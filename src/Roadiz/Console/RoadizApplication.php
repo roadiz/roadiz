@@ -38,7 +38,6 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
-use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -130,13 +129,13 @@ class RoadizApplication extends Application
 
     protected function addDoctrineCommands()
     {
-        $this->addCommands(array(
+        $this->addCommands([
             new CreateCommand(),
             new UpdateCommand(),
             new DropCommand(),
             new ValidateSchemaCommand(),
             new InfoCommand(),
-        ));
+        ]);
     }
 
     /**
@@ -146,7 +145,7 @@ class RoadizApplication extends Application
      */
     protected function getDefaultCommands()
     {
-        $commands = array(
+        $commands = [
             new DispatcherDebugCommand(),
             new ConfigurationDebugCommand(),
             new TranslationsCommand(),
@@ -192,7 +191,7 @@ class RoadizApplication extends Application
             new FilesExportCommand(),
             new FilesImportCommand(),
             new LogsCleanupCommand(),
-        );
+        ];
 
         /*
          * Register user defined Commands

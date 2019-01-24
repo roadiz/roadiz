@@ -55,7 +55,7 @@ class DoctrineCacheClearer extends Clearer
      * @param EntityManagerInterface $entityManager
      * @param Kernel $kernel
      */
-    public function __construct(EntityManagerInterface $entityManager = null, Kernel $kernel)
+    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel)
     {
         parent::__construct('');
         $this->entityManager = $entityManager;

@@ -53,6 +53,19 @@
     }
 }
 
+.content-node-edit-source {
+    opacity: 0;
+    transition: opacity linear 0.3s;
+
+    &.content-tabs-ready {
+        opacity: 1;
+    }
+
+    .no-js & {
+        opacity: 1;
+    }
+}
+
 #node-source-form-switcher-nav {
     display: inline-block;
     text-align: center;

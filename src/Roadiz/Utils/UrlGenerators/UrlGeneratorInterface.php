@@ -34,8 +34,8 @@ interface UrlGeneratorInterface
     /**
      * Get a resource Url.
      *
-     * @param boolean $absolute Use Url with domain name [default: false]
+     * @param bool $absolute Use Url with domain name [default: false]
      * @return string
      */
-    public function getUrl($absolute = false);
+    public function getUrl(bool $absolute = false): string;
 }

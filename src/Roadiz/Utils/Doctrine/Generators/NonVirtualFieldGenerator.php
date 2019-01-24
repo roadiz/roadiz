@@ -44,7 +44,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      *
      * @return string
      */
-    public function getFieldIndex()
+    public function getFieldIndex(): string
     {
         if ($this->field->isIndexed()) {
             return '@ORM\Index(columns={"'.$this->field->getName().'"})';
@@ -56,7 +56,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldAnnotation()
+    public function getFieldAnnotation(): string
     {
         $ormParams = [
             'type' => '"' . NodeTypeField::$typeToDoctrine[$this->field->getType()] . '"',
@@ -83,7 +83,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldDeclaration()
+    public function getFieldDeclaration(): string
     {
         if ($this->field->getType() === NodeTypeField::BOOLEAN_T) {
             return '    private $'.$this->field->getName().' = false;'.PHP_EOL;
@@ -97,7 +97,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldGetter()
+    public function getFieldGetter(): string
     {
         $assignation = '$this->'.$this->field->getName();
 
@@ -114,7 +114,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     /**
      * @inheritDoc
      */
-    public function getFieldSetter()
+    public function getFieldSetter(): string
     {
         $assignation = '$'.$this->field->getName();
 

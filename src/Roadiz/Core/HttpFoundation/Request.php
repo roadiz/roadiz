@@ -38,18 +38,21 @@ use Symfony\Component\HttpFoundation\Request as BaseRequest;
  */
 class Request extends BaseRequest
 {
+    /**
+     * @var null|Theme
+     */
     protected $theme = null;
 
-    public function setTheme(Theme $theme = null)
+    public function setTheme(Theme $theme = null): Request
     {
         $this->theme = $theme;
         return $this;
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Theme
+     * @return Theme|null
      */
-    public function getTheme()
+    public function getTheme(): ?Theme
     {
         return $this->theme;
     }

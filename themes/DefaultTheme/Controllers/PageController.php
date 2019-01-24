@@ -63,18 +63,24 @@ class PageController extends DefaultThemeApp
     /**
      * Default action for any Page node.
      *
-     * @param Request $request
-     * @param Node $node
+     * @param Request     $request
+     * @param Node        $node
      * @param Translation $translation
+     * @param string      $_format
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function indexAction(
         Request $request,
         Node $node = null,
-        Translation $translation = null
+        Translation $translation = null,
+        $_format = 'html'
     ) {
         $this->prepareThemeAssignation($node, $translation);
+
+        if ($request->getRequestFormat() !== 'html') {
+            throw $this->createNotFoundException('Format is not supported.');
+        }
 
         if ($request->query->has('404') && $request->query->get('404') == true) {
             throw $this->createNotFoundException('This is a 404 page manually triggered via ' . ResourceNotFoundException::class);
@@ -89,7 +95,13 @@ class PageController extends DefaultThemeApp
          * right into your front page.
          * Awesome isn’t it ?
          */
-        $response = $this->render('pages/page.html.twig', $this->assignation);
+        if ($request->getRequestFormat() === 'json') {
+            $response = new JsonResponse([
+                'title' => $this->nodeSource->getTitle(),
+            ]);
+        } else {
+            $response = $this->render('pages/page.html.twig', $this->assignation);
+        }
 
         if (!$this->get('kernel')->isDebug() &&
             !$this->get('kernel')->isPreview()) {

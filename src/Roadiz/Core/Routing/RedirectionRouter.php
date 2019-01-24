@@ -79,7 +79,7 @@ class RedirectionRouter extends Router
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = array(), $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
         return "";
     }
@@ -89,7 +89,7 @@ class RedirectionRouter extends Router
      *
      * @return UrlMatcherInterface A UrlMatcherInterface instance
      */
-    public function getMatcher()
+    public function getMatcher(): RedirectionMatcher
     {
         if (null !== $this->matcher) {
             return $this->matcher;

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
@@ -45,40 +46,12 @@ class Group extends AbstractEntity
      * @ORM\Column(type="string", unique=true)
      * @var string
      */
-    private $name;
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-    /**
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
+    private $name = '';
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
      * @var ArrayCollection
      */
     private $users;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getUsers()
-    {
-        return $this->users;
-    }
-
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups")
      * @ORM\JoinTable(name="groups_roles",
@@ -88,59 +61,10 @@ class Group extends AbstractEntity
      * @var ArrayCollection
      */
     private $roles;
+    /**
+     * @var array|null
+     */
     private $rolesNames = null;
-
-    /**
-     * Get roles entities.
-     *
-     * @return ArrayCollection
-     */
-    public function getRolesEntities()
-    {
-        return $this->roles;
-    }
-    /**
-     * Get roles names as a simple array.
-     *
-     * @return array
-     */
-    public function getRoles()
-    {
-        if ($this->rolesNames === null) {
-            $this->rolesNames = [];
-            foreach ($this->getRolesEntities() as $role) {
-                $this->rolesNames[] = $role->getName();
-            }
-        }
-
-        return $this->rolesNames;
-    }
-    /**
-     * @param \RZ\Roadiz\Core\Entities\Role $role
-     *
-     * @return $this
-     */
-    public function addRole(Role $role)
-    {
-        if (!$this->getRolesEntities()->contains($role)) {
-            $this->getRolesEntities()->add($role);
-        }
-
-        return $this;
-    }
-    /**
-     * @param \RZ\Roadiz\Core\Entities\Role $role
-     *
-     * @return $this
-     */
-    public function removeRole(Role $role)
-    {
-        if ($this->getRolesEntities()->contains($role)) {
-            $this->getRolesEntities()->removeElement($role);
-        }
-
-        return $this;
-    }
 
     /**
      * Create a new Group.
@@ -150,5 +74,87 @@ class Group extends AbstractEntity
         $this->roles = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->rolesNames = null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return $this
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
+     * Get roles names as a simple array.
+     *
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        if ($this->rolesNames === null) {
+            $this->rolesNames = array_map(function (Role $role) {
+                return $role->getRole();
+            }, $this->getRolesEntities()->toArray());
+        }
+
+        return $this->rolesNames;
+    }
+
+    /**
+     * Get roles entities.
+     *
+     * @return Collection
+     */
+    public function getRolesEntities(): Collection
+    {
+        return $this->roles;
+    }
+
+    /**
+     * @param \RZ\Roadiz\Core\Entities\Role $role
+     *
+     * @return $this
+     */
+    public function addRole(Role $role): Group
+    {
+        if (!$this->getRolesEntities()->contains($role)) {
+            $this->getRolesEntities()->add($role);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param \RZ\Roadiz\Core\Entities\Role $role
+     *
+     * @return $this
+     */
+    public function removeRole(Role $role): Group
+    {
+        if ($this->getRolesEntities()->contains($role)) {
+            $this->getRolesEntities()->removeElement($role);
+        }
+
+        return $this;
     }
 }

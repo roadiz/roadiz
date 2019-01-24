@@ -21,31 +21,46 @@ export default class NodeEditSource {
         this.inputFocus = this.inputFocus.bind(this)
         this.inputFocusOut = this.inputFocusOut.bind(this)
         this.onFormSubmit = this.onFormSubmit.bind(this)
+        this.wrapInTabs = this.wrapInTabs.bind(this)
 
         // Methods
         if (this.$content.length) {
             this.$formRow = this.$content.find('.uk-form-row')
-            this.wrapInTabs()
+            window.setTimeout(this.wrapInTabs, 300)
             this.init()
             this.initEvents()
         }
     }
 
     wrapInTabs () {
-        let fieldGroups = {}
-        let $fields = this.$content.find('.uk-form-row[data-field-group]')
+        let fieldGroups = {
+            'default': {
+                'name': 'default',
+                'id': 'default',
+                'fields': []
+            }
+        }
+        let $fields = this.$content.find('.uk-form-row[data-field-group-canonical]')
         let fieldsLength = $fields.length
-        let fieldsGroupsLength = 0
+        let fieldsGroupsLength = 1
 
-        if (fieldsLength > 1) {
+        if (fieldsLength > 0) {
             for (let i = 0; i < fieldsLength; i++) {
                 let groupName = $fields[i].getAttribute('data-field-group')
-
-                if (typeof fieldGroups[groupName] === 'undefined') {
-                    fieldGroups[groupName] = []
-                    fieldsGroupsLength++
+                let groupNameCanonical = $fields[i].getAttribute('data-field-group-canonical')
+                if (groupNameCanonical) {
+                    if (typeof fieldGroups[groupNameCanonical] === 'undefined') {
+                        fieldGroups[groupNameCanonical] = {
+                            'name': groupName,
+                            'id': groupNameCanonical,
+                            'fields': []
+                        }
+                        fieldsGroupsLength++
+                    }
+                    fieldGroups[groupNameCanonical].fields.push($fields[i])
+                } else {
+                    fieldGroups['default'].fields.push($fields[i])
                 }
-                fieldGroups[groupName].push($fields[i])
             }
 
             if (fieldsGroupsLength > 1) {
@@ -53,31 +68,22 @@ export default class NodeEditSource {
                 let $formSwitcher = this.$form.find('.uk-switcher')
                 let $formSwitcherNav = this.$form.find('#node-source-form-switcher-nav')
 
-                /*
-                 * Sort tab name and put default in first
-                 */
-                let keysSorted = Object.keys(fieldGroups).sort((a, b) => {
-                    if (a === 'default') { return -1 }
-                    if (b === 'default') { return 1 }
-                    return +(a.toLowerCase() > b.toLowerCase()) || +(a.toLowerCase() === b.toLowerCase()) - 1
-                })
-
-                for (let keyIndex in keysSorted) {
-                    let groupName2 = keysSorted[keyIndex]
-                    let groupName2Safe = groupName2.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
-
+                for (let index in fieldGroups) {
+                    let fieldGroup = fieldGroups[index]
+                    let groupName2Safe = fieldGroup.id.replace(/[\s_]/g, '-').replace(/[^\w-]+/g, '')
                     let groupId = 'group-' + groupName2Safe
+
                     $formSwitcher.append('<li class="field-group" id="' + groupId + '"></li>')
 
-                    if (groupName2 === 'default') {
+                    if (fieldGroup.id === 'default') {
                         $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#"><i class="uk-icon-star"></i></a></li>')
                     } else {
-                        $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#">' + groupName2 + '</a></li>')
+                        $formSwitcherNav.append('<li class="switcher-nav-item"><a href="#">' + fieldGroup.name + '</a></li>')
                     }
                     let $group = $formSwitcher.find('#' + groupId)
 
-                    for (let index = 0; index < fieldGroups[groupName2].length; index++) {
-                        $group.append($(fieldGroups[groupName2][index]))
+                    for (let index = 0; index < fieldGroup.fields.length; index++) {
+                        $group.append($(fieldGroup.fields[index]))
                     }
                 }
 
@@ -89,6 +95,8 @@ export default class NodeEditSource {
                 })
             }
         }
+
+        this.$content.addClass('content-tabs-ready')
     }
 
     /**

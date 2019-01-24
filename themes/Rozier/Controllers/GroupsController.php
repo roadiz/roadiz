@@ -141,6 +141,7 @@ class GroupsController extends RozierApp
                 return $this->redirect($this->generateUrl('groupsHomePage'));
             }
 
+            $this->assignation['group'] = $group;
             $this->assignation['form'] = $form->createView();
 
             return $this->render('groups/delete.html.twig', $this->assignation);

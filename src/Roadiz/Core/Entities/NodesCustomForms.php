@@ -91,7 +91,7 @@ class NodesCustomForms extends AbstractPositioned
      *
      * @return Node
      */
-    public function getNode()
+    public function getNode(): Node
     {
         return $this->node;
     }
@@ -103,10 +103,9 @@ class NodesCustomForms extends AbstractPositioned
      *
      * @return self
      */
-    public function setNode(Node $node)
+    public function setNode(Node $node): NodesCustomForms
     {
         $this->node = $node;
-
         return $this;
     }
 
@@ -115,7 +114,7 @@ class NodesCustomForms extends AbstractPositioned
      *
      * @return CustomForm
      */
-    public function getCustomForm()
+    public function getCustomForm(): CustomForm
     {
         return $this->customForm;
     }
@@ -127,7 +126,7 @@ class NodesCustomForms extends AbstractPositioned
      *
      * @return self
      */
-    public function setCustomForm(CustomForm $customForm)
+    public function setCustomForm(CustomForm $customForm): NodesCustomForms
     {
         $this->customForm = $customForm;
 
@@ -139,7 +138,7 @@ class NodesCustomForms extends AbstractPositioned
      *
      * @return NodeTypeField
      */
-    public function getField()
+    public function getField(): NodeTypeField
     {
         return $this->field;
     }
@@ -151,7 +150,7 @@ class NodesCustomForms extends AbstractPositioned
      *
      * @return self
      */
-    public function setField(NodeTypeField $field)
+    public function setField(NodeTypeField $field): NodesCustomForms
     {
         $this->field = $field;
 

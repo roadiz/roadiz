@@ -275,7 +275,7 @@ export default class MultiGeotagField extends GeotagField {
                     this.setMarker(null, markers, $input, $geocodeReset, map, results[0].geometry.location, address)
                     this.syncSelector($selector, markers, map, $input)
                 } else {
-                    console.err('Geocode was not successful for the following reason: ' + status)
+                    console.error('Geocode was not successful for the following reason: ' + status)
                 }
             })
 

@@ -70,7 +70,6 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
 
         foreach ($nodeType->getFields() as $nodeTypeField) {
             $nodeTypeFieldData = $this->ntfSerializer->toArray($nodeTypeField);
-
             $data['fields'][] = $nodeTypeFieldData;
         }
 
@@ -99,7 +98,6 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
             'publishable',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
-
         $serializer = new Serializer([$normalizer], [$encoder]);
         $nodeType = $serializer->deserialize($string, NodeType::class, 'json');
 

@@ -88,7 +88,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['mapsStyle'] = $this->get('settingsBag')->get('maps_style');
         $this->assignation['head']['mapsLocation'] = $this->get('settingsBag')->get('maps_default_location') ? $this->get('settingsBag')->get('maps_default_location') : null;
         $this->assignation['head']['mainColor'] = $this->get('settingsBag')->get('main_color');
-        $this->assignation['head']['googleClientId'] = $this->get('settingsBag')->get('google_client_id') ? $this->get('settingsBag')->get('google_client_id') : "";
+        $this->assignation['head']['googleClientId'] = $this->get('settingsBag')->get('google_client_id', "");
         $this->assignation['head']['themeName'] = static::$themeName;
         $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
 

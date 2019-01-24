@@ -58,7 +58,7 @@ export default class SettingsSaveButtons {
 
         this.currentRequest = $.ajax(sendData)
             .done(() => {
-                console.log('Saved setting with success.')
+                console.debug('Saved setting with success.')
             })
             .always(() => {
                 window.Rozier.lazyload.canvasLoader.hide()

@@ -82,6 +82,7 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
         // Node type #1
         $nt1 = new NodeType();
         $nt1->setName('page type');
+        $nt1->setDisplayName('Page Type');
 
         // Node type #2
         $nt2 = new NodeType();
@@ -97,27 +98,27 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
         $ntf1->setUniversal(false);
         $nt2->addField($ntf1);
 
-        return array(
-            array(new NodeType(), ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'),
-            array($nt1, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'),
-            array($nt2, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json'),
-        );
+        return [
+            [new NodeType(), ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'],
+            [$nt1, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'],
+            [$nt2, ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json'],
+        ];
     }
 
     public function deserializeProvider()
     {
-        return array(
-            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'),
-            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'),
-            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json'),
-        );
+        return [
+            [ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json'],
+            [ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler02.json'],
+            [ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json'],
+        ];
     }
 
     public function defaultValueTestProvider()
     {
-        return array(
-            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json', null),
-            array(ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json', "value1, value2"),
-        );
+        return [
+            [ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler01.json', null],
+            [ROADIZ_ROOT . '/tests/Fixtures/Handlers/nodeTypeHandler03.json', "value1, value2"],
+        ];
     }
 }

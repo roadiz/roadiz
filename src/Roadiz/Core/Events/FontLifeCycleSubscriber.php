@@ -69,13 +69,13 @@ class FontLifeCycleSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::prePersist,
             Events::preUpdate,
             Events::preRemove,
             Events::postPersist,
             Events::postUpdate,
-        );
+        ];
     }
 
     /**

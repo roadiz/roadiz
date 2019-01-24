@@ -1,10 +1,10 @@
-{% if not head.ajax %}{% set baseTemplate = '@Rozier/base.html.twig' %}{% else %}{% set baseTemplate = '@Rozier/ajaxBase.html.twig' %}{% endif %}{% extends baseTemplate %}
+{% extends '@Rozier/layout.html.twig' %}
 
 
 {% block content %}
 <section class="content-global add-group">
     <header class="content-header header-group header-group-edit">
-        <h1 class="content-title group-add-title">{{ "delete.group.%name%"|trans({'%name%': group.getName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title group-add-title">{{ "delete.group.%name%"|trans({'%name%': group.name}) }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">

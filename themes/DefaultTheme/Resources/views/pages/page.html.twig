@@ -39,7 +39,7 @@
         {% for image in nodeSource.pictures %}
             {% set imageMetas = image.documentTranslations.first %}
             <figure class="image col-md-3">
-                {{ image|display(themeServices.imageFormats.thumbnail) }}
+                {{ image|display(imageFormats.thumbnail) }}
                 <figcaption><h5>{{ imageMetas.name }}</h5>{{ imageMetas.description|markdown }}</figcaption>
             </figure>
         {% endfor %}

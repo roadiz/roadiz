@@ -64,7 +64,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * @return string
      * @deprecated Do not use this method directly to generate NodesSources URI but ChainRouter::generate method.
      */
-    public function getUrl($absolute = false, $canonicalSchemeAuthority = '')
+    public function getUrl(bool $absolute = false, $canonicalSchemeAuthority = ''): string
     {
         trigger_error('NodesSourcesUrlGenerator::getUrl method is deprecated. Use ChainRouter::generate method instead.', E_USER_DEPRECATED);
 
@@ -92,7 +92,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * @param NodesSources $nodeSource
      * @return bool
      */
-    protected function isNodeSourceHome(NodesSources $nodeSource)
+    protected function isNodeSourceHome(NodesSources $nodeSource): bool
     {
         if ($nodeSource->getNode()->isHome()) {
             return true;
@@ -108,9 +108,11 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * It returns a relative url to Roadiz, not relative to your server root.
      *
      * @param \RZ\Roadiz\Core\Entities\Theme $theme
+     * @param array                          $parameters
+     *
      * @return string
      */
-    public function getNonContextualUrl(Theme $theme = null)
+    public function getNonContextualUrl(Theme $theme = null, $parameters = []): string
     {
         if (null !== $this->nodeSource) {
             if ($this->isNodeSourceHome($this->nodeSource)) {
@@ -123,7 +125,11 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
             }
 
             $urlTokens = [];
-            $urlTokens[] = $this->nodeSource->getIdentifier();
+            if (isset($parameters['_format']) && in_array($parameters['_format'], ['xml', 'json', 'pdf'])) {
+                $urlTokens[] = $this->nodeSource->getIdentifier() . '.' . $parameters['_format'];
+            } else {
+                $urlTokens[] = $this->nodeSource->getIdentifier();
+            }
 
             $parent = $this->nodeSource->getParent();
             if ($parent !== null && !$parent->getNode()->isHome()) {

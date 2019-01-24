@@ -48,11 +48,11 @@ class HttpKernelExtension extends AbstractExtension
 
     public function getFunctions()
     {
-        return array(
-            new TwigFunction('render', [$this, 'renderFragment'], array('is_safe' => array('html'))),
-            new TwigFunction('render_*', [$this, 'renderFragmentStrategy'], array('is_safe' => array('html'))),
+        return [
+            new TwigFunction('render', [$this, 'renderFragment'], ['is_safe' => ['html']]),
+            new TwigFunction('render_*', [$this, 'renderFragmentStrategy'], ['is_safe' => ['html']]),
             new TwigFunction('controller', [$this, 'controller']),
-        );
+        ];
     }
     /**
      * Renders a fragment.

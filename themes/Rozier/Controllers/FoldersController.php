@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FolderEvents;
+use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -260,6 +261,9 @@ class FoldersController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
+        /** @var TranslationRepository $translationRepository */
+        $translationRepository = $this->get('em')->getRepository(Translation::class);
+
         /** @var Folder $folder */
         $folder = $this->get('em')
             ->find(Folder::class, (int) $folderId);
@@ -314,9 +318,8 @@ class FoldersController extends RozierApp
             $this->assignation['folder'] = $folder;
             $this->assignation['translation'] = $translation;
             $this->assignation['form'] = $form->createView();
-            $this->assignation['available_translations'] = $this->get('em')
-                ->getRepository(Translation::class)
-                ->findAllAvailable();
+            $this->assignation['available_translations'] = $translationRepository->findAllAvailable();
+            $this->assignation['translations'] = $translationRepository->findAvailableTranslationsForFolder($folder);
 
             return $this->render('folders/edit.html.twig', $this->assignation);
         }

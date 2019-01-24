@@ -91,7 +91,7 @@ class NodesToNodes extends AbstractPositioned
      *
      * @return Node
      */
-    public function getNodeA()
+    public function getNodeA(): Node
     {
         return $this->nodeA;
     }
@@ -103,7 +103,7 @@ class NodesToNodes extends AbstractPositioned
      *
      * @return self
      */
-    public function setNodeA(Node $nodeA)
+    public function setNodeA(Node $nodeA): NodesToNodes
     {
         $this->nodeA = $nodeA;
 
@@ -115,7 +115,7 @@ class NodesToNodes extends AbstractPositioned
      *
      * @return Node
      */
-    public function getNodeB()
+    public function getNodeB(): Node
     {
         return $this->nodeB;
     }
@@ -127,7 +127,7 @@ class NodesToNodes extends AbstractPositioned
      *
      * @return self
      */
-    public function setNodeB(Node $nodeB)
+    public function setNodeB(Node $nodeB): NodesToNodes
     {
         $this->nodeB = $nodeB;
 
@@ -139,7 +139,7 @@ class NodesToNodes extends AbstractPositioned
      *
      * @return NodeTypeField
      */
-    public function getField()
+    public function getField(): NodeTypeField
     {
         return $this->field;
     }
@@ -151,7 +151,7 @@ class NodesToNodes extends AbstractPositioned
      *
      * @return self
      */
-    public function setField(NodeTypeField $field)
+    public function setField(NodeTypeField $field): NodesToNodes
     {
         $this->field = $field;
 

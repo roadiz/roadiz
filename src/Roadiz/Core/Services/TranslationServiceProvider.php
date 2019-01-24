@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
@@ -61,8 +62,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
          * @return Translation
          */
         $container['defaultTranslation'] = function ($c) {
-            return $c['em']->getRepository(Translation::class)
-                ->findDefault();
+            return $c['em']->getRepository(Translation::class)->findDefault();
         };
 
         /**
@@ -115,10 +115,12 @@ class TranslationServiceProvider implements ServiceProviderInterface
              * DO NOT wake up entity manager in Install
              */
             if (!$kernel->isInstallMode()) {
+                /** @var TranslationRepository $translationRepository */
+                $translationRepository = $c['em']->getRepository(Translation::class);
                 if ($kernel->isPreview()) {
-                    $availableTranslations = $c['em']->getRepository(Translation::class)->findAll();
+                    $availableTranslations = $translationRepository->findAll();
                 } else {
-                    $availableTranslations = $c['em']->getRepository(Translation::class)->findAllAvailable();
+                    $availableTranslations = $translationRepository->findAllAvailable();
                 }
                 /** @var Translation $availableTranslation */
                 foreach ($availableTranslations as $availableTranslation) {
@@ -141,7 +143,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
      * @param Theme[] $classes
      * @param Kernel $kernel
      */
-    protected function addResourcesForLocale($locale, Translator $translator, array &$classes, Kernel $kernel)
+    protected function addResourcesForLocale(string $locale, Translator $translator, array &$classes, Kernel $kernel)
     {
         /*
          * Add existing Symfony validator translations
@@ -216,13 +218,18 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
     /**
      * @param Translator $translator
-     * @param string $path
-     * @param string $extension
-     * @param string $locale
-     * @param null $domain
+     * @param string     $path
+     * @param string     $extension
+     * @param string     $locale
+     * @param string|null     $domain
      */
-    protected function addTranslatorResource(Translator $translator, $path, $extension, $locale, $domain = null)
-    {
+    protected function addTranslatorResource(
+        Translator $translator,
+        string $path,
+        string $extension,
+        string $locale,
+        string $domain = null
+    ) {
         $filename = 'messages';
         if ($domain !== null && $domain !== '') {
             $filename = $domain;

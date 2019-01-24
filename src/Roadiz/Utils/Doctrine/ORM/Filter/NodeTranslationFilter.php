@@ -61,7 +61,7 @@ class NodeTranslationFilter implements EventSubscriberInterface
      *
      * @return bool
      */
-    protected function supports(FilterQueryBuilderCriteriaEvent $event)
+    protected function supports(FilterQueryBuilderCriteriaEvent $event): bool
     {
         if ($event instanceof FilterNodeQueryBuilderCriteriaEvent &&
             $event->supports()) {

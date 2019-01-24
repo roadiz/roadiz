@@ -12,7 +12,7 @@
 .translation-bar {
     position: absolute;
     right: 0;
-    bottom: 0px;
+    bottom: 0;
     border:none;
 
     @media (max-width: @screen-xs-max) {
@@ -48,7 +48,7 @@
                 height:100%;
                 padding: 0 15px 0 6px;
                 font-family: @main-font;
-                color:@translation-nav-color;
+                color: @translation-nav-color;
                 text-transform: capitalize;
                 font-size:11px; line-height:30px;
                 box-shadow: none;
@@ -81,11 +81,22 @@
                     background: @translation-nav-active-color;
                 }
             }
+
+            &.unavailable {
+                opacity: 0.6;
+
+                &:after {
+                    background: transparent;
+                }
+
+                &.uk-active {
+                    background: @translation-nav-color;
+                }
+            }
         }
     }
 }
-
-@media screen and (min-width: 1380px) {
+@media (min-width: @screen-sm-min) {
     .translation-bar {
         right:52px;
         bottom: 3px;
@@ -100,8 +111,6 @@
                 }
 
                 &:after{
-                    position: absolute;
-                    content:'';
                     top:100%;
                     left:0; right: auto;
                     bottom: auto;

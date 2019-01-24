@@ -71,7 +71,7 @@ class PrefixAwareRepository extends EntityRepository
      */
     public function getDefaultPrefix()
     {
-        return 'obj';
+        return EntityRepository::DEFAULT_ALIAS;
     }
 
     /**
@@ -261,7 +261,7 @@ class PrefixAwareRepository extends EntityRepository
 
     /**
      * @param string  $pattern Search pattern
-     * @param array   $criteria Additionnal criteria
+     * @param array   $criteria Additional criteria
      * @param array   $orders
      * @param integer $limit
      * @param integer $offset

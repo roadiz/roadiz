@@ -57,8 +57,15 @@
             width: 28px;
             height: 1px;
             background-color: @admin-entries-line-horizontal;
-            left: 29px;
+            left: (@entries-panel-width - 28) / 2;
             top: 0px;
+
+            @media (min-width: @screen-lg-min) {
+                left: (@entries-panel-lg-width - 28) / 2;
+            }
+            @media (min-width: @screen-xl-min) {
+                left: (@entries-panel-xl-width - 28) / 2;
+            }
         }
         &:first-child {
             &:before {
@@ -92,7 +99,7 @@
             display: none;
             position: absolute;
             z-index: 999;
-            left: 88px;
+            left: @entries-panel-width;
             background-color: @admin-menu-info-color;
             height: 53px;
             font-size: 13px;
@@ -105,6 +112,13 @@
             .box-sizing();
             white-space: nowrap;
             .box-shadow(1px 1px 7px rgba(0,0,0,0.05));
+
+            @media (min-width: @screen-lg-min) {
+                left: @entries-panel-lg-width;
+            }
+            @media (min-width: @screen-xl-min) {
+                left: @entries-panel-xl-width;
+            }
         }
         .work-in-progress {
             font-size: 12px;
@@ -114,7 +128,7 @@
         .uk-nav-sub {
             display: none;
             position: absolute;
-            left: 88px;
+            left: @entries-panel-width;
             top: 52px;
             z-index: 999;
             background-color: white;
@@ -122,6 +136,13 @@
             padding: 0;
             min-width: 210px;
             .box-shadow(3px 6px 7px rgba(0,0,0,0.05));
+
+            @media (min-width: @screen-lg-min) {
+                left: @entries-panel-lg-width;
+            }
+            @media (min-width: @screen-xl-min) {
+                left: @entries-panel-xl-width;
+            }
 
             li {
                 border-top: 1px solid @admin-entries-line-horizontal;
@@ -162,7 +183,6 @@
         }
 
         &.reversed-nav {
-
             .info {
                 &:after {
                     .transform(rotate(180deg));
@@ -186,7 +206,7 @@
                 }
             }
 
-            &> a > .work-in-progress {
+            & > a > .work-in-progress {
                 font-size: 12px;
                 color: #CCC;
                 display: block;
@@ -210,8 +230,15 @@
                 border-right:10px solid @admin-menu-info-color;
                 position: absolute;
                 z-index: 999;
-                left: 78px;
+                left: @entries-panel-width - 10;
                 top: 16px;
+
+                @media (min-width: @screen-lg-min) {
+                    left: (@entries-panel-lg-width - 10);
+                }
+                @media (min-width: @screen-xl-min) {
+                    left: (@entries-panel-xl-width - 10);
+                }
             }
         }
     }

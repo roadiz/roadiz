@@ -92,9 +92,9 @@ class DynamicUrlMatcher extends UrlMatcher
      *
      * @param array &$tokens
      *
-     * @return \RZ\Roadiz\Core\Entities\Translation
+     * @return Translation|null
      */
-    protected function parseTranslation(&$tokens)
+    protected function parseTranslation(&$tokens): ?Translation
     {
         /** @var TranslationRepository $repository */
         $repository = $this->em->getRepository(Translation::class);

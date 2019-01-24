@@ -47,7 +47,12 @@ abstract class AbstractFieldGenerator
         $this->field = $field;
     }
 
-    public static function flattenORMParameters(array $ormParams)
+    /**
+     * @param array $ormParams
+     *
+     * @return string
+     */
+    public static function flattenORMParameters(array $ormParams): string
     {
         $flatParams = [];
         foreach ($ormParams as $key => $value) {
@@ -62,7 +67,7 @@ abstract class AbstractFieldGenerator
      *
      * @return string
      */
-    public function getField()
+    public function getField(): string
     {
         return $this->getFieldAnnotation().
             $this->getFieldDeclaration().
@@ -74,7 +79,7 @@ abstract class AbstractFieldGenerator
     /**
      * @return string
      */
-    protected function getFieldAnnotation()
+    protected function getFieldAnnotation(): string
     {
         return '
     /**
@@ -86,7 +91,7 @@ abstract class AbstractFieldGenerator
     /**
      * Generate PHP property declaration block.
      */
-    protected function getFieldDeclaration()
+    protected function getFieldDeclaration(): string
     {
         /*
          * Buffer var to get referenced entities (documents, nodes, cforms, doctrine entities)
@@ -99,14 +104,14 @@ abstract class AbstractFieldGenerator
      *
      * @return string
      */
-    abstract protected function getFieldGetter();
+    abstract protected function getFieldGetter(): string;
 
     /**
      * Generate PHP alternative getter method block.
      *
      * @return string
      */
-    protected function getFieldAlternativeGetter()
+    protected function getFieldAlternativeGetter(): string
     {
         return '';
     }
@@ -116,7 +121,7 @@ abstract class AbstractFieldGenerator
      *
      * @return string
      */
-    protected function getFieldSetter()
+    protected function getFieldSetter(): string
     {
         return '';
     }
@@ -126,7 +131,7 @@ abstract class AbstractFieldGenerator
      *
      * @return string
      */
-    public function getFieldIndex()
+    public function getFieldIndex(): string
     {
         return '';
     }
@@ -136,7 +141,7 @@ abstract class AbstractFieldGenerator
      *
      * @return string
      */
-    public function getFieldConstructorInitialization()
+    public function getFieldConstructorInitialization(): string
     {
         return '';
     }

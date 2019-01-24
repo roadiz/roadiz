@@ -36,12 +36,10 @@ use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\RozierApp;
 
 /**
  * Fixtures class
@@ -81,12 +79,10 @@ class Fixtures
 
     /**
      * @return void
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function installFixtures()
     {
         $this->installDefaultTranslation();
-        $this->installBackofficeTheme();
         $this->entityManager->flush();
         $this->clearResultCache();
     }
@@ -117,25 +113,6 @@ class Fixtures
             if (!$fs->exists($folder)) {
                 $fs->mkdir($folder, 0755);
             }
-        }
-    }
-
-    /**
-     * @return void
-     */
-    protected function installBackofficeTheme()
-    {
-        $existing = $this->entityManager
-                         ->getRepository(Theme::class)
-                         ->findOneBy(['backendTheme' => true, 'available' => true]);
-
-        if (null === $existing) {
-            $beTheme = new Theme();
-            $beTheme->setClassName(RozierApp::class);
-            $beTheme->setAvailable(true);
-            $beTheme->setBackendTheme(true);
-
-            $this->entityManager->persist($beTheme);
         }
     }
 
@@ -289,49 +266,5 @@ class Fixtures
             $conf->setConfiguration($config);
             $conf->writeConfiguration();
         }
-    }
-
-    /**
-     * @param array $data
-     * @deprecated  Frontend themes no more need to be registered in database.
-     */
-    public function installTheme($data)
-    {
-        /*
-         * Install default theme
-         */
-        $this->installFrontendTheme($data['className']);
-    }
-
-    /**
-     * Install theme and return its ID.
-     *
-     * @param $classname
-     *
-     * @return int
-     * @deprecated Frontend themes no more need to be registered in database.
-     */
-    public function installFrontendTheme($classname)
-    {
-        /** @var Theme|null $existing */
-        $existing = $this->entityManager
-                         ->getRepository(Theme::class)
-                         ->findOneByClassName($classname);
-
-        if (null === $existing) {
-            $feTheme = new Theme();
-            $feTheme->setClassName($classname);
-            $feTheme->setAvailable(true);
-            $feTheme->setBackendTheme(false);
-
-            $this->entityManager->persist($feTheme);
-            $this->entityManager->flush();
-
-            $this->clearResultCache();
-
-            return $feTheme->getId();
-        }
-
-        return $existing->getId();
     }
 }

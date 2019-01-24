@@ -74,7 +74,7 @@ class Roles extends ParameterBag
             $this->parameters = [];
             /** @var Role $role */
             foreach ($roles as $role) {
-                $this->parameters[$role->getName()] = $role;
+                $this->parameters[$role->getRole()] = $role;
             }
         } catch (DBALException $e) {
             $this->parameters = [];
@@ -86,20 +86,17 @@ class Roles extends ParameterBag
      *
      * @param string $key
      * @param null $default
-     * @param bool $deep
      * @return Role
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function get($key, $default = null, $deep = false)
+    public function get($key, $default = null): Role
     {
         if (!is_array($this->parameters)) {
             $this->populateParameters();
         }
-        $role = parent::get($key, null, false);
+        $role = parent::get($key, null);
 
         if (null === $role) {
-            $role = new Role();
-            $role->setName($key);
+            $role = new Role($key);
             $this->entityManager->persist($role);
             $this->entityManager->flush($role);
         }
@@ -110,7 +107,7 @@ class Roles extends ParameterBag
     /**
      * @return array
      */
-    public function all()
+    public function all(): array
     {
         if (!is_array($this->parameters)) {
             $this->populateParameters();

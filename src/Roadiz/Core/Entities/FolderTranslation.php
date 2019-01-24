@@ -46,13 +46,14 @@ class FolderTranslation extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string")
+     * @var string
      */
     protected $name;
 
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -61,7 +62,7 @@ class FolderTranslation extends AbstractEntity
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
         return $this;
@@ -75,7 +76,7 @@ class FolderTranslation extends AbstractEntity
     protected $folder = null;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Translation", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="Translation", inversedBy="folderTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Translation
      */
@@ -96,7 +97,7 @@ class FolderTranslation extends AbstractEntity
     /**
      * @return Folder
      */
-    public function getFolder()
+    public function getFolder(): Folder
     {
         return $this->folder;
     }
@@ -105,7 +106,7 @@ class FolderTranslation extends AbstractEntity
      * @param Folder $folder
      * @return FolderTranslation
      */
-    public function setFolder(Folder $folder)
+    public function setFolder(Folder $folder): FolderTranslation
     {
         $this->folder = $folder;
         return $this;
@@ -117,7 +118,7 @@ class FolderTranslation extends AbstractEntity
      *
      * @return Translation
      */
-    public function getTranslation()
+    public function getTranslation(): Translation
     {
         return $this->translation;
     }
@@ -128,7 +129,7 @@ class FolderTranslation extends AbstractEntity
      * @param Translation $translation the translation
      * @return self
      */
-    public function setTranslation(Translation $translation)
+    public function setTranslation(Translation $translation): FolderTranslation
     {
         $this->translation = $translation;
         return $this;

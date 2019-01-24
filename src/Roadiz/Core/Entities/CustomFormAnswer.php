@@ -46,54 +46,14 @@ class CustomFormAnswer extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", name="ip")
+     * @var string
      */
-    private $ip;
-
-    /**
-     * @return string
-     */
-    public function getIp()
-    {
-        return $this->ip;
-    }
-
-    /**
-     * @param string $ip
-     *
-     * @return $this
-     */
-    public function setIp($ip)
-    {
-        $this->ip = $ip;
-
-        return $this;
-    }
-
+    private $ip = '';
     /**
      * @ORM\Column(type="datetime", name="submitted_at")
+     * @var \DateTime|null
      */
     private $submittedAt = null;
-
-    /**
-     * @return \DateTime
-     */
-    public function getSubmittedAt()
-    {
-        return $this->submittedAt;
-    }
-
-    /**
-     * @param $submittedAt
-     *
-     * @return $this
-     */
-    public function setSubmittedAt($submittedAt)
-    {
-        $this->submittedAt = $submittedAt;
-
-        return $this;
-    }
-
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute",
      *            mappedBy="customFormAnswer",
@@ -101,42 +61,6 @@ class CustomFormAnswer extends AbstractEntity
      * @var ArrayCollection
      */
     private $answerFields;
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getAnswers()
-    {
-        return $this->answerFields;
-    }
-    /**
-     * @param CustomFormAnswer $field
-     *
-     * @return $this
-     */
-    public function addAnswerField($field)
-    {
-        if (!$this->getAnswers()->contains($field)) {
-            $this->getAnswers()->add($field);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param CustomFormAnswer $field
-     *
-     * @return $this
-     */
-    public function removeAnswerField(CustomFormAnswer $field)
-    {
-        if ($this->getAnswers()->contains($field)) {
-            $this->getAnswers()->removeElement($field);
-        }
-
-        return $this;
-    }
-
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
      *           inversedBy="customFormAnswers")
@@ -144,24 +68,6 @@ class CustomFormAnswer extends AbstractEntity
      * @var CustomForm
      **/
     private $customForm;
-
-    /**
-     * @param $customForm
-     * @return $this
-     */
-    public function setCustomForm($customForm)
-    {
-        $this->customForm = $customForm;
-        return $this;
-    }
-
-    /**
-     * @return CustomForm
-     */
-    public function getCustomForm()
-    {
-        return $this->customForm;
-    }
 
     /**
      * Create a new empty CustomFormAnswer according to given node-type.
@@ -172,19 +78,110 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
+     * @param CustomFormAnswer $field
+     * @return $this
+     */
+    public function addAnswerField(CustomFormAnswer $field): CustomFormAnswer
+    {
+        if (!$this->getAnswers()->contains($field)) {
+            $this->getAnswers()->add($field);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAnswers()
+    {
+        return $this->answerFields;
+    }
+
+    /**
+     * @param CustomFormAnswer $field
+     *
+     * @return $this
+     */
+    public function removeAnswerField(CustomFormAnswer $field): CustomFormAnswer
+    {
+        if ($this->getAnswers()->contains($field)) {
+            $this->getAnswers()->removeElement($field);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return CustomForm
+     */
+    public function getCustomForm(): CustomForm
+    {
+        return $this->customForm;
+    }
+
+    /**
+     * @param CustomForm $customForm
+     * @return $this
+     */
+    public function setCustomForm(CustomForm $customForm): CustomFormAnswer
+    {
+        $this->customForm = $customForm;
+        return $this;
+    }
+
+    /**
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getId() . " — " . $this->getIp() .
         " — Submitted : " . ($this->getSubmittedAt()->format('Y-m-d H:i:s'));
     }
 
     /**
+     * @return string
+     */
+    public function getIp(): string
+    {
+        return $this->ip;
+    }
+
+    /**
+     * @param string $ip
+     *
+     * @return $this
+     */
+    public function setIp(string $ip): CustomFormAnswer
+    {
+        $this->ip = $ip;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getSubmittedAt(): ?\DateTime
+    {
+        return $this->submittedAt;
+    }
+
+    /**
+     * @param \DateTime $submittedAt
+     *
+     * @return $this
+     */
+    public function setSubmittedAt(\DateTime $submittedAt = null): CustomFormAnswer
+    {
+        $this->submittedAt = $submittedAt;
+        return $this;
+    }
+
+    /**
      * @param bool $namesAsKeys Use fields name as key. Default: true
      * @return array
      */
-    public function toArray($namesAsKeys = true)
+    public function toArray($namesAsKeys = true): array
     {
         $answers = [];
         /** @var CustomFormFieldAttribute $answer */
