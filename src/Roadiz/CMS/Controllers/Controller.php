@@ -52,6 +52,8 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
@@ -568,8 +570,9 @@ abstract class Controller implements ContainerAwareInterface
         if (!$this->has('securityAuthorizationChecker')) {
             throw new \LogicException('The SecurityBundle is not registered in your application.');
         }
-
-        return $this->get('securityAuthorizationChecker')->isGranted($attributes, $object);
+        /** @var AuthorizationCheckerInterface $checker */
+        $checker = $this->get('securityAuthorizationChecker');
+        return $checker->isGranted($attributes, $object);
     }
 
     /**

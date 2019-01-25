@@ -49,7 +49,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class User extends AbstractHuman implements AdvancedUserInterface
+class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
 {
     /**
      * Email confirmation link TTL (in seconds) to change
@@ -452,7 +452,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
      *
      * @return Collection
      */
-    public function getRolesEntities(): Collection
+    public function getRolesEntities(): ?Collection
     {
         return $this->roles;
     }
@@ -502,7 +502,7 @@ class User extends AbstractHuman implements AdvancedUserInterface
     /**
      * @return Collection
      */
-    public function getGroups(): Collection
+    public function getGroups(): ?Collection
     {
         return $this->groups;
     }
@@ -817,5 +817,72 @@ class User extends AbstractHuman implements AdvancedUserInterface
     {
         $this->locale = $locale;
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @see https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Model/User.php
+     */
+    public function serialize()
+    {
+        return serialize(array(
+            $this->password,
+            $this->salt,
+            $this->username,
+            $this->enabled,
+            $this->id,
+            $this->email,
+        ));
+    }
+    /**
+     * {@inheritdoc}
+     *
+     * @see https://github.com/FriendsOfSymfony/FOSUserBundle/blob/master/Model/User.php
+     */
+    public function unserialize($serialized)
+    {
+        $data = unserialize($serialized);
+        if (13 === count($data)) {
+            // Unserializing a User object from 1.3.x
+            unset($data[4], $data[5], $data[6], $data[9], $data[10]);
+            $data = array_values($data);
+        } elseif (11 === count($data)) {
+            // Unserializing a User from a dev version somewhere between 2.0-alpha3 and 2.0-beta1
+            unset($data[4], $data[7], $data[8]);
+            $data = array_values($data);
+        }
+        list(
+            $this->password,
+            $this->salt,
+            $this->username,
+            $this->enabled,
+            $this->id,
+            $this->email,
+            ) = $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSuperAdmin()
+    {
+        return $this->hasRole(Role::ROLE_SUPERADMIN);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasGroup($name)
+    {
+        return in_array($name, $this->getGroupNames());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRole($role)
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
     }
 }

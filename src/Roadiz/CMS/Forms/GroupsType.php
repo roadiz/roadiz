@@ -33,10 +33,12 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Group selector form field type.
@@ -50,12 +52,12 @@ class GroupsType extends AbstractType
     {
         $resolver->setDefaults([
             'choices_as_values' => true,
-            'groups' => new ArrayCollection(),
         ]);
 
+        $resolver->setRequired('authorizationChecker');
+        $resolver->setAllowedTypes('authorizationChecker', [AuthorizationCheckerInterface::class]);
         $resolver->setRequired('entityManager');
         $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
-        $resolver->setAllowedTypes('groups', [Collection::class]);
 
         /*
          * Use normalizer to populate choices from ChoiceType
@@ -67,7 +69,7 @@ class GroupsType extends AbstractType
 
             /** @var Group $group */
             foreach ($groups as $group) {
-                if (!$options['groups']->contains($group)) {
+                if ($options['authorizationChecker']->isGranted($group)) {
                     $choices[$group->getName()] = $group->getId();
                 }
             }
