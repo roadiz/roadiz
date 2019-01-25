@@ -36,8 +36,8 @@ use RZ\Roadiz\Core\Entities\Group;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
+use Symfony\Component\Security\Core\Role\RoleInterface;
 
 class GroupVoter extends RoleVoter
 {
@@ -92,15 +92,15 @@ class GroupVoter extends RoleVoter
     }
 
     /**
-     * @param Role $role
-     * @param Role[] $roles
+     * @param RoleInterface $role
+     * @param RoleInterface[] $roles
      *
      * @return bool
      */
-    protected function isRoleContained(Role $role, $roles)
+    protected function isRoleContained(RoleInterface $role, $roles)
     {
         foreach ($roles as $singleRole) {
-            if ($singleRole instanceof Role) {
+            if ($singleRole instanceof RoleInterface) {
                 if ($role->getRole() === $singleRole->getRole()) {
                     return true;
                 }
