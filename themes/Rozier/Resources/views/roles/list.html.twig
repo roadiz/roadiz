@@ -35,12 +35,17 @@
                     {% for role in roles %}
                     <tr>
                         <td>
-                            {% if not role.required %}<a href="{{ path('rolesEditPage', { roleId: role.getId }) }}">{{ role.getName }}</a>{% else %}
-                            {{ role.getName }}{% endif %}
+                            {% if not role.required and is_granted(role.role) %}
+                                <a href="{{ path('rolesEditPage', { roleId: role.getId }) }}">
+                                    {{ role.role }}
+                                </a>
+                            {% else %}
+                                {{- role.role -}}
+                            {% endif %}
                         </td>
                         <td class="table-actions-row">
                         {% spaceless %}
-                            {% if not role.required %}
+                            {% if not role.required and is_granted(role.role) %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('rolesEditPage', { roleId: role.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small uk-button-success rz-no-ajax-link" href="{{ path('rolesExportPage', { roleId: role.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('rolesDeletePage', { roleId: role.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>

@@ -37,7 +37,9 @@
                     <tr>
                         <td>{{ role.getName }}</td>
                         <td class="table-actions-row table-actions-row-3">
-                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}" title="{% trans %}remove{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% if is_granted(role.role) %}
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersRemoveRolesPage', { userId: user.getId, roleId: role.getId }) }}" title="{% trans %}remove{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}

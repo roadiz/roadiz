@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers\Users;
 
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -100,6 +101,10 @@ class UsersController extends RozierApp
                      ->find(User::class, (int) $userId);
 
         if ($user !== null) {
+            if (!$this->isGranted(Role::ROLE_SUPERADMIN) && $user->isSuperAdmin()) {
+                throw $this->createAccessDeniedException("You cannot edit a super admin.");
+            }
+
             $this->assignation['user'] = $user;
 
             $form = $this->createForm(UserType::class, $user, [
@@ -156,6 +161,9 @@ class UsersController extends RozierApp
         $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
+            if (!$this->isGranted(Role::ROLE_SUPERADMIN) && $user->isSuperAdmin()) {
+                throw $this->createAccessDeniedException("You cannot edit a super admin.");
+            }
             $this->assignation['user'] = $user;
             $form = $this->createForm(UserDetailsType::class, $user);
             $form->handleRequest($request);
@@ -250,6 +258,9 @@ class UsersController extends RozierApp
         $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
+            if (!$this->isGranted(Role::ROLE_SUPERADMIN) && $user->isSuperAdmin()) {
+                throw $this->createAccessDeniedException("You cannot edit a super admin.");
+            }
             $this->assignation['user'] = $user;
             $form = $this->buildDeleteForm($user);
 
@@ -290,7 +301,7 @@ class UsersController extends RozierApp
     /**
      * @param User $user
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildDeleteForm(User $user)
     {
