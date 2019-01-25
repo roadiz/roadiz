@@ -32,6 +32,7 @@ namespace Themes\Rozier\Forms;
 use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
+use RZ\Roadiz\CMS\Forms\GroupsType;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -83,7 +84,8 @@ class UserType extends AbstractType
                     'label' => 'passwordVerify',
                 ],
                 'required' => false,
-            ]);
+            ])
+        ;
     }
 
     public function getBlockPrefix()

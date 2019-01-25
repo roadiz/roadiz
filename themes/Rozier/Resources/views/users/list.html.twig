@@ -68,7 +68,9 @@
                             {% if not (user.username == session.user.username or is_granted('ROLE_PREVIOUS_ADMIN')) %}
                             <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('adminHomePage') }}?_su={{ user.username }}" title="{% trans %}start.test.user.right{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-sudo"></i></a>
                             {% endif %}
-                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersDeletePage', { userId: user.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% if is_granted('ROLE_ACCESS_USERS_DELETE') %}
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersDeletePage', { userId: user.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% endif %}
                         {% endspaceless %}
                         </td>
                     </tr>
