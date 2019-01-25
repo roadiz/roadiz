@@ -123,6 +123,9 @@ class GroupsController extends RozierApp
                       ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
+            if (!$this->isGranted($group)) {
+                throw $this->createAccessDeniedException();
+            }
             $form = $this->buildDeleteForm($group);
             $form->handleRequest($request);
 
@@ -166,6 +169,9 @@ class GroupsController extends RozierApp
                       ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
+            if (!$this->isGranted($group)) {
+                throw $this->createAccessDeniedException();
+            }
             $this->assignation['group'] = $group;
 
             $form = $this->buildEditForm($group);
@@ -214,6 +220,9 @@ class GroupsController extends RozierApp
                       ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
+            if (!$this->isGranted($group)) {
+                throw $this->createAccessDeniedException();
+            }
             $this->assignation['group'] = $group;
             $form = $this->buildEditRolesForm($group);
             $form->handleRequest($request);
@@ -261,6 +270,9 @@ class GroupsController extends RozierApp
 
         if ($group !== null &&
             $role !== null) {
+            if (!$this->isGranted($group)) {
+                throw $this->createAccessDeniedException();
+            }
             $this->assignation['group'] = $group;
             $this->assignation['role'] = $role;
 
@@ -304,6 +316,9 @@ class GroupsController extends RozierApp
                       ->find(Group::class, (int) $groupId);
 
         if ($group !== null) {
+            if (!$this->isGranted($group)) {
+                throw $this->createAccessDeniedException();
+            }
             $this->assignation['group'] = $group;
             $form = $this->buildEditUsersForm($group);
             $form->handleRequest($request);
@@ -351,6 +366,9 @@ class GroupsController extends RozierApp
 
         if ($group !== null &&
             $user !== null) {
+            if (!$this->isGranted($group)) {
+                throw $this->createAccessDeniedException();
+            }
             $this->assignation['group'] = $group;
             $this->assignation['user'] = $user;
 

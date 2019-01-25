@@ -502,7 +502,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * @return Collection
      */
-    public function getGroups(): Collection
+    public function getGroups(): ?Collection
     {
         return $this->groups;
     }
@@ -860,5 +860,29 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
             $this->id,
             $this->email,
             ) = $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isSuperAdmin()
+    {
+        return $this->hasRole(Role::ROLE_SUPERADMIN);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasGroup($name)
+    {
+        return in_array($name, $this->getGroupNames());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function hasRole($role)
+    {
+        return in_array(strtoupper($role), $this->getRoles(), true);
     }
 }
