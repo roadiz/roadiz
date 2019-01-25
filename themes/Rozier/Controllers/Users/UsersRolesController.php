@@ -56,6 +56,7 @@ class UsersRolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
+        /** @var User|null $user */
         $user = $this->get('em')
                      ->find(User::class, (int) $userId);
 
@@ -69,7 +70,7 @@ class UsersRolesController extends RozierApp
 
                 $msg = $this->getTranslator()->trans('user.%user%.role.%role%.linked', [
                     '%user%' => $user->getUserName(),
-                    '%role%' => $role->getName(),
+                    '%role%' => $role->getRole(),
                 ]);
 
                 $this->publishConfirmMessage($request, $msg);
@@ -104,23 +105,31 @@ class UsersRolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
+        /** @var User|null $user */
         $user = $this->get('em')
                      ->find(User::class, (int) $userId);
+
+        /** @var Role|null $role */
         $role = $this->get('em')
                      ->find(Role::class, (int) $roleId);
 
         if ($user !== null && $role !== null) {
+            if (!$this->isGranted($role->getRole())) {
+                throw $this->createAccessDeniedException();
+            }
+
             $this->assignation['user'] = $user;
             $this->assignation['role'] = $role;
 
-            $form = $this->buildRemoveRoleForm($user, $role);
+            $form = $this->createForm();
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->removeUserRole($form->getData(), $user);
+                $user->removeRole($role);
+                $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.role_removed',
-                    ['%name%' => $role->getName()]
+                    ['%name%' => $role->getRole()]
                 );
                 $this->publishConfirmMessage($request, $msg);
 
@@ -150,36 +159,14 @@ class UsersRolesController extends RozierApp
     private function addUserRole($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $role = $this->get('em')
-                         ->find(Role::class, $data['roleId']);
+            /** @var Role|null $role */
+            $role = $this->get('em')->find(Role::class, $data['roleId']);
 
-            $user->addRole($role);
-            $this->get('em')->flush();
-
-            return $role;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param array $data
-     * @param User  $user
-     *
-     * @return Role
-     */
-    private function removeUserRole($data, User $user)
-    {
-        if ($data['userId'] == $user->getId()) {
-            $role = $this->get('em')
-                         ->find(Role::class, $data['roleId']);
-
-            if ($role !== null) {
-                $user->removeRole($role);
+            if (null !== $role) {
+                $user->addRole($role);
                 $this->get('em')->flush();
+                return $role;
             }
-
-            return $role;
         }
 
         return null;
@@ -188,7 +175,7 @@ class UsersRolesController extends RozierApp
     /**
      * @param User $user
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildEditRolesForm(User $user)
     {
@@ -213,39 +200,7 @@ class UsersRolesController extends RozierApp
                                 'label' => 'Role',
                                 'entityManager' => $this->get('em'),
                                 'roles' => $user->getRolesEntities(),
-                            ]
-                        );
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param User $user
-     * @param Role $role
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildRemoveRoleForm(User $user, Role $role)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add(
-                            'userId',
-                            HiddenType::class,
-                            [
-                                'data' => $user->getId(),
-                                'constraints' => [
-                                    new NotBlank(),
-                                ],
-                            ]
-                        )
-                        ->add(
-                            'roleId',
-                            HiddenType::class,
-                            [
-                                'data' => $role->getId(),
-                                'constraints' => [
-                                    new NotBlank(),
-                                ],
+                                'authorizationChecker' => $this->get('securityAuthorizationChecker'),
                             ]
                         );
 

@@ -125,9 +125,13 @@ class RolesController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_ROLES');
 
+        /** @var Role|null $role */
         $role = $this->get('em')
                      ->find(Role::class, (int) $roleId);
         if ($role !== null) {
+            if (!$this->isGranted($role->getRole())) {
+                throw $this->createAccessDeniedException('You cannot delete a role you do not have.');
+            }
             $form = $this->buildDeleteForm($role);
             $form->handleRequest($request);
 
@@ -175,6 +179,9 @@ class RolesController extends RozierApp
 
         if ($role !== null &&
             !$role->required()) {
+            if (!$this->isGranted($role->getRole())) {
+                throw $this->createAccessDeniedException('You cannot edit a role you do not have.');
+            }
             $form = $this->buildEditForm($role);
             $form->handleRequest($request);
 

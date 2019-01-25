@@ -102,10 +102,12 @@ class UsersGroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_USERS');
 
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
-        $group = $this->get('em')
-                      ->find(Group::class, (int) $groupId);
+        $user = $this->get('em')->find(User::class, (int) $userId);
+        $group = $this->get('em')->find(Group::class, (int) $groupId);
+
+        if (!$this->isGranted($group)) {
+            throw $this->createAccessDeniedException();
+        }
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -213,7 +215,7 @@ class UsersGroupsController extends RozierApp
                             [
                                 'label' => 'Group',
                                 'entityManager' => $this->get('em'),
-                                'groups' => $user->getGroups(),
+                                'authorizationChecker' => $this->get('securityAuthorizationChecker'),
                             ]
                         );
 

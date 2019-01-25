@@ -33,29 +33,35 @@
                 </thead>
                 <tbody>
                     {% for group in groups %}
-                    <tr>
-                        <td>
-                            {% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
-                            {{ group.getName }}{% endif %}
-                        </td>
-                        <td class="mobile-hidden">
-                            {% transchoice group.getRolesEntities.count %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
-                        </td>
-                        <td class="mobile-hidden">
-                            {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
-                        </td>
-                        <td class="table-actions-row">
-                        {% spaceless %}
-                            {% if not group.required %}
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditPage', { groupId: group.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                                <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('groupsExportPage', { groupId: group.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
-                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                            {% else %}
-                                <div class="uk-badge uk-badge-table"><span class="uk-icon-rz-lock"></span> {% trans %}group.required{% endtrans %}</div>
-                            {% endif %}
-                        {% endspaceless %}
-                        </td>
-                    </tr>
+                        {% if is_granted(group) %}
+                            <tr>
+                                <td>
+                                    {% if not group.required %}<a href="{{ path('groupsEditPage', { groupId: group.getId }) }}">{{ group.getName }}</a>{% else %}
+                                        {{ group.getName }}{% endif %}
+                                </td>
+                                <td class="mobile-hidden">
+                                    {% transchoice group.getRolesEntities.count %}{0} no.role|{1} 1.role|]1,Inf] %count%.roles{% endtranschoice %}
+                                </td>
+                                <td class="mobile-hidden">
+                                    {% transchoice group.getUsers.count %}{0} no.user|{1} 1.user|]1,Inf] %count%.users{% endtranschoice %}
+                                </td>
+                                <td class="table-actions-row">
+                                    {% spaceless %}
+                                        {% if not group.required %}
+                                            {% if is_granted(group) %}
+                                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditPage', { groupId: group.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                                            {% endif %}
+                                            <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('groupsExportPage', { groupId: group.getId }) }}" title="{% trans %}export{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
+                                            {% if is_granted(group) %}
+                                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('groupsDeletePage', { groupId: group.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="uk-badge uk-badge-table"><span class="uk-icon-rz-lock"></span> {% trans %}group.required{% endtrans %}</div>
+                                        {% endif %}
+                                    {% endspaceless %}
+                                </td>
+                            </tr>
+                        {% endif %}
                     {% endfor %}
                 </tbody>
             </table>

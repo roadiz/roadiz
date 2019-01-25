@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
+use RZ\Roadiz\Core\Authorization\Voter\GroupVoter;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
@@ -260,6 +261,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AccessDecisionManager([
                 new AuthenticatedVoter($c['securityAuthentificationTrustResolver']),
                 $c['roleHierarchyVoter'],
+                $c['groupVoter'],
             ]);
         };
 
@@ -302,6 +304,10 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['roleHierarchyVoter'] = function ($c) {
             return new RoleHierarchyVoter($c['roleHierarchy']);
+        };
+
+        $container['groupVoter'] = function ($c) {
+            return new GroupVoter($c['roleHierarchy']);
         };
 
         $container["switchUser"] = function ($c) {
