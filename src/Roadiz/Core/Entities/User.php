@@ -452,7 +452,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      *
      * @return Collection
      */
-    public function getRolesEntities(): Collection
+    public function getRolesEntities(): ?Collection
     {
         return $this->roles;
     }

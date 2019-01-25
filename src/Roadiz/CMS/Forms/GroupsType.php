@@ -55,8 +55,8 @@ class GroupsType extends AbstractType
         ]);
 
         $resolver->setRequired('authorizationChecker');
-        $resolver->setRequired('entityManager');
         $resolver->setAllowedTypes('authorizationChecker', [AuthorizationCheckerInterface::class]);
+        $resolver->setRequired('entityManager');
         $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
 
         /*

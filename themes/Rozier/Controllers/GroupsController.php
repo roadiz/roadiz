@@ -118,6 +118,7 @@ class GroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
+        /** @var Group|null $group */
         $group = $this->get('em')
                       ->find(Group::class, (int) $groupId);
 
@@ -160,6 +161,7 @@ class GroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
+        /** @var Group|null $group */
         $group = $this->get('em')
                       ->find(Group::class, (int) $groupId);
 
@@ -207,6 +209,7 @@ class GroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
+        /** @var Group|null $group */
         $group = $this->get('em')
                       ->find(Group::class, (int) $groupId);
 
@@ -249,8 +252,10 @@ class GroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
+        /** @var Group|null $group */
         $group = $this->get('em')
                       ->find(Group::class, (int) $groupId);
+        /** @var Role|null $role */
         $role = $this->get('em')
                      ->find(Role::class, (int) $roleId);
 
@@ -265,7 +270,7 @@ class GroupsController extends RozierApp
             if ($form->isValid()) {
                 $this->removeRole($form->getData(), $group, $role);
                 $msg = $this->getTranslator()->trans('role.%role%.removed_from_group.%group%', [
-                    '%role%' => $role->getName(),
+                    '%role%' => $role->getRole(),
                     '%group%' => $group->getName(),
                 ]);
                 $this->publishConfirmMessage($request, $msg);
@@ -294,6 +299,7 @@ class GroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
+        /** @var Group $group */
         $group = $this->get('em')
                       ->find(Group::class, (int) $groupId);
 
@@ -336,8 +342,10 @@ class GroupsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
 
+        /** @var Group|null $group */
         $group = $this->get('em')
                       ->find(Group::class, (int) $groupId);
+        /** @var User|null $user */
         $user = $this->get('em')
                      ->find(User::class, (int) $userId);
 
@@ -375,7 +383,7 @@ class GroupsController extends RozierApp
     /**
      * Build add group form with name constraint.
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     protected function buildAddForm()
     {
@@ -395,7 +403,7 @@ class GroupsController extends RozierApp
      *
      * @param Group $group
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     protected function buildEditForm(Group $group)
     {
@@ -425,7 +433,7 @@ class GroupsController extends RozierApp
      *
      * @param Group $group
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     protected function buildDeleteForm(Group $group)
     {
@@ -443,7 +451,7 @@ class GroupsController extends RozierApp
     /**
      * @param Group $group
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildEditRolesForm(Group $group)
     {
@@ -463,7 +471,8 @@ class GroupsController extends RozierApp
                             [
                                 'label' => 'choose.role',
                                 'entityManager' => $this->get('em'),
-                                'roles' => $group->getRolesEntities()
+                                'roles' => $group->getRolesEntities(),
+                                'authorizationChecker' => $this->get('securityAuthorizationChecker'),
                             ]
                         );
 
@@ -473,7 +482,7 @@ class GroupsController extends RozierApp
     /**
      * @param Group $group
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildEditUsersForm(Group $group)
     {
@@ -507,7 +516,7 @@ class GroupsController extends RozierApp
      * @param Group $group
      * @param Role  $role
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildRemoveRoleForm(Group $group, Role $role)
     {
@@ -532,7 +541,7 @@ class GroupsController extends RozierApp
      * @param Group $group
      * @param User  $user
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildRemoveUserForm(Group $group, User $user)
     {
@@ -591,6 +600,7 @@ class GroupsController extends RozierApp
     protected function editGroup(array $data, Group $group)
     {
         if (isset($data['name'])) {
+            /** @var Group|null $existing */
             $existing = $this->get('em')
                              ->getRepository(Group::class)
                              ->findOneBy(['name' => $data['name']]);
@@ -667,6 +677,7 @@ class GroupsController extends RozierApp
     private function addUser($data, Group $group)
     {
         if ($data['groupId'] == $group->getId()) {
+            /** @var User|null $user */
             $user = $this->get('em')
                          ->find(User::class, (int) $data['userId']);
 

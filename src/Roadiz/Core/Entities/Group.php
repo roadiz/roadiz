@@ -125,7 +125,7 @@ class Group extends AbstractEntity
      *
      * @return Collection
      */
-    public function getRolesEntities(): Collection
+    public function getRolesEntities(): ?Collection
     {
         return $this->roles;
     }
