@@ -35,7 +35,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
- * informations for a route.
+ * information for a route.
  */
 class NodeUrlMatcher extends DynamicUrlMatcher
 {
