@@ -540,6 +540,8 @@ class DocumentRepository extends EntityRepository
     ) {
         $qb = $this->createQueryBuilder('d');
         $qb->addSelect('dt')
+            ->addSelect('nsf')
+            ->addSelect('f')
             ->leftJoin('d.documentTranslations', 'dt', 'WITH', 'dt.translation = :translation')
             ->innerJoin('d.nodesSourcesByFields', 'nsf', 'WITH', 'nsf.nodeSource = :nodeSource')
             ->innerJoin('nsf.field', 'f', 'WITH', 'f.name = :name')

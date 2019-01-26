@@ -45,6 +45,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  * @ORM\Table(name="nodes_sources", uniqueConstraints={
  *     @ORM\UniqueConstraint(columns={"node_id", "translation_id"})
  * }, indexes={
+ *     @ORM\Index(columns={"title"}),
  *     @ORM\Index(columns={"published_at"})
  * })
  * @ORM\InheritanceType("JOINED")
@@ -156,7 +157,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, cascade={"persist"}, fetch="LAZY")
      * @var ArrayCollection
      */
     private $documentsByFields;

@@ -51,7 +51,11 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  * Settings entity are a simple key-value configuration system.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\SettingRepository")
- * @ORM\Table(name="settings")
+ * @ORM\Table(name="settings", indexes={
+ *     @ORM\Index(columns={"type"}),
+ *     @ORM\Index(columns={"name"}),
+ *     @ORM\Index(columns={"visible"})
+ * })
  */
 class Setting extends AbstractEntity
 {

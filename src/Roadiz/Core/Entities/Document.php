@@ -43,7 +43,8 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
  * @ORM\Table(name="documents", indexes={
  *     @ORM\Index(columns={"raw"}),
- *     @ORM\Index(columns={"private"})
+ *     @ORM\Index(columns={"private"}),
+ *     @ORM\Index(columns={"mime_type"})
  * })
  */
 class Document extends AbstractDocument
