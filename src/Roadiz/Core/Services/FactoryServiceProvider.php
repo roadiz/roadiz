@@ -31,15 +31,13 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
-use RZ\Roadiz\Utils\Document\DocumentFactory;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
 use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Core\Handlers\GroupHandler;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
@@ -51,7 +49,9 @@ use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\ContactFormManager;
+use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
 class FactoryServiceProvider implements ServiceProviderInterface
 {
