@@ -155,64 +155,8 @@ class UrlExtension extends AbstractExtension
             } catch (InvalidArgumentException $e) {
                 throw new RuntimeError($e->getMessage(), -1, null, $e);
             }
-        } elseif ($mixed instanceof NodesSources) {
-            return $this->getNodesSourceUrl($mixed, $criteria);
-        } elseif ($mixed instanceof Node) {
-            return $this->getNodeUrl($mixed, $criteria);
-        }
-        throw new RuntimeError("Twig “url” filter can be only used with a Document, a NodesSources or a Node");
-    }
-
-    /**
-     * Get nodeSource url using cache.
-     *
-     * @param NodesSources $ns
-     * @param array $criteria
-     * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
-     * @return string
-     */
-    public function getNodesSourceUrl(NodesSources $ns, array $criteria = [])
-    {
-        trigger_error('url filter is deprecated for NodesSources. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}', E_USER_DEPRECATED);
-        $absolute = false;
-        $canonicalScheme = '';
-
-        if (isset($criteria['absolute'])) {
-            $absolute = (boolean) $criteria['absolute'];
-        }
-        if (isset($criteria['canonicalScheme'])) {
-            $canonicalScheme = trim($criteria['canonicalScheme']);
         }
 
-        $cacheKey = $this->getCacheKey($ns, $absolute, $canonicalScheme);
-
-        if ($this->cacheProvider->contains($cacheKey)) {
-            return $this->cacheProvider->fetch($cacheKey);
-        } else {
-            $urlGenerator = new NodesSourcesUrlGenerator(
-                $this->requestStack->getCurrentRequest(),
-                $ns,
-                $this->forceLocale
-            );
-
-            $url = $urlGenerator->getUrl($absolute, $canonicalScheme);
-
-            $this->cacheProvider->save($cacheKey, $url);
-            return $url;
-        }
-    }
-
-    /**
-     * Get node url using its first source.
-     *
-     * @param Node $node
-     * @param array $criteria
-     * @deprecated Use ChainRouter::generate method instead. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}
-     * @return string
-     */
-    public function getNodeUrl(Node $node, array $criteria = [])
-    {
-        trigger_error('url filter is deprecated for Node. In Twig you can use {{ path(nodeSource) }} or {{ url(nodeSource) }}', E_USER_DEPRECATED);
-        return $this->getNodesSourceUrl($node->getNodeSources()->first(), $criteria);
+        throw new RuntimeError("Twig “url” filter can be only used with a Document");
     }
 }
