@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Events\DebugBarSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
+use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
 use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
 use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
@@ -248,6 +249,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
             }
 
+            $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
             $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
             $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
