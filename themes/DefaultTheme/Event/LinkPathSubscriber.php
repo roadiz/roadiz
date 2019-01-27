@@ -23,15 +23,18 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file NodeSourcePathSubscriber.php
+ * @file LinkPathSubscriber.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Events;
+namespace Themes\DefaultTheme\Event;
 
+use GeneratedNodeSources\NSLink;
+use RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class NodeSourcePathSubscriber implements EventSubscriberInterface
+class LinkPathSubscriber implements EventSubscriberInterface
 {
     /**
      * @inheritDoc
@@ -39,7 +42,10 @@ class NodeSourcePathSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING => [['onNodesSourcesPath', -100]],
+            /*
+             * Needs to execute this BEFORE default nodes-sources path generation
+             */
+            NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING => [['onNodesSourcesPath', 0]],
         ];
     }
 
@@ -48,11 +54,25 @@ class NodeSourcePathSubscriber implements EventSubscriberInterface
      */
     public function onNodesSourcesPath(FilterNodeSourcePathEvent $event): void
     {
-        $urlGenerator = new NodesSourcesUrlGenerator(
-            null,
-            $event->getNodeSource(),
-            $event->isForceLocale()
-        );
-        $event->setPath($urlGenerator->getNonContextualUrl($event->getTheme(), $event->getParameters()));
+        $source = $event->getNodeSource();
+        if ($source instanceof NSLink) {
+            /*
+             * Prevent default nodes-sources path generation
+             * to be executed.
+             */
+            $event->stopPropagation();
+
+            if (isset($source->getRefNode()[0])) {
+                $realNode = $source->getRefNode()[0]->getNodeSources()->first();
+                $urlGenerator = new NodesSourcesUrlGenerator(
+                    null,
+                    $realNode,
+                    $event->isForceLocale()
+                );
+                $event->setPath($urlGenerator->getNonContextualUrl($event->getTheme(), $event->getParameters()));
+            } else {
+                $event->setPath('');
+            }
+        }
     }
 }

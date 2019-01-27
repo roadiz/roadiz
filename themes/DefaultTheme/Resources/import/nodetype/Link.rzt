@@ -1,0 +1,30 @@
+{
+    "name": "Link",
+    "displayName": "Link to other page",
+    "description": null,
+    "visible": true,
+    "newsletterType": false,
+    "hidingNodes": false,
+    "color": "#1bc258",
+    "reachable": false,
+    "publishable": false,
+    "fields": [
+        {
+            "name": "ref_node",
+            "label": "Node reference",
+            "description": null,
+            "visible": true,
+            "type": 13,
+            "indexed": false,
+            "virtual": true,
+            "universal": false,
+            "default_values": "Page",
+            "group_name": null,
+            "group_name_canonical": null,
+            "expanded": false,
+            "placeholder": null,
+            "min_length": 1,
+            "max_length": 1
+        }
+    ]
+}
