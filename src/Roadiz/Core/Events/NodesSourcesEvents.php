@@ -72,7 +72,7 @@ final class NodesSourcesEvents
      * is being indexed in a Solr server.
      *
      * Event listener will be given a:
-     * RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
+     * \RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
      *
      * @var string
      */
@@ -83,7 +83,7 @@ final class NodesSourcesEvents
      * This event allows generating different paths according your node types.
      *
      * Event listener will be given a:
-     * RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent instance
+     * \RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent instance
      *
      * @var string
      */
