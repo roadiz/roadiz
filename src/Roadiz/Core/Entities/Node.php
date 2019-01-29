@@ -38,7 +38,7 @@ use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * Node entities are the central feature of RZ-CMS,
+ * Node entities are the central feature of Roadiz,
  * it describes a document-like object which can be inherited
  * with *NodesSources* to create complex data structures.
  *
