@@ -30,7 +30,6 @@
 
 import $ from 'jquery'
 import { Map, Marker, LatLng, TileLayer, Icon } from 'leaflet'
-import 'leaflet/dist/leaflet.css'
 import GeoCodingService from '../services/GeoCodingService'
 
 export default class LeafletGeotagField {

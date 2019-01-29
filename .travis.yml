@@ -2,6 +2,30 @@
 # Ambroise Maupate
 jobs:
     include:
+        - stage: "Default theme assets tests"
+          language: node_js
+          node_js:
+              - "lts/*"
+              - "7"
+              - "10"
+              - "node"
+          script:
+              - cd themes/DefaultTheme/static
+              - yarn install --pure-lockfile
+              - yarn run build
+
+        - stage: "Install assets tests"
+          language: node_js
+          node_js:
+              - "lts/*"
+              - "7"
+              - "10"
+              - "node"
+          script:
+              - cd themes/Install/static
+              - yarn install --pure-lockfile
+              - yarn run build
+
         - stage: "Backoffice assets tests"
           language: node_js
           node_js:
