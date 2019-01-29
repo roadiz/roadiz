@@ -35,22 +35,9 @@ import 'jquery-ui/ui/widgets/autocomplete'
 
 import $ from 'jquery'
 import Rozier from './Rozier'
-import GeotagField from './widgets/GeotagField'
-import MultiGeotagField from './widgets/MultiGeotagField'
 
 window.CodeMirror = CodeMirror
 window.UIkit = UIkit
-
-// eslint-disable-next-line
-window.initializeGeotagFields = () => {
-    window.Rozier.gMapLoaded = true
-    window.Rozier.gMapLoading = false
-
-    /* eslint-disable no-new */
-    new GeotagField()
-    new MultiGeotagField()
-}
-
 /*
  * ============================================================================
  * Rozier entry point

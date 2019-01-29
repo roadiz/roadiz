@@ -27,10 +27,7 @@
  */
 
 import $ from 'jquery'
-import {
-    TweenLite,
-    Expo
-} from 'gsap'
+import { Expo, TweenLite } from 'gsap'
 import DocumentsBulk from './components/bulk-edits/DocumentsBulk'
 import NodesBulk from './components/bulk-edits/NodesBulk'
 import TagsBulk from './components/bulk-edits/TagsBulk'
@@ -44,8 +41,6 @@ import Import from './components/import/Import'
 import NodeEditSource from './components/node/NodeEditSource'
 import InputLengthWatcher from './widgets/InputLengthWatcher'
 import ChildrenNodesField from './widgets/ChildrenNodesField'
-import GeotagField from './widgets/GeotagField'
-import MultiGeotagField from './widgets/MultiGeotagField'
 import StackNodeTree from './widgets/StackNodeTree'
 import SaveButtons from './widgets/SaveButtons'
 import TagAutocomplete from './widgets/TagAutocomplete'
@@ -57,9 +52,9 @@ import YamlEditor from './widgets/YamlEditor'
 import MarkdownEditor from './widgets/MarkdownEditor'
 import JsonEditor from './widgets/JsonEditor'
 import CssEditor from './widgets/CssEditor'
-import {
-    isMobile
-} from './utils/plugins'
+import { isMobile } from './utils/plugins'
+import LeafletGeotagField from './widgets/LeafletGeotagField'
+import MultiLeafletGeotagField from './widgets/MultiLeafletGeotagField'
 
 /**
  * Lazyload
@@ -278,10 +273,11 @@ export default class Lazyload {
 
         $old.fadeOut(100, () => {
             $old.remove()
-
             this.generalBind()
             $tempData.fadeIn(200, () => {
                 $tempData.removeClass('new-content-global')
+                let pageShowEndEvent = new CustomEvent('pageshowend')
+                window.dispatchEvent(pageShowEndEvent)
             })
         })
     }
@@ -330,8 +326,9 @@ export default class Lazyload {
         this.inputLengthWatcher = new InputLengthWatcher()
         this.documentUploader = new DocumentUploader(window.Rozier.messages.dropzone)
         this.childrenNodesFields = new ChildrenNodesField()
-        this.geotagField = new GeotagField()
-        this.multiGeotagField = new MultiGeotagField()
+        this.geotagField = new LeafletGeotagField()
+        this.multiGeotagField = new MultiLeafletGeotagField()
+
         this.stackNodeTrees = new StackNodeTree()
 
         if (isMobile.any() === null) {

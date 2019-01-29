@@ -1,15 +1,45 @@
-import $ from 'jquery'
-import GeotagField from './GeotagField'
+/*
+ * Copyright © 2019, Ambroise Maupate and Julien Blanchet
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is furnished
+ * to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+ * IN THE SOFTWARE.
+ *
+ * Except as contained in this notice, the name of the roadiz shall not
+ * be used in advertising or otherwise to promote the sale, use or other dealings
+ * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+ *
+ * @file MultiLeafletGeotagField.js
+ * @author Ambroise Maupate
+ *
+ */
 
-export default class MultiGeotagField extends GeotagField {
+import $ from 'jquery'
+import LeafletGeotagField from './LeafletGeotagField'
+import { LatLng, LatLngBounds } from 'leaflet'
+import GeoCodingService from '../services/GeoCodingService'
+
+export default class MultiLeafletGeotagField extends LeafletGeotagField {
     constructor () {
         super()
-
         this.$fields = $('.rz-multi-geotag-field')
         this.geocoder = null
 
-        if (this.$fields.length &&
-            window.Rozier.googleClientId !== '') {
+        if (this.$fields.length) {
             this.init()
         }
     }
@@ -20,17 +50,15 @@ export default class MultiGeotagField extends GeotagField {
      * @param $geocodeReset
      * @param map
      * @param $selector
-     * @param event
      * @returns {boolean}
      */
-    resetMarker (markers, $input, $geocodeReset, map, $selector, event) {
+    resetMarker (markers, $input, $geocodeReset, map, $selector) {
         $input.val('')
         for (let i = markers.length - 1; i >= 0; i--) {
-            markers[i].setMap(null)
+            markers[i].removeFrom(map)
             markers[i] = null
         }
         markers = []
-
         $geocodeReset.hide()
         this.syncSelector($selector, markers, map, $input)
 
@@ -41,12 +69,12 @@ export default class MultiGeotagField extends GeotagField {
         let $input = $(element)
         let $label = $input.parent().find('.uk-form-label')
         let labelText = $label[0].innerHTML
-        let jsonCode = {'lat': 45.769785, 'lng': 4.833967, 'zoom': 14} // default location
+        let jsonCode = {'lat': 45.769785, 'lng': 4.833967, 'zoom': 14}
         let fieldId = 'geotag-canvas-' + this.uniqid()
         let fieldAddressId = fieldId + '-address'
         let resetButtonId = fieldId + '-reset'
         let mapOptions = {
-            center: new window.google.maps.LatLng(jsonCode.lat, jsonCode.lng),
+            center: this.createLatLng(jsonCode),
             zoom: jsonCode.zoom,
             scrollwheel: false,
             styles: window.Rozier.mapsStyle
@@ -89,7 +117,7 @@ export default class MultiGeotagField extends GeotagField {
         /*
          * Prepare map and marker
          */
-        let map = new window.google.maps.Map(document.getElementById(fieldId), mapOptions)
+        let map = this.createMap(fieldId, mapOptions)
         let markers = []
         let $selector = $input.parent().find('.multi-geotag-list-markers')
 
@@ -98,8 +126,8 @@ export default class MultiGeotagField extends GeotagField {
                 let geocodes = JSON.parse($input.val())
                 let geocodeslength = geocodes.length
                 for (let i = 0; i < geocodeslength; i++) {
-                    markers[i] = this.createMarker(geocodes[i], $input, map)
-                    window.google.maps.event.addListener(markers[i], 'dragend', $.proxy(this.setMarkerEvent, this, markers[i], markers, $input, $geocodeReset, map))
+                    markers[i] = this.createMarker(geocodes[i], map)
+                    markers[i].on('dragend', $.proxy(this.setMarkerEvent, this, markers[i], markers, $input, $geocodeReset, map))
                 }
                 $geocodeReset.show()
             } catch (e) {
@@ -110,27 +138,24 @@ export default class MultiGeotagField extends GeotagField {
             }
         }
 
-        window.google.maps.event.addListener(map, 'click', $.proxy(this.setMarkerEvent, this, null, markers, $input, $geocodeReset, map))
-        window.google.maps.event.addListener(map, 'click', $.proxy(this.syncSelector, this, $selector, markers, map, $input))
-
+        map.on('click', $.proxy(this.setMarkerEvent, this, null, markers, $input, $geocodeReset, map))
+        map.on('click', $.proxy(this.syncSelector, this, $selector, markers, map, $input))
         $geocodeInput.on('keypress', $.proxy(this.requestGeocode, this, markers, $input, $geocodeReset, map, $selector))
         $geocodeReset.on('click', $.proxy(this.resetMarker, this, markers, $input, $geocodeReset, map, $selector))
         $geocodeReset.on('click', $.proxy(this.syncSelector, this, $selector, markers, map, $input))
-
         window.Rozier.$window.on('resize', $.proxy(this.resetMap, this, map, markers, mapOptions))
+        window.Rozier.$window.on('pageshowend', $.proxy(this.resetMap, this, map, markers, mapOptions))
         this.resetMap(map, markers, mapOptions, null)
         this.syncSelector($selector, markers, map, $input)
     }
 
     syncSelector ($selector, markers, map, $input) {
         let _this = this
-
         $selector.empty()
         let markersLength = markers.length
         for (let i = 0; i < markersLength; i++) {
             if (markers[i] !== null) {
                 let geocode = this.getGeocodeFromMarker(markers[i])
-
                 $selector.append([
                     '<li>',
                     '<span class="multi-geotag-marker-name">',
@@ -143,15 +168,14 @@ export default class MultiGeotagField extends GeotagField {
 
                 let $centerBtn = $selector.find('.rz-multi-geotag-center[data-geocode-id="' + i + '"]')
                 let $removeBtn = $selector.find('.rz-multi-geotag-remove[data-geocode-id="' + i + '"]')
-
                 $centerBtn.on('click', $.proxy(this.centerMap, _this, map, markers[i]))
                 $removeBtn.on('click', $.proxy(this.removeMarker, _this, map, markers, i, $selector, $input))
             }
         }
     }
 
-    removeMarker (map, markers, index, $selector, $input, event) {
-        markers[index].setMap(null)
+    removeMarker (map, markers, index, $selector, $input) {
+        markers[index].removeFrom(map)
         markers[index] = null
 
         this.syncSelector($selector, markers, map, $input)
@@ -162,91 +186,97 @@ export default class MultiGeotagField extends GeotagField {
 
     getGeocodeFromMarker (marker) {
         return {
-            'lat': marker.getPosition().lat(),
-            'lng': marker.getPosition().lng(),
-            'zoom': marker.zoom,
+            'lat': marker.getLatLng().lat,
+            'lng': marker.getLatLng().lng,
+            'zoom': marker.getLatLng().alt,
             'name': marker.name
         }
     }
 
     resetMap (map, markers, mapOptions, event) {
         window.setTimeout(() => {
-            window.google.maps.event.trigger(map, 'resize')
-
+            map.invalidateSize(true)
             if (typeof markers !== 'undefined' && markers.length > 0) {
                 map.fitBounds(this.getMediumLatLng(markers))
             } else {
                 map.panTo(mapOptions.center)
             }
-        }, 300)
+        }, 400)
     }
 
-    centerMap (map, marker, event) {
+    /**
+     *
+     * @param {Map} map
+     * @param {Marker} marker
+     * @returns {boolean}
+     */
+    centerMap (map, marker) {
         window.setTimeout(() => {
-            window.google.maps.event.trigger(map, 'resize')
-
             if (typeof marker !== 'undefined') {
-                map.panTo(marker.getPosition())
-            }
-            if (typeof marker.zoom !== 'undefined') {
-                map.setZoom(marker.zoom)
+                map.panTo(marker.getLatLng())
+                map.setZoom(marker.getLatLng().alt)
             }
         }, 300)
 
         return false
     }
 
+    /**
+     *
+     * @param markers
+     * @returns {*|LatLngBounds}
+     */
     getMediumLatLng (markers) {
-        let bounds = new window.google.maps.LatLngBounds()
-        for (let index in markers) {
-            bounds.extend(markers[index].getPosition())
+        let bounds = new LatLngBounds()
+        for (const marker of markers) {
+            bounds.extend(marker.getLatLng())
         }
-
         return bounds
     }
 
     /**
-     * @param marker
-     * @param markers
+     * @param {Marker} marker
+     * @param {Array} markers
      * @param $input
      * @param $geocodeReset
-     * @param map
+     * @param {Map} map
      * @param event
      */
     setMarkerEvent (marker, markers, $input, $geocodeReset, map, event) {
-        this.setMarker(marker, markers, $input, $geocodeReset, map, event.latLng)
+        if (typeof event.latlng !== 'undefined') {
+            this.setMarker(marker, markers, $input, $geocodeReset, map, event.latlng)
+        } else if (marker !== null) {
+            let latlng = marker.getLatLng()
+            map.panTo(latlng)
+            this.writeMarkers(markers, $input)
+        }
     }
 
     /**
-     * @param marker
-     * @param markers
+     * @param {Marker} marker
+     * @param {Array<Marker>} markers
      * @param $input
      * @param $geocodeReset
-     * @param map
-     * @param latlng
+     * @param {Map} map
+     * @param {LatLng} latlng
      * @param name
      * @returns {Object}
      */
     setMarker (marker, markers, $input, $geocodeReset, map, latlng, name) {
+        latlng.zoom = map.getZoom()
+        latlng.alt = map.getZoom()
+
         if (marker === null) {
-            marker = new window.google.maps.Marker({
-                map: map,
-                draggable: true,
-                animation: window.google.maps.Animation.DROP,
-                position: latlng,
-                icon: window.Rozier.resourcesUrl + 'assets/img/map_marker.png'
-            })
+            marker = this.createMarker(latlng, map)
+        } else {
+            marker.setLatLng(latlng)
+            marker.addTo(map)
         }
 
-        marker.setPosition(latlng)
-        marker.setMap(map)
-        marker.zoom = map.getZoom()
         marker.name = name
         map.panTo(latlng)
         markers.push(marker)
-
         this.writeMarkers(markers, $input)
-
         $geocodeReset.show()
 
         return marker
@@ -254,13 +284,11 @@ export default class MultiGeotagField extends GeotagField {
 
     writeMarkers (markers, $input) {
         let geocodes = []
-
-        for (let i = markers.length - 1; i >= 0; i--) {
-            if (markers[i] !== null) {
-                geocodes.push(this.getGeocodeFromMarker(markers[i]))
+        for (const marker of markers) {
+            if (marker !== null) {
+                geocodes.push(this.getGeocodeFromMarker(marker))
             }
         }
-
         $input.val(JSON.stringify(geocodes))
     }
 
@@ -269,13 +297,13 @@ export default class MultiGeotagField extends GeotagField {
 
         if (event.which === 13) {
             event.preventDefault()
-
-            this.geocoder.geocode({'address': address}, (results, status) => {
-                if (status === window.google.maps.GeocoderStatus.OK) {
-                    this.setMarker(null, markers, $input, $geocodeReset, map, results[0].geometry.location, address)
+            GeoCodingService.geoCode(address).then((response) => {
+                if (response !== null) {
+                    const latlng = new LatLng(response.lat, response.lon, map.getZoom())
+                    this.setMarker(null, markers, $input, $geocodeReset, map, latlng, response.display_name)
                     this.syncSelector($selector, markers, map, $input)
                 } else {
-                    console.error('Geocode was not successful for the following reason: ' + status)
+                    console.error('Geocode was not successful.')
                 }
             })
 
