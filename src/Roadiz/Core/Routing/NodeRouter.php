@@ -31,12 +31,17 @@ namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
@@ -45,7 +50,13 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class NodeRouter extends Router implements VersatileGeneratorInterface
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $em;
+    /**
+     * @var Stopwatch|null
+     */
     protected $stopwatch;
 
     /**
@@ -60,28 +71,33 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
 
     /** @var CacheProvider */
     private $nodeSourceUrlCacheProvider;
-
     /**
      * @var Settings
      */
     private $settingsBag;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * NodeRouter constructor.
      *
-     * @param EntityManager $em
-     * @param ThemeResolverInterface $themeResolver
-     * @param Settings $settingsBag
-     * @param array $options
-     * @param RequestContext|null $context
-     * @param LoggerInterface|null $logger
-     * @param Stopwatch|null $stopwatch
-     * @param bool $preview
+     * @param EntityManagerInterface   $em
+     * @param ThemeResolverInterface   $themeResolver
+     * @param Settings                 $settingsBag
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param array                    $options
+     * @param RequestContext|null      $context
+     * @param LoggerInterface|null     $logger
+     * @param Stopwatch|null           $stopwatch
+     * @param bool                     $preview
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         ThemeResolverInterface $themeResolver,
         Settings $settingsBag,
+        EventDispatcherInterface $eventDispatcher,
         array $options = [],
         RequestContext $context = null,
         LoggerInterface $logger = null,
@@ -96,6 +112,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         $this->preview = $preview;
         $this->themeResolver = $themeResolver;
         $this->settingsBag = $settingsBag;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -235,27 +252,41 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost() . '_' . serialize($parameters);
         if (null !== $this->nodeSourceUrlCacheProvider) {
             if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
-                $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
-                $urlGenerator = new NodesSourcesUrlGenerator(
-                    null,
-                    $source,
-                    (boolean) $this->settingsBag->get('force_locale')
-                );
                 $this->nodeSourceUrlCacheProvider->save(
                     $cacheKey,
-                    $urlGenerator->getNonContextualUrl($theme, $parameters)
+                    $this->getNodesSourcesPath($source, $parameters)
                 );
             }
             return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
-        } else {
-            $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
-            $urlGenerator = new NodesSourcesUrlGenerator(
-                null,
-                $source,
-                (boolean) $this->settingsBag->get('force_locale')
-            );
-            return $urlGenerator->getNonContextualUrl($theme, $parameters);
         }
+
+        return $this->getNodesSourcesPath($source, $parameters);
+    }
+
+    /**
+     * @param NodesSources $source
+     * @param array        $parameters
+     *
+     * @return string
+     * @throws InvalidParameterException
+     */
+    protected function getNodesSourcesPath(NodesSources $source, $parameters = []): string
+    {
+        $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
+        $event = new FilterNodeSourcePathEvent(
+            $theme,
+            $source,
+            $this->getContext(),
+            $parameters,
+            (boolean) $this->settingsBag->get('force_locale')
+        );
+        $this->eventDispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING, $event);
+        $path = $event->getPath();
+
+        if (null === $path) {
+            throw new InvalidParameterException('NodeSource generated path is null.');
+        }
+        return $path;
     }
 
     /**

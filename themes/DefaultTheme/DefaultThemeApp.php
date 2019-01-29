@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\DefaultTheme\Event\LinkPathSubscriber;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
 use Themes\DefaultTheme\Twig\ImageFormatsExtension;
 
@@ -195,6 +196,7 @@ class DefaultThemeApp extends FrontendController
          */
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $container['dispatcher'];
+        $dispatcher->addSubscriber(new LinkPathSubscriber());
         $dispatcher->addListener(
             NodesSourcesEvents::NODE_SOURCE_INDEXING,
             function (FilterSolariumNodeSourceEvent $event) {

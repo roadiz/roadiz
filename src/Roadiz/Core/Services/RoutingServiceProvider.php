@@ -113,6 +113,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['em'],
                 $c['themeResolver'],
                 $c['settingsBag'],
+                $c['dispatcher'],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),

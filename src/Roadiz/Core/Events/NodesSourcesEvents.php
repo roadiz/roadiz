@@ -72,9 +72,20 @@ final class NodesSourcesEvents
      * is being indexed in a Solr server.
      *
      * Event listener will be given a:
-     * RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
+     * \RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
      *
      * @var string
      */
     const NODE_SOURCE_INDEXING = 'nodeSource.indexing';
+
+    /**
+     * Event triggered when a node-source path is being generating by the NodeRouter.
+     * This event allows generating different paths according your node types.
+     *
+     * Event listener will be given a:
+     * \RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent instance
+     *
+     * @var string
+     */
+    const NODE_SOURCE_PATH_GENERATING = 'nodeSource.pathGenerating';
 }
