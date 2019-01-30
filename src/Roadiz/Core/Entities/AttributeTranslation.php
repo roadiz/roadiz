@@ -59,6 +59,12 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
     protected $label;
 
     /**
+     * @var array|null
+     * @ORM\Column(type="simple_array", nullable=true, unique=false)
+     */
+    protected $options = [];
+
+    /**
      * @var AttributeInterface
      * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeTranslations")
      */

@@ -40,7 +40,7 @@ interface AttributeValueInterface extends PositionedInterface
     /**
      * @return AttributeInterface
      */
-    public function getAttribute(): AttributeInterface;
+    public function getAttribute(): ?AttributeInterface;
 
     /**
      * @param AttributeInterface $attribute

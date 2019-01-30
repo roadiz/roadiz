@@ -44,6 +44,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class AttributeType extends AbstractType
@@ -55,6 +56,7 @@ class AttributeType extends AbstractType
     {
         $builder->add('code', TextType::class, [
                 'label' => 'attributes.form.code',
+                'required' => true,
                 'constraints' => [
                     new NotBlank(),
                     new Regex([
@@ -78,17 +80,10 @@ class AttributeType extends AbstractType
                     'attributes.form.type.country' => AttributeInterface::COUNTRY_T,
                 ],
             ])
-            ->add('options', CollectionType::class, [
-                'label' => 'attributes.form.options',
-                'allow_add' => true,
-                'allow_delete' => true,
-                'attr' => [
-                    'class' => 'rz-collection-form-type'
-                ],
-            ])
             ->add('attributeTranslations', CollectionType::class, [
                 'label' => 'attributes.form.attributeTranslations',
                 'allow_add' => true,
+                'required' => false,
                 'allow_delete' => true,
                 'entry_type' => AttributeTranslationType::class,
                 'by_reference' => false,
@@ -98,7 +93,7 @@ class AttributeType extends AbstractType
                 ],
                 'attr' => [
                     'class' => 'rz-collection-form-type'
-                ],
+                ]
             ])
         ;
     }

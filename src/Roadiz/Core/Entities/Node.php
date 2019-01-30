@@ -703,7 +703,8 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @var Collection<AttributeValueInterface>
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="node")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="node", orphanRemoval=true)
+     * @ORM\OrderBy({"position" = "ASC"})
      */
     protected $attributeValues;
 

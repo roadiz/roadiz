@@ -24,58 +24,48 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file Attribute.php
+ * @file AttributeValueType.php
  * @author Ambroise Maupate
  *
  */
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Core\Entities;
+namespace RZ\Roadiz\Attribute\Form;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Attribute\Model\AttributeInterface;
-use RZ\Roadiz\Attribute\Model\AttributeTrait;
-use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
-/**
- * @package RZ\Roadiz\Core\Entities
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="attributes", indexes={
- *     @ORM\Index(columns={"code"}),
- *     @ORM\Index(columns={"type"})
- * })
- * @ORM\HasLifecycleCallbacks
- */
-class Attribute extends AbstractEntity implements AttributeInterface
+class AttributeValueType extends AbstractType
 {
-    use AttributeTrait;
-
     /**
-     * @var string
-     * @ORM\Column(type="string", nullable=false, unique=true)
+     * @inheritDoc
      */
-    protected $code = "";
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=false, unique=false)
-     */
-    protected $type = AttributeInterface::STRING_T;
-
-    /**
-     * @var Collection<AttributeTranslationInterface>
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation", mappedBy="attribute", fetch="EAGER", cascade={"persist", "remove"})
-     */
-    protected $attributeTranslations;
-
-    /**
-     * Attribute constructor.
-     */
-    public function __construct()
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->attributeTranslations = new ArrayCollection();
+        $builder->add('attribute', AttributeChoiceType::class, [
+            'label' => 'attribute_values.form.attribute',
+            'entityManager' => $options['entityManager'],
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        parent::configureOptions($resolver);
+
+        $resolver->setRequired('entityManager');
+        $resolver->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getBlockPrefix()
+    {
+        return 'attribute_value';
     }
 }

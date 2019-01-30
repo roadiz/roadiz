@@ -71,4 +71,17 @@ interface AttributeTranslationInterface
      * @return mixed
      */
     public function setAttribute(AttributeInterface $attribute);
+
+
+    /**
+     * @return array|null
+     */
+    public function getOptions(): ?array;
+
+    /**
+     * @param array|null $options
+     *
+     * @return mixed
+     */
+    public function setOptions(?array $options);
 }

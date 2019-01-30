@@ -33,7 +33,9 @@
                     {% for item in items %}
                     <tr>
                         <td>
-                            <a href="{{ path('attributesEditPage', { id: item.id }) }}">{{ item.code }}</a>
+                            <a href="{{ path('attributesEditPage', { id: item.id }) }}">
+                                {{- item.attributeTranslations.first.label|default(item.code) -}}
+                            </a>
                         </td>
                         <td class="table-actions-row">
                         {% spaceless %}

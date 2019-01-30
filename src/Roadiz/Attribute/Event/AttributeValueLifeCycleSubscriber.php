@@ -24,61 +24,68 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AttributeValueTrait.php
+ * @file AttributeValueLifeCycleSubscriber.php
  * @author Ambroise Maupate
  *
  */
-declare(strict_types=1);
 
-namespace RZ\Roadiz\Attribute\Model;
+namespace RZ\Roadiz\Attribute\Event;
 
-use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Events;
+use Pimple\Container;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 
-trait AttributeValueTrait
+class AttributeValueLifeCycleSubscriber implements EventSubscriber
 {
     /**
-     * @return AttributeInterface
+     * @var Container
      */
-    public function getAttribute(): ?AttributeInterface
+    private $container;
+
+    /**
+     * UserLifeCycleSubscriber constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container)
     {
-        return $this->attribute;
+        $this->container = $container;
     }
 
     /**
-     * @param AttributeInterface $attribute
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function setAttribute(AttributeInterface $attribute)
+    public function getSubscribedEvents()
     {
-        $this->attribute = $attribute;
-        return $this;
+        return [
+            Events::prePersist,
+        ];
     }
 
     /**
-     * @return int
+     * @param LifecycleEventArgs $event
      */
-    public function getType(): int
+    public function prePersist(LifecycleEventArgs $event)
     {
-        return $this->getAttribute()->getType();
-    }
+        $entity = $event->getEntity();
+        if ($entity instanceof AttributeValueInterface) {
+            /*
+             * Automatically set position only if not manually set before.
+             */
+            if ($entity->getPosition() === 0.0) {
+                /*
+                 * Get the last index after last node in parent
+                 */
+                $nodeAttributes = $entity->getAttributable()->getAttributeValues();
+                $lastPosition = 1;
+                foreach ($nodeAttributes as $nodeAttribute) {
+                    $nodeAttribute->setPosition($lastPosition);
+                    $lastPosition++;
+                }
 
-    /**
-     * @return Collection<AttributeValueTranslationInterface>
-     */
-    public function getAttributeValueTranslations(): Collection
-    {
-        return $this->attributeValueTranslations;
-    }
-
-    /**
-     * @param Collection<AttributeValueTranslationInterface> $attributeValueTranslations
-     *
-     * @return mixed
-     */
-    public function setAttributeValueTranslations(Collection $attributeValueTranslations)
-    {
-        $this->attributeValueTranslations = $attributeValueTranslations;
-        return true;
+                $entity->setPosition($lastPosition);
+            }
+        }
     }
 }

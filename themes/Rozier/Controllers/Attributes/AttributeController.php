@@ -72,6 +72,7 @@ class AttributeController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
 
         $item = new Attribute();
+        $item->setCode('new_attribute');
 
         $form = $this->createForm(AttributeType::class, $item, [
             'entityManager' => $this->get('em'),
@@ -139,5 +140,48 @@ class AttributeController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         return $this->render('attributes/edit.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES_DELETE');
+
+        /** @var Attribute $item */
+        $item = $this->get('em')->find(Attribute::class, (int) $id);
+
+        if ($item === null) {
+            throw $this->createNotFoundException('Attribute does not exist.');
+        }
+
+        $form = $this->createForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid() ) {
+            try {
+                $this->get('em')->remove($item);
+                $this->get('em')->flush();
+
+                $msg = $this->getTranslator()->trans(
+                    'attribute.%name%.deleted',
+                    ['%name%' => $item->getCode()]
+                );
+                $this->publishConfirmMessage($request, $msg);
+            } catch (\RuntimeException $e) {
+                $this->publishErrorMessage($request, $e->getMessage());
+            }
+
+            return $this->redirect($this->generateUrl('attributesHomePage'));
+        }
+
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['item'] = $item;
+
+        return $this->render('attributes/delete.html.twig', $this->assignation);
     }
 }

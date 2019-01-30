@@ -12,7 +12,9 @@
             </li>
             {% if (is_granted('ROLE_ACCESS_NODES_SETTING')) %}
                 <li class="uk-navbar-item{% if current == 'edit' %} uk-active{% endif %}" >
-                    <a class="uk-navbar-link" href="{{ path('nodesEditPage', { nodeId: node.id }) }}">{% trans %}node.parameters{% endtrans %}</a>
+                    <a class="uk-navbar-link" href="{{ path('nodesEditPage', { nodeId: node.id }) }}">
+                        {%- trans -%}node.parameters{%- endtrans -%}
+                    </a>
                 </li>
             {% endif %}
             {% if (is_granted('ROLE_ACCESS_TAGS')) %}
@@ -20,9 +22,22 @@
                     <a class="uk-navbar-link" href="{{ path('nodesEditTagsPage', { nodeId: node.id}) }}">{% trans %}tags{% endtrans %}</a>
                 </li>
             {% endif %}
+
+            {% if (is_granted('ROLE_ACCESS_NODE_ATTRIBUTES')) %}
+                <li class="uk-navbar-item{% if current == 'attributes' %} uk-active{% endif %}">
+                    <a class="uk-navbar-link" href="{{ path('nodesEditAttributesPage', {
+                        nodeId: node.id,
+                        translationId: translation.id
+                    }) }}">{% trans %}node.attributes{% endtrans %}</a>
+                </li>
+            {% endif %}
+
             {% if node.nodeType.reachable %}
                 <li class="uk-navbar-item{% if current == 'seo' %} uk-active{% endif %}">
-                    <a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', { nodeId: node.id, translationId:translation.id}) }}">{% trans %}seo{% endtrans %}</a>
+                    <a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', {
+                        nodeId: node.id,
+                        translationId: translation.id
+                    }) }}">{% trans %}seo{% endtrans %}</a>
                 </li>
             {% endif %}
         {% endif %}

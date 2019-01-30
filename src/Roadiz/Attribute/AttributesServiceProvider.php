@@ -34,6 +34,7 @@ namespace RZ\Roadiz\Attribute;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Attribute\Event\AttributeValueLifeCycleSubscriber;
 use RZ\Roadiz\Attribute\Twig\AttributesExtension;
 
 class AttributesServiceProvider implements ServiceProviderInterface
@@ -46,6 +47,11 @@ class AttributesServiceProvider implements ServiceProviderInterface
         $container->extend('twig.extensions', function ($extensions, $c) {
             $extensions->add(new AttributesExtension());
             return $extensions;
+        });
+
+        $container->extend('em.eventSubscribers', function (array $subscribers, Container $c) {
+            array_push($subscribers, new AttributeValueLifeCycleSubscriber($c));
+            return $subscribers;
         });
     }
 }

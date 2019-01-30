@@ -92,4 +92,24 @@ trait AttributeTranslationTrait
         $this->attribute = $attribute;
         return $this;
     }
+
+
+    /**
+     * @return array|null
+     */
+    public function getOptions(): ?array
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array|null $options
+     *
+     * @return $this
+     */
+    public function setOptions(?array $options)
+    {
+        $this->options = $options;
+        return $this;
+    }
 }

@@ -94,18 +94,6 @@ interface AttributeInterface
     public function setCode(string $code);
 
     /**
-     * @return array|null
-     */
-    public function getOptions(): ?array;
-
-    /**
-     * @param array|null $options
-     *
-     * @return mixed
-     */
-    public function setOptions(?array $options);
-
-    /**
      * @return Collection<AttributeTranslationInterface>
      */
     public function getAttributeTranslations(): Collection;
