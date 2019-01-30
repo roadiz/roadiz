@@ -37,13 +37,13 @@ use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Workflow\Workflow;
 use Themes\Rozier\Forms;
 use Themes\Rozier\Forms\Node\AddNodeType;
 use Themes\Rozier\RozierApp;
@@ -448,47 +448,50 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
-        if (null !== $node &&
-            !$node->isDeleted() &&
-            !$node->isLocked()) {
-            $this->assignation['node'] = $node;
-
-            $form = $this->buildDeleteForm($node);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['nodeId'] == $node->getId()) {
-                /*
-                 * Dispatch event
-                 */
-                $event = new FilterNodeEvent($node);
-                $this->get('dispatcher')->dispatch(NodeEvents::NODE_DELETED, $event);
-
-                /** @var NodeHandler $nodeHandler */
-                $nodeHandler = $this->get('node.handler')->setNode($node);
-                $nodeHandler->softRemoveWithChildren();
-                $this->get('em')->flush();
-
-                $msg = $this->getTranslator()->trans(
-                    'node.%name%.deleted',
-                    ['%name%' => $node->getNodeName()]
-                );
-                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-
-                if ($request->query->has('referer')) {
-                    return $this->redirect($request->query->get('referer'));
-                }
-                return $this->redirect($this->generateUrl('nodesHomePage'));
-            }
-            $this->assignation['form'] = $form->createView();
-            return $this->render('nodes/delete.html.twig', $this->assignation);
+        if (null === $node) {
+            throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
         }
 
-        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
+        /** @var Workflow $workflow */
+        $workflow = $this->get('workflow.registry')->get($node);
+        if (!$workflow->can($node, 'delete')) {
+            throw new BadRequestHttpException(sprintf('Node #%s cannot be deleted.', $nodeId));
+        }
+
+        $this->assignation['node'] = $node;
+        $form = $this->buildDeleteForm($node);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() &&
+            $form->isValid() &&
+            $form->getData()['nodeId'] == $node->getId()) {
+            /*
+             * Dispatch event
+             */
+            $event = new FilterNodeEvent($node);
+            $this->get('dispatcher')->dispatch(NodeEvents::NODE_DELETED, $event);
+
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->get('node.handler')->setNode($node);
+            $nodeHandler->softRemoveWithChildren();
+            $this->get('em')->flush();
+
+            $msg = $this->getTranslator()->trans(
+                'node.%name%.deleted',
+                ['%name%' => $node->getNodeName()]
+            );
+            $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+
+            if ($request->query->has('referer')) {
+                return $this->redirect($request->query->get('referer'));
+            }
+            return $this->redirect($this->generateUrl('nodesHomePage'));
+        }
+        $this->assignation['form'] = $form->createView();
+        return $this->render('nodes/delete.html.twig', $this->assignation);
+
     }
 
     /**
@@ -560,45 +563,45 @@ class NodesController extends RozierApp
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
-        if (null !== $node &&
-            $node->isDeleted()) {
-            $this->assignation['node'] = $node;
-
-            $form = $this->buildDeleteForm($node);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['nodeId'] == $node->getId()) {
-                /*
-                 * Dispatch event
-                 */
-                $event = new FilterNodeEvent($node);
-                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UNDELETED, $event);
-
-                /** @var NodeHandler $nodeHandler */
-                $nodeHandler = $this->get('node.handler')->setNode($node);
-                $nodeHandler->softUnremoveWithChildren();
-                $this->get('em')->flush();
-
-                $msg = $this->getTranslator()->trans(
-                    'node.%name%.undeleted',
-                    ['%name%' => $node->getNodeName()]
-                );
-                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                return $this->redirect($this->generateUrl('nodesEditPage', [
-                    'nodeId' => $node->getId(),
-                ]));
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('nodes/undelete.html.twig', $this->assignation);
+        if (null === $node) {
+            throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
         }
-        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
+
+        /** @var Workflow $workflow */
+        $workflow = $this->get('workflow.registry')->get($node);
+        if (!$workflow->can($node, 'undelete')) {
+            throw new BadRequestHttpException(sprintf('Node #%s cannot be undeleted.', $nodeId));
+        }
+
+        $this->assignation['node'] = $node;
+        $form = $this->createForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $event = new FilterNodeEvent($node);
+            $this->get('dispatcher')->dispatch(NodeEvents::NODE_UNDELETED, $event);
+
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->get('node.handler')->setNode($node);
+            $nodeHandler->softUnremoveWithChildren();
+            $this->get('em')->flush();
+
+            $msg = $this->getTranslator()->trans(
+                'node.%name%.undeleted',
+                ['%name%' => $node->getNodeName()]
+            );
+            $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            return $this->redirect($this->generateUrl('nodesEditPage', [
+                'nodeId' => $node->getId(),
+            ]));
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('nodes/undelete.html.twig', $this->assignation);
     }
 
     /**
@@ -629,7 +632,6 @@ class NodesController extends RozierApp
         }
     }
     /**
-     *
      * @param  Request $request
      * @param  integer  $nodeId
      * @return Response
@@ -640,36 +642,36 @@ class NodesController extends RozierApp
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
-        if (null !== $node) {
-            $form = $this->createFormBuilder()
-                ->add('nodeId', HiddenType::class, [
-                    'data' => $node->getId(),
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ])->getForm();
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                /** @var NodeHandler $nodeHandler */
-                $nodeHandler = $this->get('node.handler')->setNode($node);
-                $nodeHandler->publishWithChildren();
-                $this->get('em')->flush();
-
-                $msg = $this->getTranslator()->trans('node.offspring.published');
-                $this->publishConfirmMessage($request, $msg);
-
-                return $this->redirect($this->generateUrl('nodesEditSourcePage', [
-                    'nodeId' => $nodeId,
-                    'translationId' => $node->getNodeSources()->first()->getTranslation()->getId(),
-                ]));
-            }
-
-            $this->assignation['node'] = $node;
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('nodes/publishAll.html.twig', $this->assignation);
+        if (null === $node) {
+            throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
         }
 
-        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
+        /** @var Workflow $workflow */
+        $workflow = $this->get('workflow.registry')->get($node);
+        if (!$workflow->can($node, 'publish')) {
+            throw new BadRequestHttpException(sprintf('Node #%s cannot be publish.', $nodeId));
+        }
+
+        $form = $this->createForm();
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var NodeHandler $nodeHandler */
+            $nodeHandler = $this->get('node.handler')->setNode($node);
+            $nodeHandler->publishWithChildren();
+            $this->get('em')->flush();
+
+            $msg = $this->getTranslator()->trans('node.offspring.published');
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->generateUrl('nodesEditSourcePage', [
+                'nodeId' => $nodeId,
+                'translationId' => $node->getNodeSources()->first()->getTranslation()->getId(),
+            ]));
+        }
+
+        $this->assignation['node'] = $node;
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('nodes/publishAll.html.twig', $this->assignation);
     }
 }

@@ -88,7 +88,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
         };
 
         $container['node.handler'] = $container->factory(function ($c) {
-            return new NodeHandler($c['em']);
+            return new NodeHandler($c['em'], $c['workflow.registry']);
         });
         $container['nodes_sources.handler'] = $container->factory(function ($c) {
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);

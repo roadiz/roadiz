@@ -145,7 +145,7 @@ type|lower,
                             </p>
                         {% endif %}
 
-                        {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.Locked) %}
+                        {% if workflow_can(node, 'delete') %}
                             {% set refererUrl = request.uri %}
                             {% if refererUrl matches '/ajax/' and parent %}
                                 {% set refererUrl = path('nodesEditSourcePage', { nodeId:parent.getId, translationId:nodeTree.getTranslation.getId}) %}
@@ -169,18 +169,36 @@ type|lower,
                                     <a data-action="show" data-status="visible" data-value="1" class="show-node" title="{% trans %}node.show{% endtrans %}" href="#"><i class="uk-icon-rz-visibility-mini"></i> {% trans %}node.show{% endtrans %}</a>
                                 {% endif %}
                             </p>
-                            {% if is_granted('ROLE_ACCESS_NODES_STATUS') %}
-                                <p>
-                                    {% if not node.published %}
-                                        <a data-action="publish" data-status="status" data-value="{{ nodeStatuses.published }}" class="publish-node" title="{% trans %}node.publish{% endtrans %}" href="#"><i class="uk-icon-rz-published-mini"></i> {% trans %}node.publish{% endtrans %}</a>
-                                    {% else %}
-                                        <a data-action="unpublish" data-status="status" data-value="{{ nodeStatuses.draft }}" class="unpublish-node" title="{% trans %}node.unpublish{% endtrans %}" href="#"><i class="uk-icon-rz-draft-nodes"></i> {% trans %}node.unpublish{% endtrans %}</a>
-                                    {% endif %}
-                                </p>
-                                <p><a class="publish-all-node" title="{% trans %}publish_node_offspring{% endtrans %}" href="{{ path('nodesPublishAllAction', {nodeId : node.id}) }}"><i class="uk-icon-rz-published-mini"></i> {% trans %}publish_node_offspring{% endtrans %}</a></p>
+                            {% if not node.isPublished and workflow_can(node, 'publish') %}
+                            <p>
+                                <a data-action="publish"
+                                   data-status="status"
+                                   data-value="publish"
+                                   class="publish-node"
+                                   title="{% trans %}node.publish{% endtrans %}"
+                                   href="#"><i class="uk-icon-rz-published-mini"></i> {% trans %}node.publish{% endtrans %}</a>
+                            </p>
+                            {% endif %}
+                            {% if workflow_can(node, 'reject') %}
+                            <p>
+                                <a data-action="unpublish"
+                                   data-status="status"
+                                   data-value="reject"
+                                   class="unpublish-node"
+                                   title="{% trans %}node.unpublish{% endtrans %}"
+                                   href="#"><i class="uk-icon-rz-draft-nodes"></i> {% trans %}node.unpublish{% endtrans %}</a>
+                            </p>
+                            {% endif %}
+                            {% if workflow_can(node, 'publish') %}
+                            <p><a class="publish-all-node"
+                                  title="{% trans %}publish_node_offspring{% endtrans %}"
+                                  href="{{ path('nodesPublishAllAction', {nodeId : node.id}) }}"><i class="uk-icon-rz-published-mini"></i> {% trans %}publish_node_offspring{% endtrans %}</a></p>
                             {% endif %}
                             <p>
-                                <a data-action="duplicate" class="duplicate-node" title="{% trans %}node.duplicate{% endtrans %}" href="#"><i class="uk-icon-rz-duplicate"></i> {% trans %}node.duplicate{% endtrans %}</a>
+                                <a data-action="duplicate"
+                                   class="duplicate-node"
+                                   title="{% trans %}node.duplicate{% endtrans %}"
+                                   href="#"><i class="uk-icon-rz-duplicate"></i> {% trans %}node.duplicate{% endtrans %}</a>
                             </p>
                         </div>
                     {% endif %}

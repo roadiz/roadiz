@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\DBAL\Exception\ConnectionException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
@@ -295,12 +296,16 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['roleHierarchy'] = function ($c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            if ($kernel->isInstallMode()) {
-                return new DoctrineRoleHierarchy(null);
+            try {
+                /** @var Kernel $kernel */
+                $kernel = $c['kernel'];
+                if ($kernel->isInstallMode()) {
+                    return new DoctrineRoleHierarchy();
+                }
+                return new DoctrineRoleHierarchy($c['em']);
+            } catch (ConnectionException $e) {
+                return new DoctrineRoleHierarchy();
             }
-            return new DoctrineRoleHierarchy($c['em']);
         };
 
         $container['roleHierarchyVoter'] = function ($c) {

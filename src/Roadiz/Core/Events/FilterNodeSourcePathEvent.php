@@ -77,8 +77,7 @@ final class FilterNodeSourcePathEvent extends Event
         ?RequestContext $requestContext,
         array $parameters = [],
         bool $forceLocale = false
-    )
-    {
+    ) {
         $this->theme = $theme;
         $this->nodeSource = $nodeSource;
         $this->requestContext = $requestContext;

@@ -59,7 +59,6 @@ class SolariumSubscriber implements EventSubscriberInterface
      * @var null|Client
      */
     protected $solr;
-
     /**
      * @var LoggerInterface
      */

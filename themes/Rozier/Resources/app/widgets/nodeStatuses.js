@@ -84,7 +84,7 @@ export default class NodeStatuses {
                     statusValue = Number($input.is(':checked'))
                 } else if ($input.is('input[type="radio"]')) {
                     this.$icon[0].className = $input.parent().find('i')[0].className
-                    statusValue = Number($input.val())
+                    statusValue = $input.val()
                 }
 
                 let postData = {
@@ -102,22 +102,22 @@ export default class NodeStatuses {
                     cache: false,
                     data: postData
                 })
-                    .done(() => {
-                        window.Rozier.refreshMainNodeTree()
-                        window.Rozier.getMessages()
+                .done(() => {
+                    window.Rozier.refreshMainNodeTree()
+                    window.Rozier.getMessages()
+                })
+                .fail(data => {
+                    data = JSON.parse(data.responseText)
+                    window.UIkit.notify({
+                        message: data.error_message,
+                        status: 'danger',
+                        timeout: 3000,
+                        pos: 'top-center'
                     })
-                    .fail(data => {
-                        data = JSON.parse(data.responseText)
-                        window.UIkit.notify({
-                            message: data.error_message,
-                            status: 'danger',
-                            timeout: 3000,
-                            pos: 'top-center'
-                        })
-                    })
-                    .always(() => {
-                        this.locked = false
-                    })
+                })
+                .always(() => {
+                    this.locked = false
+                })
             }
         }
     }

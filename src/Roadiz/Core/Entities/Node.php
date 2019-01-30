@@ -38,7 +38,7 @@ use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * Node entities are the central feature of RZ-CMS,
+ * Node entities are the central feature of Roadiz,
  * it describes a document-like object which can be inherited
  * with *NodesSources* to create complex data structures.
  *
@@ -195,6 +195,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="integer")
+     * @internal You should use node Workflow to perform change on status.
      */
     private $status = Node::DRAFT;
 
@@ -209,6 +210,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @param int $status
      * @return $this
+     * @internal You should use node Workflow to perform change on status.
      */
     public function setStatus($status)
     {
@@ -253,6 +255,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param boolean $published
      *
      * @return $this
+     * @deprecated You should use node Workflow to perform change on status.
      */
     public function setPublished($published)
     {
@@ -265,6 +268,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param boolean $pending
      *
      * @return $this
+     * @deprecated You should use node Workflow to perform change on status.
      */
     public function setPending($pending)
     {
@@ -379,6 +383,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param boolean $archived
      *
      * @return $this
+     * @deprecated You should use node Workflow to perform change on status.
      */
     public function setArchived($archived)
     {
