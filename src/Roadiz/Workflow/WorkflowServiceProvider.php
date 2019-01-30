@@ -55,7 +55,9 @@ class WorkflowServiceProvider implements ServiceProviderInterface
         };
 
         $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
-            $dispatcher->addSubscriber(new NodeStatusGuardListener($c['securityAuthorizationChecker']));
+            if (true !== $c['kernel']->isInstallMode()) {
+                $dispatcher->addSubscriber(new NodeStatusGuardListener($c['securityAuthorizationChecker']));
+            }
             return $dispatcher;
         });
 

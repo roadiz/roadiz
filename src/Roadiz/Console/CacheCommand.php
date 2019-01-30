@@ -46,6 +46,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
@@ -116,66 +117,68 @@ class CacheCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var Kernel $kernel */
-        $kernel = $this->getHelper('kernel')->getKernel();
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $this->nsCacheHelper = $this->getHelper('ns-cache');
-
-        $assetsClearer = new AssetsClearer($kernel->getPublicCachePath());
-        $doctrineClearer = new DoctrineCacheClearer($this->entityManager, $kernel);
-        $routingClearer = new RoutingCacheClearer($kernel->getCacheDir());
-        $templatesClearer = new TemplatesCacheClearer($kernel->getCacheDir());
-        $translationsClearer = new TranslationsCacheClearer($kernel->getCacheDir());
-        $configurationClearer = new ConfigurationCacheClearer($kernel->getCacheDir());
-        $appCacheClearer = new AppCacheClearer($kernel->getCacheDir());
-        $nodeSourcesUrlsClearer = new NodesSourcesUrlsCacheClearer($this->nsCacheHelper->getCacheProvider());
-
-        $output->write('Clearing cache for <info>' . $kernel->getEnvironment() . '</info> environment. ');
-        if ($kernel->isPreview()) {
-            $output->write('[<info>Preview</info>]');
-        }
-        $output->write(PHP_EOL);
+        $io = new SymfonyStyle($input, $output);
 
         try {
+            /** @var Kernel $kernel */
+            $kernel = $this->getHelper('kernel')->getKernel();
+            $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+            $this->nsCacheHelper = $this->getHelper('ns-cache');
+
+            $assetsClearer = new AssetsClearer($kernel->getPublicCachePath());
+            $doctrineClearer = new DoctrineCacheClearer($this->entityManager, $kernel);
+            $routingClearer = new RoutingCacheClearer($kernel->getCacheDir());
+            $templatesClearer = new TemplatesCacheClearer($kernel->getCacheDir());
+            $translationsClearer = new TranslationsCacheClearer($kernel->getCacheDir());
+            $configurationClearer = new ConfigurationCacheClearer($kernel->getCacheDir());
+            $appCacheClearer = new AppCacheClearer($kernel->getCacheDir());
+            $nodeSourcesUrlsClearer = new NodesSourcesUrlsCacheClearer($this->nsCacheHelper->getCacheProvider());
+
+            $io->write('Clearing cache for <info>' . $kernel->getEnvironment() . '</info> environment. ');
+            if ($kernel->isPreview()) {
+                $io->write('[<info>Preview</info>]');
+            }
+            $io->write(PHP_EOL);
+
             if ($input->getOption('clear-configuration')) {
                 $configurationClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $configurationClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $configurationClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-appcache')) {
                 $appCacheClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $appCacheClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $appCacheClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-doctrine')) {
                 $doctrineClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $doctrineClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $doctrineClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-routes')) {
                 $routingClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $routingClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $routingClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-assets')) {
                 $assetsClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $assetsClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $assetsClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-templates')) {
                 $templatesClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $templatesClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $templatesClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-translations')) {
                 $translationsClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $translationsClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $translationsClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-nsurls')) {
                 $nodeSourcesUrlsClearer->clear();
-                if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                    $output->writeln('— ' . $nodeSourcesUrlsClearer->getOutput());
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    $io->writeln('— ' . $nodeSourcesUrlsClearer->getOutput());
                 }
             } else {
 
@@ -186,19 +189,19 @@ class CacheCommand extends Command
                 $dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
 
                 foreach ($event->getMessages() as $message) {
-                    if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
-                        $output->writeln(sprintf('<info>%s</info>: %s', $message['description'], $message['message']));
+                    if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                        $io->writeln(sprintf('<info>%s</info>: %s', $message['description'], $message['message']));
                     }
                 }
                 foreach ($event->getErrors() as $message) {
-                    $output->writeln(sprintf('<info>%s</info>: <error>%s</error>', $message['description'], $message['message']));
+                    $io->writeln(sprintf('<info>%s</info>: <error>%s</error>', $message['description'], $message['message']));
                 }
-                $output->writeln('<info>All caches have been been purged…</info>');
+                $io->writeln('<info>All caches have been been purged…</info>');
             }
         } catch (\PDOException $e) {
-            $output->writeln('<error>[PDOException] Can’t connect to database to empty Doctrine caches.</error>');
+            $io->writeln('<error>[PDOException] Can’t connect to database to empty Doctrine caches.</error>');
         } catch (ConnectionException $e) {
-            $output->writeln('<error>[ConnectionException] Can’t connect to database to empty Doctrine caches.</error>');
+            $io->writeln('<error>[ConnectionException] Can’t connect to database to empty Doctrine caches.</error>');
         }
     }
 }
