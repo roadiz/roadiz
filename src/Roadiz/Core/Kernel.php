@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Attribute\AttributesServiceProvider;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\DebugBarSubscriber;
@@ -275,6 +276,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new BagsServiceProvider());
         $container->register(new FactoryServiceProvider());
         $container->register(new WorkflowServiceProvider());
+        $container->register(new AttributesServiceProvider());
+
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
         }

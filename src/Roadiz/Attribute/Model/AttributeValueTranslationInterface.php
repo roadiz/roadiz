@@ -56,9 +56,9 @@ interface AttributeValueTranslationInterface
     public function setTranslation(Translation $translation);
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
-    public function getTranslation(): Translation;
+    public function getTranslation(): ?Translation;
 
     /**
      * @return AttributeValueInterface

@@ -109,6 +109,37 @@ trait AttributeTrait
     public function setAttributeTranslations(Collection $attributeTranslations)
     {
         $this->attributeTranslations = $attributeTranslations;
+        /** @var AttributeTranslationInterface $attributeTranslation */
+        foreach ($this->attributeTranslations as $attributeTranslation) {
+            $attributeTranslation->setAttribute($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @param AttributeTranslationInterface $attributeTranslation
+     *
+     * @return mixed
+     */
+    public function addAttributeTranslation(AttributeTranslationInterface $attributeTranslation)
+    {
+        if (!$this->getAttributeTranslations()->contains($attributeTranslation)) {
+            $this->getAttributeTranslations()->add($attributeTranslation);
+            $attributeTranslation->setAttribute($this);
+        }
+        return $this;
+    }
+
+    /**
+     * @param AttributeTranslationInterface $attributeTranslation
+     *
+     * @return mixed
+     */
+    public function removeAttributeTranslation(AttributeTranslationInterface $attributeTranslation)
+    {
+        if ($this->getAttributeTranslations()->contains($attributeTranslation)) {
+            $this->getAttributeTranslations()->removeElement($attributeTranslation);
+        }
         return $this;
     }
 

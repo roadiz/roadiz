@@ -91,9 +91,9 @@ trait AttributeValueTranslationTrait
     }
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
-    public function getTranslation(): Translation
+    public function getTranslation(): ?Translation
     {
         return $this->translation;
     }

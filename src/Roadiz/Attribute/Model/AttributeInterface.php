@@ -118,6 +118,20 @@ interface AttributeInterface
     public function setAttributeTranslations(Collection $attributeTranslations);
 
     /**
+     * @param AttributeTranslationInterface $attributeTranslation
+     *
+     * @return mixed
+     */
+    public function addAttributeTranslation(AttributeTranslationInterface $attributeTranslation);
+
+    /**
+     * @param AttributeTranslationInterface $attributeTranslation
+     *
+     * @return mixed
+     */
+    public function removeAttributeTranslation(AttributeTranslationInterface $attributeTranslation);
+
+    /**
      * @return int
      */
     public function getType(): int;

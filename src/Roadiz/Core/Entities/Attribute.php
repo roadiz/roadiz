@@ -73,7 +73,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
 
     /**
      * @var Collection<AttributeTranslationInterface>
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation", mappedBy="attribute", fetch="EAGER")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation", mappedBy="attribute", fetch="EAGER", cascade={"persist", "remove"})
      */
     protected $attributeTranslations;
 

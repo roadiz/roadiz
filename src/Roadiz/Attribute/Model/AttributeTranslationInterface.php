@@ -39,14 +39,14 @@ interface AttributeTranslationInterface
     /**
      * @return string
      */
-    public function getLabel(): string;
+    public function getLabel(): ?string;
 
     /**
      * @param string $label
      *
      * @return mixed
      */
-    public function setLabel(string $label);
+    public function setLabel(?string $label);
 
     /**
      * @param Translation $translation
@@ -56,9 +56,9 @@ interface AttributeTranslationInterface
     public function setTranslation(Translation $translation);
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
-    public function getTranslation(): Translation;
+    public function getTranslation(): ?Translation;
 
     /**
      * @return AttributeInterface

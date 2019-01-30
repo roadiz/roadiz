@@ -24,72 +24,28 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AttributeTranslationTrait.php
+ * @file AttributesServiceProvider.php
  * @author Ambroise Maupate
  *
  */
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Attribute\Model;
+namespace RZ\Roadiz\Attribute;
 
-use RZ\Roadiz\Core\Entities\Translation;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Attribute\Twig\AttributesExtension;
 
-trait AttributeTranslationTrait
+class AttributesServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getLabel(): ?string
+    public function register(Container $container)
     {
-        return $this->label;
-    }
-
-    /**
-     * @param string $label
-     *
-     * @return mixed
-     */
-    public function setLabel(?string $label)
-    {
-        $this->label = trim($label);
-        return $this;
-    }
-
-    /**
-     * @param Translation $translation
-     *
-     * @return mixed
-     */
-    public function setTranslation(Translation $translation)
-    {
-        $this->translation = $translation;
-        return $this;
-    }
-
-    /**
-     * @return Translation|null
-     */
-    public function getTranslation(): ?Translation
-    {
-        return $this->translation;
-    }
-
-    /**
-     * @return AttributeInterface
-     */
-    public function getAttribute(): AttributeInterface
-    {
-        return $this->attribute;
-    }
-
-    /**
-     * @param AttributeInterface $attribute
-     *
-     * @return mixed
-     */
-    public function setAttribute(AttributeInterface $attribute)
-    {
-        $this->attribute = $attribute;
-        return $this;
+        $container->extend('twig.extensions', function ($extensions, $c) {
+            $extensions->add(new AttributesExtension());
+            return $extensions;
+        });
     }
 }

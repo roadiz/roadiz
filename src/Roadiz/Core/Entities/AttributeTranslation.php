@@ -43,6 +43,8 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="attribute_translations", indexes={
  *     @ORM\Index(columns={"label"})
+ * }, uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"attribute_id", "translation_id"})
  * }))
  * @ORM\HasLifecycleCallbacks
  */
@@ -52,7 +54,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
 
     /**
      * @var string
-     * @ORM\Column(type="string", nullable=false, unique=true)
+     * @ORM\Column(type="string", nullable=false, unique=false)
      */
     protected $label;
 
