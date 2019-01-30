@@ -42,6 +42,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Workflow\Workflow;
 
 /**
  * Class AjaxNodesController
@@ -318,22 +319,20 @@ class AjaxNodesController extends AbstractAjaxController
     }
 
     /**
-     * @param Node $node
-     * @param int  $status
+     * @param Node   $node
+     * @param string $transition
+     *
      * @return JsonResponse
      */
-    protected function changeNodeStatus(Node $node, int $status)
+    protected function changeNodeStatus(Node $node, string $transition)
     {
         /** @var Request $request */
         $request = $this->get('requestStack')->getMasterRequest();
+        /** @var Workflow $workflow */
+        $workflow = $this->get('workflow.registry')->get($node);
 
-        if ($status > Node::PENDING && !$this->isGranted('ROLE_ACCESS_NODES_STATUS')) {
-            throw new AccessDeniedHttpException($this->getTranslator()->trans('role.cannot.update.status'));
-        }
-
-        $node->setStatus($status);
+        $workflow->apply($node, $transition);
         $this->em()->flush($node);
-
         $event = new FilterNodeEvent($node);
         $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
             '%name%' => $node->getNodeName(),
@@ -349,7 +348,7 @@ class AjaxNodesController extends AbstractAjaxController
                 'status' => 'success',
                 'responseText' => $msg,
                 'name' => 'status',
-                'value' => $status,
+                'value' => $transition,
             ],
             Response::HTTP_PARTIAL_CONTENT
         );

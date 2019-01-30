@@ -42,6 +42,7 @@ use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Workflow\Workflow;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
@@ -344,12 +345,15 @@ class NodesTreesController extends RozierApp
                               'id' => $nodesIds,
                           ]);
 
+            /** @var Node $node */
             foreach ($nodes as $node) {
-                $node->setStatus($data['status']);
+                /** @var Workflow $workflow */
+                $workflow = $this->get('workflow.registry')->get($node);
+                if ($workflow->can($node, $data['status'])) {
+                    $workflow->apply($node, $data['status']);
+                }
             }
-
             $this->get('em')->flush();
-
             return $this->getTranslator()->trans('nodes.bulk.status.changed');
         }
 
@@ -513,10 +517,10 @@ class NodesTreesController extends RozierApp
                             'data' => $status,
                             'choices_as_values' => true,
                             'choices' => [
-                                Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
-                                Node::getStatusLabel(Node::PENDING) => Node::PENDING,
-                                Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
-                                Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
+                                Node::getStatusLabel(Node::DRAFT) => 'reject',
+                                Node::getStatusLabel(Node::PENDING) => 'review',
+                                Node::getStatusLabel(Node::PUBLISHED) => 'publish',
+                                Node::getStatusLabel(Node::ARCHIVED) => 'archive',
                             ],
                             'constraints' => [
                                 new NotBlank(),

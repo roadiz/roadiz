@@ -42,8 +42,10 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Workflow\Workflow;
 use Themes\Rozier\Forms;
 use Themes\Rozier\Forms\Node\AddNodeType;
 use Themes\Rozier\RozierApp;
@@ -448,14 +450,14 @@ class NodesController extends RozierApp
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
-        if (null !== $node &&
-            !$node->isDeleted() &&
-            !$node->isLocked()) {
+        if (null === $node) {
+            throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
+        }
+
+        if (!$node->isLocked()) {
             $this->assignation['node'] = $node;
-
             $form = $this->buildDeleteForm($node);
             $form->handleRequest($request);
 
@@ -488,7 +490,7 @@ class NodesController extends RozierApp
             return $this->render('nodes/delete.html.twig', $this->assignation);
         }
 
-        throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
+        throw new BadRequestHttpException(sprintf('Node #%s cannot be deleted.', $nodeId));
     }
 
     /**
@@ -560,16 +562,12 @@ class NodesController extends RozierApp
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
-        if (null !== $node &&
-            $node->isDeleted()) {
+        if (null !== $node) {
             $this->assignation['node'] = $node;
-
             $form = $this->buildDeleteForm($node);
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['nodeId'] == $node->getId()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /*
                  * Dispatch event
                  */
@@ -629,7 +627,6 @@ class NodesController extends RozierApp
         }
     }
     /**
-     *
      * @param  Request $request
      * @param  integer  $nodeId
      * @return Response
@@ -641,13 +638,7 @@ class NodesController extends RozierApp
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {
-            $form = $this->createFormBuilder()
-                ->add('nodeId', HiddenType::class, [
-                    'data' => $node->getId(),
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ])->getForm();
+            $form = $this->createForm();
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 /** @var NodeHandler $nodeHandler */

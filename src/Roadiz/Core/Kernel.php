@@ -77,6 +77,7 @@ use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
+use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -273,6 +274,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new LoggerServiceProvider());
         $container->register(new BagsServiceProvider());
         $container->register(new FactoryServiceProvider());
+        $container->register(new WorkflowServiceProvider());
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
         }
