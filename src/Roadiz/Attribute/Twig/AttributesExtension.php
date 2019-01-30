@@ -37,13 +37,11 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 class AttributesExtension extends AbstractExtension
 {
-    /**
-     * @return array|\Twig_Function[]
-     */
     public function getFunctions()
     {
         return [
@@ -51,6 +49,14 @@ class AttributesExtension extends AbstractExtension
             new TwigFunction('node_source_attributes', [$this, 'getNodeSourceAttributeValues']),
         ];
     }
+
+    public function getFilters()
+    {
+        return [
+            new TwigFilter('attributes', [$this, 'getNodeSourceAttributeValues']),
+        ];
+    }
+
 
     /**
      * @param AttributableInterface $attributable
