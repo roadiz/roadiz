@@ -24,19 +24,51 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AttributeInterface.php
+ * @file AttributeTranslationInterface.php
  * @author Ambroise Maupate
  *
  */
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Attribute\Entity;
+namespace RZ\Roadiz\Attribute\Model;
 
-use RZ\Roadiz\Core\AbstractEntities\PositionedInterface;
+use RZ\Roadiz\Core\Entities\Translation;
 
-interface AttributeValueInterface extends PositionedInterface
+interface AttributeTranslationInterface
 {
+    /**
+     * @return string
+     */
+    public function getLabel(): string;
+
+    /**
+     * @param string $label
+     *
+     * @return mixed
+     */
+    public function setLabel(string $label);
+
+    /**
+     * @param Translation $translation
+     *
+     * @return mixed
+     */
+    public function setTranslation(Translation $translation);
+
+    /**
+     * @return Translation
+     */
+    public function getTranslation(): Translation;
+
+    /**
+     * @return AttributeInterface
+     */
     public function getAttribute(): AttributeInterface;
-    public function setAttribute(AttributeInterface $attribute): AttributeInterface;
-    public function getType(): int;
+
+    /**
+     * @param AttributeInterface $attribute
+     *
+     * @return mixed
+     */
+    public function setAttribute(AttributeInterface $attribute);
 }

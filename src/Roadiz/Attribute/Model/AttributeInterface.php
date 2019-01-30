@@ -30,7 +30,7 @@
  */
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Attribute\Entity;
+namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
 
@@ -69,11 +69,6 @@ interface AttributeInterface
      */
     const COLOUR_T = 11;
     /**
-     * Geotag field is a Map widget which stores
-     * a Latitude and Longitude as an array.
-     */
-    const GEOTAG_T = 12;
-    /**
      * Enum field is a simple select box with default values.
      */
     const ENUM_T = 15;
@@ -86,12 +81,106 @@ interface AttributeInterface
      */
     const COUNTRY_T = 25;
 
+    /**
+     * @return string
+     */
     public function getCode(): string;
+
+    /**
+     * @param string $code
+     *
+     * @return mixed
+     */
     public function setCode(string $code);
 
-    public function getTranslations(): Collection;
-    public function setTranslations(Collection $translations);
+    /**
+     * @return array|null
+     */
+    public function getOptions(): ?array;
 
+    /**
+     * @param array|null $options
+     *
+     * @return mixed
+     */
+    public function setOptions(?array $options);
+
+    /**
+     * @return Collection<AttributeTranslationInterface>
+     */
+    public function getAttributeTranslations(): Collection;
+
+    /**
+     * @param Collection<AttributeTranslationInterface> $attributeTranslations
+     *
+     * @return mixed
+     */
+    public function setAttributeTranslations(Collection $attributeTranslations);
+
+    /**
+     * @return int
+     */
     public function getType(): int;
+
+    /**
+     * @param int $type
+     *
+     * @return mixed
+     */
     public function setType(int $type);
+
+    /**
+     * @return bool
+     */
+    public function isString(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isDate(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isDateTime(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isBoolean(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isInteger(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isDecimal(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isEmail(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isColor(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isColour(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isEnum(): bool;
+
+    /**
+     * @return bool
+     */
+    public function isCountry(): bool;
 }

@@ -491,7 +491,6 @@ class NodesController extends RozierApp
         }
         $this->assignation['form'] = $form->createView();
         return $this->render('nodes/delete.html.twig', $this->assignation);
-
     }
 
     /**

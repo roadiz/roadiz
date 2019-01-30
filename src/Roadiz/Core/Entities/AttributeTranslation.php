@@ -24,21 +24,47 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AttribuibleInterface.php
+ * @file AttributeTranslation.php
  * @author Ambroise Maupate
  *
  */
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Attribute\Entity;
+namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\Common\Collections\Collection;
-use RZ\Roadiz\Core\Entities\Translation;
+use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
+use RZ\Roadiz\Attribute\Model\AttributeTranslationTrait;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
-interface AttributableInterface
+/**
+ * @package RZ\Roadiz\Core\Entities
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Table(name="attribute_translations", indexes={
+ *     @ORM\Index(columns={"label"})
+ * }))
+ * @ORM\HasLifecycleCallbacks
+ */
+class AttributeTranslation extends AbstractEntity implements AttributeTranslationInterface
 {
-    public function getAttributes(): Collection;
-    public function getAttributesForTranslation(Translation $translation): Collection;
-    public function setAttributes(Collection $attributes);
-    public function addAttribute(AttributeValueInterface $attribute);
+    use AttributeTranslationTrait;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false, unique=true)
+     */
+    protected $label;
+
+    /**
+     * @var AttributeInterface
+     * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeTranslations")
+     */
+    protected $attribute;
+
+    /**
+     * @var Translation
+     * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Translation")
+     */
+    protected $translation;
 }
