@@ -59,7 +59,9 @@ class AttributeType extends AbstractType
                 'constraints' => [
                     new NotBlank(),
                     new Regex([
-                        'pattern' => '#[a-z_]+#'
+                        'pattern' => "/^[a-z_]+$/i",
+                        'htmlPattern' => "^[a-z_]+$",
+                        'message' => 'attribute_code.must_contain_alpha_underscore'
                     ])
                 ]
             ])
@@ -89,6 +91,9 @@ class AttributeType extends AbstractType
                 'entry_options' => [
                     'label' => false,
                     'entityManager' => $options['entityManager'],
+                    'attr' => [
+                        'class' => 'uk-form uk-form-horizontal'
+                    ]
                 ],
                 'attr' => [
                     'class' => 'rz-collection-form-type'

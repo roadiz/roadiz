@@ -392,10 +392,10 @@ export default class Lazyload {
         const _this = this
 
         $('.rz-collection-form-type').collection({
-            up: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-up"></i></a>',
-            down: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-down"></i></a>',
-            add: '<a class="uk-button-primary uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
-            remove: '<a class="uk-button-danger uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
+            up: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-up"></i></a>',
+            down: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-down"></i></a>',
+            add: '<a tabindex="-1" class="uk-button-primary uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-plus"></i></a>',
+            remove: '<a tabindex="-1" class="uk-button-danger uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-minus"></i></a>',
             after_add: (collection, element) => {
                 _this.initMarkdownEditors(element)
                 _this.initJsonEditors(element)
@@ -403,6 +403,7 @@ export default class Lazyload {
                 _this.initYamlEditors(element)
                 _this.initBootstrapSwitches(element)
                 _this.initColorPickers(element)
+                _this.initCollectionsForms()
 
                 let $vueComponents = element.find('[data-vuejs]')
                 // Create each component

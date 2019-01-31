@@ -80,7 +80,7 @@ trait AttributeTrait
      *
      * @return string
      */
-    public function getLabelOrCode(?Translation $translation): string
+    public function getLabelOrCode(?Translation $translation = null): string
     {
         if (null !== $translation) {
             $attributeTranslation = $this->getAttributeTranslations()->filter(

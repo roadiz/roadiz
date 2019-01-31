@@ -93,6 +93,9 @@ class AttributeController extends RozierApp
             /*
              * Force redirect to avoid resending form when refreshing page
              */
+            if ($request->get('referer', '') !== '') {
+                return $this->redirect($request->get('referer'));
+            }
             return $this->redirect($this->generateUrl('attributesEditPage', ['id' => $item->getId()]));
         }
 

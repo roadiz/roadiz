@@ -43,8 +43,6 @@ interface AttributeInterface
     const STRING_T = 0;
     /**
      * DateTime field is a combined Date and Time.
-     *
-     * @see \DateTime
      */
     const DATETIME_T = 1;
     /**
@@ -99,7 +97,7 @@ interface AttributeInterface
      *
      * @return string
      */
-    public function getLabelOrCode(?Translation $translation): string;
+    public function getLabelOrCode(?Translation $translation = null): string;
 
     /**
      * @return Collection<AttributeTranslationInterface>

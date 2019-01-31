@@ -57,16 +57,16 @@ class AttributesExtension extends AbstractExtension
     {
         return [
             new TwigFilter('attributes', [$this, 'getNodeSourceAttributeValues']),
-            new TwigFilter('label', [$this, 'getAttributeLabelOrCode']),
+            new TwigFilter('attribute_label', [$this, 'getAttributeLabelOrCode']),
         ];
     }
 
 
     /**
      * @param AttributableInterface $attributable
-     * @param Translation      $translation
+     * @param Translation $translation
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      * @throws SyntaxError
      */
     public function getAttributeValues($attributable, Translation $translation)
@@ -77,8 +77,19 @@ class AttributesExtension extends AbstractExtension
         if (!$attributable instanceof AttributableInterface) {
             throw new SyntaxError('get_attributes only accepts entities that implement AttributableInterface');
         }
+        $attributeValueTranslations = [];
+        $attributeValues = $attributable->getAttributeValues();
+        /** @var AttributeValueInterface $attributeValue */
+        foreach ($attributeValues as $attributeValue) {
+            $attributeValueTranslation = $attributeValue->getAttributeValueTranslation($translation);
+            if (null !== $attributeValueTranslation) {
+                array_push($attributeValueTranslations, $attributeValueTranslation);
+            } else {
+                array_push($attributeValueTranslations, $attributeValue->getAttributeValueTranslations()->first());
+            }
+        }
 
-        return $attributable->getAttributesValuesTranslations($translation);
+        return $attributeValueTranslations;
     }
 
     /**

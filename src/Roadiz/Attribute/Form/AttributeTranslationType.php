@@ -55,9 +55,11 @@ class AttributeTranslationType extends AbstractType
         $builder->add('label', TextType::class, [
                 'empty_data' => "",
                 'label' => false,
+                'required' => false,
             ])
             ->add('translation', TranslationsType::class, [
                 'label' => false,
+                'required' => true,
                 'entityManager' => $options['entityManager'],
                 'constraints' => [
                     new NotNull()
@@ -68,6 +70,9 @@ class AttributeTranslationType extends AbstractType
                 'required' => false,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'entry_options' => [
+                    'required' => false,
+                ],
                 'attr' => [
                     'class' => 'rz-collection-form-type'
                 ],

@@ -3,7 +3,7 @@
 {% block content %}
 <section class="content-global delete-item">
     <header class="content-header header-document header-document-preview">
-        <h1 class="content-title document-delete-title">{{ "delete.attribute.%name%"|trans({'%name%': item|label(translation)}) }}</h1>
+        <h1 class="content-title document-delete-title">{{ "delete.attribute.%name%"|trans({'%name%': item|attribute_label(translation)}) }}</h1>
     </header>
     <article class="content content-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}

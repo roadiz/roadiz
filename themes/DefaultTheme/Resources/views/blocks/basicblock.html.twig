@@ -12,7 +12,7 @@
     </div>
     <ul class="block-attributes">
         {% for attributeValueTranslation in nodeSource|attributes %}
-            <li><strong>{{ attributeValueTranslation|label }}</strong> {{ attributeValueTranslation.value }}
+            <li><strong>{{ attributeValueTranslation|attribute_label }}</strong> {{ attributeValueTranslation.value }}
             </li>
         {% endfor %}
     </ul>

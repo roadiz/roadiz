@@ -105,13 +105,28 @@ class NodesAttributesController extends RozierApp
             )->getForm();
             $attributeValueTranslationForm->handleRequest($request);
 
-            if ($attributeValueTranslationForm->isValid()) {
-                $this->get('em')->merge($attributeValueTranslation);
-                $this->get('em')->flush();
-                return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
-                    'nodeId' => $node->getId(),
-                    'translationId' => $translation->getId(),
-                ]));
+            if ($attributeValueTranslationForm->isSubmitted()) {
+                if ($attributeValueTranslationForm->isValid()) {
+                    $this->get('em')->merge($attributeValueTranslation);
+                    $this->get('em')->flush();
+
+                    $msg = $this->getTranslator()->trans(
+                        'attribute_value_translation.%name%.updated_from_node.%nodeName%',
+                        [
+                            '%name%' => $attributeValue->getAttribute()->getLabelOrCode($translation),
+                            '%nodeName%' => $nodeSource->getTitle(),
+                        ]
+                    );
+                    $this->publishConfirmMessage($request, $msg);
+                    return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
+                        'nodeId' => $node->getId(),
+                        'translationId' => $translation->getId(),
+                    ]));
+                } else {
+                    foreach ($this->getErrorsAsArray($attributeValueTranslationForm) as $error) {
+                        $this->publishErrorMessage($request, $error);
+                    }
+                }
             }
 
             $this->assignation['attribute_value_translation_forms'][] = $attributeValueTranslationForm->createView();

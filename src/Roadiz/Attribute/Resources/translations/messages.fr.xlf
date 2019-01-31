@@ -130,6 +130,10 @@
                 <source>delete.attribute.%name%</source>
                 <target xml:lang="fr" state="translated">Supprimer l'attribut %name%</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_value_translation.%name%.updated_from_node.%nodeName%">
+                <source>attribute_value_translation.%name%.updated_from_node.%nodeName%</source>
+                <target xml:lang="fr" state="translated">La valeur de l'attribut %name% a été mis à jour pour le nœud %nodeName%.</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>

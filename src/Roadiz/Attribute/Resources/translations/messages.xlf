@@ -131,6 +131,16 @@
                 <source>delete.attribute.%name%</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_value_translation.%name%.updated_from_node.%nodeName%">
+                <source>attribute_value_translation.%name%.updated_from_node.%nodeName%</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_code.must_contain_alpha_underscore">
+                <source>attribute_code.must_contain_alpha_underscore</source>
+                <target></target>
+                <note>Validation failed message on Attribute code that must only contain alpha and underscore characters.</note>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>
