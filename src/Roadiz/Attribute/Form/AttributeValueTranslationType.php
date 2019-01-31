@@ -35,6 +35,10 @@ namespace RZ\Roadiz\Attribute\Form;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -52,9 +56,9 @@ class AttributeValueTranslationType extends AbstractType
 
         if ($attributeValueTranslation instanceof AttributeValueTranslationInterface) {
             $defaultOptions = [
-                'label' => $attributeValueTranslation->getAttributeValue()
-                    ->getAttribute()
-                    ->getLabelOrCode($attributeValueTranslation->getTranslation())
+                'required' => false,
+                'empty_data' => null,
+                'label' => false
             ];
             switch ($attributeValueTranslation->getAttributeValue()->getType()) {
                 case AttributeInterface::INTEGER_T:
@@ -62,6 +66,42 @@ class AttributeValueTranslationType extends AbstractType
                     break;
                 case AttributeInterface::DECIMAL_T:
                     $builder->add('value', IntegerType::class, $defaultOptions);
+                    break;
+                case AttributeInterface::DATE_T:
+                    $builder->add('value', DateType::class, array_merge($defaultOptions, [
+                        'placeholder' => [
+                            'year' => 'year',
+                            'month' => 'month',
+                            'day' => 'day'
+                        ],
+                        'widget' => 'single_text',
+                        'format' => 'yyyy-MM-dd',
+                        'attr' => [
+                            'class' => 'rz-datetime-field',
+                        ],
+                    ]));
+                    break;
+                case AttributeInterface::DATETIME_T:
+                    $builder->add('value', DateTimeType::class, array_merge($defaultOptions, [
+                        'placeholder' => [
+                            'hour' => 'hour',
+                            'minute' => 'minute',
+                        ],
+                        'date_widget' => 'single_text',
+                        'date_format' => 'yyyy-MM-dd',
+                        'attr' => [
+                            'class' => 'rz-datetime-field',
+                        ],
+                    ]));
+                    break;
+                case AttributeInterface::BOOLEAN_T:
+                    $builder->add('value', CheckboxType::class, $defaultOptions);
+                    break;
+                case AttributeInterface::ENUM_T:
+                    $builder->add('value', ChoiceType::class, array_merge($defaultOptions, [
+                        'required' => true,
+                        'choices' => $this->getOptions($attributeValueTranslation)
+                    ]));
                     break;
                 case AttributeInterface::EMAIL_T:
                     $builder->add('value', EmailType::class, array_merge($defaultOptions, [
@@ -75,6 +115,33 @@ class AttributeValueTranslationType extends AbstractType
                     break;
             }
         }
+    }
+
+    /**
+     * @param AttributeValueTranslationInterface $attributeValueTranslation
+     *
+     * @return AttributeInterface|null
+     */
+    protected function getAttribute(AttributeValueTranslationInterface $attributeValueTranslation): ?AttributeInterface
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute();
+    }
+
+    /**
+     * @param AttributeValueTranslationInterface $attributeValueTranslation
+     *
+     * @return array
+     */
+    protected function getOptions(AttributeValueTranslationInterface $attributeValueTranslation): array
+    {
+        $options = $this->getAttribute($attributeValueTranslation)->getOptions(
+            $attributeValueTranslation->getTranslation()
+        );
+        $options = array_combine($options, $options);
+
+        return array_merge([
+            'attributes.no_value' => null,
+        ], $options);
     }
 
     /**

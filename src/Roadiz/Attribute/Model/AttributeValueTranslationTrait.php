@@ -41,7 +41,19 @@ trait AttributeValueTranslationTrait
      */
     public function getValue()
     {
-        return $this->value;
+        switch ($this->getAttributeValue()->getType()) {
+            case AttributeInterface::DECIMAL_T:
+                return (float) $this->value;
+            case AttributeInterface::INTEGER_T:
+                return (int) $this->value;
+            case AttributeInterface::BOOLEAN_T:
+                return (bool) $this->value;
+            case AttributeInterface::DATETIME_T:
+            case AttributeInterface::DATE_T:
+                return $this->value ? new \DateTime($this->value) : null;
+            default:
+                return $this->value;
+        }
     }
 
     /**
@@ -68,13 +80,15 @@ trait AttributeValueTranslationTrait
                 $this->value = (bool) $value;
                 return $this;
             case AttributeInterface::DATETIME_T:
-                $this->value = new \DateTime($value);
-                return $this;
             case AttributeInterface::DATE_T:
-                $this->value = new \DateTime($value);
+                if ($value instanceof \DateTime) {
+                    $this->value = $value->format('Y-m-d H:i:s');
+                } else {
+                    $this->value = $value;
+                }
                 return $this;
             default:
-                $this->value = trim($value);
+                $this->value = $value;
                 return $this;
         }
     }

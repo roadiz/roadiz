@@ -128,6 +128,13 @@ interface AttributeInterface
     public function removeAttributeTranslation(AttributeTranslationInterface $attributeTranslation);
 
     /**
+     * @param Translation $translation
+     *
+     * @return array|null
+     */
+    public function getOptions(Translation $translation): ?array;
+
+    /**
      * @return int
      */
     public function getType(): int;

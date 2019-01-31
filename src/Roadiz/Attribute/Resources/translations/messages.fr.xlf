@@ -82,6 +82,22 @@
                 <source>attributes.form.type.country</source>
                 <target xml:lang="fr" state="translated">Code pays</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="node.attributes">
+                <source>node.attributes</source>
+                <target xml:lang="fr" state="translated">Attributs</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_values.form.attribute">
+                <source>attribute_values.form.attribute</source>
+                <target xml:lang="fr" state="translated">Ajouter un nouvel attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new_attribute">
+                <source>new_attribute</source>
+                <target xml:lang="fr" state="translated">-- Choisir un attribut --</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.node.attribute">
+                <source>add.a.node.attribute</source>
+                <target xml:lang="fr" state="translated">Ajouter l'attribut au nœud</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>

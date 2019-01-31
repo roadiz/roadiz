@@ -99,6 +99,22 @@
                 <source>add.a.node.attribute</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.no_value">
+                <source>attributes.no_value</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute.%name%.created">
+                <source>attribute.%name%.created</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute.%name%.updated">
+                <source>attribute.%name%.updated</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute.%name%.deleted">
+                <source>attribute.%name%.deleted</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -100,6 +100,28 @@ trait AttributeTrait
     }
 
     /**
+     * @param Translation $translation
+     *
+     * @return array|null
+     */
+    public function getOptions(Translation $translation): ?array
+    {
+        $attributeTranslation = $this->getAttributeTranslations()->filter(
+            function (AttributeTranslationInterface $attributeTranslation) use ($translation) {
+                if ($attributeTranslation->getTranslation() === $translation) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        if ($attributeTranslation->count() > 0) {
+            return $attributeTranslation->first()->getOptions();
+        }
+
+        return null;
+    }
+
+    /**
      * @return Collection<AttributeTranslationInterface>
      */
     public function getAttributeTranslations(): Collection

@@ -13,41 +13,52 @@
                 {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|truncate(30, false, '[…]') }}
                 {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
             </h1>
-            {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
             {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'attributes'} %}
             {% include '@Rozier/nodes/attributes/translationBar.html.twig' with {"current": translation.id} %}
         </header>
 
-        <article class="content">
-            <table class="attribute-value-forms" class="content-table settings uk-table">
-                {% for attribute_value_translation_form in attribute_value_translation_forms %}
-                <tr class="setting-row">
-                    <td>
-                        {{ attribute_value_translation_form.get('value').label }}
-                    </td>
-                    <td>
-                        {% form_theme attribute_value_translation_form '@Rozier/forms.html.twig' %}
-                        {{ form_start(attribute_value_translation_form, {
-                            'attr': {
-                                'class': 'uk-form uk-form-horizontal'
-                            }
-                        }) }}{{ form_widget(attribute_value_translation_form) }}
-                        {% spaceless %}
-                            <button data-uk-tooltip="{animation:true}" title="{% trans %}edit{% endtrans %}" class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button>
-                        {% endspaceless %}
-                        {{ form_end(attribute_value_translation_form) }}
-                    </td>
-                    <td class="table-actions-row">
-                        {% spaceless %}
-                            <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link uk-button-table-save mobile-hidden" href="#" title="{% trans %}save{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save-mini"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="#" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                        {% endspaceless %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-
-
+        <article class="content  content-settings-list">
+            <div class="content-table-cont">
+                <table class="attribute-value-forms content-table settings uk-table">
+                    <tbody>
+                        {% for attribute_value_translation_form in attribute_value_translation_forms %}
+                            {% set attributeValue = attribute_value_translation_form.vars.data.attributeValue %}
+                            <tr class="setting-row">
+                                <td>
+                                    {{- attribute_value_translation_form.vars.data|label -}}
+                                </td>
+                                <td>
+                                    {% form_theme attribute_value_translation_form '@Rozier/horizontalForms.html.twig' %}
+                                    {{ form_start(attribute_value_translation_form, {
+                                        'attr': {
+                                            'class': 'uk-form uk-form-horizontal'
+                                        }
+                                    }) }}
+                                    {{ form_widget(attribute_value_translation_form) }}
+                                    {% spaceless %}
+                                        <button data-uk-tooltip="{animation:true}" title="{% trans %}edit{% endtrans %}" class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button>
+                                    {% endspaceless %}
+                                    {{ form_end(attribute_value_translation_form) }}
+                                </td>
+                                <td class="table-actions-row">
+                                    {% spaceless %}
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link uk-button-table-save mobile-hidden" href="#{{ attribute_value_translation_form.vars.id }}" title="{% trans %}save{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save-mini"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+                                           href="{{ path('nodesDeleteAttributesPage', {
+                                               nodeId : node.id,
+                                               translationId : translation.id,
+                                               attributeValueId : attributeValue.id
+                                           }) }}"
+                                           title="{% trans %}delete{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                    {% endspaceless %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <hr>
             {% form_theme addAttributeForm '@Rozier/forms.html.twig' %}
             {{ form_start(addAttributeForm, {
                 'attr': {
