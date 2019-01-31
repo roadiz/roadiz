@@ -162,7 +162,7 @@ class AttributeController extends RozierApp
         $form = $this->createForm();
         $form->handleRequest($request);
 
-        if ($form->isValid() ) {
+        if ($form->isValid()) {
             try {
                 $this->get('em')->remove($item);
                 $this->get('em')->flush();

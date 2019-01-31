@@ -68,6 +68,5 @@ class AttributesServiceProvider implements ServiceProviderInterface
             );
             return $translator;
         });
-
     }
 }
