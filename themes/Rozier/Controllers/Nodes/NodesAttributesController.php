@@ -34,7 +34,6 @@ namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Attribute\Form\AttributeValueTranslationType;
 use RZ\Roadiz\Attribute\Form\AttributeValueType;
-use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\Entities\AttributeValue;
 use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
 use RZ\Roadiz\Core\Entities\Node;
@@ -42,6 +41,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 class NodesAttributesController extends RozierApp
@@ -59,11 +59,6 @@ class NodesAttributesController extends RozierApp
 
         /** @var Translation $translation */
         $translation = $this->get('em')->find(Translation::class, (int) $translationId);
-        /*
-         * Here we need to directly select nodeSource
-         * if not doctrine will grab a cache tag because of NodeTreeWidget
-         * that is initialized before calling route method.
-         */
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
@@ -71,7 +66,7 @@ class NodesAttributesController extends RozierApp
             throw $this->createNotFoundException('Node-source does not exist');
         }
 
-        /** @var NodesSources $source */
+        /** @var NodesSources $nodeSource */
         $nodeSource = $this->get('em')
             ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
@@ -159,5 +154,82 @@ class NodesAttributesController extends RozierApp
         $this->assignation['addAttributeForm'] = $addAttributeForm->createView();
 
         return null;
+    }
+
+    /**
+     * @param Request $request
+     * @param         $nodeId
+     * @param         $translationId
+     * @param         $attributeValueId
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     */
+    public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES_DELETE');
+
+        /** @var AttributeValue $item */
+        $item = $this->get('em')->find(AttributeValue::class, (int) $attributeValueId);
+        if ($item === null) {
+            throw $this->createNotFoundException('AttributeValue does not exist.');
+        }
+        /** @var Translation $translation */
+        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        /** @var Node $node */
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+
+        if (null === $translation || null === $node) {
+            throw $this->createNotFoundException('Node-source does not exist');
+        }
+
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $this->get('em')
+            ->getRepository(NodesSources::class)
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
+            ->findOneBy(['translation' => $translation, 'node' => $node]);
+
+        if (null === $nodeSource) {
+            throw $this->createNotFoundException('Node-source does not exist');
+        }
+        $availableTranslations = $this->get('em')
+            ->getRepository(Translation::class)
+            ->findAvailableTranslationsForNode($node);
+
+
+        $form = $this->createForm();
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            try {
+                $this->get('em')->remove($item);
+                $this->get('em')->flush();
+
+                $msg = $this->getTranslator()->trans(
+                    'attribute.%name%.deleted_from_node.%nodeName%',
+                    [
+                        '%name%' => $item->getAttribute()->getLabelOrCode($translation),
+                        '%nodeName%' => $nodeSource->getTitle(),
+                    ]
+                );
+                $this->publishConfirmMessage($request, $msg);
+            } catch (\RuntimeException $e) {
+                $this->publishErrorMessage($request, $e->getMessage());
+            }
+
+            return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
+                'nodeId' => $node->getId(),
+                'translationId' => $translation->getId(),
+            ]));
+        }
+
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['item'] = $item;
+        $this->assignation['source'] = $nodeSource;
+        $this->assignation['translation'] = $translation;
+        $this->assignation['available_translations'] = $availableTranslations;
+        $this->assignation['node'] = $node;
+
+        return $this->render('nodes/attributes/delete.html.twig', $this->assignation);
     }
 }

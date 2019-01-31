@@ -98,6 +98,38 @@
                 <source>add.a.node.attribute</source>
                 <target xml:lang="fr" state="translated">Ajouter l'attribut au nœud</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.no_value">
+                <source>attributes.no_value</source>
+                <target xml:lang="fr" state="translated">-- Aucune valeur --</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.created">
+                <source>attribute.%name%.created</source>
+                <target xml:lang="fr" state="translated">L'attribut %name% a été créé.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.updated">
+                <source>attribute.%name%.updated</source>
+                <target xml:lang="fr" state="translated">L'attribut %name% a été mis à jour.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.deleted">
+                <source>attribute.%name%.deleted</source>
+                <target xml:lang="fr" state="translated">L'attribut %name% a été supprimé.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.value">
+                <source>attributes.value</source>
+                <target xml:lang="fr" state="translated">Valeur</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
+                <source>are_you_sure.delete.attribute</source>
+                <target xml:lang="fr" state="translated">Êtes-vous sûr·e de vouloir supprimer cet attribut ?</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.deleted_from_node.%nodeName%">
+                <source>attribute.%name%.deleted_from_node.%nodeName%</source>
+                <target xml:lang="fr" state="translated">L'attribut %name% a été supprimé du nœud %nodeName%.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute.%name%">
+                <source>delete.attribute.%name%</source>
+                <target xml:lang="fr" state="translated">Supprimer l'attribut %name%</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>

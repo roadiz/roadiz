@@ -38,6 +38,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeTrait;
 use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
@@ -72,10 +73,17 @@ class Attribute extends AbstractEntity implements AttributeInterface
     protected $attributeTranslations;
 
     /**
+     * @var Collection<AttributeValueInterface>
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="attribute", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
+     */
+    protected $attributeValues;
+
+    /**
      * Attribute constructor.
      */
     public function __construct()
     {
         $this->attributeTranslations = new ArrayCollection();
+        $this->attributeValues = new ArrayCollection();
     }
 }

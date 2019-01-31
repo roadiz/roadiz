@@ -37,6 +37,8 @@ use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\ColorType;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -80,6 +82,17 @@ class AttributeValueTranslationType extends AbstractType
                             'class' => 'rz-datetime-field',
                         ],
                     ]));
+                    break;
+                case AttributeInterface::COLOUR_T:
+                    $builder->add('value', TextType::class, array_merge($defaultOptions, [
+                        'attr' => [
+                            'class' => 'colorpicker-input',
+                        ],
+                    ]));
+
+                    break;
+                case AttributeInterface::COUNTRY_T:
+                    $builder->add('value', CountryType::class, $defaultOptions);
                     break;
                 case AttributeInterface::DATETIME_T:
                     $builder->add('value', DateTimeType::class, array_merge($defaultOptions, [
@@ -137,11 +150,13 @@ class AttributeValueTranslationType extends AbstractType
         $options = $this->getAttribute($attributeValueTranslation)->getOptions(
             $attributeValueTranslation->getTranslation()
         );
-        $options = array_combine($options, $options);
+        if (null !== $options) {
+            $options = array_combine($options, $options);
+        }
 
         return array_merge([
             'attributes.no_value' => null,
-        ], $options);
+        ], $options ?: []);
     }
 
     /**

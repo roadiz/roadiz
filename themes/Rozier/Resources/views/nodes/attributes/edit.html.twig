@@ -20,6 +20,13 @@
         <article class="content  content-settings-list">
             <div class="content-table-cont">
                 <table class="attribute-value-forms content-table settings uk-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans %}attributes.code{% endtrans %}</th>
+                            <th>{% trans %}attributes.value{% endtrans %}</th>
+                            <th>{% trans %}actions{% endtrans %}</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         {% for attribute_value_translation_form in attribute_value_translation_forms %}
                             {% set attributeValue = attribute_value_translation_form.vars.data.attributeValue %}

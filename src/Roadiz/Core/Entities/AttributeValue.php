@@ -54,7 +54,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
 
     /**
      * @var AttributeInterface
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeTranslations")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues")
      */
     protected $attribute;
 

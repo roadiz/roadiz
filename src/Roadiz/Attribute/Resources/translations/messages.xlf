@@ -115,6 +115,22 @@
                 <source>attribute.%name%.deleted</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.value">
+                <source>attributes.value</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
+                <source>are_you_sure.delete.attribute</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute.%name%.deleted_from_node.%nodeName%">
+                <source>attribute.%name%.deleted_from_node.%nodeName%</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="delete.attribute.%name%">
+                <source>delete.attribute.%name%</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>
