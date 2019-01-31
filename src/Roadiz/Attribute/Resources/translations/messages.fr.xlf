@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="fr">
+    <body>
+      <trans-unit xml:space="preserve" id="manage.attributes">
+                <source>manage.attributes</source>
+                <target xml:lang="fr" state="translated">Attributs</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes">
+                <source>attributes</source>
+                <target xml:lang="fr" state="translated">Attributs</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.code">
+                <source>attributes.code</source>
+                <target xml:lang="fr" state="translated">Code</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute">
+                <source>add.a.attribute</source>
+                <target xml:lang="fr" state="translated">Créer un attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.code">
+                <source>attributes.form.code</source>
+                <target xml:lang="fr" state="translated">Code d'attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type">
+                <source>attributes.form.type</source>
+                <target xml:lang="fr" state="translated">Type de l'attribut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.attributeTranslations">
+                <source>attributes.form.attributeTranslations</source>
+                <target xml:lang="fr" state="translated">Traductions</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.options">
+                <source>attributes.form.options</source>
+                <target xml:lang="fr" state="translated">Options (pour le type «Choix»)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.attribute.%name%">
+                <source>edit.attribute.%name%</source>
+                <target xml:lang="fr" state="translated">%name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.attributes">
+                <source>back_to.attributes</source>
+                <target xml:lang="fr" state="translated">Retour aux attributs</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.string">
+                <source>attributes.form.type.string</source>
+                <target xml:lang="fr" state="translated">Chaîne de caractères</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.datetime">
+                <source>attributes.form.type.datetime</source>
+                <target xml:lang="fr" state="translated">Date et heure</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.boolean">
+                <source>attributes.form.type.boolean</source>
+                <target xml:lang="fr" state="translated">Booléen (vrai ou faux)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.integer">
+                <source>attributes.form.type.integer</source>
+                <target xml:lang="fr" state="translated">Nombre entier</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.decimal">
+                <source>attributes.form.type.decimal</source>
+                <target xml:lang="fr" state="translated">Nombre décimal</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.email">
+                <source>attributes.form.type.email</source>
+                <target xml:lang="fr" state="translated">Adresse email unique</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.colour">
+                <source>attributes.form.type.colour</source>
+                <target xml:lang="fr" state="translated">Couleur hexadécimale</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.enum">
+                <source>attributes.form.type.enum</source>
+                <target xml:lang="fr" state="translated">Choix simple</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.date">
+                <source>attributes.form.type.date</source>
+                <target xml:lang="fr" state="translated">Date</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.country">
+                <source>attributes.form.type.country</source>
+                <target xml:lang="fr" state="translated">Code pays</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -36,6 +36,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Event\AttributeValueLifeCycleSubscriber;
 use RZ\Roadiz\Attribute\Twig\AttributesExtension;
+use Symfony\Component\Translation\Translator;
 
 class AttributesServiceProvider implements ServiceProviderInterface
 {
@@ -53,5 +54,20 @@ class AttributesServiceProvider implements ServiceProviderInterface
             array_push($subscribers, new AttributeValueLifeCycleSubscriber($c));
             return $subscribers;
         });
+
+        $container->extend('translator', function (Translator $translator) {
+            $translator->addResource(
+                'xlf',
+                dirname(__FILE__) . '/Resources/translations/messages.en.xlf',
+                'en'
+            );
+            $translator->addResource(
+                'xlf',
+                dirname(__FILE__) . '/Resources/translations/messages.fr.xlf',
+                'fr'
+            );
+            return $translator;
+        });
+
     }
 }
