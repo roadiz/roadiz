@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\Entities\Translation;
 
 trait AttributeValueTrait
 {
@@ -80,5 +81,22 @@ trait AttributeValueTrait
     {
         $this->attributeValueTranslations = $attributeValueTranslations;
         return true;
+    }
+
+    /**
+     * @param Translation $translation
+     *
+     * @return AttributeValueTranslationInterface
+     */
+    public function getAttributeValueTranslation(Translation $translation): ?AttributeValueTranslationInterface
+    {
+        return $this->getAttributeValueTranslations()
+            ->filter(function (AttributeValueTranslationInterface $attributeValueTranslation) use ($translation) {
+                if ($attributeValueTranslation->getTranslation() === $translation) {
+                    return true;
+                }
+                return false;
+            })
+            ->first() ?: null;
     }
 }

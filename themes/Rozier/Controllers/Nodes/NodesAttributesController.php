@@ -32,11 +32,15 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Attribute\Form\AttributeValueTranslationType;
 use RZ\Roadiz\Attribute\Form\AttributeValueType;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\Entities\AttributeValue;
+use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
@@ -86,6 +90,38 @@ class NodesAttributesController extends RozierApp
             return $response;
         }
 
+        $this->assignation['attribute_value_translation_forms'] = [];
+        $attributeValues = $node->getAttributeValues();
+        /** @var AttributeValue $attributeValue */
+        foreach ($attributeValues as $attributeValue) {
+            /** @var FormFactory $formFactory */
+            $formFactory = $this->get('formFactory');
+            $name = $node->getNodeName() . '_attribute_' . $attributeValue->getId();
+            $attributeValueTranslation = $attributeValue->getAttributeValueTranslation($translation);
+            if (null === $attributeValueTranslation) {
+                $attributeValueTranslation = new AttributeValueTranslation();
+                $attributeValueTranslation->setAttributeValue($attributeValue);
+                $attributeValueTranslation->setTranslation($translation);
+            }
+            $attributeValueTranslationForm = $formFactory->createNamedBuilder(
+                $name,
+                AttributeValueTranslationType::class,
+                $attributeValueTranslation
+            )->getForm();
+            $attributeValueTranslationForm->handleRequest($request);
+
+            if ($attributeValueTranslationForm->isValid()) {
+                $this->get('em')->merge($attributeValueTranslation);
+                $this->get('em')->flush();
+                return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
+                    'nodeId' => $node->getId(),
+                    'translationId' => $translation->getId(),
+                ]));
+            }
+
+            $this->assignation['attribute_value_translation_forms'][] = $attributeValueTranslationForm->createView();
+        }
+
         $this->assignation['source'] = $nodeSource;
         $this->assignation['translation'] = $translation;
         $this->assignation['available_translations'] = $availableTranslations;
@@ -107,6 +143,7 @@ class NodesAttributesController extends RozierApp
         $attributeValue->setAttributable($node);
         $addAttributeForm = $this->createForm(AttributeValueType::class, $attributeValue, [
             'entityManager' => $this->get('em'),
+            'translation' => $this->get('defaultTranslation'),
         ]);
         $addAttributeForm->handleRequest($request);
 

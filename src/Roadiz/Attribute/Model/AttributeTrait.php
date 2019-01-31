@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\Entities\Translation;
 
 trait AttributeTrait
 {
@@ -72,6 +73,30 @@ trait AttributeTrait
     {
         $this->type = $type;
         return $this;
+    }
+
+    /**
+     * @param Translation $translation
+     *
+     * @return string
+     */
+    public function getLabelOrCode(?Translation $translation): string
+    {
+        if (null !== $translation) {
+            $attributeTranslation = $this->getAttributeTranslations()->filter(
+                function (AttributeTranslationInterface $attributeTranslation) use ($translation) {
+                    if ($attributeTranslation->getTranslation() === $translation) {
+                        return true;
+                    }
+                    return false;
+                }
+            );
+            if ($attributeTranslation->count() > 0 && $attributeTranslation->first()->getLabel() !== '') {
+                return $attributeTranslation->first()->getLabel();
+            }
+        }
+
+        return $this->getCode();
     }
 
     /**

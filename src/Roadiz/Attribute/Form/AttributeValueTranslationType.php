@@ -24,7 +24,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AttributeValueType.php
+ * @file AttributeValueTranslationType.php
  * @author Ambroise Maupate
  *
  */
@@ -32,37 +32,49 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Form;
 
-use Doctrine\ORM\EntityManagerInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 
-class AttributeValueType extends AbstractType
+class AttributeValueTranslationType extends AbstractType
 {
     /**
      * @inheritDoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('attribute', AttributeChoiceType::class, [
-            'label' => 'attribute_values.form.attribute',
-            'entityManager' => $options['entityManager'],
-            'translation' => $options['translation'],
-        ]);
-    }
+        $attributeValueTranslation = $builder->getData();
 
-    /**
-     * @inheritDoc
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        parent::configureOptions($resolver);
-
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
-        $resolver->setRequired('translation');
-        $resolver->setAllowedTypes('translation', [Translation::class]);
+        if ($attributeValueTranslation instanceof AttributeValueTranslationInterface) {
+            $defaultOptions = [
+                'label' => $attributeValueTranslation->getAttributeValue()
+                    ->getAttribute()
+                    ->getLabelOrCode($attributeValueTranslation->getTranslation())
+            ];
+            switch ($attributeValueTranslation->getAttributeValue()->getType()) {
+                case AttributeInterface::INTEGER_T:
+                    $builder->add('value', IntegerType::class, $defaultOptions);
+                    break;
+                case AttributeInterface::DECIMAL_T:
+                    $builder->add('value', IntegerType::class, $defaultOptions);
+                    break;
+                case AttributeInterface::EMAIL_T:
+                    $builder->add('value', EmailType::class, array_merge($defaultOptions, [
+                        'constraints' => [
+                            new Email()
+                        ]
+                    ]));
+                    break;
+                default:
+                    $builder->add('value', TextType::class, $defaultOptions);
+                    break;
+            }
+        }
     }
 
     /**
@@ -70,6 +82,6 @@ class AttributeValueType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'attribute_value';
+        return 'attribute_value_translation';
     }
 }

@@ -34,6 +34,7 @@ namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Attribute;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -71,12 +72,14 @@ class AttributeChoiceType extends AbstractType
         $resolver->setDefault('empty_data', null);
         $resolver->setRequired('entityManager');
         $resolver->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
+        $resolver->setRequired('translation');
+        $resolver->setAllowedTypes('translation', [Translation::class]);
         $resolver->setNormalizer('choices', function (Options $options) {
             $choices = [];
             /** @var Attribute[] $attributes */
             $attributes = $options['entityManager']->getRepository(Attribute::class)->findAll();
             foreach ($attributes as $attribute) {
-                $choices[$attribute->getCode()] = $attribute->getId();
+                $choices[$attribute->getLabelOrCode($options['translation'])] = $attribute->getId();
             }
             return $choices;
         });

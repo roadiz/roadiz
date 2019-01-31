@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\Entities\Translation;
 
 interface AttributeInterface
 {
@@ -92,6 +93,13 @@ interface AttributeInterface
      * @return mixed
      */
     public function setCode(string $code);
+
+    /**
+     * @param Translation $translation
+     *
+     * @return string
+     */
+    public function getLabelOrCode(?Translation $translation): string;
 
     /**
      * @return Collection<AttributeTranslationInterface>

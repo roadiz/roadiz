@@ -33,6 +33,9 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Twig;
 
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
+use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use Twig\Error\SyntaxError;
@@ -54,6 +57,7 @@ class AttributesExtension extends AbstractExtension
     {
         return [
             new TwigFilter('attributes', [$this, 'getNodeSourceAttributeValues']),
+            new TwigFilter('label', [$this, 'getAttributeLabelOrCode']),
         ];
     }
 
@@ -89,5 +93,30 @@ class AttributesExtension extends AbstractExtension
             throw new SyntaxError('Cannot call node_source_attributes on NULL');
         }
         return $this->getAttributeValues($nodesSources->getNode(), $nodesSources->getTranslation());
+    }
+
+    /**
+     * @param                  $mixed
+     * @param Translation|null $translation
+     *
+     * @return string|null
+     */
+    public function getAttributeLabelOrCode($mixed, Translation $translation = null): ?string
+    {
+        if (null === $mixed) {
+            return null;
+        }
+
+        if ($mixed instanceof AttributeInterface) {
+            return $mixed->getLabelOrCode($translation);
+        }
+        if ($mixed instanceof AttributeValueInterface) {
+            return $mixed->getAttribute()->getLabelOrCode($translation);
+        }
+        if ($mixed instanceof AttributeValueTranslationInterface) {
+            return $mixed->getAttributeValue()->getAttribute()->getLabelOrCode($mixed->getTranslation());
+        }
+
+        return null;
     }
 }
