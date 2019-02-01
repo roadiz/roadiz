@@ -145,57 +145,11 @@ class RoadizApplication extends Application
      */
     protected function getDefaultCommands()
     {
-        $commands = [
-            new DispatcherDebugCommand(),
-            new ConfigurationDebugCommand(),
-            new TranslationsCommand(),
-            new TranslationsCreationCommand(),
-            new TranslationsDeleteCommand(),
-            new TranslationsEnableCommand(),
-            new TranslationsDisableCommand(),
-            new NodeTypesCommand(),
-            new NodeTypesCreationCommand(),
-            new NodeTypesDeleteCommand(),
-            new NodeTypesAddFieldCommand(),
-            new NodesSourcesCommand(),
-            new NodesCommand(),
-            new NodesCreationCommand(),
-            new NodesDetailsCommand(),
-            new NodesCleanNamesCommand(),
-            new NodeApplyUniversalFieldsCommand(),
-            new ThemesCommand(),
-            new ThemeAssetsCommand(),
-            new ThemeGenerateCommand(),
-            new ThemeInstallCommand(),
-            new ThemeInfoCommand(),
-            new InstallCommand(),
-            new UsersCommand(),
-            new UsersCreationCommand(),
-            new UsersDeleteCommand(),
-            new UsersDisableCommand(),
-            new UsersEnableCommand(),
-            new UsersRolesCommand(),
-            new UsersPasswordCommand(),
-            new RequirementsCommand(),
-            new SolrCommand(),
-            new SolrResetCommand(),
-            new SolrReindexCommand(),
-            new SolrOptimizeCommand(),
-            new CacheCommand(),
-            new CacheInfosCommand(),
-            new CacheFpmCommand(),
-            new HtaccessCommand(),
-            new DocumentDownscaleCommand(),
-            new NodesOrphansCommand(),
-            new DatabaseDumpCommand(),
-            new FilesExportCommand(),
-            new FilesImportCommand(),
-            new LogsCleanupCommand(),
-        ];
-
-        /*
+        $commands = $this->kernel->get('console.commands');
+        /**
          * Register user defined Commands
          * Add them in your config.yml
+         * @deprecated Use a service provider then add it to your AppKernel
          */
         try {
             if (isset($this->kernel->get('config')['additionalCommands'])) {

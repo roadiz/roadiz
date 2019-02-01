@@ -50,6 +50,7 @@ use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
+use RZ\Roadiz\Core\Services\ConsoleServiceProvider;
 use RZ\Roadiz\Core\Services\DebugServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineFiltersServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
@@ -258,6 +259,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             return $dispatcher;
         };
 
+        $container->register(new ConsoleServiceProvider());
         $container->register(new AssetsServiceProvider());
         $container->register(new BackofficeServiceProvider());
         $container->register(new DoctrineServiceProvider());
@@ -282,6 +284,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $container->register(new DebugServiceProvider());
         }
 
+        /**
+         * @deprecated Register your custom service providers into AppKernel
+         */
         try {
             /*
              * Load additional service providers
