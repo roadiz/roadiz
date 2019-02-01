@@ -7,7 +7,7 @@
     } from '../types/mutationTypes'
 
     // Components
-    import RzButton from '../components/RZButton.vue'
+    import RzButton from '../components/RzButton.vue'
     import draggable from 'vuedraggable'
     import Dropzone from '../components/Dropzone.vue'
 
