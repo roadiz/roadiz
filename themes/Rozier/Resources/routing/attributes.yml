@@ -1,0 +1,15 @@
+attributesEditPage:
+    path:     /edit/{id}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::editAction
+    requirements: { id : "[0-9]+" }
+attributesAddPage:
+    path:     /add
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::addAction
+    requirements: { id : "[0-9]+" }
+attributesDeletePage:
+    path:     /delete/{id}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::deleteAction
+    requirements: { id : "[0-9]+" }

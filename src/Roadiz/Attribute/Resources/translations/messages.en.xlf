@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is furnished
+  ~ to do so, subject to the following conditions:
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+  ~ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+  ~ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+  ~ IN THE SOFTWARE.
+  ~
+  ~ Except as contained in this notice, the name of the ROADIZ shall not
+  ~ be used in advertising or otherwise to promote the sale, use or other dealings
+  ~ in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
+  ~
+  ~ @file messages.en.xlf
+  ~ @author Ambroise Maupate <ambroise@rezo-zero.com>
+  -->
+
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="en">
+    <body>
+      <trans-unit xml:space="preserve" id="manage.attributes">
+                <source>manage.attributes</source>
+                <target xml:lang="en" state="translated">Manage attributes</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes">
+                <source>attributes</source>
+                <target xml:lang="en" state="translated">Attributes</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.code">
+                <source>attributes.code</source>
+                <target xml:lang="en" state="translated">Code</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute">
+                <source>add.a.attribute</source>
+                <target xml:lang="en" state="translated">Create an attribute</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.code">
+                <source>attributes.form.code</source>
+                <target xml:lang="en" state="translated">Code</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type">
+                <source>attributes.form.type</source>
+                <target xml:lang="en" state="translated">Attribute type</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.attributeTranslations">
+                <source>attributes.form.attributeTranslations</source>
+                <target xml:lang="en" state="translated">Translations</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.options">
+                <source>attributes.form.options</source>
+                <target xml:lang="en" state="translated">Available options (for choice type)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.attribute.%name%">
+                <source>edit.attribute.%name%</source>
+                <target xml:lang="en" state="translated">%name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.attributes">
+                <source>back_to.attributes</source>
+                <target xml:lang="en" state="translated">Back to attributes</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.string">
+                <source>attributes.form.type.string</source>
+                <target xml:lang="en" state="translated">Basic text string</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.datetime">
+                <source>attributes.form.type.datetime</source>
+                <target xml:lang="en" state="translated">Date and time</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.boolean">
+                <source>attributes.form.type.boolean</source>
+                <target xml:lang="en" state="translated">Boolean (true of false)</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.integer">
+                <source>attributes.form.type.integer</source>
+                <target xml:lang="en" state="translated">Integer number</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.decimal">
+                <source>attributes.form.type.decimal</source>
+                <target xml:lang="en" state="translated">Decimal number</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.email">
+                <source>attributes.form.type.email</source>
+                <target xml:lang="en" state="translated">Single email address</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.colour">
+                <source>attributes.form.type.colour</source>
+                <target xml:lang="en" state="translated">Hexadecimal colour</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.enum">
+                <source>attributes.form.type.enum</source>
+                <target xml:lang="en" state="translated">Single choice</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.date">
+                <source>attributes.form.type.date</source>
+                <target xml:lang="en" state="translated">Date</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.country">
+                <source>attributes.form.type.country</source>
+                <target xml:lang="en" state="translated">Country code</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="node.attributes">
+                <source>node.attributes</source>
+                <target xml:lang="en" state="translated">Attributes</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_values.form.attribute">
+                <source>attribute_values.form.attribute</source>
+                <target xml:lang="en" state="translated">Add a new attribute</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new_attribute">
+                <source>new_attribute</source>
+                <target xml:lang="en" state="translated">-- Choose an attribute --</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.node.attribute">
+                <source>add.a.node.attribute</source>
+                <target xml:lang="en" state="translated">Add attribute to current node</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.no_value">
+                <source>attributes.no_value</source>
+                <target xml:lang="en" state="translated">-- No value --</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.created">
+                <source>attribute.%name%.created</source>
+                <target xml:lang="en" state="translated">Attribute %name% was created</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.updated">
+                <source>attribute.%name%.updated</source>
+                <target xml:lang="en" state="translated">Attribute %name% was updated </target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.deleted">
+                <source>attribute.%name%.deleted</source>
+                <target xml:lang="en" state="translated">Attribute %name% was deleted</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.value">
+                <source>attributes.value</source>
+                <target xml:lang="en" state="translated">Value</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
+                <source>are_you_sure.delete.attribute</source>
+                <target xml:lang="en" state="translated">Are you sure you want to delete this attribute?</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.deleted_from_node.%nodeName%">
+                <source>attribute.%name%.deleted_from_node.%nodeName%</source>
+                <target xml:lang="en" state="translated">Attribute %name% was deleted from %nodeName% node</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute.%name%">
+                <source>delete.attribute.%name%</source>
+                <target xml:lang="en" state="translated">Delete attribute %name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_value_translation.%name%.updated_from_node.%nodeName%">
+                <source>attribute_value_translation.%name%.updated_from_node.%nodeName%</source>
+                <target xml:lang="en" state="translated">Attribute %name% value has been updated for node-source %nodeName%.</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

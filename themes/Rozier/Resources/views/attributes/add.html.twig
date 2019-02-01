@@ -1,0 +1,25 @@
+{% extends '@Rozier/layout.html.twig' %}
+
+{% block content %}
+<section class="content-global add-item">
+    <header class="content-header header-item header-item-add">
+        <h1 class="content-title item-add-title">{% trans %}add.a.attribute{% endtrans %}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('attributesHomePage') }}" title="{% trans %}back_to.attributes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+
+    <article class="content content-add">
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        {{ form_start(form, { attr: { id: "add-attribute-form" }}) }}
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <button data-action-save="#add-attribute-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+            </fieldset>
+        {{ form_end(form) }}
+    </article>
+
+    {% include '@Rozier/attributes/actionsMenu.html.twig' with {"item": item} only %}
+</section>
+{% endblock %}

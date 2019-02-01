@@ -47,6 +47,19 @@ nodesDeleteSourcePage:
     defaults:
         _controller : Themes\Rozier\Controllers\Nodes\NodesSourcesController::removeAction
     requirements: {nodeSourceId : "[0-9]+"}
+
+nodesEditAttributesPage:
+    path:     /edit/{nodeId}/source/{translationId}/attributes
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesAttributesController::editAction
+    requirements: { nodeId : "[0-9]+", translationId : "[0-9]+" }
+
+nodesDeleteAttributesPage:
+    path:     /edit/{nodeId}/source/{translationId}/attributes/{attributeValueId}/delete
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesAttributesController::deleteAction
+    requirements: { nodeId : "[0-9]+", translationId : "[0-9]+", attributeValueId : "[0-9]+" }
+
 nodesEditTagsPage:
     path:     /edit/{nodeId}/tags
     defaults:

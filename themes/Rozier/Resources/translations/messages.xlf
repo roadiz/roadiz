@@ -6973,6 +6973,13 @@
             <target></target>
             <note>Preview mode label on warning sign.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="current.document.file.does.not.exist">
+            <source>current.document.file.does.not.exist</source>
+            <target></target>
+            <note>When a document does not have any file attached.</note>
+        </trans-unit>
+
     </body>
   </file>
 </xliff>

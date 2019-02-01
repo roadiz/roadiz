@@ -19,7 +19,7 @@ foldersDeletePage:
     path:     /delete/{folderId}
     defaults:
         _controller: Themes\Rozier\Controllers\FoldersController::deleteAction
-    requirements: { folderId : "[0-9]+", roleId : "[0-9]+" }
+    requirements: { folderId : "[0-9]+" }
 foldersAddPage:
     path:     /add/{parentFolderId}
     defaults:

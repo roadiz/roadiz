@@ -65,6 +65,15 @@
             },
             {
                 "name": "ROLE_ACCESS_REDIRECTIONS"
+            },
+            {
+                "name": "ROLE_ACCESS_ATTRIBUTES"
+            },
+            {
+                "name": "ROLE_ACCESS_ATTRIBUTES_DELETE"
+            },
+            {
+                "name": "ROLE_ACCESS_NODE_ATTRIBUTES"
             }
         ]
     }

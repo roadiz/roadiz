@@ -10,4 +10,10 @@
             }) }}
         {% endfor %}
     </div>
+    <ul class="block-attributes">
+        {% for attributeValueTranslation in nodeSource|attributes %}
+            <li><strong>{{ attributeValueTranslation|attribute_label }}</strong> {{ attributeValueTranslation.value }}
+            </li>
+        {% endfor %}
+    </ul>
 </article>

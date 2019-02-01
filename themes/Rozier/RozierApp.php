@@ -335,6 +335,12 @@ class RozierApp extends BackendController
                         'icon' => 'uk-icon-rz-manage-nodes',
                         'roles' => ['ROLE_ACCESS_NODETYPES'],
                     ],
+                    'manage.attributes' => [
+                        'name' => 'manage.attributes',
+                        'path' => $urlGenerator->generate('attributesHomePage'),
+                        'icon' => 'uk-icon-server',
+                        'roles' => ['ROLE_ACCESS_ATTRIBUTES'],
+                    ],
                     'manage.translations' => [
                         'name' => 'manage.translations',
                         'path' => $urlGenerator->generate('translationsHomePage'),

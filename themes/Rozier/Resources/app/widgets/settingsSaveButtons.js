@@ -46,7 +46,7 @@ export default class SettingsSaveButtons {
         }
 
         window.Rozier.lazyload.canvasLoader.show()
-        let formData = new FormData($form[0])
+        let formData = new window.FormData($form[0])
         let sendData = {
             url: window.location.href,
             type: 'post',

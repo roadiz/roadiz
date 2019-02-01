@@ -30,8 +30,11 @@
         border: 1px solid #cbcbcb;
 
         & > .uk-form-label {
+            display: block;
             padding: 1em;
+            width: auto;
             border-bottom: 1px solid #cbcbcb;
+            background: #F8F8F8;
             margin: 0;
 
             &:before {
@@ -48,7 +51,7 @@
             background-color: white;
             margin: 0;
 
-            & > .uk-form-row {
+            & > .uk-form-row:not(.rz-collection-form-type-wrapper) {
                 padding: 1em;
                 border-top: 1px dashed #cbcbcb;
                 margin: 0;
@@ -79,15 +82,16 @@
 
                 & > .data-uk-margin {
                     margin: 0;
+                    width: 100%;
 
-                    & > .uk-form-row:not(.drawer-widget) {
+                    & > .uk-form-row:not(.drawer-widget):not(.rz-collection-form-type-wrapper) {
                         & > .uk-form-label {
                             margin-right: 1em;
                         }
                     }
 
                     @media (min-width: @screen-sm-min) {
-                        & > .uk-form-row:not(.drawer-widget) {
+                        & > .uk-form-row:not(.drawer-widget):not(.rz-collection-form-type-wrapper) {
                             display: flex;
                             align-items: center;
 
@@ -158,6 +162,19 @@
 
         .markdown-editor-navbar {
             flex-shrink: 0;
+        }
+
+        .rz-collection-form-type-wrapper {
+            display: block;
+
+            div[class$="collection-actions"] {
+                display: flex;
+                padding: 6px 0 0px 15px;
+
+                .uk-button {
+                    margin: 2px 2px;
+                }
+            }
         }
     }
 }

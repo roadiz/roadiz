@@ -32,10 +32,14 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Attribute\Model\AttributableInterface;
+use RZ\Roadiz\Attribute\Model\AttributableTrait;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\Validator\Constraints\Collection;
 
 /**
  * Node entities are the central feature of Roadiz,
@@ -56,9 +60,10 @@ use RZ\Roadiz\Utils\StringHandler;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class Node extends AbstractDateTimedPositioned implements LeafInterface
+class Node extends AbstractDateTimedPositioned implements LeafInterface, AttributableInterface
 {
     use LeafTrait;
+    use AttributableTrait;
 
     const DRAFT = 10;
     const PENDING = 20;
@@ -697,6 +702,13 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
+     * @var Collection<AttributeValueInterface>
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="node", orphanRemoval=true)
+     * @ORM\OrderBy({"position" = "ASC"})
+     */
+    protected $attributeValues;
+
+    /**
      * Create a new empty Node according to given node-type.
      *
      * @param NodeType $nodeType
@@ -710,6 +722,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
         $this->customForms = new ArrayCollection();
         $this->aNodes = new ArrayCollection();
         $this->bNodes = new ArrayCollection();
+        $this->attributeValues = new ArrayCollection();
 
         $this->setNodeType($nodeType);
     }

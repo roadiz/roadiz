@@ -1171,24 +1171,20 @@ class DocumentsController extends RozierApp
             }
             $finder->setEmbedId($data['embedId']);
 
-            if ($finder->exists()) {
-                $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
-                if (null !== $document &&
-                    null !== $folderId &&
-                    $folderId > 0) {
-                    /** @var Folder $folder */
-                    $folder = $this->get('em')->find(Folder::class, (int) $folderId);
+            $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
+            if (null !== $document &&
+                null !== $folderId &&
+                $folderId > 0) {
+                /** @var Folder $folder */
+                $folder = $this->get('em')->find(Folder::class, (int) $folderId);
 
-                    $document->addFolder($folder);
-                    $folder->addDocument($document);
-                }
-
-                $this->get('em')->flush();
-
-                return $document;
-            } else {
-                throw new \RuntimeException("embedId.does_not_exist", 1);
+                $document->addFolder($folder);
+                $folder->addDocument($document);
             }
+
+            $this->get('em')->flush();
+
+            return $document;
         } else {
             throw new \RuntimeException("bad.request", 1);
         }
