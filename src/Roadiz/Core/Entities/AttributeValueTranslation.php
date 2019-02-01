@@ -64,7 +64,8 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
 
     /**
      * @var AttributeValueInterface
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", inversedBy="attributeValueTranslations")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", inversedBy="attributeValueTranslations", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     protected $attributeValue;
 }
