@@ -4647,6 +4647,11 @@ node-pre-gyp@^0.6.39:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
+node-promise@^0.5.10:
+  version "0.5.14"
+  resolved "https://registry.yarnpkg.com/node-promise/-/node-promise-0.5.14.tgz#6dccbae26d2c5383d1f49ead782c7cecbbbd07dc"
+  integrity sha512-kbd+ABY2XRdByRVHPcBDemymfNL8+msGyKNxG/ziZnh9RjneuuGQl3/CE5UkNWxCInkJS+ztc5B31/t2kIO4Yw==
+
 node-sass@^4.7.2:
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.7.2.tgz#9366778ba1469eb01438a9e8592f4262bcb6794e"
@@ -6742,6 +6747,13 @@ uglifyjs-webpack-plugin@^1.1.1:
 uid-number@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/uid-number/-/uid-number-0.0.6.tgz#0ea10e8035e8eb5b8e4449f06da1c730663baa81"
+
+uikit@2.27.4:
+  version "2.27.4"
+  resolved "https://registry.yarnpkg.com/uikit/-/uikit-2.27.4.tgz#dc0a2dde23f4fbf47fb393c7056fd794f771f255"
+  integrity sha1-3Aot3iP0+/R/s5PHBW/XlPdx8lU=
+  dependencies:
+    node-promise "^0.5.10"
 
 ultron@~1.1.0:
   version "1.1.1"

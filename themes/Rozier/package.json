@@ -46,6 +46,7 @@
     "mousetrap": "^1.6.0",
     "qs": "^6.5.2",
     "symfony-collection": "^2.1.26",
+    "uikit": "2.27.4",
     "vue-cropperjs": "^2.1.0",
     "vue-js-modal": "^1.2.3",
     "vue-multiselect": "2.0.0-beta.15",

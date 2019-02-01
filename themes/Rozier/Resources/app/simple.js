@@ -27,13 +27,13 @@
  * @author Adrien Scholaert <adrien@rezo-zero.com>
  */
 
-import UIkit from '../../bower_components/uikit/js/uikit'
-import '../../bower_components/uikit/js/components/nestable'
-import '../../bower_components/uikit/js/components/sortable.js'
-import '../../bower_components/uikit/js/components/datepicker.js'
-import '../../bower_components/uikit/js/components/pagination.js'
-import '../../bower_components/uikit/js/components/notify.js'
-import '../../bower_components/uikit/js/components/tooltip.js'
+import UIkit from '../../node_modules/uikit/dist/js/uikit'
+import '../../node_modules/uikit/dist/js/components/nestable'
+import '../../node_modules/uikit/dist/js/components/sortable.js'
+import '../../node_modules/uikit/dist/js/components/datepicker.js'
+import '../../node_modules/uikit/dist/js/components/pagination.js'
+import '../../node_modules/uikit/dist/js/components/notify.js'
+import '../../node_modules/uikit/dist/js/components/tooltip.js'
 
 import './components/login/login'
 
