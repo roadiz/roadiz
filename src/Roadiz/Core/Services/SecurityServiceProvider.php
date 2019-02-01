@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
@@ -304,6 +305,14 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 }
                 return new DoctrineRoleHierarchy($c['em']);
             } catch (ConnectionException $e) {
+                /*
+                 * Do not use DB roles when DB is not reachable
+                 */
+                return new DoctrineRoleHierarchy();
+            } catch (TableNotFoundException $e) {
+                /*
+                 * Do not use DB roles when DB tables are not created
+                 */
                 return new DoctrineRoleHierarchy();
             }
         };
