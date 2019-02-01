@@ -60,7 +60,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
 
     /**
      * @var Collection<AttributeValueTranslationInterface>
- *     @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValueTranslation", mappedBy="attributeValue", fetch="EAGER", cascade={"persist", "remove"})
+ *     @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValueTranslation", mappedBy="attributeValue", fetch="EAGER", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $attributeValueTranslations;
 

@@ -68,13 +68,13 @@ class Attribute extends AbstractEntity implements AttributeInterface
 
     /**
      * @var Collection<AttributeTranslationInterface>
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation", mappedBy="attribute", fetch="EAGER", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation", mappedBy="attribute", fetch="EAGER", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $attributeTranslations;
 
     /**
      * @var Collection<AttributeValueInterface>
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="attribute", fetch="EXTRA_LAZY", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="attribute", fetch="EXTRA_LAZY", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     protected $attributeValues;
 
