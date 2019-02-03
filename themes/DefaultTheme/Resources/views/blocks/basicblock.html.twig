@@ -12,7 +12,17 @@
     </div>
     <ul class="block-attributes">
         {% for attributeValueTranslation in nodeSource|attributes %}
-            <li><strong>{{ attributeValueTranslation|attribute_label }}</strong> {{ attributeValueTranslation.value }}
+            <li>
+                <strong>{{ attributeValueTranslation|attribute_label }}:</strong>
+                {% if attributeValueTranslation is datetime %}
+                    {{ attributeValueTranslation.value|localizeddate('medium', 'short') }}
+                {% elseif attributeValueTranslation is date %}
+                    {{ attributeValueTranslation.value|localizeddate('medium') }}
+                {% elseif attributeValueTranslation is country %}
+                    {{ attributeValueTranslation.value|country_iso(request.locale) }}
+                {% else %}
+                    {{ attributeValueTranslation.value }}
+                {% endif%}
             </li>
         {% endfor %}
     </ul>

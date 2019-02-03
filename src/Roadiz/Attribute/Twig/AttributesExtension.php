@@ -42,6 +42,7 @@ use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+use Twig\TwigTest;
 
 class AttributesExtension extends AbstractExtension
 {
@@ -59,6 +60,43 @@ class AttributesExtension extends AbstractExtension
             new TwigFilter('attributes', [$this, 'getNodeSourceAttributeValues']),
             new TwigFilter('attribute_label', [$this, 'getAttributeLabelOrCode']),
         ];
+    }
+
+    public function getTests()
+    {
+        return [
+            new TwigTest('datetime', [$this, 'isDateTime']),
+            new TwigTest('date', [$this, 'isDate']),
+            new TwigTest('country', [$this, 'isCountry']),
+            new TwigTest('boolean', [$this, 'isBoolean']),
+            new TwigTest('choice', [$this, 'isEnum']),
+            new TwigTest('enum', [$this, 'isEnum']),
+        ];
+    }
+
+    public function isDateTime(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isDateTime();
+    }
+
+    public function isDate(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isDate();
+    }
+
+    public function isCountry(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isCountry();
+    }
+
+    public function isBoolean(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isBoolean();
+    }
+
+    public function isEnum(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isEnum();
     }
 
 
@@ -84,7 +122,7 @@ class AttributesExtension extends AbstractExtension
             $attributeValueTranslation = $attributeValue->getAttributeValueTranslation($translation);
             if (null !== $attributeValueTranslation) {
                 array_push($attributeValueTranslations, $attributeValueTranslation);
-            } else {
+            } elseif (false !== $attributeValue->getAttributeValueTranslations()->first()) {
                 array_push($attributeValueTranslations, $attributeValue->getAttributeValueTranslations()->first());
             }
         }
@@ -95,7 +133,7 @@ class AttributesExtension extends AbstractExtension
     /**
      * @param NodesSources|null $nodesSources
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return array
      * @throws SyntaxError
      */
     public function getNodeSourceAttributeValues(?NodesSources $nodesSources)
