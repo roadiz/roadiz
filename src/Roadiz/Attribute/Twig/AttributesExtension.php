@@ -163,7 +163,10 @@ class AttributesExtension extends AbstractExtension
             return $mixed->getAttribute()->getLabelOrCode($translation);
         }
         if ($mixed instanceof AttributeValueTranslationInterface) {
-            return $mixed->getAttributeValue()->getAttribute()->getLabelOrCode($mixed->getTranslation());
+            if (null === $translation) {
+                $translation = $mixed->getTranslation();
+            }
+            return $mixed->getAttributeValue()->getAttribute()->getLabelOrCode($translation);
         }
 
         return null;
