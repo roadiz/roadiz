@@ -361,7 +361,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
             $c['stopwatch']->start('firewall');
             $firewall = new TimedFirewall($c['firewallMap'], $c['dispatcher'], $c['stopwatch']);
             $c['stopwatch']->stop('firewall');
-
             return $firewall;
         };
 

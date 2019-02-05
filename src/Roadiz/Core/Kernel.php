@@ -83,6 +83,7 @@ use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
@@ -164,6 +165,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
         try {
             $this->initializeContainer();
+            $this->initEvents();
             $this->booted = true;
         } catch (InvalidConfigurationException $e) {
             $view = new ExceptionViewer();
@@ -234,7 +236,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
         $container->register(new YamlConfigurationServiceProvider());
 
-        $container['dispatcher'] = function ($c) {
+        $container['dispatcher'] = function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
             $dispatcher = new EventDispatcher();
             $dispatcher->addSubscriber(new SaveSessionListener());
             $dispatcher->addSubscriber(new AppCacheEventSubscriber());
@@ -246,16 +250,37 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
             $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
             $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
+            $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
+            $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
+            $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
+            $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
+            $dispatcher->addSubscriber(new ExceptionSubscriber(
+                $kernel,
+                $c['themeResolver'],
+                $c['logger'],
+                $kernel->isDebug()
+            ));
+            $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));
+            $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
 
-            if (isset($c['config']['reverseProxyCache']) &&
-                count($c['config']['reverseProxyCache']['frontend']) > 0) {
-                $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
+            if (!$kernel->isInstallMode()) {
+                $dispatcher->addSubscriber(new LocaleSubscriber($kernel, $c['stopwatch']));
+                $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
+
+                if ($kernel->isPreview()) {
+                    $dispatcher->addSubscriber(new PreviewModeSubscriber($c));
+                    $dispatcher->addSubscriber(new PreviewBarSubscriber($c));
+                }
+            }
+            /*
+             * If debug, alter HTML responses to append Debug panel to view
+             */
+            if (!$kernel->isInstallMode() && $kernel->isDebug()) {
+                $dispatcher->addSubscriber(new DebugBarSubscriber($c));
+                $dispatcher->addSubscriber(new PimpleDumperSubscriber($c));
             }
 
-            $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
-            $dispatcher->addSubscriber(new ResponseListener($this->getCharset()));
-            $dispatcher->addSubscriber(new MaintenanceModeSubscriber($this->container));
-            $dispatcher->addSubscriber(new SignatureListener(static::$cmsVersion, $this->isDebug()));
             return $dispatcher;
         };
 
@@ -299,8 +324,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         } catch (NoConfigurationFoundException $e) {
             // Do nothing if no configuration file is found.
         }
-
-        $this->initEvents();
 
         $stopWatch->stop('registerServices');
     }
@@ -351,41 +374,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     }
 
     /**
-     * Register KernelEvents subscribers.
+     * Register additional subscribers, especially those which need
+     * dispatcher to be woken up.
      */
     protected function initEvents()
     {
-        /** @var EventDispatcher $dispatcher */
-        $dispatcher = $this->container['dispatcher'];
-
-        $dispatcher->addSubscriber($this->container['routeListener']);
-        $dispatcher->addSubscriber($this->container['firewall']);
-        $dispatcher->addSubscriber(new ExceptionSubscriber(
-            $this,
-            $this->container['themeResolver'],
-            $this->container['logger'],
-            $this->isDebug()
-        ));
-        $dispatcher->addSubscriber(new ThemesSubscriber($this, $this->container['stopwatch']));
-        $dispatcher->addSubscriber(new ControllerMatchedSubscriber($this, $this->container['stopwatch']));
-
-        if (!$this->isInstallMode()) {
-            $dispatcher->addSubscriber(new LocaleSubscriber($this, $this->container['stopwatch']));
-            $dispatcher->addSubscriber(new UserLocaleSubscriber($this->container));
-
-            if ($this->isPreview()) {
-                $dispatcher->addSubscriber(new PreviewModeSubscriber($this->container));
-                $dispatcher->addSubscriber(new PreviewBarSubscriber($this->container));
-            }
-        }
-
-        /*
-         * If debug, alter HTML responses to append Debug panel to view
-         */
-        if (!$this->isInstallMode() && $this->isDebug()) {
-            $dispatcher->addSubscriber(new DebugBarSubscriber($this->container));
-            $dispatcher->addSubscriber(new PimpleDumperSubscriber($this->container));
-        }
+        $this->get('dispatcher')->addSubscriber($this->get('firewall'));
+        $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
     }
 
     /**
