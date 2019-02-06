@@ -500,7 +500,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EAGER")
      * @ORM\JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node
      */
@@ -614,7 +614,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
      */
     private $nodeSources;
 
@@ -671,6 +671,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
+     * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
      */
     protected $bNodes;
@@ -683,6 +684,19 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     public function getBNodes()
     {
         return $this->bNodes;
+    }
+
+    /**
+     * @param NodeTypeField $field
+     *
+     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+     */
+    public function getBNodesByField(NodeTypeField $field)
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(Criteria::expr()->eq('field', $field));
+        $criteria->orderBy(['position' => 'ASC']);
+        return $this->getBNodes()->matching($criteria);
     }
 
     /**

@@ -83,7 +83,7 @@ class TranslationExtension extends AbstractExtension
      */
     public function isLocaleRtl($mixed)
     {
-        if (is_object($mixed) && $mixed instanceof Translation) {
+        if ($mixed instanceof Translation) {
             return $mixed->isRtl();
         }
 

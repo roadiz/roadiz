@@ -367,7 +367,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     public function getIdentifier(): string
     {
         $urlAlias = $this->getUrlAliases()->first();
-        if (is_object($urlAlias)) {
+        if (false !== $urlAlias && $urlAlias->getAlias() !== '') {
             return $urlAlias->getAlias();
         }
 
@@ -382,9 +382,9 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     public function getParent(): ?NodesSources
     {
         if (null !== $this->getNode()->getParent()) {
-            /** @var ArrayCollection $nodeSources */
-            $nodeSources = $this->getNode()->getParent()->getNodeSourcesByTranslation($this->translation);
-            return $nodeSources->count() > 0 ? $nodeSources->first() : null;
+            /** @var NodesSources|false $nodeSources */
+            $nodeSources = $this->getNode()->getParent()->getNodeSourcesByTranslation($this->translation)->first();
+            return $nodeSources ?: null;
         } else {
             return null;
         }

@@ -297,7 +297,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
-        if (is_object($value) && $value instanceof PersistableInterface) {
+        if ($value instanceof PersistableInterface) {
             $res = $qb->expr()->eq($alias . '.' . $key, $value->getId());
         } elseif (is_array($value)) {
             /*
@@ -402,7 +402,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     {
         $key = str_replace('.', '_', $key);
 
-        if (is_object($value) && $value instanceof PersistableInterface) {
+        if ($value instanceof PersistableInterface) {
             $finalQuery->setParameter($key, $value->getId());
         } elseif (is_array($value)) {
             if (count($value) > 1) {
@@ -618,9 +618,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                 return;
             }
 
-            if (is_array($criteria['tags']) ||
-                (is_object($criteria['tags']) &&
-                    $criteria['tags'] instanceof Collection)) {
+            if (is_array($criteria['tags']) || $criteria['tags'] instanceof Collection) {
                 /*
                  * Do not filter if tag array is empty.
                  */

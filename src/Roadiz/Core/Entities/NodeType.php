@@ -31,6 +31,8 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Selectable;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
@@ -289,11 +291,25 @@ class NodeType extends AbstractEntity
     private $fields;
 
     /**
-     * @return Collection
+     * @return Selectable
      */
-    public function getFields(): Collection
+    public function getFields()
     {
         return $this->fields;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return NodeTypeField|null
+     */
+    public function getFieldByName(string $name): ?NodeTypeField
+    {
+        $fieldCriteria = Criteria::create();
+        $fieldCriteria->andWhere(Criteria::expr()->eq('name', $name));
+        $fieldCriteria->setMaxResults(1);
+        $field = $this->getFields()->matching($fieldCriteria)->first();
+        return $field ?: null;
     }
     /**
      * Get every node-type fields names in

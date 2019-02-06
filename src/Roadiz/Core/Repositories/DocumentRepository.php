@@ -87,8 +87,7 @@ class DocumentRepository extends EntityRepository
                 return;
             }
 
-            if (is_array($criteria['folders']) ||
-                (is_object($criteria['folders']) && $criteria['folders'] instanceof Collection)) {
+            if (is_array($criteria['folders']) || $criteria['folders'] instanceof Collection) {
                 /*
                  * Do not filter if folder array is empty.
                  */

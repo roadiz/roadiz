@@ -33,6 +33,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -1230,7 +1231,7 @@ class NodeRepository extends StatusAwareRepository
          * Handle Tag relational queries
          */
         if (isset($criteria['tags'])) {
-            if (is_object($criteria['tags'])) {
+            if ($criteria['tags'] instanceof PersistableInterface) {
                 $qb->innerJoin(
                     $alias . '.tags',
                     static::TAG_ALIAS,

@@ -42,24 +42,33 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @return array Node array
+     * @return Node[] '.$this->field->getName().' array
      */
     public function '.$this->field->getGetterName().'()
     {
         if (null === $this->' . $this->field->getName() . ') {
             if (null !== $this->objectManager) {
-                $this->' . $this->field->getName() . ' = $this->objectManager
-                     ->getRepository(Node::class)
-                     ->findByNodeAndFieldNameAndTranslation(
-                         $this->getNode(),
-                         "'.$this->field->getName().'",
-                         $this->getTranslation()
-                     );
+                 $this->' . $this->field->getName() . ' = $this->objectManager
+                      ->getRepository(Node::class)
+                      ->findByNodeAndFieldNameAndTranslation(
+                          $this->getNode(),
+                          "'.$this->field->getName().'",
+                          $this->getTranslation()
+                      );
             } else {
                 $this->' . $this->field->getName() . ' = [];
             }
         }
         return $this->' . $this->field->getName() . ';
+    }
+     /**
+     * @return NodesSources[] '.$this->field->getName().' nodes-sources array
+     */
+    public function '.$this->field->getGetterName().'Sources()
+    {
+        return array_map(function(Node $node) {
+            return $node->getNodeSourcesByTranslation($this->getTranslation())->first();
+        }, $this->' . $this->field->getGetterName() . '());
     }'.PHP_EOL;
     }
 }

@@ -93,10 +93,13 @@ class SimpleQueryBuilder
         if (null === $baseKey) {
             $baseKey = $this->getParameterKey($key);
         }
-
-        if (is_object($value) && $value instanceof PersistableInterface) {
+        if (is_bool($value)) {
             return $this->queryBuilder->expr()->eq($prefix . $key, ':' . $baseKey);
-        } elseif (is_array($value)) {
+        }
+        if ('NOT NULL' === $value) {
+            return $this->queryBuilder->expr()->isNotNull($prefix . $key);
+        }
+        if (is_array($value)) {
             /*
              * array
              *
@@ -135,24 +138,25 @@ class SimpleQueryBuilder
                         );
                     case 'LIKE':
                         $fullKey = sprintf('LOWER(%s)', $prefix . $key);
-                        return $this->queryBuilder->expr()->like($fullKey, $this->queryBuilder->expr()->literal(strtolower($value[1])));
+                        return $this->queryBuilder->expr()->like(
+                            $fullKey,
+                            $this->queryBuilder->expr()->literal(strtolower($value[1]))
+                        );
                     case 'NOT IN':
                         return $this->queryBuilder->expr()->notIn($prefix . $key, ':' . $baseKey);
                     case 'INSTANCE OF':
                         return $this->queryBuilder->expr()->isInstanceOf($prefix . $key, ':' . $baseKey);
-                    default:
-                        return $this->queryBuilder->expr()->in($prefix . $key, ':' . $baseKey);
                 }
-            } else {
-                return $this->queryBuilder->expr()->in($prefix . $key, ':' . $baseKey);
             }
-        } elseif (is_bool($value)) {
+            return $this->queryBuilder->expr()->in($prefix . $key, ':' . $baseKey);
+        }
+        if ($value instanceof PersistableInterface) {
             return $this->queryBuilder->expr()->eq($prefix . $key, ':' . $baseKey);
-        } elseif ('NOT NULL' == $value) {
-            return $this->queryBuilder->expr()->isNotNull($prefix . $key);
-        } elseif (isset($value)) {
+        }
+        if (isset($value)) {
             return $this->queryBuilder->expr()->eq($prefix . $key, ':' . $baseKey);
-        } elseif (null === $value) {
+        }
+        if (null === $value) {
             return $this->queryBuilder->expr()->isNull($prefix . $key);
         }
 
@@ -169,9 +173,14 @@ class SimpleQueryBuilder
     {
         $key = $this->getParameterKey($key);
 
-        if (is_object($value) && $value instanceof PersistableInterface) {
-            return $this->queryBuilder->setParameter($key, $value->getId());
-        } elseif (is_array($value)) {
+        if (is_bool($value) || $value === 0) {
+            return $this->queryBuilder->setParameter($key, $value);
+        }
+        if ('NOT NULL' == $value) {
+            // param is not needed
+            return $this->queryBuilder;
+        }
+        if (is_array($value)) {
             if (count($value) > 1) {
                 switch ($value[0]) {
                     case '!=':
@@ -188,20 +197,17 @@ class SimpleQueryBuilder
                     case 'LIKE':
                         // param is set in filterBy
                         return $this->queryBuilder;
-                    default:
-                        return $this->queryBuilder->setParameter($key, $value);
                 }
-            } else {
-                return $this->queryBuilder->setParameter($key, $value);
             }
-        } elseif (is_bool($value) || $value === 0) {
             return $this->queryBuilder->setParameter($key, $value);
-        } elseif ('NOT NULL' == $value) {
-            // param is not needed
-            return $this->queryBuilder;
-        } elseif (isset($value)) {
+        }
+        if ($value instanceof PersistableInterface) {
+            return $this->queryBuilder->setParameter($key, $value->getId());
+        }
+        if (isset($value)) {
             return $this->queryBuilder->setParameter($key, $value);
-        } elseif (null === $value) {
+        }
+        if (null === $value) {
             return $this->queryBuilder;
         }
 

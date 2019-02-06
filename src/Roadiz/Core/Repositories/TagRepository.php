@@ -54,9 +54,7 @@ class TagRepository extends EntityRepository
     protected function filterByNodes($criteria, QueryBuilder $qb)
     {
         if (in_array('nodes', array_keys($criteria))) {
-            if (is_array($criteria['nodes']) ||
-                (is_object($criteria['nodes']) &&
-                    $criteria['nodes'] instanceof Collection)) {
+            if (is_array($criteria['nodes']) || $criteria['nodes'] instanceof Collection) {
                 $qb->innerJoin(
                     'tg.nodes',
                     static::NODE_ALIAS,
