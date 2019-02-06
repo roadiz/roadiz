@@ -50,7 +50,6 @@ class NodeSourceBaseType extends AbstractType
             'label' => 'title',
             'required' => false,
             'attr' => [
-                'data-desc' => '',
                 'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('title') . ' }}',
                 'lang' => strtolower(str_replace('_', '-', $options['translation']->getLocale())),
                 'dir' => $options['translation']->isRtl() ? 'rtl' : 'ltr',
@@ -68,7 +67,6 @@ class NodeSourceBaseType extends AbstractType
                 'required' => false,
                 'attr' => [
                     'class' => 'rz-datetime-field',
-                    'data-desc' => '',
                     'data-dev-name' => '{{ nodeSource.' . StringHandler::camelCase('publishedAt') . ' }}',
                 ],
                 'date_widget' => 'single_text',

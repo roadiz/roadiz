@@ -76,30 +76,22 @@ class NodeTypeType extends AbstractType
                 ->add('visible', CheckboxType::class, [
                     'label' => 'visible',
                     'required' => false,
-                    'attr' => [
-                        'data-desc' => 'this_node_type_will_be_available_for_creating_root_nodes',
-                    ]
+                    'help' => 'this_node_type_will_be_available_for_creating_root_nodes',
                 ])
                 ->add('publishable', CheckboxType::class, [
                     'label' => 'publishable',
                     'required' => false,
-                    'attr' => [
-                        'data-desc' => 'enables_published_at_field_for_time_based_publication'
-                    ]
+                    'help' => 'enables_published_at_field_for_time_based_publication',
                 ])
                 ->add('reachable', CheckboxType::class, [
                     'label' => 'reachable',
                     'required' => false,
-                    'attr' => [
-                        'data-desc' => 'mark_this_typed_nodes_as_reachable_with_an_url'
-                    ]
+                    'help' => 'mark_this_typed_nodes_as_reachable_with_an_url',
                 ])
                 ->add('hidingNodes', CheckboxType::class, [
                     'label' => 'nodeType.hidingNodes',
                     'required' => false,
-                    'attr' => [
-                        'data-desc' => 'this_node_type_will_hide_all_children_nodes'
-                    ]
+                    'help' => 'this_node_type_will_hide_all_children_nodes',
                 ])
                 ->add('color', TextType::class, [
                     'label' => 'nodeType.color',

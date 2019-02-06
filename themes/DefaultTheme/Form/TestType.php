@@ -45,23 +45,19 @@ class TestType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', TextType::class, [
-            'attr' => [
-                'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
-            ]
-        ])
+                'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
+            ])
             ->add('date', DateType::class, [
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
+                'help' => 'Etiam porta sem malesuada magna mollis euismod. Nullam quis risus eget urna mollis ornare vel eu leo.',
                 'attr' => [
                     'class' => 'rz-date-field',
-                    'data-desc' => 'Etiam porta sem malesuada magna mollis euismod. Nullam quis risus eget urna mollis ornare vel eu leo.'
                 ],
                 'placeholder' => '',
             ])
             ->add('content', MarkdownType::class, [
-                'attr' => [
-                    'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
-                ]
+                'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
             ])
             ->add('choice', ChoiceType::class, [
                 'choices_as_values' => true,
@@ -69,9 +65,7 @@ class TestType extends AbstractType
                     'Fusce' => 'Fusce',
                     'Inceptos Bibendum' => 'Inceptos Bibendum',
                 ],
-                'attr' => [
-                    'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
-                ]
+                'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
             ])
             ->add('choice_bullet', ChoiceType::class, [
                 'choices_as_values' => true,
@@ -80,9 +74,7 @@ class TestType extends AbstractType
                     'Fusce' => 'Fusce',
                     'Inceptos Bibendum' => 'Inceptos Bibendum',
                 ],
-                'attr' => [
-                    'data-desc' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
-                ]
+                'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
             ])
         ;
 

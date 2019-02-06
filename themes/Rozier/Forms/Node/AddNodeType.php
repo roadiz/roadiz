@@ -80,9 +80,7 @@ class AddNodeType extends AbstractType
         $builder->add('dynamicNodeName', CheckboxType::class, [
             'label' => 'node.dynamicNodeName',
             'required' => false,
-            'attr' => [
-                'data-desc' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation',
-            ],
+            'help' => 'dynamic_node_name_will_follow_any_title_change_on_default_translation',
         ])
         ->add('visible', CheckboxType::class, [
             'label' => 'visible',

@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -52,11 +53,24 @@ class FormServiceProvider implements ServiceProviderInterface
         };
 
         $container['formFactory'] = function ($c) {
-            return Forms::createFormFactoryBuilder()
-                        ->addExtension(new HttpFoundationExtension())
-                        ->addExtension(new CsrfExtension($c['csrfTokenManager']))
-                        ->addExtension(new ValidatorExtension($c['formValidator']))
-                        ->getFormFactory();
+            $formFactoryBuilder = Forms::createFormFactoryBuilder();
+            $formFactoryBuilder->addExtensions($c['form.extensions']);
+            $formFactoryBuilder->addTypeExtensions($c['form.type.extensions']);
+            return $formFactoryBuilder->getFormFactory();
+        };
+
+        $container['form.extensions'] = function ($c) {
+            return [
+                new HttpFoundationExtension(),
+                new CsrfExtension($c['csrfTokenManager']),
+                new ValidatorExtension($c['formValidator']),
+            ];
+        };
+
+        $container['form.type.extensions'] = function ($c) {
+            return [
+                new HelpAndGroupExtension()
+            ];
         };
 
         return $container;

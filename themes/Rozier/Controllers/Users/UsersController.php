@@ -36,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\AddUserType;
 use Themes\Rozier\Forms\UserDetailsType;
 use Themes\Rozier\Forms\UserType;
 use Themes\Rozier\RozierApp;
@@ -218,8 +219,9 @@ class UsersController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(UserType::class, $user, [
+            $form = $this->createForm(AddUserType::class, $user, [
                 'em' => $this->get('em'),
+                'authorizationChecker' => $this->get('securityAuthorizationChecker')
             ]);
 
             $form->handleRequest($request);

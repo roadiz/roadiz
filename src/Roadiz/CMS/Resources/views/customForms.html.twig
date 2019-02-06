@@ -169,9 +169,9 @@
             {{- form_label(form) -}}
         {% endif %}
         {{- form_errors(form) -}}
-        {% if form.vars.attr['data-description'] %}
+        {% if form.vars.help ?? false %}
             <div class="uk-form-description">
-                {{ form.vars.attr['data-description']|markdown }}
+                {{ form.vars.help|trans|markdown }}
             </div>
         {% endif %}
         {{- form_widget(form) -}}

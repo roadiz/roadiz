@@ -481,7 +481,7 @@ class NodeSourceType extends AbstractType
             $options['attr']['data-universal'] = true;
         }
         if ('' !== $field->getDescription()) {
-            $options['attr']['data-desc'] = $field->getDescription();
+            $options['help'] = $field->getDescription();
         }
         if ('' !== $field->getPlaceholder()) {
             $options['attr']['placeholder'] = $field->getPlaceholder();

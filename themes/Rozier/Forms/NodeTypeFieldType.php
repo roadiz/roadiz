@@ -55,6 +55,7 @@ class NodeTypeFieldType extends AbstractType
     {
         $builder->add('name', TextType::class, [
             'label' => 'name',
+            'help' => 'technical_name_for_database_and_templating',
             'constraints' => [
                 new NotBlank(),
                 new UniqueNodeTypeFieldName([
@@ -65,17 +66,12 @@ class NodeTypeFieldType extends AbstractType
                 new NonSqlReservedWord(),
                 new SimpleLatinString(),
             ],
-            'attr' => [
-                'data-desc' => 'technical_name_for_database_and_templating'
-            ],
         ])
         ->add('label', TextType::class, [
             'label' => 'label',
+            'help' => 'human_readable_field_name',
             'constraints' => [
                 new NotBlank(),
-            ],
-            'attr' => [
-                'data-desc' => 'human_readable_field_name'
             ],
         ])
         ->add('type', ChoiceType::class, [
@@ -91,51 +87,39 @@ class NodeTypeFieldType extends AbstractType
         ->add('placeholder', TextType::class, [
             'label' => 'placeholder',
             'required' => false,
-            'attr' => [
-                'data-desc' => 'label_for_field_with_empty_data'
-            ],
+            'help' => 'label_for_field_with_empty_data',
         ])
         ->add('groupName', TextType::class, [
             'label' => 'groupName',
             'required' => false,
-            'attr' => [
-                'data-desc' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs'
-            ],
+            'help' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs',
         ])
         ->add('visible', CheckboxType::class, [
             'label' => 'visible',
             'required' => false,
-            'attr' => [
-                'data-desc' => 'disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice'
-            ],
+            'help' => 'disable_field_visibility_if_you_dont_want_it_to_be_editable_from_backoffice',
         ])
         ->add('indexed', CheckboxType::class, [
             'label' => 'indexed',
             'required' => false,
-            'attr' => [
-                'data-desc' => 'field_should_be_indexed_if_you_plan_to_query_or_order_by_it'
-            ],
+            'help' => 'field_should_be_indexed_if_you_plan_to_query_or_order_by_it',
         ])
         ->add('universal', CheckboxType::class, [
             'label' => 'universal',
             'required' => false,
-            'attr' => [
-                'data-desc' => 'universal_fields_will_be_only_editable_from_default_translation'
-            ],
+            'help' => 'universal_fields_will_be_only_editable_from_default_translation',
         ])
         ->add('expanded', CheckboxType::class, [
             'label' => 'expanded',
-            'attr' => [
-                'data-desc' => 'use_checkboxes_or_radio_buttons_instead_of_select_box'
-            ],
+            'help' => 'use_checkboxes_or_radio_buttons_instead_of_select_box',
             'required' => false,
         ])
         ->add('defaultValues', DynamicType::class, [
             'label' => 'defaultValues',
             'required' => false,
+            'help' => 'for_children_node_and_node_references_enter_node_type_names_comma_separated',
             'attr' => [
                 'placeholder' => 'enter_values_comma_separated',
-                'data-desc' => 'for_children_node_and_node_references_enter_node_type_names_comma_separated'
             ],
         ])
         ->add('minLength', IntegerType::class, [
