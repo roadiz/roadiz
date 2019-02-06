@@ -73,7 +73,6 @@ export default class NodeStatuses {
         event.stopPropagation()
         if (this.locked === false) {
             this.locked = true
-
             let $input = $(event.currentTarget)
 
             if ($input.length) {
