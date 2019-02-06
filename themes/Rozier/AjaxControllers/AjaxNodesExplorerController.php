@@ -32,18 +32,25 @@ namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Themes\Rozier\Models\NodeModel;
+use Themes\Rozier\Models\NodeSourceModel;
 
 /**
  * {@inheritdoc}
  */
 class AjaxNodesExplorerController extends AbstractAjaxController
 {
+    protected function getItemPerPage()
+    {
+        return 30;
+    }
+
     /**
      * @param Request $request
      *
@@ -53,6 +60,32 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     {
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
+        $arrayFilter = $this->parseFilterFromRequest($request);
+
+        if ($request->get('search') !== '' && null !== $this->get('solr.search.nodeSource')) {
+            $responseArray = $this->getSolrSearchResults($request, $arrayFilter);
+        } else {
+            $responseArray = $this->getNodeSearchResults($request, $arrayFilter);
+        }
+
+        if ($request->query->has('tagId') && $request->get('tagId') > 0) {
+            $responseArray['filters'] = array_merge($responseArray['filters'], [
+                'tagId' => $request->get('tagId')
+            ]);
+        }
+
+        return new JsonResponse(
+            $responseArray
+        );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function parseFilterFromRequest(Request $request): array
+    {
         $arrayFilter = [
             'status' => ['<', Node::DELETED],
         ];
@@ -78,6 +111,17 @@ class AjaxNodesExplorerController extends AbstractAjaxController
                 $arrayFilter['nodeType'] = $nodeTypes;
             }
         }
+
+        return $arrayFilter;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    protected function getNodeSearchResults(Request $request, array $arrayFilter): array
+    {
         /*
          * Manage get request to filter list
          */
@@ -86,29 +130,66 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             $arrayFilter
         );
         $listManager->setDisplayingNotPublishedNodes(true);
-        $listManager->setItemPerPage(30);
+        $listManager->setItemPerPage($this->getItemPerPage());
         $listManager->handle();
 
         $nodes = $listManager->getEntities();
         $nodesArray = $this->normalizeNodes($nodes);
-
-        $responseArray = [
+        return [
             'status' => 'confirm',
             'statusCode' => 200,
             'nodes' => $nodesArray,
             'nodesCount' => $listManager->getItemCount(),
             'filters' => $listManager->getAssignation(),
         ];
+    }
 
-        if ($request->query->has('tagId') && $request->get('tagId') > 0) {
-            $responseArray['filters'] = array_merge($responseArray['filters'], [
-                'tagId' => $request->get('tagId')
-            ]);
-        }
-
-        return new JsonResponse(
-            $responseArray
-        );
+    /**
+     * @param Request $request
+     * @param array   $arrayFilter
+     *
+     * @return array
+     */
+    protected function getSolrSearchResults(Request $request, array $arrayFilter): array
+    {
+        unset($arrayFilter['status']);
+        $currentPage = $request->get('page', 1);
+        $arrayFilter['translation'] = $this->get('defaultTranslation');
+        $results = $this->get('solr.search.nodeSource')
+            ->searchWithHighlight(
+                $request->get('search'),
+                $arrayFilter,
+                $this->getItemPerPage(),
+                true,
+                10000,
+                $currentPage
+            )
+        ;
+        $resultsCount = $this->get('solr.search.nodeSource')
+            ->count(
+                $request->get('search'),
+                $arrayFilter,
+                0,
+                true
+            );
+        $pageCount = ceil($resultsCount/$this->getItemPerPage());
+        $nodeSources = array_map(function ($result) {
+            return $result['nodeSource'];
+        }, $results);
+        $nodesArray = $this->normalizeNodes($nodeSources);
+        return [
+            'status' => 'confirm',
+            'statusCode' => 200,
+            'nodes' => $nodesArray,
+            'nodesCount' => $resultsCount,
+            'filters' => [
+                'currentPage' => $currentPage,
+                'itemCount' => $resultsCount,
+                'itemPerPage' => $this->getItemPerPage(),
+                'pageCount' => $pageCount,
+                'nextPage' => $currentPage < $pageCount ? $currentPage + 1 : null,
+            ],
+        ];
     }
 
     /**
@@ -160,9 +241,13 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     {
         $nodesArray = [];
 
-        /** @var Node $doc */
+        /** @var Node|NodesSources $doc */
         foreach ($nodes as $node) {
-            $nodeModel = new NodeModel($node, $this->getContainer());
+            if ($node instanceof NodesSources) {
+                $nodeModel = new NodeSourceModel($node, $this->getContainer());
+            } else {
+                $nodeModel = new NodeModel($node, $this->getContainer());
+            }
             $nodesArray[] = $nodeModel->toArray();
         }
 
