@@ -41,14 +41,11 @@
         }
     ],
     "config": {
-        "bin-dir": "bin",
-        "platform": {
-            "php": "5.4.3"
-        }
+        "bin-dir": "bin"
     },
     "require": {
-        "php":                         ">=5.4.3",
-        "doctrine/orm":                "2.*",
+        "php":                         ">=5.4.3 <7.3",
+        "doctrine/orm":                "^2.5",
         "symfony/yaml":                "2.8.*",
         "symfony/console":             "2.8.*",
         "symfony/http-foundation":     "2.8.*",
