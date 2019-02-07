@@ -61,9 +61,11 @@
 <style lang="scss">
     .document-preview-widget {
         position: fixed;
-        z-index: 1500;
         width: 100%;
         height: 100%;
+        z-index: 99999;
+        top: 0;
+        left: 0;
 
         &__wrapper {
             position: absolute;
