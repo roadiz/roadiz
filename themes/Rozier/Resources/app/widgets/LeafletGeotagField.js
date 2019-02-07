@@ -232,7 +232,7 @@ export default class LeafletGeotagField {
             latlng = this.createLatLng(geocode)
         }
         let marker = new Marker(latlng, {
-            icon: this.createIcon(window.Rozier.resourcesUrl + 'assets/img/map_marker.png'),
+            icon: this.createIcon(),
             draggable: true
         }).addTo(map)
 
@@ -273,12 +273,12 @@ export default class LeafletGeotagField {
     /**
      *
      * @param fieldId
-     * @param jsonCode
+     * @param mapOptions
      * @returns {*}
      */
     createMap (fieldId, mapOptions) {
         const map = new Map(document.getElementById(fieldId)).setView(mapOptions.center, mapOptions.zoom)
-        const osmLayer = new TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        const osmLayer = new TileLayer(window.Rozier.leafletMapTileUrl, {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
         })
@@ -290,11 +290,16 @@ export default class LeafletGeotagField {
         return new LatLng(jsonCode.lat, jsonCode.lng, jsonCode.zoom)
     }
 
-    createIcon (imgPath) {
+    createIcon () {
         return new Icon({
-            iconUrl: imgPath,
-            iconSize: [25, 44],
-            iconAnchor: [12, 44]
+            iconUrl: window.Rozier.resourcesUrl + 'assets/img/marker.png',
+            iconRetinaUrl: window.Rozier.resourcesUrl + 'assets/img/marker@2x.png',
+            shadowUrl: window.Rozier.resourcesUrl + 'assets/img/marker_shadow.png',
+            shadowRetinaUrl: window.Rozier.resourcesUrl + 'assets/img/marker_shadow@2x.png',
+            iconSize: [22, 30], // size of the icon
+            shadowSize: [25, 22], // size of the shadow
+            iconAnchor: [11, 30], // point of the icon which will correspond to marker's location
+            shadowAnchor: [2, 22]  // the same for the shadow
         })
     }
 }
