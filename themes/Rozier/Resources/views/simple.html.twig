@@ -39,8 +39,8 @@
         <!-- ##debug_panel## -->
         <script>
             var temp = {
-                routes: {
-                    splashRequest: "{{ path('loginImagePage') }}"
+                "routes": {
+                    "splashRequest": "{{ path('loginImagePage') }}"
                 }
             };
 
@@ -50,7 +50,7 @@
         {% if head.devMode %}
             <script src="{{ head.resourcesUrl }}vendor/jquery.js"></script>
         {% else %}
-            <script src="https://unpkg.com/jquery@3.2.1/dist/jquery.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/jquery.min.js"></script>
         {% endif %}
 
         {# JS scripts inclusions / Using webpack #}

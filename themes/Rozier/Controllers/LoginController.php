@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -61,8 +62,10 @@ class LoginController extends RozierApp
             return $this->redirect($this->generateUrl('adminHomePage'));
         }
 
-        $form = $this->buildLoginForm($request);
-
+        $form = $this->createForm(LoginType::class, null, [
+            'urlGenerator' => $this->get('urlGenerator'),
+            'requestStack' => $this->get('requestStack'),
+        ]);
         $this->assignation['form'] = $form->createView();
 
         $helper = $this->get('securityAuthenticationUtils');
@@ -127,43 +130,5 @@ class LoginController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildLoginForm(Request $request)
-    {
-        $defaults = [];
-
-        $builder = $this->get('formFactory')
-                        ->createNamedBuilder(null, FormType::class, $defaults, [])
-                        ->add('_username', TextType::class, [
-                            'label' => 'username',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('_password', PasswordType::class, [
-                            'label' => 'password',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('_remember_me', CheckboxType::class, [
-                            'label' => 'keep_me_logged_in',
-                            'required' => false,
-                            'attr' => [
-                                'checked' => true
-                            ],
-                        ]);
-
-        if ($request->query->has('_home')) {
-            $builder->add('_target_path', HiddenType::class, [
-                'data' => $this->get('urlGenerator')->generate('adminHomePage')
-            ]);
-        }
-
-        return $builder->getForm();
     }
 }

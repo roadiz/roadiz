@@ -70,7 +70,9 @@
                             <h1>{% trans %}Welcome{% endtrans %}</h1>
                         {% endblock %}
                         <div id="canvasloader-container"></div>
-                        <div id="back-top-button" title="{% trans %}back_to.top{% endtrans %}" data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
+                        <div id="back-top-button"
+                             title="{% trans %}back_to.top{% endtrans %}"
+                             data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
                         {# This is a debug panel placeholder… do not remove it. #}
                     </div>
                 </section>
@@ -86,12 +88,13 @@
 
         <script>
             var temp = {
-                'baseUrl':        '{{ head.baseUrl }}',
-                'resourcesUrl':   '{{ head.resourcesUrl }}',
-                'ajaxToken':      '{{ head.ajaxToken }}',
-                'mainColor':      '{{ head.mainColor }}',
-                'mapsStyle':      {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
-                'googleClientId': '{{ head.googleClientId }}',
+                'baseUrl':           '{{ head.baseUrl }}',
+                'resourcesUrl':      '{{ head.resourcesUrl }}',
+                'ajaxToken':         '{{ head.ajaxToken }}',
+                'mainColor':         '{{ head.mainColor }}',
+                'mapsStyle':         {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
+                'leafletMapTileUrl': '{{ bags.settings.get('leaflet_map_tile_url')|default('https://{s}.tile.osm.org/{z}/{x}/{y}.png') }}',
+                'googleClientId':    '{{ head.googleClientId }}',
                 'defaultMapLocation': {{ head.mapsLocation|default('null')|raw }},
                 'messages': {
                     'login':                  '{{ 'login'|trans|trim|escape }}',
@@ -215,15 +218,14 @@
 
             var RozierRoot = temp;
         </script>
-
         {% if head.devMode %}
             <script src="{{ head.resourcesUrl }}vendor/vue.js"></script>
             <script src="{{ head.resourcesUrl }}vendor/vuex.js"></script>
             <script src="{{ head.resourcesUrl }}vendor/jquery.js"></script>
         {% else %}
-            <script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js"></script>
-            <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.min.js"></script>
-            <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/vue.min.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/vuex.min.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/jquery.min.js"></script>
         {% endif %}
 
         {# JS scripts inclusions / Using webpack #}

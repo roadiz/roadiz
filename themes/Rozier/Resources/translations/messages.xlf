@@ -4382,6 +4382,12 @@
         <target></target>
         <note>Setting name for social page url.</note>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="instagram_user_id">
+        <source>instagram_user_id</source>
+            <target></target>
+            <note>Setting name for social page account name.</note>
+      </trans-unit>
+
       <trans-unit xml:space="preserve" id="twitter_url">
         <source>twitter_url</source>
         <target></target>
@@ -6980,6 +6986,42 @@
             <note>When a document does not have any file attached.</note>
         </trans-unit>
 
+
+        <trans-unit xml:space="preserve" id="google_tag_manager_id">
+            <source>google_tag_manager_id</source>
+            <target></target>
+            <note>Google Tag Manager setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="leaflet_map_tile_url">
+            <source>leaflet_map_tile_url</source>
+            <target></target>
+            <note>Leaflet Map tile URL setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_access_token">
+            <source>twitter_access_token</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_access_token_secret">
+            <source>twitter_access_token_secret</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="instagram_access_token">
+            <source>instagram_access_token</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_consumer_key">
+            <source>twitter_consumer_key</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="twitter_consumer_secret">
+            <source>twitter_consumer_secret</source>
+            <target></target>
+            <note>Setting name.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
