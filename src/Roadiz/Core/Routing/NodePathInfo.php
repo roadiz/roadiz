@@ -125,7 +125,8 @@ class NodePathInfo implements \Serializable
     public function unserialize($serialized)
     {
         $data = json_decode($serialized, true);
-        $this->setIsComplete($data['is_complete']);
+        $this->setComplete($data['is_complete']);
+        $this->setParameters($data['parameters']);
         $this->setPath($data['path']);
     }
 }
