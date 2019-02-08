@@ -214,14 +214,22 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         if (null === $name || !$name instanceof NodesSources) {
             throw new RouteNotFoundException();
         }
-
-        $resourcePath = $this->getResourcePath($name, $parameters);
+        $isPathCompleted = false;
+        $resourcePath = $this->getResourcePath($name, $parameters, $isPathCompleted);
 
         if (!empty($parameters['canonicalScheme'])) {
             $schemeAuthority = trim($parameters['canonicalScheme']);
             unset($parameters['canonicalScheme']);
         } else {
             $schemeAuthority = $this->getContext()->getScheme() . '://' . $this->getHttpHost();
+        }
+
+        if (true === $isPathCompleted) {
+            if ($referenceType == self::ABSOLUTE_URL) {
+                // Absolute path
+                return $schemeAuthority . $resourcePath;
+            }
+            return $resourcePath;
         }
 
         $queryString = '';
@@ -244,33 +252,35 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
 
     /**
      * @param NodesSources $source
-     * @param array        $parameters
+     * @param array $parameters
+     * @param bool $isComplete
      * @return string
      */
-    protected function getResourcePath(NodesSources $source, $parameters = []): string
+    protected function getResourcePath(NodesSources $source, &$parameters = [], &$isComplete = false): string
     {
         $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost() . '_' . serialize($parameters);
         if (null !== $this->nodeSourceUrlCacheProvider) {
             if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
                 $this->nodeSourceUrlCacheProvider->save(
                     $cacheKey,
-                    $this->getNodesSourcesPath($source, $parameters)
+                    $this->getNodesSourcesPath($source, $parameters, $isComplete)
                 );
             }
             return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
         }
 
-        return $this->getNodesSourcesPath($source, $parameters);
+        return $this->getNodesSourcesPath($source, $parameters, $isComplete);
     }
 
     /**
      * @param NodesSources $source
-     * @param array        $parameters
+     * @param array $parameters
+     * @param bool $isComplete
      *
      * @return string
      * @throws InvalidParameterException
      */
-    protected function getNodesSourcesPath(NodesSources $source, $parameters = []): string
+    protected function getNodesSourcesPath(NodesSources $source, &$parameters = [], &$isComplete = false): string
     {
         $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
         $event = new FilterNodeSourcePathEvent(
@@ -280,8 +290,17 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $parameters,
             (boolean) $this->settingsBag->get('force_locale')
         );
+        $event->setComplete($isComplete);
+        /*
+         * Dispatch node-source URL generation to any listener
+         */
         $this->eventDispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING, $event);
+        /*
+         * Get path, parameters and isComplete back from event propagation.
+         */
         $path = $event->getPath();
+        $parameters = $event->getParameters();
+        $isComplete = $event->isComplete();
 
         if (null === $path) {
             throw new InvalidParameterException('NodeSource generated path is null.');
