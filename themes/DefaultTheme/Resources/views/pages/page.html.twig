@@ -28,12 +28,12 @@
     </div>
 
     {# Test render #}
-    <pre>
-        {{ render(controller(
-            'Themes\\DefaultTheme\\Controllers\\PageController::embedAction',
-            { 'name': 'Roadiz' }
-        )) }}
-    </pre>
+    {#<pre>#}
+        {#{{ render(controller(#}
+            {#'Themes\\DefaultTheme\\Controllers\\PageController::embedAction',#}
+            {#{ 'name': 'Roadiz' }#}
+        {#)) }}#}
+    {#</pre>#}
 
     <div class="images row">
         {% for image in nodeSource.pictures %}
@@ -44,14 +44,6 @@
             </figure>
         {% endfor %}
     </div>
-
-    {% if nodeSource.nodeReferenceSources %}
-        <ul class="references">
-            {% for refNodeSource in nodeSource.nodeReferenceSources %}
-                <li><a href="{{ path(refNodeSource) }}">{{ refNodeSource.title }}</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
 
     {% if form %}
         <div class="edit-form">
