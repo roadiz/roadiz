@@ -574,11 +574,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
              */
             return new Paginator($qb);
         } else {
-            try {
-                return $qb->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $qb->getQuery()->getResult();
         }
     }
 
@@ -596,11 +592,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
 
-        try {
-            return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**

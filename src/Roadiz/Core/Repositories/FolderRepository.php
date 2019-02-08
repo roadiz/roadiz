@@ -29,9 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
-use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
@@ -51,8 +49,6 @@ class FolderRepository extends EntityRepository
      * @param string $folderPath
      *
      * @return \RZ\Roadiz\Core\Entities\Folder
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOrCreateByPath($folderPath)
     {
@@ -105,7 +101,6 @@ class FolderRepository extends EntityRepository
      * @param string $folderPath
      *
      * @return \RZ\Roadiz\Core\Entities\Folder|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByPath($folderPath)
     {
@@ -138,21 +133,16 @@ class FolderRepository extends EntityRepository
                     ->andWhere($qb->expr()->eq('tf.translation', ':translation'))
                     ->setParameter(':translation', $translation);
             }
-
-            try {
-                return $qb->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $qb->getQuery()->getResult();
         }
         return [];
     }
 
     /**
-     * @param $folderName
+     * @param                  $folderName
      * @param Translation|null $translation
+     *
      * @return mixed|null
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneByFolderName($folderName, Translation $translation = null)
     {
@@ -169,11 +159,7 @@ class FolderRepository extends EntityRepository
                 ->setParameter(':translation', $translation);
         }
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -202,12 +188,7 @@ class FolderRepository extends EntityRepository
             ->where($qb->expr()->eq('f.parent', ':parent'))
             ->setParameter(':parent', $folder);
 
-        try {
-            $ids = $qb->getQuery()->getScalarResult();
-            return array_map('current', $ids);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $qb->getQuery()->getScalarResult());
     }
 
     /**
@@ -215,7 +196,7 @@ class FolderRepository extends EntityRepository
      *
      * @param string $pattern Search pattern
      * @param QueryBuilder $qb QueryBuilder to pass
-     * @param array $criteria Additionnal criteria
+     * @param array $criteria Additional criteria
      * @param string $alias SQL query table alias
      *
      * @return QueryBuilder
@@ -254,9 +235,9 @@ class FolderRepository extends EntityRepository
 
     /**
      * @param string $pattern
-     * @param array $criteria
+     * @param array  $criteria
+     *
      * @return int
-     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countSearchBy($pattern, array $criteria = [])
     {
@@ -266,13 +247,7 @@ class FolderRepository extends EntityRepository
 
         $qb = $this->createSearchBy($pattern, $qb, $criteria);
 
-        try {
-            return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (QueryException $e) {
-            return 0;
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -298,11 +273,7 @@ class FolderRepository extends EntityRepository
                 ->setParameter(':translation', $translation);
         }
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -333,10 +304,6 @@ class FolderRepository extends EntityRepository
                 ->setParameter(':translation', $translation);
         }
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 }

@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
@@ -63,11 +62,7 @@ class DocumentRepository extends EntityRepository
             ->setParameter(':id', $id)
             ->setMaxResults(1);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -428,11 +423,7 @@ class DocumentRepository extends EntityRepository
              */
             return new Paginator($query);
         } else {
-            try {
-                return $query->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $query->getQuery()->getResult();
         }
     }
 
@@ -463,11 +454,7 @@ class DocumentRepository extends EntityRepository
         $this->applyFilterByFolder($criteria, $query);
         $this->applyFilterByCriteria($criteria, $query);
 
-        try {
-            return $query->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -491,11 +478,7 @@ class DocumentRepository extends EntityRepository
         $this->applyFilterByFolder($criteria, $query);
         $this->applyFilterByCriteria($criteria, $query);
 
-        try {
-            return (int) $query->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -520,11 +503,8 @@ class DocumentRepository extends EntityRepository
             ->setParameter('translation', $nodeSource->getTranslation())
             ->setParameter('raw', false)
             ->setCacheable(true);
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -551,11 +531,8 @@ class DocumentRepository extends EntityRepository
             ->setParameter('translation', $nodeSource->getTranslation())
             ->setParameter('raw', false)
             ->setCacheable(true);
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -574,11 +551,7 @@ class DocumentRepository extends EntityRepository
         ')->setParameter('type', AbstractField::DOCUMENTS_T)
             ->setParameter('raw', false);
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $query->getResult();
     }
 
     /**
@@ -629,10 +602,6 @@ class DocumentRepository extends EntityRepository
 
         $query = $qb->getQuery();
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $query->getResult();
     }
 }

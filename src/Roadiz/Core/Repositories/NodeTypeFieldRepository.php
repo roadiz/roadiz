@@ -29,14 +29,13 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 class NodeTypeFieldRepository extends EntityRepository
 {
     /**
      * @param NodeType|null $nodeType
-     * @return array|null
+     * @return array
      */
     public function findAvailableGroupsForNodeType(NodeType $nodeType = null)
     {
@@ -48,11 +47,7 @@ class NodeTypeFieldRepository extends EntityRepository
             ORDER BY ntf.groupName ASC
         ')->setParameter(':nodeType', $nodeType);
 
-        try {
-            return $query->getScalarResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getScalarResult();
     }
 
     /**
@@ -68,11 +63,7 @@ class NodeTypeFieldRepository extends EntityRepository
             ->setParameter(':nodeType', $nodeType)
             ->setParameter(':universal', false);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -88,11 +79,7 @@ class NodeTypeFieldRepository extends EntityRepository
             ->setParameter(':nodeType', $nodeType)
             ->setParameter(':universal', true);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -112,10 +99,6 @@ class NodeTypeFieldRepository extends EntityRepository
             WHERE ntf.nodeType = :nodeType')
             ->setParameter('nodeType', $nodeType);
 
-        try {
-            return $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return (int) $query->getSingleScalarResult();
     }
 }

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
@@ -52,11 +51,8 @@ class CustomFormRepository extends EntityRepository
             ORDER BY ncf.position ASC')
                         ->setParameter('field', $field)
                         ->setParameter('node', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+
+        return $query->getResult();
     }
 
     /**
@@ -75,10 +71,6 @@ class CustomFormRepository extends EntityRepository
             ORDER BY ncf.position ASC')
                         ->setParameter('name', (string) $fieldName)
                         ->setParameter('node', $node);
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getResult();
     }
 }

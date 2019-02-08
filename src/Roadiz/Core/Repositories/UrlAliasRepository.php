@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
-
 /**
  * {@inheritdoc}
  */
@@ -52,11 +50,7 @@ class UrlAliasRepository extends EntityRepository
             WHERE n.id = :nodeId')
                         ->setParameter('nodeId', (int) $nodeId);
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getResult();
     }
 
     /**
@@ -71,10 +65,6 @@ class UrlAliasRepository extends EntityRepository
             WHERE ua.alias = :alias')
                         ->setParameter('alias', $alias);
 
-        try {
-            return (boolean) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
+        return (boolean) $query->getSingleScalarResult();
     }
 }

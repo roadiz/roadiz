@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
@@ -57,7 +58,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['httpKernel'] = function ($c) {
-            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack']);
+            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack'], $c['argumentResolver']);
         };
 
         $container['requestStack'] = function () {
@@ -70,6 +71,10 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
         $container['resolver'] = function () {
             return new ControllerResolver();
+        };
+
+        $container['argumentResolver'] = function () {
+            return new ArgumentResolver();
         };
 
         $container['router'] = function ($c) {

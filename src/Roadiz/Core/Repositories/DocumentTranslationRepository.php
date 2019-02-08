@@ -28,7 +28,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
+use RZ\Roadiz\Core\Entities\DocumentTranslation;
 
 /**
  * Class DocumentTranslationRepository
@@ -38,7 +38,7 @@ class DocumentTranslationRepository extends EntityRepository
 {
     /**
      * @param $id
-     * @return mixed|null
+     * @return DocumentTranslation|null
      */
     public function findOneWithDocument($id)
     {
@@ -49,10 +49,6 @@ class DocumentTranslationRepository extends EntityRepository
             ->setMaxResults(1)
             ->setParameter(':id', $id);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 }

@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Role;
 
 /**
@@ -51,11 +50,7 @@ class RoleRepository extends EntityRepository
               ->andWhere($query->expr()->eq('r.name', ':name'))
               ->setParameter('name', $roleName);
 
-        try {
-            return (int) $query->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -71,9 +66,8 @@ class RoleRepository extends EntityRepository
               ->setMaxResults(1)
               ->setParameter('name', $roleName);
 
-        try {
-            $role = $query->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
+        $role = $query->getQuery()->getOneOrNullResult();
+        if (null === $role) {
             $role = new Role($roleName);
             $this->_em->persist($role);
             $this->_em->flush();
@@ -97,12 +91,7 @@ class RoleRepository extends EntityRepository
         $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZRoleAllBasic');
 
-        try {
-            $rolesNames = $query->getScalarResult();
-            return array_map('current', $rolesNames);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 
     /**
@@ -118,11 +107,6 @@ class RoleRepository extends EntityRepository
         $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZRoleAll');
 
-        try {
-            $rolesNames = $query->getScalarResult();
-            return array_map('current', $rolesNames);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 }

@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
-
 /**
  * {@inheritdoc}
  */
@@ -47,13 +45,7 @@ class NodeTypeRepository extends EntityRepository
             ->addOrderBy('nt.name', 'ASC')
             ->setCacheable(true);
 
-        $query = $qb->getQuery();
-
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -69,10 +61,6 @@ class NodeTypeRepository extends EntityRepository
             ->andWhere($qb->expr()->eq('nt.newsletterType', true))
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 }

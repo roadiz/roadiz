@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Log;
@@ -326,11 +325,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->applyFilterByTag($criteria, $query);
         $this->applyFilterByCriteria($criteria, $query);
 
-        try {
-            return (int) $query->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -397,11 +392,7 @@ class NodesSourcesRepository extends StatusAwareRepository
              */
             return new Paginator($qb);
         } else {
-            try {
-                return $qb->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $qb->getQuery()->getResult();
         }
     }
 
@@ -437,11 +428,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->applyFilterByTag($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -543,11 +530,7 @@ class NodesSourcesRepository extends StatusAwareRepository
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -592,11 +575,7 @@ class NodesSourcesRepository extends StatusAwareRepository
             ->setMaxResults(1)
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -616,11 +595,7 @@ class NodesSourcesRepository extends StatusAwareRepository
             ->setParameter('translation', $translation)
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**

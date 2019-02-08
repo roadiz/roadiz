@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
@@ -58,11 +57,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 1800, 'RZTranslationDefault');
 
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -80,11 +75,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 1800, 'RZTranslationAllAvailable');
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getResult();
     }
 
     /**
@@ -103,11 +94,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationExists-' . $locale);
 
-        try {
-            return (boolean) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
+        return (boolean) $query->getSingleScalarResult();
     }
 
     /**
@@ -126,11 +113,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationGetAvailableLocales');
 
-        try {
-            return array_map('current', $query->getScalarResult());
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 
     /**
@@ -147,11 +130,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationGetAllLocales');
 
-        try {
-            return array_map('current', $query->getScalarResult());
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 
     /**
@@ -173,11 +152,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationGetAvailableOverrideLocales');
 
-        try {
-            return array_map('current', $query->getScalarResult());
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 
     /**
@@ -197,11 +172,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationGetAllOverrideLocales');
 
-        try {
-            return array_map('current', $query->getScalarResult());
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 
     /**
@@ -221,13 +192,14 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationAllByLocaleAndAvailable-' . $locale);
+        $query->useResultCache(
+            true,
+            60,
+            'RZTranslationAllByLocaleAndAvailable-' .
+            $locale
+        );
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getResult();
     }
 
     /**
@@ -246,13 +218,13 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationAllByOverrideAndAvailable-' . $overrideLocale);
+        $query->useResultCache(
+            true,
+            60,
+            'RZTranslationAllByOverrideAndAvailable-' . $overrideLocale
+        );
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $query->getResult();
     }
 
     /**
@@ -274,11 +246,7 @@ class TranslationRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->useResultCache(true, 60, 'RZTranslationOneByLocaleAndAvailable-' . $locale);
 
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -298,13 +266,13 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationOneByOverrideAndAvailable-' . $overrideLocale);
+        $query->useResultCache(
+            true,
+            60,
+            'RZTranslationOneByOverrideAndAvailable-' . $overrideLocale
+        );
 
-        try {
-            return $query->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -321,11 +289,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('node', $node)
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -341,11 +305,7 @@ class TranslationRepository extends EntityRepository
             ->addOrderBy('t.locale', 'ASC')
             ->setParameter('tag', $tag);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -361,11 +321,7 @@ class TranslationRepository extends EntityRepository
             ->addOrderBy('t.locale', 'ASC')
             ->setParameter('folder', $folder);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -386,11 +342,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('available', true)
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
 
@@ -405,11 +357,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -427,12 +375,7 @@ class TranslationRepository extends EntityRepository
             ->setParameter('node', $node)
             ->setCacheable(true);
 
-        try {
-            $complexArray = $qb->getQuery()->getScalarResult();
-            return array_map('current', $complexArray);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $qb->getQuery()->getScalarResult());
     }
 
     /**
@@ -447,11 +390,6 @@ class TranslationRepository extends EntityRepository
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
 
-        try {
-            $complexArray = $qb->getQuery()->getScalarResult();
-            return array_map('current', $complexArray);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $qb->getQuery()->getScalarResult());
     }
 }

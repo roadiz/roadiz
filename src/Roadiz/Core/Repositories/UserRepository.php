@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
-
 /**
  * {@inheritdoc}
  */
@@ -49,11 +47,7 @@ class UserRepository extends EntityRepository
             ->setParameter('username', $username)
             ->setCacheable(true);
 
-        try {
-            return (boolean) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
+        return (boolean) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -69,10 +63,6 @@ class UserRepository extends EntityRepository
             ->setParameter('email', $email)
             ->setCacheable(true);
 
-        try {
-            return (boolean) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
+        return (boolean) $qb->getQuery()->getSingleScalarResult();
     }
 }

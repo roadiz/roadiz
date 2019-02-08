@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
@@ -269,11 +268,7 @@ class TagRepository extends EntityRepository
              */
             return new Paginator($query);
         } else {
-            try {
-                return $query->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $query->getQuery()->getResult();
         }
     }
     /**
@@ -303,11 +298,7 @@ class TagRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $query);
         $this->applyTranslationByTag($query, $translation);
 
-        try {
-            return $query->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getQuery()->getOneOrNullResult();
     }
     /**
      * Just like the countBy method but with relational criteria.
@@ -330,11 +321,7 @@ class TagRepository extends EntityRepository
         $this->applyFilterByCriteria($criteria, $query);
         $this->applyTranslationByTag($query, $translation);
 
-        try {
-            return (int) $query->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -355,11 +342,7 @@ class TagRepository extends EntityRepository
             ->setMaxResults(1)
         ;
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -375,11 +358,7 @@ class TagRepository extends EntityRepository
             ->setParameter(':translation', $translation)
         ;
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -400,11 +379,7 @@ class TagRepository extends EntityRepository
             ->setMaxResults(1)
         ;
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -421,11 +396,7 @@ class TagRepository extends EntityRepository
             ->setParameter(':defaultTranslation', true)
         ;
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -451,11 +422,7 @@ class TagRepository extends EntityRepository
             $qb->andWhere($qb->expr()->isNull('t.parent'));
         }
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -481,11 +448,7 @@ class TagRepository extends EntityRepository
             $qb->andWhere($qb->expr()->isNull('t.parent'));
         }
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -514,11 +477,7 @@ class TagRepository extends EntityRepository
             $qb->andWhere($qb->expr()->isNull('t.parent'));
         }
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -633,7 +592,6 @@ class TagRepository extends EntityRepository
      * @param string $tagPath
      *
      * @return \RZ\Roadiz\Core\Entities\Tag
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOrCreateByPath($tagPath)
     {
@@ -660,6 +618,7 @@ class TagRepository extends EntityRepository
         $tag = $this->findOneByTagName(StringHandler::slugify($tagName));
 
         if (null === $tag) {
+            /** @var TagTranslation|null $ttag */
             $ttag = $this->_em->getRepository(TagTranslation::class)->findOneByName($tagName);
             if (null !== $ttag) {
                 $tag = $ttag->getTag();
@@ -738,10 +697,6 @@ class TagRepository extends EntityRepository
             $qb->andWhere($qb->expr()->isNull('t.parent'));
         }
 
-        try {
-            return $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }
