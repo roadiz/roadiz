@@ -1,32 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
-  ~
-  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
-  ~ of this software and associated documentation files (the "Software"), to deal
-  ~ in the Software without restriction, including without limitation the rights
-  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-  ~ copies of the Software, and to permit persons to whom the Software is furnished
-  ~ to do so, subject to the following conditions:
-  ~ The above copyright notice and this permission notice shall be included in all
-  ~ copies or substantial portions of the Software.
-  ~
-  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-  ~ OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
-  ~ THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-  ~ IN THE SOFTWARE.
-  ~
-  ~ Except as contained in this notice, the name of the ROADIZ shall not
-  ~ be used in advertising or otherwise to promote the sale, use or other dealings
-  ~ in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
-  ~
-  ~ @file messages.en.xlf
-  ~ @author Ambroise Maupate <ambroise@rezo-zero.com>
-  -->
-
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="" source-language="en" datatype="plaintext" target-language="en">
     <body>
@@ -160,7 +132,27 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="attribute_value_translation.%name%.updated_from_node.%nodeName%">
                 <source>attribute_value_translation.%name%.updated_from_node.%nodeName%</source>
-                <target xml:lang="en" state="translated">Attribute %name% value has been updated for node-source %nodeName%.</target>
+                <target xml:lang="en" state="translated">Attribute %name%'s value has been updated for node-source %nodeName%.</target>
+            <alt-trans><target xml:lang="en">Attribute %name% value has been updated for node-source %nodeName%.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_code.must_contain_alpha_underscore">
+                <source>attribute_code.must_contain_alpha_underscore</source>
+                <target xml:lang="en" state="translated">Attribute code must only contain alphabetical characters including underscore.</target>
+                <note>Validation failed message on Attribute code that must only contain alpha and underscore characters.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.searchable">
+                <source>attributes.form.searchable</source>
+                <target xml:lang="en" state="translated">Indexed in search-engine?</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.searchable">
+                <source>attributes.form_help.searchable</source>
+                <target xml:lang="en" state="translated">Index current attribute values in your full-text search-engine for each translation. </target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.code">
+                <source>attributes.form_help.code</source>
+                <target xml:lang="en" state="translated">Code allows attribute name to be unique all over your website translations.</target>
+                <note/>
             </trans-unit>
     </body>
   </file>
