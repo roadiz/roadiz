@@ -74,7 +74,9 @@ class ThemesCollector extends DataCollector implements Renderable
         }
         foreach ($this->themeResolver->findAll() as $theme) {
             $themeClassReflection = new \ReflectionClass($theme->getClassName());
-            $data['list'][] = $themeClassReflection->getName() . ' (' .$themeClassReflection->getParentClass()->getName() . ')';
+            $path = explode('\\', $themeClassReflection->getName());
+            $data['list'][$path[count($path)-1]] = $themeClassReflection->getName() .
+                ' (' .$themeClassReflection->getParentClass()->getName() . ')';
         }
 
         $data['nb_themes'] = count($data['list']);
@@ -98,7 +100,7 @@ class ThemesCollector extends DataCollector implements Renderable
         return [
             "themes" => [
                 "icon" => "th-large",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
+                "widget" => "PhpDebugBar.Widgets.KVListWidget",
                 "map" => "themes.list",
                 "default" => "[]"
             ],
