@@ -85,6 +85,8 @@ trait AttributeTrait
 
     /**
      * @param bool $searchable
+     *
+     * @return $this
      */
     public function setSearchable(bool $searchable)
     {
@@ -149,7 +151,7 @@ trait AttributeTrait
     /**
      * @param Collection<AttributeTranslationInterface> $attributeTranslations
      *
-     * @return mixed
+     * @return $this
      */
     public function setAttributeTranslations(Collection $attributeTranslations)
     {
@@ -164,7 +166,7 @@ trait AttributeTrait
     /**
      * @param AttributeTranslationInterface $attributeTranslation
      *
-     * @return mixed
+     * @return $this
      */
     public function addAttributeTranslation(AttributeTranslationInterface $attributeTranslation)
     {

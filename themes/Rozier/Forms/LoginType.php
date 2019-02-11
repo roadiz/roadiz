@@ -89,7 +89,7 @@ class LoginType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setNormalizer('action', function(Options $options) {
+        $resolver->setNormalizer('action', function (Options $options) {
             return $options['urlGenerator']->generate('loginCheckPage');
         });
         $resolver->setRequired('urlGenerator');
