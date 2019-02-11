@@ -63,6 +63,17 @@ class GlobalNodeSourceSearchHandler
     }
 
     /**
+     * @param bool $displayNonPublishedNodes
+     *
+     * @return $this
+     */
+    public function setDisplayNonPublishedNodes(bool $displayNonPublishedNodes)
+    {
+        $this->repository->setDisplayingNotPublishedNodes($displayNonPublishedNodes);
+        return $this;
+    }
+
+    /**
      * @param string $searchTerm
      * @param int $resultCount
      * @param Translation $translation

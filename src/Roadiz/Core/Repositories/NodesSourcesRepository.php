@@ -443,11 +443,18 @@ class NodesSourcesRepository extends StatusAwareRepository
         if (true === $this->get('solr.ready')) {
             /** @var NodeSourceSearchHandler $service */
             $service = $this->get('solr.search.nodeSource');
+            $arguments = [];
+            if ($this->isDisplayingNotPublishedNodes()) {
+                $arguments['status'] = ['<=', Node::PUBLISHED];
+            }
+            if ($this->isDisplayingAllNodesStatuses()) {
+                $arguments['status'] = ['<=', Node::DELETED];
+            }
 
             if ($limit > 0) {
-                return $service->search($query, [], $limit);
+                return $service->search($query, $arguments, $limit);
             } else {
-                return $service->search($query, [], 999999);
+                return $service->search($query, $arguments, 999999);
             }
         }
         return [];
