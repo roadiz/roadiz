@@ -76,6 +76,23 @@ trait AttributeTrait
     }
 
     /**
+     * @return bool
+     */
+    public function isSearchable(): bool
+    {
+        return (bool) $this->searchable;
+    }
+
+    /**
+     * @param bool $searchable
+     */
+    public function setSearchable(bool $searchable)
+    {
+        $this->searchable = $searchable;
+        return $this;
+    }
+
+    /**
      * @param Translation $translation
      *
      * @return string

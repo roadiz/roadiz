@@ -61,6 +61,12 @@ class Attribute extends AbstractEntity implements AttributeInterface
     protected $code = "";
 
     /**
+     * @var string
+     * @ORM\Column(type="boolean", nullable=false, unique=false, options={"default" = false})
+     */
+    protected $searchable = false;
+
+    /**
      * @var int
      * @ORM\Column(type="integer", nullable=false, unique=false)
      */

@@ -110,6 +110,12 @@ class NodesAttributesController extends RozierApp
                     $this->get('em')->merge($attributeValueTranslation);
                     $this->get('em')->flush();
 
+                    /*
+                     * Dispatch event
+                     */
+                    $event = new FilterNodesSourcesEvent($source);
+                    $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
                     $msg = $this->getTranslator()->trans(
                         'attribute_value_translation.%name%.updated_from_node.%nodeName%',
                         [

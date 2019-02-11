@@ -28,7 +28,6 @@
  * @author Ambroise Maupate
  *
  */
-
 namespace RZ\Roadiz\Attribute\Event;
 
 use Doctrine\Common\EventSubscriber;

@@ -126,6 +126,16 @@ interface AttributeInterface
     public function removeAttributeTranslation(AttributeTranslationInterface $attributeTranslation);
 
     /**
+     * @return bool
+     */
+    public function isSearchable(): bool;
+
+     /**
+     * @param bool $searchable
+     */
+    public function setSearchable(bool $searchable);
+
+    /**
      * @param Translation $translation
      *
      * @return array|null

@@ -37,6 +37,7 @@ use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Attribute;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -56,6 +57,7 @@ class AttributeType extends AbstractType
         $builder->add('code', TextType::class, [
                 'label' => 'attributes.form.code',
                 'required' => true,
+                'help' => 'attributes.form_help.code',
                 'constraints' => [
                     new NotBlank(),
                     new Regex([
@@ -80,6 +82,11 @@ class AttributeType extends AbstractType
                     'attributes.form.type.date' => AttributeInterface::DATE_T,
                     'attributes.form.type.country' => AttributeInterface::COUNTRY_T,
                 ],
+            ])
+            ->add('searchable', CheckboxType::class, [
+                'label' => 'attributes.form.searchable',
+                'required' => false,
+                'help' => 'attributes.form_help.searchable'
             ])
             ->add('attributeTranslations', CollectionType::class, [
                 'label' => 'attributes.form.attributeTranslations',

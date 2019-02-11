@@ -34,8 +34,10 @@ namespace RZ\Roadiz\Attribute;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Attribute\Event\AttributeValueIndexingSubscriber;
 use RZ\Roadiz\Attribute\Event\AttributeValueLifeCycleSubscriber;
 use RZ\Roadiz\Attribute\Twig\AttributesExtension;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\Translator;
 
 class AttributesServiceProvider implements ServiceProviderInterface
@@ -45,6 +47,11 @@ class AttributesServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container->extend('dispatcher', function (EventDispatcherInterface $dispatcher) {
+            $dispatcher->addSubscriber(new AttributeValueIndexingSubscriber());
+            return $dispatcher;
+        });
+
         $container->extend('twig.extensions', function ($extensions, $c) {
             $extensions->add(new AttributesExtension());
             return $extensions;

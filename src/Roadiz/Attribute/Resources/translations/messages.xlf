@@ -141,6 +141,21 @@
                 <note>Validation failed message on Attribute code that must only contain alpha and underscore characters.</note>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="attributes.form.searchable">
+                <source>attributes.form.searchable</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form_help.searchable">
+                <source>attributes.form_help.searchable</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form_help.code">
+                <source>attributes.form_help.code</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
         </body>
     </file>
 </xliff>
