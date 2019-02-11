@@ -134,6 +134,26 @@
                 <source>attribute_value_translation.%name%.updated_from_node.%nodeName%</source>
                 <target xml:lang="fr" state="translated">La valeur de l'attribut %name% a été mis à jour pour le nœud %nodeName%.</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_code.must_contain_alpha_underscore">
+                <source>attribute_code.must_contain_alpha_underscore</source>
+                <target xml:lang="fr" state="translated">Un code d'attribut ne doit contenir seulement des lettres et le caractère tiret-bas.</target>
+                <note>Validation failed message on Attribute code that must only contain alpha and underscore characters.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.searchable">
+                <source>attributes.form.searchable</source>
+                <target xml:lang="fr" state="translated">Indexé dans le moteur de recherche ?</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.searchable">
+                <source>attributes.form_help.searchable</source>
+                <target xml:lang="fr" state="translated">Indexe la valeur de l'attribut dans le moteur de recherche plein-texte.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.code">
+                <source>attributes.form_help.code</source>
+                <target xml:lang="fr" state="translated">Le code d'attribut permet de l'identifier de manière unique et ce pour toutes les traductions de votre site.</target>
+                <note/>
+            </trans-unit>
     </body>
   </file>
 </xliff>
