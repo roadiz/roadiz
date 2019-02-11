@@ -100,7 +100,7 @@ class DispatcherCollector extends DataCollector implements Renderable
     {
         $widgets = [
             'dispatcher' => [
-                'icon' => 'lock',
+                'icon' => 'flag',
                 'widget' => 'PhpDebugBar.Widgets.KVListWidget',
                 'map' => 'dispatcher.listeners',
                 'default' => '{}'

@@ -105,7 +105,7 @@ class AuthCollector extends DataCollector implements Renderable
     {
         $widgets = [
             'auth' => [
-                'icon' => 'lock',
+                'icon' => 'user',
                 'widget' => 'PhpDebugBar.Widgets.VariableListWidget',
                 'map' => 'auth.user',
                 'default' => '{}'
@@ -113,7 +113,6 @@ class AuthCollector extends DataCollector implements Renderable
         ];
         $widgets['auth.name'] = [
             'icon' => 'user',
-            'tooltip' => 'Auth status',
             'map' => 'auth.name',
             'default' => '',
         ];
