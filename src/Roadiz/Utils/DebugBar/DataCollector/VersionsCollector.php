@@ -38,7 +38,7 @@ class VersionsCollector extends DataCollector implements Renderable
     /**
      * @inheritDoc
      */
-    function collect()
+    public function collect()
     {
         return [
             'roadiz_version' => Kernel::CMS_VERSION . ' v' . Kernel::$cmsVersion,
@@ -49,7 +49,7 @@ class VersionsCollector extends DataCollector implements Renderable
     /**
      * @inheritDoc
      */
-    function getName()
+    public function getName()
     {
         return 'versions';
     }
@@ -57,7 +57,7 @@ class VersionsCollector extends DataCollector implements Renderable
     /**
      * @inheritDoc
      */
-    function getWidgets()
+    public function getWidgets()
     {
         return [
             'current.roadiz_version' => [
