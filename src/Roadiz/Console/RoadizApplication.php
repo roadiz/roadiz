@@ -181,7 +181,7 @@ class RoadizApplication extends Application
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
         $helperSet->set(new ThemeResolverHelper($this->kernel->get('themeResolver')));
-        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get('config_handler')));
+        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get('config.handler')));
         $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
         $helperSet->set(new CacheProviderHelper($this->kernel->get('nodesSourcesUrlCacheProvider')));
 

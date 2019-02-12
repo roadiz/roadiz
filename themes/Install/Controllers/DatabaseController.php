@@ -29,6 +29,8 @@
  */
 namespace Themes\Install\Controllers;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 use RZ\Roadiz\Config\YamlConfigurationHandler;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Core\Kernel;
@@ -49,6 +51,27 @@ use Themes\Install\InstallApp;
 class DatabaseController extends InstallApp
 {
     /**
+     * Test database connexion with given configuration.
+     *
+     * @param array $connexion Doctrine array parameters
+     *
+     * @return bool
+     * @throws \PDOException
+     */
+    protected function testDoctrineConnexion($connexion = [])
+    {
+        $config = Setup::createAnnotationMetadataConfiguration(
+            [],
+            true,
+            null,
+            null,
+            false
+        );
+
+        $em = EntityManager::create($connexion, $config);
+        return $em->getConnection()->connect();
+    }
+    /**
      * Install database screen.
      *
      * @param Request $request
@@ -59,47 +82,48 @@ class DatabaseController extends InstallApp
     {
         $databaseForm = $this->createForm(DatabaseType::class, $this->get('config')['doctrine']);
         /** @var YamlConfigurationHandler $yamlConfigHandler */
-        $yamlConfigHandler = $this->get('config_handler');
+        $yamlConfigHandler = $this->get('config.handler');
         $databaseForm->handleRequest($request);
 
         if ($databaseForm->isValid()) {
             try {
-                $yamlConfigHandler->testDoctrineConnexion($databaseForm->getData());
+                if (false !== $this->testDoctrineConnexion($databaseForm->getData())) {
+                    $tempConf = $yamlConfigHandler->getConfiguration();
+                    foreach ($databaseForm->getData() as $key => $value) {
+                        $tempConf['doctrine'][$key] = $value;
+                    }
+                    $yamlConfigHandler->setConfiguration($tempConf);
 
-                $tempConf = $yamlConfigHandler->getConfiguration();
-                foreach ($databaseForm->getData() as $key => $value) {
-                    $tempConf['doctrine'][$key] = $value;
+                    /*
+                     * Test connexion
+                     */
+                    /** @var Kernel $kernel */
+                    $kernel = $this->get('kernel');
+                    $fixtures = new Fixtures(
+                        $this->get('em'),
+                        $kernel->getCacheDir(),
+                        $kernel->getRootDir() . '/conf/config.yml',
+                        $kernel->getRootDir(),
+                        $kernel->isDebug(),
+                        $request
+                    );
+                    $fixtures->createFolders();
+                    $yamlConfigHandler->writeConfiguration();
+
+                    /*
+                     * Need to clear configuration cache.
+                     */
+                    $configurationClearer = new ConfigurationCacheClearer($this->get('kernel')->getCacheDir());
+                    $configurationClearer->clear();
+
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($this->generateUrl(
+                        'installDatabaseSchemaPage'
+                    ));
                 }
-                $yamlConfigHandler->setConfiguration($tempConf);
-
-                /*
-                 * Test connexion
-                 */
-                /** @var Kernel $kernel */
-                $kernel = $this->get('kernel');
-                $fixtures = new Fixtures(
-                    $this->get('em'),
-                    $kernel->getCacheDir(),
-                    $kernel->getRootDir() . '/conf/config.yml',
-                    $kernel->getRootDir(),
-                    $kernel->isDebug(),
-                    $request
-                );
-                $fixtures->createFolders();
-                $yamlConfigHandler->writeConfiguration();
-
-                /*
-                 * Need to clear configuration cache.
-                 */
-                $configurationClearer = new ConfigurationCacheClearer($this->get('kernel')->getCacheDir());
-                $configurationClearer->clear();
-
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                return $this->redirect($this->generateUrl(
-                    'installDatabaseSchemaPage'
-                ));
+                $databaseForm->addError(new FormError('Can\'t connect to database.'));
             } catch (\PDOException $e) {
                 if (strstr($e->getMessage(), 'SQLSTATE[')) {
                     preg_match('/SQLSTATE\[(\w+)\] \[(\w+)\] (.*)/', $e->getMessage(), $matches);

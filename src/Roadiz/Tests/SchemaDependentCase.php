@@ -35,7 +35,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesInheritanceSubscriber;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
@@ -155,7 +155,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
              */
             $evm->addEventListener(
                 Events::loadClassMetadata,
-                new DataInheritanceEvent(static::$kernel->getContainer())
+                new NodesSourcesInheritanceSubscriber(static::$kernel->getContainer())
             );
 
             /*

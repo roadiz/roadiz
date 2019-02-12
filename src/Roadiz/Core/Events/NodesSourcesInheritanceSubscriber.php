@@ -24,35 +24,46 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DataInheritanceEvent.php
+ * @file NodesSourcesInheritanceSubscriber.php
  * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Core\Events;
 
+use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
- * DataInheritanceEvent
+ * Class NodesSourcesInheritanceSubscriber
+ *
+ * @package RZ\Roadiz\Core\Events
  */
-class DataInheritanceEvent
+class NodesSourcesInheritanceSubscriber implements EventSubscriber
 {
-    protected $tablesPrefix;
     /**
      * @var Container
      */
     private $container;
 
     /**
-     * @param Container $container
-     * @param string $tablesPrefix
+     * @inheritDoc
      */
-    public function __construct(Container $container, $tablesPrefix = '')
+    public function getSubscribedEvents()
     {
-        $this->tablesPrefix = $tablesPrefix;
+        return [
+            Events::loadClassMetadata,
+        ];
+    }
+
+    /**
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
         $this->container = $container;
     }
 
@@ -64,24 +75,6 @@ class DataInheritanceEvent
         // the $metadata is all the mapping info for this class
         /** @var ClassMetadataInfo $metadata */
         $metadata = $eventArgs->getClassMetadata();
-
-        /*
-         * Prefix tables
-         */
-        if (!empty($this->tablesPrefix)) {
-            $metadata->table['name'] = $this->tablesPrefix.'_'.$metadata->table['name'];
-
-            /*
-             * Prefix join tables
-             */
-            foreach ($metadata->associationMappings as $key => $association) {
-                if (!empty($association['joinTable']['name'])) {
-                    $metadata->associationMappings[$key]['joinTable']['name'] =
-                        $this->tablesPrefix.'_'.$association['joinTable']['name'];
-                }
-            }
-        }
-
         // the annotation reader accepts a ReflectionClass, which can be
         // obtained from the $metadata
         $class = $metadata->getReflectionClass();
