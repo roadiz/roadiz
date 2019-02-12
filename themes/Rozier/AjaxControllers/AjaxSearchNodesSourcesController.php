@@ -61,6 +61,8 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         }
 
         $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
+        $searchHandler->setDisplayNonPublishedNodes(true);
+
         /** @var array $nodesSources */
         $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
             $request->get('searchTerms'),
