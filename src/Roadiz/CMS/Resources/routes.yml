@@ -7,7 +7,7 @@ FontFile:
         _controller: \RZ\Roadiz\CMS\Controllers\AssetsController::fontFileAction
     requirements:
         filename: "[a-zA-Z0-9\\-_]+"
-        variant: "[0-9]"
+        variant: "[0-9]+"
         extension: "[a-z0-9]+"
 FontFaceCSS:
     path:     /font-faces.css
