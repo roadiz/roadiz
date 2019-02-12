@@ -191,6 +191,28 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             unset($args['nodeType']);
         }
 
+        /*
+         * Handle publication date-time filtering
+         */
+        if (isset($args['publishedAt'])) {
+            $tmp = "published_at_dt:";
+            if (!is_array($args['status']) && $args['publishedAt'] instanceof \DateTime) {
+                $tmp .= $args['publishedAt']->format('Y-m-d\TH:i:s');
+            } elseif (isset($args['publishedAt'][0]) &&
+                $args['publishedAt'][0] === "<=" &&
+                isset($args['publishedAt'][1]) &&
+                $args['publishedAt'][1] instanceof \DateTime) {
+                $tmp .= "[* TO " . $args['publishedAt'][1]->format('Y-m-d\TH:i:s') . "]";
+            } elseif (isset($args['publishedAt'][0]) &&
+                $args['publishedAt'][0] === ">=" &&
+                isset($args['publishedAt'][1]) &&
+                $args['publishedAt'][1] instanceof \DateTime) {
+                $tmp .= "[" . $args['publishedAt'][1]->format('Y-m-d\TH:i:s') . " TO *]";
+            }
+            unset($args['publishedAt']);
+            $args["fq"][] = $tmp;
+        }
+
         if (isset($args['status'])) {
             $tmp = "node_status_i:";
             if (!is_array($args['status'])) {

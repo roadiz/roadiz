@@ -260,4 +260,23 @@ abstract class AbstractSolarium
      * @throws \Exception
      */
     abstract protected function getFieldsAssoc();
+
+    /**
+     * @param string $content
+     *
+     * @return string
+     */
+    public static function cleanTextContent($content)
+    {
+        /*
+         * Strip markdown syntax
+         */
+        $content = strip_tags(\Parsedown::instance()->text($content));
+        /*
+         * Remove ctrl characters
+         */
+        $content = preg_replace("[:cntrl:]", "", $content);
+        $content = preg_replace('/[\x00-\x1F]/', '', $content);
+        return $content;
+    }
 }
