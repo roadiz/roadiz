@@ -164,9 +164,11 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['tags_txt'] = $out;
 
         $assoc['title'] = $this->nodeSource->getTitle();
+        if (null !== $this->nodeSource->getPublishedAt()) {
+            $assoc['published_at_dt'] = $this->nodeSource->getPublishedAt()->format('Y-m-d\TH:i:s');
+        }
         $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
         $collection[] = $this->nodeSource->getTitle();
-
 
         $criteria = new Criteria();
         $criteria->andWhere(Criteria::expr()->eq("type", AbstractField::BOOLEAN_T));
@@ -189,12 +191,7 @@ class SolariumNodeSource extends AbstractSolarium
             /*
              * Strip markdown syntax
              */
-            $content = strip_tags(Parsedown::instance()->text($content));
-            /*
-             * Remove ctrl characters
-             */
-            $content = preg_replace("[:cntrl:]", "", $content);
-            $content = preg_replace('/[\x00-\x1F]/', '', $content);
+            $content = static::cleanTextContent($content);
 
             /*
              * Use locale to create field name

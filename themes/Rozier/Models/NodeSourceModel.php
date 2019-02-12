@@ -53,7 +53,7 @@ class NodeSourceModel implements ModelInterface
 
     /**
      * NodeModel constructor.
-     * @param Node $nodeSource
+     * @param NodesSources $nodeSource
      * @param Container $container
      */
     public function __construct(NodesSources $nodeSource, Container $container)

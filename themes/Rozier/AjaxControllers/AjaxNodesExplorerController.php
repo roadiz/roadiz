@@ -87,7 +87,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     protected function parseFilterFromRequest(Request $request): array
     {
         $arrayFilter = [
-            'status' => ['<', Node::DELETED],
+            'status' => ['<=', Node::ARCHIVED],
         ];
 
         if ($request->query->has('tagId') && $request->get('tagId') > 0) {
@@ -152,7 +152,6 @@ class AjaxNodesExplorerController extends AbstractAjaxController
      */
     protected function getSolrSearchResults(Request $request, array $arrayFilter): array
     {
-        unset($arrayFilter['status']);
         $currentPage = $request->get('page', 1);
         $arrayFilter['translation'] = $this->get('defaultTranslation');
         $results = $this->get('solr.search.nodeSource')
