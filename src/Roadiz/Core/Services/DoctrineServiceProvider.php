@@ -66,11 +66,27 @@ class DoctrineServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['doctrine.relative_entities_paths'] = function (Container $container) {
-            $relPaths = [
-                "src/Roadiz/Core/Entities",
-                "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
-                "gen-src/GeneratedNodeSources",
-            ];
+            /** @var Kernel $kernel */
+            $kernel = $container['kernel'];
+            if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
+                /*
+                 * Standard edition
+                 */
+                $relPaths = [
+                    "../vendor/roadiz/roadiz/src/Roadiz/Core/Entities",
+                    "../vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
+                    "gen-src/GeneratedNodeSources",
+                ];
+            } else {
+                /*
+                 * Source edition
+                 */
+                $relPaths = [
+                    "src/Roadiz/Core/Entities",
+                    "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
+                    "gen-src/GeneratedNodeSources",
+                ];
+            }
 
             if (isset($c['config']['entities'])) {
                 $relPaths = array_merge($relPaths, $container['config']['entities']);
@@ -90,9 +106,9 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             $fs = new Filesystem();
             $absPaths = [];
             foreach ($container['doctrine.relative_entities_paths'] as $relPath) {
-                $absolutePath = $kernel->getRootDir() . '/' . $relPath;
+                $absolutePath = $kernel->getRootDir() . DIRECTORY_SEPARATOR . $relPath;
                 if ($fs->exists($absolutePath)) {
-                    $absPaths[] = $kernel->getRootDir() . '/' . $relPath;
+                    $absPaths[] = $kernel->getRootDir() . DIRECTORY_SEPARATOR . $relPath;
                 }
             }
 
