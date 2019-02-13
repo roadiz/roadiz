@@ -47,6 +47,7 @@ use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Register Doctrine services for dependency injection container.
@@ -86,9 +87,13 @@ class DoctrineServiceProvider implements ServiceProviderInterface
              */
             /** @var Kernel $kernel */
             $kernel = $container['kernel'];
+            $fs = new Filesystem();
             $absPaths = [];
             foreach ($container['doctrine.relative_entities_paths'] as $relPath) {
-                $absPaths[] = $kernel->getRootDir() . '/' . $relPath;
+                $absolutePath = $kernel->getRootDir() . '/' . $relPath;
+                if ($fs->exists($absolutePath)) {
+                    $absPaths[] = $kernel->getRootDir() . '/' . $relPath;
+                }
             }
 
             return $absPaths;
