@@ -6864,6 +6864,21 @@
             <target xml:lang="en" state="translated">Twitter API - Consumer secret</target>
             <note>Setting name.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="document.mimeType">
+            <source>document.mimeType</source>
+            <target xml:lang="en" state="translated">File mime-type</target>
+            <note>Document form</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.embed">
+            <source>document.embed</source>
+            <target xml:lang="en" state="translated">Embed media</target>
+            <note>Document form</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.no_embed_platform">
+            <source>document.no_embed_platform</source>
+            <target xml:lang="en" state="translated">No embedded media</target>
+            <note>Document form</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
