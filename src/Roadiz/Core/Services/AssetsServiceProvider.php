@@ -54,6 +54,14 @@ class AssetsServiceProvider implements ServiceProviderInterface
             return new EmptyVersionStrategy();
         };
 
+        $container['interventionRequestSupportsWebP'] = function (Container $c) {
+            if ($c['config']['assetsProcessing']['driver'] === 'gd' && extension_loaded('gd')) {
+                $gd_infos = gd_info();
+                return $gd_infos['WebP Support'];
+            }
+            return false;
+        };
+
         /**
          * Assets packages
          *
@@ -85,17 +93,15 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 mkdir($cacheDir);
             }
 
-            $imageDriver = !empty($c['config']['assetsProcessing']['driver']) ? $c['config']['assetsProcessing']['driver'] : 'gd';
-            $defaultQuality = !empty($c['config']['assetsProcessing']['defaultQuality']) ? (int) $c['config']['assetsProcessing']['defaultQuality'] : 90;
-            $pngquantPath = !empty($c['config']['assetsProcessing']['pngquantPath']) ? $c['config']['assetsProcessing']['pngquantPath'] : null;
-            $jpegoptimPath = !empty($c['config']['assetsProcessing']['jpegoptimPath']) ? $c['config']['assetsProcessing']['jpegoptimPath'] : null;
-
             $conf = new Configuration();
             $conf->setCachePath($cacheDir);
             $conf->setUsePassThroughCache(true);
             $conf->setImagesPath($kernel->getPublicFilesPath());
-            $conf->setDriver($imageDriver);
-            $conf->setDefaultQuality($defaultQuality);
+            $conf->setDriver($c['config']['assetsProcessing']['driver']);
+            $conf->setDefaultQuality($c['config']['assetsProcessing']['defaultQuality']);
+
+            $pngquantPath = $c['config']['assetsProcessing']['pngquantPath'];
+            $jpegoptimPath = $c['config']['assetsProcessing']['jpegoptimPath'];
 
             if (null !== $pngquantPath) {
                 $conf->setPngquantPath($pngquantPath);

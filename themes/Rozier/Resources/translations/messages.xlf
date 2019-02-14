@@ -7022,6 +7022,22 @@
             <target></target>
             <note>Setting name.</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="document.mimeType">
+            <source>document.mimeType</source>
+            <target></target>
+            <note>Document form</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.embed">
+            <source>document.embed</source>
+            <target></target>
+            <note>Document form</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="document.no_embed_platform">
+            <source>document.no_embed_platform</source>
+            <target></target>
+            <note>Document form</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

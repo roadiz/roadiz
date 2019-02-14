@@ -53,6 +53,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,6 +63,8 @@ use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Themes\Rozier\Forms\DocumentEditType;
+use Themes\Rozier\Forms\DocumentEmbedType;
 use Themes\Rozier\Models\DocumentModel;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -77,6 +80,8 @@ class DocumentsController extends RozierApp
         'fit' => '128x128',
         'inline' => false,
     ];
+
+
 
     /**
      * @param Request $request
@@ -257,66 +262,68 @@ class DocumentsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
-        $document = $this->get('em')
-            ->find(Document::class, (int) $documentId);
+        $document = $this->get('em')->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
             $this->assignation['rawDocument'] = $document->getRawDocument();
-
             /*
              * Handle main form
              */
-            $form = $this->buildEditForm($document);
+            $form = $this->createForm(DocumentEditType::class, $document, [
+                'referer' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
+                'assetPackages' => $this->get('assetPackages'),
+                'document_platforms' => $this->get('document.platforms'),
+            ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $data = $form->getData();
+                 try {
+                     $this->get('em')->flush();
+                    /*
+                     * Update document file
+                     * if present
+                     */
+                    if (null !== $newDocumentFile = $form->get('newDocument')->getData()) {
+                        /** @var DocumentFactory $documentFactory */
+                        $documentFactory = $this->get('document.factory');
+                        $documentFactory->setFile($newDocumentFile);
+                        $documentFactory->updateDocument($document);
+                        $msg = $this->getTranslator()->trans('document.file.%name%.updated', [
+                            '%name%' => $document->getFilename(),
+                        ]);
+                        $this->get('em')->flush();
+                        $this->publishConfirmMessage($request, $msg);
+                    }
 
-                /*
-                 * Update document file
-                 * if present
-                 */
-                if ($document !== null && !empty($data['newDocument'])) {
-                    $document = $this->updateDocument($data, $document);
-                    $data["filename"] = $document->getFilename();
-
-                    $msg = $this->getTranslator()->trans('document.file.%name%.updated', [
+                    $msg = $this->getTranslator()->trans('document.%name%.updated', [
                         '%name%' => $document->getFilename(),
                     ]);
                     $this->publishConfirmMessage($request, $msg);
+
+                    $this->get("dispatcher")->dispatch(
+                        DocumentEvents::DOCUMENT_UPDATED,
+                        new FilterDocumentEvent($document)
+                    );
+
+                    $routeParams = ['documentId' => $document->getId()];
+
+                    if ($form->get('referer')->getData()) {
+                        $routeParams = array_merge($routeParams, [
+                            'referer' => $form->get('referer')->getData()
+                        ]);
+                    }
+
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($this->generateUrl(
+                        'documentsEditPage',
+                        $routeParams
+                    ));
+                } catch (FileException $exception) {
+                    $form->get('filename')->addError(new FormError($exception->getMessage()));
                 }
-                unset($data['newDocument']);
-
-                /*
-                 * Update document common data
-                 */
-                $this->editDocument($data, $document);
-                $msg = $this->getTranslator()->trans('document.%name%.updated', [
-                    '%name%' => $document->getFilename(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                $this->get("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_UPDATED,
-                    new FilterDocumentEvent($document)
-                );
-
-                $routeParams = ['documentId' => $document->getId()];
-
-                if ($form->get('referer')->getData()) {
-                    $routeParams = array_merge($routeParams, [
-                        'referer' => $form->get('referer')->getData()
-                    ]);
-                }
-
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                return $this->redirect($this->generateUrl(
-                    'documentsEditPage',
-                    $routeParams
-                ));
             }
 
             $this->assignation['form'] = $form->createView();
@@ -350,29 +357,28 @@ class DocumentsController extends RozierApp
             $this->assignation['thumbnailFormat'] = [
                 'width' => 750,
                 'controls' => true,
-                'picture' => true,
                 'srcset' => [
-                        [
-                            'format' => [
-                                'width' => 480,
-                                'quality' => 80
-                            ],
-                            'rule' => '480w',
+                    [
+                        'format' => [
+                            'width' => 480,
+                            'quality' => 80
                         ],
-                        [
-                            'format' => [
-                                'width' => 768,
-                                'quality' => 80
-                            ],
-                            'rule' => '768w',
+                        'rule' => '480w',
+                    ],
+                    [
+                        'format' => [
+                            'width' => 768,
+                            'quality' => 80
                         ],
-                        [
-                            'format' => [
-                                'width' => 1400,
-                                'quality' => 80
-                            ],
-                            'rule' => '1400w',
+                        'rule' => '768w',
+                    ],
+                    [
+                        'format' => [
+                            'width' => 1400,
+                            'quality' => 80
                         ],
+                        'rule' => '1400w',
+                    ],
                 ],
                 'sizes' => [
                     '(min-width: 1380px) 1200px',
@@ -380,6 +386,11 @@ class DocumentsController extends RozierApp
                     '(min-width: 480px) 480px',
                 ],
             ];
+
+            if ($this->get('interventionRequestSupportsWebP')) {
+                $this->assignation['thumbnailFormat']['picture'] = true;
+            }
+
             if (file_exists($documentPath)) {
                 $this->assignation['infos'] = [
                     'filesize' => sprintf('%.3f MB', (filesize($documentPath))/pow(1024, 2)),
@@ -567,7 +578,9 @@ class DocumentsController extends RozierApp
         /*
          * Handle main form
          */
-        $form = $this->buildEmbedForm();
+        $form = $this->createForm(DocumentEmbedType::class, null, [
+            'document_platforms' => $this->get('document.platforms'),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -760,9 +773,8 @@ class DocumentsController extends RozierApp
     public function usageAction(Request $request, $documentId)
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
-
-        $document = $this->get('em')
-            ->find(Document::class, (int) $documentId);
+        /** @var Document $document */
+        $document = $this->get('em')->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -777,7 +789,7 @@ class DocumentsController extends RozierApp
     /**
      * @param Document $doc
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildDeleteForm(Document $doc)
     {
@@ -797,7 +809,7 @@ class DocumentsController extends RozierApp
     /**
      * @param array $documentsIds
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildBulkDeleteForm($documentsIds)
     {
@@ -816,7 +828,7 @@ class DocumentsController extends RozierApp
     /**
      * @param array $documentsIds
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildBulkDownloadForm($documentsIds)
     {
@@ -833,7 +845,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @return Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildFileForm()
     {
@@ -854,58 +866,9 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param Document $document
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildEditForm(Document $document)
-    {
-        $defaults = [
-            'private' => $document->isPrivate(),
-            'filename' => $document->getFilename(),
-            'newDocument' => null,
-        ];
-
-        $builder = $this->createFormBuilder($defaults)
-            ->add('referer', HiddenType::class, [
-                'data' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
-                'mapped' => false,
-            ])
-            ->add('filename', TextType::class, [
-                'label' => 'filename',
-                'required' => false,
-                'constraints' => [
-                    // must ends with file extension
-                    new Regex([
-                        'pattern' => '/\.[a-z0-9]+$/i',
-                        'htmlPattern' => ".[a-z0-9]+$",
-                        'message' => 'value_is_not_a_valid_filename'
-                    ]),
-                    new UniqueFilename([
-                        'document' => $document,
-                        'packages' => $this->get('assetPackages'),
-                    ]),
-                ],
-            ])
-            ->add('private', CheckboxType::class, [
-                'label' => 'private',
-                'required' => false,
-            ])
-            ->add('newDocument', FileType::class, [
-                'label' => 'overwrite.document',
-                'required' => false,
-                'constraints' => [
-                    new File()
-                ],
-            ]);
-
-        return $builder->getForm();
-    }
-
-    /**
      * @param int $folderId
      *
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildUploadForm($folderId = null)
     {
@@ -930,35 +893,11 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildEmbedForm()
-    {
-        $services = [];
-        foreach (array_keys($this->get('document.platforms')) as $value) {
-            $services[ucwords($value)] = $value;
-        }
-
-        $builder = $this->createFormBuilder()
-            ->add('embedId', TextType::class, [
-                'label' => 'document.embedId',
-            ])
-            ->add('embedPlatform', ChoiceType::class, [
-                'label' => 'document.platform',
-                'choices_as_values' => true,
-                'choices' => $services,
-            ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @return \Symfony\Component\Form\Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildLinkFoldersForm()
     {
-        $builder = $this->get('formFactory')
-            ->createNamedBuilder('folderForm')
+        $builder = $this->createNamedFormBuilder('folderForm')
             ->add('documentsId', HiddenType::class, [
                 'attr' => ['class' => 'document-id-bulk-folder'],
                 'constraints' => [
@@ -1272,27 +1211,6 @@ class DocumentsController extends RozierApp
         }
 
         $this->get('em')->flush();
-    }
-
-    /**
-     * @param $data
-     * @param Document $document
-     * @return Document
-     */
-    private function updateDocument($data, Document $document)
-    {
-        if (!empty($data['newDocument'])) {
-            /** @var UploadedFile $uploadedFile */
-            $uploadedFile = $data['newDocument'];
-
-            /** @var DocumentFactory $documentFactory */
-            $documentFactory = $this->get('document.factory');
-            $documentFactory->setFile($uploadedFile);
-            $documentFactory->updateDocument($document);
-
-            $this->get('em')->flush();
-        }
-        return $document;
     }
 
     /**
