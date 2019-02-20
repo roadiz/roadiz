@@ -21,7 +21,8 @@
     .border-radius(0px);
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
     .transition(~'0.35s ease border-color, 0.5s ease background, opacity 0.5s linear');
-    padding: 1px 8px 0;
+    //padding: 1px 8px 0;
+    padding: 0 8px 0;
 
     @media (min-width: @screen-sm-min) {
         padding: 1px 13px 0;
@@ -89,8 +90,8 @@
     }
 
     &-filter{
-        width:32px;
-        height:32px;
+        width: 32px;
+        height: 32px;
         line-height: 30px;
         padding:0;
         background: white;
@@ -119,21 +120,55 @@
         margin-left:-1px;
 
         &:first-child{
-            margin-left:0;
+            margin-left: 0;
         }
 
-        [class*=uk-icon-rz-]{
+        [class*=uk-icon-]{
             display: block;
             margin:0;
-            color:#808080;
         }
 
         @media screen and (min-width: 1380px) {
             width: 30px;
         }
+
+        &.uk-button-primary {
+            background:rgba(@contrast-color-darker-red, @contrast-color-darker-green, @contrast-color-darker-blue, 0.3);
+            border-color: @contrast-color-darker;
+
+            [class*=uk-icon-]{
+                color: darken(@contrast-color-darker, 10%);
+            }
+
+            &:hover, &:focus{
+                background:rgba(@contrast-color-darker-red, @contrast-color-darker-green, @contrast-color-darker-blue, 0.3);
+                border-color:darken(@contrast-color-darker, 15%);
+
+                [class*=uk-icon-]{
+                    color: darken(@contrast-color-darker, 15%);
+                }
+            }
+        }
+
+        &.uk-button-danger {
+            background:rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.2);
+            border-color: @alert-color;
+
+            [class*=uk-icon-]{
+                color: @alert-color;
+            }
+
+            &:hover, &:focus{
+                background:rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.2);
+                border-color:darken(@alert-color, 15%);
+
+                [class*=uk-icon-]{
+                    color: darken(@alert-color, 15%);
+                }
+            }
+        }
     }
 }
-
 
 .uk-button-mini {
     width: 17px;
@@ -194,7 +229,6 @@
     border-color: @alert-color;
     color: white;
     text-shadow: none;
-    -webkit-font-smoothing: subpixel-antialiased;
 
     &:hover, &:active, &:focus {
         background: rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 1);
@@ -208,11 +242,15 @@
     border-color: transparent;
     color: white;
     text-shadow: none;
-    -webkit-font-smoothing: subpixel-antialiased;
 
     &:hover, &:active, &:focus {
         background: @contrast-color;
         border-color: transparent;
+        color: white;
+    }
+
+
+    [class*=uk-icon-]{
         color: white;
     }
 }
@@ -293,7 +331,6 @@
 
 .uk-button-hidden{
     background: #e0e0e0;
-    border-color:@grey-verylight;
 
     [class*=uk-icon-]{
         color:#333;
@@ -301,8 +338,7 @@
 }
 
 .uk-button-locked{
-    background: #c6c6c6;
-    border-color:#e0e0e0;
+    background: #e0e0e0;
 
     [class*=uk-icon-]{
         color:#333;

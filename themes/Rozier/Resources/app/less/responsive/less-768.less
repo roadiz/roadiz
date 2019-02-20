@@ -4,11 +4,30 @@
 
 @media (max-width: @screen-xs-max) {
     /*
- * Styles for screens with width <= 768 (mobile)
- */
-    /* -------- STYLES -------- */
+     * Styles for screens with width <= 768 (mobile)
+     */
+    .uk-button {
+        height: 32px;
+        //padding: 0px 12px 0;
 
-    .mobile-hidden{
+        &-content {
+            width: 32px;
+            height: 32px;
+        }
+
+        &-small {
+            [class*=uk-icon-] {
+                font-size: 16px;
+            }
+        }
+
+        &-mini {
+            height: 17px;
+            padding: 0;
+        }
+    }
+
+    .mobile-hidden {
         display: none;
     }
 
@@ -17,22 +36,37 @@
 
     }
 
+    #main-content-scrollable {
+        padding-top: @mobile-admin-menu-height;
+        height: auto;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
 
     // Login
+    #purge-caches,
     #login {
-        width:100%; height:70%; min-height:460px;
-        top:50%; left:50%;
+        width:100vw;
+        height: auto;
+        min-height: 100vh;
         margin:0;
+        top: 0;
+        left: 0;
+        position: relative;
+        transform: none;
 
-        #login-infos{
+        #login-infos {
             position: relative;
-            width:100%; height:60px;
+            width:100%;
+            height:60px;
 
             #login-logo{
-                width:65px; height:60px;
+                width:65px;
+                height:60px;
 
                 .uk-icon-rz-rezozero{
-                    width:65px; height:60px;
+                    width:65px;
+                    height:60px;
                     font-size: 28px;
                 }
             }
@@ -68,19 +102,26 @@
 
     #main-container-inner{
         display: block;
-        width:100%; height:100%;
+        width:100%;
+        height:100%;
 
+        .navigation-container-section {
+            position: fixed !important;
+        }
         // User panel
         #user-panel{
             display:block;
-            width:100%; height:50px;
+            width:100%;
+            height: @mobile-admin-menu-height;
             z-index:6;
 
-            #menu-mobile{
-                position: absolute;
+            #menu-mobile {
+                //position: absolute;
                 display: block;
-                top:0; left:0;
-                width:50px; height:50px;
+                top:0;
+                left:0;
+                width:50px;
+                height: @mobile-admin-menu-height;
                 background: #f2f2f2;
                 cursor: pointer;
                 z-index:3;
@@ -88,7 +129,8 @@
                 .menu-mobile-bar{
                     position: absolute;
                     left:18px;
-                    width:18px; height:2px;
+                    width:18px;
+                    height:2px;
                     background: @user-panel-color;
                 }
 
@@ -111,8 +153,10 @@
 
             #user-picture{
                 position: absolute;
-                top:0; right:0;
-                width:60px; height:50px;
+                top:0;
+                right:0;
+                width:60px;
+                height:@mobile-admin-menu-height;
                 background: @user-panel-color;
                 .rounded(0);
                 border:0;
@@ -124,8 +168,10 @@
 
                 img{
                     position: absolute;
-                    width:38px; height:38px;
-                    top:5px; right:8px;
+                    width:38px;
+                    height:38px;
+                    top:5px;
+                    right:8px;
                     .rounded((@user-picture-size / 2)+5px);
                     border: 3px solid @user-panel-color;
                 }
@@ -133,15 +179,20 @@
 
             .user-actions-menu {
                 padding:0;
-
                 h3{
                     display: none;
+                }
+
+                .user-actions {
+                    padding: 0;
+                    margin-top: 0;
                 }
             }
 
             .uk-icon-button{
                 position: relative;
-                width:100%; height:60px;
+                width:100%;
+                height: 60px;
                 margin:0;
                 border:none;
                 border-bottom:1px solid #333333;
@@ -155,7 +206,8 @@
                 &:before{
                     position: relative;
                     display:inline-block;
-                    width:36px; height:36px;
+                    width:36px;
+                    height:36px;
                     margin:14px 10px 0 17px;
                     border:1px solid #686868;
                     background: #3a3a3a;
@@ -180,7 +232,8 @@
             }
 
             .user-action-label{
-                display: inline-block; vertical-align: top;
+                display: inline-block;
+                vertical-align: top;
                 height:60px;
                 font-size:12px;
                 line-height:60px;
@@ -190,23 +243,27 @@
             }
 
             .dev-mode{
-                position: absolute;
-                left:0; right:0; bottom:20px;
+                display: none;
             }
-
         }
 
 
         // Admin menu
-        #admin-menu{
-            // display: none;
+        #admin-menu {
             position:fixed;
             display: block;
-            top:50px; right:0; bottom:0; left:0;
-            width:80%;
+            top: @mobile-admin-menu-height;
+            right:0;
+            bottom:0;
+            left:0;
+            width:80vw;
             background: #f2f2f2;
-            .translate(-100%, 0);
+            .translate(-80vw, 0);
             z-index:9;
+            -webkit-overflow-scrolling: touch;
+            overflow-y: scroll;
+            padding-bottom: 50px;
+            box-sizing: border-box;
 
             header{
                 display: none;
@@ -214,7 +271,10 @@
 
             #admin-menu-nav{
                 position: absolute;
-                top:0; right:0; bottom:0; left:0;
+                top:0;
+                right:0;
+                bottom:0;
+                left:0;
                 overflow-y: auto;
             }
 
@@ -258,20 +318,24 @@
                     color:#909090;
                 }
 
-                &> a, &> p{
-                    padding-left:17px;
+                & > a,
+                & > p {
+                    padding-left: 17px;
                 }
 
                 &:before{
                     width:100%;
-                    right:0; bottom:0; left:0;
+                    right:0;
+                    bottom:0;
+                    left:0;
                     height:1px;
                     background: #fff;
                 }
 
                 .uk-nav-sub{
                     position: relative;
-                    display: none; vertical-align: top;
+                    display: none;
+                    vertical-align: top;
                     top:0; right:0; left:0;
                     min-width:inherit;
                     height:0;
@@ -329,13 +393,11 @@
             }
         }
 
-
         // Main trees
         #main-trees{
             position: absolute;
-            // position:relative;
             display: block;
-            width:0; // height:50px;
+            width:0;
             overflow: visible;
             z-index:8;
 
@@ -347,7 +409,6 @@
                 width:0;
                 overflow: visible;
                 background: none;
-                // border-bottom:1px solid #e5e5e5;
 
                 &> div{
                     width:0;
@@ -357,17 +418,21 @@
 
             #nodes-sources-search{
                 position: fixed;
-                top:50px; bottom:0; left:0;
-                width:80%; height:100%;
+                top: @mobile-admin-menu-height;
+                bottom:0;
+                left:0;
+                width:80vw;
+                height:100%;
                 background: #aaa;
                 z-index:8;
-                .translate(-100%, 0);
+                .translate(-80vw, 0);
 
-                form{
+                form {
                     padding:20px 20px 5px 20px;
 
                     .uk-form-icon{
-                        width:100%; height:49px;
+                        width:100%;
+                        height: @mobile-admin-menu-height - 1;
                         background: #aaa;
                         .rounded(0px);
                         border-bottom:1px solid #7f7f7f;
@@ -418,55 +483,59 @@
 
 
         // Main content
-        #main-content{
+        #main-content {
             display: block;
-            width:100%; height:100%;
+            width:100vw;
         }
-
     }
 
     #tree-wrapper{
         position: fixed;
-        top:50px; bottom:0; left:0;
-        width:80%;
+        top: @mobile-admin-menu-height;
+        bottom:0;
+        left:0;
+        width:80vw;
         background: #aaa;
         z-index:8;
-        .translate(-100%, 0);
+        .translate(-80vw, 0);
     }
 
     .mobile-button{
         position: fixed;
-        display:block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         top:0;
-        width:50px; height:50px;
+        width: @mobile-admin-menu-height;
+        height: @mobile-admin-menu-height;
         border-right:1px solid #5f5f5f;
         text-align: center;
         z-index:7;
         .box-sizing();
         .transition(0.6s background @easeOutExpo);
 
+
         &.active{
             background: #aaaaaa;
-
-            i{
+            i {
                 color:@grey-interface;
             }
         }
 
-        i{
+        i {
             font-size:24px;
-            line-height:49px;
+            line-height: @mobile-admin-menu-height -1;
             color:#a3a3a3;
             .transition(0.6s color @easeOutExpo);
         }
     }
 
     #search-button{
-        left:50px;
+        left: @mobile-admin-menu-height;
     }
 
     #tree-button{
-        left:100px;
+        left: @mobile-admin-menu-height * 2;
     }
 
     #tree-menu{
@@ -602,7 +671,9 @@
     // Content header
     .content-header-action-menu{
         position: relative;
-        top:0; right:0; left:0;
+        top:0;
+        right:0;
+        left:0;
         padding: 10px 15px;
         text-align: center;
         justify-content: center;
@@ -638,7 +709,7 @@
     }
 
     // Action menu
-    .actions-menu{
+    .actions-menu {
         position: relative;
         width:auto;
         height:auto;
@@ -651,17 +722,22 @@
         z-index:4;
 
         header{
-            display: inline-block; vertical-align:top;
+            display: inline-block;
+            vertical-align:top;
             width:52px; min-height:52px; height:auto;
         }
 
-        .uk-button{
+        .uk-button {
             display: inline-block;
             vertical-align:top;
-            width:auto; height:36px;
+            width:auto;
+            height:32px;
             background: #999;
             margin: 0 8px 8px 0;
             padding:0 12px;
+            text-shadow: none;
+            box-shadow: none;
+            border: 0 none;
 
             &.uk-button-danger{
                 background: @alert-color;
@@ -674,12 +750,16 @@
             .icon-container{
                 position: relative;
                 display: inline-block;
-                width:auto; height: auto;
+                width:auto;
+                height: auto;
                 background: none;
-                padding:0;
+                padding: 0;
+                vertical-align: middle;
+                box-shadow: none;
 
-                i{
-                    width:auto; height: auto;
+                i {
+                    width:auto;
+                    height: auto;
                     margin-right:4px;
                     background: none;
                     border:none;
@@ -690,10 +770,12 @@
             .label{
                 position: relative;
                 display: inline-block;
-                line-height:36px;
+                line-height: 30px;
+                font-size: 11px;
 
                 .label-text{
-                    padding:0;
+                    padding: 0;
+                    background: none transparent;
                 }
             }
         }
@@ -823,12 +905,10 @@
 
 
     // Custom forms
-    .content-custom-forms-list{
-
-        .uk-button-content{
+    .content-custom-forms-list {
+        .uk-button-content {
             margin-bottom:4px;
         }
-
     }
 
     #add-custom-form-form,
@@ -840,7 +920,6 @@
         }
     }
 
-
     // Settings
     #add-setting-form .form-col-type,
     #edit-setting-form .form-col-type{
@@ -851,11 +930,9 @@
         width:95px;
     }
 
-
     .dropzone .dz-default.dz-message span {
         height: auto;
         padding: 10px 20px;
         line-height: 16px;
     }
-
 }

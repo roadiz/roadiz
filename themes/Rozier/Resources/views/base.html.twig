@@ -4,15 +4,10 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>{% block title %}{{- head.siteTitle -}}{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Roadiz {{ cms_prefix }} {{ cms_version }} - {{ head.themeName }}" />
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ head.resourcesUrl }}assets/img/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ head.resourcesUrl }}assets/img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ head.resourcesUrl }}assets/img/favicon-16x16.png">
-        <link rel="mask-icon" href="{{ head.resourcesUrl }}assets/img/safari-pinned-tab.svg" color="#5bbad5">
-        <meta name="msapplication-TileColor" content="#2d89ef">
-        <meta name="theme-color" content="#ffffff">
+        <title>{% block title %}{% trans %}back_office{% endtrans %}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{% trans %}back_office{% endtrans %}{% endblock %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        {% include 'admin/meta-icon.html.twig' %}
 
         {# CSS scripts inclusions / Using webpack #}
         {% include '@Rozier/partials/css-inject.html.twig' %}
@@ -30,7 +25,7 @@
         <div id="app"></div>
         <div id="main-container" >
             <div id="main-container-inner">
-                <section class="main-container-section" id="user-panel">
+                <section class="main-container-section navigation-container-section" id="user-panel">
                     {% include '@Rozier/panels/user_panel.html.twig' with {
                         'session' : session,
                         'head' : head,
@@ -38,7 +33,7 @@
                         'request':request
                     } only %}
                 </section>
-                <section class="main-container-section" id="admin-menu">
+                <section class="main-container-section navigation-container-section" id="admin-menu">
                     {% include '@Rozier/panels/admin_menu.html.twig' with {
                         'themeServices' : themeServices,
                         'backofficeEntries':backofficeEntries,
@@ -48,7 +43,7 @@
                 {% if (is_granted('ROLE_ACCESS_NODES') or
                        is_granted('ROLE_ACCESS_DOCUMENTS') or
                        is_granted('ROLE_ACCESS_TAGS')) %}
-                <section id="main-trees" class="main-container-section">
+                <section class="main-container-section navigation-container-section" id="main-trees">
                     <div id="main-trees-overlay"></div>
                     <div id="main-trees-container">
                         {% include '@Rozier/panels/tree_panel.html.twig' with {

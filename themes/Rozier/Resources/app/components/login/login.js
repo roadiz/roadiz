@@ -1,4 +1,6 @@
 import $ from 'jquery'
+import { isMobile } from '../../utils/plugins'
+import request from 'axios'
 
 (function () {
     const onLoad = function (data) {
@@ -10,25 +12,29 @@ import $ from 'jquery'
     }
 
     const requestImage = function () {
-        $.ajax({
+        request({
+            method: 'GET',
             url: window.RozierRoot.routes.splashRequest,
-            async: true,
-            type: 'GET',
-            cache: true,
-            dataType: 'json'
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            withCredentials: true,
+            responseType: 'json'
         })
-        .done(function (data) {
-            if (data === false) {
-                requestImage()
-            } else if (typeof data.url !== 'undefined') {
+        .then((response) => {
+            if (typeof response.data !== 'undefined' &&
+                typeof response.data.url !== 'undefined') {
                 let myImage = new Image(window.width, window.height)
-                myImage.src = data.url
-                myImage.onload = $.proxy(onLoad, this, data)
+                myImage.src = response.data.url
+                myImage.onload = $.proxy(onLoad, this, response.data)
             }
+        })
+        .catch((error) => {
+            throw new Error(error.response.data.humanMessage)
         })
     }
 
-    if (typeof window.RozierRoot.routes.splashRequest !== 'undefined') {
+    if (typeof window.RozierRoot.routes.splashRequest !== 'undefined' && !isMobile.any()) {
         requestImage()
     }
 })()
