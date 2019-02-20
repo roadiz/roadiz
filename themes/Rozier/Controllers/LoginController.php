@@ -31,6 +31,7 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
@@ -103,32 +104,29 @@ class LoginController extends RozierApp
      */
     public function imageAction(Request $request)
     {
-        if ($request->isXmlHttpRequest()) {
-            $response = new JsonResponse();
+        $response = new JsonResponse();
 
-            if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
+        if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
+            if ($document instanceof Document) {
                 /** @var DocumentUrlGenerator $documentUrlGenerator */
                 $documentUrlGenerator = $this->get('document.url_generator');
                 $documentUrlGenerator->setDocument($document);
                 $documentUrlGenerator->setOptions([
                     'noProcess' => true
                 ]);
-
                 $response->setData([
                     'url' => $documentUrlGenerator->getUrl()
                 ]);
-            } else {
-                $splash = new SplashbasePictureFinder();
-                $feed = $splash->getRandomBySearch('road');
-                if (false === $feed) {
-                    throw new ResourceNotFoundException();
-                }
-                $response->setData($feed);
+                return $response;
             }
-
-            return $response;
         }
+        $splash = new SplashbasePictureFinder();
+        $feed = $splash->getRandomBySearch('road');
+        if (false === $feed) {
+            throw new ResourceNotFoundException();
+        }
+        $response->setData($feed);
 
-        throw new ResourceNotFoundException();
+        return $response;
     }
 }
