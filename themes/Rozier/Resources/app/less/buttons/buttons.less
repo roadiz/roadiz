@@ -186,6 +186,7 @@
 
 .uk-button-status{
     display: inline-block;
+    display: inline-flex;
     width:20px;
     height:20px;
     margin:2px;
@@ -195,8 +196,10 @@
     background-color: #F2F2F2;
     text-align: center;
     .rounded(100%);
+    align-items: center;
+    justify-content: center;
 
-    [class*=uk-icon-rz-]{
+    [class*=uk-icon-] {
         margin:0;
         font-size: 14px;
     }
@@ -206,7 +209,7 @@
         height:30px;
         line-height:28px;
 
-        [class*=uk-icon-rz-]{
+        [class*=uk-icon-]{
             font-size: 16px;
         }
     }
@@ -224,16 +227,47 @@
     }
 }
 
-.uk-button-danger {
-    background: rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.8);
-    border-color: @alert-color;
-    color: white;
+// .uk-button-hidden,
+.uk-button-locked,
+.uk-button-warning {
+    background: fade(@warning-color, 20%);
+    border-color: @warning-color;
+    color: darken(@warning-color, 15%);
     text-shadow: none;
 
+    [class*=uk-icon-]{
+        color: darken(@warning-color, 15%);
+    }
+
     &:hover, &:active, &:focus {
-        background: rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 1);
+        background: @warning-color;
+        border-color: @warning-color;
+        color: white;
+
+        [class*=uk-icon-]{
+            color: white;
+        }
+    }
+}
+.uk-button-deleted,
+.uk-button-danger {
+    background: fade(@alert-color, 20%);
+    border-color: @alert-color;
+    color: darken(@alert-color, 15%);
+    text-shadow: none;
+
+    [class*=uk-icon-]{
+        color: darken(@alert-color, 15%);
+    }
+
+    &:hover, &:active, &:focus {
+        background: @alert-color;
         border-color: @alert-color;
         color: white;
+
+        [class*=uk-icon-]{
+            color: white;
+        }
     }
 }
 
@@ -243,14 +277,13 @@
     color: white;
     text-shadow: none;
 
-    &:hover, &:active, &:focus {
-        background: @contrast-color;
-        border-color: transparent;
+    [class*=uk-icon-]{
         color: white;
     }
 
-
-    [class*=uk-icon-]{
+    &:hover, &:active, &:focus {
+        background: @contrast-color;
+        border-color: transparent;
         color: white;
     }
 }
@@ -276,10 +309,6 @@
     background: #333333;
     .opacity(0.8);
     .transition(~"border-color 0.3s linear, background 0.3s linear, opacity 0.3s linear");
-
-    // &:before {
-    //     margin-left: 1px;
-    // }
 
     &:hover {
         .opacity(0.8);
@@ -320,32 +349,6 @@
     }
 }
 
-.uk-button-deleted{
-    background:rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.2);
-    border-color: @alert-color;
-
-    [class*=uk-icon-]{
-        color: darken(@alert-color, 15%);
-    }
-}
-
-.uk-button-hidden{
-    background: #e0e0e0;
-
-    [class*=uk-icon-]{
-        color:#333;
-    }
-}
-
-.uk-button-locked{
-    background: #e0e0e0;
-
-    [class*=uk-icon-]{
-        color:#333;
-    }
-}
-
-
 .uk-button-table-save{
     background:rgba(@contrast-color-darker-red, @contrast-color-darker-green, @contrast-color-darker-blue, 0.3);
     border-color: @contrast-color-darker;
@@ -364,7 +367,8 @@
     }
 }
 
-.uk-button-table-delete, .uk-button-bulk-delete{
+.uk-button-table-delete,
+.uk-button-bulk-delete {
     background:rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.2);
     border-color: @alert-color;
 

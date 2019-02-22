@@ -12,21 +12,23 @@
         {% if controls %}
         <input class="document-checkbox" type="checkbox" name="documents[]" value="{{ document.id }}" />
         <div class="document-links">
-            <a class="uk-button uk-button-small document-link" href="{{ path('documentsEditPage', { documentId: document.id }) }}"><i class="uk-icon-rz-pencil"></i></a>
-            <a class="uk-button uk-button-small uk-button-danger document-link" href="{{ path('documentsDeletePage', { documentId: document.id }) }}"><i class="uk-icon-rz-trash-mini-o"></i></a>
+            <a class="uk-button uk-button-small document-link"
+               href="{{ path('documentsEditPage', { documentId: document.id }) }}"><i class="uk-icon-rz-pencil"></i></a>
+            <a class="uk-button uk-button-small uk-button-danger document-link"
+               href="{{ path('documentsDeletePage', { documentId: document.id }) }}"><i class="uk-icon-trash-o"></i></a>
         </div>
         {% endif %}
         {% if document.isEmbed %}
             <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
             {% if document.private %}
-            <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
+                <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
             {% else %}
-            <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
             {% endif %}
         {% else %}
             <div class="document-mime-type">{{ document.getShortMimeType|truncate(13, false, '…') }}</div>
             {% if document.private %}
-            <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
+                <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
             {% endif %}
         {% endif %}
     </div>

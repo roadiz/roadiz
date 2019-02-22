@@ -15,11 +15,8 @@
         {% if filters.itemCount and filters.itemPerPage and filters.itemCount > filters.itemPerPage %}
         <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-pagination">
             <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
-
                 {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
-
                 {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-rz-prev-page"></i></a>{% endif %}
-
                 <span class="filter-form-text pageTitle">{% trans %}page{% endtrans %}</span>
                 <input class="uk-form-width-mini" id="uk-form-filter-input-page" type="text" name="page"  value="{{ filters.currentPage }}" />
                 <span class="filter-form-text pageCount">/ {{ filters.pageCount }}</span>

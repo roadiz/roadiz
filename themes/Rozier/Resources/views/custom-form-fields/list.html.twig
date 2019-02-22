@@ -7,7 +7,7 @@
             <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
             <div class="content-header-action-menu">
                 <nav>
-                    <a class="uk-button" href="{{ path('customFormFieldsAddPage', { customFormId: customForm.getId }) }}"><i class="uk-icon-plus"></i> {% trans %}add.a.customFormField{% endtrans %}</a>
+                    <a class="uk-button" href="{{ path('customFormFieldsAddPage', { customFormId: customForm.getId }) }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.customFormField{% endtrans %}</a>
                 </nav>
             </div>
             {% include '@Rozier/custom-forms/navBar.html.twig' with {

@@ -75,30 +75,21 @@
 
     .document-links{
         position:absolute;
-        width:80px; height:30px;
+        width:80px;
+        height:30px;
         bottom:-30px;
         overflow: hidden;
         .transition(0.4s bottom @easeOutExpo);
+        background: rgba(255,255,255,0.8);
 
-        .document-link{ // a
+        .document-link {
             display: inline-block;
-            width:40px; height:30px;
+            width:40px;
+            height:30px;
             .rounded(0);
-            color:#333;
             .opacity(0.95);
 
-            &:hover{
-                color:darken(#333, 10%);
-            }
-            &:first-child{
-                background: #aaa;
-
-                &:hover{
-                    background: darken(#aaa, 10%);
-                }
-            }
-
-            i{
+            i {
                 margin:0;
                 line-height:30px;
             }
