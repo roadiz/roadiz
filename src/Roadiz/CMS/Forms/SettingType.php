@@ -84,6 +84,7 @@ class SettingType extends AbstractType
                     'label' => 'setting.group',
                     'choices_as_values' => true,
                     'choices' => $choices,
+                    'required' => false,
                     'placeholder' => '---------',
                 ])
                 ->add('defaultValues', TextType::class, [
@@ -104,8 +105,11 @@ class SettingType extends AbstractType
                     return null;
                 },
                 function ($id) use ($options) {
-                    $group = $options['entityManager']->find(SettingGroup::class, $id);
-                    return $group;
+                    if (null !== $id) {
+                        $group = $options['entityManager']->find(SettingGroup::class, $id);
+                        return $group;
+                    }
+                    return null;
                 }
             ));
         }
