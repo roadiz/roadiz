@@ -247,6 +247,7 @@ class SettingsController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
         $setting = new Setting();
+        $setting->setSettingGroup(null);
 
         $this->assignation['setting'] = $setting;
 

@@ -42,6 +42,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RawDocumentsSubscriber implements EventSubscriberInterface
 {
+    /** @var DownscaleImageManager */
     protected $manager;
 
     /**
@@ -72,6 +73,8 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
 
     public function onDocumentImageUploaded(FilterDocumentEvent $event)
     {
-        $this->manager->processAndOverrideDocument($event->getDocument());
+        if (null !== $event->getDocument() && $event->getDocument()->isProcessable()) {
+            $this->manager->processAndOverrideDocument($event->getDocument());
+        }
     }
 }
