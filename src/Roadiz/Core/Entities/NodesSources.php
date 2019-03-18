@@ -128,7 +128,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource")
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource", cascade={"remove"})
      * @var ArrayCollection
      */
     private $urlAliases;
