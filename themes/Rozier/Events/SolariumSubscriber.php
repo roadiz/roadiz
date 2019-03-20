@@ -80,7 +80,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      * @param HandlerFactory $handlerFactory
      */
     public function __construct(
-        Client $solr = null,
+        ?Client $solr,
         EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
         HandlerFactory $handlerFactory

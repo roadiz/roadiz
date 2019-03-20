@@ -106,6 +106,16 @@ class Document extends AbstractDocument
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      */
     private $private = false;
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     */
+    private $imageWidth = 0;
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     */
+    private $imageHeight = 0;
 
     /**
      * Document constructor.
@@ -118,6 +128,8 @@ class Document extends AbstractDocument
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
+        $this->imageWidth = 0;
+        $this->imageHeight = 0;
     }
 
     /**
@@ -384,6 +396,46 @@ class Document extends AbstractDocument
     public function getDownscaledDocument()
     {
         return $this->downscaledDocument;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageWidth(): int
+    {
+        return $this->imageWidth;
+    }
+
+    /**
+     * @param int $imageWidth
+     *
+     * @return Document
+     */
+    public function setImageWidth(int $imageWidth): Document
+    {
+        $this->imageWidth = $imageWidth;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageHeight(): int
+    {
+        return $this->imageHeight;
+    }
+
+    /**
+     * @param int $imageHeight
+     *
+     * @return Document
+     */
+    public function setImageHeight(int $imageHeight): Document
+    {
+        $this->imageHeight = $imageHeight;
+
+        return $this;
     }
 
     /**
