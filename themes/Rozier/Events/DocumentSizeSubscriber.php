@@ -29,7 +29,6 @@
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
@@ -50,24 +49,18 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
      * @var LoggerInterface
      */
     private $logger;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
 
     /**
-     * @param EntityManager $entityManager
      * @param Packages $packages
      * @param LoggerInterface $logger
      */
     public function __construct(
-        EntityManager $entityManager,
         Packages $packages,
         LoggerInterface $logger = null
     ) {
         $this->packages = $packages;
         $this->logger = $logger;
-        $this->entityManager = $entityManager;
+
     }
 
     public static function getSubscribedEvents()

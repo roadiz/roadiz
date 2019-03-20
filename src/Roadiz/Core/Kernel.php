@@ -95,6 +95,7 @@ use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
+use Themes\Rozier\Events\DocumentSizeSubscriber;
 use Themes\Rozier\Events\ExifDocumentSubscriber;
 use Themes\Rozier\Events\NodeDuplicationSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
@@ -274,20 +275,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             if (!$kernel->isInstallMode()) {
                 $dispatcher->addSubscriber(new LocaleSubscriber($kernel, $c['stopwatch']));
                 $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
-                /*
-                * Add custom event subscribers to the general dispatcher.
-                *
-                * Important: do not check here if Solr respond, not to request
-                * solr server at each HTTP request.
-                */
-                $dispatcher->addSubscriber(
-                    new SolariumSubscriber(
-                        $c['solr'],
-                        $dispatcher,
-                        $c['logger'],
-                        $c['factory.handler']
-                    )
-                );
 
                 /*
                  * Add custom event subscriber to empty NS Url cache
@@ -307,18 +294,21 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $dispatcher->addSubscriber(
                     new NodesSourcesUniversalSubscriber($c['em'])
                 );
-                /*
-                 * Add custom event subscriber to manage node duplication
-                 */
-                $dispatcher->addSubscriber(
-                    new NodeDuplicationSubscriber($c['em'], $c['node.handler'])
-                );
 
                 /*
                  * Add custom event subscriber to manage Svg document sanitizing
                  */
                 $dispatcher->addSubscriber(
                     new SvgDocumentSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                /*
+                 * Add custom event subscriber to manage image document size
+                 */
+                $dispatcher->addSubscriber(
+                    new DocumentSizeSubscriber(
                         $c['assetPackages'],
                         $c['logger']
                     )
@@ -462,6 +452,26 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     {
         $this->get('dispatcher')->addSubscriber($this->get('firewall'));
         $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
+        /*
+         * Add custom event subscribers to the general dispatcher.
+         *
+         * Important: do not check here if Solr respond, not to request
+         * solr server at each HTTP request.
+         */
+        $this->get('dispatcher')->addSubscriber(
+            new SolariumSubscriber(
+                $this->get('solr'),
+                $this->get('dispatcher'),
+                $this->get('logger'),
+                $this->get('factory.handler')
+            )
+        );
+        /*
+         * Add custom event subscriber to manage node duplication
+         */
+        $this->get('dispatcher')->addSubscriber(
+            new NodeDuplicationSubscriber($this->get('em'), $this->get('node.handler'))
+        );
     }
 
     /**

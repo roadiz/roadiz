@@ -174,6 +174,12 @@ class DocumentExtension extends AbstractExtension
             }
         }
         if (null !== $document && $document->isImage()) {
+            if ($document instanceof Document) {
+                return [
+                    'width' => $document->getImageWidth(),
+                    'height' => $document->getImageHeight(),
+                ];
+            }
             try {
                 $manager = new ImageManager();
                 $documentPath = $this->container['assetPackages']->getDocumentFilePath($document);
