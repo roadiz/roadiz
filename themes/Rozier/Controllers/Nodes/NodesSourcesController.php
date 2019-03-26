@@ -260,6 +260,7 @@ class NodesSourcesController extends RozierApp
              * if it is ALREADY suffixed with a unique ID.
              */
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
+                NodeNameChecker::isNodeNameValid($testingNodeName) &&
                 !NodeNameChecker::isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
                 $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->get('em'));
                 if (!$alreadyUsed) {
