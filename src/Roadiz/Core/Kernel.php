@@ -101,7 +101,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.1.9";
+    public static $cmsVersion = "1.1.10";
 
     /**
      * @var null|Container
