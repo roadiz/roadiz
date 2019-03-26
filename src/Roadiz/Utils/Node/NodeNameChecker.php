@@ -61,6 +61,19 @@ abstract class NodeNameChecker
     }
 
     /**
+     * @param $nodeName
+     *
+     * @return bool
+     */
+    public static function isNodeNameValid($nodeName)
+    {
+        if (preg_match('#^[a-zA-Z0-9\-]+$#', $nodeName) === 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Test if node’s name is already used as a name or an url-alias.
      *
      * @param string $nodeName

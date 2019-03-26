@@ -102,6 +102,7 @@ class NodesCleanNamesCommand extends Command
                      * node-name AND if it is not ALREADY suffixed with a unique ID.
                      */
                     if ($prefixNameSlug != $node->getNodeName() &&
+                        NodeNameChecker::isNodeNameValid($prefixNameSlug) &&
                         !NodeNameChecker::isNodeNameWithUniqId($prefixNameSlug, $nodeSource->getNode()->getNodeName())) {
                         $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($prefixName, $this->entityManager);
                         if (!$alreadyUsed) {
