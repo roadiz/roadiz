@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraints\Collection;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Node entities are the central feature of Roadiz,
@@ -71,6 +72,10 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     const ARCHIVED = 40;
     const DELETED = 50;
 
+    /**
+     * @var array
+     * @Serializer\Exclude
+     */
     public static $orderingFields = [
         'position' => 'position',
         'nodeName' => 'nodeName',
@@ -503,6 +508,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EAGER")
      * @ORM\JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node
+     * @Serializer\Exclude
      */
     protected $parent;
 

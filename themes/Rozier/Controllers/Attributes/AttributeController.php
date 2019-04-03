@@ -32,8 +32,10 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Attributes;
 
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\Attribute\Form\AttributeType;
 use RZ\Roadiz\Core\Entities\Attribute;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
@@ -60,6 +62,24 @@ class AttributeController extends RozierApp
         $this->assignation['items'] = $listManager->getEntities();
 
         return $this->render('attributes/list.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function exportAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
+
+        $attributes = $this->get('em')->getRepository(Attribute::class)->findAll();
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse($serializer->serialize($attributes, 'json'), JsonResponse::HTTP_OK, [
+            'Content-Disposition' => sprintf('attachment; filename="%s"', 'attributes.json')
+        ], true);
     }
 
     /**

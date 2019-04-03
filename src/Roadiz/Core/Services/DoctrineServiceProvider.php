@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;
@@ -117,6 +118,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
         $container['em.config'] = function (Container $c) {
             try {
+                AnnotationRegistry::registerLoader('class_exists');
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
                 /*

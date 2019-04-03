@@ -41,6 +41,7 @@ use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTrait;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Entities
@@ -67,6 +68,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     /**
      * @var Node|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="attributeValues")
+     * @Serializer\Exclude
      */
     protected $node;
 
