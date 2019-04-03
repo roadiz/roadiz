@@ -31,7 +31,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\Serializer;
