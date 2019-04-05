@@ -467,7 +467,7 @@ class DocumentsController extends RozierApp
 
         $documentsIds = $request->get('documents', []);
         if (count($documentsIds) <= 0) {
-            throw new ResourceNotFoundException('No documents selected to delete.');
+            throw new ResourceNotFoundException('No selected documents to delete.');
         }
 
         $documents = $this->get('em')
@@ -519,7 +519,7 @@ class DocumentsController extends RozierApp
 
         $documentsIds = $request->get('documents', []);
         if (count($documentsIds) <= 0) {
-            throw new ResourceNotFoundException('No documents selected to download.');
+            throw new ResourceNotFoundException('No selected documents to download.');
         }
 
         $documents = $this->get('em')
