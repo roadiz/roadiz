@@ -457,7 +457,10 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
-        $documentsIds = $request->get('documents');
+        $documentsIds = $request->get('documents', []);
+        if (count($documentsIds) <= 0) {
+            throw new ResourceNotFoundException('No selected documents to download.');
+        }
 
         $documents = $this->get('em')
             ->getRepository(Document::class)
@@ -507,7 +510,10 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $documentsIds = $request->get('documents');
+        $documentsIds = $request->get('documents', []);
+        if (count($documentsIds) <= 0) {
+            throw new ResourceNotFoundException('No selected documents to download.');
+        }
 
         $documents = $this->get('em')
             ->getRepository(Document::class)
