@@ -29,7 +29,6 @@
 namespace Themes\Rozier\Controllers\Documents;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -45,8 +44,6 @@ use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -62,7 +59,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 use Themes\Rozier\Forms\DocumentEditType;
 use Themes\Rozier\Forms\DocumentEmbedType;
 use Themes\Rozier\Models\DocumentModel;
@@ -278,12 +274,12 @@ class DocumentsController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                 try {
-                     $this->get('em')->flush();
+                try {
+                    $this->get('em')->flush();
                     /*
-                     * Update document file
-                     * if present
-                     */
+                    * Update document file
+                    * if present
+                    */
                     if (null !== $newDocumentFile = $form->get('newDocument')->getData()) {
                         /** @var DocumentFactory $documentFactory */
                         $documentFactory = $this->get('document.factory');
@@ -297,7 +293,7 @@ class DocumentsController extends RozierApp
                     }
 
                     $msg = $this->getTranslator()->trans('document.%name%.updated', [
-                        '%name%' => $document->getFilename(),
+                       '%name%' => $document->getFilename(),
                     ]);
                     $this->publishConfirmMessage($request, $msg);
 
@@ -310,13 +306,13 @@ class DocumentsController extends RozierApp
 
                     if ($form->get('referer')->getData()) {
                         $routeParams = array_merge($routeParams, [
-                            'referer' => $form->get('referer')->getData()
+                           'referer' => $form->get('referer')->getData()
                         ]);
                     }
 
                     /*
-                     * Force redirect to avoid resending form when refreshing page
-                     */
+                    * Force redirect to avoid resending form when refreshing page
+                    */
                     return $this->redirect($this->generateUrl(
                         'documentsEditPage',
                         $routeParams
@@ -469,7 +465,10 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
 
-        $documentsIds = $request->get('documents');
+        $documentsIds = $request->get('documents', []);
+        if (count($documentsIds) <= 0) {
+            throw new ResourceNotFoundException('No documents selected to delete.');
+        }
 
         $documents = $this->get('em')
             ->getRepository(Document::class)
@@ -497,7 +496,6 @@ class DocumentsController extends RozierApp
 
                 return $this->redirect($this->generateUrl('documentsHomePage'));
             }
-
             $this->assignation['form'] = $form->createView();
             $this->assignation['action'] = '?' . http_build_query(['documents' => $documentsIds]);
             $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
@@ -519,7 +517,10 @@ class DocumentsController extends RozierApp
     {
         $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
 
-        $documentsIds = $request->get('documents');
+        $documentsIds = $request->get('documents', []);
+        if (count($documentsIds) <= 0) {
+            throw new ResourceNotFoundException('No documents selected to download.');
+        }
 
         $documents = $this->get('em')
             ->getRepository(Document::class)
@@ -527,11 +528,9 @@ class DocumentsController extends RozierApp
                 'id' => $documentsIds,
             ]);
 
-        if ($documents !== null &&
-            count($documents) > 0) {
+        if ($documents !== null && count($documents) > 0) {
             $this->assignation['documents'] = $documents;
             $form = $this->buildBulkDownloadForm($documentsIds);
-
             $form->handleRequest($request);
 
             if ($form->isValid()) {
@@ -813,10 +812,13 @@ class DocumentsController extends RozierApp
      */
     private function buildBulkDeleteForm($documentsIds)
     {
-        $defaults = [];
-        $builder = $this->createFormBuilder($defaults)
+        $defaults = [
+            'checksum' => md5(serialize($documentsIds))
+        ];
+        $builder = $this->createFormBuilder($defaults, [
+            'action' => '?' . http_build_query(['documents' => $documentsIds]),
+        ])
             ->add('checksum', HiddenType::class, [
-                'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
                 ],
@@ -832,10 +834,13 @@ class DocumentsController extends RozierApp
      */
     private function buildBulkDownloadForm($documentsIds)
     {
-        $defaults = [];
-        $builder = $this->createFormBuilder($defaults)
+        $defaults = [
+            'checksum' => md5(serialize($documentsIds))
+        ];
+        $builder = $this->createFormBuilder($defaults, [
+            'action' => '?' . http_build_query(['documents' => $documentsIds]),
+        ])
             ->add('checksum', HiddenType::class, [
-                'data' => md5(serialize($documentsIds)),
                 'constraints' => [
                     new NotBlank(),
                 ],
