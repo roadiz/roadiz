@@ -4,7 +4,6 @@ node_js:
   - "lts/*"
   - "8"
 php:
-  - 7.1
   - 7.2
   - 7.3
 
@@ -45,7 +44,6 @@ jobs:
           language: php
           sudo: required
           php:
-            - 7.1
             - 7.2
             - 7.3
           install:
@@ -58,7 +56,6 @@ jobs:
           language: php
           sudo: required
           php:
-            - 7.1
             - 7.2
             - 7.3
           env:
