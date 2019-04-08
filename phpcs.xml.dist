@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <arg name="basepath" value="."/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+
+    <rule ref="PSR2">
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+    <file>./</file>
+    <exclude-pattern>index.php</exclude-pattern>
+    <exclude-pattern>dev.php</exclude-pattern>
+    <exclude-pattern>clear_cache.php</exclude-pattern>
+    <exclude-pattern>install.php</exclude-pattern>
+    <exclude-pattern>preview.php</exclude-pattern>
+    <exclude-pattern>*/node_modules</exclude-pattern>
+    <exclude-pattern>*/.AppleDouble</exclude-pattern>
+    <exclude-pattern>*/vendor</exclude-pattern>
+    <exclude-pattern>*/cache</exclude-pattern>
+    <exclude-pattern>*/gen-src</exclude-pattern>
+    <exclude-pattern>*/tests</exclude-pattern>
+    <exclude-pattern>*/bin</exclude-pattern>
+    <exclude-pattern>*/themes</exclude-pattern>
+</ruleset>
