@@ -207,7 +207,7 @@ class RozierApp extends BackendController
          * Add custom event subscriber to manage universal node-type fields
          */
         $container['dispatcher']->addSubscriber(
-            new NodesSourcesUniversalSubscriber($container['em'])
+            new NodesSourcesUniversalSubscriber($container['em'], $container['utils.universalDataDuplicator'])
         );
         /*
          * Add custom event subscriber to manage node duplication

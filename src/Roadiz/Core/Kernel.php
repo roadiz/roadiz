@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Events\DebugBarSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
+use RZ\Roadiz\Core\Events\NodeNameSubscriber;
 use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
 use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
 use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
@@ -80,6 +81,7 @@ use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
+use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -254,6 +256,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
+            $dispatcher->addSubscriber(new NodeNameSubscriber($c['logger'], $c['utils.nodeNameChecker']));
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
             $dispatcher->addSubscriber(new ExceptionSubscriber(
                 $kernel,
@@ -305,6 +308,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new WorkflowServiceProvider());
         $container->register(new AttributesServiceProvider());
         $container->register(new SerializationServiceProvider());
+        $container->register(new UtilsServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

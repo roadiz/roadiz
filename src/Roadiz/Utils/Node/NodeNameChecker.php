@@ -30,7 +30,7 @@
  */
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Utils\StringHandler;
@@ -39,8 +39,23 @@ use RZ\Roadiz\Utils\StringHandler;
  * Class NodeNameChecker
  * @package RZ\Roadiz\Utils\Node
  */
-abstract class NodeNameChecker
+class NodeNameChecker
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * NodeNameChecker constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * Test if current node name is suffixed with a 13 chars Unique ID (uniqid()).
      *
@@ -48,7 +63,7 @@ abstract class NodeNameChecker
      * @param string $nodeName Node name to test
      * @return bool
      */
-    public static function isNodeNameWithUniqId($canonicalNodeName, $nodeName)
+    public function isNodeNameWithUniqId($canonicalNodeName, $nodeName)
     {
         $pattern = '#^' . preg_quote($canonicalNodeName) . '\-[0-9a-z]{13}$#';
         $returnState = preg_match_all($pattern, $nodeName);
@@ -65,7 +80,7 @@ abstract class NodeNameChecker
      *
      * @return bool
      */
-    public static function isNodeNameValid($nodeName)
+    public function isNodeNameValid($nodeName)
     {
         if (preg_match('#^[a-zA-Z0-9\-]+$#', $nodeName) === 1) {
             return true;
@@ -77,17 +92,16 @@ abstract class NodeNameChecker
      * Test if node’s name is already used as a name or an url-alias.
      *
      * @param string $nodeName
-     * @param EntityManager $entityManager
      * @return bool
      */
-    public static function isNodeNameAlreadyUsed($nodeName, EntityManager $entityManager)
+    public function isNodeNameAlreadyUsed($nodeName)
     {
         $nodeName = StringHandler::slugify($nodeName);
 
-        if (false === (boolean) $entityManager
+        if (false === (boolean) $this->entityManager
                 ->getRepository(UrlAlias::class)
                 ->exists($nodeName) &&
-            false === (boolean) $entityManager
+            false === (boolean) $this->entityManager
                 ->getRepository(Node::class)
                 ->setDisplayingNotPublishedNodes(true)
                 ->exists($nodeName)) {

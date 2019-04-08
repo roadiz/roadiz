@@ -613,7 +613,8 @@ class NodesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         try {
-            $generator = new UniqueNodeGenerator($this->get('em'));
+            /** @var UniqueNodeGenerator $generator */
+            $generator = $this->get('utils.uniqueNodeGenerator');
             $source = $generator->generateFromRequest($request);
             /*
              * Dispatch event

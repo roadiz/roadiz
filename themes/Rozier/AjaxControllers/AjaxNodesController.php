@@ -367,7 +367,8 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         try {
-            $generator = new UniqueNodeGenerator($this->get('em'));
+            /** @var UniqueNodeGenerator $generator */
+            $generator = $this->get('utils.uniqueNodeGenerator');
             $source = $generator->generateFromRequest($request);
 
             /*

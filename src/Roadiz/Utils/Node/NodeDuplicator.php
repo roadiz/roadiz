@@ -86,6 +86,7 @@ class NodeDuplicator
             }
 
             if ($parent !== null) {
+                /** @var Node $parent */
                 $parent = $this->em->find(Node::class, $parent->getId());
                 $node->setParent($parent);
             }

@@ -101,10 +101,12 @@ class NodesCleanNamesCommand extends Command
                      * Proceed to rename only if best name is not the current
                      * node-name AND if it is not ALREADY suffixed with a unique ID.
                      */
+                    /** @var NodeNameChecker $nodeNameChecker */
+                    $nodeNameChecker = $this->getHelper('kernel')->getKernel()->get('utils.nodeNameChecker');
                     if ($prefixNameSlug != $node->getNodeName() &&
-                        NodeNameChecker::isNodeNameValid($prefixNameSlug) &&
-                        !NodeNameChecker::isNodeNameWithUniqId($prefixNameSlug, $nodeSource->getNode()->getNodeName())) {
-                        $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($prefixName, $this->entityManager);
+                        $nodeNameChecker->isNodeNameValid($prefixNameSlug) &&
+                        !$nodeNameChecker->isNodeNameWithUniqId($prefixNameSlug, $nodeSource->getNode()->getNodeName())) {
+                        $alreadyUsed = $nodeNameChecker->isNodeNameAlreadyUsed($prefixName);
                         if (!$alreadyUsed) {
                             $output->writeln($node->getNodeName(). ' ---> ' . $prefixNameSlug);
                             $node->setNodeName($prefixName);
