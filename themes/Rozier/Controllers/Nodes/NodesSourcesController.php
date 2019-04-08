@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use http\Exception\InvalidArgumentException;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -43,6 +44,7 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -114,9 +116,15 @@ class NodesSourcesController extends RozierApp
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
+                        /*
+                         * Dispatch pre-flush event
+                         */
+                        $event = new FilterNodesSourcesEvent($source);
+                        $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE, $event);
+
                         $this->get('em')->flush();
                         /*
-                         * Dispatch event
+                         * Dispatch post-flush event
                          */
                         $event = new FilterNodesSourcesEvent($source);
                         $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
@@ -187,8 +195,23 @@ class NodesSourcesController extends RozierApp
         if (null === $ns) {
             throw new ResourceNotFoundException();
         }
+        /** @var Node $node */
+        $node = $ns->getNode();
+        $this->get("em")->refresh($ns->getNode());
 
-        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $node->getId());
+
+        /*
+         * Prevent deleting last node-source available in node.
+         */
+        if ($node->getNodeSources()->count() <= 1) {
+            $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [
+                '%node_source%' => $node->getNodeName(),
+                '%translation%' => $ns->getTranslation()->getName(),
+            ]);
+
+            throw new BadRequestHttpException($msg);
+        }
 
         $builder = $this->createFormBuilder()
                         ->add('nodeId', HiddenType::class, [
@@ -204,32 +227,24 @@ class NodesSourcesController extends RozierApp
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Node $node */
             $node = $ns->getNode();
-            if ($node->getNodeSources()->count() <= 1) {
-                $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [
-                    '%node_source%' => $node->getNodeName(),
-                    '%translation%' => $ns->getTranslation()->getName(),
-                ]);
+            /*
+             * Dispatch event
+             */
+            $event = new FilterNodesSourcesEvent($ns);
+            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
 
-                $this->publishErrorMessage($request, $msg);
-            } else {
-                /*
-                 * Dispatch event
-                 */
-                $event = new FilterNodesSourcesEvent($ns);
-                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
+            $this->get("em")->remove($ns);
+            $this->get("em")->flush();
 
-                $this->get("em")->remove($ns);
-                $this->get("em")->flush();
+            $ns = $node->getNodeSources()->first();
 
-                $ns = $node->getNodeSources()->first();
+            $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', [
+                '%node_source%' => $node->getNodeName(),
+                '%translation%' => $ns->getTranslation()->getName(),
+            ]);
 
-                $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', [
-                    '%node_source%' => $node->getNodeName(),
-                    '%translation%' => $ns->getTranslation()->getName(),
-                ]);
+            $this->publishConfirmMessage($request, $msg);
 
-                $this->publishConfirmMessage($request, $msg);
-            }
             return $this->redirect($this->generateUrl(
                 'nodesEditSourcePage',
                 ['nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId()]
