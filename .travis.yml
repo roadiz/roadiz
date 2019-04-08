@@ -37,4 +37,4 @@ script:
   - php bin/roadiz users:create -n --email=test2@test.com --password=secret2 --back-end test2
   - php bin/roadiz orm:schema-tool:drop --force
   - php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/
-  - bin/phpcs --report=full --report-file=./report.txt --extensions=php --warning-severity=0 --standard=PSR2 --ignore="*/node_modules/*,*/.AppleDouble,*/vendor/*,*/cache/*,*/gen-src/*,*/tests/*,*/bin/*,*/themes/*" -p ./
+  - bin/phpcs --report=full --report-file=./report.txt -p ./
