@@ -53,20 +53,22 @@ class Document extends AbstractDocument
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
      * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Exclude
+     * @Serializer\Groups({"document"})
      */
     protected $rawDocument = null;
     /**
      * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
-     * @Serializer\Exclude
+     * @Serializer\Groups({"document"})
      */
     protected $raw = false;
     /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     protected $embedId = null;
     /**
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     protected $embedPlatform = null;
     /**
@@ -84,19 +86,23 @@ class Document extends AbstractDocument
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
+     * @Serializer\Groups({"document"})
      */
     protected $folders;
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     protected $documentTranslations;
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $filename;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $mimeType;
     /**
@@ -106,10 +112,12 @@ class Document extends AbstractDocument
     private $downscaledDocument = null;
     /**
      * @ORM\Column(type="string")
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $folder;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $private = false;
 

@@ -73,7 +73,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Exclude
+     * @Serializer\Groups({"nodes_sources"})
      */
     private $node;
 
@@ -113,6 +113,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Groups({"nodes_sources"})
      */
     private $translation;
 
@@ -137,6 +138,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource", cascade={"remove"})
      * @var ArrayCollection
+     * @Serializer\Groups({"nodes_sources"})
      */
     private $urlAliases;
 
@@ -234,6 +236,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
 
     /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $title = '';
 
@@ -260,6 +263,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $publishedAt;
 
@@ -283,6 +287,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
 
     /**
      * @ORM\Column(type="string", name="meta_title", unique=false)
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $metaTitle = '';
 
@@ -307,6 +312,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
     /**
      * @ORM\Column(type="text", name="meta_keywords")
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $metaKeywords = '';
 
@@ -331,6 +337,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
     /**
      * @ORM\Column(type="text", name="meta_description")
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $metaDescription = '';
 

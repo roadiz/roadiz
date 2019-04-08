@@ -146,4 +146,12 @@ abstract class AbstractFieldGenerator
     {
         return '';
     }
+
+    /**
+     * @return bool
+     */
+    protected function excludeFromSerialization()
+    {
+        return false;
+    }
 }

@@ -65,6 +65,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     /**
      * @return NodesSources[] '.$this->field->getName().' nodes-sources array
      * @Serializer\VirtualProperty
+     * @Serializer\Groups({"nodes_sources"})
      * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'Sources()

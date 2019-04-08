@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Translated representation of Tags.
@@ -48,6 +49,7 @@ class TagTranslation extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string")
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
      */
     protected $name;
 
@@ -72,6 +74,7 @@ class TagTranslation extends AbstractEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
      */
     protected $description;
 
@@ -99,6 +102,7 @@ class TagTranslation extends AbstractEntity
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
      * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
+     * @Serializer\Exclude()
      */
     protected $tag = null;
 
@@ -106,6 +110,7 @@ class TagTranslation extends AbstractEntity
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Translation
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
      */
     protected $translation = null;
 
@@ -114,6 +119,7 @@ class TagTranslation extends AbstractEntity
      *     orphanRemoval=true, cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection|null
+     * @Serializer\Groups({"tag"})
      */
     protected $tagTranslationDocuments = null;
 

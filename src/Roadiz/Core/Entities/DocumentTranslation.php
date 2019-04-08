@@ -45,6 +45,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @ORM\Column(type="string", nullable=true)
      * @var string|null
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     protected $name = null;
     /**
@@ -68,6 +69,7 @@ class DocumentTranslation extends AbstractEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     protected $description;
     /**
@@ -91,6 +93,7 @@ class DocumentTranslation extends AbstractEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $copyright;
     /**
@@ -115,6 +118,7 @@ class DocumentTranslation extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Groups({"document", "nodes_sources"})
      * @var  Translation
      */
     protected $translation;

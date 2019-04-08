@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Utils\StringHandler;
 
@@ -48,42 +49,50 @@ class CustomForm extends AbstractDateTimed
     /**
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)
      * @var string
+     * @Serializer\Groups({"custom_form", "nodes_sources"})
      */
     protected $color = '#000000';
     /**
      * @ORM\Column(type="string", unique=true)
      * @var string
+     * @Serializer\Groups({"custom_form", "nodes_sources"})
      */
     private $name = 'Untitled';
     /**
      * @ORM\Column(name="display_name", type="string")
      * @var string
+     * @Serializer\Groups({"custom_form", "nodes_sources"})
      */
     private $displayName = 'Untitled';
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string
+     * @Serializer\Groups({"nodes_sources"})
      */
     private $description;
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string
+     * @Serializer\Groups({"custom_form"})
      */
     private $email;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @var bool
+     * @Serializer\Groups({"custom_form"})
      */
     private $open = true;
     /**
      * @ORM\Column(name="close_date", type="datetime", nullable=true)
      * @var \DateTime|null
+     * @Serializer\Groups({"custom_form"})
      */
     private $closeDate = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", mappedBy="customForm", cascade={"ALL"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
+     * @Serializer\Groups({"custom_form"})
      */
     private $fields;
     /**
@@ -93,11 +102,13 @@ class CustomForm extends AbstractDateTimed
      *    cascade={"ALL"}
      * )
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     private $customFormAnswers;
     /**
      * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     private $nodes = null;
 

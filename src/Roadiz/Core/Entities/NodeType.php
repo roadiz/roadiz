@@ -30,12 +30,12 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Selectable;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * NodeType describes each node structure family,
@@ -54,6 +54,7 @@ class NodeType extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"node_type", "node", "nodes_sources"})
      */
     private $name;
 
@@ -77,6 +78,7 @@ class NodeType extends AbstractEntity
     /**
      * @var string
      * @ORM\Column(name="display_name", type="string")
+     * @Serializer\Groups({"node_type", "node", "nodes_soutces"})
      */
     private $displayName;
 
@@ -102,6 +104,7 @@ class NodeType extends AbstractEntity
     /**
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups("node_type")
      */
     private $description;
 
@@ -126,6 +129,7 @@ class NodeType extends AbstractEntity
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups("node_type")
      */
     private $visible = true;
 
@@ -150,6 +154,7 @@ class NodeType extends AbstractEntity
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups("node_type")
      */
     private $publishable = false;
 
@@ -179,6 +184,7 @@ class NodeType extends AbstractEntity
      *
      * @var bool
      * @ORM\Column(name="reachable", type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups("node_type")
      */
     private $reachable = true;
 
@@ -211,6 +217,7 @@ class NodeType extends AbstractEntity
     /**
      * @var bool
      * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups("node_type")
      */
     private $newsletterType = false;
 
@@ -235,6 +242,7 @@ class NodeType extends AbstractEntity
     /**
      * @var bool
      * @ORM\Column(name="hiding_nodes",type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups("node_type")
      */
     private $hidingNodes = false;
     /**
@@ -256,6 +264,7 @@ class NodeType extends AbstractEntity
     }
     /**
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)
+     * @Serializer\Groups({"node_type", "color"})
      */
     protected $color = '#000000';
 
@@ -286,6 +295,7 @@ class NodeType extends AbstractEntity
     /**
      * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
      * @ORM\OrderBy({"position" = "ASC"})
+     * @Serializer\Groups("node_type")
      * @var ArrayCollection
      */
     private $fields;

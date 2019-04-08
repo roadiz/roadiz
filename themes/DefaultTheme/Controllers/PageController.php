@@ -30,6 +30,7 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use JMS\Serializer\SerializationContext;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -94,7 +95,16 @@ class PageController extends DefaultThemeApp
          * Awesome isn’t it ?
          */
         if ($request->getRequestFormat() === 'json') {
-            $response = new JsonResponse($this->get('serializer')->serialize($this->nodeSource, 'json'), Response::HTTP_OK, [], true);
+            $response = new JsonResponse(
+                $this->get('serializer')->serialize(
+                    $this->nodeSource,
+                    'json',
+                    SerializationContext::create()->setGroups(['nodes_sources'])
+                ),
+                Response::HTTP_OK,
+                [],
+                true
+            );
         } else {
             $response = $this->render('pages/page.html.twig', $this->assignation);
         }
