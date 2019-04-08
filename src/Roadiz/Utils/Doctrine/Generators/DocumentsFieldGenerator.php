@@ -43,6 +43,8 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
         return '
     /**
      * @return array Documents array
+     * @Serializer\VirtualProperty
+     * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'()
     {

@@ -43,6 +43,8 @@ class CustomFormsFieldGenerator extends AbstractFieldGenerator
         return '
     /**
      * @return array CustomForm array
+     * @Serializer\VirtualProperty
+     * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'()
     {

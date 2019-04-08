@@ -43,6 +43,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
         return '
     /**
      * @return Node[] '.$this->field->getName().' array
+     * @Serializer\Exclude
      */
     public function '.$this->field->getGetterName().'()
     {
@@ -61,8 +62,10 @@ class NodesFieldGenerator extends AbstractFieldGenerator
         }
         return $this->' . $this->field->getName() . ';
     }
-     /**
+    /**
      * @return NodesSources[] '.$this->field->getName().' nodes-sources array
+     * @Serializer\VirtualProperty
+     * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'Sources()
     {

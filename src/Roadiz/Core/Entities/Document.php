@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Models\AbstractDocument;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
@@ -52,10 +53,12 @@ class Document extends AbstractDocument
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
      * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Exclude
      */
     protected $rawDocument = null;
     /**
      * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
+     * @Serializer\Exclude
      */
     protected $raw = false;
     /**
@@ -69,11 +72,13 @@ class Document extends AbstractDocument
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="document")
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     protected $nodesSourcesByFields = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="document")
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     protected $tagTranslations = null;
     /**
@@ -96,6 +101,7 @@ class Document extends AbstractDocument
     private $mimeType;
     /**
      * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
+     * @Serializer\Exclude
      */
     private $downscaledDocument = null;
     /**

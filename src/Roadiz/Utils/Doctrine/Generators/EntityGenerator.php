@@ -142,6 +142,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Yaml\Yaml;
+use JMS\Serializer\Annotation as Serializer;
 use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
     }
 
