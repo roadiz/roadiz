@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Attributes;
 
+use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use RZ\Roadiz\Attribute\Form\AttributeType;
 use RZ\Roadiz\Core\Entities\Attribute;
@@ -77,9 +78,18 @@ class AttributeController extends RozierApp
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
 
-        return new JsonResponse($serializer->serialize($attributes, 'json'), JsonResponse::HTTP_OK, [
-            'Content-Disposition' => sprintf('attachment; filename="%s"', 'attributes.json')
-        ], true);
+        return new JsonResponse(
+            $serializer->serialize(
+                $attributes,
+                'json',
+                SerializationContext::create()->setGroups(['attribute', 'id'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                //'Content-Disposition' => sprintf('attachment; filename="%s"', 'attributes.json')
+            ],
+            true
+        );
     }
 
     /**

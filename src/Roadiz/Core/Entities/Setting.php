@@ -46,6 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Settings entity are a simple key-value configuration system.
@@ -59,13 +60,13 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
  */
 class Setting extends AbstractEntity
 {
-
     /**
      * Associates custom form field type to a readable string.
      *
      * These string will be used as translation key.
      *
      * @var array
+     * @Serializer\Exclude()
      */
     public static $typeToHuman = [
         AbstractField::STRING_T => 'string.type',
@@ -89,6 +90,7 @@ class Setting extends AbstractEntity
      * Associates node-type field type to a Symfony Form type.
      *
      * @var array
+     * @Serializer\Exclude()
      */
     public static $typeToForm = [
         AbstractField::STRING_T => TextType::class,
@@ -110,6 +112,7 @@ class Setting extends AbstractEntity
 
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"setting", "nodes_sources"})
      */
     private $name;
     /**
@@ -135,6 +138,7 @@ class Setting extends AbstractEntity
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"setting", "nodes_sources"})
      */
     private $value;
     /**
@@ -172,6 +176,7 @@ class Setting extends AbstractEntity
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups({"setting"})
      */
     private $visible = true;
     /**
@@ -196,6 +201,7 @@ class Setting extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="SettingGroup", inversedBy="settings")
      * @ORM\JoinColumn(name="setting_group_id", referencedColumnName="id")
+     * @Serializer\Groups({"setting"})
      * @var SettingGroup
      */
     private $settingGroup;
@@ -223,6 +229,7 @@ class Setting extends AbstractEntity
      * Use NodeTypeField types constants.
      *
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"setting"})
      */
     private $type = NodeTypeField::STRING_T;
     /**
@@ -249,6 +256,7 @@ class Setting extends AbstractEntity
      *
      * @var string
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"setting"})
      */
     private $defaultValues = "";
 
