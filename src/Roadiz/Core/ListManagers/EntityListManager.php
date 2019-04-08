@@ -53,7 +53,7 @@ class EntityListManager
     /**
      * @var EntityManager|null
      */
-    protected $_em = null;
+    protected $entityManager = null;
     /**
      * @var string
      */
@@ -111,22 +111,22 @@ class EntityListManager
     protected $displayAllNodesStatuses;
 
     /**
-     * @param Request $request
-     * @param EntityManager $_em
-     * @param string $entityName
-     * @param array $preFilters
-     * @param array $preOrdering
+     * @param Request       $request
+     * @param EntityManager $entityManager
+     * @param string        $entityName
+     * @param array         $preFilters
+     * @param array         $preOrdering
      */
     public function __construct(
         Request $request,
-        EntityManager $_em,
+        EntityManager $entityManager,
         $entityName,
         $preFilters = [],
         $preOrdering = []
     ) {
         $this->request = $request;
         $this->entityName = $entityName;
-        $this->_em = $_em;
+        $this->entityManager = $entityManager;
         $this->displayNotPublishedNodes = false;
         $this->displayAllNodesStatuses = false;
 
@@ -215,7 +215,7 @@ class EntityListManager
         // transform the key chroot in parent
         if (array_key_exists('chroot', $this->filteringArray)) {
             if ($this->filteringArray["chroot"] instanceof Node) {
-                $ids = $this->_em
+                $ids = $this->entityManager
                     ->getRepository(Node::class)
                     ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
                     ->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses())
@@ -324,7 +324,7 @@ class EntityListManager
             $this->entityName === '\RZ\Roadiz\Core\Entities\Node' ||
             $this->entityName === "Node") {
             $this->paginator = new NodePaginator(
-                $this->_em,
+                $this->entityManager,
                 $this->entityName,
                 $this->itemPerPage,
                 $this->filteringArray
@@ -336,14 +336,14 @@ class EntityListManager
             $this->entityName == "NodesSources" ||
             strpos($this->entityName, NodeType::getGeneratedEntitiesNamespace()) !== false) {
             $this->paginator = new NodesSourcesPaginator(
-                $this->_em,
+                $this->entityManager,
                 $this->entityName,
                 $this->itemPerPage,
                 $this->filteringArray
             );
         } else {
             $this->paginator = new Paginator(
-                $this->_em,
+                $this->entityManager,
                 $this->entityName,
                 $this->itemPerPage,
                 $this->filteringArray
@@ -442,7 +442,7 @@ class EntityListManager
             $this->paginator->setItemsPerPage($this->getItemPerPage());
             return $this->paginator->findByAtPage($this->orderingArray, $this->currentPage);
         } else {
-            $repository = $this->_em->getRepository($this->entityName);
+            $repository = $this->entityManager->getRepository($this->entityName);
             if ($repository instanceof StatusAwareRepository) {
                 $repository->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes());
                 $repository->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses());

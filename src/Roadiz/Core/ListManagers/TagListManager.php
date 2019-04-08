@@ -41,13 +41,13 @@ class TagListManager extends EntityListManager
 {
     /**
      * @param \Symfony\Component\HttpFoundation\Request $request
-     * @param \Doctrine\ORM\EntityManager               $_em
+     * @param \Doctrine\ORM\EntityManager               $entityManager
      * @param array                                     $preFilters
      * @param array                                     $preOrdering
      */
-    public function __construct(Request $request, EntityManager $_em, $preFilters = [], $preOrdering = [])
+    public function __construct(Request $request, EntityManager $entityManager, $preFilters = [], $preOrdering = [])
     {
-        parent::__construct($request, $_em, Tag::class, $preFilters, $preOrdering);
+        parent::__construct($request, $entityManager, Tag::class, $preFilters, $preOrdering);
     }
 
     /**
@@ -57,7 +57,7 @@ class TagListManager extends EntityListManager
     {
         try {
             if ($this->searchPattern != '') {
-                return $this->_em
+                return $this->entityManager
                     ->getRepository(TagTranslation::class)
                     ->searchBy($this->searchPattern, $this->filteringArray, $this->orderingArray);
             } else {
