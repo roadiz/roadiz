@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use Symfony\Component\EventDispatcher\Event;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RequestContext;
 
 final class FilterNodeSourcePathEvent extends Event
@@ -106,11 +105,23 @@ final class FilterNodeSourcePathEvent extends Event
     }
 
     /**
-     * @return Request|null
+     * @param NodesSources|null $nodeSource
+     *
+     * @return FilterNodeSourcePathEvent
      */
-    public function getRequest(): ?Request
+    public function setNodeSource(?NodesSources $nodeSource): FilterNodeSourcePathEvent
     {
-        return $this->request;
+        $this->nodeSource = $nodeSource;
+
+        return $this;
+    }
+
+    /**
+     * @return RequestContext|null
+     */
+    public function getRequestContext(): ?RequestContext
+    {
+        return $this->requestContext;
     }
 
     /**
