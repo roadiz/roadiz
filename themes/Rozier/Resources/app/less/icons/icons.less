@@ -2,14 +2,25 @@
    Component: Icon
  ========================================================================== */
 @font-face {
-  font-family: 'FontAwesome';
-  src: url('../fonts/fontawesome-webfont.eot');
-  src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"),
-       url("../fonts/fontawesome-webfont.woff2") format("woff2"),
-       url("../fonts/fontawesome-webfont.woff") format("woff"),
-       url("../fonts/fontawesome-webfont.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
+    font-family: 'FontAwesome';
+    src: url('../fonts/fontawesome-webfont.eot');
+    src: url("../fonts/fontawesome-webfont.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/fontawesome-webfont.woff2") format("woff2"),
+    url("../fonts/fontawesome-webfont.woff") format("woff"),
+    url("../fonts/fontawesome-webfont.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'FontAwesomeBrands';
+    src: url('../fonts/fa-brands-400.eot');
+    src: url("../fonts/fa-brands-400.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/fa-brands-400.woff2") format("woff2"),
+    url("../fonts/fa-brands-400.woff") format("woff"),
+    url("../fonts/fa-brands-400.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
 }
 
 @font-face {
@@ -479,4 +490,28 @@
 }
 .uk-icon-rz-marker:before {
   content: "\e091";
+}
+/*
+ * Brands
+ */
+.uk-icon-rz-youtube:before,
+.uk-icon-rz-vimeo:before,
+.uk-icon-rz-soundcloud:before,
+.uk-icon-rz-mixcloud:before {
+    font-family: 'FontAwesomeBrands';
+    font-size: 0.75em;
+    vertical-align: bottom;
+}
+
+.uk-icon-rz-youtube:before {
+  content: "\f167";
+}
+.uk-icon-rz-mixcloud:before {
+  content: "\f289";
+}
+.uk-icon-rz-vimeo:before {
+    content: "\f27d";
+}
+.uk-icon-rz-soundcloud:before {
+    content: "\f1be";
 }
