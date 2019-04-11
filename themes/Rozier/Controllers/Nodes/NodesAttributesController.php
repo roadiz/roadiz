@@ -39,6 +39,8 @@ use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -113,7 +115,7 @@ class NodesAttributesController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterNodesSourcesEvent($source);
+                    $event = new FilterNodesSourcesEvent($nodeSource);
                     $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
 
                     $msg = $this->getTranslator()->trans(
@@ -123,7 +125,7 @@ class NodesAttributesController extends RozierApp
                             '%nodeName%' => $nodeSource->getTitle(),
                         ]
                     );
-                    $this->publishConfirmMessage($request, $msg);
+                    $this->publishConfirmMessage($request, $msg, $nodeSource);
                     return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
                         'nodeId' => $node->getId(),
                         'translationId' => $translation->getId(),

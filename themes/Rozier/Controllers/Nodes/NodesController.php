@@ -59,7 +59,6 @@ class NodesController extends RozierApp
 {
     use NodesTrait;
 
-
     /**
      * List every nodes.
      *
@@ -467,6 +466,8 @@ class NodesController extends RozierApp
         if ($form->isSubmitted() &&
             $form->isValid() &&
             $form->getData()['nodeId'] == $node->getId()) {
+            /** @var Node $parent */
+            $parent = $node->getParent();
             /*
              * Dispatch event
              */
@@ -486,6 +487,15 @@ class NodesController extends RozierApp
 
             if ($request->query->has('referer')) {
                 return $this->redirect($request->query->get('referer'));
+            }
+            if (null !== $parent) {
+                return $this->redirect($this->generateUrl(
+                    'nodesEditSourcePage',
+                    [
+                        'nodeId' => $parent->getId(),
+                        'translationId' => $this->get('defaultTranslation')->getId()
+                    ]
+                ));
             }
             return $this->redirect($this->generateUrl('nodesHomePage'));
         }

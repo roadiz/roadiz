@@ -817,6 +817,16 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
                     $cloneNodeSource->setNode($this);
                 }
             }
+            $attributeValues = $this->getAttributeValues();
+            if ($attributeValues !== null) {
+                $this->attributeValues = new ArrayCollection();
+                /** @var AttributeValue $attributeValue */
+                foreach ($attributeValues as $attributeValue) {
+                    $cloneAttributeValue = clone $attributeValue;
+                    $cloneAttributeValue->setNode($this);
+                    $this->addAttributeValue($cloneAttributeValue);
+                }
+            }
             // Get a random string after node-name.
             $namePrefix = $this->getNodeSources()->first()->getTitle() != "" ?
                 $this->getNodeSources()->first()->getTitle() :

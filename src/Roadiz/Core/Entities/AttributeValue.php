@@ -62,7 +62,13 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
 
     /**
      * @var Collection<AttributeValueTranslationInterface>
- *     @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValueTranslation", mappedBy="attributeValue", fetch="EAGER", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(
+     *     targetEntity="RZ\Roadiz\Core\Entities\AttributeValueTranslation",
+     *     mappedBy="attributeValue",
+     *     fetch="EAGER",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      */
     protected $attributeValueTranslations;
@@ -100,5 +106,47 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
             return $this;
         }
         throw new \InvalidArgumentException('Attributable have to be an instance of Node.');
+    }
+
+    /**
+     * @return Node|null
+     */
+    public function getNode(): ?Node
+    {
+        return $this->node;
+    }
+
+    /**
+     * @param Node|null $node
+     *
+     * @return AttributeValue
+     */
+    public function setNode(?Node $node): AttributeValue
+    {
+        $this->node = $node;
+
+        return $this;
+    }
+
+    /**
+     * After clone method.
+     *
+     * Clone current node and ist relations.
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+            $attributeValueTranslations = $this->getAttributeValueTranslations();
+            if ($attributeValueTranslations !== null) {
+                $this->attributeValueTranslations = new ArrayCollection();
+                /** @var AttributeValueTranslationInterface $attributeValueTranslation */
+                foreach ($attributeValueTranslations as $attributeValueTranslation) {
+                    $cloneAttributeValueTranslation = clone $attributeValueTranslation;
+                    $cloneAttributeValueTranslation->setAttributeValue($this);
+                    $this->attributeValueTranslations->add($cloneAttributeValueTranslation);
+                }
+            }
+        }
     }
 }
