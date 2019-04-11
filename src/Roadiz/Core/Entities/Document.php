@@ -51,9 +51,10 @@ use JMS\Serializer\Annotation as Serializer;
 class Document extends AbstractDocument
 {
     /**
-     * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"document"})
+     * @var DocumentInterface|null
      */
     protected $rawDocument = null;
     /**
@@ -106,8 +107,9 @@ class Document extends AbstractDocument
      */
     private $mimeType;
     /**
-     * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
+     * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument", fetch="EXTRA_LAZY")
      * @Serializer\Exclude
+     * @var DocumentInterface|null
      */
     private $downscaledDocument = null;
     /**
