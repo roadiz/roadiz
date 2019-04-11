@@ -213,7 +213,9 @@ class NodesSourcesRepository extends StatusAwareRepository
         $prefix = EntityRepository::NODESSOURCES_ALIAS
     ) {
         if (true === $this->isDisplayingAllNodesStatuses()) {
-            $qb->innerJoin($prefix . '.node', static::NODE_ALIAS);
+            if (!$this->hasJoinedNode($qb, $prefix)) {
+                $qb->innerJoin($prefix . '.node', static::NODE_ALIAS);
+            }
             return $qb;
         }
 
@@ -677,5 +679,35 @@ class NodesSourcesRepository extends StatusAwareRepository
         $alias = EntityRepository::DEFAULT_ALIAS
     ) {
         return parent::searchBy($pattern, $criteria, $orders, $limit, $offset, static::NODESSOURCES_ALIAS);
+    }
+
+    /**
+     * @param NodesSources $nodesSources
+     * @param string $fieldName
+     * @return array|null
+     */
+    public function findByNodesSourcesAndFieldNameAndTranslation(
+        NodesSources $nodesSources,
+        string $fieldName
+    ) {
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
+        $qb->select('ns, n, ua')
+            ->innerJoin('ns.node', static::NODE_ALIAS)
+            ->leftJoin('ns.urlAliases', 'ua')
+            ->innerJoin('n.aNodes', 'ntn')
+            ->innerJoin('ntn.field', 'f')
+            ->andWhere($qb->expr()->eq('f.name', ':name'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        $qb->setParameter('name', $fieldName)
+            ->setParameter('nodeA', $nodesSources->getNode())
+            ->setParameter('translation', $nodesSources->getTranslation());
+
+        return $qb->getQuery()->getResult();
     }
 }

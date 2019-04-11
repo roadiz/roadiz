@@ -29,12 +29,68 @@
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Bags\NodeTypes;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+
 /**
  * Class NodesFieldGenerator
+ *
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class NodesFieldGenerator extends AbstractFieldGenerator
 {
+    /**
+     * @var NodeTypes
+     */
+    private $nodeTypesBag;
+
+    /**
+     * NodesFieldGenerator constructor.
+     *
+     * @param NodeTypeField $field
+     * @param NodeTypes     $nodeTypesBag
+     */
+    public function __construct(NodeTypeField $field, NodeTypes $nodeTypesBag)
+    {
+        parent::__construct($field);
+        $this->nodeTypesBag = $nodeTypesBag;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getFieldSourcesName(): string
+    {
+        return $this->field->getName().'_sources';
+    }
+    /**
+     * @return bool
+     */
+    protected function hasOnlyOneNodeType()
+    {
+        return count(explode(',', $this->field->getDefaultValues())) === 1;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getRepositoryClass(): string
+    {
+        if ($this->hasOnlyOneNodeType() === true) {
+            $nodeTypeName = trim(explode(',', $this->field->getDefaultValues())[0]);
+
+            /** @var NodeType $nodeType */
+            $nodeType = $this->nodeTypesBag->get($nodeTypeName);
+            if (null !== $nodeType) {
+                return $nodeType->getSourceEntityFullQualifiedClassName();
+            }
+        }
+        return NodesSources::class;
+    }
+
     /**
      * @inheritDoc
      */
@@ -43,10 +99,13 @@ class NodesFieldGenerator extends AbstractFieldGenerator
         return '
     /**
      * @return Node[] '.$this->field->getName().' array
+     * @deprecated Use '.$this->field->getGetterName().'Sources() instead to directly handle node-sources
      * @Serializer\Exclude
      */
     public function '.$this->field->getGetterName().'()
     {
+        trigger_error(\'Method \' . __METHOD__ . \' is deprecated. Use '.$this->field->getGetterName().'Sources instead to deal with NodesSources.\', E_USER_DEPRECATED);
+        
         if (null === $this->' . $this->field->getName() . ') {
             if (null !== $this->objectManager) {
                  $this->' . $this->field->getName() . ' = $this->objectManager
@@ -63,6 +122,14 @@ class NodesFieldGenerator extends AbstractFieldGenerator
         return $this->' . $this->field->getName() . ';
     }
     /**
+     * ' . $this->getFieldSourcesName() .' NodesSources direct field buffer.
+     * (Virtual field, this var is a buffer)
+     * @Serializer\Exclude
+     * @var NodesSources[]|null
+     */
+    private $'.$this->getFieldSourcesName().';
+    
+    /**
      * @return NodesSources[] '.$this->field->getName().' nodes-sources array
      * @Serializer\VirtualProperty
      * @Serializer\Groups({"nodes_sources"})
@@ -70,9 +137,19 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      */
     public function '.$this->field->getGetterName().'Sources()
     {
-        return array_map(function(Node $node) {
-            return $node->getNodeSourcesByTranslation($this->getTranslation())->first();
-        }, $this->' . $this->field->getGetterName() . '());
+        if (null === $this->' . $this->getFieldSourcesName() . ') {
+            if (null !== $this->objectManager) {
+                 $this->' . $this->getFieldSourcesName() . ' = $this->objectManager
+                      ->getRepository(\\'. $this->getRepositoryClass() .'::class)
+                      ->findByNodesSourcesAndFieldNameAndTranslation(
+                          $this,
+                          "'.$this->field->getName().'"
+                      );
+            } else {
+                $this->' . $this->getFieldSourcesName() . ' = [];
+            }
+        }
+        return $this->' . $this->getFieldSourcesName() . ';
     }'.PHP_EOL;
     }
 }
