@@ -50,20 +50,20 @@ class NodeSourceApi extends AbstractApi
      */
     protected function getRepositoryName(array $criteria = null)
     {
-        if (isset($criteria['node.nodeType']) &&
-            $criteria['node.nodeType'] instanceof NodeType) {
-            $rep = NodeType::getGeneratedEntitiesNamespace() .
-            "\\" .
-            $criteria['node.nodeType']->getSourceEntityClassName();
-
+        if (isset($criteria['node.nodeType']) && $criteria['node.nodeType'] instanceof NodeType) {
+            $this->repository = $criteria['node.nodeType']->getSourceEntityFullQualifiedClassName();
+            unset($criteria['node.nodeType']);
+        } elseif (isset($criteria['node.nodeType']) &&
+            is_array($criteria['node.nodeType']) &&
+            count($criteria['node.nodeType']) === 1 &&
+            $criteria['node.nodeType'][0] instanceof NodeType) {
+            $this->repository = $criteria['node.nodeType'][0]->getSourceEntityFullQualifiedClassName();
             unset($criteria['node.nodeType']);
         } else {
-            $rep = NodesSources::class;
+            $this->repository = NodesSources::class;
         }
 
-        $this->repository = $rep;
-
-        return $rep;
+        return $this->repository;
     }
 
     /**
