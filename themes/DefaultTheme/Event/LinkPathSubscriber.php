@@ -31,7 +31,7 @@ namespace Themes\DefaultTheme\Event;
 use GeneratedNodeSources\NSLink;
 use RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LinkPathSubscriber implements EventSubscriberInterface
@@ -51,28 +51,28 @@ class LinkPathSubscriber implements EventSubscriberInterface
 
     /**
      * @param FilterNodeSourcePathEvent $event
+     * @param string                   $eventName
+     * @param EventDispatcherInterface  $dispatcher
      */
-    public function onNodesSourcesPath(FilterNodeSourcePathEvent $event): void
+    public function onNodesSourcesPath(FilterNodeSourcePathEvent $event, $eventName, EventDispatcherInterface $dispatcher): void
     {
         $source = $event->getNodeSource();
         if ($source instanceof NSLink) {
+            if (isset($source->getRefNodeSources()[0])) {
+                /*
+                 * Dispatch path generation AGAIN but
+                 * with linked nodeSource.
+                 */
+                $event->setNodeSource($source->getRefNodeSources()[0]);
+                $dispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING, $event);
+            } else {
+                $event->setPath('');
+            }
             /*
              * Prevent default nodes-sources path generation
              * to be executed.
              */
             $event->stopPropagation();
-
-            if (isset($source->getRefNode()[0])) {
-                $realNode = $source->getRefNode()[0]->getNodeSources()->first();
-                $urlGenerator = new NodesSourcesUrlGenerator(
-                    null,
-                    $realNode,
-                    $event->isForceLocale()
-                );
-                $event->setPath($urlGenerator->getNonContextualUrl($event->getTheme(), $event->getParameters()));
-            } else {
-                $event->setPath('');
-            }
         }
     }
 }
