@@ -70,6 +70,7 @@ class SettingsImporter implements ImporterInterface
                 // Existing settings will be updated
                 if (in_array($setting->getName(), $settingsNames)) {
                     $importValue = $setting->getValue();
+                    $importDescription = $setting->getDescription();
                     $setting = $em->getRepository(Setting::class)->findOneByName($setting->getName());
                     /*
                      * Replace setting value if defined in imported file, only if
@@ -77,6 +78,9 @@ class SettingsImporter implements ImporterInterface
                      */
                     if (null !== $importValue && $importValue !== 0 && $importValue !== '') {
                         $setting->setValue($importValue);
+                    }
+                    if (null !== $importDescription && $importDescription !== '') {
+                        $setting->setDescription($importDescription);
                     }
                 }
                 /*

@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -73,7 +74,7 @@ class GroupsUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-all-' . date("YmdHis") . '.rzt'
+                'group-all-' . date("YmdHis") . '.json'
             )
         ); // Rezo-Zero Type
         $response->prepare($request);
@@ -109,7 +110,7 @@ class GroupsUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-' . $existingGroup->getName() . '-' . date("YmdHis") . '.rzt'
+                'group-' . $existingGroup->getName() . '-' . date("YmdHis") . '.json'
             )
         ); // Rezo-Zero Type
         $response->prepare($request);
@@ -134,6 +135,7 @@ class GroupsUtilsController extends RozierApp
 
         if ($form->isValid() &&
             !empty($form['group_file'])) {
+            /** @var UploadedFile $file */
             $file = $form['group_file']->getData();
 
             if ($file->isValid()) {

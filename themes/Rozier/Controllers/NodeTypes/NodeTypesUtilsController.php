@@ -74,7 +74,7 @@ class NodeTypesUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $nodeType->getName() . '.rzt'
+                $nodeType->getName() . '.json'
             )
         ); // Rezo-Zero Type
         $response->prepare($request);
@@ -101,7 +101,7 @@ class NodeTypesUtilsController extends RozierApp
 
         /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
-            $zipArchive->addFromString($nodeType->getName() . '.rzt', $serializer->serialize($nodeType));
+            $zipArchive->addFromString($nodeType->getName() . '.json', $serializer->serialize($nodeType));
         }
 
         $zipArchive->close();

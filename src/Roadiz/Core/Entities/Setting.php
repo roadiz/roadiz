@@ -137,6 +137,33 @@ class Setting extends AbstractEntity
     }
 
     /**
+     * @var string|null
+     * @ORM\Column(type="text", unique=false, nullable=true)
+     * @Serializer\Groups({"setting"})
+     */
+    private $description;
+
+    /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string|null $description
+     *
+     * @return Setting
+     */
+    public function setDescription(?string $description): Setting
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"setting", "nodes_sources"})
      */

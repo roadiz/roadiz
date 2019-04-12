@@ -73,7 +73,7 @@ class RolesUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'role-all-' . date("YmdHis") . '.rzt'
+                'role-all-' . date("YmdHis") . '.json'
             )
         ); // Rezo-Zero Type
 
@@ -110,7 +110,7 @@ class RolesUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'role-' . $existingRole->getName() . '-' . date("YmdHis") . '.rzt'
+                'role-' . $existingRole->getName() . '-' . date("YmdHis") . '.json'
             )
         ); // Rezo-Zero Type
 

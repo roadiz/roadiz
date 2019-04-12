@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -50,24 +51,40 @@ class SettingsUtilsController extends RozierApp
      * Export all settings in a Json file (.rzt).
      *
      * @param Request $request
+     * @param int|null    $settingGroupId
      *
      * @return Response
      */
-    public function exportAllAction(Request $request)
+    public function exportAllAction(Request $request, $settingGroupId = null)
     {
         $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
 
-        $groups = $this->get('em')
-                       ->getRepository(SettingGroup::class)
-                       ->findAll();
-        $lonelySettings = $this->get('em')
-                               ->getRepository(Setting::class)
-                               ->findBy(['settingGroup' => null]);
+        $groups = [];
+        $filePrefix = 'all';
+        if (null === $settingGroupId) {
+            $groups = $this->get('em')
+                ->getRepository(SettingGroup::class)
+                ->findAll();
+            $lonelySettings = $this->get('em')
+                ->getRepository(Setting::class)
+                ->findBy(['settingGroup' => null]);
 
-        $tmpGroup = new SettingGroup();
-        $tmpGroup->setName('__default__');
-        $tmpGroup->addSettings($lonelySettings);
-        $groups[] = $tmpGroup;
+            $tmpGroup = new SettingGroup();
+            $tmpGroup->setName('__default__');
+            $tmpGroup->addSettings($lonelySettings);
+            $groups[] = $tmpGroup;
+        } else {
+            /** @var SettingGroup|null $group */
+            $group = $this->get('em')
+                ->find(SettingGroup::class, $settingGroupId);
+
+            if (null === $group) {
+                throw $this->createNotFoundException();
+            }
+
+            $groups[] = $group;
+            $filePrefix = StringHandler::cleanForFilename($group->getName());
+        }
 
         $serializer = new SettingCollectionJsonSerializer();
         $data = $serializer->serialize($groups);
@@ -82,7 +99,7 @@ class SettingsUtilsController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'setting-all-' . date("YmdHis") . '.rzt'
+                'settings-' . $filePrefix . '-' . date("YmdHis") . '.json'
             )
         ); // Rezo-Zero Type
         $response->prepare($request);
