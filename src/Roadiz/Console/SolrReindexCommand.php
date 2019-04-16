@@ -122,21 +122,17 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $buffer = $this->solr->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        // Then index
-        $nSources = $this->entityManager
-            ->getRepository(NodesSources::class)
-            ->setDisplayingAllNodesStatuses(true)
-            ->setDisplayingNotPublishedNodes(true)
-            ->findAll();
+        $countQuery = $this->entityManager->createQuery("select count(ns) from ".NodesSources::class." ns inner join ns.node n");
+        $q = $this->entityManager->createQuery("select ns,n from ".NodesSources::class." ns inner join ns.node n");
+        $iterableResult = $q->iterate();
 
-        $progress = new ProgressBar($output, count($nSources));
+        $progress = new ProgressBar($output, $countQuery->getSingleScalarResult());
         $progress->setFormat('verbose');
         $progress->start();
 
-        /** @var NodesSources $ns */
-        foreach ($nSources as $ns) {
+        while (($row = $iterableResult->next()) !== false) {
             $solarium = new SolariumNodeSource(
-                $ns,
+                $row[0],
                 $this->solr,
                 $this->getHelper('kernel')->getKernel()->get('dispatcher'),
                 $this->getHelper('handlerFactory')->getHandlerFactory(),
@@ -146,6 +142,8 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
             $solarium->index();
             $buffer->addDocument($solarium->getDocument());
             $progress->advance();
+
+            $this->entityManager->detach($row[0]);
         }
 
         $buffer->flush();
@@ -170,19 +168,17 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $buffer = $this->solr->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        // Then index
-        $docs = $this->entityManager
-            ->getRepository(Document::class)
-            ->findAll();
+        $countQuery = $this->entityManager->createQuery("select count(d) from ".Document::class." d");
+        $q = $this->entityManager->createQuery("select d from ".Document::class." d");
+        $iterableResult = $q->iterate();
 
-        $progress = new ProgressBar($output, count($docs));
+        $progress = new ProgressBar($output, $countQuery->getSingleScalarResult());
         $progress->setFormat('verbose');
         $progress->start();
 
-        /** @var Document $doc */
-        foreach ($docs as $doc) {
+        while (($row = $iterableResult->next()) !== false) {
             $solarium = new SolariumDocument(
-                $doc,
+                $row[0],
                 $this->entityManager,
                 $this->solr,
                 $this->getHelper('logger')->getLogger()
@@ -193,6 +189,8 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
                 $buffer->addDocument($document);
             }
             $progress->advance();
+
+            $this->entityManager->detach($row[0]);
         }
 
         $buffer->flush();
