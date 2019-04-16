@@ -242,12 +242,14 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
         /** @var Node|NodesSources $doc */
         foreach ($nodes as $node) {
-            if ($node instanceof NodesSources) {
-                $nodeModel = new NodeSourceModel($node, $this->getContainer());
-            } else {
-                $nodeModel = new NodeModel($node, $this->getContainer());
+            if (null !== $node) {
+                if ($node instanceof NodesSources) {
+                    $nodeModel = new NodeSourceModel($node, $this->getContainer());
+                } else {
+                    $nodeModel = new NodeModel($node, $this->getContainer());
+                }
+                $nodesArray[] = $nodeModel->toArray();
             }
-            $nodesArray[] = $nodeModel->toArray();
         }
 
         return $nodesArray;
