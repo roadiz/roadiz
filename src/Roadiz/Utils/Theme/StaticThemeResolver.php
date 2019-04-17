@@ -99,7 +99,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     /**
      * @inheritDoc
      */
-    public function findTheme(string $host): ?Theme
+    public function findTheme(string $host = null): ?Theme
     {
         $default = null;
         /*

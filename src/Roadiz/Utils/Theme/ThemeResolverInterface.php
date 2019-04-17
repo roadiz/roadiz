@@ -44,11 +44,11 @@ interface ThemeResolverInterface
     public function getBackendClassName(): string;
 
     /**
-     * @param string $host
+     * @param string|null $host
      *
      * @return Theme|null
      */
-    public function findTheme(string $host): ?Theme;
+    public function findTheme(string $host = null): ?Theme;
 
 
     /**
