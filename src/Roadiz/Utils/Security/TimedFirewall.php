@@ -87,7 +87,7 @@ class TimedFirewall extends Firewall
          * based on User token.
          */
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 33],
+            KernelEvents::REQUEST => ['onKernelRequest', 34],
             KernelEvents::FINISH_REQUEST => 'onKernelFinishRequest',
         ];
     }
