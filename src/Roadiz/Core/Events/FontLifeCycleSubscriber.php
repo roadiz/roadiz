@@ -171,10 +171,12 @@ class FontLifeCycleSubscriber implements EventSubscriber
                  * Removing font folder if empty.
                  */
                 $fontFolderPath = $packages->getFontsPath($entity->getFolder());
-                $isDirEmpty = !(new \FilesystemIterator($fontFolderPath))->valid();
-                if ($isDirEmpty) {
-                    $logger->debug('Font folder is empty, deleting…', ['folder' => $fontFolderPath]);
-                    $fileSystem->remove($fontFolderPath);
+                if ($fileSystem->exists($fontFolderPath)) {
+                    $isDirEmpty = !(new \FilesystemIterator($fontFolderPath))->valid();
+                    if ($isDirEmpty) {
+                        $logger->debug('Font folder is empty, deleting…', ['folder' => $fontFolderPath]);
+                        $fileSystem->remove($fontFolderPath);
+                    }
                 }
             } catch (IOException $e) {
                 //do nothing
