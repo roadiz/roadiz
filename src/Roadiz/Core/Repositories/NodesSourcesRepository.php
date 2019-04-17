@@ -34,6 +34,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\QueryBuilderEvents;
@@ -682,6 +683,37 @@ class NodesSourcesRepository extends StatusAwareRepository
     }
 
     /**
+     * @param NodesSources  $nodesSources
+     * @param NodeTypeField $field
+     *
+     * @return array|null
+     */
+    public function findByNodesSourcesAndFieldAndTranslation(
+        NodesSources $nodesSources,
+        NodeTypeField $field
+    ) {
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
+        $qb->select('ns, n, ua')
+            ->innerJoin('ns.node', static::NODE_ALIAS)
+            ->leftJoin('ns.urlAliases', 'ua')
+            ->innerJoin('n.aNodes', 'ntn')
+            ->andWhere($qb->expr()->eq('ntn.field', ':field'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        $qb->setParameter('field', $field)
+            ->setParameter('nodeA', $nodesSources->getNode())
+            ->setParameter('translation', $nodesSources->getTranslation());
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @deprecated Use findByNodesSourcesAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param NodesSources $nodesSources
      * @param string $fieldName
      * @return array|null

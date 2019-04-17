@@ -152,7 +152,10 @@ class NodeHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(CustomForm::class)
-            ->findByNodeAndFieldName($this->node, $fieldName);
+            ->findByNodeAndField(
+                $this->node,
+                $this->node->getNodeType()->getFieldByName($fieldName)
+            );
     }
 
     /**
@@ -220,9 +223,9 @@ class NodeHandler extends AbstractHandler
     public function getNodesFromFieldName($fieldName)
     {
         return $this->getRepository()
-            ->findByNodeAndFieldName(
+            ->findByNodeAndField(
                 $this->node,
-                $fieldName
+                $this->node->getNodeType()->getFieldByName($fieldName)
             );
     }
 
@@ -235,9 +238,9 @@ class NodeHandler extends AbstractHandler
     public function getReverseNodesFromFieldName($fieldName)
     {
         return $this->getRepository()
-            ->findByReverseNodeAndFieldName(
+            ->findByReverseNodeAndField(
                 $this->node,
-                $fieldName
+                $this->node->getNodeType()->getFieldByName($fieldName)
             );
     }
 

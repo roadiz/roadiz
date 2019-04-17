@@ -107,7 +107,7 @@ class Document extends AbstractDocument
      */
     private $mimeType;
     /**
-     * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument", fetch="EXTRA_LAZY")
+     * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
      * @Serializer\Exclude
      * @var DocumentInterface|null
      */

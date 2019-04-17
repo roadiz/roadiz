@@ -104,7 +104,7 @@ class NodeSourceCustomFormType extends AbstractNodeSourceFieldType
 
         $event->setData($entityManager
             ->getRepository(CustomForm::class)
-            ->findByNodeAndFieldName($nodeSource->getNode(), $nodeTypeField->getName()));
+            ->findByNodeAndField($nodeSource->getNode(), $nodeTypeField));
     }
 
     /**

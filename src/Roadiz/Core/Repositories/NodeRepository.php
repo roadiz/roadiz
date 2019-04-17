@@ -792,6 +792,7 @@ class NodeRepository extends StatusAwareRepository
      * Be careful, this methods could return other nodes if you created many fields
      * with the same name on different node-types.
      *
+     * @deprecated Use findByNodeAndField instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param string $fieldName
      * @return Node[]
@@ -851,6 +852,7 @@ class NodeRepository extends StatusAwareRepository
      * Be careful, this methods could return other nodes if you created many fields
      * with the same name on different node-types.
      *
+     * @deprecated Use findByNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param $fieldName
      * @param Translation $translation
@@ -910,6 +912,7 @@ class NodeRepository extends StatusAwareRepository
      * Be careful, this methods could return other nodes if you created many fields
      * with the same name on different node-types.
      *
+     * @deprecated Use findByReverseNodeAndField instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param string $fieldName
      * @return array
@@ -966,6 +969,7 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
+     * @deprecated Use findByReverseNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param $fieldName
      * @param Translation $translation

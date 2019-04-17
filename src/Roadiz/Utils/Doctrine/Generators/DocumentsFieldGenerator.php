@@ -53,7 +53,10 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
             if (null !== $this->objectManager) {
                 $this->' . $this->field->getName() . ' = $this->objectManager
                     ->getRepository(Document::class)
-                    ->findByNodeSourceAndFieldName($this, "'.$this->field->getName().'");
+                    ->findByNodeSourceAndField(
+                        $this, 
+                        $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getName().'")
+                    );
             } else {
                 $this->' . $this->field->getName() . ' = [];
             }

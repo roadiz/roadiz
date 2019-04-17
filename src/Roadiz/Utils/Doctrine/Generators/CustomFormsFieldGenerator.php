@@ -53,7 +53,10 @@ class CustomFormsFieldGenerator extends AbstractFieldGenerator
             if (null !== $this->objectManager) {
                 $this->' . $this->field->getName() . ' = $this->objectManager
                     ->getRepository(CustomForm::class)
-                    ->findByNodeAndFieldName($this->getNode(), "'.$this->field->getName().'");
+                    ->findByNodeAndField(
+                        $this->getNode(), 
+                        $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getName().'")
+                    );
             } else {
                 $this->' . $this->field->getName() . ' = [];
             }
