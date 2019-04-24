@@ -114,6 +114,9 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
                             if (isset($setting['default_values'])) {
                                 $newSetting->setDefaultValues($setting['default_values']);
                             }
+                            if (isset($setting['description'])) {
+                                $newSetting->setDescription($setting['description']);
+                            }
                             $newGroup->addSetting($newSetting);
                             $newSetting->setSettingGroup($newGroup);
                         }
