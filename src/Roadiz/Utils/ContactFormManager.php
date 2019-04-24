@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -234,6 +235,25 @@ class ContactFormManager extends EmailManager
     public function withHoneypot($honeypotName = 'eml')
     {
         $this->getFormBuilder()->add($honeypotName, HoneypotType::class);
+        return $this;
+    }
+
+    /**
+     * @param string $honeypotName
+     *
+     * @return $this
+     */
+    public function withUserConsent($consentDescription = 'contact_form.user_consent')
+    {
+        $this->getFormBuilder()->add('consent', CheckboxType::class, [
+            'label' => $consentDescription,
+            'required' => true,
+            'constraints' => [
+                new NotBlank([
+                    'message' => 'contact_form.must_consent_to_send'
+                ])
+            ]
+        ]);
         return $this;
     }
 
