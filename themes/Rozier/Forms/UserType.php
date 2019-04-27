@@ -32,6 +32,7 @@ namespace Themes\Rozier\Forms;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
+use RZ\Roadiz\CMS\Forms\CreatePasswordType;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -73,17 +74,7 @@ class UserType extends AbstractType
                     ])
                 ],
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'password.must.match',
-                'first_options' => [
-                    'label' => 'password',
-                ],
-                'second_options' => [
-                    'label' => 'passwordVerify',
-                ],
-                'required' => false,
-            ])
+            ->add('plainPassword', CreatePasswordType::class)
         ;
     }
 

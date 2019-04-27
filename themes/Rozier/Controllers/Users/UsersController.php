@@ -124,7 +124,6 @@ class UsersController extends RozierApp
                     ['%name%' => $user->getUsername()]
                 );
                 $this->publishConfirmMessage($request, $msg);
-
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */

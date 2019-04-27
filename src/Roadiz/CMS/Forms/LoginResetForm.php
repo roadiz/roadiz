@@ -57,15 +57,7 @@ class LoginResetForm extends AbstractType
                 ]),
             ],
         ])
-        ->add('plainPassword', RepeatedType::class, [
-            'type' => PasswordType::class,
-            'invalid_message' => 'password.must.match',
-            'first_options' => [
-                'label' => 'choose.a.new.password',
-            ],
-            'second_options' => [
-                'label' => 'passwordVerify',
-            ],
+        ->add('plainPassword', CreatePasswordType::class, [
             'required' => true,
         ]);
     }
