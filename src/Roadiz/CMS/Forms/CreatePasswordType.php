@@ -47,22 +47,24 @@ class CreatePasswordType extends RepeatedType
         $resolver->setDefaults([
             'type' => PasswordType::class,
             'invalid_message' => 'password.must.match',
-            'first_options' => [
-                'label' => 'choose.a.new.password',
+            'options' => [
                 'constraints' => [
                     new Blacklist(),
                     new PasswordStrength([
                         'minLength' => 6,
                         'minStrength' => 3,
-                        'message' => 'password_should_contains_at_least_one_capital_one_digit'
+                        'message' => 'password_should_contains_at_least_one_capital_one_digit',
+                        'tooShortMessage' => 'password_should_be_at_least_{{length}}_characters_long',
                     ])
                 ]
+            ],
+            'first_options' => [
+                'label' => 'choose.a.new.password',
             ],
             'second_options' => [
                 'label' => 'passwordVerify',
             ],
-            'error_bubbling' => false,
-            'required' => false
+            'required' => false,
         ]);
     }
 }
