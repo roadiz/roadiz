@@ -61,7 +61,7 @@
         "symfony-cmf/routing":         "~2.1.0",
         "twig/twig":                   "~2.5.0",
         "twig/extensions":             "~1.5.1",
-        "guzzlehttp/guzzle":           "~6.3.3",
+        "guzzlehttp/guzzle":           "^6.3",
         "swiftmailer/swiftmailer":     "~6.0.0",
         "erusev/parsedown":            "<=1.6.4 | 1.8.0-beta-5 | ~1.8.0",
         "erusev/parsedown-extra":      "<=0.7.1 | 0.8.0-beta-1 | ~0.8.0",
