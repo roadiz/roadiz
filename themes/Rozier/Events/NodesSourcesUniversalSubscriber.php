@@ -46,13 +46,19 @@ class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
      */
     private $em;
 
+    /** @var UniversalDataDuplicator */
+    private $universalDataDuplicator;
+
     /**
      * NodesSourcesUniversalSubscriber constructor.
-     * @param EntityManager $em
+     *
+     * @param EntityManager           $em
+     * @param UniversalDataDuplicator $universalDataDuplicator
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, UniversalDataDuplicator $universalDataDuplicator)
     {
         $this->em = $em;
+        $this->universalDataDuplicator = $universalDataDuplicator;
     }
 
     /**
@@ -72,11 +78,10 @@ class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
     {
         $source = $event->getNodeSource();
 
-        $duplicator = new UniversalDataDuplicator($this->em);
         /*
          * Flush only if duplication happened.
          */
-        if (true === $duplicator->duplicateUniversalContents($source)) {
+        if (true === $this->universalDataDuplicator->duplicateUniversalContents($source)) {
             $this->em->flush();
         }
     }

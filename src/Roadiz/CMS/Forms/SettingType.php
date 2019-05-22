@@ -70,6 +70,10 @@ class SettingType extends AbstractType
                         new NotBlank(),
                     ],
                 ])
+                ->add('description', MarkdownType::class, [
+                    'label' => 'description',
+                    'required' => false,
+                ])
                 ->add('visible', CheckboxType::class, [
                     'label' => 'visible',
                     'required' => false,

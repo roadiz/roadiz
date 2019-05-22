@@ -242,6 +242,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
                     $c['nodes_sources.handler'],
+                    $c['nodeSourceApi'],
                     $kernel->isPreview()
                 ));
 

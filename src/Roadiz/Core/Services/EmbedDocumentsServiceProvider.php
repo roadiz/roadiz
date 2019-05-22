@@ -32,7 +32,11 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\MediaFinders\DailymotionEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\MixcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\SpotifyEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\TedEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\TwitchEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\VimeoEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 
@@ -57,7 +61,11 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
                 'youtube' =>     YoutubeEmbedFinder::class,
                 'vimeo' =>       VimeoEmbedFinder::class,
                 'dailymotion' => DailymotionEmbedFinder::class,
-                'soundcloud' =>  SoundcloudEmbedFinder::class
+                'soundcloud' =>  SoundcloudEmbedFinder::class,
+                'mixcloud' =>  MixcloudEmbedFinder::class,
+                'spotify' =>  SpotifyEmbedFinder::class,
+                'ted' =>  TedEmbedFinder::class,
+                'twitch' =>  TwitchEmbedFinder::class
             ];
         };
 
@@ -69,6 +77,22 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
 
         $container['embed_finder.vimeo'] = $container->factory(function () {
             return new VimeoEmbedFinder('', false);
+        });
+
+        $container['embed_finder.mixcloud'] = $container->factory(function () {
+            return new MixcloudEmbedFinder('', false);
+        });
+
+        $container['embed_finder.spotify'] = $container->factory(function () {
+            return new SpotifyEmbedFinder('', false);
+        });
+
+        $container['embed_finder.ted'] = $container->factory(function () {
+            return new TedEmbedFinder('', false);
+        });
+
+        $container['embed_finder.twitch'] = $container->factory(function () {
+            return new TwitchEmbedFinder('', false);
         });
 
         $container['embed_finder.dailymotion'] = $container->factory(function () {

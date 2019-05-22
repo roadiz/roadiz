@@ -16,6 +16,11 @@ settingsExportAllPage:
     path:     /export
     defaults:
         _controller: Themes\Rozier\Controllers\SettingsUtilsController::exportAllAction
+settingsExportGroupPage:
+    path:     /export/{settingGroupId}
+    defaults:
+        _controller: Themes\Rozier\Controllers\SettingsUtilsController::exportAllAction
+    requirements: { settingGroupId: "[0-9]+" }
 settingsImportPage:
     path:     /import
     defaults:

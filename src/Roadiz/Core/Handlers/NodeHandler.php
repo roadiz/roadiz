@@ -152,7 +152,10 @@ class NodeHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(CustomForm::class)
-            ->findByNodeAndFieldName($this->node, $fieldName);
+            ->findByNodeAndField(
+                $this->node,
+                $this->node->getNodeType()->getFieldByName($fieldName)
+            );
     }
 
     /**
@@ -220,9 +223,9 @@ class NodeHandler extends AbstractHandler
     public function getNodesFromFieldName($fieldName)
     {
         return $this->getRepository()
-            ->findByNodeAndFieldName(
+            ->findByNodeAndField(
                 $this->node,
-                $fieldName
+                $this->node->getNodeType()->getFieldByName($fieldName)
             );
     }
 
@@ -235,9 +238,9 @@ class NodeHandler extends AbstractHandler
     public function getReverseNodesFromFieldName($fieldName)
     {
         return $this->getRepository()
-            ->findByReverseNodeAndFieldName(
+            ->findByReverseNodeAndField(
                 $this->node,
-                $fieldName
+                $this->node->getNodeType()->getFieldByName($fieldName)
             );
     }
 
@@ -320,7 +323,9 @@ class NodeHandler extends AbstractHandler
     public function softRemoveWithChildren()
     {
         $workflow = $this->getWorkflow();
-        $workflow->apply($this->node, 'delete');
+        if ($workflow->can($this->node, 'delete')) {
+            $workflow->apply($this->node, 'delete');
+        }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
@@ -342,7 +347,9 @@ class NodeHandler extends AbstractHandler
     public function softUnremoveWithChildren()
     {
         $workflow = $this->getWorkflow();
-        $workflow->apply($this->node, 'undelete');
+        if ($workflow->can($this->node, 'undelete')) {
+            $workflow->apply($this->node, 'undelete');
+        }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
@@ -364,7 +371,9 @@ class NodeHandler extends AbstractHandler
     public function publishWithChildren()
     {
         $workflow = $this->getWorkflow();
-        $workflow->apply($this->node, 'publish');
+        if ($workflow->can($this->node, 'publish')) {
+            $workflow->apply($this->node, 'publish');
+        }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
@@ -385,7 +394,9 @@ class NodeHandler extends AbstractHandler
     public function archiveWithChildren()
     {
         $workflow = $this->getWorkflow();
-        $workflow->apply($this->node, 'archive');
+        if ($workflow->can($this->node, 'archive')) {
+            $workflow->apply($this->node, 'archive');
+        }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {

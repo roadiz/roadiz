@@ -56,6 +56,7 @@ class CustomFormRepository extends EntityRepository
     }
 
     /**
+     * @deprecated Use findByNodeAndField instead because **filtering on field name is not safe**.
      * @param \RZ\Roadiz\Core\Entities\Node $node
      * @param string                      $fieldName
      *

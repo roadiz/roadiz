@@ -60,7 +60,7 @@ documentsBulkDeletePage:
     defaults:
         _controller: Themes\Rozier\Controllers\Documents\DocumentsController::bulkDeleteAction
 documentsBulkDownloadPage:
-    path:     /bulk-download
+    path: /bulk-download
     defaults:
         _controller: Themes\Rozier\Controllers\Documents\DocumentsController::bulkDownloadAction
 documentsUnusedPage:

@@ -30,6 +30,9 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -53,7 +56,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
         } else {
             $translation = $this->get('em')
                                 ->find(
-                                    '\RZ\Roadiz\Core\Entities\Translation',
+                                    Translation::class,
                                     (int) $translationId
                                 );
         }
@@ -69,7 +72,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                 if ($request->get('parentNodeId') > 0) {
                     $node = $this->get('em')
                                 ->find(
-                                    '\RZ\Roadiz\Core\Entities\Node',
+                                    Node::class,
                                     (int) $request->get('parentNodeId')
                                 );
                 } elseif (null !== $this->getUser()) {
@@ -89,7 +92,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $request->get('tagId') > 0) {
                     $filterTag = $this->get('em')
                                         ->find(
-                                            '\RZ\Roadiz\Core\Entities\Tag',
+                                            Tag::class,
                                             (int) $request->get('tagId')
                                         );
 

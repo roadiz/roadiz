@@ -12,8 +12,9 @@
 /google*.html
 
 # PHPCS report
-report.txt
-.php_cs.cache
+/report.txt
+/.php_cs.cache
+/.phpcs-cache
 
 # Cloverage build folder
 /build

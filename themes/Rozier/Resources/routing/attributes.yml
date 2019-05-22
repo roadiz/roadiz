@@ -7,7 +7,11 @@ attributesAddPage:
     path:     /add
     defaults:
         _controller: Themes\Rozier\Controllers\Attributes\AttributeController::addAction
-    requirements: { id : "[0-9]+" }
+attributesExportPage:
+    path:     /export-all
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::exportAction
+
 attributesDeletePage:
     path:     /delete/{id}
     defaults:

@@ -85,6 +85,7 @@ abstract class AbstractFieldGenerator
     /**
      * ' . $this->field->getLabel() .'
      * (Virtual field, this var is a buffer)
+     * @Serializer\Exclude
      */'.PHP_EOL;
     }
 
@@ -144,5 +145,13 @@ abstract class AbstractFieldGenerator
     public function getFieldConstructorInitialization(): string
     {
         return '';
+    }
+
+    /**
+     * @return bool
+     */
+    protected function excludeFromSerialization()
+    {
+        return false;
     }
 }

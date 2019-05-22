@@ -59,7 +59,6 @@ class NodesController extends RozierApp
 {
     use NodesTrait;
 
-
     /**
      * List every nodes.
      *
@@ -303,6 +302,10 @@ class NodesController extends RozierApp
 
         if ($type !== null && $translation !== null) {
             $node = new Node($type);
+            if (null !== $this->getUser() && null !== $this->getUser()->getChroot()) {
+                // If user is jailed in a node, prevent moving nodes out.
+                $node->setParent($this->getUser()->getChroot());
+            }
 
             /** @var Form $form */
             $form = $this->createForm(AddNodeType::class, $node, [
@@ -467,6 +470,8 @@ class NodesController extends RozierApp
         if ($form->isSubmitted() &&
             $form->isValid() &&
             $form->getData()['nodeId'] == $node->getId()) {
+            /** @var Node $parent */
+            $parent = $node->getParent();
             /*
              * Dispatch event
              */
@@ -486,6 +491,15 @@ class NodesController extends RozierApp
 
             if ($request->query->has('referer')) {
                 return $this->redirect($request->query->get('referer'));
+            }
+            if (null !== $parent) {
+                return $this->redirect($this->generateUrl(
+                    'nodesEditSourcePage',
+                    [
+                        'nodeId' => $parent->getId(),
+                        'translationId' => $this->get('defaultTranslation')->getId()
+                    ]
+                ));
             }
             return $this->redirect($this->generateUrl('nodesHomePage'));
         }
@@ -613,7 +627,8 @@ class NodesController extends RozierApp
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         try {
-            $generator = new UniqueNodeGenerator($this->get('em'));
+            /** @var UniqueNodeGenerator $generator */
+            $generator = $this->get('utils.uniqueNodeGenerator');
             $source = $generator->generateFromRequest($request);
             /*
              * Dispatch event

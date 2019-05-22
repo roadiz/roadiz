@@ -104,10 +104,11 @@ class NodeSourceDocumentType extends AbstractNodeSourceFieldType
         /** @var EntityManager $entityManager */
         $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
 
-        $event->setData($entityManager->getRepository(Document::class)
-            ->findByNodeSourceAndFieldName(
+        $event->setData($entityManager
+            ->getRepository(Document::class)
+            ->findByNodeSourceAndField(
                 $nodeSource,
-                $nodeTypeField->getName()
+                $nodeTypeField
             ));
     }
 

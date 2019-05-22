@@ -31,11 +31,15 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Rollerworks\Component\PasswordStrength\Blacklist\ArrayProvider;
+use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
+use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
+use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Validation;
 
 /**
@@ -45,8 +49,32 @@ class FormServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
+        $container[BlacklistProviderInterface::class] = function ($c) {
+            return new ArrayProvider([
+                'root',
+                'password',
+                'test',
+                'testtest',
+                '111111',
+                '123456',
+                '1234567',
+                '12345678',
+                '123456789',
+                'azerty',
+                'qwerty',
+                'motdepasse'
+            ]);
+        };
+
+        $container[BlacklistValidator::class] = function ($c) {
+            return new BlacklistValidator($c[BlacklistProviderInterface::class]);
+        };
+
         $container['formValidator'] = function ($c) {
+            $constraintFactory = new ContainerConstraintValidatorFactory(new \Pimple\Psr11\Container($c));
+
             return Validation::createValidatorBuilder()
+                        ->setConstraintValidatorFactory($constraintFactory)
                         ->setTranslationDomain(null)
                         ->setTranslator($c['translator'])
                         ->getValidator();

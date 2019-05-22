@@ -131,7 +131,7 @@ class NodeTypeHandler extends AbstractHandler
         }
 
         if (!file_exists($file)) {
-            $classGenerator = new EntityGenerator($this->nodeType);
+            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag']);
             $content = $classGenerator->getClassContent();
 
             if (false === @file_put_contents($file, $content)) {

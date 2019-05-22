@@ -41,6 +41,7 @@ use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTrait;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Entities
@@ -55,18 +56,27 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     /**
      * @var AttributeInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues")
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      */
     protected $attribute;
 
     /**
      * @var Collection<AttributeValueTranslationInterface>
- *     @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValueTranslation", mappedBy="attributeValue", fetch="EAGER", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(
+     *     targetEntity="RZ\Roadiz\Core\Entities\AttributeValueTranslation",
+     *     mappedBy="attributeValue",
+     *     fetch="EAGER",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      */
     protected $attributeValueTranslations;
 
     /**
      * @var Node|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="attributeValues")
+     * @Serializer\Exclude
      */
     protected $node;
 
@@ -96,5 +106,47 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
             return $this;
         }
         throw new \InvalidArgumentException('Attributable have to be an instance of Node.');
+    }
+
+    /**
+     * @return Node|null
+     */
+    public function getNode(): ?Node
+    {
+        return $this->node;
+    }
+
+    /**
+     * @param Node|null $node
+     *
+     * @return AttributeValue
+     */
+    public function setNode(?Node $node): AttributeValue
+    {
+        $this->node = $node;
+
+        return $this;
+    }
+
+    /**
+     * After clone method.
+     *
+     * Clone current node and ist relations.
+     */
+    public function __clone()
+    {
+        if ($this->id) {
+            $this->id = null;
+            $attributeValueTranslations = $this->getAttributeValueTranslations();
+            if ($attributeValueTranslations !== null) {
+                $this->attributeValueTranslations = new ArrayCollection();
+                /** @var AttributeValueTranslationInterface $attributeValueTranslation */
+                foreach ($attributeValueTranslations as $attributeValueTranslation) {
+                    $cloneAttributeValueTranslation = clone $attributeValueTranslation;
+                    $cloneAttributeValueTranslation->setAttributeValue($this);
+                    $this->attributeValueTranslations->add($cloneAttributeValueTranslation);
+                }
+            }
+        }
     }
 }

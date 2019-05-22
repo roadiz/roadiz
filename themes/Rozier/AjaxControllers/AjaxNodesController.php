@@ -172,8 +172,13 @@ class AjaxNodesController extends AbstractAjaxController
                 $parent->addChild($node);
             }
         } else {
-            // if no parent or null we place node at root level
-            $node->setParent(null);
+            if (null !== $this->getUser() && null !== $this->getUser()->getChroot()) {
+                // If user is jailed in a node, prevent moving nodes out.
+                $node->setParent($this->getUser()->getChroot());
+            } else {
+                // if no parent or null we place node at root level
+                $node->setParent(null);
+            }
         }
 
         /*
@@ -367,7 +372,8 @@ class AjaxNodesController extends AbstractAjaxController
         $this->validateAccessForRole('ROLE_ACCESS_NODES');
 
         try {
-            $generator = new UniqueNodeGenerator($this->get('em'));
+            /** @var UniqueNodeGenerator $generator */
+            $generator = $this->get('utils.uniqueNodeGenerator');
             $source = $generator->generateFromRequest($request);
 
             /*

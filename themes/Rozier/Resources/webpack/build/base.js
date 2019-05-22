@@ -118,14 +118,16 @@ const getWebpackConfigBase = (config) => {
                     publicPath: '../',
                     name: config.assets_name_img
                 }
-            }, {
-                test: /\.(eot|svg|ttf|woff|woff2)$/,
-                loader: 'url-loader',
+            },
+            {
+                test: /\.(woff2|woff|ttf|eot|svg|otf)$/,
+                loader: 'file-loader',
                 options: {
+                    name: config.assets_name_font,
                     publicPath: '../',
-                    name: config.assets_name_font
                 }
-            }, {
+            },
+            {
                 test: /\.vue$/,
                 loader: 'vue-loader',
                 options: {

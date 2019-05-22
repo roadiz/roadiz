@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Settings entity are a simple key-value configuration system.
@@ -44,6 +45,7 @@ class SettingGroup extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"setting", "setting_group"})
      */
     private $name;
 
@@ -67,6 +69,7 @@ class SettingGroup extends AbstractEntity
 
     /**
      * @ORM\Column(type="boolean", name="in_menu", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"setting", "setting_group"})
      */
     protected $inMenu = false;
 
@@ -92,7 +95,7 @@ class SettingGroup extends AbstractEntity
     /**
      * @ORM\OneToMany(targetEntity="Setting", mappedBy="settingGroup")
      * @var ArrayCollection
-     *
+     * @Serializer\Groups({"setting_group"})
      */
     private $settings;
     /**

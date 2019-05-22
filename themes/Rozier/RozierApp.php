@@ -39,14 +39,6 @@ use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Themes\Rozier\Events\ExifDocumentSubscriber;
-use Themes\Rozier\Events\NodeDuplicationSubscriber;
-use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
-use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
-use Themes\Rozier\Events\RawDocumentsSubscriber;
-use Themes\Rozier\Events\SolariumSubscriber;
-use Themes\Rozier\Events\SvgDocumentSubscriber;
-use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -72,7 +64,6 @@ class RozierApp extends BackendController
     public function prepareBaseAssignation()
     {
         parent::prepareBaseAssignation();
-
         /*
          * Use kernel DI container to delay API requuests
          */
@@ -342,18 +333,6 @@ class RozierApp extends BackendController
                         'icon' => 'uk-icon-rz-newsletters',
                         'roles' => ['ROLE_ACCESS_NEWSLETTERS'],
                     ],
-                    /*'manage.subscribers' => [
-                        'name' => 'manage.subscribers',
-                        'path' => null,
-                        'icon' => 'uk-icon-rz-subscribers',
-                        'roles' => ['ROLE_ACCESS_MANAGE_SUBSCRIBERS'],
-                    ],
-                    'manage.comments' => [
-                        'name' => 'manage.comments',
-                        'path' => null,
-                        'icon' => 'uk-icon-rz-comments',
-                        'roles' => ['ROLE_ACCESS_COMMENTS'],
-                    ],*/
                 ],
             ];
 

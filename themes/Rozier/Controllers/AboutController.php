@@ -87,7 +87,7 @@ class AboutController extends RozierApp
         try {
             $url = "https://api.github.com/repos/roadiz/roadiz/releases";
 
-            $client = new Client(['defaults' => ['debug' => false]]);
+            $client = new Client();
             $response = $client->get($url);
 
             if (Response::HTTP_OK == $response->getStatusCode()) {

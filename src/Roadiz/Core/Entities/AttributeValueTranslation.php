@@ -37,6 +37,7 @@ use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationTrait;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Entities
@@ -53,12 +54,14 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
     /**
      * @var string|null
      * @ORM\Column(type="string", nullable=true, unique=false)
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      */
     protected $value;
 
     /**
      * @var Translation
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation")
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      */
     protected $translation;
 
@@ -66,6 +69,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
      * @var AttributeValueInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", inversedBy="attributeValueTranslations", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Serializer\Exclude
      */
     protected $attributeValue;
 }

@@ -175,7 +175,10 @@ class NodesSourcesHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(Document::class)
-            ->findByNodeSourceAndFieldName($this->nodeSource, $fieldName);
+            ->findByNodeSourceAndField(
+                $this->nodeSource,
+                $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName)
+            );
     }
 
     /**
@@ -556,9 +559,9 @@ class NodesSourcesHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(Node::class)
-            ->findByNodeAndFieldNameAndTranslation(
+            ->findByNodeAndFieldAndTranslation(
                 $this->nodeSource->getNode(),
-                $fieldName,
+                $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName),
                 $this->nodeSource->getTranslation()
             );
     }

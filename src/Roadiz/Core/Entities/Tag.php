@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Tags are hierarchical entities used
@@ -57,6 +58,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="string", name="tag_name", unique=true)
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
      */
     private $tagName;
     /**
@@ -79,6 +81,10 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
         return $this;
     }
 
+    /**
+     * @var string
+     * @Serializer\Exclude
+     */
     private $dirtyTagName;
 
     /**
@@ -93,21 +99,25 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="string", name="color", length=7, unique=false, nullable=false, options={"default" = "#000000"})
+     * @Serializer\Groups({"tag", "color"})
      */
     protected $color = '#000000';
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
      */
     private $visible = true;
 
     /**
      * @ORM\Column(type="string", name="children_order", options={"default" = "position"})
+     * @Serializer\Groups({"tag"})
      */
     private $childrenOrder = 'position';
 
     /**
      * @ORM\Column(type="string", name="children_order_direction", length=4, options={"default" = "ASC"})
+     * @Serializer\Groups({"tag"})
      */
     private $childrenOrderDirection = 'ASC';
 
@@ -132,6 +142,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"tag"})
      */
     private $locked = false;
     /**
@@ -157,6 +168,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @ORM\ManyToMany(targetEntity="Node", mappedBy="tags")
      * @ORM\JoinTable(name="nodes_tags")
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     private $nodes = null;
     /**
@@ -191,6 +203,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Tag
+     * @Serializer\Exclude
      */
     protected $parent;
 
@@ -198,12 +211,14 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, cascade={"persist"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
+     * @Serializer\Groups({"tag"})
      */
     protected $children;
 
     /**
      * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="tag", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
      */
     private $translatedTags = null;
 

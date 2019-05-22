@@ -37,6 +37,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * NodesSources store Node content according to a translation and a NodeType.
@@ -54,11 +55,15 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  */
 class NodesSources extends AbstractEntity implements ObjectManagerAware
 {
-    /** @var ObjectManager */
+    /**
+     * @var ObjectManager
+     * @Serializer\Exclude
+     */
     protected $objectManager;
 
     /**
      * @inheritDoc
+     * @Serializer\Exclude
      */
     public function injectObjectManager(ObjectManager $objectManager, ClassMetadata $classMetadata)
     {
@@ -68,6 +73,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Groups({"nodes_sources"})
      */
     private $node;
 
@@ -107,6 +113,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Groups({"nodes_sources"})
      */
     private $translation;
 
@@ -131,6 +138,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource", cascade={"remove"})
      * @var ArrayCollection
+     * @Serializer\Groups({"nodes_sources"})
      */
     private $urlAliases;
 
@@ -159,6 +167,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, cascade={"persist"}, fetch="LAZY")
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     private $documentsByFields;
 
@@ -200,6 +209,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Log", mappedBy="nodeSource")
      * @ORM\OrderBy({"datetime" = "DESC"})
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     protected $logs;
 
@@ -226,6 +236,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
 
     /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $title = '';
 
@@ -252,6 +263,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $publishedAt;
 
@@ -275,6 +287,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
 
     /**
      * @ORM\Column(type="string", name="meta_title", unique=false)
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $metaTitle = '';
 
@@ -299,6 +312,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
     /**
      * @ORM\Column(type="text", name="meta_keywords")
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $metaKeywords = '';
 
@@ -323,6 +337,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
     /**
      * @ORM\Column(type="text", name="meta_description")
+     * @Serializer\Groups({"nodes_sources"})
      */
     protected $metaDescription = '';
 
@@ -378,6 +393,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      * Get parent node’ source based on the same translation.
      *
      * @return NodesSources|null
+     * @Serializer\Exclude
      */
     public function getParent(): ?NodesSources
     {

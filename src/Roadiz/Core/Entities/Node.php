@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraints\Collection;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Node entities are the central feature of Roadiz,
@@ -71,6 +72,10 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     const ARCHIVED = 40;
     const DELETED = 50;
 
+    /**
+     * @var array
+     * @Serializer\Exclude
+     */
     public static $orderingFields = [
         'position' => 'position',
         'nodeName' => 'nodeName',
@@ -102,6 +107,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $nodeName;
 
@@ -154,6 +160,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", name="home", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $home = false;
 
@@ -177,6 +184,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $visible = true;
 
@@ -200,6 +208,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"nodes_sources", "node"})
      * @internal You should use node Workflow to perform change on status.
      */
     private $status = Node::DRAFT;
@@ -284,6 +293,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node"})
      */
     private $locked = false;
 
@@ -309,6 +319,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="decimal", precision=2, scale=1)
+     * @Serializer\Groups({"node"})
      */
     private $priority = 0.8;
 
@@ -334,6 +345,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", name="hide_children", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node"})
      */
     protected $hideChildren = false;
 
@@ -399,6 +411,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node"})
      */
     private $sterile = false;
 
@@ -424,6 +437,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="children_order")
+     * @Serializer\Groups({"node"})
      */
     private $childrenOrder = 'position';
 
@@ -449,6 +463,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="children_order_direction", length=4)
+     * @Serializer\Groups({"node"})
      */
     private $childrenOrderDirection = 'ASC';
 
@@ -475,6 +490,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\ManyToOne(targetEntity="NodeType")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Serializer\Groups({"nodes_sources", "node"})
      * @var NodeType
      */
     private $nodeType;
@@ -503,6 +519,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EAGER")
      * @ORM\JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node
+     * @Serializer\Exclude
      */
     protected $parent;
 
@@ -510,6 +527,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     protected $children;
 
@@ -517,6 +535,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
      * @var ArrayCollection
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $tags = null;
 
@@ -559,6 +578,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="node", fetch="EXTRA_LAZY")
      * @var ArrayCollection
+     * @Serializer\Exclude()
      */
     private $customForms = null;
 
@@ -574,6 +594,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\ManyToMany(targetEntity="NodeType")
      * @ORM\JoinTable(name="stack_types")
      * @var ArrayCollection
+     * @Serializer\Groups({"node"})
      */
     private $stackTypes = null;
 
@@ -615,6 +636,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @Serializer\Groups({"node"})
      */
     private $nodeSources;
 
@@ -673,6 +695,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
+     * @Serializer\Exclude()
      */
     protected $bNodes;
 
@@ -702,6 +725,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeB")
      * @var ArrayCollection
+     * @Serializer\Exclude()
      */
     protected $aNodes;
 
@@ -719,6 +743,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Collection<AttributeValueInterface>
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="node", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     protected $attributeValues;
 
@@ -790,6 +815,16 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
                 foreach ($nodeSources as $nodeSource) {
                     $cloneNodeSource = clone $nodeSource;
                     $cloneNodeSource->setNode($this);
+                }
+            }
+            $attributeValues = $this->getAttributeValues();
+            if ($attributeValues !== null) {
+                $this->attributeValues = new ArrayCollection();
+                /** @var AttributeValue $attributeValue */
+                foreach ($attributeValues as $attributeValue) {
+                    $cloneAttributeValue = clone $attributeValue;
+                    $cloneAttributeValue->setNode($this);
+                    $this->addAttributeValue($cloneAttributeValue);
                 }
             }
             // Get a random string after node-name.

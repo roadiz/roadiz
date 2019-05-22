@@ -772,13 +772,27 @@ class NodeRepository extends StatusAwareRepository
         Node $node,
         NodeTypeField $field
     ) {
-        return $this->findByNodeAndFieldName(
-            $node,
-            $field->getName()
-        );
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select(static::NODE_ALIAS)
+            ->innerJoin('n.aNodes', 'ntn')
+            ->andWhere($qb->expr()->eq('ntn.field', ':field'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        $qb->setParameter('field', $field)
+            ->setParameter('nodeA', $node);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
+     * Be careful, this methods could return other nodes if you created many fields
+     * with the same name on different node-types.
+     *
+     * @deprecated Use findByNodeAndField instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param string $fieldName
      * @return Node[]
@@ -815,14 +829,30 @@ class NodeRepository extends StatusAwareRepository
         NodeTypeField $field,
         Translation $translation
     ) {
-        return $this->findByNodeAndFieldNameAndTranslation(
-            $node,
-            $field->getName(),
-            $translation
-        );
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select('n, ns')
+            ->innerJoin('n.aNodes', 'ntn')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->andWhere($qb->expr()->eq('ntn.field', ':field'))
+            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        $qb->setParameter('field', $field)
+            ->setParameter('nodeA', $node)
+            ->setParameter('translation', $translation);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
+     * Be careful, this methods could return other nodes if you created many fields
+     * with the same name on different node-types.
+     *
+     * @deprecated Use findByNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param $fieldName
      * @param Translation $translation
@@ -862,13 +892,27 @@ class NodeRepository extends StatusAwareRepository
         Node $node,
         NodeTypeField $field
     ) {
-        return $this->findByReverseNodeAndFieldName(
-            $node,
-            $field->getName()
-        );
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select(static::NODE_ALIAS)
+            ->innerJoin('n.bNodes', 'ntn')
+            ->andWhere($qb->expr()->eq('ntn.field', ':field'))
+            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        $qb->setParameter('field', $field)
+            ->setParameter('nodeB', $node);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
+     * Be careful, this methods could return other nodes if you created many fields
+     * with the same name on different node-types.
+     *
+     * @deprecated Use findByReverseNodeAndField instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param string $fieldName
      * @return array
@@ -905,14 +949,27 @@ class NodeRepository extends StatusAwareRepository
         NodeTypeField $field,
         Translation $translation
     ) {
-        return $this->findByReverseNodeAndFieldNameAndTranslation(
-            $node,
-            $field->getName(),
-            $translation
-        );
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select('n, ns')
+            ->innerJoin('n.bNodes', 'ntn')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->andWhere($qb->expr()->eq('ntn.field', ':field'))
+            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
+            ->addOrderBy('ntn.position', 'ASC')
+            ->setCacheable(true);
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+
+        $qb->setParameter('field', $field)
+            ->setParameter('translation', $translation)
+            ->setParameter('nodeB', $node);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
+     * @deprecated Use findByReverseNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param $fieldName
      * @param Translation $translation

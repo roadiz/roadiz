@@ -493,8 +493,10 @@ class DocumentRepository extends EntityRepository
     ) {
         $qb = $this->createQueryBuilder('d');
         $qb->addSelect('dt')
+            ->addSelect('dd')
             ->leftJoin('d.documentTranslations', 'dt', 'WITH', 'dt.translation = :translation')
             ->innerJoin('d.nodesSourcesByFields', 'nsf', 'WITH', 'nsf.nodeSource = :nodeSource')
+            ->leftJoin('d.downscaledDocument', 'dd')
             ->andWhere($qb->expr()->eq('nsf.field', ':field'))
             ->andWhere($qb->expr()->eq('d.raw', ':raw'))
             ->addOrderBy('nsf.position', 'ASC')
@@ -508,6 +510,7 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
+     * @deprecated Use findByNodeSourceAndField because relying on field name **is not safe**.
      * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      * @param string                              $fieldName
      *
@@ -519,9 +522,9 @@ class DocumentRepository extends EntityRepository
     ) {
         $qb = $this->createQueryBuilder('d');
         $qb->addSelect('dt')
-            ->addSelect('nsf')
-            ->addSelect('f')
+            ->addSelect('dd')
             ->leftJoin('d.documentTranslations', 'dt', 'WITH', 'dt.translation = :translation')
+            ->leftJoin('d.downscaledDocument', 'dd')
             ->innerJoin('d.nodesSourcesByFields', 'nsf', 'WITH', 'nsf.nodeSource = :nodeSource')
             ->innerJoin('nsf.field', 'f', 'WITH', 'f.name = :name')
             ->andWhere($qb->expr()->eq('d.raw', ':raw'))

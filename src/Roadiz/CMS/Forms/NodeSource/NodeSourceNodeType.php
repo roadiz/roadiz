@@ -105,9 +105,9 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
         $event->setData($entityManager
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
-            ->findByNodeAndFieldName(
+            ->findByNodeAndField(
                 $nodeSource->getNode(),
-                $nodeTypeField->getName()
+                $nodeTypeField
             ));
     }
 

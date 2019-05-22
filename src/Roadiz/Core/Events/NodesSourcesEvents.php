@@ -48,6 +48,19 @@ final class NodesSourcesEvents
     /**
      * Event nodeSource.updated is triggered each time a node-source
      * is updated.
+     * This event is dispatched BEFORE entity manager FLUSHED.
+     *
+     * Event listener will be given a:
+     * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
+     *
+     * @var string
+     */
+    const NODE_SOURCE_PRE_UPDATE = 'nodeSource.pre_update';
+
+    /**
+     * Event nodeSource.updated is triggered each time a node-source
+     * is updated.
+     * This event is dispatched AFTER entity manager FLUSHED.
      *
      * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
@@ -59,6 +72,8 @@ final class NodesSourcesEvents
     /**
      * Event nodeSource.deleted is triggered each time a node-source
      * is deleted.
+     *
+     * This event is dispatched BEFORE entity manager FLUSHED.
      *
      * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance

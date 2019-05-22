@@ -58,6 +58,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldAnnotation(): string
     {
+        $exclusion = $this->excludeFromSerialization() ? '@Serializer\Exclude()' : '@Serializer\Groups({"nodes_sources"})';
         $ormParams = [
             'type' => '"' . NodeTypeField::$typeToDoctrine[$this->field->getType()] . '"',
             'nullable' => 'true',
@@ -77,6 +78,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      * ' . $this->field->getLabel() .'
      *
      * @ORM\Column(' . static::flattenORMParameters($ormParams) . ')
+     * ' . $exclusion . '
      */'.PHP_EOL;
     }
 

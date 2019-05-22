@@ -35,15 +35,9 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
 
