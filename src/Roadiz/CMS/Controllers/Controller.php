@@ -29,8 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
-use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
@@ -62,10 +62,7 @@ use Twig\Environment;
  */
 abstract class Controller implements ContainerAwareInterface
 {
-    /**
-     * @var Container|null
-     */
-    protected $container = null;
+    use ContainerAwareTrait;
 
     /**
      * Get current request.
@@ -80,26 +77,6 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * Sets the Container associated with this Controller.
-     *
-     * @param Container $container
-     * @return ContainerAwareInterface
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
      * Get mixed object from Dependency Injection container.
      *
      * *Alias for `$this->container[$key]`*
@@ -111,22 +88,6 @@ abstract class Controller implements ContainerAwareInterface
     public function getService($key = null)
     {
         return $this->container[$key];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get($serviceName)
-    {
-        return $this->container->offsetGet($serviceName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function has($serviceName)
-    {
-        return $this->container->offsetExists($serviceName);
     }
 
     /**
@@ -282,15 +243,9 @@ abstract class Controller implements ContainerAwareInterface
         $repository = $this->get('em')->getRepository(Translation::class);
 
         if ($this->get('kernel')->isPreview()) {
-            $translation = $repository->findOneByOverrideLocale($_locale);
-            if (null === $translation) {
-                $translation = $repository->findOneByLocale($_locale);
-            }
+            $translation = $repository->findOneByLocaleOrOverrideLocale($_locale);
         } else {
-            $translation = $repository->findOneByOverrideLocaleAndAvailable($_locale);
-            if (null === $translation) {
-                $translation = $repository->findOneByLocaleAndAvailable($_locale);
-            }
+            $translation = $repository->findOneAvailableByLocaleOrOverrideLocale($_locale);
         }
 
         if (null !== $translation) {

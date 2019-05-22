@@ -105,17 +105,9 @@ class DynamicUrlMatcher extends UrlMatcher
             // First token is for language
             if ($locale !== null && $locale != '') {
                 if ($this->preview === true) {
-                    if (in_array($locale, $repository->getAllOverrideLocales())) {
-                        return $repository->findOneByOverrideLocale($locale);
-                    } elseif (in_array($locale, $repository->getAllLocales())) {
-                        return $repository->findOneByLocale($locale);
-                    }
+                    return $repository->findOneByLocaleOrOverrideLocale($locale);
                 } else {
-                    if (in_array($locale, $repository->getAvailableOverrideLocales())) {
-                        return $repository->findOneByOverrideLocaleAndAvailable($locale);
-                    } elseif (in_array($locale, $repository->getAvailableLocales())) {
-                        return $repository->findOneByLocaleAndAvailable($locale);
-                    }
+                    return $repository->findOneAvailableByLocaleOrOverrideLocale($locale);
                 }
             }
         }

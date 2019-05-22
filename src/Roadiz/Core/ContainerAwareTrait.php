@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,33 +23,51 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AbstractExplorerProvider.php
+ * @file ContainerAwareTrait.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace Themes\Rozier\Explorer;
+namespace RZ\Roadiz\Core;
 
-use RZ\Roadiz\Core\ContainerAwareTrait;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Pimple\Container;
 
-abstract class AbstractExplorerProvider implements ExplorerProviderInterface
+trait ContainerAwareTrait
 {
-    use ContainerAwareTrait;
+    /**
+     * @var null|Container
+     */
+    protected $container = null;
 
     /**
-     * @var array
+     * {@inheritdoc}
      */
-    protected $options;
-
-    /**
-     * @param OptionsResolver $resolver
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function getContainer()
     {
-        $resolver->setDefaults([
-            'page'       => 1,
-            'search'   =>  null,
-            'itemPerPage'   => 30
-        ]);
+        return $this->container;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setContainer(Container $container)
+    {
+        $this->container = $container;
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($serviceName)
+    {
+        return $this->container->offsetGet($serviceName);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function has($serviceName)
+    {
+        return $this->container->offsetExists($serviceName);
     }
 }

@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -408,8 +409,13 @@ abstract class AppController extends Controller
      */
     public function throw404($message = "")
     {
-        $this->get('logger')->error($message);
+        $this->get('logger')->warn($message);
+
+        $this->assignation['nodeName'] = 'error-404';
+        $this->assignation['nodeTypeName'] = 'error404';
         $this->assignation['errorMessage'] = $message;
+        $this->assignation['title'] = $this->get('translator')->trans('error404.title');
+        $this->assignation['content'] = $this->get('translator')->trans('error404.message');
 
         return new Response(
             $this->getTwig()->render('404.html.twig', $this->assignation),
@@ -489,19 +495,6 @@ abstract class AppController extends Controller
         $this->container['stopwatch']->stop('getHome');
 
         return $this->homeNode;
-    }
-
-    /**
-     * @return Node|null
-     * @deprecated Theme root has never been used and will be removed.
-     */
-    protected function getRoot()
-    {
-        $theme = $this->getTheme();
-        if (null !== $theme) {
-            return $theme->getRoot();
-        }
-        return null;
     }
 
     /**

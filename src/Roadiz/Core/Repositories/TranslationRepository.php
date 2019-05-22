@@ -228,10 +228,61 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
+     * Get one translation by locale or override locqle.
+     *
+     * @param $locale
+     *
+     * @return Translation|null
+     */
+    public function findOneByLocaleOrOverrideLocale($locale)
+    {
+        $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
+        $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.locale', ':locale'),
+                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.overrideLocale', ':locale')
+            ))
+            ->setParameter('locale', $locale)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+
+        $query = $qb->getQuery();
+        $query->useResultCache(true, 60, 'findOneByLocaleOrOverrideLocale_' . $locale);
+
+        return $query->getOneOrNullResult();
+    }
+
+    /**
+     * Get one available translation by locale or override locqle.
+     *
+     * @param $locale
+     *
+     * @return Translation|null
+     */
+    public function findOneAvailableByLocaleOrOverrideLocale($locale)
+    {
+        $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
+        $qb->andWhere($qb->expr()->orX(
+                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.locale', ':locale'),
+                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.overrideLocale', ':locale')
+            ))
+            ->andWhere($qb->expr()->eq(static::TRANSLATION_ALIAS . '.available', ':available'))
+            ->setParameter('available', true)
+            ->setParameter('locale', $locale)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+
+        $query = $qb->getQuery();
+        $query->useResultCache(true, 60, 'findOneAvailableByLocaleOrOverrideLocale_' . $locale);
+
+        return $query->getOneOrNullResult();
+    }
+
+    /**
      * Get one available translation by locale.
      *
      * @param $locale
-     * @return \RZ\Roadiz\Core\Entities\Translation|null
+     *
+     * @return Translation|null
      */
     public function findOneByLocaleAndAvailable($locale)
     {
@@ -253,7 +304,8 @@ class TranslationRepository extends EntityRepository
      * Get one available translation by overrideLocale.
      *
      * @param $overrideLocale
-     * @return \RZ\Roadiz\Core\Entities\Translation|null
+     *
+     * @return Translation|null
      */
     public function findOneByOverrideLocaleAndAvailable($overrideLocale)
     {

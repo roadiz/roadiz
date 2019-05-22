@@ -113,16 +113,14 @@ use Themes\Rozier\Events\TranslationSubscriber;
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
+    use ContainerAwareTrait;
+
     const CMS_VERSION = 'develop';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
     public static $cmsVersion = "1.1.17";
 
-    /**
-     * @var null|Container
-     */
-    protected $container = null;
     protected $environment;
     protected $debug;
     protected $preview;
@@ -268,7 +266,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new NodeNameSubscriber($c['logger'], $c['utils.nodeNameChecker']));
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
             $dispatcher->addSubscriber(new ExceptionSubscriber(
-                $kernel,
+                $c,
                 $c['themeResolver'],
                 $c['logger'],
                 $kernel->isDebug()
@@ -525,39 +523,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public function isProdMode()
     {
         return $this->environment == 'prod';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-        return $this;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function get($serviceName)
-    {
-        return $this->container->offsetGet($serviceName);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function has($serviceName)
-    {
-        return $this->container->offsetExists($serviceName);
     }
 
     /**

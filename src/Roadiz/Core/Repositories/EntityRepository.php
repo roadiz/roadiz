@@ -41,6 +41,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use Pimple\Container;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
@@ -53,15 +54,12 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
  */
 class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var bool
      */
     protected $isPreview;
-
-    /**
-     * @var Container
-     */
-    protected $container;
 
     /**
      * EntityRepository constructor.
@@ -75,38 +73,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         parent::__construct($em, $class);
         $this->isPreview = $isPreview;
         $this->container = $container;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get($serviceName)
-    {
-        return $this->container->offsetGet($serviceName);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function has($serviceName)
-    {
-        return $this->container->offsetExists($serviceName);
     }
 
     /**
