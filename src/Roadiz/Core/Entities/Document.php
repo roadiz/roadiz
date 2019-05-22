@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\Models\AbstractDocument;
@@ -125,11 +126,13 @@ class Document extends AbstractDocument
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $imageWidth = 0;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $imageHeight = 0;
 
@@ -266,7 +269,7 @@ class Document extends AbstractDocument
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getNodesSourcesByFields()
     {
@@ -317,7 +320,7 @@ class Document extends AbstractDocument
 
     /**
      * @param Translation $translation
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDocumentTranslationsByTranslation(Translation $translation)
     {
@@ -359,7 +362,7 @@ class Document extends AbstractDocument
     /**
      * Gets the value of rawDocument.
      *
-     * @return Document|null
+     * @return DocumentInterface|null
      */
     public function getRawDocument()
     {
@@ -407,7 +410,7 @@ class Document extends AbstractDocument
     /**
      * Gets the downscaledDocument.
      *
-     * @return Document|null
+     * @return DocumentInterface|null
      */
     public function getDownscaledDocument()
     {

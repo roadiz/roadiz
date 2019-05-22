@@ -29,7 +29,6 @@
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;

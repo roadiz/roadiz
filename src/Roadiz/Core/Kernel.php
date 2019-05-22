@@ -296,7 +296,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                  * Add custom event subscriber to manage universal node-type fields
                  */
                 $dispatcher->addSubscriber(
-                    new NodesSourcesUniversalSubscriber($c['em'])
+                    new NodesSourcesUniversalSubscriber($c['em'], $c['utils.universalDataDuplicator'])
                 );
 
                 /*

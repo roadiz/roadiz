@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\Common\Collections\Criteria;
 use Monolog\Logger;
-use Parsedown;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
