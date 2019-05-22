@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\Models\AbstractDocument;
@@ -122,6 +123,18 @@ class Document extends AbstractDocument
      * @Serializer\Groups({"document", "nodes_sources"})
      */
     private $private = false;
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Groups({"document", "nodes_sources"})
+     */
+    private $imageWidth = 0;
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Groups({"document", "nodes_sources"})
+     */
+    private $imageHeight = 0;
 
     /**
      * Document constructor.
@@ -134,6 +147,8 @@ class Document extends AbstractDocument
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
+        $this->imageWidth = 0;
+        $this->imageHeight = 0;
     }
 
     /**
@@ -254,7 +269,7 @@ class Document extends AbstractDocument
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getNodesSourcesByFields()
     {
@@ -305,7 +320,7 @@ class Document extends AbstractDocument
 
     /**
      * @param Translation $translation
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDocumentTranslationsByTranslation(Translation $translation)
     {
@@ -347,7 +362,7 @@ class Document extends AbstractDocument
     /**
      * Gets the value of rawDocument.
      *
-     * @return Document|null
+     * @return DocumentInterface|null
      */
     public function getRawDocument()
     {
@@ -395,11 +410,51 @@ class Document extends AbstractDocument
     /**
      * Gets the downscaledDocument.
      *
-     * @return Document|null
+     * @return DocumentInterface|null
      */
     public function getDownscaledDocument()
     {
         return $this->downscaledDocument;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageWidth(): int
+    {
+        return $this->imageWidth;
+    }
+
+    /**
+     * @param int $imageWidth
+     *
+     * @return Document
+     */
+    public function setImageWidth(int $imageWidth): Document
+    {
+        $this->imageWidth = $imageWidth;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageHeight(): int
+    {
+        return $this->imageHeight;
+    }
+
+    /**
+     * @param int $imageHeight
+     *
+     * @return Document
+     */
+    public function setImageHeight(int $imageHeight): Document
+    {
+        $this->imageHeight = $imageHeight;
+
+        return $this;
     }
 
     /**

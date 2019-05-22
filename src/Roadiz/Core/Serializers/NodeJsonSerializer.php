@@ -152,7 +152,6 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         $node->setLocked($data['locked']);
         $node->setPriority($data['priority']);
         $node->setHidingChildren($data['hiding_children']);
-        $node->setArchived($data['archived']);
         $node->setSterile($data['sterile']);
         $node->setChildrenOrder($data['children_order']);
         $node->setChildrenOrderDirection($data['children_order_direction']);

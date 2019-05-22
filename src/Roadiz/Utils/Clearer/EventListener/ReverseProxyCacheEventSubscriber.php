@@ -72,7 +72,8 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
      */
     protected function supportConfig()
     {
-        return isset($c['config']['reverseProxyCache']) && count($c['config']['reverseProxyCache']['frontend']) > 0;
+        return isset($this->container['config']['reverseProxyCache']) &&
+            count($this->container['config']['reverseProxyCache']['frontend']) > 0;
     }
 
     /**

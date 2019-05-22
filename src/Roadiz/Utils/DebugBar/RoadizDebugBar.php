@@ -32,8 +32,6 @@ namespace RZ\Roadiz\Utils\DebugBar;
 use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MemoryCollector;
-use DebugBar\DataCollector\PhpInfoCollector;
-use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DebugBar;
 use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AccessMapCollector;
