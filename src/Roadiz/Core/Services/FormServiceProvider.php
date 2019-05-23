@@ -33,8 +33,10 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\ArrayProvider;
 use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
+use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
+use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
@@ -50,20 +52,27 @@ class FormServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container[BlacklistProviderInterface::class] = function ($c) {
+            return new LazyChainProvider(new \Pimple\Psr11\Container($c), [
+                ArrayProvider::class,
+                Top500Provider::class,
+            ]);
+        };
+
+        $container[ArrayProvider::class] = function () {
             return new ArrayProvider([
                 'root',
-                'password',
                 'test',
                 'testtest',
-                '111111',
-                '123456',
-                '1234567',
-                '12345678',
-                '123456789',
                 'azerty',
+                'Azerty',
+                'azertyuiop',
                 'qwerty',
-                'motdepasse'
+                'motdepasse',
+                'Motdepasse'
             ]);
+        };
+        $container[Top500Provider::class] = function () {
+            return new Top500Provider();
         };
 
         $container[BlacklistValidator::class] = function ($c) {

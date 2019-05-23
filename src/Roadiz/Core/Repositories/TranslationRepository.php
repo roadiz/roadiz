@@ -238,9 +238,9 @@ class TranslationRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
         $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.locale', ':locale'),
-                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.overrideLocale', ':locale')
-            ))
+            $qb->expr()->eq(static::TRANSLATION_ALIAS . '.locale', ':locale'),
+            $qb->expr()->eq(static::TRANSLATION_ALIAS . '.overrideLocale', ':locale')
+        ))
             ->setParameter('locale', $locale)
             ->setMaxResults(1)
             ->setCacheable(true);
@@ -262,9 +262,9 @@ class TranslationRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
         $qb->andWhere($qb->expr()->orX(
-                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.locale', ':locale'),
-                $qb->expr()->eq(static::TRANSLATION_ALIAS . '.overrideLocale', ':locale')
-            ))
+            $qb->expr()->eq(static::TRANSLATION_ALIAS . '.locale', ':locale'),
+            $qb->expr()->eq(static::TRANSLATION_ALIAS . '.overrideLocale', ':locale')
+        ))
             ->andWhere($qb->expr()->eq(static::TRANSLATION_ALIAS . '.available', ':available'))
             ->setParameter('available', true)
             ->setParameter('locale', $locale)
