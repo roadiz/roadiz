@@ -31,6 +31,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use JMS\Serializer\EventDispatcher\EventDispatcher;
+use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\Serializer;
@@ -62,8 +64,20 @@ class SerializationServiceProvider implements ServiceProviderInterface
                         new IdenticalPropertyNamingStrategy()
                     )
                 )
-                ->addDefaultHandlers();
+                ->addDefaultHandlers()
+                ->configureListeners(function(EventDispatcher $dispatcher) use ($c) {
+                    foreach ($c['serializer.subscribers'] as $subscriber) {
+                        if ($subscriber instanceof EventSubscriberInterface) {
+                            $dispatcher->addSubscriber($subscriber);
+                        }
+                    }
+                });
         };
+
+        $container['serializer.subscribers'] = function ($c) {
+            return [];
+        };
+
         /**
          * @param $c
          *
