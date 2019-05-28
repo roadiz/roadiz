@@ -57,6 +57,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @var string
      * @ORM\Column(type="string", nullable=false, unique=false)
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("string")
      */
     protected $label;
 
@@ -64,6 +65,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @var array|null
      * @ORM\Column(type="simple_array", nullable=true, unique=false)
      * @Serializer\Groups({"attribute"})
+     * @Serializer\Type("array")
      */
     protected $options = [];
 
@@ -79,6 +81,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @var Translation
      * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Translation")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
      */
     protected $translation;
 }

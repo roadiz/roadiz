@@ -38,6 +38,8 @@ use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use Symfony\Component\Console\Input\InputArgument;
@@ -49,17 +51,14 @@ use Symfony\Component\Yaml\Yaml;
 /**
  * Command line utils for managing themes from terminal.
  */
-class ThemeInstallCommand extends ThemesCommand
+class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var string
      */
     private $themeRoot;
-
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
 
     /**
      * @var bool
@@ -113,7 +112,6 @@ class ThemeInstallCommand extends ThemesCommand
         $output->writeln('Theme name is: <info>'. $reflectionClass->getName() .'</info>.');
         $output->writeln('Theme assets are located in <info>'. $this->themeRoot .'/static</info>.');
 
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         if ($input->getOption('data')) {
             $this->importThemeData($reflectionClass->getName(), $output);
         } elseif ($input->getOption('nodes')) {
@@ -135,11 +133,8 @@ class ThemeInstallCommand extends ThemesCommand
             if (isset($data["importFiles"]['groups'])) {
                 foreach ($data["importFiles"]['groups'] as $filename) {
                     if (!$this->dryRun) {
-                        GroupsImporter::importJsonFile(
-                            file_get_contents($this->themeRoot . "/" . $filename),
-                            $this->entityManager,
-                            $this->getHelper('handlerFactory')->getHandlerFactory()
-                        );
+                        $this->get(GroupsImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
+                        $this->get('em')->flush();
                     }
                     $output->writeln('* Groups file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
@@ -147,11 +142,8 @@ class ThemeInstallCommand extends ThemesCommand
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     if (!$this->dryRun) {
-                        RolesImporter::importJsonFile(
-                            file_get_contents($this->themeRoot . "/" . $filename),
-                            $this->entityManager,
-                            $this->getHelper('handlerFactory')->getHandlerFactory()
-                        );
+                        $this->get(RolesImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
+                        $this->get('em')->flush();
                     }
                     $output->writeln('* Roles file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
@@ -159,11 +151,8 @@ class ThemeInstallCommand extends ThemesCommand
             if (isset($data["importFiles"]['settings'])) {
                 foreach ($data["importFiles"]['settings'] as $filename) {
                     if (!$this->dryRun) {
-                        SettingsImporter::importJsonFile(
-                            file_get_contents($this->themeRoot . "/" . $filename),
-                            $this->entityManager,
-                            $this->getHelper('handlerFactory')->getHandlerFactory()
-                        );
+                        $this->get(SettingsImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
+                        $this->get('em')->flush();
                     }
                     $output->writeln('* Settings file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
@@ -171,11 +160,8 @@ class ThemeInstallCommand extends ThemesCommand
             if (isset($data["importFiles"]['nodetypes'])) {
                 foreach ($data["importFiles"]['nodetypes'] as $filename) {
                     if (!$this->dryRun) {
-                        NodeTypesImporter::importJsonFile(
-                            file_get_contents($this->themeRoot . "/" . $filename),
-                            $this->entityManager,
-                            $this->getHelper('handlerFactory')->getHandlerFactory()
-                        );
+                        $this->get(NodeTypesImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
+                        $this->get('em')->flush();
                     }
                     $output->writeln('* Node-type file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
@@ -184,11 +170,8 @@ class ThemeInstallCommand extends ThemesCommand
                 foreach ($data["importFiles"]['tags'] as $filename) {
                     if (!$this->dryRun) {
                         try {
-                            TagsImporter::importJsonFile(
-                                file_get_contents($this->themeRoot . "/" . $filename),
-                                $this->entityManager,
-                                $this->getHelper('handlerFactory')->getHandlerFactory()
-                            );
+                            $this->get(TagsImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
+                            $this->get('em')->flush();
                             $output->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                         } catch (EntityAlreadyExistsException $e) {
                             $output->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> <error>has NOT been imported ('.$e->getMessage().')</error>.');
@@ -214,11 +197,8 @@ class ThemeInstallCommand extends ThemesCommand
                 foreach ($data["importFiles"]['nodes'] as $filename) {
                     try {
                         if (!$this->dryRun) {
-                            NodesImporter::importJsonFile(
-                                file_get_contents($this->themeRoot . "/" . $filename),
-                                $this->entityManager,
-                                $this->getHelper('handlerFactory')->getHandlerFactory()
-                            );
+                            $this->get(NodesImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
+                            $this->get('em')->flush();
                         }
                         $output->writeln('— Theme file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                     } catch (EntityAlreadyExistsException $e) {

@@ -38,6 +38,7 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -165,8 +166,15 @@ class RoadizApplication extends Application
             // Do not load additional commands if configuration is not available
         }
 
+        $commands = array_merge(parent::getDefaultCommands(), $commands);
 
-        return array_merge(parent::getDefaultCommands(), $commands);
+        foreach ($commands as $command) {
+            if ($command instanceof ContainerAwareInterface) {
+                $command->setContainer($this->kernel->getContainer());
+            }
+        }
+
+        return $commands;
     }
 
     /**

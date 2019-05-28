@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2019, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,32 +20,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the ROADIZ shall not
+ * Except as contained in this notice, the name of the roadiz shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RolesImporter.php
- * @author Maxime Constantinian
+ * @file AttributeImporter.php
+ * @author Ambroise Maupate
+ *
  */
-namespace RZ\Roadiz\CMS\Importers;
+declare(strict_types=1);
+
+namespace RZ\Roadiz\Attribute\Importer;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityNotFoundException;
+use JMS\Serializer\Serializer;
 use Pimple\Container;
+use RZ\Roadiz\CMS\Importers\EntityImporterInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
-use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
+use RZ\Roadiz\Core\Entities\Attribute;
+use RZ\Roadiz\Core\Entities\AttributeTranslation;
 
-/**
- * {@inheritdoc}
- */
-class RolesImporter implements ImporterInterface, EntityImporterInterface, ContainerAwareInterface
+class AttributeImporter implements EntityImporterInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
     /**
-     * NodesImporter constructor.
+     * AttributeImporter constructor.
      *
      * @param Container $container
      */
@@ -54,13 +56,12 @@ class RolesImporter implements ImporterInterface, EntityImporterInterface, Conta
         $this->container = $container;
     }
 
-
     /**
      * @inheritDoc
      */
     public function supports(string $entityClass): bool
     {
-        return $entityClass === Role::class;
+        return $entityClass === Attribute::class || $entityClass === 'array<' . Attribute::class . '>';
     }
 
     /**
@@ -70,28 +71,30 @@ class RolesImporter implements ImporterInterface, EntityImporterInterface, Conta
     {
         /** @var EntityManager $em */
         $em = $this->get('em');
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $attributes = $serializer->deserialize($serializedData, 'array<' . Attribute::class . '>', 'json');
 
-        $serializer = new RoleCollectionJsonSerializer($em);
-        $serializer->deserialize($serializedData);
+        /** @var Attribute $attribute */
+        foreach ($attributes as $attribute) {
+            /** @var AttributeTranslation $attributeTranslation */
+            foreach ($attribute->getAttributeTranslations() as $attributeTranslation) {
+                try {
+                    $em->merge($attributeTranslation);
+                } catch (EntityNotFoundException $e) {
+                    $attribute->setId(null);
+                    $em->persist($attributeTranslation);
+                }
+            }
+            try {
+                $em->merge($attribute);
+            } catch (EntityNotFoundException $e) {
+                $attribute->setId(null);
+                $em->persist($attribute);
+            }
+        }
 
         $em->flush();
-
-        return true;
-    }
-
-    /**
-     * Import a Json file (.rzt) containing setting and setting group.
-     *
-     * @param string $serializedData
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
-     * @deprecated
-     */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
-    {
-        $serializer = new RoleCollectionJsonSerializer($em);
-        $serializer->deserialize($serializedData);
 
         return true;
     }

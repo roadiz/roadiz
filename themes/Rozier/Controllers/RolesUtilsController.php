@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -142,7 +143,7 @@ class RolesUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (RolesImporter::importJsonFile($serializedData, $this->get('em'), $this->get('factory.handler'))) {
+                    if ($this->get(RolesImporter::class)->import($serializedData)) {
                         $msg = $this->getTranslator()->trans('role.imported');
                         $this->publishConfirmMessage($request, $msg);
 
@@ -158,30 +159,11 @@ class RolesUtilsController extends RozierApp
                         return $this->redirect($this->generateUrl(
                             'rolesHomePage'
                         ));
-                    } else {
-                        $msg = $this->getTranslator()->trans('file.format.not_valid');
-                        $request->getSession()->getFlashBag()->add('error', $msg);
-                        $this->get('logger')->error($msg);
-
-                        // redirect even if its null
-                        return $this->redirect($this->generateUrl(
-                            'rolesImportPage'
-                        ));
                     }
-                } else {
-                    $msg = $this->getTranslator()->trans('file.format.not_valid');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->error($msg);
-
-                    // redirect even if its null
-                    return $this->redirect($this->generateUrl(
-                        'rolesImportPage'
-                    ));
                 }
+                $form->addError(new FormError($this->getTranslator()->trans('file.format.not_valid')));
             } else {
-                $msg = $this->getTranslator()->trans('file.not_uploaded');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->get('logger')->error($msg);
+                $form->addError(new FormError($this->getTranslator()->trans('file.not_uploaded')));
             }
         }
 

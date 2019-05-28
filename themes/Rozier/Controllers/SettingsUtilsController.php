@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -130,7 +131,7 @@ class SettingsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (SettingsImporter::importJsonFile($serializedData, $this->get('em'), $this->get('factory.handler'))) {
+                    if ($this->get(SettingsImporter::class)->import($serializedData)) {
                         $msg = $this->getTranslator()->trans('setting.imported');
                         $this->publishConfirmMessage($request, $msg);
 
@@ -140,30 +141,11 @@ class SettingsUtilsController extends RozierApp
                         return $this->redirect($this->generateUrl(
                             'settingsHomePage'
                         ));
-                    } else {
-                        $msg = $this->getTranslator()->trans('file.format.not_valid');
-                        $request->getSession()->getFlashBag()->add('error', $msg);
-                        $this->get('logger')->error($msg);
-
-                        // redirect even if its null
-                        return $this->redirect($this->generateUrl(
-                            'settingsImportPage'
-                        ));
                     }
-                } else {
-                    $msg = $this->getTranslator()->trans('file.format.not_valid');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->error($msg);
-
-                    // redirect even if its null
-                    return $this->redirect($this->generateUrl(
-                        'settingsImportPage'
-                    ));
                 }
+                $form->addError(new FormError($this->getTranslator()->trans('file.format.not_valid')));
             } else {
-                $msg = $this->getTranslator()->trans('file.not_uploaded');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->get('logger')->error($msg);
+                $form->addError(new FormError($this->getTranslator()->trans('file.not_uploaded')));
             }
         }
 

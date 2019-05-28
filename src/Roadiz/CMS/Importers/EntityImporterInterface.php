@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2019, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the ROADIZ shall not
+ * Except as contained in this notice, the name of the roadiz shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ImporterInterface.php
- * @author Maxime Constantinian
+ * @file EntityImporterInterface.php
+ * @author Ambroise Maupate
+ *
  */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
-
-/**
- * Class for create all importer.
- *
- * @deprecated
- */
-interface ImporterInterface
+interface EntityImporterInterface
 {
     /**
-     * Import json file.
+     * @param string $entityClass
      *
-     * @param string $template
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
      * @return bool
-     * @deprecated
      */
-    public static function importJsonFile($template, EntityManager $em, HandlerFactoryInterface $handlerFactory);
+    public function supports(string $entityClass): bool;
+
+    /**
+     * @param string $serializedData
+     *
+     * @return bool
+     */
+    public function import(string $serializedData): bool;
 }

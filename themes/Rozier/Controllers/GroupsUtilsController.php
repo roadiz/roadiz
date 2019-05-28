@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -142,11 +143,8 @@ class GroupsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    GroupsImporter::importJsonFile(
-                        $serializedData,
-                        $this->get('em'),
-                        $this->get('factory.handler')
-                    );
+                    $this->get(GroupsImporter::class)->import($serializedData);
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
                     $this->publishConfirmMessage($request, $msg);
@@ -155,20 +153,10 @@ class GroupsUtilsController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'groupsHomePage'
                     ));
-                } else {
-                    $msg = $this->getTranslator()->trans('file.format.not_valid');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->error($msg);
-
-                    // redirect even if its null
-                    return $this->redirect($this->generateUrl(
-                        'groupsImportPage'
-                    ));
                 }
+                $form->addError(new FormError($this->getTranslator()->trans('file.format.not_valid')));
             } else {
-                $msg = $this->getTranslator()->trans('file.not_uploaded');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->get('logger')->error($msg);
+                $form->addError(new FormError($this->getTranslator()->trans('file.not_uploaded')));
             }
         }
 
