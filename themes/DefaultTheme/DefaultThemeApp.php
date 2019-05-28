@@ -33,14 +33,13 @@ namespace Themes\DefaultTheme;
 
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\Event\LinkPathSubscriber;
+use Themes\DefaultTheme\Serialization\DocumentUriSubscriber;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
 use Themes\DefaultTheme\Twig\ImageFormatsExtension;
 
@@ -175,6 +174,11 @@ class DefaultThemeApp extends FrontendController
         $container->extend('twig.extensions', function ($extensions, $c) {
             $extensions->add(new ImageFormatsExtension());
             return $extensions;
+        });
+
+        $container->extend('serializer.subscribers', function ($subscribers, $c) {
+            $subscribers[] = new DocumentUriSubscriber($c);
+            return $subscribers;
         });
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
