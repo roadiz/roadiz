@@ -72,18 +72,22 @@ class DocumentUriSubscriber implements EventSubscriberInterface, ContainerAwareI
     {
         $document = $event->getObject();
         $visitor = $event->getVisitor();
+        $context = $event->getContext();
 
-        /** @var DocumentUrlGenerator $urlGenerator */
-        $urlGenerator = $this->get('document.url_generator')->setDocument($document);
+        if ($context->hasAttribute('groups') &&
+            in_array('urls', $context->getAttribute('groups'))) {
+            /** @var DocumentUrlGenerator $urlGenerator */
+            $urlGenerator = $this->get('document.url_generator')->setDocument($document);
 
-        if ($document instanceof Document) {
-            if ($visitor instanceof SerializationVisitorInterface) {
-                $visitor->visitProperty(new StaticPropertyMetadata('array', 'urls', []), [
-                    'original' => $urlGenerator->setOptions(['noProcess' => true])->getUrl(true),
-                    'small' => $urlGenerator->setOptions(['width' => 300])->getUrl(true),
-                    'medium' => $urlGenerator->setOptions(['width' => 700])->getUrl(true),
-                    'large' => $urlGenerator->setOptions(['width' => 1500])->getUrl(true)
-                ]);
+            if ($document instanceof Document) {
+                if ($visitor instanceof SerializationVisitorInterface) {
+                    $visitor->visitProperty(new StaticPropertyMetadata('array', 'urls', []), [
+                        'original' => $urlGenerator->setOptions(['noProcess' => true])->getUrl(true),
+                        'small' => $urlGenerator->setOptions(['width' => 300])->getUrl(true),
+                        'medium' => $urlGenerator->setOptions(['width' => 700])->getUrl(true),
+                        'large' => $urlGenerator->setOptions(['width' => 1500])->getUrl(true)
+                    ]);
+                }
             }
         }
     }
