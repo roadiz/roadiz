@@ -29,10 +29,15 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -42,6 +47,36 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NodesType extends AbstractType
 {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer(new CallbackTransformer(function ($mixedEntities) {
+            if ($mixedEntities instanceof Collection) {
+                return $mixedEntities->toArray();
+            }
+            if (!is_array($mixedEntities)) {
+                return [$mixedEntities];
+            }
+            return $mixedEntities;
+        }, function ($mixedIds) use ($options) {
+            /** @var NodeRepository $repository */
+            $repository = $options['entityManager']
+                ->getRepository(Node::class)
+                ->setDisplayingAllNodesStatuses(true);
+            if (is_array($mixedIds) && count($mixedIds) === 0) {
+                return [];
+            } elseif (is_array($mixedIds) && count($mixedIds) > 0) {
+                if ($options['multiple'] === false) {
+                    return $repository->findOneBy(['id' => $mixedIds]);
+                }
+                return $repository->findBy(['id' => $mixedIds]);
+            } elseif ($options['multiple'] === true) {
+                return [];
+            } else {
+                return $repository->findOneById($mixedIds);
+            }
+        }));
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -60,6 +95,7 @@ class NodesType extends AbstractType
             'entityManager'
         ]);
         $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
+        $resolver->setAllowedTypes('multiple', ['boolean']);
     }
 
     /**
@@ -76,7 +112,9 @@ class NodesType extends AbstractType
         /*
          * Inject data as plain nodes entities
          */
-        $view->vars['data'] = $options['nodes'];
+        if (!empty($options['nodes'])) {
+            $view->vars['data'] = $options['nodes'];
+        }
     }
     /**
      * {@inheritdoc}

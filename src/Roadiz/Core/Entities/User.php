@@ -642,8 +642,15 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     public function setLocked($locked)
     {
         $this->locked = (boolean)$locked;
-
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked(): bool
+    {
+        return $this->locked;
     }
 
     /**
