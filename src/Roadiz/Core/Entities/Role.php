@@ -35,6 +35,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Roles are persisted version of string Symfony's roles.
@@ -75,6 +76,7 @@ class Role extends BaseRole implements PersistableInterface
 
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"user", "role", "group"})
      * @var string
      */
     private $name;
@@ -133,7 +135,8 @@ class Role extends BaseRole implements PersistableInterface
 
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles")
-     * @var Collection
+     * @Serializer\Groups({"role"})
+     * @var Collection<Group>
      */
     private $groups;
 
@@ -177,6 +180,7 @@ class Role extends BaseRole implements PersistableInterface
      * It replace underscores by dashes and lowercase.
      *
      * @return string
+     * @Serializer\Groups({"role"})
      */
     public function getClassName(): string
     {

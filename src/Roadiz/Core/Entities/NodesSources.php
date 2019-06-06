@@ -71,9 +71,10 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
 
     /**
+     * @var Node
      * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Groups({"nodes_sources", "log_sources"})
      */
     private $node;
 
@@ -111,9 +112,10 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     }
 
     /**
+     * @var Translation
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Groups({"nodes_sources", "log_sources"})
      */
     private $translation;
 
@@ -236,7 +238,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
 
     /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
-     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Groups({"nodes_sources", "log_sources"})
      */
     protected $title = '';
 

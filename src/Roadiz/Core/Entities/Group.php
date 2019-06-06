@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * A group gather User and Roles.
@@ -44,11 +45,13 @@ class Group extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"user", "role", "group"})
      * @var string
      */
     private $name = '';
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
+     * @Serializer\Groups({"group_user"})
      * @var ArrayCollection
      */
     private $users;
@@ -58,11 +61,13 @@ class Group extends AbstractEntity
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
-     * @var ArrayCollection
+     * @var ArrayCollection<Role>
+     * @Serializer\Groups({"group"})
      */
     private $roles;
     /**
      * @var array|null
+     * @Serializer\Groups({"group", "user"})
      */
     private $rolesNames = null;
 

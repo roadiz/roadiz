@@ -107,7 +107,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"nodes_sources", "node", "log_sources"})
      */
     private $nodeName;
 

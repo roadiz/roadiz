@@ -542,7 +542,7 @@ class Translation extends AbstractDateTimed
      *
      * @var string
      * @ORM\Column(type="string", unique=true, length=10)
-     * @Serializer\Groups({"translation", "document", "nodes_sources", "tag", "attribute", "folder"})
+     * @Serializer\Groups({"translation", "document", "nodes_sources", "tag", "attribute", "folder", "log_sources"})
      */
     private $locale = '';
     /**
