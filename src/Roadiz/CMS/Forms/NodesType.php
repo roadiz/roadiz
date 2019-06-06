@@ -85,9 +85,7 @@ class NodesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'class' => Node::class,
             'multiple' => true,
-            'property' => 'id',
             'nodes' => [],
         ]);
 
