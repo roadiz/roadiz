@@ -180,7 +180,7 @@ abstract class Controller implements ContainerAwareInterface
      * an AccessDeniedException exception.
      *
      * @param string $role
-     *
+     * @deprecated Use denyAccessUnlessGranted() method instead
      * @throws AccessDeniedException
      */
     public function validateAccessForRole($role)

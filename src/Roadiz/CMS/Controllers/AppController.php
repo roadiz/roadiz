@@ -562,9 +562,16 @@ abstract class AppController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        if ($this->isGranted($role) && null !== $user && $user->getChroot() === null) {
+            /*
+             * Already grant access if user is not chrooted.
+             */
+            return;
+        }
+
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
-
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
@@ -582,8 +589,7 @@ abstract class AppController extends Controller
             $isNewsletterFriend = false;
         }
 
-        if ($isNewsletterFriend &&
-            !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+        if ($isNewsletterFriend && !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
             throw new AccessDeniedException("You don't have access to this page");
         } elseif (!$isNewsletterFriend) {
             if (!$this->isGranted($role)) {
