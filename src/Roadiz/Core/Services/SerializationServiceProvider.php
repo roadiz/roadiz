@@ -48,12 +48,7 @@ class SerializationServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        /**
-         * @param $c
-         *
-         * @return SerializerBuilder
-         */
-        $container['serializer.builder'] = function ($c) {
+        $container[SerializerBuilder::class] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return SerializerBuilder::create()
@@ -78,13 +73,20 @@ class SerializationServiceProvider implements ServiceProviderInterface
             return [];
         };
 
+        /*
+         * Alias with FQN
+         */
+        $container[Serializer::class] = function ($c) {
+            return $c['serializer'];
+        };
+
         /**
          * @param $c
          *
          * @return Serializer
          */
         $container['serializer'] = function ($c) {
-            return $c['serializer.builder']->build();
+            return $c[SerializerBuilder::class]->build();
         };
     }
 }

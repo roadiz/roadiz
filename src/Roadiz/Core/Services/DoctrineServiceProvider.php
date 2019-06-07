@@ -34,6 +34,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -153,6 +154,13 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             } catch (NoConfigurationFoundException $e) {
                 return null;
             }
+        };
+
+        /*
+         * Alias with FQN interface
+         */
+        $container[EntityManagerInterface::class] = function ($c) {
+            return $c['em'];
         };
 
         $container['em'] = function (Container $c) {

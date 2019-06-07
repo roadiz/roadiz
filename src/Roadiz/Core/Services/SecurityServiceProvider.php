@@ -56,6 +56,7 @@ use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -277,6 +278,13 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 AnonymousToken::class,
                 RememberMeToken::class
             );
+        };
+
+        /*
+         * Alias with FQN interface
+         */
+        $container[AuthorizationCheckerInterface::class] = function (Container $c) {
+            return $c['securityAuthorizationChecker'];
         };
 
         $container['securityAuthorizationChecker'] = function ($c) {
