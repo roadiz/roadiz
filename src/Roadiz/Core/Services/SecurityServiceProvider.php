@@ -257,15 +257,19 @@ class SecurityServiceProvider implements ServiceProviderInterface
             ]);
         };
 
+        $container['security.voters'] = function (Container $c) {
+            return [
+                new AuthenticatedVoter($c['securityAuthentificationTrustResolver']),
+                $c['roleHierarchyVoter'],
+                $c['groupVoter'],
+            ];
+        };
+
         /*
          * Main decision manager, set your voters here.
          */
         $container['accessDecisionManager'] = function ($c) {
-            return new AccessDecisionManager([
-                new AuthenticatedVoter($c['securityAuthentificationTrustResolver']),
-                $c['roleHierarchyVoter'],
-                $c['groupVoter'],
-            ]);
+            return new AccessDecisionManager($c['security.voters']);
         };
 
         $container['securityAuthentificationTrustResolver'] = function ($c) {
