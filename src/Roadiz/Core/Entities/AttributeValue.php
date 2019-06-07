@@ -57,6 +57,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
      * @var AttributeInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Attribute")
      */
     protected $attribute;
 
@@ -70,6 +71,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
      *     orphanRemoval=true
      * )
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\AttributeValueTranslation>")
      */
     protected $attributeValueTranslations;
 

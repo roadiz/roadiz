@@ -32,10 +32,21 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Attributes;
 
+use Doctrine\ORM\EntityNotFoundException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
+use RZ\Roadiz\Attribute\Form\AttributeImportType;
 use RZ\Roadiz\Attribute\Form\AttributeType;
+use RZ\Roadiz\Attribute\Importer\AttributeImporter;
+use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\Attribute;
+use RZ\Roadiz\Core\Entities\AttributeTranslation;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -86,10 +97,43 @@ class AttributeController extends RozierApp
             ),
             JsonResponse::HTTP_OK,
             [
-                //'Content-Disposition' => sprintf('attachment; filename="%s"', 'attributes.json')
+                'Content-Disposition' => sprintf('attachment; filename="%s"', 'attributes.json'),
             ],
             true
         );
+    }
+
+    /**
+     * Import a Json file (.rzt) containing Attributes datas and fields.
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function importAction(Request $request)
+    {
+        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
+
+        $form = $this->createForm(AttributeImportType::class);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            /** @var UploadedFile $file */
+            $file = $form->get('file')->getData();
+
+            if ($file->isValid()) {
+                $serializedData = file_get_contents($file->getPathname());
+
+                $this->get(AttributeImporter::class)->import($serializedData);
+                $this->get('em')->flush();
+                return $this->redirect($this->generateUrl('attributesHomePage'));
+            }
+            $form->addError(new FormError($this->getTranslator()->trans('file.not_uploaded')));
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('attributes/import.html.twig', $this->assignation);
     }
 
     /**
@@ -152,7 +196,7 @@ class AttributeController extends RozierApp
         }
 
         $form = $this->createForm(AttributeType::class, $item, [
-            'entityManager' => $this->get('em')
+            'entityManager' => $this->get('em'),
         ]);
         $form->handleRequest($request);
         if ($form->isValid()) {

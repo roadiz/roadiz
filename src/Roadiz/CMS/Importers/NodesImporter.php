@@ -31,6 +31,9 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\EntityManager;
+use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -41,8 +44,54 @@ use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 /**
  * {@inheritdoc}
  */
-class NodesImporter implements ImporterInterface
+class NodesImporter implements ImporterInterface, EntityImporterInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
+    /**
+     * NodesImporter constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $entityClass): bool
+    {
+        return $entityClass === Node::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function import(string $serializedData): bool
+    {
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+
+        static::$usedTranslations = [];
+        $serializer = new NodeJsonSerializer($em);
+        $nodes = $serializer->deserialize($serializedData);
+
+        try {
+            foreach ($nodes as $node) {
+                static::browseTree($node, $em);
+            }
+            $em->flush();
+        } catch (UniqueConstraintViolationException $e) {
+            throw new EntityAlreadyExistsException($e->getMessage());
+        }
+
+        return true;
+    }
+
+
     protected static $usedTranslations;
 
     /**
@@ -52,6 +101,7 @@ class NodesImporter implements ImporterInterface
      * @param EntityManager $em
      * @param HandlerFactoryInterface $handlerFactory
      * @return bool
+     * @deprecated
      */
     public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {
@@ -63,7 +113,6 @@ class NodesImporter implements ImporterInterface
             foreach ($nodes as $node) {
                 static::browseTree($node, $em);
             }
-
             $em->flush();
         } catch (UniqueConstraintViolationException $e) {
             throw new EntityAlreadyExistsException($e->getMessage());

@@ -59,6 +59,7 @@ use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
 use RZ\Roadiz\Core\Services\FactoryServiceProvider;
 use RZ\Roadiz\Core\Services\FormServiceProvider;
+use RZ\Roadiz\Core\Services\ImporterServiceProvider;
 use RZ\Roadiz\Core\Services\LoggerServiceProvider;
 use RZ\Roadiz\Core\Services\MailerServiceProvider;
 use RZ\Roadiz\Core\Services\RoutingServiceProvider;
@@ -379,6 +380,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new AttributesServiceProvider());
         $container->register(new SerializationServiceProvider());
         $container->register(new UtilsServiceProvider());
+        $container->register(new ImporterServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

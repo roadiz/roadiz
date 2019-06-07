@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use RZ\Roadiz\CMS\Importers\EntityImporterInterface;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
@@ -219,7 +220,9 @@ class ImportController extends AppController
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'), $this->get('factory.handler'));
+                /** @var EntityImporterInterface $importer */
+                $importer = $this->get($classImporter);
+                $importer->import($file);
             } else {
                 throw new \Exception('File: ' . $path . ' don\'t exist');
             }

@@ -30,6 +30,11 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
+use RZ\Roadiz\Core\Entities\Setting;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -42,8 +47,49 @@ use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
  *
  * @package RZ\Roadiz\CMS\Importers
  */
-class TagsImporter implements ImporterInterface
+class TagsImporter implements ImporterInterface, EntityImporterInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
+    /**
+     * NodesImporter constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $entityClass): bool
+    {
+        return $entityClass === Tag::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function import(string $serializedData): bool
+    {
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+
+        $serializer = new TagJsonSerializer();
+        $tags = $serializer->deserialize($serializedData);
+        foreach ($tags as $tag) {
+            static::browseTree($tag, $em);
+        }
+
+        $em->flush();
+
+        return true;
+    }
+
+
     protected static $usedTranslations;
 
     /**
@@ -53,6 +99,7 @@ class TagsImporter implements ImporterInterface
      * @param EntityManager $em
      * @param HandlerFactoryInterface $handlerFactory
      * @return bool
+     * @deprecated
      */
     public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {

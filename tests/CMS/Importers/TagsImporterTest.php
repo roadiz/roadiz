@@ -13,7 +13,7 @@ class TagsImporterTest extends SchemaDependentCase
      */
     public function testImportJsonFile($json, $count)
     {
-        $this->assertTrue(TagsImporter::importJsonFile($json, $this->get('em'), $this->get('factory.handler')));
+        $this->assertTrue($this->get(TagsImporter::class)->import($json));
         $this->assertEquals($count, $this->countTags());
         $this->assertEquals($count, $this->countTagTranslations());
 

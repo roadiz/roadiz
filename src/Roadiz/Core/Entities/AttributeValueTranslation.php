@@ -55,6 +55,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
      * @var string|null
      * @ORM\Column(type="string", nullable=true, unique=false)
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("string")
      */
     protected $value;
 
@@ -62,6 +63,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
      * @var Translation
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
      */
     protected $translation;
 

@@ -59,6 +59,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
      * @var string
      * @ORM\Column(type="string", nullable=false, unique=true)
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("string")
      */
     protected $code = "";
 
@@ -66,6 +67,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
      * @var string
      * @ORM\Column(type="boolean", nullable=false, unique=false, options={"default" = false})
      * @Serializer\Groups({"attribute"})
+     * @Serializer\Type("boolean")
      */
     protected $searchable = false;
 
@@ -73,6 +75,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
      * @var int
      * @ORM\Column(type="integer", nullable=false, unique=false)
      * @Serializer\Groups({"attribute"})
+     * @Serializer\Type("integer")
      */
     protected $type = AttributeInterface::STRING_T;
 
@@ -80,6 +83,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
      * @var Collection<AttributeTranslationInterface>
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation", mappedBy="attribute", fetch="EAGER", cascade={"persist", "remove"}, orphanRemoval=true)
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\AttributeTranslation>")
      */
     protected $attributeTranslations;
 

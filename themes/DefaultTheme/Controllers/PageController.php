@@ -99,7 +99,7 @@ class PageController extends DefaultThemeApp
                 $this->get('serializer')->serialize(
                     $this->nodeSource,
                     'json',
-                    SerializationContext::create()->setGroups(['nodes_sources'])
+                    SerializationContext::create()->setGroups(['nodes_sources', 'urls'])
                 ),
                 Response::HTTP_OK,
                 [],

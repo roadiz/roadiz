@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2019, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,47 +20,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the ROADIZ shall not
+ * Except as contained in this notice, the name of the roadiz shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RolesImporter.php
- * @author Maxime Constantinian
+ * @file ChainImporter.php
+ * @author Ambroise Maupate
+ *
  */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
-use Pimple\Container;
-use RZ\Roadiz\Core\ContainerAwareInterface;
-use RZ\Roadiz\Core\ContainerAwareTrait;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
-use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
-
-/**
- * {@inheritdoc}
- */
-class RolesImporter implements ImporterInterface, EntityImporterInterface, ContainerAwareInterface
+class ChainImporter implements EntityImporterInterface
 {
-    use ContainerAwareTrait;
+    private $importers = [];
 
     /**
-     * NodesImporter constructor.
+     * ChainImporter constructor.
      *
-     * @param Container $container
+     * @param array $importers
      */
-    public function __construct(Container $container)
+    public function __construct(array $importers)
     {
-        $this->container = $container;
+        $this->importers = $importers;
     }
-
 
     /**
      * @inheritDoc
      */
     public function supports(string $entityClass): bool
     {
-        return $entityClass === Role::class;
+        foreach ($this->importers as $importer) {
+            if ($importer instanceof EntityImporterInterface && $importer->supports($entityClass)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -68,31 +65,20 @@ class RolesImporter implements ImporterInterface, EntityImporterInterface, Conta
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
-
-        $serializer = new RoleCollectionJsonSerializer($em);
-        $serializer->deserialize($serializedData);
-
-        $em->flush();
-
-        return true;
+        throw new \RuntimeException('You cannot call import method on ChainImporter, but importWithType method');
     }
 
-    /**
-     * Import a Json file (.rzt) containing setting and setting group.
-     *
-     * @param string $serializedData
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
-     * @deprecated
-     */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
-    {
-        $serializer = new RoleCollectionJsonSerializer($em);
-        $serializer->deserialize($serializedData);
 
-        return true;
+    /**
+     * @inheritDoc
+     */
+    public function importWithType(string $serializedData, string $entityClass): bool
+    {
+        foreach ($this->importers as $importer) {
+            if ($importer instanceof EntityImporterInterface && $importer->supports($entityClass)) {
+                return $importer->import($serializedData);
+            }
+        }
+        return false;
     }
 }

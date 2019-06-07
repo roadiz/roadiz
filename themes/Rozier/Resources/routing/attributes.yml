@@ -11,6 +11,10 @@ attributesExportPage:
     path:     /export-all
     defaults:
         _controller: Themes\Rozier\Controllers\Attributes\AttributeController::exportAction
+attributesImportPage:
+    path:     /import
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::importAction
 
 attributesDeletePage:
     path:     /delete/{id}

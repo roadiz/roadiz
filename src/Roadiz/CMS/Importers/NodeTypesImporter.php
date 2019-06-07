@@ -30,6 +30,9 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
@@ -39,8 +42,68 @@ use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 /**
  * {@inheritdoc}
  */
-class NodeTypesImporter implements ImporterInterface
+class NodeTypesImporter implements ImporterInterface, EntityImporterInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
+    /**
+     * NodesImporter constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $entityClass): bool
+    {
+        return $entityClass === NodeType::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function import(string $serializedData): bool
+    {
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        /** @var HandlerFactoryInterface $handlerFactory */
+        $handlerFactory = $this->get('factory.handler');
+
+        $serializer = new NodeTypeJsonSerializer();
+        $nodeType = $serializer->deserialize($serializedData);
+        /** @var NodeType $existingNodeType */
+        $existingNodeType = $em->getRepository(NodeType::class)
+            ->findOneByName($nodeType->getName());
+
+        if ($existingNodeType === null) {
+            $em->persist($nodeType);
+            $existingNodeType = $nodeType;
+            /** @var NodeTypeHandler $nodeTypeHandler */
+            $nodeTypeHandler = $handlerFactory->getHandler($existingNodeType);
+            $fieldPosition = 1;
+            /** @var NodeTypeField $field */
+            foreach ($nodeType->getFields() as $field) {
+                $em->persist($field);
+                $field->setNodeType($nodeType);
+                $field->setPosition($fieldPosition);
+                $fieldPosition++;
+            }
+        } else {
+            /** @var NodeTypeHandler $nodeTypeHandler */
+            $nodeTypeHandler = $handlerFactory->getHandler($existingNodeType);
+            $nodeTypeHandler->diff($nodeType);
+        }
+        $em->flush();
+        $nodeTypeHandler->updateSchema();
+        return true;
+    }
+
     /**
      * Import a Json file (.rzt) containing setting and setting group.
      *
@@ -49,7 +112,7 @@ class NodeTypesImporter implements ImporterInterface
      *
      * @param HandlerFactoryInterface $handlerFactory
      * @return bool
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @deprecated
      */
     public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
     {

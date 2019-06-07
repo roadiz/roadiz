@@ -543,30 +543,35 @@ class Translation extends AbstractDateTimed
      * @var string
      * @ORM\Column(type="string", unique=true, length=10)
      * @Serializer\Groups({"translation", "document", "nodes_sources", "tag", "attribute", "folder", "log_sources"})
+     * @Serializer\Type("string")
      */
     private $locale = '';
     /**
      * @var string|null
      * @ORM\Column(type="string", name="override_locale", length=10, unique=true, nullable=true)
      * @Serializer\Groups({"translation", "document", "nodes_sources", "tag", "attribute", "folder"})
+     * @Serializer\Type("string")
      */
     private $overrideLocale = null;
     /**
      * @var string
      * @ORM\Column(type="string", unique=true)
      * @Serializer\Groups({"translation"})
+     * @Serializer\Type("string")
      */
     private $name = '';
     /**
      * @var bool
      * @ORM\Column(name="default_translation", type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups({"translation"})
+     * @Serializer\Type("bool")
      */
     private $defaultTranslation = false;
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @Serializer\Groups({"translation"})
+     * @Serializer\Type("bool")
      */
     private $available = true;
     /**

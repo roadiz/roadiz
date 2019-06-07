@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2019, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
  * IN THE SOFTWARE.
  *
- * Except as contained in this notice, the name of the ROADIZ shall not
+ * Except as contained in this notice, the name of the roadiz shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file ImporterInterface.php
- * @author Maxime Constantinian
- */
-namespace RZ\Roadiz\CMS\Importers;
-
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
-
-/**
- * Class for create all importer.
+ * @file AttributeImportType.php
+ * @author Ambroise Maupate
  *
- * @deprecated
  */
-interface ImporterInterface
+declare(strict_types=1);
+
+namespace RZ\Roadiz\Attribute\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\File;
+
+class AttributeImportType extends AbstractType
 {
     /**
-     * Import json file.
-     *
-     * @param string $template
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
-     * @deprecated
+     * @inheritDoc
      */
-    public static function importJsonFile($template, EntityManager $em, HandlerFactoryInterface $handlerFactory);
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->add('file', FileType::class, [
+            'label' => 'attributes.import_form.file.label',
+            'help' => 'attributes.import_form.file.help',
+            'constraints' => [
+                new File([
+                    'mimeTypes' => ['application/json', 'text/json', 'text/plain']
+                ])
+            ]
+        ]);
+    }
 }
