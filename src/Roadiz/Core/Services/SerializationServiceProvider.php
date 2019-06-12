@@ -60,7 +60,7 @@ class SerializationServiceProvider implements ServiceProviderInterface
                     )
                 )
                 ->addDefaultHandlers()
-                ->configureListeners(function(EventDispatcher $dispatcher) use ($c) {
+                ->configureListeners(function (EventDispatcher $dispatcher) use ($c) {
                     foreach ($c['serializer.subscribers'] as $subscriber) {
                         if ($subscriber instanceof EventSubscriberInterface) {
                             $dispatcher->addSubscriber($subscriber);
