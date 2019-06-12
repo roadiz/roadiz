@@ -55,7 +55,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ConstraintViolation;
-use Themes\EventsApiTheme\EventSubscriber\CachableResponseSubscriber;
+use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 
 /**
  * Base class for Roadiz themes.
