@@ -44,6 +44,7 @@ use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,6 +55,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ConstraintViolation;
+use Themes\EventsApiTheme\EventSubscriber\CachableResponseSubscriber;
 
 /**
  * Base class for Roadiz themes.
@@ -683,16 +685,10 @@ abstract class AppController extends Controller
     public function makeResponseCachable(Request $request, Response $response, $minutes)
     {
         $kernel = $this->get('kernel');
-        if (!$kernel->isPreview() && !$kernel->isDebug() && $request->isMethodCacheable()) {
-            $response->setPublic();
-            $response->setMaxAge(60 * $minutes);
-            $response->setSharedMaxAge(60 * $minutes);
-            $response->setVary('Accept-Encoding, X-Partial, x-requested-with');
-            if ($request->isXmlHttpRequest()) {
-                $response->headers->add([
-                    'X-Partial' => true
-                ]);
-            }
+        if (!$kernel->isPreview() && $request->isMethodCacheable()) {
+            /** @var EventDispatcherInterface $dispatcher */
+            $dispatcher = $this->get('dispatcher');
+            $dispatcher->addSubscriber(new CachableResponseSubscriber($minutes, true));
         }
 
         return $response;
