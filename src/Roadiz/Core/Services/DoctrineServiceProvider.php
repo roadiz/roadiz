@@ -122,17 +122,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 AnnotationRegistry::registerLoader('class_exists');
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
-                /*
-                 * Use ArrayCache if no cache type is explicitly defined.
-                 */
-                $cache = new ArrayCache();
-                if ($c['config']['cacheDriver']['type'] !== null) {
-                    $cache = CacheFactory::fromConfig(
-                        $c['config']['cacheDriver'],
-                        $kernel,
-                        $c['config']["appNamespace"]
-                    );
-                }
+                $cache = $c[CacheProvider::class];
 
                 $proxyFolder = $kernel->getRootDir() . '/gen-src/Proxies';
                 $config = Setup::createAnnotationMetadataConfiguration(
@@ -219,24 +209,25 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          * @return CacheProvider
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            /*
-             * Use ArrayCache if no cache type is explicitly defined.
-             */
-            $cache = new ArrayCache();
-            if ($c['config']['cacheDriver']['type'] !== null &&
-                !$kernel->isPreview() &&
-                !$kernel->isDebug()) {
-                $cache = CacheFactory::fromConfig(
-                    $c['config']['cacheDriver'],
-                    $kernel,
-                    $c['config']["appNamespace"]
-                );
-            }
+            $cache = $c[CacheProvider::class];
             $cache->setNamespace($cache->getNamespace() . "_nsurls_"); // to avoid collisions
             return $cache;
         };
+
+        $container[CacheProvider::class] = $container->factory(function (Container $c) {
+            if ($c['config']['cacheDriver']['type'] !== null &&
+                !$c['kernel']->isPreview() &&
+                !$c['kernel']->isDebug()) {
+                $cache = CacheFactory::fromConfig(
+                    $c['config']['cacheDriver'],
+                    $c['kernel'],
+                    $c['config']["appNamespace"]
+                );
+            } else {
+                $cache = new ArrayCache();
+            }
+            return $cache;
+        });
 
         return $container;
     }
