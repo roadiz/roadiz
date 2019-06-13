@@ -68,6 +68,9 @@ final class NodeFactory implements ContainerAwareInterface
     public function create(string $title, NodeType $type = null, Translation $translation = null, Node $node = null): Node
     {
         $nodeName = StringHandler::slugify($title);
+        if (empty($nodeName)) {
+            throw new \RuntimeException('Node name is empty.');
+        }
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
         /** @var NodeRepository $repository */
