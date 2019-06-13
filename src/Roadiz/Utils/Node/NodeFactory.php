@@ -74,7 +74,7 @@ final class NodeFactory implements ContainerAwareInterface
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
         /** @var NodeRepository $repository */
-        $repository = $entityManager->getRepository(Node::class);
+        $repository = $entityManager->getRepository(Node::class)->setDisplayingAllNodesStatuses(true);
 
         if (true === $repository->exists($nodeName)) {
             $nodeName .= '-' . uniqid();

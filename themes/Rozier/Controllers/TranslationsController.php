@@ -60,7 +60,7 @@ class TranslationsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TRANSLATIONS');
 
         $this->assignation['translations'] = [];
 
@@ -121,7 +121,7 @@ class TranslationsController extends RozierApp
      */
     public function editAction(Request $request, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->get('em')
                             ->find(Translation::class, (int) $translationId);
@@ -173,7 +173,7 @@ class TranslationsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = new Translation();
         $this->assignation['translation'] = $translation;
@@ -215,7 +215,7 @@ class TranslationsController extends RozierApp
      */
     public function deleteAction(Request $request, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TRANSLATIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TRANSLATIONS');
 
         $translation = $this->get('em')
                             ->find(Translation::class, (int) $translationId);

@@ -52,7 +52,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /*
          * Prevent raw document to show in explorer.
@@ -115,7 +115,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
      */
     public function listAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
             throw new InvalidParameterException('Ids should be provided within an array');

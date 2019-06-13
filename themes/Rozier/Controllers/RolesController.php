@@ -56,7 +56,7 @@ class RolesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         $listManager = $this->createEntityListManager(
             Role::class,
@@ -86,7 +86,7 @@ class RolesController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         $form = $this->buildAddForm();
         $form->handleRequest($request);
@@ -123,7 +123,7 @@ class RolesController extends RozierApp
      */
     public function deleteAction(Request $request, $roleId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         /** @var Role|null $role */
         $role = $this->get('em')
@@ -171,7 +171,7 @@ class RolesController extends RozierApp
      */
     public function editAction(Request $request, $roleId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         /** @var Role $role */
         $role = $this->get('em')

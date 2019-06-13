@@ -47,7 +47,7 @@ class AjaxSessionMessages extends AbstractAjaxController
      */
     public function getMessagesAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         $responseArray = [
             'statusCode' => Response::HTTP_OK,

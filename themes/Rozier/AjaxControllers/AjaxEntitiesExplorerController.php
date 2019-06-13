@@ -72,7 +72,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!$request->query->has('nodeTypeFieldId')) {
             throw new InvalidParameterException('nodeTypeFieldId parameter is missing.');
@@ -135,7 +135,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
             throw new InvalidParameterException('Ids should be provided within an array');
         }
 
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var EntityManager $em */
         $em = $this->get('em');

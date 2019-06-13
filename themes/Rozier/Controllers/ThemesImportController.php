@@ -48,7 +48,7 @@ class ThemesImportController extends ImportController
      */
     public function importSettingsAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importSettingsAction($request, $themeId);
     }
@@ -63,7 +63,7 @@ class ThemesImportController extends ImportController
      */
     public function importRolesAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importRolesAction($request, $themeId);
     }
@@ -78,7 +78,7 @@ class ThemesImportController extends ImportController
      */
     public function importGroupsAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importGroupsAction($request, $themeId);
     }
@@ -93,7 +93,7 @@ class ThemesImportController extends ImportController
      */
     public function importNodeTypesAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importNodeTypesAction($request, $themeId);
     }
@@ -108,7 +108,7 @@ class ThemesImportController extends ImportController
      */
     public function importTagsAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importTagsAction($request, $themeId);
     }
@@ -123,7 +123,7 @@ class ThemesImportController extends ImportController
      */
     public function importNodesAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importNodesAction($request, $themeId);
     }

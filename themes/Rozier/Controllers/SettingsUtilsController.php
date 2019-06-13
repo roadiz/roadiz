@@ -58,7 +58,7 @@ class SettingsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request, $settingGroupId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         $groups = [];
         $filePrefix = 'all';
@@ -117,7 +117,7 @@ class SettingsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         $form = $this->buildImportJsonFileForm();
 

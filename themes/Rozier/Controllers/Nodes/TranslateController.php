@@ -56,7 +56,7 @@ class TranslateController extends RozierApp
      */
     public function translateAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);

@@ -55,7 +55,7 @@ class UsersSecurityController extends RozierApp
     public function securityAction(Request $request, $userId)
     {
         // Only user managers can review security
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User $user */
         $user = $this->get('em')->find(User::class, (int) $userId);

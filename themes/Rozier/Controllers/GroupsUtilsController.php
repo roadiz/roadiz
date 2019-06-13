@@ -57,7 +57,7 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->get('em')
                               ->getRepository(Group::class)
@@ -93,7 +93,7 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $groupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->get('em')
                               ->find(Group::class, (int) $groupId);
@@ -128,7 +128,7 @@ class GroupsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         $form = $this->buildImportJsonFileForm();
 

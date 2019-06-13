@@ -61,7 +61,7 @@ class AttributeController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
 
         $listManager = $this->createEntityListManager(
             Attribute::class,
@@ -83,7 +83,7 @@ class AttributeController extends RozierApp
      */
     public function exportAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
 
         $attributes = $this->get('em')->getRepository(Attribute::class)->findAll();
         /** @var Serializer $serializer */
@@ -112,7 +112,7 @@ class AttributeController extends RozierApp
      */
     public function importAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
 
         $form = $this->createForm(AttributeImportType::class);
         $form->handleRequest($request);
@@ -143,7 +143,7 @@ class AttributeController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
 
         $item = new Attribute();
         $item->setCode('new_attribute');
@@ -186,7 +186,7 @@ class AttributeController extends RozierApp
      */
     public function editAction(Request $request, $id)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
 
         /** @var Attribute $item */
         $item = $this->get('em')->find(Attribute::class, (int) $id);
@@ -227,7 +227,7 @@ class AttributeController extends RozierApp
      */
     public function deleteAction(Request $request, $id)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
         /** @var Attribute $item */
         $item = $this->get('em')->find(Attribute::class, (int) $id);

@@ -59,7 +59,7 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
@@ -90,7 +90,7 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $nodeTypes = $this->get('em')
             ->getRepository(NodeType::class)
@@ -126,7 +126,7 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $form = $this->buildImportJsonFileForm();
 

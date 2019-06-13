@@ -55,7 +55,7 @@ class NodeTypesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
         /*
          * Manage get request to filter list
          */
@@ -90,7 +90,7 @@ class NodeTypesController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
@@ -141,7 +141,7 @@ class NodeTypesController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $nodeType = new NodeType();
 
@@ -197,7 +197,7 @@ class NodeTypesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES_DELETE');
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')

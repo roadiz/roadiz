@@ -69,7 +69,7 @@ class NodesController extends RozierApp
      */
     public function indexAction(Request $request, $filter = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
         $translation = $this->get('defaultTranslation');
 
         /** @var User $user */
@@ -249,7 +249,7 @@ class NodesController extends RozierApp
      */
     public function removeStackTypeAction(Request $request, $nodeId, $typeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, $nodeId);
@@ -286,7 +286,7 @@ class NodesController extends RozierApp
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var NodeType $type */
         $type = $this->get('em')
@@ -516,7 +516,7 @@ class NodesController extends RozierApp
      */
     public function emptyTrashAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES_DELETE');
 
         $form = $this->buildEmptyTrashForm();
         $form->handleRequest($request);
@@ -624,7 +624,7 @@ class NodesController extends RozierApp
      */
     public function generateAndAddNodeAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         try {
             /** @var UniqueNodeGenerator $generator */
@@ -652,7 +652,7 @@ class NodesController extends RozierApp
      */
     public function publishAllAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES_STATUS');
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 

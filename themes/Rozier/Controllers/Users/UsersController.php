@@ -57,7 +57,7 @@ class UsersController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /*
          * Manage get request to filter list
@@ -91,7 +91,7 @@ class UsersController extends RozierApp
      */
     public function editAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!($this->isGranted('ROLE_ACCESS_USERS')
             || $this->getUser()->getId() == $userId)) {
@@ -151,7 +151,7 @@ class UsersController extends RozierApp
      */
     public function editDetailsAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!($this->isGranted('ROLE_ACCESS_USERS')
             || $this->getUser()->getId() == $userId)) {
@@ -210,7 +210,7 @@ class UsersController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         $user = new User();
         $user->sendCreationConfirmationEmail(true);
@@ -253,7 +253,7 @@ class UsersController extends RozierApp
      */
     public function deleteAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS_DELETE');
 
         /** @var User $user */
         $user = $this->get('em')->find(User::class, (int) $userId);

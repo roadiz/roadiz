@@ -58,7 +58,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         $arrayFilter = $this->parseFilterFromRequest($request);
 
@@ -199,7 +199,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
      */
     public function listAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
             throw new InvalidParameterException('Ids should be provided within an array');

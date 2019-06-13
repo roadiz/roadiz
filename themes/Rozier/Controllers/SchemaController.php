@@ -66,7 +66,7 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypesSchemaAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
         $this->clearMetadata();
         $this->updateSchema($request);
 
@@ -83,7 +83,7 @@ class SchemaController extends RozierApp
      */
     public function updateNodeTypeFieldsSchemaAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
         $this->clearMetadata();
         $this->updateSchema($request);
 
@@ -103,7 +103,7 @@ class SchemaController extends RozierApp
      */
     public function updateThemeSchemaAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         try {
             $this->clearMetadata();
@@ -123,7 +123,7 @@ class SchemaController extends RozierApp
      */
     public function clearThemeCacheAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         /*
          * Very important, when using standard-edition,

@@ -63,7 +63,7 @@ class TagsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         /*
          * Manage get request to filter list
@@ -99,7 +99,7 @@ class TagsController extends RozierApp
      */
     public function editTranslatedAction(Request $request, $tagId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         /** @var TranslationRepository $translationRepository */
         $translationRepository = $this->get('em')->getRepository(Translation::class);
@@ -228,7 +228,7 @@ class TagsController extends RozierApp
      */
     public function bulkDeleteAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS_DELETE');
 
         if (!empty($request->get('deleteForm')['tagsIds'])) {
             $tagsIds = trim($request->get('deleteForm')['tagsIds']);
@@ -283,7 +283,7 @@ class TagsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $tag = new Tag();
 
@@ -345,7 +345,7 @@ class TagsController extends RozierApp
      */
     public function editSettingsAction(Request $request, $tagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
 
@@ -397,7 +397,7 @@ class TagsController extends RozierApp
      */
     public function treeAction(Request $request, $tagId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $tag = $this->get('em')
             ->find(Tag::class, (int) $tagId);
@@ -431,7 +431,7 @@ class TagsController extends RozierApp
      */
     public function deleteAction(Request $request, $tagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS_DELETE');
 
         $tag = $this->get('em')
             ->find(Tag::class, (int) $tagId);
@@ -481,7 +481,7 @@ class TagsController extends RozierApp
      */
     public function addChildAction(Request $request, $tagId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
 
@@ -555,7 +555,8 @@ class TagsController extends RozierApp
      */
     public function editNodesAction(Request $request, $tagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
+
         $tag = $this->get('em')
             ->find(Tag::class, (int) $tagId);
 

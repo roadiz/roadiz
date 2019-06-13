@@ -46,7 +46,7 @@ class DashboardController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         $this->assignation['latestLogs'] = [];
 

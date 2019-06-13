@@ -87,7 +87,7 @@ class DocumentsController extends RozierApp
      */
     public function indexAction(Request $request, $folderId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Translation $translation */
         $translation = $this->get('em')
@@ -166,7 +166,7 @@ class DocumentsController extends RozierApp
      */
     public function adjustAction(Request $request, $documentId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
         $document = $this->get('em')
@@ -255,7 +255,7 @@ class DocumentsController extends RozierApp
      */
     public function editAction(Request $request, $documentId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
         $document = $this->get('em')->find(Document::class, (int) $documentId);
@@ -338,7 +338,7 @@ class DocumentsController extends RozierApp
      */
     public function previewAction(Request $request, $documentId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
         $document = $this->get('em')
@@ -414,7 +414,7 @@ class DocumentsController extends RozierApp
      */
     public function deleteAction(Request $request, $documentId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $document = $this->get('em')
             ->find(Document::class, (int) $documentId);
@@ -463,7 +463,7 @@ class DocumentsController extends RozierApp
      */
     public function bulkDeleteAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $documentsIds = $request->get('documents', []);
         if (count($documentsIds) <= 0) {
@@ -515,7 +515,7 @@ class DocumentsController extends RozierApp
      */
     public function bulkDownloadAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $documentsIds = $request->get('documents', []);
         if (count($documentsIds) <= 0) {
@@ -564,7 +564,7 @@ class DocumentsController extends RozierApp
      */
     public function embedAction(Request $request, $folderId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         if (null !== $folderId &&
             $folderId > 0) {
@@ -623,7 +623,7 @@ class DocumentsController extends RozierApp
      */
     public function randomAction(Request $request, $folderId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         try {
             $document = $this->randomDocument($folderId);
@@ -659,7 +659,7 @@ class DocumentsController extends RozierApp
      */
     public function downloadAction(Request $request, $documentId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
         $document = $this->get('em')
@@ -684,7 +684,7 @@ class DocumentsController extends RozierApp
      */
     public function uploadAction(Request $request, $folderId = null, $_format = 'html')
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         if (null !== $folderId &&
             $folderId > 0) {
@@ -771,7 +771,7 @@ class DocumentsController extends RozierApp
      */
     public function usageAction(Request $request, $documentId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
         /** @var Document $document */
         $document = $this->get('em')->find(Document::class, (int) $documentId);
 
@@ -1259,7 +1259,7 @@ class DocumentsController extends RozierApp
      */
     public function unusedAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $this->assignation['orphans'] = true;
         $this->assignation['documents'] = $this->get('em')

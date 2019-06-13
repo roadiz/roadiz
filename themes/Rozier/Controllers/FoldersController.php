@@ -60,7 +60,7 @@ class FoldersController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $listManager = $this->createEntityListManager(
             Folder::class
@@ -84,7 +84,7 @@ class FoldersController extends RozierApp
      */
     public function addAction(Request $request, $parentFolderId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $folder = new Folder();
 
@@ -146,7 +146,7 @@ class FoldersController extends RozierApp
      */
     public function deleteAction(Request $request, $folderId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Folder $folder */
         $folder = $this->get('em')
@@ -199,7 +199,7 @@ class FoldersController extends RozierApp
      */
     public function editAction(Request $request, $folderId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Folder $folder */
         $folder = $this->get('em')
@@ -259,7 +259,7 @@ class FoldersController extends RozierApp
      */
     public function editTranslationAction(Request $request, $folderId, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var TranslationRepository $translationRepository */
         $translationRepository = $this->get('em')->getRepository(Translation::class);
@@ -337,7 +337,7 @@ class FoldersController extends RozierApp
      */
     public function downloadAction(Request $request, $folderId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Folder $folder */
         $folder = $this->get('em')

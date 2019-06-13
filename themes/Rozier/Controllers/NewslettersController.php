@@ -58,7 +58,7 @@ class NewslettersController extends RozierApp
 
     public function listAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NEWSLETTERS');
 
         $translation = $this->get('defaultTranslation');
         $listManager = $this->createEntityListManager(
@@ -90,7 +90,7 @@ class NewslettersController extends RozierApp
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NEWSLETTERS');
 
         $type = $this->get('em')
                      ->find(NodeType::class, $nodeTypeId);
@@ -163,7 +163,7 @@ class NewslettersController extends RozierApp
      */
     public function editAction(Request $request, $newsletterId, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NEWSLETTERS');
 
         $translation = $this->get('em')
                             ->find(Translation::class, (int) $translationId);

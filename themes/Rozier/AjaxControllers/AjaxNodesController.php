@@ -58,7 +58,7 @@ class AjaxNodesController extends AbstractAjaxController
      */
     public function getTagsAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
         $tags = [];
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
@@ -88,7 +88,7 @@ class AjaxNodesController extends AbstractAjaxController
          * Validate
          */
         $this->validateRequest($request);
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
@@ -236,7 +236,7 @@ class AjaxNodesController extends AbstractAjaxController
     public function statusesAction(Request $request)
     {
         $this->validateRequest($request);
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         if ($request->get('nodeId', 0) <= 0) {
             throw new BadRequestHttpException($this->getTranslator()->trans('node.id.not_specified'));
@@ -369,7 +369,7 @@ class AjaxNodesController extends AbstractAjaxController
          * Validate
          */
         $this->validateRequest($request);
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         try {
             /** @var UniqueNodeGenerator $generator */

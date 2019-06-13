@@ -53,7 +53,7 @@ class ExportController extends RozierApp
      */
     public function exportAllXlsxAction(Request $request, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /*
          * Get translation

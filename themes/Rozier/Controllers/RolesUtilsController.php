@@ -55,7 +55,7 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         $existingRole = $this->get('em')
                              ->getRepository(Role::class)
@@ -93,7 +93,7 @@ class RolesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $roleId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         $existingRole = $this->get('em')
                              ->find(Role::class, (int) $roleId);
@@ -129,7 +129,7 @@ class RolesUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ROLES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         $form = $this->buildImportJsonFileForm();
 

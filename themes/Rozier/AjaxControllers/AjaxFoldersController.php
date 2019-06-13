@@ -56,7 +56,7 @@ class AjaxFoldersController extends AbstractAjaxController
          * Validate
          */
         $this->validateRequest($request);
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $folder = $this->get('em')
             ->find(Folder::class, (int) $folderId);
@@ -108,7 +108,7 @@ class AjaxFoldersController extends AbstractAjaxController
      */
     public function searchAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         if ($request->query->has('search') && $request->get('search') != "") {
             $responseArray = [];

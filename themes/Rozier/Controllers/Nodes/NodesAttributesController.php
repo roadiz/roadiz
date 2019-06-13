@@ -57,7 +57,7 @@ class NodesAttributesController extends RozierApp
      */
     public function editAction(Request $request, $nodeId, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODE_ATTRIBUTES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODE_ATTRIBUTES');
 
         /** @var Translation $translation */
         $translation = $this->get('em')->find(Translation::class, (int) $translationId);
@@ -189,7 +189,7 @@ class NodesAttributesController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_ATTRIBUTES_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
         /** @var AttributeValue $item */
         $item = $this->get('em')->find(AttributeValue::class, (int) $attributeValueId);

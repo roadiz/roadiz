@@ -124,7 +124,7 @@ class AboutController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_SUPERADMIN');
+        $this->denyAccessUnlessGranted('ROLE_SUPERADMIN');
         $lastRelease = $this->getLatestRelease();
 
         if ($lastRelease !== null) {

@@ -57,7 +57,7 @@ class ThemesController extends RozierApp
      */
     public function importAction(Request $request, $id)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
         /** @var ThemeResolverInterface $themeResolver */
         $themeResolver = $this->get('themeResolver');
         $result = $themeResolver->findById($id);
@@ -76,7 +76,7 @@ class ThemesController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         /** @var ThemeResolverInterface $themeResolver */
         $themeResolver = $this->get('themeResolver');
@@ -95,7 +95,7 @@ class ThemesController extends RozierApp
      */
     public function summaryAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
         if (!$request->query->has("classname")) {
             throw new InvalidParameterException('classname query param is mandatory');
         }
@@ -113,7 +113,7 @@ class ThemesController extends RozierApp
      */
     public function settingAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         if (!$request->query->has("classname")) {
             throw new InvalidParameterException('classname query param is mandatory');

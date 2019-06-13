@@ -54,7 +54,7 @@ class TagsUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $tagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $existingTag = $this->get('em')
                               ->find(Tag::class, (int) $tagId);
@@ -92,7 +92,7 @@ class TagsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request, $tagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $existingTags = $this->get('em')
                               ->getRepository(Tag::class)

@@ -53,7 +53,7 @@ class CustomFormFieldAttributesController extends RozierApp
      */
     public function listAction(Request $request, $customFormAnswerId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
         /*
          * Manage get request to filter list
          */

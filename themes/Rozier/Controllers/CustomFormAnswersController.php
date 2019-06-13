@@ -53,7 +53,7 @@ class CustomFormAnswersController extends RozierApp
      */
     public function listAction(Request $request, $customFormId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
         /*
          * Manage get request to filter list
          */
@@ -87,7 +87,7 @@ class CustomFormAnswersController extends RozierApp
      */
     public function deleteAction(Request $request, $customFormAnswerId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $customFormAnswer = $this->get('em')
                                  ->find(CustomFormAnswer::class, (int) $customFormAnswerId);

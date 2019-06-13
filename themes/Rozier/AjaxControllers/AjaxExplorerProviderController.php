@@ -46,7 +46,7 @@ class AjaxExplorerProviderController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!$request->query->has('providerClass')) {
             throw new InvalidParameterException('providerClass parameter is missing.');
@@ -118,7 +118,7 @@ class AjaxExplorerProviderController extends AbstractAjaxController
             throw new InvalidParameterException('Ids should be provided within an array');
         }
 
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         $provider = new $providerClass();
         if ($provider instanceof ExplorerProviderInterface) {

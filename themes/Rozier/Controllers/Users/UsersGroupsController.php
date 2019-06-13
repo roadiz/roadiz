@@ -52,7 +52,7 @@ class UsersGroupsController extends RozierApp
      */
     public function editGroupsAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         $user = $this->get('em')
                      ->find(User::class, (int) $userId);
@@ -100,7 +100,7 @@ class UsersGroupsController extends RozierApp
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         $user = $this->get('em')->find(User::class, (int) $userId);
         $group = $this->get('em')->find(Group::class, (int) $groupId);

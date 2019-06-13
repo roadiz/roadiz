@@ -69,7 +69,7 @@ class UrlAliasesController extends RozierApp
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         if (null === $translationId && $translationId < 1) {
             $translation = $this->get('defaultTranslation');

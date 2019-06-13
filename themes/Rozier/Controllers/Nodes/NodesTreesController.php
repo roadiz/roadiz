@@ -157,7 +157,7 @@ class NodesTreesController extends RozierApp
      */
     public function bulkDeleteAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES_DELETE');
 
         if (!empty($request->get('deleteForm')['nodesIds'])) {
             $nodesIds = trim($request->get('deleteForm')['nodesIds']);
@@ -210,7 +210,7 @@ class NodesTreesController extends RozierApp
      */
     public function bulkStatusAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES_STATUS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES_STATUS');
 
         if (!empty($request->get('statusForm')['nodesIds'])) {
             $nodesIds = trim($request->get('statusForm')['nodesIds']);

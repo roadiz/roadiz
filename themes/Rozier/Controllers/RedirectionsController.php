@@ -49,7 +49,7 @@ class RedirectionsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
 
         $listManager = $this->createEntityListManager(
             Redirection::class,
@@ -77,7 +77,7 @@ class RedirectionsController extends RozierApp
      */
     public function editAction(Request $request, $redirectionId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
 
         /** @var Redirection|null $redirection */
         $redirection = $this->get('em')->find(Redirection::class, $redirectionId);
@@ -112,7 +112,7 @@ class RedirectionsController extends RozierApp
      */
     public function deleteAction(Request $request, $redirectionId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
 
         /** @var Redirection|null $redirection */
         $redirection = $this->get('em')->find(Redirection::class, $redirectionId);
@@ -142,7 +142,7 @@ class RedirectionsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_REDIRECTIONS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
 
         $redirection = new Redirection();
         $form = $this->createForm(RedirectionType::class, $redirection, [

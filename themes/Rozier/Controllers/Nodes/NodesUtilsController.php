@@ -56,7 +56,7 @@ class NodesUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $existingNode */
         $existingNode = $this->get('em')
@@ -94,7 +94,7 @@ class NodesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node[] $existingNodes */
         $existingNodes = $this->get('em')
@@ -138,7 +138,7 @@ class NodesUtilsController extends RozierApp
      */
     public function duplicateAction(Request $request, $nodeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $existingNode */
         $existingNode = $this->get('em')->find(Node::class, (int) $nodeId);
