@@ -51,6 +51,7 @@ use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
+use RZ\Roadiz\Utils\Node\NodeFactory;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
 class FactoryServiceProvider implements ServiceProviderInterface
@@ -82,6 +83,10 @@ class FactoryServiceProvider implements ServiceProviderInterface
                 $c['document.url_generator']
             );
         });
+
+        $container[NodeFactory::class] = function ($c) {
+            return new NodeFactory($c);
+        };
 
         $container['factory.handler'] = function ($c) {
             return new HandlerFactory($c);

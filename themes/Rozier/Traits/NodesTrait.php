@@ -34,11 +34,9 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Repositories\NodeRepository;
-use RZ\Roadiz\Utils\StringHandler;
+use RZ\Roadiz\Utils\Node\NodeFactory;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormInterface;
@@ -55,30 +53,12 @@ trait NodesTrait
      */
     protected function createNode($title, Translation $translation, Node $node = null, NodeType $type = null)
     {
-        $nodeName = StringHandler::slugify($title);
+        /** @var NodeFactory $factory */
+        $factory = $this->get(NodeFactory::class);
+        $node = $factory->create($title, $type, $translation, $node);
+
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
-        /** @var NodeRepository $repository */
-        $repository = $entityManager->getRepository(Node::class);
-
-        if (true === $repository->exists($nodeName)) {
-            $nodeName .= '-' . uniqid();
-        }
-
-        if ($node === null) {
-            $node = new Node($type);
-        }
-
-        $node->setNodeName($nodeName);
-        $entityManager->persist($node);
-
-        $sourceClass = "GeneratedNodeSources\\" . $node->getNodeType()->getSourceEntityClassName();
-        /** @var NodesSources $source */
-        $source = new $sourceClass($node, $translation);
-        $source->setTitle($title);
-        $source->setPublishedAt(new \DateTime());
-
-        $entityManager->persist($source);
         $entityManager->flush();
 
         return $node;
