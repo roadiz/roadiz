@@ -31,6 +31,7 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
@@ -676,6 +677,12 @@ abstract class AppController extends Controller
      * Pay attention that, some reverse proxies systems will need to remove your response
      * cookies header to actually save your response.
      *
+     * Do not cache, if
+     * - we are in preview mode
+     * - we are in debug mode
+     * - Request forbids cache
+     * - we are in maintenance mode
+     *
      * @param Request $request
      * @param Response $response
      * @param int $minutes TTL in minutes
@@ -684,8 +691,14 @@ abstract class AppController extends Controller
      */
     public function makeResponseCachable(Request $request, Response $response, $minutes)
     {
+        /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
-        if (!$kernel->isPreview() && $request->isMethodCacheable()) {
+        /** @var Settings $settings */
+        $settings = $this->get('settingsBag');
+        if (!$kernel->isPreview() &&
+            !$kernel->isDebug() &&
+            $request->isMethodCacheable() &&
+            !$settings->get('maintenance_mode', false)) {
             /** @var EventDispatcherInterface $dispatcher */
             $dispatcher = $this->get('dispatcher');
             $dispatcher->addSubscriber(new CachableResponseSubscriber($minutes, true));
