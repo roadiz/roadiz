@@ -48,6 +48,9 @@
 
                 <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
                 <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-download"></i><span class="label">{% trans %}export{% endtrans %}</span></a>
+                {% if node.hidingChildren and translation %}
+                    <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportNodeXlsxPage', {parentNodeId: node.id, translationId:translation.id}) }}"><i class="uk-icon-file-excel-o"></i> <span class="label">{{ 'export_format.excel.%language%'|trans({'%language%':translation.name }) }}</span></a>
+                {% endif %}
             </nav>
         </div>
 

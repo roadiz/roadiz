@@ -82,7 +82,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 
         if ($nodeSource instanceof NodesSources) {
             if ($this->addUrls === true) {
-                $data['_url'] = $this->urlGenerator->generate($nodeSource, UrlGeneratorInterface::ABSOLUTE_URL);
+                $data['_url'] = $this->urlGenerator->generate($nodeSource, [], UrlGeneratorInterface::ABSOLUTE_URL);
             }
 
             $data['translation'] = $nodeSource->getTranslation()->getLocale();

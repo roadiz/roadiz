@@ -29,6 +29,7 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Serializers\NodeSourceXlsxSerializer;
@@ -48,10 +49,11 @@ class ExportController extends RozierApp
      *
      * @param Request $request
      * @param int     $translationId
+     * @param int|null     $parentNodeId
      *
      * @return Response
      */
-    public function exportAllXlsxAction(Request $request, $translationId)
+    public function exportAllXlsxAction(Request $request, $translationId, $parentNodeId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
@@ -60,22 +62,35 @@ class ExportController extends RozierApp
          */
         $translation = $this->get('em')
             ->find(Translation::class, $translationId);
+
         if (null === $translation) {
             $translation = $this->get('em')
                 ->getRepository(Translation::class)
                 ->findDefault();
+        }
+        $criteria = ["translation" => $translation];
+        $order = ['node.nodeType' => 'ASC'];
+        $filename = 'nodes-' . date("YmdHis") . '.' . $translation->getLocale() . '.xlsx';
+
+        if (null !== $parentNodeId) {
+            /** @var Node|null $parentNode */
+            $parentNode = $this->get('em')->find(Node::class, $parentNodeId);
+            if (null === $parentNode) {
+                throw $this->createNotFoundException();
+            }
+            $criteria['node.parent'] = $parentNode;
+            $filename = $parentNode->getNodeName() . '-' . date("YmdHis") . '.' . $translation->getLocale() . '.xlsx';
         }
 
         $sources = $this->get('em')
             ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
-            ->findBy(["translation" => $translation], ['node.nodeType' => 'ASC']);
+            ->findBy($criteria, $order);
 
         $serializer = new NodeSourceXlsxSerializer($this->get('em'), $this->get('translator'), $this->get('urlGenerator'));
         $serializer->setOnlyTexts(true);
         $serializer->addUrls($request, $this->get('settingsBag')->get('force_locale'));
-
         $xlsx = $serializer->serialize($sources);
 
         $response = new Response(
@@ -88,7 +103,7 @@ class ExportController extends RozierApp
             'Content-Disposition',
             $response->headers->makeDisposition(
                 ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'nodes-' . date("YmdHis") . '.' . $translation->getLocale() . '.xlsx'
+                $filename
             )
         );
 
