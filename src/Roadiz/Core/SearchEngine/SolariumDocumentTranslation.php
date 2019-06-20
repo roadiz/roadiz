@@ -136,6 +136,8 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
         $assoc['title'] = $this->documentTranslation->getName();
         $assoc['title'.$suffix] = $this->documentTranslation->getName();
+        $assoc['created_at_dt'] = $this->rzDocument->getCreatedAt()->format('Y-m-d\TH:i:s');
+        $assoc['updated_at_dt'] = $this->rzDocument->getUpdatedAt()->format('Y-m-d\TH:i:s');
 
         /*
          * Remove ctrl characters
