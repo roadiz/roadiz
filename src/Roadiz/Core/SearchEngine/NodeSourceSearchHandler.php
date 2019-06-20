@@ -44,6 +44,19 @@ use Solarium\Core\Query\Helper;
 class NodeSourceSearchHandler extends AbstractSearchHandler
 {
     /**
+     * @var bool
+     */
+    protected $boostByPublicationDate = false;
+    /**
+     * @var bool
+     */
+    protected $boostByUpdateDate = false;
+    /**
+     * @var bool
+     */
+    protected $boostByCreationDate = false;
+
+    /**
      * Default Solr query builder.
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
@@ -59,9 +72,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
         $q = trim($q);
         $qHelper = new Helper();
         $q = $qHelper->escapeTerm($q);
-
         $singleWord = strpos($q, ' ') === false ? true : false;
-
         $titleField = 'title';
 
         /*
@@ -89,9 +100,9 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             }
         } else {
             if ($singleWord) {
-                return sprintf('(' . $titleField . ':%s*)^5 (collection_txt:%s*)', $q, $q);
+                return sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*)', $q, $q);
             } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
+                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
             }
         }
     }
@@ -112,7 +123,18 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             $query = $this->createSolrQuery($args, $rows, $page);
             $queryTxt = $this->buildQuery($q, $args, $searchTags, $proximity);
 
-
+            if ($this->boostByPublicationDate) {
+                $boost = '{!boost b=recip(ms(NOW,published_at_dt),3.16e-11,1,1)}';
+                $queryTxt = $boost . $queryTxt;
+            }
+            if ($this->boostByUpdateDate) {
+                $boost = '{!boost b=recip(ms(NOW,updated_at_dt),3.16e-11,1,1)}';
+                $queryTxt = $boost . $queryTxt;
+            }
+            if ($this->boostByCreationDate) {
+                $boost = '{!boost b=recip(ms(NOW,created_at_dt),3.16e-11,1,1)}';
+                $queryTxt = $boost . $queryTxt;
+            }
             $query->setQuery($queryTxt);
 
             /*
@@ -279,5 +301,41 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
         }
 
         return [];
+    }
+
+    /**
+     * @return NodeSourceSearchHandler
+     */
+    public function boostByPublicationDate(): NodeSourceSearchHandler
+    {
+        $this->boostByPublicationDate = true;
+        $this->boostByUpdateDate = false;
+        $this->boostByCreationDate = false;
+
+        return $this;
+    }
+
+    /**
+     * @return NodeSourceSearchHandler
+     */
+    public function boostByUpdateDate(): NodeSourceSearchHandler
+    {
+        $this->boostByPublicationDate = false;
+        $this->boostByUpdateDate = true;
+        $this->boostByCreationDate = false;
+
+        return $this;
+    }
+
+    /**
+     * @return NodeSourceSearchHandler
+     */
+    public function boostByCreationDate(): NodeSourceSearchHandler
+    {
+        $this->boostByPublicationDate = false;
+        $this->boostByUpdateDate = false;
+        $this->boostByCreationDate = true;
+
+        return $this;
     }
 }

@@ -32,6 +32,7 @@ use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
 use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -72,12 +73,14 @@ class SearchController extends DefaultThemeApp
             $callable
         );
 
-        if (null !== $this->get('solr.search.nodeSource')) {
+        /** @var NodeSourceSearchHandler|null $searchHandler */
+        $searchHandler = $this->get('solr.search.nodeSource');
+        if (null !== $searchHandler) {
             /*
              * Use Apache Solr when available
              */
-            $nodeSources = $this->get('solr.search.nodeSource')
-                ->search(
+            $searchHandler->boostByPublicationDate();
+            $nodeSources = $searchHandler->search(
                     $request->query->get('query'), # Use ?query query parameter to search with
                     [
                         'translation' => $translation,
