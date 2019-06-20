@@ -90,25 +90,25 @@ class SolrServiceProvider implements ServiceProviderInterface
          * @param $c
          * @return null|NodeSourceSearchHandler
          */
-        $container['solr.search.nodeSource'] = function ($c) {
+        $container['solr.search.nodeSource'] = $container->factory(function ($c) {
             if ($c['solr.ready']) {
                 return new NodeSourceSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
                 return null;
             }
-        };
+        });
 
         /**
          * @param $c
-         * @return null|DocumentSearchHandler()
+         * @return null|DocumentSearchHandler
          */
-        $container['solr.search.document'] = function ($c) {
+        $container['solr.search.document'] = $container->factory(function ($c) {
             if ($c['solr.ready']) {
                 return new DocumentSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
                 return null;
             }
-        };
+        });
 
         return $container;
     }

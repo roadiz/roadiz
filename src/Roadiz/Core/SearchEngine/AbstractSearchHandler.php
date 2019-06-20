@@ -28,24 +28,35 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Solarium\Core\Client\Client;
+use Solarium\QueryType\Select\Query\Component\BoostQuery;
+use Solarium\QueryType\Select\Query\Query;
 
 abstract class AbstractSearchHandler
 {
+    /**
+     * @var Client|null
+     */
     protected $client = null;
+    /**
+     * @var EntityManagerInterface|null
+     */
     protected $em = null;
+    /**
+     * @var LoggerInterface|null
+     */
     protected $logger = null;
 
     /**
      * @param Client $client
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
      */
     public function __construct(
         Client $client,
-        EntityManager $em,
+        EntityManagerInterface $em,
         LoggerInterface $logger = null
     ) {
         $this->client = $client;
@@ -88,7 +99,7 @@ abstract class AbstractSearchHandler
      * @param array $args
      * @param int $rows
      * @param int $page
-     * @return \Solarium\QueryType\Select\Query\Query
+     * @return Query
      */
     protected function createSolrQuery(array &$args = [], $rows = 20, $page = 1)
     {

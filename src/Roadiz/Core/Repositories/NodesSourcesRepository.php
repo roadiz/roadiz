@@ -453,9 +453,9 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     public function findBySearchQuery($query, $limit = 25)
     {
-        if (true === $this->get('solr.ready')) {
-            /** @var NodeSourceSearchHandler $service */
-            $service = $this->get('solr.search.nodeSource');
+        /** @var NodeSourceSearchHandler|null $service */
+        $service = $this->get('solr.search.nodeSource');
+        if (null !== $service) {
             $arguments = [];
             if ($this->isDisplayingNotPublishedNodes()) {
                 $arguments['status'] = ['<=', Node::PUBLISHED];
@@ -484,9 +484,9 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
-        if (true === $this->get('solr.ready')) {
-            /** @var NodeSourceSearchHandler $service */
-            $service = $this->get('solr.search.nodeSource');
+        /** @var NodeSourceSearchHandler|null $service */
+        $service = $this->get('solr.search.nodeSource');
+        if (null !== $service) {
             $params = [
                 'translation' => $translation,
             ];
