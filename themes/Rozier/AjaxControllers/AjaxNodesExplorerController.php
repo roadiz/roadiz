@@ -34,6 +34,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -61,9 +62,10 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         $arrayFilter = $this->parseFilterFromRequest($request);
-
-        if ($request->get('search') !== '' && null !== $this->get('solr.search.nodeSource')) {
-            $responseArray = $this->getSolrSearchResults($request, $arrayFilter);
+        /** @var NodeSourceSearchHandler|null $searchHandler */
+        $searchHandler = $this->get('solr.search.nodeSource');
+        if ($request->get('search') !== '' && null !== $searchHandler) {
+            $responseArray = $this->getSolrSearchResults($request, $searchHandler, $arrayFilter);
         } else {
             $responseArray = $this->getNodeSearchResults($request, $arrayFilter);
         }
@@ -145,17 +147,18 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     }
 
     /**
-     * @param Request $request
-     * @param array   $arrayFilter
+     * @param Request                 $request
+     * @param NodeSourceSearchHandler $searchHandler
+     * @param array                   $arrayFilter
      *
      * @return array
      */
-    protected function getSolrSearchResults(Request $request, array $arrayFilter): array
+    protected function getSolrSearchResults(Request $request, NodeSourceSearchHandler $searchHandler, array $arrayFilter): array
     {
+        $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
         $arrayFilter['translation'] = $this->get('defaultTranslation');
-        $results = $this->get('solr.search.nodeSource')
-            ->searchWithHighlight(
+        $results = $searchHandler->searchWithHighlight(
                 $request->get('search'),
                 $arrayFilter,
                 $this->getItemPerPage(),
@@ -164,8 +167,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
                 $currentPage
             )
         ;
-        $resultsCount = $this->get('solr.search.nodeSource')
-            ->count(
+        $resultsCount = $searchHandler->count(
                 $request->get('search'),
                 $arrayFilter,
                 0,

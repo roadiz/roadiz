@@ -31,6 +31,7 @@
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\SearchEngine\GlobalNodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -60,15 +61,32 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             throw new BadRequestHttpException('searchTerms parameter is missing.');
         }
 
-        $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
-        $searchHandler->setDisplayNonPublishedNodes(true);
+        /** @var NodeSourceSearchHandler|null $searchHandler */
+        $searchHandler = $this->get('solr.search.nodeSource');
+        if (null !== $searchHandler) {
+            $searchHandler->boostByUpdateDate();
+            $results = $searchHandler->searchWithHighlight(
+                $request->get('searchTerms'),
+                [],
+                static::RESULT_COUNT,
+                false,
+                10000
+            );
+            $nodesSources = array_map(function ($result) {
+                return $result['nodeSource'];
+            }, $results);
+        } else {
+            $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
+            $searchHandler->setDisplayNonPublishedNodes(true);
 
-        /** @var array $nodesSources */
-        $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
-            $request->get('searchTerms'),
-            static::RESULT_COUNT,
-            $this->get('defaultTranslation')
-        );
+            /** @var array $nodesSources */
+            $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
+                $request->get('searchTerms'),
+                static::RESULT_COUNT,
+                $this->get('defaultTranslation')
+            );
+        }
+
 
         if (null !== $nodesSources && count($nodesSources) > 0) {
             $responseArray = [
