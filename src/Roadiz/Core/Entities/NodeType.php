@@ -301,7 +301,7 @@ class NodeType extends AbstractEntity
     private $fields;
 
     /**
-     * @return Selectable
+     * @return ArrayCollection<NodeTypeField>
      */
     public function getFields()
     {
