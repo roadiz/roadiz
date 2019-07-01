@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use JMS\Serializer\Construction\UnserializeObjectConstructor;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
@@ -39,7 +40,11 @@ use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Attribute\Serializer\AttributeObjectConstructor;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\ChainDoctrineObjectConstructor;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TagObjectConstructor;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TranslationObjectConstructor;
 
 class SerializationServiceProvider implements ServiceProviderInterface
 {
@@ -60,6 +65,7 @@ class SerializationServiceProvider implements ServiceProviderInterface
                     )
                 )
                 ->addDefaultHandlers()
+                ->setObjectConstructor($c[ChainDoctrineObjectConstructor::class])
                 ->configureListeners(function (EventDispatcher $dispatcher) use ($c) {
                     foreach ($c['serializer.subscribers'] as $subscriber) {
                         if ($subscriber instanceof EventSubscriberInterface) {
@@ -67,6 +73,25 @@ class SerializationServiceProvider implements ServiceProviderInterface
                         }
                     }
                 });
+        };
+
+        $container['serializer.fallback_constructor'] = function () {
+            return new UnserializeObjectConstructor();
+        };
+
+        $container[ChainDoctrineObjectConstructor::class] = function ($c) {
+            $constructor = new ChainDoctrineObjectConstructor(
+                $c['em'],
+                $c['serializer.fallback_constructor']
+            );
+            $constructor->add(new TranslationObjectConstructor(
+                $c['em'],
+                $c['serializer.fallback_constructor']
+            ))->add(new TagObjectConstructor(
+                $c['em'],
+                $c['serializer.fallback_constructor']
+            ));
+            return $constructor;
         };
 
         $container['serializer.subscribers'] = function ($c) {

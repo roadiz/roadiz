@@ -4,6 +4,7 @@
 <section class="content-global delete-item">
     <header class="content-header header-document header-document-preview">
         <h1 class="content-title document-delete-title">{{ "delete.attribute.%name%"|trans({'%name%': item.code}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('attributesHomePage') }}" title="{% trans %}back_to.attributes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
     <article class="content content-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}

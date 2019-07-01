@@ -36,6 +36,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
+use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
 use RZ\Roadiz\CMS\Importers\EntityImporterInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
@@ -77,23 +78,8 @@ class AttributeImporter implements EntityImporterInterface, ContainerAwareInterf
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
-            /** @var AttributeTranslation $attributeTranslation */
-            foreach ($attribute->getAttributeTranslations() as $attributeTranslation) {
-                try {
-                    $em->merge($attributeTranslation);
-                } catch (EntityNotFoundException $e) {
-                    $attribute->setId(null);
-                    $em->persist($attributeTranslation);
-                }
-            }
-            try {
-                $em->merge($attribute);
-            } catch (EntityNotFoundException $e) {
-                $attribute->setId(null);
-                $em->persist($attribute);
-            }
+            $em->merge($attribute);
         }
-
         $em->flush();
 
         return true;

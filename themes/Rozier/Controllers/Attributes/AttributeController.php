@@ -93,7 +93,7 @@ class AttributeController extends RozierApp
             $serializer->serialize(
                 $attributes,
                 'json',
-                SerializationContext::create()->setGroups(['attribute', 'id'])
+                SerializationContext::create()->setGroups(['attribute'])
             ),
             JsonResponse::HTTP_OK,
             [
