@@ -376,11 +376,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new LoggerServiceProvider());
         $container->register(new BagsServiceProvider());
         $container->register(new FactoryServiceProvider());
+        $container->register(new ImporterServiceProvider());
         $container->register(new WorkflowServiceProvider());
-        $container->register(new AttributesServiceProvider());
         $container->register(new SerializationServiceProvider());
         $container->register(new UtilsServiceProvider());
-        $container->register(new ImporterServiceProvider());
+        $container->register(new AttributesServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

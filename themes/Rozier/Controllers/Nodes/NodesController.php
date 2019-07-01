@@ -302,6 +302,7 @@ class NodesController extends RozierApp
 
         if ($type !== null && $translation !== null) {
             $node = new Node($type);
+
             if (null !== $this->getUser() && null !== $this->getUser()->getChroot()) {
                 // If user is jailed in a node, prevent moving nodes out.
                 $node->setParent($this->getUser()->getChroot());

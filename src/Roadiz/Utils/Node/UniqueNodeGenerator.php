@@ -76,6 +76,7 @@ class UniqueNodeGenerator
     ) {
         $name = $nodeType->getDisplayName() . " " . uniqid();
         $node = new Node($nodeType);
+        $node->setTtl($node->getNodeType()->getDefaultTtl());
         $node->setNodeName($name);
 
         if (null !== $tag) {

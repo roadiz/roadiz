@@ -36,7 +36,9 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Event\AttributeValueIndexingSubscriber;
 use RZ\Roadiz\Attribute\Event\AttributeValueLifeCycleSubscriber;
+use RZ\Roadiz\Attribute\Importer\AttributeImporter;
 use RZ\Roadiz\Attribute\Twig\AttributesExtension;
+use RZ\Roadiz\CMS\Importers\ChainImporter;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\Translator;
 
@@ -47,6 +49,14 @@ class AttributesServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container[AttributeImporter::class] = $container->factory(function ($c) {
+            return new AttributeImporter($c);
+        });
+        $container->extend(ChainImporter::class, function (ChainImporter $chainImporter, $c) {
+            $chainImporter->addImporter($c[AttributeImporter::class]);
+            return $chainImporter;
+        });
+
         $container->extend('dispatcher', function (EventDispatcherInterface $dispatcher) {
             $dispatcher->addSubscriber(new AttributeValueIndexingSubscriber());
             return $dispatcher;

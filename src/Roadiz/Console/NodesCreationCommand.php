@@ -128,6 +128,7 @@ class NodesCreationCommand extends Command
     ) {
         $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
+        $node->setTtl($node->getNodeType()->getDefaultTtl());
         $node->setNodeName($nodeName);
         $this->entityManager->persist($node);
 

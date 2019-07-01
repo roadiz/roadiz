@@ -64,6 +64,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         $data['newsletterType'] = $nodeType->isNewsletterType();
         $data['hidingNodes'] = $nodeType->isHidingNodes();
         $data['color'] = $nodeType->getColor();
+        $data['defaultTtl'] = $nodeType->getDefaultTtl();
         $data['reachable'] = $nodeType->isReachable();
         $data['publishable'] = $nodeType->isPublishable();
         $data['fields'] = [];
@@ -92,6 +93,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
             'description',
             'visible',
             'newsletterType',
+            'defaultTtl',
             'color',
             'hidingNodes',
             'reachable',

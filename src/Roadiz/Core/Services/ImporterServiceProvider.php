@@ -59,7 +59,6 @@ class ImporterServiceProvider implements ServiceProviderInterface
     {
         $container[ChainImporter::class] = $container->factory(function ($c) {
             return new ChainImporter([
-                $c[AttributeImporter::class],
                 $c[GroupsImporter::class],
                 $c[NodesImporter::class],
                 $c[NodeTypesImporter::class],
@@ -69,9 +68,6 @@ class ImporterServiceProvider implements ServiceProviderInterface
             ]);
         });
 
-        $container[AttributeImporter::class] = $container->factory(function ($c) {
-            return new AttributeImporter($c);
-        });
         $container[GroupsImporter::class] = $container->factory(function ($c) {
             return new GroupsImporter($c);
         });

@@ -5,6 +5,8 @@
     "visible": true,
     "newsletterType": false,
     "hidingNodes": false,
+    "color": "#000000",
+    "defaultTtl": 0,
     "reachable": true,
     "publishable": false,
     "fields": [

@@ -309,6 +309,33 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @var int
+     * @ORM\Column(type="integer", name="default_ttl", nullable=false, options={"default" = 0})
+     * @Serializer\Exclude()
+     */
+    private $defaultTtl = 0;
+
+    /**
+     * @return int
+     */
+    public function getDefaultTtl(): int
+    {
+        return $this->defaultTtl;
+    }
+
+    /**
+     * @param int $defaultTtl
+     *
+     * @return NodeType
+     */
+    public function setDefaultTtl(int $defaultTtl): NodeType
+    {
+        $this->defaultTtl = $defaultTtl;
+
+        return $this;
+    }
+
+    /**
      * @param string $name
      *
      * @return NodeTypeField|null

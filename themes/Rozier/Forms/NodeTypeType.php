@@ -36,10 +36,12 @@ use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeName;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -63,48 +65,60 @@ class NodeTypeType extends AbstractType
                 ],
             ]);
         }
-        $builder->add('displayName', TextType::class, [
-                    'label' => 'nodeType.displayName',
-                    'constraints' => [
-                        new NotBlank(),
-                    ],
-                ])
-                ->add('description', TextType::class, [
-                    'label' => 'description',
-                    'required' => false,
-                ])
-                ->add('visible', CheckboxType::class, [
-                    'label' => 'visible',
-                    'required' => false,
-                    'help' => 'this_node_type_will_be_available_for_creating_root_nodes',
-                ])
-                ->add('publishable', CheckboxType::class, [
-                    'label' => 'publishable',
-                    'required' => false,
-                    'help' => 'enables_published_at_field_for_time_based_publication',
-                ])
-                ->add('reachable', CheckboxType::class, [
-                    'label' => 'reachable',
-                    'required' => false,
-                    'help' => 'mark_this_typed_nodes_as_reachable_with_an_url',
-                ])
-                ->add('hidingNodes', CheckboxType::class, [
-                    'label' => 'nodeType.hidingNodes',
-                    'required' => false,
-                    'help' => 'this_node_type_will_hide_all_children_nodes',
-                ])
-                ->add('color', TextType::class, [
-                    'label' => 'nodeType.color',
-                    'required' => false,
-                    'attr' => ['class' => 'colorpicker-input'],
-                    'constraints' => [
-                        new HexadecimalColor(),
-                    ],
-                ])
-                ->add('newsletterType', CheckboxType::class, [
-                    'label' => 'nodeType.newsletterType',
-                    'required' => false,
-                ]);
+        $builder
+            ->add('displayName', TextType::class, [
+                'label' => 'nodeType.displayName',
+                'constraints' => [
+                    new NotBlank(),
+                ],
+            ])
+            ->add('description', TextType::class, [
+                'label' => 'description',
+                'required' => false,
+            ])
+            ->add('visible', CheckboxType::class, [
+                'label' => 'visible',
+                'required' => false,
+                'help' => 'this_node_type_will_be_available_for_creating_root_nodes',
+            ])
+            ->add('publishable', CheckboxType::class, [
+                'label' => 'publishable',
+                'required' => false,
+                'help' => 'enables_published_at_field_for_time_based_publication',
+            ])
+            ->add('reachable', CheckboxType::class, [
+                'label' => 'reachable',
+                'required' => false,
+                'help' => 'mark_this_typed_nodes_as_reachable_with_an_url',
+            ])
+            ->add('hidingNodes', CheckboxType::class, [
+                'label' => 'nodeType.hidingNodes',
+                'required' => false,
+                'help' => 'this_node_type_will_hide_all_children_nodes',
+            ])
+            ->add('newsletterType', CheckboxType::class, [
+                'label' => 'nodeType.newsletterType',
+                'required' => false,
+            ])
+            ->add('color', TextType::class, [
+                'label' => 'nodeType.color',
+                'required' => false,
+                'attr' => ['class' => 'colorpicker-input'],
+                'constraints' => [
+                    new HexadecimalColor(),
+                ],
+            ])
+            ->add('defaultTtl', IntegerType::class, [
+                'label' => 'nodeType.defaultTtl',
+                'required' => false,
+                'help' => 'nodeType_default_ttl_when_creating_nodes',
+                'constraints' => [
+                    new GreaterThanOrEqual([
+                        'value' => 0
+                    ]),
+                ],
+            ])
+        ;
     }
 
     public function getBlockPrefix()

@@ -4890,6 +4890,14 @@
           <source>nodeType.color</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.defaultTtl">
+          <source>nodeType.defaultTtl</source>
+            <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType_default_ttl_when_creating_nodes">
+          <source>nodeType_default_ttl_when_creating_nodes</source>
+            <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="nodeType.numberFields">
           <source>nodeType.numberFields</source>

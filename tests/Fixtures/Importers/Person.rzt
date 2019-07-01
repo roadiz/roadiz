@@ -6,6 +6,7 @@
     "newsletterType": false,
     "hidingNodes": false,
     "color": "#7553db",
+    "defaultTtl": 0,
     "reachable": true,
     "publishable": false,
     "fields": [

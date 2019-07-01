@@ -95,7 +95,7 @@ class BasicFirewallEntry extends FirewallEntry
 
         return new BasicAuthenticationListener(
             $this->container['securityTokenStorage'],
-            $this->container['authentificationManager'],
+            $this->container['authenticationManager'],
             Kernel::SECURITY_DOMAIN,
             $this->getAuthenticationEntryPoint(),
             $this->container['logger']
@@ -134,7 +134,7 @@ class BasicFirewallEntry extends FirewallEntry
     {
         return new ExceptionListener(
             $this->container['securityTokenStorage'],
-            $this->container['securityAuthentificationTrustResolver'],
+            $this->container['securityAuthenticationTrustResolver'],
             $this->container['httpUtils'],
             Kernel::SECURITY_DOMAIN,
             $this->getAuthenticationEntryPoint(),

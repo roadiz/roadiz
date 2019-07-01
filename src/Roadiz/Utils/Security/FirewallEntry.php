@@ -191,7 +191,7 @@ class FirewallEntry
             $this->container['securityTokenStorage'],
             $this->container['config']['security']['secret'],
             $this->container['kernel']->isDebug() ? $this->container['logger'] : null,
-            $this->container['authentificationManager']
+            $this->container['authenticationManager']
         ), 8888];
         return $this;
     }
@@ -309,7 +309,7 @@ class FirewallEntry
 
         return new UsernamePasswordFormAuthenticationListener(
             $this->container['securityTokenStorage'],
-            $this->container['authentificationManager'],
+            $this->container['authenticationManager'],
             new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
             $this->container['httpUtils'],
             Kernel::SECURITY_DOMAIN,
@@ -347,7 +347,7 @@ class FirewallEntry
     {
         return new ExceptionListener(
             $this->container['securityTokenStorage'],
-            $this->container['securityAuthentificationTrustResolver'],
+            $this->container['securityAuthenticationTrustResolver'],
             $this->container['httpUtils'],
             Kernel::SECURITY_DOMAIN,
             $this->getAuthenticationEntryPoint($useForward),

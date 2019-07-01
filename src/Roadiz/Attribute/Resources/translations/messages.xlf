@@ -156,6 +156,16 @@
                 <target></target>
                 <note></note>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.import_form.file.label">
+                <source>attributes.import_form.file.label</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.import_form.file.help">
+                <source>attributes.import_form.file.help</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
         </body>
     </file>
 </xliff>

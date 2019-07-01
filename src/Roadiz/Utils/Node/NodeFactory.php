@@ -93,6 +93,7 @@ final class NodeFactory implements ContainerAwareInterface
         }
 
         $node->setNodeName($nodeName);
+        $node->setTtl($node->getNodeType()->getDefaultTtl());
         $entityManager->persist($node);
 
         $sourceClass = $node->getNodeType()->getSourceEntityFullQualifiedClassName();

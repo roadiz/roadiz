@@ -58,14 +58,14 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
     {
         $container['document.platforms'] = function () {
             return [
-                'youtube' =>     YoutubeEmbedFinder::class,
-                'vimeo' =>       VimeoEmbedFinder::class,
+                'youtube' => YoutubeEmbedFinder::class,
+                'vimeo' => VimeoEmbedFinder::class,
                 'dailymotion' => DailymotionEmbedFinder::class,
-                'soundcloud' =>  SoundcloudEmbedFinder::class,
-                'mixcloud' =>  MixcloudEmbedFinder::class,
-                'spotify' =>  SpotifyEmbedFinder::class,
-                'ted' =>  TedEmbedFinder::class,
-                'twitch' =>  TwitchEmbedFinder::class
+                'soundcloud' => SoundcloudEmbedFinder::class,
+                'mixcloud' => MixcloudEmbedFinder::class,
+                'spotify' => SpotifyEmbedFinder::class,
+                'ted' => TedEmbedFinder::class,
+                'twitch' => TwitchEmbedFinder::class
             ];
         };
 

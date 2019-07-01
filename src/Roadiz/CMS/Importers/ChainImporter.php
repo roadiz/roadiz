@@ -47,6 +47,17 @@ class ChainImporter implements EntityImporterInterface
     }
 
     /**
+     * @param EntityImporterInterface $entityImporter
+     *
+     * @return ChainImporter
+     */
+    public function addImporter(EntityImporterInterface $entityImporter): self
+    {
+        $this->importers[] = $entityImporter;
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function supports(string $entityClass): bool

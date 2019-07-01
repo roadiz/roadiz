@@ -244,23 +244,26 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new RememberMeListener(
                 $c['securityTokenStorage'],
                 $c['tokenBasedRememberMeServices'],
-                $c['authentificationManager'],
+                $c['authenticationManager'],
                 $c['kernel']->isDebug() ? $c['logger'] : null,
                 $c['dispatcher']
             );
         };
 
-        $container['authentificationManager'] = function ($c) {
+        $container['authenticationManager'] = function ($c) {
             return new AuthenticationProviderManager([
                 new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
             ]);
         };
+        $container['authentificationManager'] = function ($c) {
+            return $c['authenticationManager'];
+        };
 
         $container['security.voters'] = function (Container $c) {
             return [
-                new AuthenticatedVoter($c['securityAuthentificationTrustResolver']),
+                new AuthenticatedVoter($c['securityAuthenticationTrustResolver']),
                 $c['roleHierarchyVoter'],
                 $c['groupVoter'],
             ];
@@ -273,11 +276,15 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AccessDecisionManager($c['security.voters']);
         };
 
-        $container['securityAuthentificationTrustResolver'] = function ($c) {
+
+        $container['securityAuthenticationTrustResolver'] = function ($c) {
             return new AuthenticationTrustResolver(
                 AnonymousToken::class,
                 RememberMeToken::class
             );
+        };
+        $container['securityAuthentificationTrustResolver'] = function ($c) {
+            return $c['securityAuthenticationTrustResolver'];
         };
 
         /*
@@ -290,7 +297,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container['securityAuthorizationChecker'] = function ($c) {
             return new AuthorizationChecker(
                 $c['securityTokenStorage'],
-                $c['authentificationManager'],
+                $c['authenticationManager'],
                 $c['accessDecisionManager']
             );
         };
@@ -304,7 +311,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['securityTokenStorage'],
                 $c['accessDecisionManager'],
                 $c['accessMap'],
-                $c['authentificationManager']
+                $c['authenticationManager']
             );
         };
 
