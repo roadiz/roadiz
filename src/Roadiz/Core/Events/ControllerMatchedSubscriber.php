@@ -104,9 +104,9 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
          * Set request locale if _locale param
          * is present in Route.
          */
-        $routeParams = $event->getRequest()->get('_route_params');
-        if (!empty($routeParams["_locale"])) {
-            $event->getRequest()->setLocale($routeParams["_locale"]);
+        $locale = $event->getRequest()->get('_locale');
+        if (null !== $locale) {
+            $event->getRequest()->setLocale($locale);
         }
 
         /*

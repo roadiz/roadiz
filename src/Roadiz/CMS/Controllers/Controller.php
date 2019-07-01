@@ -225,7 +225,7 @@ abstract class Controller implements ContainerAwareInterface
          * Get language from static route
          */
         $translation = $this->findTranslationForLocale($_locale);
-        $request->setLocale($translation->getLocale());
+        $request->setLocale($translation->getPreferredLocale());
         return $translation;
     }
 

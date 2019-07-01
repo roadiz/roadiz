@@ -234,7 +234,8 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
             $controller->__init();
         }
 
-        if ($exception instanceof NoTranslationAvailableException) {
+        if ($exception instanceof NoTranslationAvailableException ||
+            $exception->getPrevious() instanceof NoTranslationAvailableException) {
             $event->getRequest()->setLocale($this->get('defaultTranslation')->getLocale());
         }
 
