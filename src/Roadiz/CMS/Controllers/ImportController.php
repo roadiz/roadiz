@@ -211,7 +211,7 @@ class ImportController extends AppController
                 $theme = $themeResolver->findById($themeId);
 
                 if ($theme === null) {
-                    throw new \Exception('Theme don\'t exist in database.');
+                    throw new \Exception('Theme don’t exist in database.');
                 }
 
                 $classname = $theme->getClassName();
@@ -224,7 +224,7 @@ class ImportController extends AppController
                 $importer = $this->get($classImporter);
                 $importer->import($file);
             } else {
-                throw new \Exception('File: ' . $path . ' don\'t exist');
+                throw new \Exception('File: ' . $path . ' don’t exist');
             }
         } catch (\Exception $e) {
             $data['error'] = $e->getMessage();

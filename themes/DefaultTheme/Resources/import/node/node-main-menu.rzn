@@ -13,6 +13,7 @@
         "children_order": "position",
         "children_order_direction": "ASC",
         "position": 1,
+        "dynamic_node_name": false,
         "children": [
             {
                 "node_name": "home",
@@ -28,6 +29,7 @@
                 "children_order": "order",
                 "children_order_direction": "ASC",
                 "position": 1,
+                "dynamic_node_name": true,
                 "children": [
                     {
                         "node_name": "ullamcorper-quam-purus-57dda7570caf4",
@@ -43,6 +45,7 @@
                         "children_order": "order",
                         "children_order_direction": "ASC",
                         "position": 1,
+                        "dynamic_node_name": true,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -51,6 +54,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             },
@@ -60,6 +64,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             },
@@ -69,6 +74,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             },
@@ -78,6 +84,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             }
@@ -98,6 +105,7 @@
                         "children_order": "order",
                         "children_order_direction": "ASC",
                         "position": 2,
+                        "dynamic_node_name": true,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -106,6 +114,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -115,6 +124,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -124,6 +134,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -133,6 +144,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             }
@@ -153,6 +165,7 @@
                         "children_order": "order",
                         "children_order_direction": "ASC",
                         "position": 3,
+                        "dynamic_node_name": true,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -161,6 +174,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -170,6 +184,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -179,6 +194,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -188,6 +204,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             }
@@ -202,6 +219,7 @@
                         "meta_title": "Hello Roadiz!",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "This is Roadiz default theme. It’s made for you to create your own theme from a simple base.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
                         "url_aliases": []
                     },
@@ -211,6 +229,7 @@
                         "meta_title": "Bonjour Roadiz !",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "Bienvenue sur le thème par défaut de Roadiz. Il a été fait pour vous permettre de créer votre propre thème à partir d’une base existante.\r\n\r\nPour éditer cette page, connectez-vous au backstage sur **/rz-admin**",
                         "url_aliases": []
                     },
@@ -220,6 +239,7 @@
                         "meta_title": "Hello Roadiz!",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "This is Roadiz default theme. It’s made for you to create your own theme from a simple base.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
                         "url_aliases": []
                     },
@@ -229,6 +249,7 @@
                         "meta_title": "Привет Roadiz !",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "Добро пожаловать в тему Roadiz по умолчанию. Это сделано для Вас, чтобы создать свою собственную тему с простым базы.\r\n\r\nЧтобы отредактировать эту страницу , подключение к бэк-офиса на **/rz-admin**",
                         "url_aliases": []
                     }
@@ -249,6 +270,7 @@
                 "children_order": "order",
                 "children_order_direction": "ASC",
                 "position": 2,
+                "dynamic_node_name": true,
                 "children": [
                     {
                         "node_name": "ullamcorper-quam-purus",
@@ -264,6 +286,7 @@
                         "children_order": "order",
                         "children_order_direction": "ASC",
                         "position": 1,
+                        "dynamic_node_name": true,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -272,6 +295,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             },
@@ -281,6 +305,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             },
@@ -290,6 +315,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             },
@@ -299,6 +325,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Vestibulum id ligula porta felis euismod semper. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec id elit non mi porta gravida at eget metus.\r\n\r\nCum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Nullam quis risus eget urna mollis ornare vel eu leo.",
                                 "url_aliases": []
                             }
@@ -319,6 +346,7 @@
                         "children_order": "order",
                         "children_order_direction": "ASC",
                         "position": 2,
+                        "dynamic_node_name": true,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -327,6 +355,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -336,6 +365,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -345,6 +375,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -354,6 +385,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Nulla vitae elit libero, a pharetra augue. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla. Donec id elit non mi porta gravida at eget metus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra augue.\r\n\r\nMorbi leo risus, porta ac consectetur ac, vestibulum at eros. Sed posuere consectetur est at lobortis. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             }
@@ -374,6 +406,7 @@
                         "children_order": "order",
                         "children_order_direction": "ASC",
                         "position": 3,
+                        "dynamic_node_name": true,
                         "children": [],
                         "nodes_sources": [
                             {
@@ -382,6 +415,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -391,6 +425,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -400,6 +435,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             },
@@ -409,6 +445,7 @@
                                 "meta_title": "",
                                 "meta_keywords": "",
                                 "meta_description": "",
+                                "published_at": null,
                                 "content": "Donec sed odio dui. Maecenas sed diam eget risus varius blandit sit amet non magna. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Curabitur blandit tempus porttitor. Cras mattis consectetur purus sit amet fermentum. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed posuere consectetur est at lobortis.\r\n\r\nSed posuere consectetur est at lobortis. Donec ullamcorper nulla non metus auctor fringilla. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
                                 "url_aliases": []
                             }
@@ -423,6 +460,7 @@
                         "meta_title": "",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "This is a about example page.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
                         "url_aliases": []
                     },
@@ -432,6 +470,7 @@
                         "meta_title": "",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "Ceci est une page d'exemple (\"À propos\").\r\n\r\nPour éditer cette page, connectez-vous au backstage sur **/rz-admin**",
                         "url_aliases": []
                     },
@@ -441,6 +480,7 @@
                         "meta_title": "",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "This is a about example page.\r\n\r\nTo edit this page, connect to your backstage at **/rz-admin**",
                         "url_aliases": []
                     },
@@ -450,6 +490,7 @@
                         "meta_title": "",
                         "meta_keywords": "",
                         "meta_description": "",
+                        "published_at": null,
                         "content": "Это пример страницы. \r\n\r\nЧтобы отредактировать эту страницу , подключиться к бэк-офиса в **/rz-admin**",
                         "url_aliases": []
                     }
@@ -460,18 +501,20 @@
         "nodes_sources": [
             {
                 "translation": "en",
-                "title": "main-menu",
+                "title": "Main menu",
                 "meta_title": "",
                 "meta_keywords": "",
                 "meta_description": "",
+                "published_at": null,
                 "url_aliases": []
             },
             {
                 "translation": "fr",
-                "title": "main-menu",
+                "title": "Menu principal",
                 "meta_title": "",
                 "meta_keywords": "",
                 "meta_description": "",
+                "published_at": null,
                 "url_aliases": []
             },
             {
@@ -480,6 +523,7 @@
                 "meta_title": "",
                 "meta_keywords": "",
                 "meta_description": "",
+                "published_at": null,
                 "url_aliases": []
             },
             {
@@ -488,6 +532,7 @@
                 "meta_title": "",
                 "meta_keywords": "",
                 "meta_description": "",
+                "published_at": null,
                 "url_aliases": []
             }
         ],

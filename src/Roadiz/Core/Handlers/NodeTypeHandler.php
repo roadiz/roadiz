@@ -159,8 +159,9 @@ class NodeTypeHandler extends AbstractHandler
      */
     public function updateSchema()
     {
-        $this->clearCaches();
         $this->regenerateEntityClass();
+        // Clear cache only after generating NSEntity class.
+        $this->clearCaches();
 
         return $this;
     }

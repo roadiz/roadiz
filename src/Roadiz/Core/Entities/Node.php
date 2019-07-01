@@ -234,6 +234,33 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Exclude()
+     */
+    private $ttl = 0;
+
+    /**
+     * @return int
+     */
+    public function getTtl(): int
+    {
+        return $this->ttl;
+    }
+
+    /**
+     * @param int $ttl
+     *
+     * @return Node
+     */
+    public function setTtl(int $ttl): Node
+    {
+        $this->ttl = $ttl;
+
+        return $this;
+    }
+
+    /**
      * @return boolean
      */
     public function isPublished()

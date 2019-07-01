@@ -5,5 +5,8 @@
     "visible": true,
     "newsletterType": false,
     "hidingNodes": false,
+    "color": "#969696",
+    "reachable": false,
+    "publishable": false,
     "fields": []
 }

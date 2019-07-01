@@ -6169,6 +6169,14 @@
           <source>node.childrenOrderDirection</source>
           <target></target>
       </trans-unit>
+        <trans-unit xml:space="preserve" id="node.ttl">
+          <source>node.ttl</source>
+            <target></target>
+      </trans-unit>
+        <trans-unit xml:space="preserve" id="node_time_to_live_cache_on_front_controller">
+          <source>node_time_to_live_cache_on_front_controller</source>
+            <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="createdAt">
           <source>createdAt</source>
           <target></target>

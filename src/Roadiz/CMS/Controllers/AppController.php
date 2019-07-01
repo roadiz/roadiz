@@ -199,6 +199,14 @@ abstract class AppController extends Controller
     protected $assignation = [];
 
     /**
+     * @return array
+     */
+    public function getAssignation(): array
+    {
+        return $this->assignation;
+    }
+
+    /**
      * @var Node|null
      */
     private $homeNode = null;

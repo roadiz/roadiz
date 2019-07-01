@@ -109,7 +109,10 @@ class PageController extends DefaultThemeApp
             $response = $this->render('pages/page.html.twig', $this->assignation);
         }
 
-        return $this->makeResponseCachable($request, $response, 10);
+        if ($this->getNode()->getTtl() > 0) {
+            return $this->makeResponseCachable($request, $response, $this->getNode()->getTtl());
+        }
+        return $response;
     }
 
     /**

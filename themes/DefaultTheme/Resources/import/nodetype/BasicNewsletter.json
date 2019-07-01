@@ -6,6 +6,8 @@
     "newsletterType": true,
     "hidingNodes": false,
     "color": "#cc8686",
+    "reachable": false,
+    "publishable": false,
     "fields": [
         {
             "name": "subject",
@@ -17,7 +19,9 @@
             "virtual": false,
             "universal": false,
             "default_values": null,
-            "group_name": null,
+            "group_name": "",
+            "group_name_canonical": "",
+            "expanded": false,
             "placeholder": null,
             "min_length": null,
             "max_length": null
@@ -32,7 +36,9 @@
             "virtual": false,
             "universal": false,
             "default_values": null,
-            "group_name": null,
+            "group_name": "",
+            "group_name_canonical": "",
+            "expanded": false,
             "placeholder": null,
             "min_length": null,
             "max_length": null
@@ -47,7 +53,9 @@
             "virtual": false,
             "universal": true,
             "default_values": null,
-            "group_name": null,
+            "group_name": "",
+            "group_name_canonical": "",
+            "expanded": false,
             "placeholder": null,
             "min_length": null,
             "max_length": null
@@ -62,7 +70,9 @@
             "virtual": false,
             "universal": true,
             "default_values": null,
-            "group_name": null,
+            "group_name": "",
+            "group_name_canonical": "",
+            "expanded": false,
             "placeholder": null,
             "min_length": null,
             "max_length": null
@@ -77,7 +87,9 @@
             "virtual": true,
             "universal": false,
             "default_values": "BasicBlock",
-            "group_name": null,
+            "group_name": "",
+            "group_name_canonical": "",
+            "expanded": false,
             "placeholder": null,
             "min_length": null,
             "max_length": null

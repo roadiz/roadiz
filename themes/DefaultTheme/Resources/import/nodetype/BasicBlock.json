@@ -5,6 +5,9 @@
     "visible": false,
     "newsletterType": false,
     "hidingNodes": false,
+    "color": "#000000",
+    "reachable": false,
+    "publishable": false,
     "fields": [
         {
             "name": "content",
@@ -14,8 +17,11 @@
             "type": 4,
             "indexed": false,
             "virtual": false,
+            "universal": false,
             "default_values": null,
-            "group_name": null,
+            "group_name": "",
+            "group_name_canonical": "",
+            "expanded": false,
             "placeholder": null,
             "min_length": null,
             "max_length": null

@@ -153,6 +153,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     'translation' => $translation,
                     '_route' => null,
                     '_format' => $_format,
+                    'theme' => $this->theme,
                 ];
             } else {
                 /*
@@ -199,6 +200,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         'translation' => $translation,
                         '_route' => null,
                         '_format' => $_format,
+                        'theme' => $this->theme,
                     ];
 
                     if (null !== $translation) {

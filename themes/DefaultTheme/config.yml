@@ -14,11 +14,11 @@ importFiles:
     groups: []
     settings: []
     nodetypes:
-        - Resources/import/nodetype/BasicBlock.rzt
-        - Resources/import/nodetype/BasicNewsletter.rzt
-        - Resources/import/nodetype/Link.rzt
-        - Resources/import/nodetype/Neutral.rzt
-        - Resources/import/nodetype/Page.rzt
+        - Resources/import/nodetype/BasicBlock.json
+        - Resources/import/nodetype/BasicNewsletter.json
+        - Resources/import/nodetype/Link.json
+        - Resources/import/nodetype/Neutral.json
+        - Resources/import/nodetype/Page.json
     tags: []
     nodes:
         - "Resources/import/node/node-main-menu.rzn"

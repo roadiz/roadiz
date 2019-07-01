@@ -36,12 +36,13 @@ searchPageLocale:
         _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
 thanksPage:
-    path:     /{_locale}/contact/thank-you
+    path: /{_locale}/contact/thank-you
     defaults:
         _controller: Themes\DefaultTheme\Controllers\ContactController::thankAction
         _locale: "en"
     requirements:
         _locale: "[a-z]{2}_?[A-Z]{0,2}"
+
 thanksPageLocale:
     path:     /{_locale}/contact/thank-you
     defaults:
