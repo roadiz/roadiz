@@ -553,15 +553,15 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection
-     * @Serializer\Exclude
+     * @var ArrayCollection<RZ\Roadiz\Core\Entities\Node>
+     * @Serializer\Groups({"node_children"})
      */
     protected $children;
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
-     * @var ArrayCollection
+     * @var ArrayCollection<RZ\Roadiz\Core\Entities\Tag>
      * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $tags = null;

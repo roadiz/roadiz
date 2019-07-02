@@ -72,6 +72,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
      * )
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\AttributeValueTranslation>")
+     * @Serializer\Accessor(getter="getAttributeValueTranslations",setter="setAttributeValueTranslations")
      */
     protected $attributeValueTranslations;
 

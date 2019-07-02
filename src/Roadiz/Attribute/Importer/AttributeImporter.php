@@ -79,8 +79,8 @@ class AttributeImporter implements EntityImporterInterface, ContainerAwareInterf
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
             $em->merge($attribute);
+            $em->flush();
         }
-        $em->flush();
 
         return true;
     }

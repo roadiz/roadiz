@@ -47,12 +47,14 @@ class TranslationObjectConstructor extends AbstractTypedObjectConstructor
      */
     protected function findObject($data): ?object
     {
-        $translation = null;
-        if (null !== $data['locale'] && $data['locale'] !== '') {
-            $translation = $this->entityManager
-                ->getRepository(Translation::class)
-                ->findOneByLocale($data['locale']);
+        if (null === $data['locale'] || $data['locale'] === '') {
+            throw new ObjectConstructionException('Translation locale can not be empty');
         }
+
+        $translation = $this->entityManager
+            ->getRepository(Translation::class)
+            ->findOneByLocale($data['locale']);
+
         if (null === $translation) {
             throw new ObjectConstructionException(sprintf('Translation with locale “%s” can not be found', $data['locale']));
         }

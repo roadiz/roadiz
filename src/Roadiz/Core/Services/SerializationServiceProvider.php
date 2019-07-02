@@ -43,6 +43,8 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Serializer\AttributeObjectConstructor;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\ChainDoctrineObjectConstructor;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\NodeObjectConstructor;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\NodeTypeObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TagObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TranslationObjectConstructor;
 
@@ -88,6 +90,12 @@ class SerializationServiceProvider implements ServiceProviderInterface
                 $c['em'],
                 $c['serializer.fallback_constructor']
             ))->add(new TagObjectConstructor(
+                $c['em'],
+                $c['serializer.fallback_constructor']
+            ))->add(new NodeObjectConstructor(
+                $c['em'],
+                $c['serializer.fallback_constructor']
+            ))->add(new NodeTypeObjectConstructor(
                 $c['em'],
                 $c['serializer.fallback_constructor']
             ));

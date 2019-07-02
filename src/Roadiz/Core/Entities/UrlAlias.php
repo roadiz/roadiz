@@ -45,6 +45,7 @@ class UrlAlias extends AbstractEntity
     /**
      * @ORM\Column(type="string", unique=true)
      * @var string
+     * @Serializer\Groups({"url_alias"})
      */
     private $alias = '';
 

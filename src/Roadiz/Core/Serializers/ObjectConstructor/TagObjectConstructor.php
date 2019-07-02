@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Core\Serializers\ObjectConstructor;
 
+use JMS\Serializer\Exception\ObjectConstructionException;
 use RZ\Roadiz\Core\Entities\Tag;
 
 class TagObjectConstructor extends AbstractTypedObjectConstructor
@@ -46,11 +47,11 @@ class TagObjectConstructor extends AbstractTypedObjectConstructor
      */
     protected function findObject($data): ?object
     {
-        if (null !== $data['tagName'] && $data['tagName'] !== '') {
-            return $this->entityManager
-                ->getRepository(Tag::class)
-                ->findOneByTagName($data['tagName']);
+        if (null === $data['tagName'] || $data['tagName'] === '') {
+            throw new ObjectConstructionException('Tag name can not be empty');
         }
-        return null;
+        return $this->entityManager
+            ->getRepository(Tag::class)
+            ->findOneByTagName($data['tagName']);
     }
 }

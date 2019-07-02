@@ -80,6 +80,10 @@ trait AttributeValueTrait
     public function setAttributeValueTranslations(Collection $attributeValueTranslations)
     {
         $this->attributeValueTranslations = $attributeValueTranslations;
+        /** @var AttributeValueTranslationInterface $attributeValueTranslation */
+        foreach ($this->attributeValueTranslations as $attributeValueTranslation) {
+            $attributeValueTranslation->setAttributeValue($this);
+        }
         return true;
     }
 
