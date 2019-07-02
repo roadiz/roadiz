@@ -31,11 +31,10 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Selectable;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
-use JMS\Serializer\Annotation as Serializer;
 
 /**
  * NodeType describes each node structure family,
@@ -53,8 +52,10 @@ use JMS\Serializer\Annotation as Serializer;
 class NodeType extends AbstractEntity
 {
     /**
+     * @var string
      * @ORM\Column(type="string", unique=true)
      * @Serializer\Groups({"node_type", "node", "nodes_sources"})
+     * @Serializer\Type("string")
      */
     private $name;
 
@@ -79,6 +80,7 @@ class NodeType extends AbstractEntity
      * @var string
      * @ORM\Column(name="display_name", type="string")
      * @Serializer\Groups({"node_type", "node", "nodes_soutces"})
+     * @Serializer\Type("string")
      */
     private $displayName;
 
@@ -105,6 +107,7 @@ class NodeType extends AbstractEntity
      * @var string
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups("node_type")
+     * @Serializer\Type("string")
      */
     private $description;
 
@@ -130,6 +133,7 @@ class NodeType extends AbstractEntity
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @Serializer\Groups("node_type")
+     * @Serializer\Type("boolean")
      */
     private $visible = true;
 
@@ -155,6 +159,7 @@ class NodeType extends AbstractEntity
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups("node_type")
+     * @Serializer\Type("boolean")
      */
     private $publishable = false;
 
@@ -185,6 +190,7 @@ class NodeType extends AbstractEntity
      * @var bool
      * @ORM\Column(name="reachable", type="boolean", nullable=false, options={"default" = true})
      * @Serializer\Groups("node_type")
+     * @Serializer\Type("boolean")
      */
     private $reachable = true;
 
@@ -218,6 +224,7 @@ class NodeType extends AbstractEntity
      * @var bool
      * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups("node_type")
+     * @Serializer\Type("boolean")
      */
     private $newsletterType = false;
 
@@ -243,6 +250,7 @@ class NodeType extends AbstractEntity
      * @var bool
      * @ORM\Column(name="hiding_nodes",type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups("node_type")
+     * @Serializer\Type("boolean")
      */
     private $hidingNodes = false;
     /**
@@ -263,8 +271,10 @@ class NodeType extends AbstractEntity
         return $this;
     }
     /**
+     * @var string
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)
      * @Serializer\Groups({"node_type", "color"})
+     * @Serializer\Type("string")
      */
     protected $color = '#000000';
 
@@ -293,10 +303,12 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @var ArrayCollection<RZ\Roadiz\Core\Entities\NodeTypeField>
      * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"ALL"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @Serializer\Groups("node_type")
-     * @var ArrayCollection
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\NodeTypeField>")
+     * @Serializer\Accessor(getter="getFields", setter="setFields")
      */
     private $fields;
 
@@ -309,9 +321,25 @@ class NodeType extends AbstractEntity
     }
 
     /**
+     * @param ArrayCollection<NodeTypeField> $fields
+     *
+     * @return NodeType
+     */
+    public function setFields(ArrayCollection $fields): NodeType
+    {
+        $this->fields = $fields;
+        foreach ($this->fields as $field) {
+            $field->setNodeType($this);
+        }
+
+        return $this;
+    }
+
+    /**
      * @var int
      * @ORM\Column(type="integer", name="default_ttl", nullable=false, options={"default" = 0})
-     * @Serializer\Exclude()
+     * @Serializer\Groups("node_type")
+     * @Serializer\Type("int")
      */
     private $defaultTtl = 0;
 

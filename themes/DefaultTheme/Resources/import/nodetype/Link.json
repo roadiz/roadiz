@@ -1,30 +1,24 @@
 {
     "name": "Link",
     "displayName": "Link to other page",
-    "description": null,
     "visible": true,
+    "publishable": false,
+    "reachable": false,
     "newsletterType": false,
     "hidingNodes": false,
     "color": "#1bc258",
-    "reachable": false,
-    "publishable": false,
     "fields": [
         {
+            "position": 1.0,
             "name": "ref_node",
             "label": "Node reference",
-            "description": null,
-            "visible": true,
             "type": 13,
-            "indexed": false,
-            "virtual": true,
-            "universal": false,
-            "default_values": "Page",
-            "group_name": "",
-            "group_name_canonical": "",
             "expanded": false,
-            "placeholder": null,
-            "min_length": 1,
-            "max_length": 1
+            "nodeTypeName": "Link",
+            "universal": false,
+            "indexed": false,
+            "visible": true
         }
-    ]
+    ],
+    "defaultTtl": 0
 }

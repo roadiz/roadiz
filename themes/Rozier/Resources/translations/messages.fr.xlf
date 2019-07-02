@@ -4832,6 +4832,14 @@
           <source>nodeType.color</source>
           <target state="translated">Couleur</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.defaultTtl">
+          <source>nodeType.defaultTtl</source>
+            <target state="translated">TTL frontal pour les nouveau nœuds</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType_default_ttl_when_creating_nodes">
+          <source>nodeType_default_ttl_when_creating_nodes</source>
+            <target state="translated">Durée de vie du cache frontal pour tous les nouveau nœuds de ce type.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.numberFields" approved="yes">
           <source>nodeType.numberFields</source>
           <target state="translated">Nombre de champs</target>

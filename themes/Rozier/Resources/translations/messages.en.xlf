@@ -4832,6 +4832,14 @@
           <source>nodeType.color</source>
           <target state="translated">Color</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.defaultTtl">
+          <source>nodeType.defaultTtl</source>
+            <target state="translated">Front TTL for new nodes</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType_default_ttl_when_creating_nodes">
+          <source>nodeType_default_ttl_when_creating_nodes</source>
+            <target state="translated">Front cache time-to-live for nodes created against this type.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.numberFields" approved="yes">
           <source>nodeType.numberFields</source>
           <target state="translated">Number of fields</target>

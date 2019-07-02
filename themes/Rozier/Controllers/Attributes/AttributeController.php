@@ -32,19 +32,12 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Attributes;
 
-use Doctrine\ORM\EntityNotFoundException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use RZ\Roadiz\Attribute\Form\AttributeImportType;
 use RZ\Roadiz\Attribute\Form\AttributeType;
 use RZ\Roadiz\Attribute\Importer\AttributeImporter;
-use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\Attribute;
-use RZ\Roadiz\Core\Entities\AttributeTranslation;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
-use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -31,6 +31,8 @@
 
 namespace Themes\Rozier\Controllers\NodeTypes;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -39,6 +41,7 @@ use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -64,24 +67,21 @@ class NodeTypesUtilsController extends RozierApp
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
 
-        $serializer = new NodeTypeJsonSerializer();
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
 
-        $response = new Response(
-            $serializer->serialize($nodeType),
-            Response::HTTP_OK,
-            []
+        return new JsonResponse(
+            $serializer->serialize(
+                $nodeType,
+                'json',
+                SerializationContext::create()->setGroups(['node_type', 'position'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $nodeType->getName() . '.json'),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $nodeType->getName() . '.json'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -96,14 +96,22 @@ class NodeTypesUtilsController extends RozierApp
             ->getRepository(NodeType::class)
             ->findAll();
 
-        $serializer = new NodeTypeJsonSerializer();
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
         $zipArchive = new \ZipArchive();
         $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
         $zipArchive->open($tmpfname, \ZipArchive::CREATE);
 
         /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
-            $zipArchive->addFromString($nodeType->getName() . '.json', $serializer->serialize($nodeType));
+            $zipArchive->addFromString(
+                $nodeType->getName() . '.json',
+                $serializer->serialize(
+                    $nodeType,
+                    'json',
+                    SerializationContext::create()->setGroups(['node_type', 'position'])
+                )
+            );
         }
 
         $zipArchive->close();
