@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -46,6 +47,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
+use ZipArchive;
 
 /**
  * {@inheritdoc}
@@ -58,7 +61,7 @@ class NodeTypesUtilsController extends RozierApp
      * @param Request $request
      * @param int     $nodeTypeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
@@ -66,6 +69,10 @@ class NodeTypesUtilsController extends RozierApp
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
+
+        if (null === $nodeType) {
+            throw $this->createNotFoundException();
+        }
 
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
@@ -98,9 +105,9 @@ class NodeTypesUtilsController extends RozierApp
 
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $zipArchive = new \ZipArchive();
+        $zipArchive = new ZipArchive();
         $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
-        $zipArchive->open($tmpfname, \ZipArchive::CREATE);
+        $zipArchive->open($tmpfname, ZipArchive::CREATE);
 
         /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
@@ -130,7 +137,8 @@ class NodeTypesUtilsController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {
@@ -168,7 +176,7 @@ class NodeTypesUtilsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return Form
      */
     private function buildImportJsonFileForm()
     {

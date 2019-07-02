@@ -46,28 +46,33 @@ class Group extends AbstractEntity
     /**
      * @ORM\Column(type="string", unique=true)
      * @Serializer\Groups({"user", "role", "group"})
+     * @Serializer\Type("string")
      * @var string
      */
     private $name = '';
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
      * @Serializer\Groups({"group_user"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\User>")
      * @var ArrayCollection
      */
     private $users;
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups", cascade={"persist", "merge"})
      * @ORM\JoinTable(name="groups_roles",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
      * @var ArrayCollection<Role>
      * @Serializer\Groups({"group"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Role>")
+     * @Serializer\Accessor(getter="getRolesEntities", setter="setRolesEntities")
      */
     private $roles;
     /**
      * @var array|null
      * @Serializer\Groups({"group", "user"})
+     * @Serializer\Type("array<string>")
      */
     private $rolesNames = null;
 
@@ -133,6 +138,23 @@ class Group extends AbstractEntity
     public function getRolesEntities(): ?Collection
     {
         return $this->roles;
+    }
+
+    /**
+     * Get roles entities.
+     *
+     * @param Collection $roles
+     *
+     * @return Group
+     */
+    public function setRolesEntities(Collection $roles): self
+    {
+        $this->roles = $roles;
+        /** @var Role $role */
+        foreach ($this->roles as $role) {
+            $role->addGroup($this);
+        }
+        return $this;
     }
 
     /**

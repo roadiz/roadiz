@@ -46,6 +46,8 @@ class SettingGroup extends AbstractEntity
     /**
      * @ORM\Column(type="string", unique=true)
      * @Serializer\Groups({"setting", "setting_group"})
+     * @Serializer\Type("string")
+     * @var string
      */
     private $name;
 
@@ -70,6 +72,7 @@ class SettingGroup extends AbstractEntity
     /**
      * @ORM\Column(type="boolean", name="in_menu", nullable=false, options={"default" = false})
      * @Serializer\Groups({"setting", "setting_group"})
+     * @Serializer\Type("bool")
      */
     protected $inMenu = false;
 

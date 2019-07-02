@@ -54,4 +54,12 @@ class NodeTypeObjectConstructor extends AbstractTypedObjectConstructor
             ->getRepository(NodeType::class)
             ->findOneByName($data['name']);
     }
+
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof NodeType) {
+            $object->setName($data['name']);
+            $object->setDisplayName('temp');
+        }
+    }
 }

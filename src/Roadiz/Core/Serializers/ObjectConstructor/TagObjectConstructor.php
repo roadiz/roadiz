@@ -54,4 +54,11 @@ class TagObjectConstructor extends AbstractTypedObjectConstructor
             ->getRepository(Tag::class)
             ->findOneByTagName($data['tagName']);
     }
+
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof Tag) {
+            $object->setTagName($data['tagName']);
+        }
+    }
 }

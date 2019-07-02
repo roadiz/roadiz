@@ -31,14 +31,15 @@
 
 namespace Themes\Rozier\Controllers;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -61,26 +62,21 @@ class RolesUtilsController extends RozierApp
                              ->getRepository(Role::class)
                              ->findAll();
 
-        $serializer = new RoleCollectionJsonSerializer($this->get('em'));
-        $role = $serializer->serialize($existingRole);
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
 
-        $response = new Response(
-            $role,
-            Response::HTTP_OK,
-            []
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingRole,
+                'json',
+                SerializationContext::create()->setGroups(['role'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', 'role-all-' . date("YmdHis") . '.json'),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'role-all-' . date("YmdHis") . '.json'
-            )
-        ); // Rezo-Zero Type
-
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -98,26 +94,25 @@ class RolesUtilsController extends RozierApp
         $existingRole = $this->get('em')
                              ->find(Role::class, (int) $roleId);
 
-        $serializer = new RoleCollectionJsonSerializer($this->get('em'));
-        $role = $serializer->serialize([$existingRole]);
+        if (null === $existingRole) {
+            throw $this->createNotFoundException();
+        }
 
-        $response = new Response(
-            $role,
-            Response::HTTP_OK,
-            []
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingRole,
+                'json',
+                SerializationContext::create()->setGroups(['role'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', 'role-' . $existingRole->getName() . '-' . date("YmdHis") . '.json'),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'role-' . $existingRole->getName() . '-' . date("YmdHis") . '.json'
-            )
-        ); // Rezo-Zero Type
-
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -126,6 +121,7 @@ class RolesUtilsController extends RozierApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {

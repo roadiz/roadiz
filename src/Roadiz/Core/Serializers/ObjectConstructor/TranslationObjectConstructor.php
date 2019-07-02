@@ -60,4 +60,11 @@ class TranslationObjectConstructor extends AbstractTypedObjectConstructor
         }
         return $translation;
     }
+
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof Translation) {
+            $object->setLocale($data['locale']);
+        }
+    }
 }

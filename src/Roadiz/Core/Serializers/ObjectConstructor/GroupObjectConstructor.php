@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -23,56 +22,40 @@
  * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file RoleJsonSerializer.php
- * @author Thomas Aufresne
  */
-namespace RZ\Roadiz\Core\Serializers;
 
-use RZ\Roadiz\Core\Entities\Role;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\Serializer;
+namespace RZ\Roadiz\Core\Serializers\ObjectConstructor;
 
-/**
- * Serialization class for Role.
- * @deprecated Use Serializer service.
- */
-class RoleJsonSerializer extends AbstractJsonSerializer
+use JMS\Serializer\Exception\ObjectConstructionException;
+use RZ\Roadiz\Core\Entities\Group;
+
+class GroupObjectConstructor extends AbstractTypedObjectConstructor
 {
-
     /**
-     * Create a simple associative array with Role entity.
-     *
-     * @param \RZ\Roadiz\Core\Entities\Role $role
-     * @deprecated Use Serializer service.
-     * @return array
+     * @inheritDoc
      */
-    public function toArray($role)
+    public function supports(string $className, array $data): bool
     {
-        $data = [];
-        $data['name'] = $role->getRole();
-
-        return $data;
+        return $className === Group::class && array_key_exists('name', $data);
     }
 
     /**
-     * Deserialize a json file into a readable array of data.
-     *
-     * @param string $jsonString
-     * @return \RZ\Roadiz\Core\Entities\Role
-     * @deprecated Use Serializer service.
-     * @throws \Exception
+     * @inheritDoc
      */
-    public function deserialize($jsonString)
+    protected function findObject($data): ?object
     {
-        if ($jsonString == "") {
-            throw new \Exception('File is empty.');
+        if (null === $data['name'] || $data['name'] === '') {
+            throw new ObjectConstructionException('Group name can not be empty');
         }
+        return $this->entityManager
+            ->getRepository(Group::class)
+            ->findOneByName($data['name']);
+    }
 
-        $serializer = new Serializer([
-            new RoleNormalizer()
-        ], [new JsonEncoder()]);
-
-        return $serializer->deserialize($jsonString, Role::class, 'json');
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof Group) {
+            $object->setName($data['name']);
+        }
     }
 }

@@ -31,16 +31,18 @@
 
 namespace Themes\Rozier\Controllers;
 
+use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -59,53 +61,46 @@ class SettingsUtilsController extends RozierApp
     public function exportAllAction(Request $request, $settingGroupId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
-
-        $groups = [];
-        $filePrefix = 'all';
-        if (null === $settingGroupId) {
-            $groups = $this->get('em')
-                ->getRepository(SettingGroup::class)
-                ->findAll();
-            $lonelySettings = $this->get('em')
-                ->getRepository(Setting::class)
-                ->findBy(['settingGroup' => null]);
-
-            $tmpGroup = new SettingGroup();
-            $tmpGroup->setName('__default__');
-            $tmpGroup->addSettings($lonelySettings);
-            $groups[] = $tmpGroup;
-        } else {
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->get('em');
+        if (null !== $settingGroupId) {
             /** @var SettingGroup|null $group */
-            $group = $this->get('em')
+            $group = $entityManager
                 ->find(SettingGroup::class, $settingGroupId);
-
             if (null === $group) {
                 throw $this->createNotFoundException();
             }
-
-            $groups[] = $group;
-            $filePrefix = StringHandler::cleanForFilename($group->getName());
+            $fileName = 'settings-' . strtolower(StringHandler::cleanForFilename($group->getName())) . '-' . date("YmdHis") . '.json';
+            $settings = $entityManager
+                ->getRepository(Setting::class)
+                ->findBySettingGroup($group);
+        } else {
+            $fileName = 'settings-' . date("YmdHis") . '.json';
+            $settings = $entityManager
+                ->getRepository(Setting::class)
+                ->findAll();
         }
 
-        $serializer = new SettingCollectionJsonSerializer();
-        $data = $serializer->serialize($groups);
+        /** @var Setting $setting */
+        /*foreach ($settings as $setting) {
+            $entityManager->initializeObject($setting->getSettingGroup());
+        }*/
 
-        $response = new Response(
-            $data,
-            Response::HTTP_OK,
-            []
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $settings,
+                'json',
+                SerializationContext::create()->setGroups(['setting'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'settings-' . $filePrefix . '-' . date("YmdHis") . '.json'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**

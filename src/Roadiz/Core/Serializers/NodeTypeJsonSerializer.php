@@ -37,6 +37,8 @@ use Symfony\Component\Serializer\Serializer;
 
 /**
  * Json Serialization handler for NodeType.
+ *
+ * @deprecated Use Serializer service.
  */
 class NodeTypeJsonSerializer extends AbstractJsonSerializer
 {
@@ -50,7 +52,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
      * Create a simple associative array with a NodeType.
      *
      * @param NodeType $nodeType
-     *
+     * @deprecated Use Serializer service.
      * @return array
      */
     public function toArray($nodeType)
@@ -81,7 +83,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
      * Deserializes a Json into readable datas.
      *
      * @param string $string
-     *
+     * @deprecated Use Serializer service.
      * @return \RZ\Roadiz\Core\Entities\NodeType
      */
     public function deserialize($string)

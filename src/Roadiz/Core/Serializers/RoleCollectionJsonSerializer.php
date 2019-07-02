@@ -35,6 +35,8 @@ use RZ\Roadiz\Core\Entities\Role;
 
 /**
  * Serialization class for Role.
+ *
+ * @deprecated Use Serializer service.
  */
 class RoleCollectionJsonSerializer extends AbstractJsonSerializer
 {
@@ -53,7 +55,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
      * an ArrayCollection of Role.
      *
      * @param \Doctrine\Common\Collections\ArrayCollection $roles
-     *
+     * @deprecated Use Serializer service.
      * @return array
      */
     public function toArray($roles)
@@ -74,6 +76,7 @@ class RoleCollectionJsonSerializer extends AbstractJsonSerializer
      * @param string $jsonString
      *
      * @return ArrayCollection
+     * @deprecated Use Serializer service.
      * @throws \Exception
      */
     public function deserialize($jsonString)

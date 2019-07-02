@@ -165,7 +165,6 @@ EOF
                 ->end()
             ->end()
             ->arrayNode('entities')
-                ->requiresAtLeastOneElement()
                 ->prototype('scalar')
                     ->cannotBeEmpty()
                 ->end()

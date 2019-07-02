@@ -77,6 +77,7 @@ class Role extends BaseRole implements PersistableInterface
     /**
      * @ORM\Column(type="string", unique=true)
      * @Serializer\Groups({"user", "role", "group"})
+     * @Serializer\Type("string")
      * @var string
      */
     private $name;
@@ -134,8 +135,9 @@ class Role extends BaseRole implements PersistableInterface
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles", cascade={"persist", "merge"})
      * @Serializer\Groups({"role"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Group>")
      * @var Collection<Group>
      */
     private $groups;

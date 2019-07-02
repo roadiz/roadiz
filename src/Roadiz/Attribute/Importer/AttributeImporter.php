@@ -34,6 +34,7 @@ namespace RZ\Roadiz\Attribute\Importer;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
+use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
 use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
@@ -42,6 +43,7 @@ use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Entities\AttributeTranslation;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 class AttributeImporter implements EntityImporterInterface, ContainerAwareInterface
 {
@@ -74,7 +76,14 @@ class AttributeImporter implements EntityImporterInterface, ContainerAwareInterf
         $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $attributes = $serializer->deserialize($serializedData, 'array<' . Attribute::class . '>', 'json');
+        $attributes = $serializer->deserialize(
+            $serializedData,
+            'array<' . Attribute::class . '>',
+            'json',
+            DeserializationContext::create()
+                ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
+                ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
+        );
 
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {

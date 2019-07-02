@@ -39,6 +39,7 @@ use Symfony\Component\Serializer\Serializer;
 
 /**
  * Serialization class for Group.
+ * @deprecated Use Serializer service.
  */
 class GroupJsonSerializer extends AbstractJsonSerializer
 {
@@ -60,6 +61,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
      * @param Group $group
      *
      * @return array
+     * @deprecated Use Serializer service.
      */
     public function toArray($group)
     {
@@ -82,6 +84,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
      *
      * @return Group[]
      * @throws \Exception
+     * @deprecated Use Serializer service.
      */
     public function deserialize($string)
     {

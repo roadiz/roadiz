@@ -57,7 +57,10 @@ class NodeTypeFieldObjectConstructor extends AbstractTypedObjectConstructor
             ->findOneByName($data['nodeTypeName']);
 
         if (null === $nodeType) {
-            throw new ObjectConstructionException('NodeType does not exist.');
+            /*
+             * Do not look for existing fields if node-type does not exist either.
+             */
+            return null;
         }
         return $this->entityManager
             ->getRepository(NodeTypeField::class)
@@ -65,5 +68,12 @@ class NodeTypeFieldObjectConstructor extends AbstractTypedObjectConstructor
                 'name' => $data['name'],
                 'nodeType' => $nodeType,
             ]);
+    }
+
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof NodeTypeField) {
+            $object->setName($data['name']);
+        }
     }
 }

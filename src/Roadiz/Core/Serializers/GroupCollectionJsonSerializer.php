@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Role;
 
 /**
  * Serialization class for Group.
+ * @deprecated Use Serializer service.
  */
 class GroupCollectionJsonSerializer extends AbstractJsonSerializer
 {
@@ -74,6 +75,7 @@ class GroupCollectionJsonSerializer extends AbstractJsonSerializer
      * @param string $string
      * @return ArrayCollection
      * @throws \Exception
+     * @deprecated Use Serializer service.
      */
     public function deserialize($string)
     {

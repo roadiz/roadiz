@@ -1,0 +1,398 @@
+[
+    {
+        "name": "display_debug_panel",
+        "value": "1",
+        "visible": true,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 5,
+        "defaultValues": ""
+    },
+    {
+        "name": "force_locale",
+        "visible": true,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 5,
+        "defaultValues": ""
+    },
+    {
+        "name": "leaflet_map_tile_url",
+        "value": "https:\/\/{s}.tile.osm.org\/{z}\/{x}\/{y}.png",
+        "visible": true,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "maps_style",
+        "value": "[{\"featureType\":\"administrative.country\",\"elementType\":\"geometry\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#949494\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"color\":\"#636363\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"all\",\"stylers\":[{\"color\":\"#f8f8f8\"}]},{\"featureType\":\"administrative.land_parcel\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c7c7c7\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"visibility\":\"off\"},{\"color\":\"#cfcfcf\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"visibility\":\"simplified\"},{\"color\":\"#ffffff\"},{\"weight\":3.04}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"simplified\"},{\"saturation\":-100},{\"lightness\":28}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"simplified\"},{\"color\":\"#f8f8f8\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":-100}]},{\"featureType\":\"road.highway.controlled_access\",\"elementType\":\"labels\",\"stylers\":[{\"saturation\":-100}]},{\"featureType\":\"road.arterial\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":-100}]},{\"featureType\":\"road\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":-100},{\"lightness\":-11}]}]",
+        "visible": true,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 23,
+        "defaultValues": ""
+    },
+    {
+        "name": "maps_default_location",
+        "value": "{\"lat\":45.769785, \"lng\":4.833967, \"zoom\":14}",
+        "visible": true,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 23,
+        "defaultValues": ""
+    },
+    {
+        "name": "use_cdn",
+        "value": "1",
+        "visible": true,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 5,
+        "defaultValues": ""
+    },
+    {
+        "name": "email_sender",
+        "visible": true,
+        "settingGroup": {
+            "name": "Emailings",
+            "inMenu": true
+        },
+        "type": 8,
+        "defaultValues": ""
+    },
+    {
+        "name": "email_sender_name",
+        "visible": true,
+        "settingGroup": {
+            "name": "Emailings",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "soundcloud_client_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "google_client_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "google_server_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "twitter_client_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "twitter_consumer_key",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "twitter_consumer_secret",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "twitter_access_token",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "twitter_access_token_secret",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "facebook_client_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "universal_analytics_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "google_tag_manager_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "recaptcha_public_key",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "recaptcha_private_key",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "instagram_user_id",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "instagram_access_token",
+        "visible": true,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "seo_description",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 2,
+        "defaultValues": ""
+    },
+    {
+        "name": "site_name",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "maintenance_mode",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 5,
+        "defaultValues": ""
+    },
+    {
+        "name": "site_copyright",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "main_color",
+        "value": "#00deab",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 11,
+        "defaultValues": ""
+    },
+    {
+        "name": "admin_image",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 9,
+        "defaultValues": ""
+    },
+    {
+        "name": "login_image",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 9,
+        "defaultValues": ""
+    },
+    {
+        "name": "static_domain_name",
+        "visible": true,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "facebook_url",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "instagram_url",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "pinterest_url",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "twitter_url",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "linkedin_url",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "youtube_url",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "googleplus_url",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    },
+    {
+        "name": "twitter_account",
+        "visible": true,
+        "settingGroup": {
+            "name": "Social networks",
+            "inMenu": true
+        },
+        "type": 0,
+        "defaultValues": ""
+    }
+]

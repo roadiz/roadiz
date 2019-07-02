@@ -33,6 +33,8 @@ use JMS\Serializer\Construction\ObjectConstructorInterface;
 
 interface TypedObjectConstructorInterface extends ObjectConstructorInterface
 {
+    const PERSIST_NEW_OBJECTS = 'persist_on_deserialize';
+    const FLUSH_NEW_OBJECTS = 'flush_on_deserialize';
     /**
      * @param string $className
      * @param array $data

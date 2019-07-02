@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Attribute\Serializer;
 
+use JMS\Serializer\Exception\ObjectConstructionException;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\AbstractTypedObjectConstructor;
@@ -49,11 +50,18 @@ class AttributeObjectConstructor extends AbstractTypedObjectConstructor
      */
     protected function findObject($data): ?object
     {
-        if (null !== $data['code'] && $data['code'] !== '') {
-            return $this->entityManager
-                ->getRepository(Attribute::class)
-                ->findOneByCode($data['code']);
+        if (null === $data['code'] || $data['code'] === '') {
+            throw new ObjectConstructionException('Attribute code can not be empty');
         }
-        return null;
+        return $this->entityManager
+            ->getRepository(Attribute::class)
+            ->findOneByCode($data['code']);
+    }
+
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof Attribute) {
+            $object->setCode($data['code']);
+        }
     }
 }

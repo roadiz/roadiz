@@ -37,6 +37,7 @@ use Symfony\Component\Serializer\Serializer;
 
 /**
  * Serialization class for NodeTypeField.
+ * @deprecated Use Serializer service.
  */
 class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
 {
@@ -48,6 +49,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      * @param \RZ\Roadiz\Core\Entities\NodeTypeField $nodeTypeField
      *
      * @return array
+     * @deprecated Use Serializer service.
      */
     public function toArray($nodeTypeField)
     {
@@ -78,6 +80,7 @@ class NodeTypeFieldJsonSerializer extends AbstractJsonSerializer
      * @param string $jsonString
      *
      * @return \RZ\Roadiz\Core\Entities\NodeTypeField
+     * @deprecated Use Serializer service.
      */
     public function deserialize($jsonString)
     {

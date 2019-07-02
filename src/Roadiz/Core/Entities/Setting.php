@@ -113,6 +113,7 @@ class Setting extends AbstractEntity
     /**
      * @ORM\Column(type="string", unique=true)
      * @Serializer\Groups({"setting", "nodes_sources"})
+     * @Serializer\Type("string")
      */
     private $name;
     /**
@@ -140,6 +141,7 @@ class Setting extends AbstractEntity
      * @var string|null
      * @ORM\Column(type="text", unique=false, nullable=true)
      * @Serializer\Groups({"setting"})
+     * @Serializer\Type("string")
      */
     private $description;
 
@@ -166,6 +168,7 @@ class Setting extends AbstractEntity
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"setting", "nodes_sources"})
+     * @Serializer\Type("string")
      */
     private $value;
     /**
@@ -204,6 +207,7 @@ class Setting extends AbstractEntity
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @Serializer\Groups({"setting"})
+     * @Serializer\Type("bool")
      */
     private $visible = true;
     /**
@@ -226,16 +230,20 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="SettingGroup", inversedBy="settings")
-     * @ORM\JoinColumn(name="setting_group_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\SettingGroup", inversedBy="settings", cascade={"persist", "merge"}, fetch="EAGER")
+     * @ORM\JoinColumn(name="setting_group_id", referencedColumnName="id", onDelete="SET NULL")
      * @Serializer\Groups({"setting"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\SettingGroup")
+     * @Serializer\Accessor(getter="getSettingGroup", setter="setSettingGroup")
+     * @Serializer\AccessType("public_method")
      * @var SettingGroup
      */
     private $settingGroup;
+
     /**
      * @return SettingGroup
      */
-    public function getSettingGroup()
+    public function getSettingGroup(): ?SettingGroup
     {
         return $this->settingGroup;
     }
@@ -244,7 +252,7 @@ class Setting extends AbstractEntity
      *
      * @return $this
      */
-    public function setSettingGroup($settingGroup)
+    public function setSettingGroup(?SettingGroup $settingGroup)
     {
         $this->settingGroup = $settingGroup;
 
@@ -257,6 +265,7 @@ class Setting extends AbstractEntity
      *
      * @ORM\Column(type="integer")
      * @Serializer\Groups({"setting"})
+     * @Serializer\Type("int")
      */
     private $type = NodeTypeField::STRING_T;
     /**
@@ -284,6 +293,7 @@ class Setting extends AbstractEntity
      * @var string
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"setting"})
+     * @Serializer\Type("string")
      */
     private $defaultValues = "";
 

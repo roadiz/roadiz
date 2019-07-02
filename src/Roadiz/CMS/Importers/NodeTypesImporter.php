@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
@@ -37,6 +38,7 @@ use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 /**
  * {@inheritdoc}
@@ -72,10 +74,17 @@ class NodeTypesImporter implements EntityImporterInterface, ContainerAwareInterf
         $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $nodeType = $serializer->deserialize($serializedData, NodeType::class, 'json');
+        $nodeType = $serializer->deserialize(
+            $serializedData,
+            NodeType::class,
+            'json',
+            DeserializationContext::create()
+                ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
+                ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
+        );
 
         $em->merge($nodeType);
-        $em->flush();
+        $em->flush($nodeType);
 
         /** @var HandlerFactoryInterface $handlerFactory */
         $handlerFactory = $this->get('factory.handler');

@@ -34,7 +34,6 @@ use JMS\Serializer\Construction\ObjectConstructorInterface;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Visitor\DeserializationVisitorInterface;
-use RZ\Roadiz\Core\Entities\Attribute;
 
 abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorInterface
 {
@@ -67,6 +66,12 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
     abstract protected function findObject($data): ?object;
 
     /**
+     * @param object $object
+     * @param array  $data
+     */
+    abstract protected function fillIdentifier(object $object, array $data): void;
+
+    /**
      * @inheritDoc
      */
     public function construct(
@@ -80,7 +85,22 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
         $object = $this->findObject($data);
 
         if (null === $object) {
-            return $this->fallbackConstructor->construct($visitor, $metadata, $data, $type, $context);
+            $object = $this->fallbackConstructor->construct($visitor, $metadata, $data, $type, $context);
+            if ($context->hasAttribute(static::PERSIST_NEW_OBJECTS) &&
+                true === $context->hasAttribute(static::PERSIST_NEW_OBJECTS)) {
+                $this->entityManager->persist($object);
+            }
+
+            /*
+             * If we need to fetch related entities, we can flush light objects with
+             * at least their identifier key filled.
+             */
+            $this->fillIdentifier($object, $data);
+
+            if ($context->hasAttribute(static::FLUSH_NEW_OBJECTS) &&
+                true === $context->hasAttribute(static::FLUSH_NEW_OBJECTS)) {
+                $this->entityManager->flush($object);
+            }
         }
 
         $this->entityManager->initializeObject($object);

@@ -30,17 +30,21 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Serializer;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
+use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 
 /**
  * {@inheritdoc}
  */
-class RolesImporter implements ImporterInterface, EntityImporterInterface, ContainerAwareInterface
+class RolesImporter implements EntityImporterInterface, ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
@@ -70,28 +74,22 @@ class RolesImporter implements ImporterInterface, EntityImporterInterface, Conta
     {
         /** @var EntityManager $em */
         $em = $this->get('em');
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $roles = $serializer->deserialize(
+            $serializedData,
+            'array<' . Role::class . '>',
+            'json',
+            DeserializationContext::create()
+                ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
+                ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
+        );
 
-        $serializer = new RoleCollectionJsonSerializer($em);
-        $serializer->deserialize($serializedData);
-
-        $em->flush();
-
-        return true;
-    }
-
-    /**
-     * Import a Json file (.rzt) containing setting and setting group.
-     *
-     * @param string $serializedData
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
-     * @deprecated
-     */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
-    {
-        $serializer = new RoleCollectionJsonSerializer($em);
-        $serializer->deserialize($serializedData);
+        /** @var Role $role */
+        foreach ($roles as $role) {
+            $em->merge($role);
+            $em->flush();
+        }
 
         return true;
     }

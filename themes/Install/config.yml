@@ -6,13 +6,11 @@ themeDir: "Install"
 supportedLocale:
     - "en"
     - "fr"
-    - "ru"
-versionRequire: "1.1.0"
+versionRequire: "1.2.0"
 importFiles:
     roles:
-        - "Resources/import/roles.rzt"
-    groups:
-        - "Resources/import/groups.rzt"
+        - "Resources/import/roles.json"
+    groups: []
     settings:
-        - "Resources/import/settings.rzt"
+        - "Resources/import/settings.json"
     nodetypes: []

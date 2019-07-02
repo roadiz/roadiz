@@ -31,6 +31,8 @@
 
 namespace Themes\Rozier\Controllers;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
@@ -38,6 +40,7 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -63,24 +66,21 @@ class GroupsUtilsController extends RozierApp
                               ->getRepository(Group::class)
                               ->findAll();
 
-        $serializer = new GroupCollectionJsonSerializer($this->get('em'));
-        $group = $serializer->serialize($existingGroup);
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
 
-        $response = new Response(
-            $group,
-            Response::HTTP_OK,
-            []
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingGroup,
+                'json',
+                SerializationContext::create()->setGroups(['group'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', 'group-all-' . date("YmdHis") . '.json'),
+            ],
+            true
         );
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-all-' . date("YmdHis") . '.json'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -98,25 +98,25 @@ class GroupsUtilsController extends RozierApp
         $existingGroup = $this->get('em')
                               ->find(Group::class, (int) $groupId);
 
-        $serializer = new GroupCollectionJsonSerializer($this->get('em'));
-        $group = $serializer->serialize([$existingGroup]);
+        if (null === $existingGroup) {
+            throw $this->createNotFoundException();
+        }
 
-        $response = new Response(
-            $group,
-            Response::HTTP_OK,
-            []
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingGroup,
+                'json',
+                SerializationContext::create()->setGroups(['group'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', 'group-' . $existingGroup->getName() . '-' . date("YmdHis") . '.json'),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-' . $existingGroup->getName() . '-' . date("YmdHis") . '.json'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**

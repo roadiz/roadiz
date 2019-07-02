@@ -55,4 +55,11 @@ class NodeObjectConstructor extends AbstractTypedObjectConstructor
             ->setDisplayingAllNodesStatuses(true)
             ->findOneByNodeName($data['nodeName']);
     }
+
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof Node) {
+            $object->setNodeName($data['nodeName']);
+        }
+    }
 }

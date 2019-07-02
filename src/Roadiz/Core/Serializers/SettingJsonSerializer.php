@@ -37,6 +37,7 @@ use Symfony\Component\Serializer\Serializer;
 
 /**
  * Serialization class for Setting.
+ * @deprecated Use Serializer service.
  */
 class SettingJsonSerializer extends AbstractJsonSerializer
 {

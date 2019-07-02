@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\SettingGroup;
 
 /**
  * Serialization class for Setting.
+ * @deprecated Use Serializer service.
  */
 class SettingCollectionJsonSerializer extends AbstractJsonSerializer
 {
