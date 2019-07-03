@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Tests;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Tools\ToolsException;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Node\NodeFactory;
@@ -59,7 +58,6 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         static::runCommand('generate:nsentities');
         static::runCommand('orm:schema-tool:update --dump-sql --force');
         static::runCommand('cache:clear');
-        static::runCommand('themes:install --nodes "/Themes/DefaultTheme/DefaultThemeApp"');
     }
 
     /**

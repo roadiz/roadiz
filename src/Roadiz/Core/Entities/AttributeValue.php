@@ -56,6 +56,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     /**
      * @var AttributeInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Attribute")
      */
@@ -79,6 +80,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     /**
      * @var Node|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="attributeValues")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Serializer\Exclude
      */
     protected $node;

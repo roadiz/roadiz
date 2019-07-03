@@ -117,6 +117,7 @@ class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
     {
         parent::setUpBeforeClass();
 
+        static::runCommand('themes:install --nodes "/Themes/DefaultTheme/DefaultThemeApp"');
         static::runCommand('solr:reindex');
     }
 }

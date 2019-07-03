@@ -80,8 +80,10 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
     /**
      * @var Translation
      * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Translation")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
+     * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
      */
     protected $translation;
 }
