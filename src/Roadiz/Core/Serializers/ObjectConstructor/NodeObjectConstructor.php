@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Core\Serializers\ObjectConstructor;
 
+use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Exception\ObjectConstructionException;
 use RZ\Roadiz\Core\Entities\Node;
 
@@ -45,7 +46,7 @@ class NodeObjectConstructor extends AbstractTypedObjectConstructor
     /**
      * @inheritDoc
      */
-    protected function findObject($data): ?object
+    protected function findObject($data, DeserializationContext $context): ?object
     {
         if (null === $data['nodeName'] || $data['nodeName'] === '') {
             throw new ObjectConstructionException('Node name can not be empty');

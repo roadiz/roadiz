@@ -34,6 +34,7 @@ use JMS\Serializer\Construction\ObjectConstructorInterface;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Metadata\ClassMetadata;
 use JMS\Serializer\Visitor\DeserializationVisitorInterface;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorInterface
 {
@@ -59,11 +60,12 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
     }
 
     /**
-     * @param $data
+     * @param                        $data
+     * @param DeserializationContext $context
      *
      * @return object|null
      */
-    abstract protected function findObject($data): ?object;
+    abstract protected function findObject($data, DeserializationContext $context): ?object;
 
     /**
      * @param object $object
@@ -89,7 +91,14 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
         DeserializationContext $context
     ): ?object {
         // Entity update, load it from database
-        $object = $this->findObject($data);
+        $object = $this->findObject($data, $context);
+
+        if (null !== $object &&
+            $context->hasAttribute(static::EXCEPTION_ON_EXISTING) &&
+            true === $context->hasAttribute(static::EXCEPTION_ON_EXISTING)
+        ) {
+            throw new EntityAlreadyExistsException('Object already exists in database.');
+        }
 
         if (null === $object) {
             $object = $this->fallbackConstructor->construct($visitor, $metadata, $data, $type, $context);

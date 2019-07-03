@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
+use RZ\Roadiz\Attribute\Importer\AttributeImporter;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
@@ -178,6 +179,21 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                         }
                     } else {
                         $output->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                    }
+                }
+            }
+            if (isset($data["importFiles"]['attributes'])) {
+                foreach ($data["importFiles"]['attributes'] as $filename) {
+                    if (!$this->dryRun) {
+                        try {
+                            $this->get(AttributeImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
+                            $this->get('em')->flush();
+                            $output->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                        } catch (EntityAlreadyExistsException $e) {
+                            $output->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> <error>has NOT been imported ('.$e->getMessage().')</error>.');
+                        }
+                    } else {
+                        $output->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                     }
                 }
             }

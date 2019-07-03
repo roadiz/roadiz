@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en" datatype="plaintext" original="none">
+    <file source-language="en" datatype="plaintext" original="file.ext">
         <body>
             <trans-unit id="1">
                 <source>Node name</source>
@@ -105,7 +105,7 @@
             </trans-unit>
 
 
-             <!-- Import -->
+            <!-- Import -->
             <trans-unit id="import.title">
                 <source>import.title</source>
                 <target />
@@ -435,6 +435,16 @@
             </trans-unit>
             <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz">
                 <source>now_you_can_delete_install_file_and_use_roadiz</source>
+                <target></target>
+            </trans-unit>
+
+
+            <trans-unit xml:space="preserve" id="import_attribute">
+                <source>import_attribute</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="import_node">
+                <source>import_node</source>
                 <target></target>
             </trans-unit>
         </body>

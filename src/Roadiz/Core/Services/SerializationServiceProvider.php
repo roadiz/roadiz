@@ -31,16 +31,15 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
-use JMS\Serializer\Construction\UnserializeObjectConstructor;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
+use JMS\Serializer\EventDispatcher\Subscriber\DoctrineProxySubscriber;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Attribute\Serializer\AttributeObjectConstructor;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\ChainDoctrineObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\GroupObjectConstructor;
@@ -125,7 +124,9 @@ class SerializationServiceProvider implements ServiceProviderInterface
         };
 
         $container['serializer.subscribers'] = function ($c) {
-            return [];
+            return [
+                new DoctrineProxySubscriber(),
+            ];
         };
 
         /*

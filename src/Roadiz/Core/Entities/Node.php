@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
@@ -39,7 +40,6 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Validator\Constraints\Collection;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -108,6 +108,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
      * @Serializer\Groups({"nodes_sources", "node", "log_sources"})
+     * @Serializer\Accessor(getter="getNodeName", setter="setNodeName")
      */
     private $nodeName;
 
@@ -567,11 +568,22 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     private $tags = null;
 
     /**
-     * @return ArrayCollection
+     * @return Collection<Tag>
      */
-    public function getTags()
+    public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    /**
+     * @param Collection<Tag> $tags
+     *
+     * @return Node
+     */
+    public function setTags(Collection $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
     }
 
     /**
@@ -579,7 +591,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      *
      * @return $this
      */
-    public function removeTag(Tag $tag)
+    public function removeTag(Tag $tag): self
     {
         if ($this->getTags()->contains($tag)) {
             $this->getTags()->removeElement($tag);
@@ -593,7 +605,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      *
      * @return $this
      */
-    public function addTag(Tag $tag)
+    public function addTag(Tag $tag): self
     {
         if (!$this->getTags()->contains($tag)) {
             $this->getTags()->add($tag);
@@ -679,7 +691,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * Get node-sources using a given translation.
      *
      * @param Translation $translation
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getNodeSourcesByTranslation(Translation $translation)
     {
@@ -739,7 +751,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @param NodeTypeField $field
      *
-     * @return ArrayCollection|\Doctrine\Common\Collections\Collection
+     * @return ArrayCollection|Collection
      */
     public function getBNodesByField(NodeTypeField $field)
     {

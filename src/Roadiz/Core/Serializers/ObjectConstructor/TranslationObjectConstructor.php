@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Core\Serializers\ObjectConstructor;
 
+use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Exception\ObjectConstructionException;
 use RZ\Roadiz\Core\Entities\Translation;
 
@@ -45,26 +46,22 @@ class TranslationObjectConstructor extends AbstractTypedObjectConstructor
     /**
      * @inheritDoc
      */
-    protected function findObject($data): ?object
+    protected function findObject($data, DeserializationContext $context): ?object
     {
         if (null === $data['locale'] || $data['locale'] === '') {
             throw new ObjectConstructionException('Translation locale can not be empty');
         }
 
-        $translation = $this->entityManager
+        return $this->entityManager
             ->getRepository(Translation::class)
             ->findOneByLocale($data['locale']);
-
-        if (null === $translation) {
-            throw new ObjectConstructionException(sprintf('Translation with locale “%s” can not be found', $data['locale']));
-        }
-        return $translation;
     }
 
     protected function fillIdentifier(object $object, array $data): void
     {
         if ($object instanceof Translation) {
             $object->setLocale($data['locale']);
+            $object->setName($data['locale']);
         }
     }
 }

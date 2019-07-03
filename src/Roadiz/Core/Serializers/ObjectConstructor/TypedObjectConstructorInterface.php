@@ -35,6 +35,7 @@ interface TypedObjectConstructorInterface extends ObjectConstructorInterface
 {
     const PERSIST_NEW_OBJECTS = 'persist_on_deserialize';
     const FLUSH_NEW_OBJECTS = 'flush_on_deserialize';
+    const EXCEPTION_ON_EXISTING = 'exception_on_existing';
     /**
      * @param string $className
      * @param array $data

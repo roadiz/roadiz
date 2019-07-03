@@ -116,8 +116,27 @@
                     {% endfor %}
                 </table>
                 {% endif %}
+                {% if attributes|length > 0 %}
+                    <h4 class="import-nodetypes-part">{% trans %}import_attribute{% endtrans %}</h4>
+                    <table class="install-table uk-table">
+                        <tr>
+                            <th></th>
+                            <th>{% trans %}step.name{% endtrans %}</th>
+                            <th class="last-col">{% trans %}status{% endtrans %}</th>
+                        </tr>
+                        {% for attribute in attributes %}
+                            <tr>
+                                <td></td>
+                                <td>{{ attribute|trans }}</td>
+                                <td class="last-col">
+                                    <div class="uk-badge uk-badge-notification" id="{{ attribute|replace({'/': '_', '.': '_'}) }}"><i class="uk-icon-circle-o"></i></div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                {% endif %}
                 {% if nodes|length > 0 %}
-                <h4 class="import-nodetypes-part">{% trans %}import_node_type.node{% endtrans %}</h4>
+                <h4 class="import-nodetypes-part">{% trans %}import_node{% endtrans %}</h4>
                 <table class="install-table uk-table">
                     <tr>
                         <th></th>
@@ -185,6 +204,13 @@
             'url': "{{ path('installImportTags', {'themeId': themeId}) }}",
             'id':'{{ tag|replace({'/': '_', '.': '_'}) }}',
             'filename': '{{ tag }}'
+        });
+        {% endfor %}
+        {% for attribute in attributes %}
+        Install.importRoutes.push({
+            'url': "{{ path('installImportAttributes', {'themeId': themeId}) }}",
+            'id':'{{ attribute|replace({'/': '_', '.': '_'}) }}',
+            'filename': '{{ attribute }}'
         });
         {% endfor %}
         {% for node in nodes %}

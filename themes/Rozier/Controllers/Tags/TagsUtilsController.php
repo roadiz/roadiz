@@ -31,11 +31,12 @@
 
 namespace Themes\Rozier\Controllers\Tags;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -56,30 +57,26 @@ class TagsUtilsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
-        $existingTag = $this->get('em')
-                              ->find(Tag::class, (int) $tagId);
-        $this->get('em')->refresh($existingTag);
+        $existingTag = $this->get('em')->find(Tag::class, (int) $tagId);
 
-        $serializer = new TagJsonSerializer();
-        $tag = $serializer->serialize([$existingTag]);
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
 
-        $response =  new Response(
-            $tag,
-            Response::HTTP_OK,
-            []
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingTag,
+                'json',
+                SerializationContext::create()->setGroups(['tag', 'position'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf(
+                    'attachment; filename="%s"',
+                    'tag-' . $existingTag->getTagName() . '-' . date("YmdHis")  . '.json'
+                ),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'tag-' . $existingTag->getTagName() . '-' . date("YmdHis")  . '.rzg'
-            )
-        ); // Rezo-Zero Type
-
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -97,28 +94,24 @@ class TagsUtilsController extends RozierApp
         $existingTags = $this->get('em')
                               ->getRepository(Tag::class)
                               ->findBy(["parent" => null]);
-        foreach ($existingTags as $existingTag) {
-            $this->get('em')->refresh($existingTag);
-        }
-        $serializer = new TagJsonSerializer();
-        $tag = $serializer->serialize($existingTags);
 
-        $response =  new Response(
-            $tag,
-            Response::HTTP_OK,
-            []
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingTags,
+                'json',
+                SerializationContext::create()->setGroups(['tag', 'position'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf(
+                    'attachment; filename="%s"',
+                    'tag-all-' . date("YmdHis") . '.json'
+                ),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'tag-all-' . date("YmdHis")  . '.rzg'
-            )
-        ); // Rezo-Zero Type
-
-        $response->prepare($request);
-
-        return $response;
     }
 }

@@ -62,7 +62,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
     /**
      * @var Translation
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
      * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
@@ -72,7 +72,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
     /**
      * @var AttributeValueInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", inversedBy="attributeValueTranslations", cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Exclude
      */
     protected $attributeValue;

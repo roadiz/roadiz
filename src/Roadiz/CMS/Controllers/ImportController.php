@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use RZ\Roadiz\Attribute\Importer\AttributeImporter;
 use RZ\Roadiz\CMS\Importers\EntityImporterInterface;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
@@ -166,6 +167,23 @@ class ImportController extends AppController
     {
         return $this->genericImportAction(
             TagsImporter::class,
+            $request,
+            $themeId
+        );
+    }
+
+    /**
+     * Import Attributes file.
+     *
+     * @param Request $request
+     * @param int     $themeId
+     *
+     * @return Response
+     */
+    public function importAttributesAction(Request $request, $themeId = null)
+    {
+        return $this->genericImportAction(
+            AttributeImporter::class,
             $request,
             $themeId
         );

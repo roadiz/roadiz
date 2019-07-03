@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Attribute\Serializer;
 
+use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Exception\ObjectConstructionException;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Core\Entities\Attribute;
@@ -48,7 +49,7 @@ class AttributeObjectConstructor extends AbstractTypedObjectConstructor
     /**
      * @inheritDoc
      */
-    protected function findObject($data): ?object
+    protected function findObject($data, DeserializationContext $context): ?object
     {
         if (null === $data['code'] || $data['code'] === '') {
             throw new ObjectConstructionException('Attribute code can not be empty');

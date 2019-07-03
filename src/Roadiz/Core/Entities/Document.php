@@ -55,22 +55,26 @@ class Document extends AbstractDocument
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"document"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      * @var DocumentInterface|null
      */
     protected $rawDocument = null;
     /**
      * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
      * @Serializer\Groups({"document"})
+     * @Serializer\Type("bool")
      */
     protected $raw = false;
     /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     protected $embedId = null;
     /**
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     protected $embedPlatform = null;
     /**
@@ -89,22 +93,26 @@ class Document extends AbstractDocument
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
      * @Serializer\Groups({"document"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Folder>")
      */
     protected $folders;
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\DocumentTranslation>")
      */
     protected $documentTranslations;
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     private $filename;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     private $mimeType;
     /**
@@ -115,24 +123,28 @@ class Document extends AbstractDocument
     private $downscaledDocument = null;
     /**
      * @ORM\Column(type="string")
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     private $folder;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("bool")
      */
     private $private = false;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("int")
      */
     private $imageWidth = 0;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("int")
      */
     private $imageHeight = 0;
 

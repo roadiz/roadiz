@@ -61,12 +61,12 @@ class SettingsUtilsController extends RozierApp
     public function exportAllAction(Request $request, $settingGroupId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
+
         /** @var EntityManagerInterface $entityManager */
         $entityManager = $this->get('em');
         if (null !== $settingGroupId) {
             /** @var SettingGroup|null $group */
-            $group = $entityManager
-                ->find(SettingGroup::class, $settingGroupId);
+            $group = $entityManager->find(SettingGroup::class, $settingGroupId);
             if (null === $group) {
                 throw $this->createNotFoundException();
             }
@@ -80,11 +80,6 @@ class SettingsUtilsController extends RozierApp
                 ->getRepository(Setting::class)
                 ->findAll();
         }
-
-        /** @var Setting $setting */
-        /*foreach ($settings as $setting) {
-            $entityManager->initializeObject($setting->getSettingGroup());
-        }*/
 
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');

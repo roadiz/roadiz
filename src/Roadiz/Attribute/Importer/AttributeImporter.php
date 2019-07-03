@@ -33,16 +33,13 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Importer;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityNotFoundException;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
-use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
 use RZ\Roadiz\CMS\Importers\EntityImporterInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Attribute;
-use RZ\Roadiz\Core\Entities\AttributeTranslation;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 class AttributeImporter implements EntityImporterInterface, ContainerAwareInterface

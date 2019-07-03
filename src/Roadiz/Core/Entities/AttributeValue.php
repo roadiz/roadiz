@@ -56,7 +56,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     /**
      * @var AttributeInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Attribute")
      */

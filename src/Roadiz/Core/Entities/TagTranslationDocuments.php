@@ -30,6 +30,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Describes a complex ManyToMany relation
@@ -43,16 +44,19 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
 class TagTranslationDocuments extends AbstractPositioned
 {
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\TagTranslation", inversedBy="tagTranslationDocuments", fetch="EAGER", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\TagTranslation", inversedBy="tagTranslationDocuments", fetch="EAGER", cascade={"persist", "merge"})
      * @ORM\JoinColumn(name="tag_translation_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var TagTranslation
+     * @var TagTranslation|null
+     * @Serializer\Exclude()
      */
     protected $tagTranslation;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="tagTranslations", fetch="EAGER", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="tagTranslations", fetch="EAGER", cascade={"persist", "merge"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Document
+     * @var Document|null
+     * @Serializer\Groups({"tag"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      */
     protected $document;
 
@@ -62,7 +66,7 @@ class TagTranslationDocuments extends AbstractPositioned
      * @param TagTranslation $tagTranslation
      * @param Document $document
      */
-    public function __construct(TagTranslation $tagTranslation, Document $document)
+    public function __construct(TagTranslation $tagTranslation = null, Document $document = null)
     {
         $this->document = $document;
         $this->tagTranslation = $tagTranslation;
@@ -84,7 +88,7 @@ class TagTranslationDocuments extends AbstractPositioned
      *
      * @return Document
      */
-    public function getDocument(): Document
+    public function getDocument(): ?Document
     {
         return $this->document;
     }
@@ -96,7 +100,7 @@ class TagTranslationDocuments extends AbstractPositioned
      *
      * @return self
      */
-    public function setDocument(Document $document): TagTranslationDocuments
+    public function setDocument(?Document $document): TagTranslationDocuments
     {
         $this->document = $document;
 
@@ -106,7 +110,7 @@ class TagTranslationDocuments extends AbstractPositioned
     /**
      * @return TagTranslation
      */
-    public function getTagTranslation(): TagTranslation
+    public function getTagTranslation(): ?TagTranslation
     {
         return $this->tagTranslation;
     }
@@ -115,7 +119,7 @@ class TagTranslationDocuments extends AbstractPositioned
      * @param TagTranslation $tagTranslation
      * @return TagTranslationDocuments
      */
-    public function setTagTranslation(TagTranslation $tagTranslation): TagTranslationDocuments
+    public function setTagTranslation(?TagTranslation $tagTranslation): TagTranslationDocuments
     {
         $this->tagTranslation = $tagTranslation;
         return $this;
