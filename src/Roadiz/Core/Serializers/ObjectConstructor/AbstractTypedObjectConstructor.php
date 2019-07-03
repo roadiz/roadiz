@@ -72,6 +72,13 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
     abstract protected function fillIdentifier(object $object, array $data): void;
 
     /**
+     * @return bool
+     */
+    protected function canBeFlushed(): bool
+    {
+        return true;
+    }
+    /**
      * @inheritDoc
      */
     public function construct(
@@ -91,15 +98,17 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
                 $this->entityManager->persist($object);
             }
 
-            /*
-             * If we need to fetch related entities, we can flush light objects with
-             * at least their identifier key filled.
-             */
-            $this->fillIdentifier($object, $data);
+            if ($this->canBeFlushed()) {
+                /*
+                 * If we need to fetch related entities, we can flush light objects with
+                 * at least their identifier key filled.
+                 */
+                $this->fillIdentifier($object, $data);
 
-            if ($context->hasAttribute(static::FLUSH_NEW_OBJECTS) &&
-                true === $context->hasAttribute(static::FLUSH_NEW_OBJECTS)) {
-                $this->entityManager->flush($object);
+                if ($context->hasAttribute(static::FLUSH_NEW_OBJECTS) &&
+                    true === $context->hasAttribute(static::FLUSH_NEW_OBJECTS)) {
+                    $this->entityManager->flush($object);
+                }
             }
         }
 

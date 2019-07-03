@@ -138,6 +138,7 @@ class Role extends BaseRole implements PersistableInterface
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles", cascade={"persist", "merge"})
      * @Serializer\Groups({"role"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Group>")
+     * @Serializer\Accessor(getter="getGroups", setter="setGroups")
      * @var Collection<Group>
      */
     private $groups;
@@ -158,6 +159,21 @@ class Role extends BaseRole implements PersistableInterface
     {
         if (!$this->getGroups()->contains($group)) {
             $this->getGroups()->add($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Collection $groups
+     * @return $this
+     */
+    public function setGroups(Collection $groups): Role
+    {
+        $this->groups = $groups;
+        /** @var Group $group */
+        foreach ($this->groups as $group) {
+            $group->addRole($this);
         }
 
         return $this;

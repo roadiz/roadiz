@@ -1,13 +1,13 @@
 <?php
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -22,43 +22,25 @@
  * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodeTypeObjectConstructor.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
 namespace RZ\Roadiz\Core\Serializers\ObjectConstructor;
 
-use JMS\Serializer\Exception\ObjectConstructionException;
-use RZ\Roadiz\Core\Entities\NodeType;
+use JMS\Serializer\Construction\ObjectConstructorInterface;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Metadata\ClassMetadata;
+use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 
-class NodeTypeObjectConstructor extends AbstractTypedObjectConstructor
+class ObjectConstructor implements ObjectConstructorInterface
 {
-    /**
-     * @inheritDoc
-     */
-    public function supports(string $className, array $data): bool
-    {
-        return $className === NodeType::class && array_key_exists('name', $data);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function findObject($data): ?object
-    {
-        if (null === $data['name'] || $data['name'] === '') {
-            throw new ObjectConstructionException('NodeType name can not be empty');
-        }
-        return $this->entityManager
-            ->getRepository(NodeType::class)
-            ->findOneByName($data['name']);
-    }
-
-    protected function fillIdentifier(object $object, array $data): void
-    {
-        if ($object instanceof NodeType) {
-            $object->setName($data['name']);
-        }
+    public function construct(
+        DeserializationVisitorInterface $visitor,
+        ClassMetadata $metadata,
+        $data,
+        array $type,
+        DeserializationContext $context
+    ): ?object {
+        $className = $metadata->name;
+        return new $className();
     }
 }

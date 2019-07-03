@@ -164,8 +164,8 @@ class Group extends AbstractEntity
      */
     public function addRole(Role $role): Group
     {
-        if (!$this->getRolesEntities()->contains($role)) {
-            $this->getRolesEntities()->add($role);
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
         }
 
         return $this;
@@ -178,8 +178,8 @@ class Group extends AbstractEntity
      */
     public function removeRole(Role $role): Group
     {
-        if ($this->getRolesEntities()->contains($role)) {
-            $this->getRolesEntities()->removeElement($role);
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
         }
 
         return $this;

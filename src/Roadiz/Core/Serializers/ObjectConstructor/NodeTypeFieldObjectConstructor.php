@@ -72,8 +72,14 @@ class NodeTypeFieldObjectConstructor extends AbstractTypedObjectConstructor
 
     protected function fillIdentifier(object $object, array $data): void
     {
-        if ($object instanceof NodeTypeField) {
-            $object->setName($data['name']);
-        }
+        trigger_error('Cannot call fillIdentifier on NodeTypeField', E_USER_WARNING);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function canBeFlushed(): bool
+    {
+        return false;
     }
 }

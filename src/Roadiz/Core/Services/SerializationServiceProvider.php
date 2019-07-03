@@ -47,6 +47,7 @@ use RZ\Roadiz\Core\Serializers\ObjectConstructor\GroupObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\NodeObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\NodeTypeFieldObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\NodeTypeObjectConstructor;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\ObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\RoleObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\SettingGroupObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\SettingObjectConstructor;
@@ -83,7 +84,8 @@ class SerializationServiceProvider implements ServiceProviderInterface
         };
 
         $container['serializer.fallback_constructor'] = function () {
-            return new UnserializeObjectConstructor();
+            //return new UnserializeObjectConstructor();
+            return new ObjectConstructor();
         };
 
         $container[ChainDoctrineObjectConstructor::class] = function ($c) {
