@@ -112,6 +112,17 @@
                                {% if node.isDraft %}checked{% endif %} />
                     </li>
                     {% endif %}
+                    {% if workflow_can(node, 'unarchive') or node.isDraft %}
+                        <li class="node-statuses-item node-draft">
+                            <i class="uk-icon-rz-draft-nodes"></i>
+                            <span class="label">{% trans %}draft{% endtrans %}</span>
+                            <input data-node-id="{{ node.getId }}"
+                                   type="radio"
+                                   name="status"
+                                   value="unarchive"
+                                   {% if node.isDraft %}checked{% endif %} />
+                        </li>
+                    {% endif %}
                     {% if workflow_can(node, 'review') or node.isPending %}
                     <li class="node-statuses-item node-pending">
                         <i class="uk-icon-rz-pending-nodes"></i>

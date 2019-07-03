@@ -29,6 +29,7 @@
  */
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
@@ -81,9 +82,9 @@ class NodesSourcesParentTest extends SchemaDependentCase
         $sources = $this->getSourcesParentsProvider();
 
         foreach ($sources as $source) {
-            /** @var \RZ\Roadiz\Core\Entities\NodesSources|null $nodeSource */
+            /** @var NodesSources|null $nodeSource */
             $nodeSource = $source[0];
-            /** @var \RZ\Roadiz\Core\Entities\NodesSources|null $expectedParent */
+            /** @var NodesSources|null $expectedParent */
             $expectedParent = $source[1];
 
             if (null === $expectedParent) {

@@ -19,13 +19,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "birthday",
@@ -36,13 +37,14 @@
             "indexed": false,
             "virtual": false,
             "universal": true,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "nationality",
@@ -53,13 +55,14 @@
             "indexed": false,
             "virtual": false,
             "universal": true,
-            "default_values": "fr,en,it,es,de",
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": "fr,en,it,es,de",
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "email",
@@ -70,13 +73,14 @@
             "indexed": false,
             "virtual": false,
             "universal": true,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "civil_status",
@@ -87,13 +91,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "education",
@@ -104,13 +109,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "languages",
@@ -121,13 +127,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "computer_sciences",
@@ -138,13 +145,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": "Champs complémentaires",
-            "group_name_canonical": "champs-complementaires",
+            "defaultValues": null,
+            "groupName": "Champs complémentaires",
+            "groupNameCanonical": "champs-complementaires",
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "professional_organization",
@@ -155,13 +163,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "job",
@@ -172,13 +181,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "experience_years",
@@ -189,13 +199,14 @@
             "indexed": false,
             "virtual": false,
             "universal": true,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "skills",
@@ -206,13 +217,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "experience",
@@ -223,13 +235,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
+            "defaultValues": null,
+            "groupName": null,
+            "groupNameCanonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "other_information",
@@ -240,13 +253,9 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": null,
-            "group_name_canonical": null,
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "nodeTypeName": "Person"
         },
         {
             "name": "publishings",
@@ -257,13 +266,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": "Champs complémentaires",
-            "group_name_canonical": "champs-complementaires",
+            "defaultValues": null,
+            "groupName": "Champs complémentaires",
+            "groupNameCanonical": "champs-complementaires",
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         },
         {
             "name": "seminars",
@@ -274,13 +284,14 @@
             "indexed": false,
             "virtual": false,
             "universal": false,
-            "default_values": null,
-            "group_name": "Champs complémentaires",
-            "group_name_canonical": "champs-complementaires",
+            "defaultValues": null,
+            "groupName": "Champs complémentaires",
+            "groupNameCanonical": "champs-complementaires",
             "expanded": false,
             "placeholder": null,
-            "min_length": null,
-            "max_length": null
+            "minLength": null,
+            "maxLength": null,
+            "nodeTypeName": "Person"
         }
     ]
 }

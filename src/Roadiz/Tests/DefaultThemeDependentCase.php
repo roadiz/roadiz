@@ -29,14 +29,14 @@
  */
 namespace RZ\Roadiz\Tests;
 
-use GeneratedNodeSources\NSPage;
-use RZ\Roadiz\Console\RoadizApplication;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Tools\ToolsException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\Console\Input\StringInput;
+use RZ\Roadiz\Utils\Node\NodeFactory;
+use RZ\Roadiz\Utils\Tag\TagFactory;
 
 /**
  * Class DefaultThemeDependentCase for UnitTest which need EntityManager and some NodeTypes and nodes.
@@ -47,41 +47,19 @@ use Symfony\Component\Console\Input\StringInput;
  */
 abstract class DefaultThemeDependentCase extends SchemaDependentCase
 {
-
-
     /**
-     * @var RoadizApplication
-     */
-    public static $application;
-
-    /**
-     * @throws \Doctrine\ORM\Tools\ToolsException
+     * @throws ToolsException
      */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
 
-        static::$application = new RoadizApplication(static::$kernel);
-        static::$application->setAutoExit(false);
-
-        static::runCommand('install -n');
-        static::runCommand('themes:install -n "/Themes/DefaultTheme/DefaultThemeApp"');
-        static::runCommand('themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"');
+        static::runCommand('install');
+        static::runCommand('themes:install --data "/Themes/DefaultTheme/DefaultThemeApp"');
         static::runCommand('generate:nsentities');
         static::runCommand('orm:schema-tool:update --dump-sql --force');
-        static::runCommand('cache:clear -e test');
-    }
-
-    /**
-     * @param $command
-     * @return int
-     * @throws \Exception
-     */
-    protected static function runCommand($command)
-    {
-        $command = sprintf('%s --quiet --env=test', $command);
-
-        return static::$application->run(new StringInput($command));
+        static::runCommand('cache:clear');
+        static::runCommand('themes:install --nodes "/Themes/DefaultTheme/DefaultThemeApp"');
     }
 
     /**
@@ -92,25 +70,21 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
      * @param Node|null $parent
      * @return Node
      */
-    protected static function createPageNode($title, Translation $translation, Node $parent = null)
+    protected static function createPageNode($title, Translation $translation, Node $parent = null): Node
     {
-        $nodeType = static::getManager()
-            ->getRepository(NodeType::class)
-            ->findOneByName('Page');
+        /** @var NodeFactory $nodeFactory */
+        $nodeFactory = static::getContainer()->offsetGet(NodeFactory::class);
+        $nodeType = static::getContainer()->offsetGet('nodeTypesBag')->get('Page');
+        if (null === $nodeType) {
+            throw new EntityNotFoundException('Page node-type does not exist.');
+        }
+        $nodeFactory->create($title, $nodeType, $translation);
 
-        $node = new Node($nodeType);
-        $node->setNodeName($title);
+        $node = $nodeFactory->create($title, $nodeType, $translation);
 
         if (null !== $parent) {
             $parent->addChild($node);
         }
-
-        $ns = new NSPage($node, $translation);
-        $ns->setTitle($title);
-        $ns->setPublishedAt(new \DateTime());
-
-        static::getManager()->persist($node);
-        static::getManager()->persist($ns);
 
         return $node;
     }
@@ -120,18 +94,10 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
      * @param Translation $translation
      * @return Tag
      */
-    protected static function createTag($title, Translation $translation)
+    protected static function createTag($title, Translation $translation): Tag
     {
-        $tag = new Tag();
-        $tag->setTagName($title);
-        static::getManager()->persist($tag);
-
-        $tt = new TagTranslation($tag, $translation);
-        $tt->setName($title);
-        static::getManager()->persist($tt);
-
-        $tag->getTranslatedTags()->add($tt);
-
-        return $tag;
+        /** @var TagFactory $tagFactory */
+        $tagFactory = static::getContainer()->offsetGet(TagFactory::class);
+        return $tagFactory->create($title, $translation);
     }
 }

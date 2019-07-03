@@ -30,13 +30,13 @@ namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
+use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Stopwatch\Stopwatch;
 
-class RedirectionRouter extends Router
+class RedirectionRouter extends Router implements VersatileGeneratorInterface
 {
     protected $em;
     protected $stopwatch;
@@ -81,13 +81,13 @@ class RedirectionRouter extends Router
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        return "";
+        return '';
     }
 
     /**
      * Gets the UrlMatcher instance associated with this Router.
      *
-     * @return UrlMatcherInterface A UrlMatcherInterface instance
+     * @return RedirectionMatcher A UrlMatcherInterface instance
      */
     public function getMatcher(): RedirectionMatcher
     {
@@ -111,5 +111,15 @@ class RedirectionRouter extends Router
     public function getGenerator()
     {
         return null;
+    }
+
+    public function supports($name): bool
+    {
+        return false;
+    }
+
+    public function getRouteDebugMessage($name, array $parameters = [])
+    {
+        return 'RedirectionRouter does not support path generation.';
     }
 }

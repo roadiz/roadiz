@@ -29,7 +29,11 @@
  */
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityNotFoundException;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Utils\Node\NodeDuplicator;
+use Symfony\Component\Workflow\Registry;
 
 class NodeHandlerTest extends DefaultThemeDependentCase
 {
@@ -38,33 +42,37 @@ class NodeHandlerTest extends DefaultThemeDependentCase
     public function testDuplicate()
     {
         $node = null;
+        /** @var Translation $tran */
         $tran = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
+            ->getRepository(Translation::class)
             ->findDefault();
 
         if (null !== $tran) {
-            $node = static::createPageNode("Original node", $tran);
-            $node->setPublished(true);
-            static::getManager()->flush();
+            try {
+                $node = static::createPageNode("Original node", $tran);
+                static::getManager()->flush();
 
-            $nbNode = count(static::$runtimeCollection);
+                $nbNode = count(static::$runtimeCollection);
 
-            $duplicator = new \RZ\Roadiz\Utils\Node\NodeDuplicator($node, static::getManager());
-            $duplicatedNode = $duplicator->duplicate();
+                $duplicator = new NodeDuplicator($node, static::getManager());
+                $duplicatedNode = $duplicator->duplicate();
 
-            $this->assertEquals($node->getNodeSources()->count(), $duplicatedNode->getNodeSources()->count());
-            $this->assertEquals($node->getChildren()->count(), $duplicatedNode->getChildren()->count());
-            $this->assertEquals($node->getStackTypes()->count(), $duplicatedNode->getStackTypes()->count());
-            $this->assertEquals($node->getTags()->count(), $duplicatedNode->getTags()->count());
-            $this->assertEquals($node->getParent(), $duplicatedNode->getParent());
+                $this->assertEquals($node->getNodeSources()->count(), $duplicatedNode->getNodeSources()->count());
+                $this->assertEquals($node->getChildren()->count(), $duplicatedNode->getChildren()->count());
+                $this->assertEquals($node->getStackTypes()->count(), $duplicatedNode->getStackTypes()->count());
+                $this->assertEquals($node->getTags()->count(), $duplicatedNode->getTags()->count());
+                $this->assertEquals($node->getParent(), $duplicatedNode->getParent());
 
-            static::$runtimeCollection->add($duplicatedNode);
+                static::$runtimeCollection->add($duplicatedNode);
 
-            $duplicatedNode->getNodeSources()->first()->setTitle("testNodeDuplicated");
+                $duplicatedNode->getNodeSources()->first()->setTitle("testNodeDuplicated");
 
-            $this->assertEquals($nbNode + 1, count(static::$runtimeCollection));
+                $this->assertEquals($nbNode + 1, count(static::$runtimeCollection));
 
-            static::getManager()->flush();
+                static::getManager()->flush();
+            } catch (EntityNotFoundException $e) {
+                $this->markTestIncomplete($e->getMessage());
+            }
         }
     }
 

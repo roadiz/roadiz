@@ -38,8 +38,8 @@ class SettingsImporterTest extends SchemaDependentCase
     {
         return [
             [
-                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/settings.rzt'),
-                35,
+                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/settings.json'),
+                39,
             ]
         ];
     }

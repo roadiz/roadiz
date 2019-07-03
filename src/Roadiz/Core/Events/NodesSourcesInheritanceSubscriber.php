@@ -68,7 +68,7 @@ class NodesSourcesInheritanceSubscriber implements EventSubscriber
     }
 
     /**
-     * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
+     * @param LoadClassMetadataEventArgs $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
@@ -86,7 +86,7 @@ class NodesSourcesInheritanceSubscriber implements EventSubscriber
                 $nodeTypes = $this->container->offsetGet('nodeTypesBag')->all();
                 $map = [];
                 foreach ($nodeTypes as $type) {
-                    $map[strtolower($type->getName())] = NodeType::getGeneratedEntitiesNamespace().'\\'.$type->getSourceEntityClassName();
+                    $map[strtolower($type->getName())] = $type->getSourceEntityFullQualifiedClassName();
                 }
 
                 $metadata->setDiscriminatorMap($map);

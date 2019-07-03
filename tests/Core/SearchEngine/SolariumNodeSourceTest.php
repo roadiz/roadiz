@@ -171,15 +171,6 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
         static::$entityCollection = array();
         static::$documentCollection = array();
-
-        $testTitle = "Ipsum Lorem Vehicula";
-        $translation = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Translation')
-            ->findDefault();
-
-        static::createPageNode($testTitle, $translation);
-
-        static::getManager()->flush();
     }
 
     /**

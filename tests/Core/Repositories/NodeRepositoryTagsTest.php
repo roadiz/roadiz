@@ -27,6 +27,7 @@
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
+use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -108,9 +109,9 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
      * fixtures
      * ============================================================================
      */
-    public static function setUpBeforeClass()
+    protected function setUp()
     {
-        parent::setUpBeforeClass();
+        parent::setUp();
 
         $translation = static::getManager()
             ->getRepository(Translation::class)
@@ -142,21 +143,25 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
         /*
          * Adding nodes
          */
-        foreach ($nodes as $value) {
-            $node = static::createPageNode($value[0], $translation);
+        try {
+            foreach ($nodes as $value) {
+                $node = static::createPageNode($value[0], $translation);
 
-            /*
-             * Adding tags
-             */
-            foreach ($value[1] as $tagName) {
-                $tag = static::getManager()
-                    ->getRepository(Tag::class)
-                    ->findOneByTagName($tagName);
-                if (null !== $tag) {
-                    $node->addTag($tag);
+                /*
+                 * Adding tags
+                 */
+                foreach ($value[1] as $tagName) {
+                    $tag = static::getManager()
+                        ->getRepository(Tag::class)
+                        ->findOneByTagName($tagName);
+                    if (null !== $tag) {
+                        $node->addTag($tag);
+                    }
                 }
             }
+            static::getManager()->flush();
+        } catch (EntityNotFoundException $e) {
+            $this->markTestIncomplete($e->getMessage());
         }
-        static::getManager()->flush();
     }
 }

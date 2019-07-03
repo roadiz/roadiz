@@ -30,19 +30,13 @@
 namespace RZ\Roadiz\Tests;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Events;
 use Doctrine\ORM\Tools\SchemaTool;
+use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\NodesSourcesInheritanceSubscriber;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\Clearer\AssetsClearer;
-use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Clearer\RoutingCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TemplatesCacheClearer;
-use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
+use Symfony\Component\Console\Input\StringInput;
 
 /**
  * Class SchemaDependentCase for UnitTest which need EntityManager.
@@ -53,11 +47,6 @@ use RZ\Roadiz\Utils\Clearer\TranslationsCacheClearer;
  */
 abstract class SchemaDependentCase extends KernelDependentCase
 {
-    /**
-     * @var EntityManager
-     */
-    public static $entityManager;
-
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
@@ -74,8 +63,8 @@ abstract class SchemaDependentCase extends KernelDependentCase
         if (count($dropSQL) > 0) {
             throw new \PHPUnit_Framework_RiskyTestError('Test database is not empty! Do not execute tests on a running Roadiz db.');
         }
-        $schemaTool->dropDatabase();
-        $schemaTool->createSchema($metadata);
+
+        static::runCommand('orm:schema-tool:create');
     }
 
     /**
@@ -85,34 +74,12 @@ abstract class SchemaDependentCase extends KernelDependentCase
     {
         parent::tearDown();
 
-        /*
-         * Empty caches
-         */
-        $kernel = new Kernel('test', true);
-        $clearers = [
-            // PROD
-            new AssetsClearer($kernel->getPublicCachePath()),
-            new RoutingCacheClearer($kernel->getCacheDir()),
-            new TemplatesCacheClearer($kernel->getCacheDir()),
-            new TranslationsCacheClearer($kernel->getCacheDir()),
-            new ConfigurationCacheClearer($kernel->getCacheDir()),
-            new OPCacheClearer(),
-        ];
-        foreach ($clearers as $clearer) {
-            $clearer->clear();
-        }
-        $kernel->shutdown();
+        static::runCommand('cache:clear');
     }
 
     public static function tearDownAfterClass()
     {
-        $em = static::getManager();
-        $schemaTool = new SchemaTool($em);
-
-        // Drop and recreate tables for all entities
-        $schemaTool->dropDatabase();
-        $em->close();
-        static::$entityManager = null;
+        static::runCommand('orm:schema-tool:drop --force');
 
         parent::tearDownAfterClass();
     }
@@ -144,29 +111,21 @@ abstract class SchemaDependentCase extends KernelDependentCase
      */
     public static function getManager()
     {
-        if (static::$entityManager === null) {
-            $config = static::$kernel->get('config');
-            $emConfig = static::$kernel->get('em.config');
-            static::$entityManager = EntityManager::create($config["doctrine"], $emConfig);
-            $evm = static::$entityManager->getEventManager();
+        return static::$kernel->get('em');
+    }
 
-            /*
-             * Create dynamic discriminator map for our Node system
-             */
-            $evm->addEventListener(
-                Events::loadClassMetadata,
-                new NodesSourcesInheritanceSubscriber(static::$kernel->getContainer())
-            );
-
-            /*
-             * Inject doctrine event subscribers for
-             * a service to be able to add new ones from themes.
-             */
-            foreach (static::$kernel->get('em.eventSubscribers') as $eventSubscriber) {
-                $evm->addEventSubscriber($eventSubscriber);
-            }
-        }
-
-        return static::$entityManager;
+    /**
+     * @param $command
+     * @throws \Exception
+     */
+    protected static function runCommand($command): void
+    {
+        $command = sprintf('%s --quiet --no-interaction --env=test', $command);
+        $kernel = new Kernel('test', true, false);
+        $kernel->boot();
+        $application = new RoadizApplication($kernel);
+        $application->setAutoExit(false);
+        $application->setCatchExceptions(false);
+        $application->run(new StringInput($command));
     }
 }

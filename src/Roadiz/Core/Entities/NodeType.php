@@ -398,6 +398,7 @@ class NodeType extends AbstractEntity
     {
         if (!$this->getFields()->contains($field)) {
             $this->getFields()->add($field);
+            $field->setNodeType($this);
         }
 
         return $this;

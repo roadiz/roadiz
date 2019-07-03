@@ -27,11 +27,14 @@
  * @file NodeTypeHandlerTest.php
  * @author Ambroise Maupate
  */
+
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
+use RZ\Roadiz\Tests\SchemaDependentCase;
 
-class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
+class NodeTypeHandlerTest extends SchemaDependentCase
 {
     /**
      * @dataProvider serializeToJsonProvider
@@ -40,8 +43,13 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
      */
     public function testSerializeToJson($sourceNodeType, $expectedFile)
     {
-        $serializer = new NodeTypeJsonSerializer();
-        $json = $serializer->serialize($sourceNodeType);
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $json = $serializer->serialize(
+            $sourceNodeType,
+            'json',
+            SerializationContext::create()->setGroups(['node_type', 'position'])
+        );
 
         // Assert
         $this->assertJsonStringEqualsJsonFile($expectedFile, $json);
@@ -54,10 +62,21 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
     public function testDeserialize($expectedFile)
     {
         $expectedJson = file_get_contents($expectedFile);
-        $serializer = new NodeTypeJsonSerializer();
-        $nt = $serializer->deserialize($expectedJson);
 
-        $newJson = $serializer->serialize($nt);
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $nt = $serializer->deserialize(
+            $expectedJson,
+            NodeType::class,
+            'json'
+        );
+        $this->assertEquals(get_class($nt), NodeType::class);
+
+        $newJson = $serializer->serialize(
+            $nt,
+            'json',
+            SerializationContext::create()->setGroups(['node_type', 'position'])
+        );
         $this->assertJsonStringEqualsJsonString($expectedJson, $newJson);
     }
 
@@ -68,8 +87,13 @@ class NodeTypeHandlerTest extends PHPUnit_Framework_TestCase
      */
     public function testDefaultValue($json, $expectedValue)
     {
-        $serializer = new NodeTypeJsonSerializer();
-        $nt = $serializer->deserialize(file_get_contents($json));
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $nt = $serializer->deserialize(
+            file_get_contents($json),
+            NodeType::class,
+            'json'
+        );
 
         $ntfields = $nt->getFields();
         if (count($ntfields) > 0) {

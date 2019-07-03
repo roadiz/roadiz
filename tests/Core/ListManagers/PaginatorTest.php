@@ -28,6 +28,8 @@
  * @author Ambroise Maupate
  */
 
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\ListManagers\NodePaginator;
 use RZ\Roadiz\Core\ListManagers\Paginator;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
@@ -38,7 +40,7 @@ class PaginatorTest extends DefaultThemeDependentCase
     {
         $paginator = new NodePaginator(
             static::getManager(),
-            'RZ\Roadiz\Core\Entities\Node'
+            Node::class
         );
         /** @var \Doctrine\ORM\Query $query */
         $query = static::getManager()->createQuery('SELECT COUNT(n.id) FROM RZ\Roadiz\Core\Entities\Node n');
@@ -47,13 +49,16 @@ class PaginatorTest extends DefaultThemeDependentCase
 
     /**
      * @dataProvider getTestingItemPerPage
+     *
      * @param $itemPerPage
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function testNodePaginatorFindByAtPage($itemPerPage)
     {
         $paginator = new NodePaginator(
             static::getManager(),
-            'RZ\Roadiz\Core\Entities\Node',
+            Node::class,
             $itemPerPage
         );
 
@@ -86,7 +91,7 @@ class PaginatorTest extends DefaultThemeDependentCase
     {
         $paginator = new Paginator(
             static::getManager(),
-            'RZ\Roadiz\Core\Entities\Role'
+            Role::class
         );
 
         $query = static::getManager()->createQuery('SELECT COUNT(d.id) FROM RZ\Roadiz\Core\Entities\Role d');
@@ -96,13 +101,16 @@ class PaginatorTest extends DefaultThemeDependentCase
 
     /**
      * @dataProvider getTestingItemPerPage
+     *
      * @param $itemPerPage
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function testPaginatorFindByAtPage($itemPerPage)
     {
         $paginator = new Paginator(
             static::getManager(),
-            'RZ\Roadiz\Core\Entities\Role',
+            Role::class,
             $itemPerPage
         );
 
