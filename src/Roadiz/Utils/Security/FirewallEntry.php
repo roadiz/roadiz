@@ -65,13 +65,23 @@ class FirewallEntry
      */
     protected $firewallBasePath;
     /**
+     * Login path.
+     *
      * @var string
      */
     protected $firewallLogin;
     /**
+     * Logout path.
+     *
      * @var string
      */
     protected $firewallLogout;
+    /**
+     * Path where user is redirected after logout.
+     *
+     * @var string
+     */
+    protected $firewallAfterLogout;
     /**
      * @var string
      */
@@ -148,6 +158,8 @@ class FirewallEntry
         $this->firewallBasePattern = $firewallBasePattern;
         $this->firewallBasePath = $firewallBasePath;
         $this->firewallLogin = $firewallLogin;
+        // Default, use login path to redirect user after logout.
+        $this->firewallAfterLogout = $firewallLogin;
         $this->firewallLogout = $firewallLogout;
         $this->firewallLoginCheck = $firewallLoginCheck;
         $this->accessDeniedHandler = null;
@@ -370,7 +382,7 @@ class FirewallEntry
             $this->container['httpUtils'],
             new DefaultLogoutSuccessHandler(
                 $this->container['httpUtils'],
-                $this->firewallLogin
+                $this->firewallAfterLogout
             ),
             [
                 'logout_path' => $this->firewallLogout,
@@ -380,5 +392,25 @@ class FirewallEntry
         $logoutListener->addHandler($this->container['cookieClearingLogoutHandler']);
 
         return $logoutListener;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirewallAfterLogout(): string
+    {
+        return $this->firewallAfterLogout;
+    }
+
+    /**
+     * @param string $firewallAfterLogout
+     *
+     * @return FirewallEntry
+     */
+    public function setFirewallAfterLogout(string $firewallAfterLogout): FirewallEntry
+    {
+        $this->firewallAfterLogout = $firewallAfterLogout;
+
+        return $this;
     }
 }
