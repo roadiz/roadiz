@@ -363,7 +363,7 @@ abstract class Controller implements ContainerAwareInterface
      */
     protected function createNotFoundException($message = 'Not Found', \Exception $previous = null)
     {
-        return new ResourceNotFoundException($message, $previous);
+        return new ResourceNotFoundException($message, 0, $previous);
     }
 
     /**

@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Error\LoaderError;
 
 final class DefaultController extends FrontendController
 {
@@ -89,7 +90,14 @@ final class DefaultController extends FrontendController
                 true
             );
         }
-        $response = $this->render('pages/' . strtolower($node->getNodeType()->getName()) . '.html.twig', $this->assignation, null, '/');
+        try {
+            $response = $this->render('pages/' . strtolower($node->getNodeType()->getName()) . '.html.twig', $this->assignation, null, '/');
+        } catch (LoaderError $exception) {
+            /*
+             * Transform template not found into 404 error for node explicitly not handled.
+             */
+            throw $this->createNotFoundException($exception->getMessage(), $exception);
+        }
 
         if ($this->getNode()->getTtl() > 0) {
             return $this->makeResponseCachable($request, $response, $this->getNode()->getTtl());
