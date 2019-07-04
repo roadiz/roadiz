@@ -31,7 +31,10 @@ class SettingsImporterTest extends SchemaDependentCase
      */
     public function countSettings()
     {
-        return $this->getSettingRepository()->createQueryBuilder('t')->select('count(t)')->getQuery()->getSingleScalarResult();
+        return $this->getSettingRepository()
+            ->createQueryBuilder('t')
+            ->select('count(t)')
+            ->getQuery()->getSingleScalarResult();
     }
 
     public static function importJsonFileProvider()

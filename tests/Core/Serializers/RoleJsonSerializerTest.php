@@ -32,7 +32,7 @@ use RZ\Roadiz\Core\Serializers\RoleJsonSerializer;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**
- * Description.
+ * @deprecated
  */
 class RoleJsonSerializerTest extends SchemaDependentCase
 {

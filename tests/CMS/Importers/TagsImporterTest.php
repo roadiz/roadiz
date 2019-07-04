@@ -1,9 +1,11 @@
 <?php
 
+use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
-use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
+use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Core\Repositories\TagRepository;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 class TagsImporterTest extends SchemaDependentCase
@@ -13,13 +15,13 @@ class TagsImporterTest extends SchemaDependentCase
      */
     public function testImportJsonFile($json, $count)
     {
-        $this->assertTrue($this->get(TagsImporter::class)->import($json));
-        $this->assertEquals($count, $this->countTags());
-        $this->assertEquals($count, $this->countTagTranslations());
-
         $this->getTagRepository()->createQueryBuilder('t')->delete()->getQuery()->execute();
         $this->assertEquals(0, $this->countTags());
         $this->assertEquals(0, $this->countTagTranslations());
+
+        $this->assertTrue($this->get(TagsImporter::class)->import($json));
+        $this->assertEquals($count, $this->countTags());
+        $this->assertEquals($count, $this->countTagTranslations());
     }
 
     /**
@@ -27,15 +29,19 @@ class TagsImporterTest extends SchemaDependentCase
      */
     public function testDeserializeJsonFile($json, $count)
     {
-        $serializer = new TagJsonSerializer();
-        $tags = $serializer->deserialize($json);
+        $serializer = $this->get('serializer');
+        /** @var Tag $tag */
+        $tag = $serializer->deserialize(
+            $json,
+            Tag::class,
+            'json'
+        );
 
-        $this->assertEquals(1, count($tags));
-        $this->assertEquals(($count - 1), count($tags[0]->getChildren()));
+        $this->assertEquals(($count - 1), count($tag->getChildren()));
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Repositories\TagRepository
+     * @return TagRepository
      */
     public function getTagRepository()
     {
@@ -43,47 +49,46 @@ class TagsImporterTest extends SchemaDependentCase
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Repositories\TagTranslation
+     * @return EntityRepository
      */
     public function getTagTranslationRepository()
     {
         return $this->get('em')->getRepository(TagTranslation::class);
     }
 
-
     /**
      * @return int
      */
-    public function countTags()
+    public function countTags(): int
     {
-        return $this->getTagRepository()->createQueryBuilder('t')->select('count(t)')->getQuery()->getSingleScalarResult();
+        /** @var QueryBuilder $qb */
+        $qb = $this->getTagRepository()
+            ->createQueryBuilder('t');
+        return $qb->select($qb->expr()->countDistinct('t'))
+            ->getQuery()->getSingleScalarResult();
     }
 
     /**
      * @return int
      */
-    public function countTagTranslations()
+    public function countTagTranslations(): int
     {
-        return $this->getTagTranslationRepository()->createQueryBuilder('t')->select('count(t)')->getQuery()->getSingleScalarResult();
-    }
-
-    /**
-     * @return array
-     */
-    public function tagNames()
-    {
-        return $this->getTagRepository()->createQueryBuilder('t')->select('t.tagName')->getQuery()->getScalarResult();
+        /** @var QueryBuilder $qb */
+        $qb = $this->getTagTranslationRepository()
+            ->createQueryBuilder('t');
+        return $qb->select($qb->expr()->countDistinct('t'))
+            ->getQuery()->getSingleScalarResult();
     }
 
     public static function importJsonFileProvider()
     {
         return [
             [
-                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/tag-pays-20180426182620.rzg'),
+                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/tag-pays-20180426182620.json'),
                 250,
             ],
             [
-                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/tag-thematiques-20180426190148.rzg'),
+                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/tag-thematiques-20180426190148.json'),
                 3
             ]
         ];

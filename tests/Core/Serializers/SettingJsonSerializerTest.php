@@ -33,7 +33,7 @@ use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**
- * Description.
+ * @deprecated
  */
 class SettingJsonSerializerTest extends SchemaDependentCase
 {

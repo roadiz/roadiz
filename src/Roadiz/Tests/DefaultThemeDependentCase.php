@@ -63,16 +63,18 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     /**
      * No need to persist
      *
-     * @param $title
+     * @param             $title
      * @param Translation $translation
-     * @param Node|null $parent
+     * @param Node|null   $parent
+     *
      * @return Node
+     * @throws EntityNotFoundException
      */
     protected static function createPageNode($title, Translation $translation, Node $parent = null): Node
     {
         /** @var NodeFactory $nodeFactory */
-        $nodeFactory = static::getContainer()->offsetGet(NodeFactory::class);
-        $nodeType = static::getContainer()->offsetGet('nodeTypesBag')->get('Page');
+        $nodeFactory = static::$kernel->getContainer()->offsetGet(NodeFactory::class);
+        $nodeType = static::$kernel->getContainer()->offsetGet('nodeTypesBag')->get('Page');
         if (null === $nodeType) {
             throw new EntityNotFoundException('Page node-type does not exist.');
         }
@@ -95,7 +97,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     protected static function createTag($title, Translation $translation): Tag
     {
         /** @var TagFactory $tagFactory */
-        $tagFactory = static::getContainer()->offsetGet(TagFactory::class);
+        $tagFactory = static::$kernel->getContainer()->offsetGet(TagFactory::class);
         return $tagFactory->create($title, $translation);
     }
 }

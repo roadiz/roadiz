@@ -1,0 +1,4002 @@
+{
+    "tagName": "pays",
+    "visible": true,
+    "locked": true,
+    "color": "#00449e",
+    "children": [
+        {
+            "tagName": "ssd",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SSD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "afg",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "AFG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "aze",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "AZE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bwa",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BWA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "civ",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CIV",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cog",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "COG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cod",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "COD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cri",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CRI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "dom",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "DOM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "abw",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ABW",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ago",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "AGO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "aia",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "AIA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ala",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ALA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "alb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ALB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "and",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "AND",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "are",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ARE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "arg",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ARG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "arm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ARM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "asm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ASM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ata",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ATA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "atf",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ATF",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "atg",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ATG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "aus",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "AUS",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "aut",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "AUT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bdi",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BDI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bel",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BEL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ben",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BEN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bes",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BES",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bfa",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BFA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bgd",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BGD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bgr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BGR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bhr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BHR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bhs",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BHS",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bih",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BIH",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "blm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BLM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "blr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BLR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "blz",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BLZ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bmu",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BMU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bol",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BOL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bra",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BRA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "brb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BRB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "brn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BRN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "btn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BTN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "bvt",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "BVT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "caf",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CAF",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "can",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CAN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cck",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CCK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "che",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CHE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "chl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CHL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "chn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CHN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cmr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CMR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cok",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "COK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "col",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "COL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "com",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "COM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cpv",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CPV",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cub",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CUB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cuw",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CUW",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cxr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CXR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cym",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CYM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cyp",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CYP",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "cze",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "CZE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "deu",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "DEU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "dji",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "DJI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "dma",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "DMA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "dnk",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "DNK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "dza",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "DZA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ecu",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ECU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "egy",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "EGY",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "eri",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ERI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "esh",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ESH",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "esp",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ESP",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "est",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "EST",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "eth",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ETH",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "fin",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "FIN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "fji",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "FJI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "flk",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "FLK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "fra",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "FRA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "fro",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "FRO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "fsm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "FSM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gab",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GAB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gbr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GBR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "geo",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GEO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ggy",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GGY",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gha",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GHA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gib",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GIB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gin",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GIN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "glp",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GLP",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gmb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GMB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gnb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GNB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gnq",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GNQ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "grc",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GRC",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "grd",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GRD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "grl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GRL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gtm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GTM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "guf",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GUF",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "gum",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GUM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "guy",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "GUY",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "hkg",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "HKG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "hmd",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "HMD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "hnd",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "HND",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "hrv",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "HRV",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "hti",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "HTI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "hun",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "HUN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "idn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "IDN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "imn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "IMN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ind",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "IND",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "iot",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "IOT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "irl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "IRL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "irn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "IRN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "irq",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "IRQ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "isl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ISL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "isr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ISR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ita",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ITA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "jam",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "JAM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "jey",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "JEY",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "jor",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "JOR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "jpn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "JPN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "kaz",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KAZ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ken",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KEN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "kgz",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KGZ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "khm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KHM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "kir",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KIR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "kna",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KNA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "kor",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KOR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "kwt",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "KWT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lao",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LAO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lbn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LBN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lbr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LBR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lby",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LBY",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lca",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LCA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lie",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LIE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lka",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LKA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lso",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LSO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ltu",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LTU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lux",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LUX",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "lva",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "LVA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mac",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MAC",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "maf",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MAF",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mar",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MAR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mco",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MCO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mda",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MDA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mdg",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MDG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mdv",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MDV",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mex",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MEX",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mhl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MHL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mkd",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MKD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mli",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MLI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mlt",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MLT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mmr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MMR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mne",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MNE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mng",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MNG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mnp",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MNP",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "moz",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MOZ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mrt",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MRT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "msr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MSR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mtq",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MTQ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mus",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MUS",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mwi",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MWI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "mys",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MYS",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "myt",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "MYT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nam",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NAM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ncl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NCL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ner",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NER",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nfk",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NFK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nga",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NGA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nic",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NIC",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "niu",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NIU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nld",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NLD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nor",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NOR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "npl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NPL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nru",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NRU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "nzl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "NZL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "omn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "OMN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pak",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PAK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pan",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PAN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pcn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PCN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "per",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PER",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "phl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PHL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "plw",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PLW",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "png",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PNG",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pol",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "POL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pri",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PRI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "prk",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PRK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "prt",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PRT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pry",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PRY",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pse",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PSE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "pyf",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "PYF",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "qat",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "QAT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "reu",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "REU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "rou",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ROU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "rus",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "RUS",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "rwa",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "RWA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sau",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SAU",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sdn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SDN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sen",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SEN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sgp",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SGP",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sgs",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SGS",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "shn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SHN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sjm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SJM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "slb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SLB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sle",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SLE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "slv",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SLV",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "smr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SMR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "som",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SOM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "spm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SPM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "srb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SRB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "stp",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "STP",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sur",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SUR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "svk",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SVK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "svn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SVN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "swe",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SWE",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "swz",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SWZ",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "sxm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SXM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "syc",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SYC",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "syr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "SYR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tca",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TCA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tcd",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TCD",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tgo",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TGO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tha",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "THA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tjk",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TJK",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tkl",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TKL",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tkm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TKM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tls",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TLS",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ton",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TON",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tto",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TTO",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tun",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TUN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tur",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TUR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tuv",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TUV",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "twn",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TWN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "tza",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "TZA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "uga",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "UGA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ukr",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "UKR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "umi",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "UMI",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ury",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "URY",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "usa",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "USA",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "uzb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "UZB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "vat",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "VAT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "vct",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "VCT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "ven",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "VEN",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "vgb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "VGB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "vir",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "VIR",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "vnm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "VNM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "vut",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "VUT",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "wlf",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "WLF",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "wsm",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "WSM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "yem",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "YEM",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "zaf",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ZAF",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "zmb",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ZMB",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "zwe",
+            "visible": true,
+            "locked": true,
+            "color": "#00449e",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "ZWE",
+                    "description": null
+                }
+            ]
+        }
+    ],
+    "translatedTags": [
+        {
+            "translation": {
+                "locale": "fr"
+            },
+            "name": "Pays",
+            "description": null
+        }
+    ]
+}
+
