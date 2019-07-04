@@ -89,14 +89,15 @@ final class DefaultController extends FrontendController
                 [],
                 true
             );
-        }
-        try {
-            $response = $this->render('pages/' . strtolower($node->getNodeType()->getName()) . '.html.twig', $this->assignation, null, '/');
-        } catch (LoaderError $exception) {
-            /*
-             * Transform template not found into 404 error for node explicitly not handled.
-             */
-            throw $this->createNotFoundException($exception->getMessage(), $exception);
+        } else {
+            try {
+                $response = $this->render('pages/' . strtolower($node->getNodeType()->getName()) . '.html.twig', $this->assignation, null, '/');
+            } catch (LoaderError $exception) {
+                /*
+                 * Transform template not found into 404 error for node explicitly not handled.
+                 */
+                throw $this->createNotFoundException($exception->getMessage(), $exception);
+            }
         }
 
         if ($this->getNode()->getTtl() > 0) {
