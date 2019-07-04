@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\NodeTypeType;
@@ -51,7 +52,7 @@ class NodeTypesController extends RozierApp
      * List every node-types.
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -86,7 +87,7 @@ class NodeTypesController extends RozierApp
      * @param Request $request
      * @param int     $nodeTypeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $nodeTypeId)
     {
@@ -137,7 +138,7 @@ class NodeTypesController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addAction(Request $request)
     {
@@ -193,7 +194,7 @@ class NodeTypesController extends RozierApp
      * @param Request $request
      * @param int     $nodeTypeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $nodeTypeId)
     {
