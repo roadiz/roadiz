@@ -31,6 +31,8 @@ namespace RZ\Roadiz\Utils\Clearer;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\ORMException;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -114,15 +116,19 @@ class DoctrineCacheClearer extends Clearer
      */
     protected function recreateProxies()
     {
-        $fs = new Filesystem();
-        $finder = new Finder();
-        $conf = $this->entityManager->getConfiguration();
-        $finder->files()->in($conf->getProxyDir());
-        $fs->remove($finder);
+        try {
+            $fs = new Filesystem();
+            $finder = new Finder();
+            $conf = $this->entityManager->getConfiguration();
+            $finder->files()->in($conf->getProxyDir());
+            $fs->remove($finder);
 
-        $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        $proxyFactory = $this->entityManager->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, $conf->getProxyDir());
-        $this->output .= 'Doctrine proxy classes has been recreated.';
+            $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
+            $proxyFactory = $this->entityManager->getProxyFactory();
+            $proxyFactory->generateProxyClasses($meta, $conf->getProxyDir());
+            $this->output .= 'Doctrine proxy classes has been recreated.';
+        } catch (ORMException $exception) {
+            $this->output .= '<error>Doctrine proxy can’t be recreated.</error>';
+        }
     }
 }
