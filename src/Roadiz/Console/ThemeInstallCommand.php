@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Console;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Attribute\Importer\AttributeImporter;
 use RZ\Roadiz\CMS\Controllers\AppController;
@@ -110,23 +109,26 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
             throw new RuntimeException('Given theme is not a valid Roadiz theme.');
         }
         $this->themeRoot = call_user_func([$reflectionClass->getName(), 'getThemeFolder']);
-        $output->writeln('Theme name is: <info>'. $reflectionClass->getName() .'</info>.');
-        $output->writeln('Theme assets are located in <info>'. $this->themeRoot .'/static</info>.');
+        if ($output->isVeryVerbose()) {
+            $output->writeln('Theme name is: <info>'. $reflectionClass->getName() .'</info>.');
+            $output->writeln('Theme assets are located in <info>'. $this->themeRoot .'/static</info>.');
+        }
 
         if ($input->getOption('data')) {
-            $this->importThemeData($reflectionClass->getName(), $output);
+            $this->importThemeData($reflectionClass->getName(), $input, $output);
         } elseif ($input->getOption('nodes')) {
-            $this->importThemeNodes($reflectionClass->getName(), $output);
+            $this->importThemeNodes($reflectionClass->getName(), $input, $output);
         } else {
             $output->writeln('Frontend themes are no more registered into database. <info>You should use --data or --nodes option.</info>');
         }
     }
 
     /**
-     * @param string $classname
-     * @param $text
+     * @param string          $classname
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
-    protected function importThemeData($classname, OutputInterface $output)
+    protected function importThemeData($classname, InputInterface $input, OutputInterface $output)
     {
         $data = $this->getThemeConfig();
 
@@ -197,14 +199,21 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                     }
                 }
             }
-            $output->writeln('You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.');
-            $output->writeln('And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.');
+            if ($output->isVeryVerbose()) {
+                $output->writeln('You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.');
+                $output->writeln('And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.');
+            }
         } else {
             $output->writeln('Theme class <info>' . $classname . '</info> has no data to import.');
         }
     }
 
-    protected function importThemeNodes($classname, OutputInterface $output)
+    /**
+     * @param                 $classname
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    protected function importThemeNodes($classname, InputInterface $input, OutputInterface $output)
     {
         $data = $this->getThemeConfig();
 

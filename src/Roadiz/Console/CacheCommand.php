@@ -142,42 +142,42 @@ class CacheCommand extends Command
 
             if ($input->getOption('clear-configuration')) {
                 $configurationClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $configurationClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-appcache')) {
                 $appCacheClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $appCacheClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-doctrine')) {
                 $doctrineClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $doctrineClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-routes')) {
                 $routingClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $routingClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-assets')) {
                 $assetsClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $assetsClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-templates')) {
                 $templatesClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $templatesClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-translations')) {
                 $translationsClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $translationsClearer->getOutput());
                 }
             } elseif ($input->getOption('clear-nsurls')) {
                 $nodeSourcesUrlsClearer->clear();
-                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                     $io->writeln('— ' . $nodeSourcesUrlsClearer->getOutput());
                 }
             } else {
@@ -189,7 +189,7 @@ class CacheCommand extends Command
                 $dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
 
                 foreach ($event->getMessages() as $message) {
-                    if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                    if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                         $io->writeln(sprintf('<info>%s</info>: %s', $message['description'], $message['message']));
                     }
                 }

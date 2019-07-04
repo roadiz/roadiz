@@ -49,14 +49,13 @@ class NodesSourcesCommand extends Command
     protected function configure()
     {
         $this->setName('generate:nsentities')
-            ->setDescription('Generate node-sources entities classes.');
+            ->setDescription('Generate node-sources entities PHP classes.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         /** @var EntityManager entityManager */
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
 
         $nodetypes = $this->entityManager
             ->getRepository(NodeType::class)
@@ -67,13 +66,17 @@ class NodesSourcesCommand extends Command
             foreach ($nodetypes as $nt) {
                 /** @var NodeTypeHandler $handler */
                 $handler = $this->getHelper('handlerFactory')->getHandler($nt);
+
                 $handler->removeSourceEntityClass();
-                $text .= '<info>' . $handler->generateSourceEntityClass() . '</info>' . PHP_EOL;
+                $handler->generateSourceEntityClass();
+                $output->writeln("* Source class <info>".$nt->getSourceEntityClassName()."</info> has been generated.");
+
+                if ($output->isVeryVerbose()) {
+                    $output->writeln("\t<info>".$handler->getSourceClassPath()."</info>");
+                }
             }
         } else {
-            $text = '<info>No available node-types…</info>' . PHP_EOL;
+            $output->writeln('<error>No available node-types…</error>');
         }
-
-        $output->writeln($text);
     }
 }

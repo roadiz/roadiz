@@ -85,7 +85,7 @@ class CacheFpmCommand extends Command
                 'allow_redirects' => true,
                 'timeout' => 2
             ]);
-            if ($output->getVerbosity() === OutputInterface::VERBOSITY_DEBUG) {
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
                 $output->writeln($url);
             }
             $output->writeln('PHP-FPM caches were cleared for <info>'.$kernel->getEnvironment().'</info> environement.');
