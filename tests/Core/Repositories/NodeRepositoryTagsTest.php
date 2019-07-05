@@ -28,6 +28,7 @@
  */
 
 use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Tools\ToolsException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -62,6 +63,7 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
             [['unittest-tag-1'], 3],
             [['unittest-tag-2'], 1],
             [['unittest-tag-3'], 1],
+            [['unittest-tag-4'], 2],
             [['unittest-tag-1', 'unittest-tag-2'], 3],
             [['unittest-tag-1', 'unittest-tag-3'], 3],
             [['unittest-tag-2', 'unittest-tag-3'], 2],
@@ -109,9 +111,14 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
      * fixtures
      * ============================================================================
      */
-    protected function setUp()
+    /**
+     * @throws ToolsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public static function setUpBeforeClass()
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         $translation = static::getManager()
             ->getRepository(Translation::class)
@@ -143,25 +150,23 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
         /*
          * Adding nodes
          */
-        try {
-            foreach ($nodes as $value) {
-                $node = static::createPageNode($value[0], $translation);
+        foreach ($nodes as $value) {
+            $node = static::createPageNode($value[0], $translation);
 
-                /*
-                 * Adding tags
-                 */
-                foreach ($value[1] as $tagName) {
-                    $tag = static::getManager()
-                        ->getRepository(Tag::class)
-                        ->findOneByTagName($tagName);
-                    if (null !== $tag) {
-                        $node->addTag($tag);
-                    }
+            /*
+             * Adding tags
+             */
+            foreach ($value[1] as $tagName) {
+                $tag = static::getManager()
+                    ->getRepository(Tag::class)
+                    ->findOneByTagName($tagName);
+                if (null !== $tag) {
+                    $node->addTag($tag);
+                } else {
+                    throw new \RuntimeException('Cannot find tag');
                 }
             }
-            static::getManager()->flush();
-        } catch (EntityNotFoundException $e) {
-            $this->markTestIncomplete($e->getMessage());
         }
+        static::getManager()->flush();
     }
 }

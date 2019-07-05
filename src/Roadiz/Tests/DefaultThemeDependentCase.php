@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Tests;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\ORM\Tools\ToolsException;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Node\NodeFactory;
@@ -58,6 +59,8 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         static::runCommand('generate:nsentities');
         static::runCommand('orm:schema-tool:update --dump-sql --force');
         static::runCommand('cache:clear');
+        static::$kernel->get('nodeTypesBag')->reset();
+        static::$kernel->get('settingsBag')->reset();
     }
 
     /**
@@ -74,12 +77,10 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     {
         /** @var NodeFactory $nodeFactory */
         $nodeFactory = static::$kernel->getContainer()->offsetGet(NodeFactory::class);
-        $nodeType = static::$kernel->getContainer()->offsetGet('nodeTypesBag')->get('Page');
+        $nodeType = static::getManager()->getRepository(NodeType::class)->findOneByName('Page');
         if (null === $nodeType) {
             throw new EntityNotFoundException('Page node-type does not exist.');
         }
-        $nodeFactory->create($title, $nodeType, $translation);
-
         $node = $nodeFactory->create($title, $nodeType, $translation);
 
         if (null !== $parent) {

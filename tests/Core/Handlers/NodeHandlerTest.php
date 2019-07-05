@@ -33,7 +33,6 @@ use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
-use Symfony\Component\Workflow\Registry;
 
 class NodeHandlerTest extends DefaultThemeDependentCase
 {
@@ -42,16 +41,15 @@ class NodeHandlerTest extends DefaultThemeDependentCase
     public function testDuplicate()
     {
         $node = null;
-        /** @var Translation $tran */
-        $tran = static::getManager()
+        /** @var Translation $translation */
+        $translation = static::getManager()
             ->getRepository(Translation::class)
             ->findDefault();
 
-        if (null !== $tran) {
+        if (null !== $translation) {
             try {
-                $node = static::createPageNode("Original node", $tran);
+                $node = static::createPageNode("testDuplicate Original node", $translation);
                 static::getManager()->flush();
-
                 $nbNode = count(static::$runtimeCollection);
 
                 $duplicator = new NodeDuplicator($node, static::getManager());
@@ -69,10 +67,11 @@ class NodeHandlerTest extends DefaultThemeDependentCase
 
                 $this->assertEquals($nbNode + 1, count(static::$runtimeCollection));
 
-                static::getManager()->flush();
             } catch (EntityNotFoundException $e) {
                 $this->markTestIncomplete($e->getMessage());
             }
+        } else {
+            $this->markTestIncomplete('Default translation does not exist.');
         }
     }
 

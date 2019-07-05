@@ -83,16 +83,18 @@ class NodeTest extends DefaultThemeDependentCase
 
             $node1 = static::createPageNode('node 1', $translation, $root);
             $collection->add($node1);
+            static::getManager()->flush();
 
             $node2 = static::createPageNode('node 2', $translation, $root);
             $collection->add($node2);
+            static::getManager()->flush();
 
             $node3 = static::createPageNode('node 3', $translation, $root);
             $collection->add($node3);
+            static::getManager()->flush();
 
             $node4 = static::createPageNode('node 4', $translation, $root);
             $collection->add($node4);
-
             static::getManager()->flush();
 
             $this->assertEquals(4, $root->getChildren()->count());

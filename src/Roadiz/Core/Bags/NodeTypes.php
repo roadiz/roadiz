@@ -106,4 +106,10 @@ class NodeTypes extends ParameterBag
 
         return parent::all();
     }
+
+
+    public function reset():void
+    {
+        $this->parameters = null;
+    }
 }

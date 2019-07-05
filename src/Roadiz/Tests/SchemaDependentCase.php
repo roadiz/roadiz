@@ -56,7 +56,6 @@ abstract class SchemaDependentCase extends KernelDependentCase
 
         $em = static::getManager();
         $schemaTool = new SchemaTool($em);
-        $metadata = $em->getMetadataFactory()->getAllMetadata();
 
         // Drop and recreate tables for all entities
         $dropSQL = $schemaTool->getDropDatabaseSQL();
