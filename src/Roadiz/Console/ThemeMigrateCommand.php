@@ -89,7 +89,13 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
      */
     protected function runCommand(string $command, $environment = 'dev', $preview = false)
     {
-        $kernel = new Kernel($environment, true, $preview);
+        /*
+         * Need to get exact Kernel class: for standard edition
+         */
+        $existingKernel = $this->getHelper('kernel')->getKernel();
+        $kernelClass = get_class($existingKernel);
+        
+        $kernel = new $kernelClass($environment, true, $preview);
         $kernel->boot();
         $application = new RoadizApplication($kernel);
         $application->setAutoExit(false);
