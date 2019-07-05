@@ -108,7 +108,8 @@
             "samples/install.php.sample": "./install.php",
             "samples/dev.php.sample": "./dev.php",
             "samples/Vagrantfile.sample": "./Vagrantfile"
-        }
+        },
+        "config-path": "./conf/config.yml"
     },
     "bin": ["bin/roadiz"],
     "scripts": {
@@ -121,10 +122,12 @@
         ],
         "post-install-cmd": [
             "RZ\\Roadiz\\Utils\\Composer\\InstallFiles\\ScriptHandler::install",
+            "RZ\\Roadiz\\Utils\\Composer\\InstallFiles\\ScriptHandler::rotateSecret",
             "@cache-scripts"
         ],
         "post-update-cmd": [
             "RZ\\Roadiz\\Utils\\Composer\\InstallFiles\\ScriptHandler::install",
+            "RZ\\Roadiz\\Utils\\Composer\\InstallFiles\\ScriptHandler::rotateSecret",
             "@cache-scripts"
         ]
     }

@@ -30,9 +30,14 @@
 namespace RZ\Roadiz\Utils\Composer\InstallFiles;
 
 use Composer\Script\Event;
+use RZ\Roadiz\Config\YamlConfigurationHandler;
+use RZ\Roadiz\Utils\Security\TokenGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Dumper;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 
 class ScriptHandler
 {
@@ -109,6 +114,36 @@ class ScriptHandler
                     }
                 }
             }
+        }
+    }
+
+    public static function rotateSecret(Event $event)
+    {
+        $extras = $event->getComposer()->getPackage()->getExtra();
+        $fs = new Filesystem();
+        $io = $event->getIO();
+
+        if (!isset($extras['config-path'])) {
+            $io->write('No config path configured through the extra.config-path setting.');
+            return;
+        }
+
+        if (false === $fs->exists($extras['config-path'])) {
+            throw new \InvalidArgumentException(sprintf('<error>File "%s" does not exist.</error>', $extras['config-path']));
+        }
+
+        $parser = new Parser();
+        $configuration = $parser->parse(file_get_contents($extras['config-path']));
+        $generator = new TokenGenerator();
+        $configuration['security']['secret'] = $generator->generateToken();
+
+        try {
+            $dumper = new Dumper();
+            $yaml = $dumper->dump($configuration, 4);
+            file_put_contents($extras['config-path'], $yaml);
+            return true;
+        } catch (ParseException $e) {
+            return false;
         }
     }
 }
