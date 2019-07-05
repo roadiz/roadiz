@@ -89,7 +89,7 @@ class ContactController extends DefaultThemeApp
                                        /*
                                         * Disable CSRF protection if using Varnish
                                         */
-                                       ->disableCsrfProtection()
+                                       //->disableCsrfProtection()
                                        // Use Honeypot
                                        ->withDefaultFields(true)
                                        ->withGoogleRecaptcha()
