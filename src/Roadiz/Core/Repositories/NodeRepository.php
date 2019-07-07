@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
@@ -1269,5 +1270,28 @@ class NodeRepository extends StatusAwareRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * Get latest position in parent.
+     *
+     * Parent can be null for node root
+     *
+     * @param Node|null $parent
+     * @return int
+     */
+    public function findLatestPositionInParent(Node $parent = null)
+    {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select($qb->expr()->max('n.position'));
+
+        if (null !== $parent) {
+            $qb->andWhere($qb->expr()->eq('n.parent', ':parent'))
+                ->setParameter(':parent', $parent);
+        } else {
+            $qb->andWhere($qb->expr()->isNull('n.parent'));
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

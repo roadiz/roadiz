@@ -62,10 +62,17 @@ final class NodeFactory implements ContainerAwareInterface
      * @param NodeType|null    $type
      * @param Translation|null $translation
      * @param Node|null        $node
+     * @param Node|null        $parent
      *
      * @return Node
      */
-    public function create(string $title, NodeType $type = null, Translation $translation = null, Node $node = null): Node
+    public function create(
+        string $title,
+        NodeType $type = null,
+        Translation $translation = null,
+        Node $node = null,
+        Node $parent = null
+    ): Node
     {
         $nodeName = StringHandler::slugify($title);
         if (empty($nodeName)) {
@@ -74,7 +81,8 @@ final class NodeFactory implements ContainerAwareInterface
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
         /** @var NodeRepository $repository */
-        $repository = $entityManager->getRepository(Node::class)->setDisplayingAllNodesStatuses(true);
+        $repository = $entityManager->getRepository(Node::class)
+            ->setDisplayingAllNodesStatuses(true);
 
         if (true === $repository->exists($nodeName)) {
             $nodeName .= '-' . uniqid();
@@ -94,6 +102,7 @@ final class NodeFactory implements ContainerAwareInterface
 
         $node->setNodeName($nodeName);
         $node->setTtl($node->getNodeType()->getDefaultTtl());
+        $node->setParent($parent);
         $entityManager->persist($node);
 
         $sourceClass = $node->getNodeType()->getSourceEntityFullQualifiedClassName();

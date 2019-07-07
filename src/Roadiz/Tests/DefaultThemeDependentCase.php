@@ -81,11 +81,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         if (null === $nodeType) {
             throw new EntityNotFoundException('Page node-type does not exist.');
         }
-        $node = $nodeFactory->create($title, $nodeType, $translation);
-
-        if (null !== $parent) {
-            $parent->addChild($node);
-        }
+        $node = $nodeFactory->create($title, $nodeType, $translation, null, $parent);
 
         return $node;
     }

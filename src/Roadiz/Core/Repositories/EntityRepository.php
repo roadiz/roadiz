@@ -68,8 +68,12 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param Container $container
      * @param bool $isPreview
      */
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, Container $container, $isPreview = false)
-    {
+    public function __construct(
+        EntityManager $em,
+        Mapping\ClassMetadata $class,
+        Container $container,
+        $isPreview = false
+    ) {
         parent::__construct($em, $class);
         $this->isPreview = $isPreview;
         $this->container = $container;
