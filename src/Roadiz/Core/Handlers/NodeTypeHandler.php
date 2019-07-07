@@ -168,7 +168,7 @@ class NodeTypeHandler extends AbstractHandler
      */
     public function updateSchema()
     {
-        $this->clearCaches();
+        $this->clearCaches(false);
         $this->regenerateEntityClass();
         // Clear cache only after generating NSEntity class.
         $this->clearCaches();
@@ -200,14 +200,14 @@ class NodeTypeHandler extends AbstractHandler
         return $this;
     }
 
-    protected function clearCaches()
+    protected function clearCaches(bool $recreateProxies = true)
     {
         $clearers = [
             new OPCacheClearer(),
         ];
 
         if ($this->objectManager instanceof EntityManagerInterface) {
-            $clearers[] = new DoctrineCacheClearer($this->objectManager, $this->kernel);
+            $clearers[] = new DoctrineCacheClearer($this->objectManager, $this->kernel, $recreateProxies);
         }
 
         foreach ($clearers as $clearer) {

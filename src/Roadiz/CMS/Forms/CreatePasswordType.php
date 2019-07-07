@@ -33,6 +33,7 @@ use Rollerworks\Component\PasswordStrength\Validator\Constraints\Blacklist;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\PasswordStrength;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CreatePasswordType extends RepeatedType
@@ -65,6 +66,17 @@ class CreatePasswordType extends RepeatedType
                 'label' => 'passwordVerify',
             ],
             'required' => false,
+            'error_mapping' => function (Options $options) {
+                return ['.' => $options['first_name']];
+            },
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getBlockPrefix()
+    {
+        return 'repeated';
     }
 }

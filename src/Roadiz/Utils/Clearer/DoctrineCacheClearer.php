@@ -43,6 +43,10 @@ use Symfony\Component\Finder\Finder;
 class DoctrineCacheClearer extends Clearer
 {
     /**
+     * @var bool
+     */
+    protected $recreateProxies;
+    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
@@ -55,13 +59,15 @@ class DoctrineCacheClearer extends Clearer
      * DoctrineCacheClearer constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param Kernel $kernel
+     * @param Kernel                 $kernel
+     * @param bool                   $recreateProxies
      */
-    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel)
+    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, bool $recreateProxies = true)
     {
         parent::__construct('');
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;
+        $this->recreateProxies = $recreateProxies;
     }
 
     /**
@@ -88,7 +94,9 @@ class DoctrineCacheClearer extends Clearer
             $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
             $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
             $this->clearCacheDriver($conf->getMetadataCacheImpl(), 'metadata');
-            $this->recreateProxies();
+            if ($this->recreateProxies === true) {
+                $this->recreateProxies();
+            }
         }
 
         return true;

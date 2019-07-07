@@ -39,6 +39,7 @@ use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\Validator\Type\RepeatedTypeValidatorExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
@@ -106,7 +107,8 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $container['form.type.extensions'] = function ($c) {
             return [
-                new HelpAndGroupExtension()
+                new HelpAndGroupExtension(),
+                new RepeatedTypeValidatorExtension(),
             ];
         };
 
