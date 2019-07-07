@@ -85,11 +85,11 @@ class NodeTest extends DefaultThemeDependentCase
             static::getManager()->flush();
 
             $this->assertEquals(4, $root->getChildren()->count());
-            $this->assertEquals(0, $root->getPosition());
-            $this->assertEquals(0, $node1->getPosition());
-            $this->assertEquals(1, $node2->getPosition());
-            $this->assertEquals(2, $node3->getPosition());
-            $this->assertEquals(3, $node4->getPosition());
+            $this->assertEquals(1, $root->getPosition());
+            $this->assertEquals(1, $node1->getPosition());
+            $this->assertEquals(2, $node2->getPosition());
+            $this->assertEquals(3, $node3->getPosition());
+            $this->assertEquals(4, $node4->getPosition());
         } catch (EntityNotFoundException $e) {
             $this->markTestIncomplete($e->getMessage());
         }
