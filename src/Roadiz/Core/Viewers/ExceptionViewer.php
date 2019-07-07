@@ -31,10 +31,10 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
-use RZ\Roadiz\CMS\Controllers\CmsController;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +44,8 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Twig\Error\Error;
+use Twig\Error\SyntaxError;
 
 /**
  * Class ExceptionViewer
@@ -239,6 +241,7 @@ class ExceptionViewer
             if ($debug) {
                 $html = str_replace('{{ message }}', $e->getMessage(), $html);
                 $trace = preg_replace('#([^\n]+)#', '<p>$1</p>', $e->getTraceAsString());
+                $trace = $this->addTwigSource($e, $trace);
                 $html = str_replace('{{ details }}', $trace, $html);
                 $html = str_replace('{{ exception }}', $class, $html);
             } else {
@@ -256,6 +259,27 @@ class ExceptionViewer
                 ]
             );
         }
+    }
+
+    /**
+     * @param \Exception $e
+     * @param string     $trace
+     *
+     * @return string
+     */
+    protected function addTwigSource(\Exception $e, string $trace): string
+    {
+        if ($e instanceof SyntaxError && null !== $e->getSourceContext()) {
+            return '<table cellpadding="0" cellspacing="0"><tr><td class="cell-title">Template</td><td>'.$e->getSourceContext()->getName().'</td></tr>' . PHP_EOL .
+                '<tr><td class="cell-title">Line number</td><td>'.$e->getTemplateLine().'</td></tr>' . PHP_EOL .
+                '<tr><td class="cell-title">Path</td><td>'.$e->getSourceContext()->getPath().'</td></tr></table>' . PHP_EOL .
+                $trace;
+        } elseif ($e instanceof Error && null !== $e->getSourceContext()) {
+            return '<table cellpadding="0" cellspacing="0"><tr><td class="cell-title">Template</td><td>'.$e->getSourceContext()->getName().'</td></tr>' . PHP_EOL .
+                '<tr><td class="cell-title" colspan="2"><code>'.$e->getSourceContext()->getPath().'</code></td></tr></table>' . PHP_EOL .
+                $trace;
+        }
+        return $trace;
     }
 
     /**

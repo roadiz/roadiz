@@ -56,6 +56,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * Base controller.
@@ -298,7 +299,7 @@ abstract class Controller implements ContainerAwareInterface
             $response->setContent($this->renderView($this->getNamespacedView($view, $namespace), $parameters));
 
             return $response;
-        } catch (\Twig_Error_Runtime $e) {
+        } catch (RuntimeError $e) {
             if ($e->getPrevious() instanceof ForceResponseException) {
                 return $e->getPrevious()->getResponse();
             } else {
