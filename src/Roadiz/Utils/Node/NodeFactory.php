@@ -72,8 +72,7 @@ final class NodeFactory implements ContainerAwareInterface
         Translation $translation = null,
         Node $node = null,
         Node $parent = null
-    ): Node
-    {
+    ): Node {
         $nodeName = StringHandler::slugify($title);
         if (empty($nodeName)) {
             throw new \RuntimeException('Node name is empty.');

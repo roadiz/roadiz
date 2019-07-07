@@ -200,6 +200,9 @@ class NodeTypeHandler extends AbstractHandler
         return $this;
     }
 
+    /**
+     * @param bool $recreateProxies
+     */
     protected function clearCaches(bool $recreateProxies = true)
     {
         $clearers = [
@@ -269,6 +272,7 @@ class NodeTypeHandler extends AbstractHandler
      * This method does not flush ORM. You'll need to manually call it.
      *
      * @param \RZ\Roadiz\Core\Entities\NodeType $newNodeType
+     * @deprecated Use deserialization and denormalization.
      *
      * @throws \RuntimeException If newNodeType param is null
      */
