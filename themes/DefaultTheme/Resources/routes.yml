@@ -50,6 +50,11 @@ thanksPageLocale:
     requirements:
         _locale: "[a-z]{2}_?[A-Z]{0,2}"
 
+sitemap:
+    path: /sitemap.xml
+    defaults:
+        _controller: Themes\DefaultTheme\Controllers\SitemapController::sitemapAction
+
 defaultRemoveTrailingSlash:
     path: /{url}
     defaults:

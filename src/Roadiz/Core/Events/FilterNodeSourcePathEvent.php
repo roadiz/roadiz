@@ -64,6 +64,10 @@ final class FilterNodeSourcePathEvent extends Event
      * @var bool Tells Node Router to prepend request context information to path or not.
      */
     private $isComplete = false;
+    /**
+     * @var bool
+     */
+    protected $containsScheme = false;
 
     /**
      * FilterNodeSourcePathEvent constructor.
@@ -188,6 +192,26 @@ final class FilterNodeSourcePathEvent extends Event
     public function setComplete(bool $isComplete): FilterNodeSourcePathEvent
     {
         $this->isComplete = $isComplete;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function containsScheme(): bool
+    {
+        return $this->containsScheme;
+    }
+
+    /**
+     * @param bool $containsScheme
+     *
+     * @return FilterNodeSourcePathEvent
+     */
+    public function setContainsScheme(bool $containsScheme): FilterNodeSourcePathEvent
+    {
+        $this->containsScheme = $containsScheme;
 
         return $this;
     }

@@ -226,7 +226,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
          * If node path is complete, do not alter path any more.
          */
         if (true === $nodePathInfo->isComplete()) {
-            if ($referenceType == self::ABSOLUTE_URL) {
+            if ($referenceType == self::ABSOLUTE_URL && !$nodePathInfo->containsScheme()) {
                 return $schemeAuthority . $nodePathInfo->getPath();
             }
             return $nodePathInfo->getPath();
@@ -301,6 +301,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         $nodePathInfo->setPath($event->getPath());
         $nodePathInfo->setParameters($event->getParameters());
         $nodePathInfo->setComplete($event->isComplete());
+        $nodePathInfo->setContainsScheme($event->containsScheme());
 
         if (null === $nodePathInfo->getPath()) {
             throw new InvalidParameterException('NodeSource generated path is null.');

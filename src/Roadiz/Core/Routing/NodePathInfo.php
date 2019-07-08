@@ -46,6 +46,10 @@ class NodePathInfo implements \Serializable
      * @var bool
      */
     protected $isComplete = false;
+    /**
+     * @var bool
+     */
+    protected $containsScheme = false;
 
     /**
      * @return string
@@ -108,6 +112,26 @@ class NodePathInfo implements \Serializable
     }
 
     /**
+     * @return bool
+     */
+    public function containsScheme(): bool
+    {
+        return $this->containsScheme;
+    }
+
+    /**
+     * @param bool $containsScheme
+     *
+     * @return NodePathInfo
+     */
+    public function setContainsScheme(bool $containsScheme): NodePathInfo
+    {
+        $this->containsScheme = $containsScheme;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function serialize()
@@ -115,7 +139,8 @@ class NodePathInfo implements \Serializable
         return json_encode([
             'path' => $this->getPath(),
             'parameters' => $this->getParameters(),
-            'is_complete' => $this->isComplete()
+            'is_complete' => $this->isComplete(),
+            'contains_scheme' => $this->containsScheme()
         ]);
     }
 
@@ -128,5 +153,6 @@ class NodePathInfo implements \Serializable
         $this->setComplete($data['is_complete']);
         $this->setParameters($data['parameters']);
         $this->setPath($data['path']);
+        $this->setContainsScheme($data['contains_scheme']);
     }
 }
