@@ -38,6 +38,7 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
@@ -145,57 +146,11 @@ class RoadizApplication extends Application
      */
     protected function getDefaultCommands()
     {
-        $commands = [
-            new DispatcherDebugCommand(),
-            new ConfigurationDebugCommand(),
-            new TranslationsCommand(),
-            new TranslationsCreationCommand(),
-            new TranslationsDeleteCommand(),
-            new TranslationsEnableCommand(),
-            new TranslationsDisableCommand(),
-            new NodeTypesCommand(),
-            new NodeTypesCreationCommand(),
-            new NodeTypesDeleteCommand(),
-            new NodeTypesAddFieldCommand(),
-            new NodesSourcesCommand(),
-            new NodesCommand(),
-            new NodesCreationCommand(),
-            new NodesDetailsCommand(),
-            new NodesCleanNamesCommand(),
-            new NodeApplyUniversalFieldsCommand(),
-            new ThemesCommand(),
-            new ThemeAssetsCommand(),
-            new ThemeGenerateCommand(),
-            new ThemeInstallCommand(),
-            new ThemeInfoCommand(),
-            new InstallCommand(),
-            new UsersCommand(),
-            new UsersCreationCommand(),
-            new UsersDeleteCommand(),
-            new UsersDisableCommand(),
-            new UsersEnableCommand(),
-            new UsersRolesCommand(),
-            new UsersPasswordCommand(),
-            new RequirementsCommand(),
-            new SolrCommand(),
-            new SolrResetCommand(),
-            new SolrReindexCommand(),
-            new SolrOptimizeCommand(),
-            new CacheCommand(),
-            new CacheInfosCommand(),
-            new CacheFpmCommand(),
-            new HtaccessCommand(),
-            new DocumentDownscaleCommand(),
-            new NodesOrphansCommand(),
-            new DatabaseDumpCommand(),
-            new FilesExportCommand(),
-            new FilesImportCommand(),
-            new LogsCleanupCommand(),
-        ];
-
-        /*
+        $commands = $this->kernel->get('console.commands');
+        /**
          * Register user defined Commands
          * Add them in your config.yml
+         * @deprecated Use a service provider then add it to your AppKernel
          */
         try {
             if (isset($this->kernel->get('config')['additionalCommands'])) {
@@ -211,8 +166,15 @@ class RoadizApplication extends Application
             // Do not load additional commands if configuration is not available
         }
 
+        $commands = array_merge(parent::getDefaultCommands(), $commands);
 
-        return array_merge(parent::getDefaultCommands(), $commands);
+        foreach ($commands as $command) {
+            if ($command instanceof ContainerAwareInterface) {
+                $command->setContainer($this->kernel->getContainer());
+            }
+        }
+
+        return $commands;
     }
 
     /**
@@ -227,7 +189,7 @@ class RoadizApplication extends Application
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
         $helperSet->set(new ThemeResolverHelper($this->kernel->get('themeResolver')));
-        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get('config_handler')));
+        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get('config.handler')));
         $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
         $helperSet->set(new CacheProviderHelper($this->kernel->get('nodesSourcesUrlCacheProvider')));
 

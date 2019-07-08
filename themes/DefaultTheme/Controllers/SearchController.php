@@ -110,6 +110,7 @@ class SearchController extends DefaultThemeApp
             $callable
         );
 
-        return $this->render('pages/search.html.twig', $this->assignation);
+        $response = $this->render('pages/search.html.twig', $this->assignation);
+        return $this->makeResponseCachable($request, $response, 10);
     }
 }

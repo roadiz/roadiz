@@ -1,0 +1,38 @@
+{
+    "name": "Page",
+    "displayName": "Page",
+    "description": null,
+    "visible": true,
+    "newsletterType": false,
+    "hidingNodes": false,
+    "color": "#000000",
+    "defaultTtl": 0,
+    "reachable": true,
+    "publishable": false,
+    "fields": [
+        {
+            "name": "content",
+            "label": "Contenu",
+            "description": null,
+            "visible": true,
+            "type": 4,
+            "indexed": false,
+            "virtual": false,
+            "defaultValues": null,
+            "expanded": false,
+            "nodeTypeName": "Page"
+        },
+        {
+            "name": "header_image",
+            "label": "Image d’en-tête",
+            "description": null,
+            "visible": true,
+            "type": 9,
+            "indexed": false,
+            "virtual": true,
+            "defaultValues": null,
+            "expanded": false,
+            "nodeTypeName": "Page"
+        }
+    ]
+}

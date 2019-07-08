@@ -31,7 +31,7 @@ use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**
- * Description.
+ * @deprecated .
  */
 class SettingCollectionJsonSerializerTest extends SchemaDependentCase
 {
@@ -92,11 +92,11 @@ class SettingCollectionJsonSerializerTest extends SchemaDependentCase
      */
     public static function deserializeReturnTypeProvider()
     {
-        return array(
-            array(
+        return [
+            [
                 file_get_contents(ROADIZ_ROOT . '/tests/Fixtures/Serializers/settingCollectionJsonSerializer01.json'),
                 'Doctrine\Common\Collections\ArrayCollection',
-            ),
-        );
+            ],
+        ];
     }
 }

@@ -61,6 +61,17 @@ class RootPackagesTest extends DefaultThemeDependentCase
         ]);
     }
 
+    public function getTestKernel(): Kernel
+    {
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+        $request = $this->getRequest();
+        $kernel->getContainer()->offsetSet('request', $request);
+        $kernel->get('requestContext')->fromRequest($request);
+        $kernel->get('requestStack')->push($request);
+        return $kernel;
+    }
+
     /**
      * @dataProvider documentUrlWithBasePathProvider
      * @param Document $document
@@ -70,9 +81,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $kernel = new Kernel('test', true);
-        $kernel->boot();
-        $kernel->handle($this->getRequest());
+        $kernel = $this->getTestKernel();
 
         $documentUrlGenerator = $kernel->get('document.url_generator');
         $documentUrlGenerator->setDocument($document);
@@ -86,9 +95,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
 
     public function testGetUrl()
     {
-        $kernel = new Kernel('test', true);
-        $kernel->boot();
-        $kernel->handle($this->getRequest());
+        $kernel = $this->getTestKernel();
 
         $this->assertEquals(
             '/files/some-custom-file',
@@ -112,9 +119,7 @@ class RootPackagesTest extends DefaultThemeDependentCase
      */
     public function testGetUrlWithSlash()
     {
-        $kernel = new Kernel('test', true);
-        $kernel->boot();
-        $kernel->handle($this->getRequest());
+        $kernel = $this->getTestKernel();
 
         $this->assertNotEquals(
             '/files/some-custom-file',

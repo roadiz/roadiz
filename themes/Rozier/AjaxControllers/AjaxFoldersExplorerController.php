@@ -47,7 +47,7 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $folders = $this->get('em')
                         ->getRepository(Folder::class)

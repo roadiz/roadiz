@@ -54,7 +54,7 @@ class UsersRolesController extends RozierApp
      */
     public function editRolesAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User|null $user */
         $user = $this->get('em')
@@ -103,7 +103,7 @@ class UsersRolesController extends RozierApp
      */
     public function removeRoleAction(Request $request, $userId, $roleId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User|null $user */
         $user = $this->get('em')

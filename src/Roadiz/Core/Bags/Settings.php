@@ -88,16 +88,16 @@ class Settings extends ParameterBag
 
     /**
      * @param string $key
-     * @param null $default
+     * @param mixed $default
      * @return bool|mixed
      */
-    public function get($key, $default = null)
+    public function get($key, $default = false)
     {
         if (!is_array($this->parameters)) {
             $this->populateParameters();
         }
 
-        return parent::get($key, false);
+        return parent::get($key, $default);
     }
 
     /**
@@ -130,5 +130,10 @@ class Settings extends ParameterBag
         }
 
         return parent::all();
+    }
+
+    public function reset():void
+    {
+        $this->parameters = null;
     }
 }

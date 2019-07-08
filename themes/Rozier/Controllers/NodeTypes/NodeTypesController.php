@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\NodeTypeType;
@@ -51,11 +52,11 @@ class NodeTypesController extends RozierApp
      * List every node-types.
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
         /*
          * Manage get request to filter list
          */
@@ -86,11 +87,11 @@ class NodeTypesController extends RozierApp
      * @param Request $request
      * @param int     $nodeTypeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')
@@ -137,11 +138,11 @@ class NodeTypesController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $nodeType = new NodeType();
 
@@ -193,11 +194,11 @@ class NodeTypesController extends RozierApp
      * @param Request $request
      * @param int     $nodeTypeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES_DELETE');
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')

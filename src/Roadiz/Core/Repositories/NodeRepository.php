@@ -29,13 +29,14 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
@@ -104,11 +105,7 @@ class NodeRepository extends StatusAwareRepository
         $this->applyFilterByCriteria($criteria, $query);
         $this->applyTranslationByTag($query, $translation);
 
-        try {
-            return (int) $query->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -356,11 +353,7 @@ class NodeRepository extends StatusAwareRepository
              */
             return new Paginator($query);
         } else {
-            try {
-                return $query->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $query->getQuery()->getResult();
         }
     }
 
@@ -469,11 +462,7 @@ class NodeRepository extends StatusAwareRepository
         $this->applyFilterByCriteria($criteria, $query);
         $this->applyTranslationByTag($query, $translation);
 
-        try {
-            return $query->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -499,11 +488,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -528,11 +513,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -558,11 +539,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -587,11 +564,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -619,11 +592,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -646,11 +615,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -693,11 +658,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -723,11 +684,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -746,11 +703,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -773,11 +726,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -798,11 +747,7 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -816,11 +761,7 @@ class NodeRepository extends StatusAwareRepository
             ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
             ->setParameter('nodeName', $nodeName);
 
-        try {
-            return (boolean) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
+        return (boolean) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -852,6 +793,7 @@ class NodeRepository extends StatusAwareRepository
      * Be careful, this methods could return other nodes if you created many fields
      * with the same name on different node-types.
      *
+     * @deprecated Use findByNodeAndField instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param string $fieldName
      * @return Node[]
@@ -874,11 +816,7 @@ class NodeRepository extends StatusAwareRepository
         $qb->setParameter('name', $fieldName)
             ->setParameter('nodeA', $node);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -915,6 +853,7 @@ class NodeRepository extends StatusAwareRepository
      * Be careful, this methods could return other nodes if you created many fields
      * with the same name on different node-types.
      *
+     * @deprecated Use findByNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param $fieldName
      * @param Translation $translation
@@ -942,11 +881,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('nodeA', $node)
             ->setParameter('translation', $translation);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -978,6 +913,7 @@ class NodeRepository extends StatusAwareRepository
      * Be careful, this methods could return other nodes if you created many fields
      * with the same name on different node-types.
      *
+     * @deprecated Use findByReverseNodeAndField instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param string $fieldName
      * @return array
@@ -1000,11 +936,7 @@ class NodeRepository extends StatusAwareRepository
         $qb->setParameter('name', $fieldName)
             ->setParameter('nodeB', $node);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -1038,6 +970,7 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
+     * @deprecated Use findByReverseNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
      * @param $fieldName
      * @param Translation $translation
@@ -1065,11 +998,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('translation', $translation)
             ->setParameter('nodeB', $node);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -1168,11 +1097,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('nodeId', $node->getId())
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -1189,11 +1114,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
 
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -1212,12 +1133,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('nodeId', $node->getId())
             ->setCacheable(true);
 
-        try {
-            $complexArray = $qb->getQuery()->getScalarResult();
-            return array_map('current', $complexArray);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $qb->getQuery()->getScalarResult());
     }
 
     /**
@@ -1234,12 +1150,7 @@ class NodeRepository extends StatusAwareRepository
             ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
             ->setCacheable(true);
 
-        try {
-            $complexArray = $qb->getQuery()->getScalarResult();
-            return array_map('current', $complexArray);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $qb->getQuery()->getScalarResult());
     }
 
     /**
@@ -1283,7 +1194,7 @@ class NodeRepository extends StatusAwareRepository
          * Handle Tag relational queries
          */
         if (isset($criteria['tags'])) {
-            if (is_object($criteria['tags'])) {
+            if ($criteria['tags'] instanceof PersistableInterface) {
                 $qb->innerJoin(
                     $alias . '.tags',
                     static::TAG_ALIAS,
@@ -1359,5 +1270,28 @@ class NodeRepository extends StatusAwareRepository
         }
 
         return $qb;
+    }
+
+    /**
+     * Get latest position in parent.
+     *
+     * Parent can be null for node root
+     *
+     * @param Node|null $parent
+     * @return int
+     */
+    public function findLatestPositionInParent(Node $parent = null)
+    {
+        $qb = $this->createQueryBuilder('n');
+        $qb->select($qb->expr()->max('n.position'));
+
+        if (null !== $parent) {
+            $qb->andWhere($qb->expr()->eq('n.parent', ':parent'))
+                ->setParameter(':parent', $parent);
+        } else {
+            $qb->andWhere($qb->expr()->isNull('n.parent'));
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 }

@@ -35,7 +35,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
- * informations for a route.
+ * information for a route.
  */
 class NodeUrlMatcher extends DynamicUrlMatcher
 {
@@ -148,11 +148,12 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
                 return [
                     '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
-                    '_locale' => $translation->getLocale(), //pass request locale to init translator
-                    'node' => $node,
-                    'translation' => $translation,
+                    '_locale' => $translation->getPreferredLocale(), //pass request locale to init translator
                     '_route' => null,
                     '_format' => $_format,
+                    'node' => $node,
+                    'translation' => $translation,
+                    'theme' => $this->theme,
                 ];
             } else {
                 /*
@@ -195,14 +196,15 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                     }
                     $match = [
                         '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
-                        'node' => $node,
-                        'translation' => $translation,
                         '_route' => null,
                         '_format' => $_format,
+                        'node' => $node,
+                        'translation' => $translation,
+                        'theme' => $this->theme,
                     ];
 
                     if (null !== $translation) {
-                        $match['_locale'] = $translation->getLocale(); //pass request locale to init translator
+                        $match['_locale'] = $translation->getPreferredLocale(); //pass request locale to init translator
                     }
 
                     return $match;

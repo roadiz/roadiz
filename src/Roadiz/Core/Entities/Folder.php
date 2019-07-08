@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Folders entity represent a directory on server with datetime and naming.
@@ -59,37 +60,44 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Folder", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Folder|null
+     * @Serializer\Exclude
      */
     protected $parent = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
+     * @Serializer\Groups({"folder"})
      */
     protected $children;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders")
      * @ORM\JoinTable(name="documents_folders")
      * @var ArrayCollection
+     * @Serializer\Groups({"folder"})
      */
     protected $documents;
     /**
      * @ORM\Column(name="folder_name", type="string", unique=true, nullable=false)
      * @var string
+     * @Serializer\Groups({"folder", "document"})
      */
     private $folderName = '';
     /**
      * @var string
+     * @Serializer\Exclude()
      */
     private $dirtyFolderName = '';
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @var boolean
+     * @Serializer\Groups({"folder"})
      */
     private $visible = true;
     /**
      * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true)
      * @var ArrayCollection
+     * @Serializer\Groups({"folder", "document"})
      */
     private $translatedFolders;
 

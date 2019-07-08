@@ -64,7 +64,7 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
         $onlyParents = false;
 
         if ($request->query->has('onlyParents') &&
@@ -97,7 +97,7 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function listArrayAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         if (!$request->query->has('ids') || !is_array($request->query->get('ids'))) {
             throw new InvalidParameterException('Ids should be provided within an array');
@@ -129,7 +129,7 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function explorerListAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $arrayFilter = [
             'translation' => $this->get('defaultTranslation')
@@ -236,7 +236,7 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function editAction(Request $request, $tagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $tag = $this->get('em')->find(Tag::class, (int) $tagId);
 
@@ -276,7 +276,7 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function searchAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         if ($request->get('search') != "") {
             $responseArray = [];
@@ -378,7 +378,7 @@ class AjaxTagsController extends AbstractAjaxController
      */
     public function createAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         if (!$request->get('tagName')) {
             throw new InvalidParameterException('tagName should be provided to create a new Tag');

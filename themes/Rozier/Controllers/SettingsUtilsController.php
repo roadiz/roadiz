@@ -31,14 +31,18 @@
 
 namespace Themes\Rozier\Controllers;
 
+use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -50,44 +54,48 @@ class SettingsUtilsController extends RozierApp
      * Export all settings in a Json file (.rzt).
      *
      * @param Request $request
+     * @param int|null    $settingGroupId
      *
      * @return Response
      */
-    public function exportAllAction(Request $request)
+    public function exportAllAction(Request $request, $settingGroupId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
-        $groups = $this->get('em')
-                       ->getRepository(SettingGroup::class)
-                       ->findAll();
-        $lonelySettings = $this->get('em')
-                               ->getRepository(Setting::class)
-                               ->findBy(['settingGroup' => null]);
+        /** @var EntityManagerInterface $entityManager */
+        $entityManager = $this->get('em');
+        if (null !== $settingGroupId) {
+            /** @var SettingGroup|null $group */
+            $group = $entityManager->find(SettingGroup::class, $settingGroupId);
+            if (null === $group) {
+                throw $this->createNotFoundException();
+            }
+            $fileName = 'settings-' . strtolower(StringHandler::cleanForFilename($group->getName())) . '-' . date("YmdHis") . '.json';
+            $settings = $entityManager
+                ->getRepository(Setting::class)
+                ->findBySettingGroup($group);
+        } else {
+            $fileName = 'settings-' . date("YmdHis") . '.json';
+            $settings = $entityManager
+                ->getRepository(Setting::class)
+                ->findAll();
+        }
 
-        $tmpGroup = new SettingGroup();
-        $tmpGroup->setName('__default__');
-        $tmpGroup->addSettings($lonelySettings);
-        $groups[] = $tmpGroup;
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
 
-        $serializer = new SettingCollectionJsonSerializer();
-        $data = $serializer->serialize($groups);
-
-        $response = new Response(
-            $data,
-            Response::HTTP_OK,
-            []
+        return new JsonResponse(
+            $serializer->serialize(
+                $settings,
+                'json',
+                SerializationContext::create()->setGroups(['setting'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'setting-all-' . date("YmdHis") . '.rzt'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -99,7 +107,7 @@ class SettingsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         $form = $this->buildImportJsonFileForm();
 
@@ -113,7 +121,7 @@ class SettingsUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    if (SettingsImporter::importJsonFile($serializedData, $this->get('em'), $this->get('factory.handler'))) {
+                    if ($this->get(SettingsImporter::class)->import($serializedData)) {
                         $msg = $this->getTranslator()->trans('setting.imported');
                         $this->publishConfirmMessage($request, $msg);
 
@@ -123,30 +131,11 @@ class SettingsUtilsController extends RozierApp
                         return $this->redirect($this->generateUrl(
                             'settingsHomePage'
                         ));
-                    } else {
-                        $msg = $this->getTranslator()->trans('file.format.not_valid');
-                        $request->getSession()->getFlashBag()->add('error', $msg);
-                        $this->get('logger')->error($msg);
-
-                        // redirect even if its null
-                        return $this->redirect($this->generateUrl(
-                            'settingsImportPage'
-                        ));
                     }
-                } else {
-                    $msg = $this->getTranslator()->trans('file.format.not_valid');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->error($msg);
-
-                    // redirect even if its null
-                    return $this->redirect($this->generateUrl(
-                        'settingsImportPage'
-                    ));
                 }
+                $form->addError(new FormError($this->getTranslator()->trans('file.format.not_valid')));
             } else {
-                $msg = $this->getTranslator()->trans('file.not_uploaded');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->get('logger')->error($msg);
+                $form->addError(new FormError($this->getTranslator()->trans('file.not_uploaded')));
             }
         }
 

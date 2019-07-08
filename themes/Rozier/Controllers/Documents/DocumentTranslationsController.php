@@ -56,7 +56,7 @@ class DocumentTranslationsController extends RozierApp
      */
     public function editAction(Request $request, $documentId, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         if (null === $translationId) {
             $translation = $this->get('defaultTranslation');
@@ -165,7 +165,7 @@ class DocumentTranslationsController extends RozierApp
      */
     public function deleteAction(Request $request, $documentId, $translationId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCUMENTS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $documentTr = $this->get('em')
                            ->getRepository(DocumentTranslation::class)

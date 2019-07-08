@@ -28,7 +28,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 
 /**
@@ -47,10 +46,6 @@ FROM RZ\Roadiz\Core\Entities\TagTranslationDocuments ttd
 WHERE ttd.tagTranslation = :tagTranslation')
                     ->setParameter('tagTranslation', $tagTranslation);
 
-        try {
-            return (int) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getSingleScalarResult();
     }
 }

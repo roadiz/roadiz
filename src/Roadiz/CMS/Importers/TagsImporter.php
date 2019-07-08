@@ -30,93 +30,65 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Serializer;
+use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\TagTranslation;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
-use RZ\Roadiz\Core\Serializers\TagJsonSerializer;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TagObjectConstructor;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 /**
  * Class TagsImporter.
  *
  * @package RZ\Roadiz\CMS\Importers
  */
-class TagsImporter implements ImporterInterface
+class TagsImporter implements EntityImporterInterface, ContainerAwareInterface
 {
-    protected static $usedTranslations;
+    use ContainerAwareTrait;
 
     /**
-     * Import a Json file (.rzt) containing tag and tag translation.
+     * NodesImporter constructor.
      *
-     * @param string $serializedData
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
+     * @param Container $container
      */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
+    public function __construct(Container $container)
     {
-        $serializer = new TagJsonSerializer();
-        $tags = $serializer->deserialize($serializedData);
-        foreach ($tags as $tag) {
-            static::browseTree($tag, $em);
-        }
+        $this->container = $container;
+    }
 
-        $em->flush();
 
-        return true;
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $entityClass): bool
+    {
+        return $entityClass === Tag::class;
     }
 
     /**
-     * @param Tag $tag
-     * @param EntityManager $em
-     * @return null|Tag
+     * @inheritDoc
      */
-    protected static function browseTree(Tag $tag, EntityManager $em)
+    public function import(string $serializedData): bool
     {
-        /**
-         * Test if tag already exists against its tagName
-         *
-         * @var Tag|null $existing
-         */
-        $existing = $em->getRepository(Tag::class)
-                       ->findOneByTagName($tag->getTagName());
-        if (null !== $existing) {
-            throw new EntityAlreadyExistsException('"' . $tag . '" already exists.');
-        }
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $tag = $serializer->deserialize(
+            $serializedData,
+            Tag::class,
+            'json',
+            DeserializationContext::create()
+                ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
+                ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
+                ->setAttribute(TagObjectConstructor::EXCEPTION_ON_EXISTING_TAG, true)
+        );
 
-        foreach ($tag->getChildren() as $child) {
-            static::browseTree($child, $em);
-        }
-        /*
-         * Persist current tag BEFORE
-         * handling any relationship
-         */
-        $em->persist($tag);
+        $em->merge($tag);
+        $em->flush();
 
-        /** @var TagTranslation $tagTranslation */
-        foreach ($tag->getTranslatedTags() as $tagTranslation) {
-            /** @var Translation|null $trans */
-            $trans = $em->getRepository(Translation::class)
-                ->findOneByLocale($tagTranslation->getTranslation()->getLocale());
-
-            if (null === $trans &&
-                !empty(static::$usedTranslations[$tagTranslation->getTranslation()->getLocale()])) {
-                $trans = static::$usedTranslations[$tagTranslation->getTranslation()->getLocale()];
-            }
-
-            if (null === $trans) {
-                $trans = new Translation();
-                $trans->setLocale($tagTranslation->getTranslation()->getLocale());
-                $trans->setName(Translation::$availableLocales[$tagTranslation->getTranslation()->getLocale()]);
-                $em->persist($trans);
-
-                static::$usedTranslations[$tagTranslation->getTranslation()->getLocale()] = $trans;
-            }
-            $tagTranslation->setTranslation($trans);
-            $em->persist($tagTranslation);
-        }
-
-        return $tag;
+        return true;
     }
 }

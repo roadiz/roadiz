@@ -79,6 +79,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             $data['hiding_children'] = $node->isHidingChildren();
             $data['archived'] = $node->isArchived();
             $data['sterile'] = $node->isSterile();
+            $data['ttl'] = $node->getTtl();
             $data['children_order'] = $node->getChildrenOrder();
             $data['children_order_direction'] = $node->getChildrenOrderDirection();
             $data['position'] = $node->getPosition();
@@ -152,7 +153,6 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         $node->setLocked($data['locked']);
         $node->setPriority($data['priority']);
         $node->setHidingChildren($data['hiding_children']);
-        $node->setArchived($data['archived']);
         $node->setSterile($data['sterile']);
         $node->setChildrenOrder($data['children_order']);
         $node->setChildrenOrderDirection($data['children_order_direction']);
@@ -161,6 +161,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
         if (isset($data['dynamic_node_name'])) {
             $node->setDynamicNodeName((boolean) $data['dynamic_node_name']);
+        }
+        if (isset($data['ttl'])) {
+            $node->setTtl((int) $data['ttl']);
         }
 
         foreach ($data["nodes_sources"] as $source) {

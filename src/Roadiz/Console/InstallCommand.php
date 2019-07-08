@@ -34,6 +34,8 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,10 +47,9 @@ use Themes\Install\InstallApp;
 /**
  * Command line utils for installing RZ-CMS v3 from terminal.
  */
-class InstallCommand extends Command
+class InstallCommand extends Command implements ContainerAwareInterface
 {
-    /** @var EntityManager */
-    private $entityManager;
+    use ContainerAwareTrait;
 
     protected function configure()
     {
@@ -60,7 +61,6 @@ class InstallCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $text = "";
 
         $question = new ConfirmationQuestion(
@@ -81,31 +81,19 @@ class InstallCommand extends Command
 
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
-                    RolesImporter::importJsonFile(
-                        file_get_contents($installRoot . "/" . $filename),
-                        $this->entityManager,
-                        $this->getHelper('handlerFactory')->getHandlerFactory()
-                    );
+                    $this->get(RolesImporter::class)->import(file_get_contents($installRoot . "/" . $filename));
                     $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['groups'])) {
                 foreach ($data["importFiles"]['groups'] as $filename) {
-                    GroupsImporter::importJsonFile(
-                        file_get_contents($installRoot . "/" . $filename),
-                        $this->entityManager,
-                        $this->getHelper('handlerFactory')->getHandlerFactory()
-                    );
+                    $this->get(GroupsImporter::class)->import(file_get_contents($installRoot . "/" . $filename));
                     $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported..</info>' . PHP_EOL;
                 }
             }
             if (isset($data["importFiles"]['settings'])) {
                 foreach ($data["importFiles"]['settings'] as $filename) {
-                    SettingsImporter::importJsonFile(
-                        file_get_contents($installRoot . "/" . $filename),
-                        $this->entityManager,
-                        $this->getHelper('handlerFactory')->getHandlerFactory()
-                    );
+                    $this->get(SettingsImporter::class)->import(file_get_contents($installRoot . "/" . $filename));
                     $text .= '     — <info>Theme files “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
                 }
             }
@@ -120,17 +108,17 @@ class InstallCommand extends Command
                     ->setLocale("en")
                     ->setName("Default translation");
 
-                $this->entityManager->persist($defaultTrans);
-                $this->entityManager->flush();
+                $this->get('em')->persist($defaultTrans);
 
                 $text .= '<info>Default translation installed…</info>' . PHP_EOL;
             } else {
                 $text .= '<error>A default translation is already installed.</error>' . PHP_EOL;
             }
+            $this->get('em')->flush();
 
             // Clear result cache
             /** @var CacheProvider $cacheDriver */
-            $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
+            $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
             if ($cacheDriver !== null) {
                 $cacheDriver->deleteAll();
             }
@@ -146,9 +134,7 @@ class InstallCommand extends Command
      */
     public function hasDefaultTranslation()
     {
-        $default = $this->entityManager
-            ->getRepository(Translation::class)
-            ->findOneBy([]);
+        $default = $this->get('em')->getRepository(Translation::class)->findOneBy([]);
 
         return $default !== null ? true : false;
     }

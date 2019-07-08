@@ -29,53 +29,17 @@
 
 namespace Themes\Rozier\Explorer;
 
-use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractExplorerProvider implements ExplorerProviderInterface
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    use ContainerAwareTrait;
 
     /**
      * @var array
      */
     protected $options;
-
-    /**
-     * @inheritDoc
-     */
-    public function getContainer()
-    {
-        return $this->container;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setContainer(Container $container)
-    {
-        $this->container = $container;
-        return $this;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function get($serviceName)
-    {
-        return $this->container->offsetGet($serviceName);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function has($serviceName)
-    {
-        return $this->container->offsetExists($serviceName);
-    }
 
     /**
      * @param OptionsResolver $resolver

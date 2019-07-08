@@ -145,6 +145,7 @@ class ConfigurationHandler
      * @param array $connexion Doctrine array parameters
      *
      * @throws \PDOException
+     * @deprecated This method does not belong here.
      */
     public function testDoctrineConnexion($connexion = [])
     {

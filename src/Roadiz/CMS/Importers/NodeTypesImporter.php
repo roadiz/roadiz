@@ -30,55 +30,68 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Serializer;
+use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
-use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 /**
  * {@inheritdoc}
  */
-class NodeTypesImporter implements ImporterInterface
+class NodeTypesImporter implements EntityImporterInterface, ContainerAwareInterface
 {
-    /**
-     * Import a Json file (.rzt) containing setting and setting group.
-     *
-     * @param string $serializedData
-     * @param EntityManager $em
-     *
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
-    {
-        $serializer = new NodeTypeJsonSerializer();
-        $nodeType = $serializer->deserialize($serializedData);
-        /** @var NodeType $existingNodeType */
-        $existingNodeType = $em->getRepository(NodeType::class)
-                               ->findOneByName($nodeType->getName());
+    use ContainerAwareTrait;
 
-        if ($existingNodeType === null) {
-            $em->persist($nodeType);
-            $existingNodeType = $nodeType;
-            /** @var NodeTypeHandler $nodeTypeHandler */
-            $nodeTypeHandler = $handlerFactory->getHandler($existingNodeType);
-            $fieldPosition = 1;
-            /** @var NodeTypeField $field */
-            foreach ($nodeType->getFields() as $field) {
-                $em->persist($field);
-                $field->setNodeType($nodeType);
-                $field->setPosition($fieldPosition);
-                $fieldPosition++;
-            }
-        } else {
-            /** @var NodeTypeHandler $nodeTypeHandler */
-            $nodeTypeHandler = $handlerFactory->getHandler($existingNodeType);
-            $nodeTypeHandler->diff($nodeType);
-        }
-        $em->flush();
-        $nodeTypeHandler->regenerateEntityClass();
+    /**
+     * NodeTypesImporter constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $entityClass): bool
+    {
+        return $entityClass === NodeType::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function import(string $serializedData): bool
+    {
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $nodeType = $serializer->deserialize(
+            $serializedData,
+            NodeType::class,
+            'json',
+            DeserializationContext::create()
+                ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
+                ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
+        );
+
+        $em->merge($nodeType);
+        $em->flush($nodeType);
+
+        /** @var HandlerFactoryInterface $handlerFactory */
+        $handlerFactory = $this->get('factory.handler');
+        /** @var NodeTypeHandler $nodeTypeHandler */
+        $nodeTypeHandler = $handlerFactory->getHandler($nodeType);
+        $nodeTypeHandler->updateSchema();
+
         return true;
     }
 }

@@ -31,11 +31,13 @@
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -43,6 +45,7 @@ use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,6 +56,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ConstraintViolation;
+use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 
 /**
  * Base class for Roadiz themes.
@@ -193,6 +197,14 @@ abstract class AppController extends Controller
      * @var array
      */
     protected $assignation = [];
+
+    /**
+     * @return array
+     */
+    public function getAssignation(): array
+    {
+        return $this->assignation;
+    }
 
     /**
      * @var Node|null
@@ -408,8 +420,13 @@ abstract class AppController extends Controller
      */
     public function throw404($message = "")
     {
-        $this->get('logger')->error($message);
+        $this->get('logger')->warn($message);
+
+        $this->assignation['nodeName'] = 'error-404';
+        $this->assignation['nodeTypeName'] = 'error404';
         $this->assignation['errorMessage'] = $message;
+        $this->assignation['title'] = $this->get('translator')->trans('error404.title');
+        $this->assignation['content'] = $this->get('translator')->trans('error404.message');
 
         return new Response(
             $this->getTwig()->render('404.html.twig', $this->assignation),
@@ -492,19 +509,6 @@ abstract class AppController extends Controller
     }
 
     /**
-     * @return Node|null
-     * @deprecated Theme root has never been used and will be removed.
-     */
-    protected function getRoot()
-    {
-        $theme = $this->getTheme();
-        if (null !== $theme) {
-            return $theme->getRoot();
-        }
-        return null;
-    }
-
-    /**
      * Publish a message in Session flash bag and
      * logger interface.
      *
@@ -569,9 +573,16 @@ abstract class AppController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+
+        if ($this->isGranted($role) && null !== $user && $user->getChroot() === null) {
+            /*
+             * Already grant access if user is not chrooted.
+             */
+            return;
+        }
+
         /** @var Node $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
-
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
@@ -589,8 +600,7 @@ abstract class AppController extends Controller
             $isNewsletterFriend = false;
         }
 
-        if ($isNewsletterFriend &&
-            !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+        if ($isNewsletterFriend && !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
             throw new AccessDeniedException("You don't have access to this page");
         } elseif (!$isNewsletterFriend) {
             if (!$this->isGranted($role)) {
@@ -675,6 +685,12 @@ abstract class AppController extends Controller
      * Pay attention that, some reverse proxies systems will need to remove your response
      * cookies header to actually save your response.
      *
+     * Do not cache, if
+     * - we are in preview mode
+     * - we are in debug mode
+     * - Request forbids cache
+     * - we are in maintenance mode
+     *
      * @param Request $request
      * @param Response $response
      * @param int $minutes TTL in minutes
@@ -683,17 +699,17 @@ abstract class AppController extends Controller
      */
     public function makeResponseCachable(Request $request, Response $response, $minutes)
     {
+        /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
-        if (!$kernel->isPreview() && !$kernel->isDebug() && $request->isMethodCacheable()) {
-            $response->setPublic();
-            $response->setMaxAge(60 * $minutes);
-            $response->setSharedMaxAge(60 * $minutes);
-            $response->setVary('Accept-Encoding, X-Partial, x-requested-with');
-            if ($request->isXmlHttpRequest()) {
-                $response->headers->add([
-                    'X-Partial' => true
-                ]);
-            }
+        /** @var Settings $settings */
+        $settings = $this->get('settingsBag');
+        if (!$kernel->isPreview() &&
+            !$kernel->isDebug() &&
+            $request->isMethodCacheable() &&
+            !$settings->get('maintenance_mode', false)) {
+            /** @var EventDispatcherInterface $dispatcher */
+            $dispatcher = $this->get('dispatcher');
+            $dispatcher->addSubscriber(new CachableResponseSubscriber($minutes, true));
         }
 
         return $response;

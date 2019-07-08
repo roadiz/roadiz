@@ -229,6 +229,17 @@
     <input class="rz-boolean-checkbox" type="checkbox" data-on-text="I" data-off-text="O" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget %}
 
+{%- block choice_widget_expanded -%}
+    <div {{ block('widget_container_attributes') }}>
+        {%- for child in form %}
+            <div class="uk-form-group uk-margin-bottom">
+                {{- form_widget(child) -}}
+                {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
+            </div>
+        {% endfor -%}
+    </div>
+{%- endblock choice_widget_expanded -%}
+
 {% block number_widget -%}
     <input type="number" step="any" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value|replace({',': '.'}) }}"{% endif %} />
 {%- endblock number_widget %}
@@ -335,7 +346,11 @@
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
-        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="uk-form-label-title">{{- label|trans -}}</span>{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}{% if attr['data-desc'] %} <small class="form-row-desc uk-form-label-description">{{- attr['data-desc']|trans -}}</small>{% endif %}</label>
+        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="uk-form-label-title">{{- label|trans -}}</span>{% if attr['data-universal'] %} <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}
+        {%- if form.vars.help ?? false -%}
+            <small id="{{ form.vars.id }}_help" class="form-row-desc uk-form-label-description">{{ form.vars.help|trans }}</small>
+        {%- endif -%}
+        </label>
     {%- endif %}
 {%- endblock form_label %}
 
@@ -404,7 +419,10 @@
             attr.class ~ '-wrapper'
         ]) %}
     {% endif %}
-    <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group']|trans }}" data-field-group-canonical="{{ attr['data-field-group-canonical'] }}"{% endif %} class="{{ rowClasses|join(' ') }}">
+    <div {% if attr['data-field-group'] %}data-field-group="{{ attr['data-field-group']|trans }}"
+         data-field-group-canonical="{{ attr['data-field-group-canonical'] }}"{% endif %}
+         {%- if form.vars.help ?? false -%}aria-describedby="{{ form.vars.id }}_help"{% endif %}
+         class="{{ rowClasses|join(' ') }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
             {{- form_label(form) -}}
         {% endif %}

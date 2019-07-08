@@ -31,15 +31,13 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
-use RZ\Roadiz\Utils\Document\DocumentFactory;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Handlers\FolderHandler;
 use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Core\Handlers\GroupHandler;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
@@ -51,7 +49,11 @@ use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\ContactFormManager;
+use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
+use RZ\Roadiz\Utils\Node\NodeFactory;
+use RZ\Roadiz\Utils\Tag\TagFactory;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
 class FactoryServiceProvider implements ServiceProviderInterface
 {
@@ -83,12 +85,19 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
 
+        $container[NodeFactory::class] = function ($c) {
+            return new NodeFactory($c);
+        };
+        $container[TagFactory::class] = function ($c) {
+            return new TagFactory($c);
+        };
+
         $container['factory.handler'] = function ($c) {
             return new HandlerFactory($c);
         };
 
         $container['node.handler'] = $container->factory(function ($c) {
-            return new NodeHandler($c['em']);
+            return new NodeHandler($c['em'], $c['workflow.registry']);
         });
         $container['nodes_sources.handler'] = $container->factory(function ($c) {
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);

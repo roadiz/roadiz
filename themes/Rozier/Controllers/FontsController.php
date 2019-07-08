@@ -59,7 +59,7 @@ class FontsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
 
         $listManager = $this->createEntityListManager(
             Font::class,
@@ -84,7 +84,7 @@ class FontsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
 
         $font = new Font();
 
@@ -132,7 +132,7 @@ class FontsController extends RozierApp
      */
     public function deleteAction(Request $request, $fontId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
 
         /** @var Font $font */
         $font = $this->get('em')->find(Font::class, (int) $fontId);
@@ -180,7 +180,7 @@ class FontsController extends RozierApp
      */
     public function editAction(Request $request, $fontId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
 
         /** @var Font $font */
         $font = $this->get('em')->find(Font::class, (int) $fontId);
@@ -243,7 +243,7 @@ class FontsController extends RozierApp
      */
     public function downloadAction(Request $request, $fontId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_FONTS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
 
         /** @var Font $font */
         $font = $this->get('em')->find(Font::class, (int) $fontId);

@@ -68,10 +68,23 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * @return bool
+     */
+    protected function supportConfig()
+    {
+        return isset($this->container['config']['reverseProxyCache']) &&
+            count($this->container['config']['reverseProxyCache']['frontend']) > 0;
+    }
+
+    /**
      * @param FilterCacheEvent $event
      */
     public function onBanRequest(FilterCacheEvent $event)
     {
+        if (!$this->supportConfig()) {
+            return;
+        }
+
         try {
             foreach ($this->createBanRequests() as $name => $request) {
                 (new Client())->send($request, ['debug' => $event->getKernel()->isDebug()]);
@@ -95,6 +108,10 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
      */
     public function onPurgeRequest(FilterNodesSourcesEvent $event)
     {
+        if (!$this->supportConfig()) {
+            return;
+        }
+
         try {
             /** @var UrlGeneratorInterface $urlGenerator */
             $urlGenerator = $this->container['router'];

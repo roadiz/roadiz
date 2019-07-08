@@ -27,10 +27,7 @@
  */
 
 import $ from 'jquery'
-import {
-    TweenLite,
-    Expo
-} from 'gsap'
+import { Expo, TweenLite } from 'gsap'
 import DocumentsBulk from './components/bulk-edits/DocumentsBulk'
 import NodesBulk from './components/bulk-edits/NodesBulk'
 import TagsBulk from './components/bulk-edits/TagsBulk'
@@ -44,8 +41,6 @@ import Import from './components/import/Import'
 import NodeEditSource from './components/node/NodeEditSource'
 import InputLengthWatcher from './widgets/InputLengthWatcher'
 import ChildrenNodesField from './widgets/ChildrenNodesField'
-import GeotagField from './widgets/GeotagField'
-import MultiGeotagField from './widgets/MultiGeotagField'
 import StackNodeTree from './widgets/StackNodeTree'
 import SaveButtons from './widgets/SaveButtons'
 import TagAutocomplete from './widgets/TagAutocomplete'
@@ -57,9 +52,9 @@ import YamlEditor from './widgets/YamlEditor'
 import MarkdownEditor from './widgets/MarkdownEditor'
 import JsonEditor from './widgets/JsonEditor'
 import CssEditor from './widgets/CssEditor'
-import {
-    isMobile
-} from './utils/plugins'
+import { isMobile } from './utils/plugins'
+import LeafletGeotagField from './widgets/LeafletGeotagField'
+import MultiLeafletGeotagField from './widgets/MultiLeafletGeotagField'
 
 /**
  * Lazyload
@@ -278,10 +273,11 @@ export default class Lazyload {
 
         $old.fadeOut(100, () => {
             $old.remove()
-
             this.generalBind()
             $tempData.fadeIn(200, () => {
                 $tempData.removeClass('new-content-global')
+                let pageShowEndEvent = new CustomEvent('pageshowend')
+                window.dispatchEvent(pageShowEndEvent)
             })
         })
     }
@@ -330,8 +326,9 @@ export default class Lazyload {
         this.inputLengthWatcher = new InputLengthWatcher()
         this.documentUploader = new DocumentUploader(window.Rozier.messages.dropzone)
         this.childrenNodesFields = new ChildrenNodesField()
-        this.geotagField = new GeotagField()
-        this.multiGeotagField = new MultiGeotagField()
+        this.geotagField = new LeafletGeotagField()
+        this.multiGeotagField = new MultiLeafletGeotagField()
+
         this.stackNodeTrees = new StackNodeTree()
 
         if (isMobile.any() === null) {
@@ -395,10 +392,10 @@ export default class Lazyload {
         const _this = this
 
         $('.rz-collection-form-type').collection({
-            up: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-up"></i></a>',
-            down: '<a class="uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-angle-down"></i></a>',
-            add: '<a class="uk-button-primary uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-plus"></i></a>',
-            remove: '<a class="uk-button-danger uk-button uk-button-small" href="#"><i class="uk-icon uk-icon-minus"></i></a>',
+            up: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-up"></i></a>',
+            down: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-down"></i></a>',
+            add: '<a tabindex="-1" class="uk-button-primary uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-plus"></i></a>',
+            remove: '<a tabindex="-1" class="uk-button-danger uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-minus"></i></a>',
             after_add: (collection, element) => {
                 _this.initMarkdownEditors(element)
                 _this.initJsonEditors(element)
@@ -406,6 +403,7 @@ export default class Lazyload {
                 _this.initYamlEditors(element)
                 _this.initBootstrapSwitches(element)
                 _this.initColorPickers(element)
+                _this.initCollectionsForms()
 
                 let $vueComponents = element.find('[data-vuejs]')
                 // Create each component

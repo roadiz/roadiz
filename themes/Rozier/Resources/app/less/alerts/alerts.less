@@ -16,29 +16,30 @@
     .rounded(0px);
     .box-sizing();
     -webkit-font-smoothing: antialiased;
-    border-top: none;
+    //border-top: none;
     list-style: none;
     text-shadow: none;
 }
 
 .uk-alert-danger {
-    color: @alert-color;
-    border-color: rgba(@alert-color-red, @alert-color-green, @alert-color-blue, 0.5);
-    background: #FFEEEE;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    color: darken(@alert-color, 15%);
+    border-color: fade(@alert-color, 50%);
+    background: fade(@alert-color, 20%);
+    text-shadow: none;
 }
 
 .uk-alert-success {
-    background: @contrast-color-darker;
-    border-color: darken(@contrast-color-darker, 5%);
-    color: white;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    color: darken(@contrast-color-darker, 15%);
+    background: fade(@contrast-color-darker, 20%);
+    border-color: fade(@contrast-color-darker, 50%);
+    text-shadow: none;
 }
 
 .uk-alert-warning {
-    background: #FDD6B0;
-    color: #884300;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    color: darken(@warning-color, 15%);
+    background: fade(@warning-color, 20%);
+    border-color: fade(@warning-color, 50%);
+    text-shadow: none;
 }
 
 /*

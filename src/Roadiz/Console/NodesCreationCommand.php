@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -44,6 +45,9 @@ use Symfony\Component\Console\Question\Question;
 class NodesCreationCommand extends Command
 {
     private $questionHelper;
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
     protected function configure()
@@ -128,6 +132,7 @@ class NodesCreationCommand extends Command
     ) {
         $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
+        $node->setTtl($node->getNodeType()->getDefaultTtl());
         $node->setNodeName($nodeName);
         $this->entityManager->persist($node);
 

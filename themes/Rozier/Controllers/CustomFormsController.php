@@ -52,7 +52,7 @@ class CustomFormsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
         /*
          * Manage get request to filter list
          */
@@ -80,7 +80,7 @@ class CustomFormsController extends RozierApp
      */
     public function editAction(Request $request, $customFormId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
         /** @var CustomForm $customForm */
         $customForm = $this->get('em')->find(CustomForm::class, (int) $customFormId);
@@ -124,7 +124,7 @@ class CustomFormsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
         $customForm = new CustomForm();
 
         if (null !== $customForm) {
@@ -171,7 +171,7 @@ class CustomFormsController extends RozierApp
      */
     public function deleteAction(Request $request, $customFormId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         /** @var CustomForm $customForm */
         $customForm = $this->get('em')

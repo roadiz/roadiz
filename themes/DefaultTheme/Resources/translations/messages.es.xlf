@@ -4,79 +4,79 @@
     <body>
       <trans-unit id="hello.world">
         <source>hello.world</source>
-        <target xml:lang="es-ES" state="translated">¡Hola mundo!</target>
+        <target state="translated">¡Hola mundo!</target>
       </trans-unit>
       <trans-unit id="nodeName">
         <source>node.name.is.%name%</source>
-        <target xml:lang="es-ES" state="translated">El nombre del nodo es %name%</target>
+        <target state="translated">El nombre del nodo es %name%</target>
       </trans-unit>
       <trans-unit id="translationName">
         <source>translation.is.%name%</source>
-        <target xml:lang="es-ES" state="translated">La traducción es %name%</target>
+        <target state="translated">La traducción es %name%</target>
       </trans-unit>
       <trans-unit id="contact">
         <source>contact</source>
-        <target xml:lang="es-ES" state="translated">contacto</target>
+        <target state="translated">contacto</target>
       </trans-unit>
       <trans-unit id="contact.us">
         <source>contact.us</source>
-        <target xml:lang="es-ES" state="translated">contactanos</target>
+        <target state="translated">contactanos</target>
       </trans-unit>
       <trans-unit id="your.email">
         <source>your.email</source>
-        <target xml:lang="es-ES" state="translated">Tu correo</target>
+        <target state="translated">Tu correo</target>
       </trans-unit>
       <trans-unit id="your.name">
         <source>your.name</source>
-        <target xml:lang="es-ES" state="translated">Tu nombre</target>
+        <target state="translated">Tu nombre</target>
       </trans-unit>
       <trans-unit id="your.message">
         <source>your.message</source>
-        <target xml:lang="es-ES" state="translated">Tu mensaje</target>
+        <target state="translated">Tu mensaje</target>
       </trans-unit>
       <trans-unit id="call.me.back">
         <source>call.me.back</source>
-        <target xml:lang="es-ES" state="translated">Llámame de vuelta</target>
+        <target state="translated">Llámame de vuelta</target>
       </trans-unit>
       <trans-unit id="send.contact.form">
         <source>send.contact.form</source>
-        <target xml:lang="es-ES" state="translated">Mandar formulario de contacto</target>
+        <target state="translated">Mandar formulario de contacto</target>
       </trans-unit>
       <trans-unit id="document">
         <source><![CDATA[document]]></source>
-        <target xml:lang="es-ES" state="translated"><![CDATA[documento]]></target>
+        <target state="translated"><![CDATA[documento]]></target>
       </trans-unit>
       <trans-unit id="cookie_choice.consent_message">
         <source>cookie_choice.consent_message</source>
-        <target xml:lang="es-ES" state="translated">Este sitio utiliza cookies para mejorar su experiencia de navegación. Continuando en este sitio, usted nos da permiso para utilizar estas cookies.</target>
+        <target state="translated">Este sitio utiliza cookies para mejorar su experiencia de navegación. Continuando en este sitio, usted nos da permiso para utilizar estas cookies.</target>
       </trans-unit>
       <trans-unit id="cookie_choice.close_message">
         <source>cookie_choice.close_message</source>
-        <target xml:lang="es-ES" state="translated">Aceptar</target>
+        <target state="translated">Aceptar</target>
       </trans-unit>
       <trans-unit id="cookie_choice.find_out_more_message">
         <source>cookie_choice.find_out_more_message</source>
-        <target xml:lang="es-ES" state="translated">Descubrir más</target>
+        <target state="translated">Descubrir más</target>
       </trans-unit>
       <trans-unit id="no_javascript_message">
         <source>no_javascript_message</source>
-        <target xml:lang="es-ES" state="translated">Javascript no está disponible en su navegador o no apoya a esta tecnología. Por favor activar o actualizar su navegador para tener una mejor experiencia.</target>
+        <target state="translated">Javascript no está disponible en su navegador o no apoya a esta tecnología. Por favor activar o actualizar su navegador para tener una mejor experiencia.</target>
       </trans-unit>
       <trans-unit id="browser_update.message">
         <source>browser_update.message</source>
-        <target xml:lang="es-ES" state="translated">Su navegador es demasiado antiguo. Actualizar para mejorar el rendimiento del sitio web.</target>
+        <target state="translated">Su navegador es demasiado antiguo. Actualizar para mejorar el rendimiento del sitio web.</target>
       </trans-unit>
       <trans-unit id="browser_update.link">
         <source>browser_update.link</source>
-        <target xml:lang="es-ES" state="translated">Ver como actulizar su navegador</target>
+        <target state="translated">Ver como actulizar su navegador</target>
       </trans-unit>
       <trans-unit id="error404.title">
         <source>error404.title</source>
-        <target xml:lang="es-ES" state="translated">404 Error</target>
+        <target state="translated">404 Error</target>
       </trans-unit>
       <trans-unit id="error404.message">
         <source>error404.message</source>
-        <target xml:lang="es-ES" state="translated">La página no puede ser encontrada.</target>
+        <target state="translated">La página no puede ser encontrada.</target>
       </trans-unit>
     </body>
   </file>

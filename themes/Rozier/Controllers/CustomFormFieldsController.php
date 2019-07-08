@@ -54,7 +54,7 @@ class CustomFormFieldsController extends RozierApp
      */
     public function listAction(Request $request, $customFormId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
         $customForm = $this->get('em')
                            ->find(CustomForm::class, (int) $customFormId);
@@ -81,7 +81,7 @@ class CustomFormFieldsController extends RozierApp
      */
     public function editAction(Request $request, $customFormFieldId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
         /** @var CustomFormField $field */
         $field = $this->get('em')
@@ -132,7 +132,7 @@ class CustomFormFieldsController extends RozierApp
      */
     public function addAction(Request $request, $customFormId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
         $field = new CustomFormField();
         $customForm = $this->get('em')
@@ -201,7 +201,7 @@ class CustomFormFieldsController extends RozierApp
      */
     public function deleteAction(Request $request, $customFormFieldId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $field = $this->get('em')
                       ->find(CustomFormField::class, (int) $customFormFieldId);

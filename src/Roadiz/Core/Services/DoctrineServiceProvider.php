@@ -29,138 +29,33 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
-use Doctrine\Common\Cache\ApcuCache;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Cache\ArrayCache;
-use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\Common\Cache\FilesystemCache;
-use Doctrine\Common\Cache\MemcacheCache;
-use Doctrine\Common\Cache\MemcachedCache;
-use Doctrine\Common\Cache\PhpFileCache;
-use Doctrine\Common\Cache\RedisCache;
-use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Events;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
-use RZ\Roadiz\Core\Events\DataInheritanceEvent;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\LeafEntityLifeCycleSubscriber;
+use RZ\Roadiz\Core\Events\NodesSourcesInheritanceSubscriber;
+use RZ\Roadiz\Core\Events\TablePrefixSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Register Doctrine services for dependency injection container.
  */
 class DoctrineServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * Get cache driver according to config.yml entry.
-     *
-     * Logic from Doctrine setup method
-     * https://github.com/doctrine/doctrine2/blob/master/lib/Doctrine/ORM/Tools/Setup.php#L122
-     *
-     * @param array $cacheConfig
-     * @param Kernel $kernel
-     * @return Cache
-     */
-    protected function getManuallyDefinedCache(
-        array $cacheConfig,
-        Kernel $kernel
-    ) {
-        if ($kernel->isProdMode()) {
-            if (extension_loaded('apcu') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'apcu'
-            ) {
-                $cache = new ApcuCache();
-            } elseif (extension_loaded('apc') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'apc'
-            ) {
-                $cache = new ApcuCache();
-            } elseif (!empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'php'
-            ) {
-                $cache = new PhpFileCache($kernel->getCacheDir().'/doctrine');
-            } elseif (!empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'file'
-            ) {
-                $cache = new FilesystemCache($kernel->getCacheDir().'/doctrine');
-            } elseif (extension_loaded('xcache') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'xcache'
-            ) {
-                $cache = new XcacheCache();
-            } elseif (extension_loaded('memcache') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'memcache'
-            ) {
-                $memcache = new \Memcache();
-                $host = !empty($cacheConfig['host']) ? $cacheConfig['host'] : '127.0.0.1';
-                if (!empty($cacheConfig['port'])) {
-                    $memcache->connect($host, $cacheConfig['port']);
-                } else {
-                    $memcache->connect($host);
-                }
-                $cache = new MemcacheCache();
-                $cache->setMemcache($memcache);
-            } elseif (extension_loaded('memcached') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'memcached'
-            ) {
-                $memcached = new \Memcached();
-                $host = !empty($cacheConfig['host']) ? $cacheConfig['host'] : '127.0.0.1';
-                $port = !empty($cacheConfig['port']) ? $cacheConfig['port'] : 11211;
-                $memcached->addServer($host, $port);
-
-                $cache = new MemcachedCache();
-                $cache->setMemcached($memcached);
-            } elseif (extension_loaded('redis') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'redis'
-            ) {
-                $redis = new \Redis();
-                $host = !empty($cacheConfig['host']) ? $cacheConfig['host'] : '127.0.0.1';
-                if (!empty($cacheConfig['port'])) {
-                    $redis->connect($host, $cacheConfig['port']);
-                } else {
-                    $redis->connect($host);
-                }
-                $cache = new RedisCache();
-                $cache->setRedis($redis);
-            } else {
-                $cache = new ArrayCache();
-            }
-        } else {
-            $cache = new ArrayCache();
-        }
-
-        return $cache;
-    }
-
-    /**
-     * @param string $namespace
-     * @param bool $isPreview
-     * @param string $environment
-     * @return string
-     */
-    public function getNamespace($namespace = 'dc2', $isPreview = false, $environment = 'prod')
-    {
-        $namespace = $namespace . "_" . $environment . "_";
-        if ($isPreview) {
-            $namespace .= 'preview_';
-        }
-
-        return $namespace;
-    }
-
     /**
      * Initialize Doctrine entity manager in DI container.
      *
@@ -172,35 +67,66 @@ class DoctrineServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container['doctrine.relative_entities_paths'] = function (Container $container) {
+            /** @var Kernel $kernel */
+            $kernel = $container['kernel'];
+            if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
+                /*
+                 * Standard edition
+                 */
+                $relPaths = [
+                    "../vendor/roadiz/roadiz/src/Roadiz/Core/Entities",
+                    "../vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
+                    "gen-src/GeneratedNodeSources",
+                ];
+            } else {
+                /*
+                 * Source edition
+                 */
+                $relPaths = [
+                    "src/Roadiz/Core/Entities",
+                    "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
+                    "gen-src/GeneratedNodeSources",
+                ];
+            }
+
+            if (isset($c['config']['entities'])) {
+                $relPaths = array_merge($relPaths, $container['config']['entities']);
+            }
+
+            return array_filter(array_unique($relPaths));
+        };
+        /*
+         * Every path to parse to find doctrine entities
+         */
+        $container['doctrine.entities_paths'] = function (Container $container) {
+            /*
+             * We need to work with absolute paths.
+             */
+            /** @var Kernel $kernel */
+            $kernel = $container['kernel'];
+            $fs = new Filesystem();
+            $absPaths = [];
+            foreach ($container['doctrine.relative_entities_paths'] as $relPath) {
+                $absolutePath = $kernel->getRootDir() . DIRECTORY_SEPARATOR . $relPath;
+                if ($fs->exists($absolutePath)) {
+                    $absPaths[] = $kernel->getRootDir() . DIRECTORY_SEPARATOR . $relPath;
+                }
+            }
+
+            return $absPaths;
+        };
+
         $container['em.config'] = function (Container $c) {
             try {
+                AnnotationRegistry::registerLoader('class_exists');
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
-                /*
-                 * Use ArrayCache if no cache type is explicitly defined.
-                 */
-                $cache = new ArrayCache();
-
-                if ($c['config']['cacheDriver']['type'] !== null) {
-                    $cache = $this->getManuallyDefinedCache(
-                        $c['config']['cacheDriver'],
-                        $kernel
-                    );
-                }
-                /*
-                 * Set namespace
-                 */
-                if ($cache instanceof CacheProvider) {
-                    $cache->setNamespace($this->getNamespace(
-                        $c['config']["appNamespace"],
-                        $kernel->isPreview(),
-                        $kernel->getEnvironment()
-                    ));
-                }
+                $cache = $c[CacheProvider::class];
 
                 $proxyFolder = $kernel->getRootDir() . '/gen-src/Proxies';
                 $config = Setup::createAnnotationMetadataConfiguration(
-                    $c['entitiesPaths'],
+                    $c['doctrine.entities_paths'],
                     $kernel->isDevMode(),
                     $proxyFolder,
                     $cache,
@@ -220,6 +146,13 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             }
         };
 
+        /*
+         * Alias with FQN interface
+         */
+        $container[EntityManagerInterface::class] = function ($c) {
+            return $c['em'];
+        };
+
         $container['em'] = function (Container $c) {
             $c['stopwatch']->start('initDoctrine');
 
@@ -229,16 +162,6 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 /** @var EntityManager $em */
                 $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
                 $evm = $em->getEventManager();
-
-                $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
-                /*
-                 * Create dynamic discriminator map for our Node system
-                 */
-                $evm->addEventListener(
-                    Events::loadClassMetadata,
-                    new DataInheritanceEvent($c, $prefix)
-                );
-
                 /*
                  * Inject doctrine event subscribers for
                  * a service to be able to add new ones from themes.
@@ -269,7 +192,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          * @return EventSubscriber[] Event subscribers for Entity manager.
          */
         $container['em.eventSubscribers'] = function (Container $c) {
+            $prefix = isset($c['config']['doctrine']['prefix']) ? $c['config']['doctrine']['prefix'] : '';
             return [
+                new NodesSourcesInheritanceSubscriber($c),
+                new TablePrefixSubscriber($prefix),
                 new FontLifeCycleSubscriber($c),
                 new DocumentLifeCycleSubscriber($c['kernel']),
                 new UserLifeCycleSubscriber($c),
@@ -283,29 +209,25 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          * @return CacheProvider
          */
         $container['nodesSourcesUrlCacheProvider'] = function ($c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            /** @var EntityManager $entityManager */
-            $entityManager = $c['em'];
-
-            /*
-             * Use node source url cache only if not Test, nor Preview, nor
-             * Debug environments.
-             */
-            if (null !== $entityManager &&
-                $kernel->getEnvironment() !== 'test' &&
-                !$kernel->isPreview() &&
-                !$kernel->isDebug()) {
-                // clone existing cache to be able to vary namespace
-                $cache = clone $entityManager->getConfiguration()->getMetadataCacheImpl();
-                if ($cache instanceof CacheProvider) {
-                    $cache->setNamespace($cache->getNamespace() . "nsurls_"); // to avoid collisions
-                }
-                return $cache;
-            } else {
-                return new ArrayCache();
-            }
+            $cache = $c[CacheProvider::class];
+            $cache->setNamespace($cache->getNamespace() . "_nsurls_"); // to avoid collisions
+            return $cache;
         };
+
+        $container[CacheProvider::class] = $container->factory(function (Container $c) {
+            if ($c['config']['cacheDriver']['type'] !== null &&
+                !$c['kernel']->isPreview() &&
+                !$c['kernel']->isDebug()) {
+                $cache = CacheFactory::fromConfig(
+                    $c['config']['cacheDriver'],
+                    $c['kernel'],
+                    $c['config']["appNamespace"]
+                );
+            } else {
+                $cache = new ArrayCache();
+            }
+            return $cache;
+        });
 
         return $container;
     }

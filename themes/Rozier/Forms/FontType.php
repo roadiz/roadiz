@@ -55,9 +55,7 @@ class FontType extends AbstractType
     {
         $builder->add('name', TextType::class, [
                 'label' => 'font.name',
-                'attr' => [
-                    'data-desc' => 'font_name_should_be_the_same_for_all_variants'
-                ],
+                'help' => 'font_name_should_be_the_same_for_all_variants',
                 'constraints' => [
                     new NotBlank(),
                     new Length([
@@ -68,9 +66,7 @@ class FontType extends AbstractType
             ->add('hash', TextType::class, [
                 'label' => 'font.cssfamily',
                 'empty_data' => '',
-                'attr' => [
-                    'data-desc' => 'css_font_family_hash_is_automatically_generated_from_font_name'
-                ]
+                'help' => 'css_font_family_hash_is_automatically_generated_from_font_name',
             ])
             ->add('variant', FontVariantsType::class, [
                 'label' => 'font.variant',

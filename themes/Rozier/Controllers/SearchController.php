@@ -30,6 +30,8 @@
 
 namespace Themes\Rozier\Controllers;
 
+use DateTime;
+use IteratorAggregate;
 use RZ\Roadiz\CMS\Forms\CompareDatetimeType;
 use RZ\Roadiz\CMS\Forms\CompareDateType;
 use RZ\Roadiz\CMS\Forms\ExtendedBooleanType;
@@ -50,11 +52,13 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Class SearchController
@@ -84,6 +88,25 @@ class SearchController extends RozierApp
     }
 
     /**
+     * @param array  $data
+     * @param string $fieldName
+     *
+     * @return array
+     */
+    protected function appendDateTimeCriteria(array &$data, string $fieldName)
+    {
+        $date = $data[$fieldName]['compareDatetime'];
+        if ($date instanceof DateTime) {
+            $date = $date->format('Y-m-d H:i:s');
+        }
+        $data[$fieldName] = [
+            $data[$fieldName]['compareOp'],
+            $date,
+        ];
+        return $data;
+    }
+
+    /**
      * @param array $data
      * @param string $prefix
      * @return mixed
@@ -105,25 +128,11 @@ class SearchController extends RozierApp
         }
 
         if (isset($data[$prefix . 'createdAt'])) {
-            $date = $data[$prefix . 'createdAt']['compareDatetime'];
-            if ($date instanceof \DateTime) {
-                $date = $date->format('Y-m-d H:i:s');
-            }
-            $data[$prefix . "createdAt"] = [
-                $data[$prefix . 'createdAt']['compareOp'],
-                $date,
-            ];
+            $this->appendDateTimeCriteria($data, $prefix . 'createdAt');
         }
 
         if (isset($data[$prefix . 'updatedAt'])) {
-            $date = $data[$prefix . 'updatedAt']['compareDatetime'];
-            if ($date instanceof \DateTime) {
-                $date = $date->format('Y-m-d H:i:s');
-            }
-            $data[$prefix . "updatedAt"] = [
-                $data[$prefix . 'updatedAt']['compareOp'],
-                $date,
-            ];
+            $this->appendDateTimeCriteria($data, $prefix . 'updatedAt');
         }
 
         if (isset($data[$prefix . "limitResult"])) {
@@ -155,38 +164,30 @@ class SearchController extends RozierApp
     {
         $fields = $nodetype->getFields();
         foreach ($data as $key => $value) {
-            foreach ($fields as $field) {
-                if ($key == $field->getName()) {
-                    if ($field->getType() === NodeTypeField::MARKDOWN_T
-                        || $field->getType() === NodeTypeField::STRING_T
-                        || $field->getType() === NodeTypeField::YAML_T
-                        || $field->getType() === NodeTypeField::JSON_T
-                        || $field->getType() === NodeTypeField::TEXT_T
-                        || $field->getType() === NodeTypeField::EMAIL_T
-                        || $field->getType() === NodeTypeField::CSS_T) {
-                        $data[$key] = ["LIKE", "%" . $value . "%"];
-                    } elseif ($field->getType() === NodeTypeField::BOOLEAN_T) {
-                        $data[$key] = (bool) $value;
-                    } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
-                        $data[$key] = implode(",", $value);
-                    } elseif ($field->getType() === NodeTypeField::DATETIME_T) {
-                        $date = $data[$key]['compareDatetime'];
-                        if ($date instanceof \DateTime) {
-                            $date = $date->format('Y-m-d H:i:s');
+            if ($key === 'title') {
+                $data[$key] = ["LIKE", "%" . $value . "%"];
+            } elseif ($key === 'publishedAt') {
+                $this->appendDateTimeCriteria($data, 'publishedAt');
+            } else {
+                foreach ($fields as $field) {
+                    if ($key == $field->getName()) {
+                        if ($field->getType() === NodeTypeField::MARKDOWN_T
+                            || $field->getType() === NodeTypeField::STRING_T
+                            || $field->getType() === NodeTypeField::YAML_T
+                            || $field->getType() === NodeTypeField::JSON_T
+                            || $field->getType() === NodeTypeField::TEXT_T
+                            || $field->getType() === NodeTypeField::EMAIL_T
+                            || $field->getType() === NodeTypeField::CSS_T) {
+                            $data[$key] = ["LIKE", "%" . $value . "%"];
+                        } elseif ($field->getType() === NodeTypeField::BOOLEAN_T) {
+                            $data[$key] = (bool) $value;
+                        } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
+                            $data[$key] = implode(",", $value);
+                        } elseif ($field->getType() === NodeTypeField::DATETIME_T) {
+                            $this->appendDateTimeCriteria($data, $key);
+                        } elseif ($field->getType() === NodeTypeField::DATE_T) {
+                            $this->appendDateTimeCriteria($data, $key);
                         }
-                        $data[$key] = [
-                            $data[$key]['compareOp'],
-                            $date,
-                        ];
-                    } elseif ($field->getType() === NodeTypeField::DATE_T) {
-                        $date = $data[$key]['compareDatetime'];
-                        if ($date instanceof \DateTime) {
-                            $date = $date->format('Y-m-d H:i:s');
-                        }
-                        $data[$key] = [
-                            $data[$key]['compareOp'],
-                            $date,
-                        ];
                     }
                 }
             }
@@ -196,12 +197,14 @@ class SearchController extends RozierApp
 
     /**
      * @param Request $request
+     *
      * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function searchNodeAction(Request $request)
     {
         /** @var Form $form */
-        $builder = $this->buildSimpleForm("");
+        $builder = $this->buildSimpleForm('');
         $form = $this->addButtons($builder)->getForm();
         $form->handleRequest($request);
 
@@ -251,9 +254,10 @@ class SearchController extends RozierApp
 
     /**
      * @param Request $request
-     * @param $nodetypeId
+     * @param         $nodetypeId
      *
-     * @return null|\Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return null|RedirectResponse|Response
+     * @throws Twig_Error_Runtime
      */
     public function searchNodeSourceAction(Request $request, $nodetypeId)
     {
@@ -347,7 +351,8 @@ class SearchController extends RozierApp
 
     /**
      * @param Form $nodeTypeForm
-     * @return null|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return null|RedirectResponse
      */
     protected function handleNodeTypeForm(Form $nodeTypeForm)
     {
@@ -393,7 +398,7 @@ class SearchController extends RozierApp
             $data = $this->processCriteriaNodetype($data, $nodetype);
 
             $listManager = $this->createEntityListManager(
-                NodeType::getGeneratedEntitiesNamespace() . '\\' . $nodetype->getSourceEntityClassName(),
+                $nodetype->getSourceEntityFullQualifiedClassName(),
                 $data
             );
             $listManager->setDisplayingNotPublishedNodes(true);
@@ -440,8 +445,8 @@ class SearchController extends RozierApp
     }
 
     /**
-     * @param NodeType $nodetype
-     * @param array|\IteratorAggregate $entities
+     * @param NodeType                $nodetype
+     * @param array|IteratorAggregate $entities
      *
      * @return string
      */
@@ -506,17 +511,17 @@ class SearchController extends RozierApp
                             'label' => 'node.id.parent',
                             'required' => false,
                         ])
-                        ->add($prefix . "createdAt", CompareDatetimeType::class, [
+                        ->add($prefix . 'createdAt', CompareDatetimeType::class, [
                             'label' => 'created.at',
                             'inherit_data' => false,
                             'required' => false,
                         ])
-                        ->add($prefix . "updatedAt", CompareDatetimeType::class, [
+                        ->add($prefix . 'updatedAt', CompareDatetimeType::class, [
                             'label' => 'updated.at',
                             'inherit_data' => false,
                             'required' => false,
                         ])
-                        ->add($prefix . "limitResult", NumberType::class, [
+                        ->add($prefix . 'limitResult', NumberType::class, [
                             'label' => 'node.limit.result',
                             'required' => false,
                             'constraints' => [
@@ -527,7 +532,7 @@ class SearchController extends RozierApp
                         ->add('tags', TextType::class, [
                             'label' => 'node.tags',
                             'required' => false,
-                            'attr' => ["class" => "rz-tag-autocomplete"],
+                            'attr' => ['class' => 'rz-tag-autocomplete'],
                         ])
                         // No need to prefix tags
                         ->add('tagExclusive', CheckboxType::class, [
@@ -554,7 +559,26 @@ class SearchController extends RozierApp
                 'label' => 'nodetypefield',
                 'attr' => ["class" => "label-separator"],
             ]
+        )->add(
+            "title",
+            TextType::class,
+            [
+                'label' => 'title',
+                'required' => false,
+            ]
         );
+
+        if ($nodetype->isPublishable()) {
+            $builder->add(
+                "publishedAt",
+                CompareDatetimeType::class,
+                [
+                    'label' => 'publishedAt',
+                    'required' => false,
+                ]
+            );
+        }
+
 
         /** @var NodeTypeField $field */
         foreach ($fields as $field) {

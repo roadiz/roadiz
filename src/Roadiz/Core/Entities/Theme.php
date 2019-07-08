@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Entities;
 
-use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
@@ -40,7 +39,6 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 class Theme extends AbstractEntity
 {
     /**
-     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @var boolean
      */
     private $available = false;
@@ -65,7 +63,7 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(type="boolean", name="static_theme", nullable=false, options={"default" = false})
+     *
      */
     protected $staticTheme = false;
 
@@ -92,7 +90,6 @@ class Theme extends AbstractEntity
 
 
     /**
-     * @ORM\Column(name="classname", type="string", unique=true)
      * @var string
      */
     private $className;
@@ -114,8 +111,19 @@ class Theme extends AbstractEntity
         $this->className = $className;
         return $this;
     }
+
     /**
-     * Get theme informations in an array.
+     * Alias for getInformations.
+     *
+     * @return array
+     */
+    public function getInformation(): array
+    {
+        return $this->getInformations();
+    }
+
+    /**
+     * Get theme information in an array.
      *
      * - name
      * - author
@@ -126,7 +134,7 @@ class Theme extends AbstractEntity
      */
     public function getInformations(): array
     {
-        /** @var string|\RZ\Roadiz\CMS\Controllers\AppController $class */
+        /** @var string|AppController $class */
         $class = $this->getClassName();
 
         if (class_exists($class)) {
@@ -145,7 +153,6 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(name="hostname",type="string")
      * @var string
      */
     private $hostname = '*';
@@ -170,7 +177,6 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(name="route_prefix",type="string", nullable=true)
      * @var string
      */
     private $routePrefix = '';
@@ -195,7 +201,6 @@ class Theme extends AbstractEntity
     }
 
     /**
-     * @ORM\Column(name="backend", type="boolean")
      * @var boolean
      */
     private $backendTheme = false;
@@ -216,56 +221,5 @@ class Theme extends AbstractEntity
     {
         $this->backendTheme = $backendTheme;
         return $this;
-    }
-
-    /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="homenode_id", referencedColumnName="id", onDelete="SET NULL")
-     * @var Node|null
-     */
-    private $homeNode;
-
-    /**
-     * @param Node|null $homeNode
-     * @return $this
-     */
-    public function setHomeNode(Node $homeNode = null): Theme
-    {
-        $this->homeNode = $homeNode;
-        return $this;
-    }
-
-    /**
-     * @return Node|null
-     */
-    public function getHomeNode(): ?Node
-    {
-        return $this->homeNode;
-    }
-
-    /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="root_id", referencedColumnName="id", onDelete="SET NULL")
-     *
-     * @var Node|null
-     */
-    private $root;
-
-    /**
-     * @param Node|null $root
-     * @return $this
-     */
-    public function setRoot(Node $root = null): Theme
-    {
-        $this->root = $root;
-        return $this;
-    }
-
-    /**
-     * @return Node
-     */
-    public function getRoot(): ?Node
-    {
-        return $this->root;
     }
 }

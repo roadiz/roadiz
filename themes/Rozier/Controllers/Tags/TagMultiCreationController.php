@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Utils\Tag\TagFactory;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -47,7 +48,7 @@ class TagMultiCreationController extends RozierApp
 {
     public function addChildAction(Request $request, $parentTagId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
         $parentTag = $this->get('em')->find(Tag::class, (int) $parentTagId);
@@ -71,26 +72,12 @@ class TagMultiCreationController extends RozierApp
                     ->findLatestPositionInParent($parentTag);
 
                 $tagsArray = [];
-
+                /** @var TagFactory $tagFactory */
+                $tagFactory = $this->get(TagFactory::class);
                 foreach ($names as $name) {
-                    $name = strip_tags(trim($name));
-
-                    $tag = new Tag();
-                    $tag->setTagName($name);
-                    $tag->setParent($parentTag);
-                    $tag->setPosition(++$latestPosition);
-                    $this->get('em')->persist($tag);
-
-                    $translatedTag = new TagTranslation($tag, $translation);
-                    $this->get('em')->persist($translatedTag);
-
-                    $tagsArray[] = $tag;
+                    $tagsArray[] = $tagFactory->create($name, $translation, $parentTag, $latestPosition);
+                    $this->get('em')->flush();
                 }
-
-                /*
-                 * Flush only one time.
-                 */
-                $this->get('em')->flush();
 
                 /*
                  * Dispatch event and msg

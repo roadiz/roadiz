@@ -57,7 +57,7 @@ class GroupsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         /*
          * Manage get request to filter list
@@ -81,7 +81,7 @@ class GroupsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         $form = $this->buildAddForm();
         $form->handleRequest($request);
@@ -116,7 +116,7 @@ class GroupsController extends RozierApp
      */
     public function deleteAction(Request $request, $groupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         /** @var Group|null $group */
         $group = $this->get('em')
@@ -162,7 +162,7 @@ class GroupsController extends RozierApp
      */
     public function editAction(Request $request, $groupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         /** @var Group|null $group */
         $group = $this->get('em')
@@ -213,7 +213,7 @@ class GroupsController extends RozierApp
      */
     public function editRolesAction(Request $request, $groupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         /** @var Group|null $group */
         $group = $this->get('em')
@@ -259,7 +259,7 @@ class GroupsController extends RozierApp
      */
     public function removeRolesAction(Request $request, $groupId, $roleId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         /** @var Group|null $group */
         $group = $this->get('em')
@@ -309,7 +309,7 @@ class GroupsController extends RozierApp
      */
     public function editUsersAction(Request $request, $groupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         /** @var Group $group */
         $group = $this->get('em')
@@ -355,7 +355,7 @@ class GroupsController extends RozierApp
      */
     public function removeUsersAction(Request $request, $groupId, $userId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         /** @var Group|null $group */
         $group = $this->get('em')

@@ -30,12 +30,14 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\Models\AbstractDocument;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
@@ -43,68 +45,108 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
  * @ORM\Table(name="documents", indexes={
  *     @ORM\Index(columns={"raw"}),
- *     @ORM\Index(columns={"private"})
+ *     @ORM\Index(columns={"private"}),
+ *     @ORM\Index(columns={"mime_type"})
  * })
  */
 class Document extends AbstractDocument
 {
     /**
-     * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"})
+     * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Groups({"document"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
+     * @var DocumentInterface|null
      */
     protected $rawDocument = null;
     /**
      * @ORM\Column(type="boolean", name="raw", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"document"})
+     * @Serializer\Type("bool")
      */
     protected $raw = false;
     /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     protected $embedId = null;
     /**
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     protected $embedPlatform = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="document")
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     protected $nodesSourcesByFields = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="document")
      * @var ArrayCollection
+     * @Serializer\Exclude
      */
     protected $tagTranslations = null;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
+     * @Serializer\Groups({"document"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Folder>")
      */
     protected $folders;
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\DocumentTranslation>")
      */
     protected $documentTranslations;
     /**
      * @ORM\Column(type="string", nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     private $filename;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     private $mimeType;
     /**
      * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
+     * @Serializer\Exclude
+     * @var DocumentInterface|null
      */
     private $downscaledDocument = null;
     /**
      * @ORM\Column(type="string")
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
      */
     private $folder;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("bool")
      */
     private $private = false;
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("int")
+     */
+    private $imageWidth = 0;
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("int")
+     */
+    private $imageHeight = 0;
 
     /**
      * Document constructor.
@@ -117,6 +159,8 @@ class Document extends AbstractDocument
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
+        $this->imageWidth = 0;
+        $this->imageHeight = 0;
     }
 
     /**
@@ -194,7 +238,6 @@ class Document extends AbstractDocument
     public function setEmbedId($embedId)
     {
         $this->embedId = $embedId;
-
         return $this;
     }
 
@@ -232,12 +275,15 @@ class Document extends AbstractDocument
     public function setPrivate($private)
     {
         $this->private = (boolean) $private;
+        if (null !== $raw = $this->getRawDocument()) {
+            $raw->setPrivate($private);
+        }
 
         return $this;
     }
 
     /**
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getNodesSourcesByFields()
     {
@@ -288,7 +334,7 @@ class Document extends AbstractDocument
 
     /**
      * @param Translation $translation
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDocumentTranslationsByTranslation(Translation $translation)
     {
@@ -330,7 +376,7 @@ class Document extends AbstractDocument
     /**
      * Gets the value of rawDocument.
      *
-     * @return Document|null
+     * @return DocumentInterface|null
      */
     public function getRawDocument()
     {
@@ -378,11 +424,51 @@ class Document extends AbstractDocument
     /**
      * Gets the downscaledDocument.
      *
-     * @return Document|null
+     * @return DocumentInterface|null
      */
     public function getDownscaledDocument()
     {
         return $this->downscaledDocument;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageWidth(): int
+    {
+        return $this->imageWidth;
+    }
+
+    /**
+     * @param int $imageWidth
+     *
+     * @return Document
+     */
+    public function setImageWidth(int $imageWidth): Document
+    {
+        $this->imageWidth = $imageWidth;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getImageHeight(): int
+    {
+        return $this->imageHeight;
+    }
+
+    /**
+     * @param int $imageHeight
+     *
+     * @return Document
+     */
+    public function setImageHeight(int $imageHeight): Document
+    {
+        $this->imageHeight = $imageHeight;
+
+        return $this;
     }
 
     /**

@@ -35,6 +35,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Security\Core\Role\Role as BaseRole;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Roles are persisted version of string Symfony's roles.
@@ -75,6 +76,8 @@ class Role extends BaseRole implements PersistableInterface
 
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"user", "role", "group"})
+     * @Serializer\Type("string")
      * @var string
      */
     private $name;
@@ -132,8 +135,11 @@ class Role extends BaseRole implements PersistableInterface
     }
 
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles")
-     * @var Collection
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Group", mappedBy="roles", cascade={"persist", "merge"})
+     * @Serializer\Groups({"role"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Group>")
+     * @Serializer\Accessor(getter="getGroups", setter="setGroups")
+     * @var Collection<Group>
      */
     private $groups;
 
@@ -159,6 +165,21 @@ class Role extends BaseRole implements PersistableInterface
     }
 
     /**
+     * @param Collection $groups
+     * @return $this
+     */
+    public function setGroups(Collection $groups): Role
+    {
+        $this->groups = $groups;
+        /** @var Group $group */
+        foreach ($this->groups as $group) {
+            $group->addRole($this);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param \RZ\Roadiz\Core\Entities\Group $group
      * @return $this
      */
@@ -177,6 +198,7 @@ class Role extends BaseRole implements PersistableInterface
      * It replace underscores by dashes and lowercase.
      *
      * @return string
+     * @Serializer\Groups({"role"})
      */
     public function getClassName(): string
     {

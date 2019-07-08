@@ -1,0 +1,217 @@
+[
+    {
+        "name": "ROLE_ACCESS_ATTRIBUTES",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_ATTRIBUTES_DELETE",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_COMMENTS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_CUSTOMFORMS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_CUSTOMFORMS_DELETE",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_DOCTRINE_CACHE_DELETE",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_DOCUMENTS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_DOCUMENTS_DELETE",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_FONTS",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_GROUPS",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_MANAGE_SUBSCRIBERS",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_NEWSLETTERS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_NEWSLETTERS_SEND",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_NODE_ATTRIBUTES",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_NODEFIELDS_DELETE",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_NODES",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_NODES_DELETE",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_NODES_SETTING",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_NODES_STATUS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_NODETYPES",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_NODETYPES_DELETE",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_REDIRECTIONS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_ROLES",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_SETTINGS",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_TAGS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_TAGS_DELETE",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_THEMES",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_TRANSLATIONS",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_USERS",
+        "groups": []
+    },
+    {
+        "name": "ROLE_ACCESS_USERS_DELETE",
+        "groups": []
+    },
+    {
+        "name": "ROLE_BACKEND_USER",
+        "groups": [
+            {
+                "name": "Backend User"
+            },
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_SUPERADMIN",
+        "groups": [
+            {
+                "name": "Admin"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_USER",
+        "groups": []
+    }
+]

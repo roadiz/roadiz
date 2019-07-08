@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Controllers;
 
+use RZ\Roadiz\Attribute\Importer\AttributeImporter;
+use RZ\Roadiz\CMS\Importers\EntityImporterInterface;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
@@ -171,6 +173,23 @@ class ImportController extends AppController
     }
 
     /**
+     * Import Attributes file.
+     *
+     * @param Request $request
+     * @param int     $themeId
+     *
+     * @return Response
+     */
+    public function importAttributesAction(Request $request, $themeId = null)
+    {
+        return $this->genericImportAction(
+            AttributeImporter::class,
+            $request,
+            $themeId
+        );
+    }
+
+    /**
      * Import Nodes file.
      *
      * @param Request $request
@@ -210,7 +229,7 @@ class ImportController extends AppController
                 $theme = $themeResolver->findById($themeId);
 
                 if ($theme === null) {
-                    throw new \Exception('Theme don\'t exist in database.');
+                    throw new \Exception('Theme don’t exist in database.');
                 }
 
                 $classname = $theme->getClassName();
@@ -219,9 +238,11 @@ class ImportController extends AppController
             }
             if (file_exists($path)) {
                 $file = file_get_contents($path);
-                call_user_func([$classImporter, 'importJsonFile'], $file, $this->get('em'), $this->get('factory.handler'));
+                /** @var EntityImporterInterface $importer */
+                $importer = $this->get($classImporter);
+                $importer->import($file);
             } else {
-                throw new \Exception('File: ' . $path . ' don\'t exist');
+                throw new \Exception('File: ' . $path . ' don’t exist');
             }
         } catch (\Exception $e) {
             $data['error'] = $e->getMessage();

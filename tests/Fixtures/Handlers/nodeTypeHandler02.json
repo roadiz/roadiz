@@ -1,12 +1,12 @@
 {
     "name": "PageType",
     "displayName": "Page Type",
-    "description": null,
     "visible": true,
+    "publishable": false,
+    "reachable": true,
     "newsletterType": false,
     "hidingNodes": false,
     "color": "#000000",
-    "reachable": true,
-    "publishable": false,
-    "fields": []
+    "fields": [],
+    "defaultTtl": 0
 }

@@ -90,7 +90,10 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
          * Install mode is active.
          */
         $request = $event->getRequest();
-        if (true !== $this->kernel->isInstallMode() &&
+        if (null !== $event->getRequest()->get('theme') &&
+            $request instanceof RoadizRequest) {
+            $request->setTheme($event->getRequest()->get('theme'));
+        } elseif (true !== $this->kernel->isInstallMode() &&
             $request instanceof RoadizRequest &&
             $matchedCtrl instanceof AppController) {
             // No node controller matching in install mode
@@ -101,9 +104,9 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
          * Set request locale if _locale param
          * is present in Route.
          */
-        $routeParams = $event->getRequest()->get('_route_params');
-        if (!empty($routeParams["_locale"])) {
-            $event->getRequest()->setLocale($routeParams["_locale"]);
+        $locale = $event->getRequest()->get('_locale');
+        if (null !== $locale) {
+            $event->getRequest()->setLocale($locale);
         }
 
         /*

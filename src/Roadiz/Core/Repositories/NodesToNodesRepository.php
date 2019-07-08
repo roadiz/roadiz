@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
@@ -52,10 +51,6 @@ class NodesToNodesRepository extends EntityRepository
                     ->setParameter('nodeA', $node)
                     ->setParameter('field', $field);
 
-        try {
-            return (int) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getSingleScalarResult();
     }
 }

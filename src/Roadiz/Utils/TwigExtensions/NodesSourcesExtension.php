@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use RZ\Roadiz\CMS\Utils\NodeSourceApi;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
@@ -51,16 +52,22 @@ class NodesSourcesExtension extends AbstractExtension
      * @var NodesSourcesHandler
      */
     private $nodesSourcesHandler;
+    /**
+     * @var NodeSourceApi
+     */
+    private $nodeSourceApi;
 
     /**
      * @param AuthorizationChecker $securityAuthorizationChecker
      * @param NodesSourcesHandler $nodesSourcesHandler
+     * @param NodeSourceApi $nodeSourceApi
      * @param boolean $preview
      * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
     public function __construct(
         AuthorizationChecker $securityAuthorizationChecker,
         NodesSourcesHandler $nodesSourcesHandler,
+        NodeSourceApi $nodeSourceApi,
         $preview = false,
         $throwExceptions = false
     ) {
@@ -68,6 +75,7 @@ class NodesSourcesExtension extends AbstractExtension
         $this->preview = $preview;
         $this->throwExceptions = $throwExceptions;
         $this->nodesSourcesHandler = $nodesSourcesHandler;
+        $this->nodeSourceApi = $nodeSourceApi;
     }
 
     public function getFilters()
@@ -100,8 +108,24 @@ class NodesSourcesExtension extends AbstractExtension
                 return [];
             }
         }
-        $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getChildren($criteria, $order);
+        $defaultCrit = [
+            'node.parent' => $ns->getNode(),
+            'translation' => $ns->getTranslation(),
+        ];
+
+        if (null !== $order) {
+            $defaultOrder = $order;
+        } else {
+            $defaultOrder = [
+                'node.position' => 'ASC',
+            ];
+        }
+
+        if (null !== $criteria) {
+            $defaultCrit = array_merge($defaultCrit, $criteria);
+        }
+
+        return $this->nodeSourceApi->getBy($defaultCrit, $defaultOrder);
     }
 
     /**

@@ -31,6 +31,8 @@ namespace RZ\Roadiz\Utils\Clearer;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\ORMException;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -40,6 +42,10 @@ use Symfony\Component\Finder\Finder;
  */
 class DoctrineCacheClearer extends Clearer
 {
+    /**
+     * @var bool
+     */
+    protected $recreateProxies;
     /**
      * @var EntityManagerInterface
      */
@@ -53,13 +59,15 @@ class DoctrineCacheClearer extends Clearer
      * DoctrineCacheClearer constructor.
      *
      * @param EntityManagerInterface $entityManager
-     * @param Kernel $kernel
+     * @param Kernel                 $kernel
+     * @param bool                   $recreateProxies
      */
-    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel)
+    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, bool $recreateProxies = true)
     {
         parent::__construct('');
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;
+        $this->recreateProxies = $recreateProxies;
     }
 
     /**
@@ -86,7 +94,9 @@ class DoctrineCacheClearer extends Clearer
             $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
             $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
             $this->clearCacheDriver($conf->getMetadataCacheImpl(), 'metadata');
-            $this->recreateProxies();
+            if ($this->recreateProxies === true) {
+                $this->recreateProxies();
+            }
         }
 
         return true;
@@ -114,15 +124,19 @@ class DoctrineCacheClearer extends Clearer
      */
     protected function recreateProxies()
     {
-        $fs = new Filesystem();
-        $finder = new Finder();
-        $conf = $this->entityManager->getConfiguration();
-        $finder->files()->in($conf->getProxyDir());
-        $fs->remove($finder);
+        try {
+            $fs = new Filesystem();
+            $finder = new Finder();
+            $conf = $this->entityManager->getConfiguration();
+            $finder->files()->in($conf->getProxyDir());
+            $fs->remove($finder);
 
-        $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
-        $proxyFactory = $this->entityManager->getProxyFactory();
-        $proxyFactory->generateProxyClasses($meta, $conf->getProxyDir());
-        $this->output .= 'Doctrine proxy classes has been recreated.';
+            $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
+            $proxyFactory = $this->entityManager->getProxyFactory();
+            $proxyFactory->generateProxyClasses($meta, $conf->getProxyDir());
+            $this->output .= 'Doctrine proxy classes has been recreated.';
+        } catch (ORMException $exception) {
+            $this->output .= '<error>Doctrine proxy can’t be recreated.</error>';
+        }
     }
 }

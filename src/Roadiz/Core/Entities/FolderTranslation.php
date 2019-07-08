@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
@@ -46,6 +47,7 @@ class FolderTranslation extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string")
+     * @Serializer\Groups({"folder", "document"})
      * @var string
      */
     protected $name;
@@ -71,6 +73,7 @@ class FolderTranslation extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Folder", inversedBy="translatedFolders")
      * @ORM\JoinColumn(name="folder_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Exclude
      * @var Folder
      */
     protected $folder = null;
@@ -78,6 +81,7 @@ class FolderTranslation extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="folderTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @Serializer\Groups({"folder", "document"})
      * @var Translation
      */
     protected $translation = null;

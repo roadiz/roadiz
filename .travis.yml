@@ -1,40 +1,89 @@
 # Roadiz travis setup
 # Ambroise Maupate
-language: php
-sudo: required
+node_js:
+  - "lts/*"
+  - "8"
 php:
-  - 7.1
   - 7.2
   - 7.3
 
-env:
-  - DB=mysql
-  - DB=pgsql
+jobs:
+    include:
+        - stage: "Default theme assets tests"
+          language: node_js
+          node_js:
+              - "lts/*"
+              - "8"
+          script:
+              - cd themes/DefaultTheme/static
+              - yarn install --pure-lockfile
+              - yarn run build
 
-install:
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests_tmp;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests_tmp;' -U postgres; fi"
-  - sh -c "if [ '$DB' = 'pgsql' ]; then cp conf/config.pgsql.travis.yml conf/config.yml; fi"
-  - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS roadiz_tests_tmp;create database IF NOT EXISTS roadiz_tests;'; fi"
-  - sh -c "if [ '$DB' = 'mysql' ]; then cp conf/config.mysql.travis.yml conf/config.yml; fi"
-  - sh -c "if [ '$DB' = 'sqlite' ]; then cp conf/config.sqlite.travis.yml conf/config.yml; fi"
-  - curl -s http://getcomposer.org/installer | php
-  - php composer.phar install --dev --no-interaction
+        - stage: "Install assets tests"
+          language: node_js
+          node_js:
+              - "lts/*"
+              - "8"
+          script:
+              - cd themes/Install/static
+              - yarn install --pure-lockfile
+              - yarn run build
 
-script:
-  - php bin/roadiz orm:schema-tool:create -n --env=install
-  - php bin/roadiz install -n --env=install
-  - php bin/roadiz themes:install -n "/Themes/DefaultTheme/DefaultThemeApp"
-  - php bin/roadiz themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"
-  - php bin/roadiz cache:clear --env=install
-  - php bin/roadiz orm:schema-tool:update -n --force
-  - php bin/roadiz themes:install -n --nodes "/Themes/DefaultTheme/DefaultThemeApp"
-  - php bin/roadiz cache:clear --env=install
-  - php bin/roadiz cache:clear --env=test
-  - php bin/roadiz users:create -n --email=test@test.com --password=secret --super-admin test
-  - php bin/roadiz users:create -n --email=test2@test.com --password=secret2 --back-end test2
-  - php bin/roadiz orm:schema-tool:drop --force
-  - php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/
-  - bin/phpcs --report=full --report-file=./report.txt -p ./
+        - stage: "Backoffice assets tests"
+          language: node_js
+          node_js:
+              - "lts/*"
+              - "8"
+          script:
+              - cd themes/Rozier
+              - yarn install --pure-lockfile
+              - yarn run install
+              - yarn run build
+
+        - stage: "PHP lint tests"
+          language: php
+          sudo: required
+          php:
+            - 7.2
+            - 7.3
+          install:
+            - curl -s http://getcomposer.org/installer | php
+            - php composer.phar install --dev --no-interaction
+          script:
+            - bin/phpcs --report=full --report-file=./report.txt -p ./
+
+        - stage: "PHP unit tests"
+          language: php
+          sudo: required
+          php:
+            - 7.2
+            - 7.3
+          env:
+            - DB=mysql
+            - DB=pgsql
+          install:
+            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
+            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests_tmp;' -U postgres; fi"
+            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests;' -U postgres; fi"
+            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests_tmp;' -U postgres; fi"
+            - sh -c "if [ '$DB' = 'pgsql' ]; then cp conf/config.pgsql.travis.yml conf/config.yml; fi"
+            - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS roadiz_tests_tmp;create database IF NOT EXISTS roadiz_tests;'; fi"
+            - sh -c "if [ '$DB' = 'mysql' ]; then cp conf/config.mysql.travis.yml conf/config.yml; fi"
+            - sh -c "if [ '$DB' = 'sqlite' ]; then cp conf/config.sqlite.travis.yml conf/config.yml; fi"
+            - curl -s http://getcomposer.org/installer | php
+            - php composer.phar install --dev --no-interaction
+          script:
+            - php bin/roadiz orm:schema-tool:create -n --env=install
+            - php bin/roadiz install -n --env=install
+            - php bin/roadiz themes:install -n "/Themes/DefaultTheme/DefaultThemeApp"
+            - php bin/roadiz themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"
+            - php bin/roadiz cache:clear --env=install
+            - php bin/roadiz orm:schema-tool:update -n --force
+            - php bin/roadiz themes:install -n --nodes "/Themes/DefaultTheme/DefaultThemeApp"
+            - php bin/roadiz cache:clear --env=install
+            - php bin/roadiz cache:clear --env=test
+            - php bin/roadiz users:create -n --email=test@test.com --password=secret --super-admin test
+            - php bin/roadiz users:create -n --email=test2@test.com --password=secret2 --back-end test2
+            - php bin/roadiz orm:schema-tool:drop --force
+            - php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/
+

@@ -31,10 +31,18 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Rollerworks\Component\PasswordStrength\Blacklist\ArrayProvider;
+use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
+use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
+use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
+use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
+use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\Extension\Validator\Type\RepeatedTypeValidatorExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
+use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Validation;
 
 /**
@@ -44,19 +52,64 @@ class FormServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
+        $container[BlacklistProviderInterface::class] = function ($c) {
+            return new LazyChainProvider(new \Pimple\Psr11\Container($c), [
+                ArrayProvider::class,
+                Top500Provider::class,
+            ]);
+        };
+
+        $container[ArrayProvider::class] = function () {
+            return new ArrayProvider([
+                'root',
+                'test',
+                'testtest',
+                'azerty',
+                'Azerty',
+                'azertyuiop',
+                'qwerty',
+                'motdepasse',
+                'Motdepasse'
+            ]);
+        };
+        $container[Top500Provider::class] = function () {
+            return new Top500Provider();
+        };
+
+        $container[BlacklistValidator::class] = function ($c) {
+            return new BlacklistValidator($c[BlacklistProviderInterface::class]);
+        };
+
         $container['formValidator'] = function ($c) {
+            $constraintFactory = new ContainerConstraintValidatorFactory(new \Pimple\Psr11\Container($c));
+
             return Validation::createValidatorBuilder()
+                        ->setConstraintValidatorFactory($constraintFactory)
                         ->setTranslationDomain(null)
                         ->setTranslator($c['translator'])
                         ->getValidator();
         };
 
         $container['formFactory'] = function ($c) {
-            return Forms::createFormFactoryBuilder()
-                        ->addExtension(new HttpFoundationExtension())
-                        ->addExtension(new CsrfExtension($c['csrfTokenManager']))
-                        ->addExtension(new ValidatorExtension($c['formValidator']))
-                        ->getFormFactory();
+            $formFactoryBuilder = Forms::createFormFactoryBuilder();
+            $formFactoryBuilder->addExtensions($c['form.extensions']);
+            $formFactoryBuilder->addTypeExtensions($c['form.type.extensions']);
+            return $formFactoryBuilder->getFormFactory();
+        };
+
+        $container['form.extensions'] = function ($c) {
+            return [
+                new HttpFoundationExtension(),
+                new CsrfExtension($c['csrfTokenManager']),
+                new ValidatorExtension($c['formValidator']),
+            ];
+        };
+
+        $container['form.type.extensions'] = function ($c) {
+            return [
+                new HelpAndGroupExtension(),
+                new RepeatedTypeValidatorExtension(),
+            ];
         };
 
         return $container;

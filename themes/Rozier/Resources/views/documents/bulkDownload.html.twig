@@ -9,7 +9,10 @@
 
     <article class="content content-download content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
-        {{ form_start(form, {'action': action, attr: { id: "documents-bulk-download-form"}}) }}
+        {{ form_start(form, {
+            'action': action,
+            'attr': { id: "documents-bulk-download-form"}
+        }) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <legend class="uk-alert uk-alert-info"><i class="uk-icon uk-icon-info-circle"></i> {% trans %}are_you_sure.download.these.documents{% endtrans %}</legend>

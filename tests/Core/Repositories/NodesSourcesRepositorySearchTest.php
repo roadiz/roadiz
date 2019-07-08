@@ -32,6 +32,7 @@
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 
 /**
@@ -46,7 +47,7 @@ class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
      */
     public function testFindBySearchQuery($query, $expectedClass)
     {
-        /** @var \RZ\Roadiz\Core\Repositories\NodesSourcesRepository $repository */
+        /** @var NodesSourcesRepository $repository */
         $repository = static::getManager()
             ->getRepository(NodesSources::class)
             ->setDisplayingAllNodesStatuses(true)
@@ -54,8 +55,8 @@ class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
         ;
         $nSources = $repository->findBySearchQuery($query);
 
-        if (null !== $nSources) {
-            foreach ($nSources as $key => $source) {
+        if (null !== $nSources || count($nSources) > 0) {
+            foreach ($nSources as $source) {
                 $this->assertEquals($expectedClass, get_class($source));
             }
         } else {
@@ -87,8 +88,8 @@ class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
             ->setDisplayingNotPublishedNodes(true)
             ->findBySearchQueryAndTranslation($query, $translation);
 
-        if (null !== $nSources) {
-            foreach ($nSources as $key => $source) {
+        if (null !== $nSources || count($nSources) > 0) {
+            foreach ($nSources as $source) {
                 $this->assertEquals($expectedClass, get_class($source));
             }
         } else {
@@ -103,10 +104,10 @@ class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
         $english = new Translation();
         $english->setLocale('en_GB');
 
-        return array(
-            array('Propos', NSPage::class, $english),
-            array('About', NSPage::class, $english),
-        );
+        return [
+            ['Propos', NSPage::class, $english],
+            ['About', NSPage::class, $english],
+        ];
     }
 
     /**
@@ -116,7 +117,7 @@ class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
     {
         parent::setUpBeforeClass();
 
-        static::runCommand('themes:install -n --nodes "/Themes/DefaultTheme/DefaultThemeApp"');
-        static::runCommand('solr:reindex -n');
+        static::runCommand('themes:install --nodes "/Themes/DefaultTheme/DefaultThemeApp"');
+        static::runCommand('solr:reindex');
     }
 }

@@ -124,7 +124,6 @@ class LoggerServiceProvider implements ServiceProviderInterface
                                     $client,
                                     constant('\Monolog\Logger::'.$config['level'])
                                 );
-                                //$handler->setFormatter(new LineFormatter("%message% %context% %extra%\n"));
                                 $handlers[] = $handler;
                                 break;
                         }

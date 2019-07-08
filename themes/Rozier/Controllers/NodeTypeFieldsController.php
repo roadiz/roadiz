@@ -56,7 +56,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function listAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
@@ -83,7 +83,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function editAction(Request $request, $nodeTypeFieldId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeTypeField $field */
         $field = $this->get('em')->find(NodeTypeField::class, $nodeTypeFieldId);
@@ -139,7 +139,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function addAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $field = new NodeTypeField();
         /** @var NodeType $nodeType */
@@ -221,7 +221,7 @@ class NodeTypeFieldsController extends RozierApp
      */
     public function deleteAction(Request $request, $nodeTypeFieldId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODEFIELDS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         /** @var NodeTypeField $field */
         $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);

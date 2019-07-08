@@ -49,7 +49,7 @@ class CacheController extends RozierApp
      */
     public function deleteDoctrineCache(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
 
         $form = $this->buildDeleteDoctrineForm();
         $form->handleRequest($request);
@@ -128,7 +128,7 @@ class CacheController extends RozierApp
      */
     public function deleteAssetsCache(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCTRINE_CACHE_DELETE');
 
         $form = $this->buildDeleteAssetsForm();
         $form->handleRequest($request);

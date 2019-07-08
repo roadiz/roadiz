@@ -49,7 +49,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
      */
     public function getTreeAction(Request $request, $translationId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         if (null === $translationId) {
             $translation = $this->get('defaultTranslation');

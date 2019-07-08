@@ -61,19 +61,20 @@ class ContactController extends DefaultThemeApp
 
 
     /**
-     * @param Request $request
-     * @param Node|null $node
+     * @param Request          $request
+     * @param Node|null        $node
      * @param Translation|null $translation
-     * @param null $_locale
-     * @param null $_route
+     * @param string           $_locale
+     * @param null             $_route
      *
      * @return null|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(
         Request $request,
         Node $node = null,
         Translation $translation = null,
-        $_locale = null,
+        $_locale = "en",
         $_route = null
     ) {
         /*
@@ -88,12 +89,12 @@ class ContactController extends DefaultThemeApp
                                        /*
                                         * Disable CSRF protection if using Varnish
                                         */
-                                       ->disableCsrfProtection()
+                                       //->disableCsrfProtection()
                                        // Use Honeypot
                                        ->withDefaultFields(true)
                                        ->withGoogleRecaptcha()
                                        ->setRedirectUrl($this->generateUrl('thanksPageLocale', [
-                                           '_locale' => $request->getLocale()
+                                           '_locale' => $_locale
                                        ]))
             ;
 

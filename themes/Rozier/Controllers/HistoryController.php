@@ -65,7 +65,7 @@ class HistoryController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         /*
          * Manage get request to filter list
@@ -96,7 +96,7 @@ class HistoryController extends RozierApp
      */
     public function userAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!($this->isGranted('ROLE_ACCESS_USERS')
             || (is_object($this->getUser()) && $this->getUser()->getId() == $userId))) {

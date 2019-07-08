@@ -30,41 +30,64 @@
 namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Serializer;
+use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Group;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 /**
  * {@inheritdoc}
  */
-class GroupsImporter implements ImporterInterface
+class GroupsImporter implements EntityImporterInterface, ContainerAwareInterface
 {
-    /**
-     * Import a Json file (.rzt) containing group.
-     *
-     * @param string $serializedData
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
-     */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
-    {
-        $serializer = new GroupCollectionJsonSerializer($em);
-        /** @var \RZ\Roadiz\Core\Entities\Group[] $groups */
-        $groups = $serializer->deserialize($serializedData);
-        foreach ($groups as $group) {
-            /** @var Group $existingGroup */
-            $existingGroup = $em->getRepository(Group::class)
-                                ->findOneByName($group->getName());
+    use ContainerAwareTrait;
 
-            if (null === $existingGroup) {
-                $em->persist($group);
-                // Flush before creating group's roles.
-                $em->flush($group);
-            } else {
-                $handlerFactory->getHandler($existingGroup)->diff($group);
-                $em->flush($existingGroup);
-            }
+    /**
+     * GroupsImporter constructor.
+     *
+     * @param Container $container
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $entityClass): bool
+    {
+        return $entityClass === Group::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function import(string $serializedData): bool
+    {
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $groups = $serializer->deserialize(
+            $serializedData,
+            'array<' . Group::class . '>',
+            'json',
+            DeserializationContext::create()
+                ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
+                ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
+        );
+
+        /** @var Group $group */
+        foreach ($groups as $group) {
+            $em->merge($group);
+            $em->flush();
         }
 
         return true;

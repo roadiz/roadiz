@@ -67,9 +67,7 @@ class CustomFormFieldType extends AbstractType
             ->add('placeholder', TextType::class, [
                 'label' => 'placeholder',
                 'required' => false,
-                'attr' => [
-                    'data-desc' => 'label_for_field_with_empty_data'
-                ],
+                'help' => 'label_for_field_with_empty_data',
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'type',
@@ -80,15 +78,11 @@ class CustomFormFieldType extends AbstractType
             ->add('required', CheckboxType::class, [
                 'label' => 'required',
                 'required' => false,
-                'attr' => [
-                    'data-desc' => 'make_this_field_mandatory_for_users'
-                ],
+                'help' => 'make_this_field_mandatory_for_users',
             ])
             ->add('expanded', CheckboxType::class, [
                 'label' => 'expanded',
-                'attr' => [
-                    'data-desc' => 'use_checkboxes_or_radio_buttons_instead_of_select_box'
-                ],
+                'help' => 'use_checkboxes_or_radio_buttons_instead_of_select_box',
                 'required' => false,
             ])
             ->add(
@@ -105,9 +99,7 @@ class CustomFormFieldType extends AbstractType
             ->add('groupName', TextType::class, [
                 'label' => 'groupName',
                 'required' => false,
-                'attr' => [
-                    'data-desc' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs'
-                ],
+                'help' => 'use_the_same_group_names_over_fields_to_gather_them_in_tabs',
             ]);
     }
 

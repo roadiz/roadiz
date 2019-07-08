@@ -57,7 +57,7 @@ class NewslettersUtilsController extends RozierApp
      */
     public function duplicateAction(Request $request, $newsletterId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NEWSLETTERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NEWSLETTERS');
 
         $translation = $this->get('defaultTranslation');
 

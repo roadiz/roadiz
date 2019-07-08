@@ -1,0 +1,13 @@
+{
+    "name": "Neutral",
+    "displayName": "Neutral",
+    "description": "Neutral Node-type.",
+    "visible": true,
+    "publishable": false,
+    "reachable": false,
+    "newsletterType": false,
+    "hidingNodes": false,
+    "color": "#969696",
+    "fields": [],
+    "defaultTtl": 0
+}

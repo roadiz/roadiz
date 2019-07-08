@@ -1,0 +1,105 @@
+{% set currentTitle = source.title|default(node.nodeName) %}
+
+{% extends '@Rozier/layout.html.twig' %}
+
+{% block content %}
+    <section class="content-global">
+        <header class="content-header header-node header-node-edit-source">
+            {% include '@Rozier/nodes/breadcrumb.html.twig' with {
+                "node": node,
+                "source": source,
+            } only %}
+            <h1 class="content-title node-edit-source-title"{% if source.translation.locale is rtl %} dir="rtl"{% endif %}>
+                {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|truncate(30, false, '[…]') }}
+                {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
+            </h1>
+            {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'attributes'} %}
+            {% include '@Rozier/nodes/attributes/translationBar.html.twig' with {"current": translation.id} %}
+        </header>
+
+        <article class="content  content-settings-list">
+            <div class="content-table-cont">
+                <table class="attribute-value-forms content-table settings uk-table">
+                    <thead>
+                        <tr>
+                            <th>{% trans %}attributes.code{% endtrans %}</th>
+                            <th>{% trans %}attributes.value{% endtrans %}</th>
+                            <th>{% trans %}actions{% endtrans %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for attribute_value_translation_form in attribute_value_translation_forms %}
+                            {% set attributeValue = attribute_value_translation_form.vars.data.attributeValue %}
+                            <tr class="setting-row">
+                                <td>
+                                    {{- attribute_value_translation_form.vars.data|attribute_label -}}
+                                </td>
+                                <td>
+                                    {% form_theme attribute_value_translation_form '@Rozier/horizontalForms.html.twig' %}
+                                    {{ form_start(attribute_value_translation_form, {
+                                        'attr': {
+                                            'class': 'uk-form uk-form-horizontal'
+                                        }
+                                    }) }}
+                                    {{ form_widget(attribute_value_translation_form) }}
+                                    {% spaceless %}
+                                        <button data-uk-tooltip="{animation:true}" title="{% trans %}edit{% endtrans %}" class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button>
+                                    {% endspaceless %}
+                                    {{ form_end(attribute_value_translation_form) }}
+                                </td>
+                                <td class="table-actions-row">
+                                    {% spaceless %}
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link uk-button-table-save mobile-hidden" href="#{{ attribute_value_translation_form.vars.id }}" title="{% trans %}save{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save-mini"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+                                           href="{{ path('nodesDeleteAttributesPage', {
+                                               nodeId : node.id,
+                                               translationId : translation.id,
+                                               attributeValueId : attributeValue.id
+                                           }) }}"
+                                           title="{% trans %}delete{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                    {% endspaceless %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        <tr>
+                            <td colspan="3">
+                                {% form_theme addAttributeForm '@Rozier/horizontalForms.html.twig' %}
+                                {{ form_start(addAttributeForm, {
+                                    'attr': {
+                                        'id': 'add-node-attribute-form',
+                                        'class': 'uk-form uk-form-stacked'
+                                    }
+                                }) }}{{ form_widget(addAttributeForm) }}
+                                {% spaceless %}
+                                    <button class="uk-button uk-button-primary" type="submit">
+                                        <span class="icon-container"><i class="uk-icon-rz-plus"></i></span>
+                                        <span class="label"><span class="label-text">{% trans %}add.a.node.attribute{% endtrans %}</span></span>
+                                    </button>
+                                {% endspaceless %}
+                                {{ form_end(addAttributeForm) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <hr>
+
+            {% set currentPath = path('nodesEditAttributesPage', {
+                nodeId: node.id,
+                translationId: translation.id
+            })  %}
+
+            <div class="content-table-cont uk-margin">
+                <a class="uk-button"
+                   href="{{ path('attributesAddPage', {referer: currentPath}) }}">
+                    <i class="uk-icon-rz-plus"></i>
+                    {% trans %}add.a.attribute{%- endtrans -%}
+                </a>
+            </div>
+        </article>
+
+        {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    </section>
+{% endblock %}

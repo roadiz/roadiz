@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
+use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
@@ -50,12 +51,18 @@ class EntityGenerator
     private $fieldGenerators;
 
     /**
+     * @var NodeTypes
+     */
+    private $nodeTypesBag;
+
+    /**
      * EntityGenerator constructor.
      * @param NodeType $nodeType
      */
-    public function __construct(NodeType $nodeType)
+    public function __construct(NodeType $nodeType, NodeTypes $nodeTypesBag)
     {
         $this->nodeType = $nodeType;
+        $this->nodeTypesBag = $nodeTypesBag;
         $this->fieldGenerators = [];
 
         /** @var NodeTypeField $field */
@@ -90,7 +97,7 @@ class EntityGenerator
             return new ManyToManyFieldGenerator($field);
         }
         if ($field->getType() === AbstractField::NODES_T) {
-            return new NodesFieldGenerator($field);
+            return new NodesFieldGenerator($field, $this->nodeTypesBag);
         }
         if (!$field->isVirtual()) {
             return new NonVirtualFieldGenerator($field);
@@ -142,6 +149,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Yaml\Yaml;
+use JMS\Serializer\Annotation as Serializer;
 use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
     }
 

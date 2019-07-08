@@ -62,8 +62,7 @@ class DispatcherCollector extends DataCollector implements Renderable
         foreach ($this->dispatcher->getListeners() as $eventName => $listeners) {
             /** @var EventSubscriberInterface $listener */
             foreach ($listeners as $priority => $listener) {
-                if (is_object($listener) &&
-                    $listener instanceof WrappedListener) {
+                if ($listener instanceof WrappedListener) {
                     $listener = $listener->getWrappedListener();
                 }
 
@@ -101,7 +100,7 @@ class DispatcherCollector extends DataCollector implements Renderable
     {
         $widgets = [
             'dispatcher' => [
-                'icon' => 'lock',
+                'icon' => 'flag',
                 'widget' => 'PhpDebugBar.Widgets.KVListWidget',
                 'map' => 'dispatcher.listeners',
                 'default' => '{}'

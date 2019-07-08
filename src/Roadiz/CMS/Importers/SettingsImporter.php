@@ -31,90 +31,67 @@ namespace RZ\Roadiz\CMS\Importers;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Serializer;
+use Pimple\Container;
+use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
+use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 /**
  * {@inheritdoc}
  */
-class SettingsImporter implements ImporterInterface
+class SettingsImporter implements EntityImporterInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
-     * Import a Json file (.rzt) containing setting and setting group.
+     * NodesImporter constructor.
      *
-     * @param string $serializedData
-     * @param EntityManager $em
-     * @param HandlerFactoryInterface $handlerFactory
-     * @return bool
+     * @param Container $container
      */
-    public static function importJsonFile($serializedData, EntityManager $em, HandlerFactoryInterface $handlerFactory)
+    public function __construct(Container $container)
     {
-        $serializer = new SettingCollectionJsonSerializer();
-        /** @var \RZ\Roadiz\Core\Entities\SettingGroup[] $settingGroups */
-        $settingGroups = $serializer->deserialize($serializedData);
+        $this->container = $container;
+    }
 
-        $groupsNames = $em->getRepository(SettingGroup::class)->findAllNames();
-        $settingsNames = $em->getRepository(Setting::class)->findAllNames();
 
-        $newSettings = [];
+    /**
+     * @inheritDoc
+     */
+    public function supports(string $entityClass): bool
+    {
+        return $entityClass === Setting::class;
+    }
 
-        foreach ($settingGroups as $settingGroup) {
-            /*
-             * Loop over settings to set their group
-             * and move them to a temp collection
-             */
-            /** @var Setting $setting */
-            foreach ($settingGroup->getSettings() as $setting) {
-                // Existing settings will be updated
-                if (in_array($setting->getName(), $settingsNames)) {
-                    $importValue = $setting->getValue();
-                    $setting = $em->getRepository(Setting::class)->findOneByName($setting->getName());
-                    /*
-                     * Replace setting value if defined in imported file, only if
-                     * not null, not zero, not empty string.
-                     */
-                    if (null !== $importValue && $importValue !== 0 && $importValue !== '') {
-                        $setting->setValue($importValue);
-                    }
-                }
-                /*
-                 * Set array with setting and the deserialize setting's group
-                 * to don't take the existing setting's group
-                 */
-                $newSettings[] = [$setting, $settingGroup];
-                $settingGroup->getSettings()->clear();
-            }
+    /**
+     * @inheritDoc
+     */
+    public function import(string $serializedData): bool
+    {
+        /** @var EntityManager $em */
+        $em = $this->get('em');
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $settings = $serializer->deserialize(
+            $serializedData,
+            'array<' . Setting::class . '>',
+            'json',
+            DeserializationContext::create()
+                ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
+                ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
+        );
+
+        /** @var Setting $setting */
+        foreach ($settings as $setting) {
+            $em->merge($setting);
+            $em->flush();
         }
-
-        foreach ($newSettings as $settingArray) {
-            /** @var \RZ\Roadiz\Core\Entities\SettingGroup $settingGroup */
-            $settingGroup = $settingArray[1];
-            /** @var \RZ\Roadiz\Core\Entities\Setting $setting */
-            $setting = $settingArray[0];
-
-            /*
-             * Persist or not group
-             */
-            if (null !== $settingGroup) {
-                if (!in_array($settingGroup->getName(), $groupsNames)) {
-                    $em->persist($settingGroup);
-                } else {
-                    $settingGroup = $em->getRepository(SettingGroup::class)
-                        ->findOneByName($settingGroup->getName());
-                }
-            }
-            /*
-             * Add group to setting and persist if don't exist
-             */
-            $setting->setSettingGroup($settingGroup);
-            if ($setting->getId() === null) {
-                $em->persist($setting);
-            }
-        }
-
-        $em->flush();
 
         // Clear result cache
         $cacheDriver = $em->getConfiguration()->getResultCacheImpl();

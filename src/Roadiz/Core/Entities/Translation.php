@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use RZ\Roadiz\Utils\StringHandler;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Translations describe language locales to be used by Nodes,
@@ -53,6 +54,7 @@ class Translation extends AbstractDateTimed
      * Associates locales to pretty languages names.
      *
      * @var array
+     * @Serializer\Exclude
      */
     public static $availableLocales = [
         'af_NA' => "Afrikaans (Namibia)",
@@ -490,7 +492,10 @@ class Translation extends AbstractDateTimed
         'zu_ZA' => "Zulu (South Africa)",
         'zu' => "Zulu",
     ];
-
+    /**
+     * @var array
+     * @Serializer\Exclude
+     */
     public static $rtlLanguages = [
         'ar_DZ' => "Arabic (Algeria)",
         'ar_BH' => "Arabic (Bahrain)",
@@ -521,11 +526,13 @@ class Translation extends AbstractDateTimed
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var Collection
+     * @Serializer\Exclude
      */
     protected $documentTranslations;
     /**
      * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var Collection
+     * @Serializer\Exclude
      */
     protected $folderTranslations;
     /**
@@ -535,36 +542,48 @@ class Translation extends AbstractDateTimed
      *
      * @var string
      * @ORM\Column(type="string", unique=true, length=10)
+     * @Serializer\Groups({"translation", "document", "nodes_sources", "tag", "attribute", "folder", "log_sources"})
+     * @Serializer\Type("string")
      */
     private $locale = '';
     /**
      * @var string|null
      * @ORM\Column(type="string", name="override_locale", length=10, unique=true, nullable=true)
+     * @Serializer\Groups({"translation", "document", "nodes_sources", "tag", "attribute", "folder"})
+     * @Serializer\Type("string")
      */
     private $overrideLocale = null;
     /**
      * @var string
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"translation"})
+     * @Serializer\Type("string")
      */
     private $name = '';
     /**
      * @var bool
      * @ORM\Column(name="default_translation", type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"translation"})
+     * @Serializer\Type("bool")
      */
     private $defaultTranslation = false;
     /**
      * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups({"translation"})
+     * @Serializer\Type("bool")
      */
     private $available = true;
     /**
      * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var Collection
+     * @Serializer\Exclude
      */
     private $nodeSources;
     /**
      * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @var Collection
+     * @Serializer\Exclude
      */
     private $tagTranslations;
 

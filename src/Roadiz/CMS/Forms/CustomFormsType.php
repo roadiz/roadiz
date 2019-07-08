@@ -172,9 +172,8 @@ class CustomFormsType extends AbstractType
     {
         $option = [
             "label" => $field->getLabel(),
+            'help' => $field->getDescription(),
             'attr' => [
-                'data-description' => $field->getDescription(),
-                'data-desc' => $field->getDescription(),
                 'data-group' => $field->getGroupName(),
             ],
         ];

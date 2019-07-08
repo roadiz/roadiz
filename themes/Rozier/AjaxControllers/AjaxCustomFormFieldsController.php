@@ -54,7 +54,7 @@ class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
          * Validate
          */
         $this->validateRequest($request);
-        $this->validateAccessForRole('ROLE_ACCESS_CUSTOMFORMS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
         $field = $this->get('em')->find(CustomFormField::class, (int) $customFormFieldId);
 

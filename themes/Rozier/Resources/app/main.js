@@ -13,13 +13,13 @@ import '../../bower_components/mousetrap/mousetrap'
 import '../../bower_components/caret/jquery.caret.js'
 import '../../bower_components/jquery-minicolors/jquery.minicolors.js'
 
-import UIkit from '../../bower_components/uikit/js/uikit'
-import '../../bower_components/uikit/js/components/nestable'
-import '../../bower_components/uikit/js/components/sortable.js'
-import '../../bower_components/uikit/js/components/datepicker.js'
-import '../../bower_components/uikit/js/components/pagination.js'
-import '../../bower_components/uikit/js/components/notify.js'
-import '../../bower_components/uikit/js/components/tooltip.js'
+import UIkit from '../../node_modules/uikit/dist/js/uikit'
+import '../../node_modules/uikit/dist/js/components/nestable'
+import '../../node_modules/uikit/dist/js/components/sortable.js'
+import '../../node_modules/uikit/dist/js/components/datepicker.js'
+import '../../node_modules/uikit/dist/js/components/pagination.js'
+import '../../node_modules/uikit/dist/js/components/notify.js'
+import '../../node_modules/uikit/dist/js/components/tooltip.js'
 
 import CodeMirror from 'codemirror'
 import 'codemirror/mode/markdown/markdown.js'
@@ -35,22 +35,9 @@ import 'jquery-ui/ui/widgets/autocomplete'
 
 import $ from 'jquery'
 import Rozier from './Rozier'
-import GeotagField from './widgets/GeotagField'
-import MultiGeotagField from './widgets/MultiGeotagField'
 
 window.CodeMirror = CodeMirror
 window.UIkit = UIkit
-
-// eslint-disable-next-line
-window.initializeGeotagFields = () => {
-    window.Rozier.gMapLoaded = true
-    window.Rozier.gMapLoading = false
-
-    /* eslint-disable no-new */
-    new GeotagField()
-    new MultiGeotagField()
-}
-
 /*
  * ============================================================================
  * Rozier entry point

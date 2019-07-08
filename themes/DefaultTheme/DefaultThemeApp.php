@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Themes\DefaultTheme;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
@@ -38,6 +39,8 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Themes\DefaultTheme\Event\LinkPathSubscriber;
+use Themes\DefaultTheme\Serialization\DocumentUriSubscriber;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
 use Themes\DefaultTheme\Twig\ImageFormatsExtension;
 
@@ -117,9 +120,11 @@ class DefaultThemeApp extends FrontendController
      */
     public function throw404($message = '')
     {
+        /** @var Request $request */
+        $request = $this->get('requestStack')->getCurrentRequest();
         $translation = $this->bindLocaleFromRoute(
-            $this->get('requestStack')->getCurrentRequest(),
-            $this->get('requestStack')->getCurrentRequest()->getLocale()
+            $request,
+            $request->getLocale()
         );
         $this->prepareThemeAssignation(null, $translation);
         $this->get('logger')->warn($message);
@@ -167,9 +172,14 @@ class DefaultThemeApp extends FrontendController
     {
         parent::setupDependencyInjection($container);
 
-        $container->extend('twig.extensions', function ($extensions, $c) {
+        $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
             $extensions->add(new ImageFormatsExtension());
             return $extensions;
+        });
+
+        $container->extend('serializer.subscribers', function ($subscribers, $c) {
+            $subscribers[] = new DocumentUriSubscriber($c);
+            return $subscribers;
         });
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
@@ -195,6 +205,7 @@ class DefaultThemeApp extends FrontendController
          */
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $container['dispatcher'];
+        $dispatcher->addSubscriber(new LinkPathSubscriber());
         $dispatcher->addListener(
             NodesSourcesEvents::NODE_SOURCE_INDEXING,
             function (FilterSolariumNodeSourceEvent $event) {

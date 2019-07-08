@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
@@ -57,7 +58,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['httpKernel'] = function ($c) {
-            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack']);
+            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack'], $c['argumentResolver']);
         };
 
         $container['requestStack'] = function () {
@@ -72,6 +73,10 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new ControllerResolver();
         };
 
+        $container['argumentResolver'] = function () {
+            return new ArgumentResolver();
+        };
+
         $container['router'] = function ($c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -81,7 +86,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
             if (false === $kernel->isInstallMode()) {
                 $router->add($c['nodeRouter'], 1);
-                $router->add($c['redirectionRouter'], 0);
+                // Redirection must be first to be able to redirect nodes urls
+                $router->add($c['redirectionRouter'], 3);
             }
 
             return $router;
@@ -113,6 +119,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['em'],
                 $c['themeResolver'],
                 $c['settingsBag'],
+                $c['dispatcher'],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),

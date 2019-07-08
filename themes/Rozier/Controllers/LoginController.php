@@ -31,18 +31,14 @@
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -61,8 +57,10 @@ class LoginController extends RozierApp
             return $this->redirect($this->generateUrl('adminHomePage'));
         }
 
-        $form = $this->buildLoginForm($request);
-
+        $form = $this->createForm(LoginType::class, null, [
+            'urlGenerator' => $this->get('urlGenerator'),
+            'requestStack' => $this->get('requestStack'),
+        ]);
         $this->assignation['form'] = $form->createView();
 
         $helper = $this->get('securityAuthenticationUtils');
@@ -100,70 +98,29 @@ class LoginController extends RozierApp
      */
     public function imageAction(Request $request)
     {
-        if ($request->isXmlHttpRequest()) {
-            $response = new JsonResponse();
+        $response = new JsonResponse();
 
-            if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
+        if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
+            if ($document instanceof Document) {
                 /** @var DocumentUrlGenerator $documentUrlGenerator */
                 $documentUrlGenerator = $this->get('document.url_generator');
                 $documentUrlGenerator->setDocument($document);
                 $documentUrlGenerator->setOptions([
                     'noProcess' => true
                 ]);
-
                 $response->setData([
                     'url' => $documentUrlGenerator->getUrl()
                 ]);
-            } else {
-                $splash = new SplashbasePictureFinder();
-                $feed = $splash->getRandomBySearch('road');
-                if (false === $feed) {
-                    throw new ResourceNotFoundException();
-                }
-                $response->setData($feed);
+                return $response;
             }
-
-            return $response;
         }
-
-        throw new ResourceNotFoundException();
-    }
-
-    /**
-     * @return \Symfony\Component\Form\Form
-     */
-    private function buildLoginForm(Request $request)
-    {
-        $defaults = [];
-
-        $builder = $this->get('formFactory')
-                        ->createNamedBuilder(null, FormType::class, $defaults, [])
-                        ->add('_username', TextType::class, [
-                            'label' => 'username',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('_password', PasswordType::class, [
-                            'label' => 'password',
-                            'constraints' => [
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('_remember_me', CheckboxType::class, [
-                            'label' => 'keep_me_logged_in',
-                            'required' => false,
-                            'attr' => [
-                                'checked' => true
-                            ],
-                        ]);
-
-        if ($request->query->has('_home')) {
-            $builder->add('_target_path', HiddenType::class, [
-                'data' => $this->get('urlGenerator')->generate('adminHomePage')
-            ]);
+        $splash = new SplashbasePictureFinder();
+        $feed = $splash->getRandomBySearch('road');
+        if (false === $feed) {
+            throw new ResourceNotFoundException();
         }
+        $response->setData($feed);
 
-        return $builder->getForm();
+        return $response;
     }
 }

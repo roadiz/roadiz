@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
@@ -217,11 +216,7 @@ class PrefixAwareRepository extends EntityRepository
              */
             return new Paginator($qb);
         } else {
-            try {
-                return $qb->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $qb->getQuery()->getResult();
         }
     }
 
@@ -252,11 +247,7 @@ class PrefixAwareRepository extends EntityRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -307,11 +298,7 @@ class PrefixAwareRepository extends EntityRepository
              */
             return new Paginator($qb);
         } else {
-            try {
-                return $qb->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $qb->getQuery()->getResult();
         }
     }
 
@@ -329,11 +316,7 @@ class PrefixAwareRepository extends EntityRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
 
-        try {
-            return (int) $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**

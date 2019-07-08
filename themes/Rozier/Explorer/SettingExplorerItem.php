@@ -60,7 +60,10 @@ class SettingExplorerItem extends AbstractExplorerItem
      */
     public function getAlternativeDisplayable()
     {
-        return $this->setting->getSettingGroup()->getName();
+        if (null !== $this->setting->getSettingGroup()) {
+            return $this->setting->getSettingGroup()->getName();
+        }
+        return '';
     }
 
     /**

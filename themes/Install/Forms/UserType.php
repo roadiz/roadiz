@@ -29,10 +29,9 @@
 
 namespace Themes\Install\Forms;
 
+use RZ\Roadiz\CMS\Forms\CreatePasswordType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -59,8 +58,7 @@ class UserType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
+            ->add('password', CreatePasswordType::class, [
                 'invalid_message' => 'password.must_match',
                 'first_options' => ['label' => 'password'],
                 'second_options' => ['label' => 'password.verify'],

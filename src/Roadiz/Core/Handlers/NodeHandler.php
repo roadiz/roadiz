@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
@@ -40,14 +41,33 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Workflow\Registry;
+use Symfony\Component\Workflow\Workflow;
 
 /**
  * Handle operations with nodes entities.
  */
 class NodeHandler extends AbstractHandler
 {
+    /**
+     * @var Registry
+     */
+    private $registry;
+
     /** @var null|Node  */
     private $node;
+
+    /**
+     * NodeHandler constructor.
+     *
+     * @param ObjectManager $objectManager
+     * @param Registry      $registry
+     */
+    public function __construct(ObjectManager $objectManager, Registry $registry)
+    {
+        parent::__construct($objectManager);
+        $this->registry = $registry;
+    }
 
     /**
      * @return Node
@@ -132,7 +152,10 @@ class NodeHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(CustomForm::class)
-            ->findByNodeAndFieldName($this->node, $fieldName);
+            ->findByNodeAndField(
+                $this->node,
+                $this->node->getNodeType()->getFieldByName($fieldName)
+            );
     }
 
     /**
@@ -200,9 +223,9 @@ class NodeHandler extends AbstractHandler
     public function getNodesFromFieldName($fieldName)
     {
         return $this->getRepository()
-            ->findByNodeAndFieldName(
+            ->findByNodeAndField(
                 $this->node,
-                $fieldName
+                $this->node->getNodeType()->getFieldByName($fieldName)
             );
     }
 
@@ -215,9 +238,9 @@ class NodeHandler extends AbstractHandler
     public function getReverseNodesFromFieldName($fieldName)
     {
         return $this->getRepository()
-            ->findByReverseNodeAndFieldName(
+            ->findByReverseNodeAndField(
                 $this->node,
-                $fieldName
+                $this->node->getNodeType()->getFieldByName($fieldName)
             );
     }
 
@@ -244,7 +267,7 @@ class NodeHandler extends AbstractHandler
     {
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager);
+            $handler = new NodeHandler($this->objectManager, $this->registry);
             $handler->setNode($node);
             $handler->removeWithChildrenAndAssociations();
         }
@@ -283,6 +306,14 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
+     * @return Workflow
+     */
+    private function getWorkflow(): Workflow
+    {
+        return $this->registry->get($this->node);
+    }
+
+    /**
      * Soft delete node and its children.
      *
      * **This method does not flush!**
@@ -291,11 +322,14 @@ class NodeHandler extends AbstractHandler
      */
     public function softRemoveWithChildren()
     {
-        $this->node->setStatus(Node::DELETED);
+        $workflow = $this->getWorkflow();
+        if ($workflow->can($this->node, 'delete')) {
+            $workflow->apply($this->node, 'delete');
+        }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager);
+            $handler = new NodeHandler($this->objectManager, $this->registry);
             $handler->setNode($node);
             $handler->softRemoveWithChildren();
         }
@@ -312,11 +346,14 @@ class NodeHandler extends AbstractHandler
      */
     public function softUnremoveWithChildren()
     {
-        $this->node->setStatus(Node::PENDING);
+        $workflow = $this->getWorkflow();
+        if ($workflow->can($this->node, 'undelete')) {
+            $workflow->apply($this->node, 'undelete');
+        }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager);
+            $handler = new NodeHandler($this->objectManager, $this->registry);
             $handler->setNode($node);
             $handler->softUnremoveWithChildren();
         }
@@ -333,17 +370,14 @@ class NodeHandler extends AbstractHandler
      */
     public function publishWithChildren()
     {
-        /*
-         * Publish only if node is Draft or pending
-         * NOT deleted nor archived.
-         */
-        if ($this->node->getStatus() < Node::PUBLISHED) {
-            $this->node->setStatus(Node::PUBLISHED);
+        $workflow = $this->getWorkflow();
+        if ($workflow->can($this->node, 'publish')) {
+            $workflow->apply($this->node, 'publish');
         }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager);
+            $handler = new NodeHandler($this->objectManager, $this->registry);
             $handler->setNode($node);
             $handler->publishWithChildren();
         }
@@ -359,11 +393,14 @@ class NodeHandler extends AbstractHandler
      */
     public function archiveWithChildren()
     {
-        $this->node->setStatus(Node::ARCHIVED);
+        $workflow = $this->getWorkflow();
+        if ($workflow->can($this->node, 'archive')) {
+            $workflow->apply($this->node, 'archive');
+        }
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager);
+            $handler = new NodeHandler($this->objectManager, $this->registry);
             $handler->setNode($node);
             $handler->archiveWithChildren();
         }
@@ -502,7 +539,7 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            $parentHandler = new NodeHandler($this->objectManager);
+            $parentHandler = new NodeHandler($this->objectManager, $this->registry);
             $parentHandler->setNode($this->node->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {

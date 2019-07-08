@@ -36,6 +36,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
 use RZ\Roadiz\Utils\Security\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * User Entity.
@@ -61,37 +62,44 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
 
     /**
      * @var bool
+     * @Serializer\Groups({"user"})
      */
     protected $sendCreationConfirmationEmail;
 
     /**
      * @var string
      * @ORM\Column(type="string", name="facebook_name", unique=false, nullable=true)
+     * @Serializer\Groups({"user"})
      */
     protected $facebookName = null;
 
     /**
      * @var string
      * @ORM\Column(type="text", name="picture_url", nullable=true)
+     * @Serializer\Groups({"user"})
      */
     protected $pictureUrl = '';
     /**
      * @var boolean
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups({"user"})
      */
     protected $enabled = true;
     /**
      * @ORM\Column(name="confirmation_token", type="string", unique=true, nullable=true)
+     * @Serializer\Groups({"user"})
      * @var string
      */
     protected $confirmationToken;
     /**
      * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
+     * @Serializer\Groups({"user"})
      * @var \DateTime
      */
     protected $passwordRequestedAt;
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"user", "log_user"})
      * @var string
      */
     private $username = '';
@@ -99,6 +107,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * The salt to use for hashing
      *
      * @ORM\Column(name="salt", type="string")
+     * @Serializer\Exclude()
      * @var string
      */
     private $salt = '';
@@ -107,6 +116,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      *
      * @var string
      * @ORM\Column(type="string", nullable=false)
+     * @Serializer\Exclude()
      */
     private $password = '';
     /**
@@ -114,16 +124,20 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * **Must not be persisted.**
      *
      * @var string|null
+     * @Serializer\Exclude()
      */
     private $plainPassword = null;
     /**
      * @var \DateTime
      * @ORM\Column(name="last_login", type="datetime", nullable=true)
+     * @Serializer\Groups({"user"})
      */
     private $lastLogin;
     /**
      * @var ArrayCollection
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
+     * @Serializer\Groups({"user_role"})
+     * @Serializer\Accessor(getter="getRolesEntities",setter="setRolesEntities")
      * @ORM\JoinTable(name="users_roles",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id", onDelete="CASCADE")}
@@ -135,6 +149,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * to be compatible with symfony security scheme
      *
      * @var array
+     * @Serializer\Groups({"user"})
      */
     private $rolesNames = null;
     /**
@@ -143,37 +158,44 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
      * )
-     * @var ArrayCollection
+     * @var ArrayCollection<Group>
+     * @Serializer\Groups({"user_group"})
      */
     private $groups;
     /**
      * @var boolean
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"user"})
      */
     private $expired = false;
     /**
      * @var boolean
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"user"})
      */
     private $locked = false;
     /**
      * @ORM\Column(name="credentials_expires_at", type="datetime", nullable=true)
+     * @Serializer\Groups({"user"})
      * @var \DateTime
      */
     private $credentialsExpiresAt;
     /**
      * @var boolean
      * @ORM\Column(type="boolean", name="credentials_expired", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"user"})
      */
     private $credentialsExpired = false;
     /**
      * @ORM\Column(name="expires_at", type="datetime", nullable=true)
+     * @Serializer\Groups({"user"})
      * @var \DateTime
      */
     private $expiresAt;
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
+     * @Serializer\Groups({"user"})
      * @var Node
      */
     private $chroot;
@@ -181,6 +203,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * @var null|string
      * @ORM\Column(name="locale", type="string", nullable=true, length=7)
+     * @Serializer\Groups({"user"})
      */
     private $locale = null;
 
@@ -226,6 +249,8 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * or username as a last try.
      *
      * @return string
+     * @Serializer\Groups({"user"})
+     * @Serializer\VirtualProperty()
      */
     public function getIdentifier(): string
     {
@@ -458,6 +483,18 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * @param ArrayCollection $roles
+     *
+     * @return User
+     */
+    public function setRolesEntities(ArrayCollection $roles): User
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
      * Remove role from current user.
      *
      * @param \RZ\Roadiz\Core\Entities\Role $role
@@ -527,6 +564,8 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * Get current user groups name.
      *
      * @return array Array of strings
+     * @Serializer\Groups({"user"})
+     * @Serializer\VirtualProperty()
      */
     public function getGroupNames(): array
     {
@@ -570,6 +609,8 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * @return bool    true if the user's account is non expired, false otherwise
      *
      * @see AccountExpiredException
+     * @Serializer\Groups({"user"})
+     * @Serializer\VirtualProperty()
      */
     public function isAccountNonExpired(): bool
     {
@@ -590,6 +631,8 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * @return bool true if the user is not locked, false otherwise
      *
      * @see LockedException
+     * @Serializer\Groups({"user"})
+     * @Serializer\VirtualProperty()
      */
     public function isAccountNonLocked(): bool
     {
@@ -599,8 +642,15 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     public function setLocked($locked)
     {
         $this->locked = (boolean)$locked;
-
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked(): bool
+    {
+        return $this->locked;
     }
 
     /**
@@ -776,7 +826,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * Get roles names as a simple array, combining groups roles.
      *
-     * @return array
+     * @return array<string>
      */
     public function getRoles(): array
     {
@@ -864,6 +914,8 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
 
     /**
      * {@inheritdoc}
+     * @Serializer\Groups({"user"})
+     * @Serializer\VirtualProperty()
      */
     public function isSuperAdmin()
     {

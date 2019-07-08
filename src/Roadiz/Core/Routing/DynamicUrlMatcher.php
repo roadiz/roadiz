@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Routing;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -42,11 +42,11 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
- * informations for a route.
+ * information for a route.
  */
 class DynamicUrlMatcher extends UrlMatcher
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $em;
     /** @var Theme  */
     protected $theme;
@@ -65,7 +65,7 @@ class DynamicUrlMatcher extends UrlMatcher
 
     /**
      * @param RequestContext $context
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param ThemeResolverInterface $themeResolver
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
@@ -73,7 +73,7 @@ class DynamicUrlMatcher extends UrlMatcher
      */
     public function __construct(
         RequestContext $context,
-        EntityManager $em,
+        EntityManagerInterface $em,
         ThemeResolverInterface $themeResolver,
         Stopwatch $stopwatch = null,
         LoggerInterface $logger = null,
@@ -105,17 +105,12 @@ class DynamicUrlMatcher extends UrlMatcher
             // First token is for language
             if ($locale !== null && $locale != '') {
                 if ($this->preview === true) {
-                    if (in_array($locale, $repository->getAllOverrideLocales())) {
-                        return $repository->findOneByOverrideLocale($locale);
-                    } elseif (in_array($locale, $repository->getAllLocales())) {
-                        return $repository->findOneByLocale($locale);
-                    }
+                    $translation = $repository->findOneByLocaleOrOverrideLocale($locale);
                 } else {
-                    if (in_array($locale, $repository->getAvailableOverrideLocales())) {
-                        return $repository->findOneByOverrideLocaleAndAvailable($locale);
-                    } elseif (in_array($locale, $repository->getAvailableLocales())) {
-                        return $repository->findOneByLocaleAndAvailable($locale);
-                    }
+                    $translation =  $repository->findOneAvailableByLocaleOrOverrideLocale($locale);
+                }
+                if (null !== $translation) {
+                    return $translation;
                 }
             }
         }

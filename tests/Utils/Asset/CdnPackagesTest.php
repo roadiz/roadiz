@@ -125,10 +125,12 @@ class CdnPackagesTest extends DefaultThemeDependentCase
 
     /**
      * @dataProvider documentUrlWithBasePathProvider
+     *
+     * @param          $domainName
      * @param Document $document
-     * @param array $options
-     * @param $absolute
-     * @param $expectedUrl
+     * @param array    $options
+     * @param          $absolute
+     * @param          $expectedUrl
      */
     public function testDocumentUrlWithBasePath($domainName, Document $document, array $options, $absolute, $expectedUrl)
     {

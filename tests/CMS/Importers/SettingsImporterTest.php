@@ -11,7 +11,7 @@ class SettingsImporterTest extends SchemaDependentCase
      */
     public function testImportJsonFile($json, $count)
     {
-        $this->assertTrue(SettingsImporter::importJsonFile($json, $this->get('em'), $this->get('factory.handler')));
+        $this->assertTrue($this->get(SettingsImporter::class)->import($json));
         $this->assertEquals($count, $this->countSettings());
 
         $this->getSettingRepository()->createQueryBuilder('t')->delete()->getQuery()->execute();
@@ -31,15 +31,18 @@ class SettingsImporterTest extends SchemaDependentCase
      */
     public function countSettings()
     {
-        return $this->getSettingRepository()->createQueryBuilder('t')->select('count(t)')->getQuery()->getSingleScalarResult();
+        return $this->getSettingRepository()
+            ->createQueryBuilder('t')
+            ->select('count(t)')
+            ->getQuery()->getSingleScalarResult();
     }
 
     public static function importJsonFileProvider()
     {
         return [
             [
-                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/settings.rzt'),
-                35,
+                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/settings.json'),
+                39,
             ]
         ];
     }

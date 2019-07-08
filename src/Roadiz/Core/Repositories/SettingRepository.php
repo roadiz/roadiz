@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
-
 /**
  * {@inheritdoc}
  */
@@ -53,11 +51,7 @@ class SettingRepository extends EntityRepository
         $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZSettingValue_'.$name);
 
-        try {
-            return $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getSingleScalarResult();
     }
 
     /**
@@ -75,11 +69,7 @@ class SettingRepository extends EntityRepository
         $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZSettingExists_'.$name);
 
-        try {
-            return (boolean) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
+        return (boolean) $query->getSingleScalarResult();
     }
 
     /**
@@ -94,11 +84,6 @@ class SettingRepository extends EntityRepository
         $query = $builder->getQuery();
         $query->useResultCache(true, 3600, 'RZSettingAll');
 
-        try {
-            $rolesNames = $query->getScalarResult();
-            return array_map('current', $rolesNames);
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 }

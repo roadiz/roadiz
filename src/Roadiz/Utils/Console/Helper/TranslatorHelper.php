@@ -30,16 +30,24 @@
 namespace RZ\Roadiz\Utils\Console\Helper;
 
 use Symfony\Component\Console\Helper\Helper;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * TranslatorHelper.
  */
 class TranslatorHelper extends Helper
 {
+    /**
+     * @var TranslatorInterface
+     */
     protected $translator;
 
-    public function __construct(Translator $translator)
+    /**
+     * TranslatorHelper constructor.
+     *
+     * @param TranslatorInterface $translator
+     */
+    public function __construct(TranslatorInterface $translator)
     {
         $this->translator = $translator;
     }

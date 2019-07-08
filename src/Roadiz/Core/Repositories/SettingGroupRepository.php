@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\NoResultException;
-
 /**
  * {@inheritdoc}
  */
@@ -49,11 +47,7 @@ class SettingGroupRepository extends EntityRepository
             WHERE s.name = :name')
                         ->setParameter('name', $name);
 
-        try {
-            return (boolean) $query->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return false;
-        }
+        return (boolean) $query->getSingleScalarResult();
     }
 
     /**
@@ -62,17 +56,6 @@ class SettingGroupRepository extends EntityRepository
     public function findAllNames()
     {
         $query = $this->_em->createQuery('SELECT s.name FROM RZ\Roadiz\Core\Entities\SettingGroup s');
-        try {
-            $result = $query->getScalarResult();
-
-            $ids = [];
-            foreach ($result as $item) {
-                $ids[] = $item['name'];
-            }
-
-            return $ids;
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return array_map('current', $query->getScalarResult());
     }
 }

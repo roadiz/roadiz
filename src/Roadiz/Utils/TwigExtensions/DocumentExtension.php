@@ -29,8 +29,6 @@
  */
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-use Intervention\Image\Exception\NotReadableException;
-use Intervention\Image\ImageManager;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
@@ -174,20 +172,10 @@ class DocumentExtension extends AbstractExtension
             }
         }
         if (null !== $document && $document->isImage()) {
-            try {
-                $manager = new ImageManager();
-                $documentPath = $this->container['assetPackages']->getDocumentFilePath($document);
-                $imageProcess = $manager->make($documentPath);
-                return [
-                    'width' => $imageProcess->width(),
-                    'height' => $imageProcess->height(),
-                ];
-            } catch (NotReadableException $exception) {
-                /*
-                 * Do nothing
-                 * just return 0 width and height
-                 */
-            }
+            return [
+                'width' => $document->getImageWidth(),
+                'height' => $document->getImageHeight(),
+            ];
         }
 
         return [

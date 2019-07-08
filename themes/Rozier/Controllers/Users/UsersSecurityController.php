@@ -38,6 +38,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Themes\Rozier\Forms\UserSecurityType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -54,19 +55,22 @@ class UsersSecurityController extends RozierApp
     public function securityAction(Request $request, $userId)
     {
         // Only user managers can review security
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User $user */
         $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
-            $form = $this->buildEditSecurityForm($user);
-
+            $form = $this->createForm(UserSecurityType::class, $user, [
+                'canChroot' => $this->isGranted("ROLE_SUPERADMIN"),
+                'entityManager' => $this->get('em'),
+            ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->editUserSecurity($form->getData(), $user, $request);
+                $this->get('em')->flush();
+
                 $msg = $this->getTranslator()->trans(
                     'user.%name%.security.updated',
                     ['%name%' => $user->getUsername()]
@@ -89,109 +93,5 @@ class UsersSecurityController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     *
-     * @param  User   $user
-     *
-     * @return \Symfony\Component\Form\Form
-     */
-    protected function buildEditSecurityForm(User $user)
-    {
-        $defaults = [
-            'enabled' => $user->isEnabled(),
-            'locked' => !$user->isAccountNonLocked(),
-            'expiresAt' => $user->getExpiresAt(),
-            'expired' => $user->getExpired(),
-            'credentialsExpiresAt' => $user->getCredentialsExpiresAt(),
-            'credentialsExpired' => $user->getCredentialsExpired(),
-            'chroot' => ($user->getChroot() !== null) ? $user->getChroot()->getId() : null,
-        ];
-
-        /** @var FormBuilder $builder */
-        $builder = $this->get('formFactory')
-                        ->createNamedBuilder('source', FormType::class, $defaults);
-
-        $builder->add('enabled', CheckboxType::class, [
-                    'label' => 'user.enabled',
-                    'required' => false,
-                ])
-                ->add('locked', CheckboxType::class, [
-                    'label' => 'user.locked',
-                    'required' => false,
-                ])
-                ->add('expiresAt', DateTimeType::class, [
-                    'label' => 'user.expiresAt',
-                    'required' => false,
-                    'years' => range(date('Y'), date('Y') + 2),
-                    'date_widget' => 'single_text',
-                    'date_format' => 'yyyy-MM-dd',
-                    'attr' => [
-                        'class' => 'rz-datetime-field',
-                    ],
-                    'placeholder' => [
-                        'hour' => 'hour',
-                        'minute' => 'minute',
-                    ],
-                ])
-                ->add('expired', CheckboxType::class, [
-                    'label' => 'user.force.expired',
-                    'required' => false,
-                ])
-                ->add('credentialsExpiresAt', DateTimeType::class, [
-                    'label' => 'user.credentialsExpiresAt',
-                    'required' => false,
-                    'years' => range(date('Y'), date('Y') + 2),
-                    'date_widget' => 'single_text',
-                    'date_format' => 'yyyy-MM-dd',
-                    'attr' => [
-                        'class' => 'rz-datetime-field',
-                    ],
-                    'placeholder' => [
-                        'hour' => 'hour',
-                        'minute' => 'minute',
-                    ],
-                ])
-                ->add('credentialsExpired', CheckboxType::class, [
-                    'label' => 'user.force.credentialsExpired',
-                    'required' => false,
-                ]);
-
-        if ($this->isGranted("ROLE_SUPERADMIN")) {
-            $n = $user->getChroot();
-            $n = ($n !== null) ? [$n] : [];
-            $builder->add('chroot', NodesType::class, [
-                'label' => 'chroot',
-                'required' => false,
-                'nodes' => $n,
-                'entityManager' => $this->get('em'),
-            ]);
-        }
-
-        return $builder->getForm();
-    }
-
-    protected function editUserSecurity(array $data, User $user, Request $request)
-    {
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            if ($key == "chroot") {
-                if (count($value) > 1) {
-                    $msg = $this->getTranslator()->trans('chroot.limited.one');
-                    $this->publishErrorMessage($request, $msg);
-                }
-                if ($value !== null) {
-                    $n = $this->get('em')->find(Node::class, $value[0]);
-                    $user->$setter($n);
-                } else {
-                    $user->$setter(null);
-                }
-            } else {
-                $user->$setter($value);
-            }
-        }
-
-        $this->get('em')->flush();
     }
 }

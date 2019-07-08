@@ -27,6 +27,8 @@
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
+use Doctrine\ORM\EntityNotFoundException;
+use Doctrine\ORM\Tools\ToolsException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -61,6 +63,7 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
             [['unittest-tag-1'], 3],
             [['unittest-tag-2'], 1],
             [['unittest-tag-3'], 1],
+            [['unittest-tag-4'], 2],
             [['unittest-tag-1', 'unittest-tag-2'], 3],
             [['unittest-tag-1', 'unittest-tag-3'], 3],
             [['unittest-tag-2', 'unittest-tag-3'], 2],
@@ -108,6 +111,11 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
      * fixtures
      * ============================================================================
      */
+    /**
+     * @throws ToolsException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
@@ -154,6 +162,8 @@ class NodeRepositoryTagsTest extends DefaultThemeDependentCase
                     ->findOneByTagName($tagName);
                 if (null !== $tag) {
                     $node->addTag($tag);
+                } else {
+                    throw new \RuntimeException('Cannot find tag');
                 }
             }
         }

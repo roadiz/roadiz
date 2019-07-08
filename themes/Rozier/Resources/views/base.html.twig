@@ -4,15 +4,10 @@
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>{% block title %}{{- head.siteTitle -}}{% endblock %}</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="generator" content="Roadiz {{ cms_prefix }} {{ cms_version }} - {{ head.themeName }}" />
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ head.resourcesUrl }}assets/img/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="{{ head.resourcesUrl }}assets/img/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="{{ head.resourcesUrl }}assets/img/favicon-16x16.png">
-        <link rel="mask-icon" href="{{ head.resourcesUrl }}assets/img/safari-pinned-tab.svg" color="#5bbad5">
-        <meta name="msapplication-TileColor" content="#2d89ef">
-        <meta name="theme-color" content="#ffffff">
+        <title>{% block title %}{% trans %}back_office{% endtrans %}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{% trans %}back_office{% endtrans %}{% endblock %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        {% include 'admin/meta-icon.html.twig' %}
 
         {# CSS scripts inclusions / Using webpack #}
         {% include '@Rozier/partials/css-inject.html.twig' %}
@@ -30,7 +25,7 @@
         <div id="app"></div>
         <div id="main-container" >
             <div id="main-container-inner">
-                <section class="main-container-section" id="user-panel">
+                <section class="main-container-section navigation-container-section" id="user-panel">
                     {% include '@Rozier/panels/user_panel.html.twig' with {
                         'session' : session,
                         'head' : head,
@@ -38,7 +33,7 @@
                         'request':request
                     } only %}
                 </section>
-                <section class="main-container-section" id="admin-menu">
+                <section class="main-container-section navigation-container-section" id="admin-menu">
                     {% include '@Rozier/panels/admin_menu.html.twig' with {
                         'themeServices' : themeServices,
                         'backofficeEntries':backofficeEntries,
@@ -48,7 +43,7 @@
                 {% if (is_granted('ROLE_ACCESS_NODES') or
                        is_granted('ROLE_ACCESS_DOCUMENTS') or
                        is_granted('ROLE_ACCESS_TAGS')) %}
-                <section id="main-trees" class="main-container-section">
+                <section class="main-container-section navigation-container-section" id="main-trees">
                     <div id="main-trees-overlay"></div>
                     <div id="main-trees-container">
                         {% include '@Rozier/panels/tree_panel.html.twig' with {
@@ -70,7 +65,9 @@
                             <h1>{% trans %}Welcome{% endtrans %}</h1>
                         {% endblock %}
                         <div id="canvasloader-container"></div>
-                        <div id="back-top-button" title="{% trans %}back_to.top{% endtrans %}" data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
+                        <div id="back-top-button"
+                             title="{% trans %}back_to.top{% endtrans %}"
+                             data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
                         {# This is a debug panel placeholder… do not remove it. #}
                     </div>
                 </section>
@@ -86,12 +83,13 @@
 
         <script>
             var temp = {
-                'baseUrl':        '{{ head.baseUrl }}',
-                'resourcesUrl':   '{{ head.resourcesUrl }}',
-                'ajaxToken':      '{{ head.ajaxToken }}',
-                'mainColor':      '{{ head.mainColor }}',
-                'mapsStyle':      {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
-                'googleClientId': '{{ head.googleClientId }}',
+                'baseUrl':           '{{ head.baseUrl }}',
+                'resourcesUrl':      '{{ head.resourcesUrl }}',
+                'ajaxToken':         '{{ head.ajaxToken }}',
+                'mainColor':         '{{ head.mainColor }}',
+                'mapsStyle':         {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
+                'leafletMapTileUrl': '{{ bags.settings.get('leaflet_map_tile_url')|default('https://{s}.tile.osm.org/{z}/{x}/{y}.png') }}',
+                'googleClientId':    '{{ head.googleClientId }}',
                 'defaultMapLocation': {{ head.mapsLocation|default('null')|raw }},
                 'messages': {
                     'login':                  '{{ 'login'|trans|trim|escape }}',
@@ -177,12 +175,12 @@
                     'ping' :                      '{{ path('ping') }}',
                     'splashRequest':              '{{ path('loginImagePage') }}',
                     'loginPage':                  '{{ path('loginPage') }}',
-                    'nodeAjaxEdit' :              '{{ head.baseUrl }}/rz-admin/ajax/node/edit/%nodeId%',
-                    'tagAjaxEdit' :               '{{ head.baseUrl }}/rz-admin/ajax/tag/edit/%tagId%',
-                    'folderAjaxEdit' :            '{{ head.baseUrl }}/rz-admin/ajax/folder/edit/%folderId%',
-                    'nodeTypesFieldAjaxEdit':     '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/edit/%nodeTypeFieldId%',
-                    'nodeTypesFieldAjaxList':     '{{ head.baseUrl }}/rz-admin/ajax/node-types/fields/list',
-                    'customFormsFieldAjaxEdit':   '{{ head.baseUrl }}/rz-admin/ajax/custom-forms/fields/edit/%customFormFieldId%',
+                    'nodeAjaxEdit' :              '{{ path('adminHomePage') }}/ajax/node/edit/%nodeId%',
+                    'tagAjaxEdit' :               '{{ path('adminHomePage') }}/ajax/tag/edit/%tagId%',
+                    'folderAjaxEdit' :            '{{ path('adminHomePage') }}/ajax/folder/edit/%folderId%',
+                    'nodeTypesFieldAjaxEdit':     '{{ path('adminHomePage') }}/ajax/node-types/fields/edit/%nodeTypeFieldId%',
+                    'nodeTypesFieldAjaxList':     '{{ path('adminHomePage') }}/ajax/node-types/fields/list',
+                    'customFormsFieldAjaxEdit':   '{{ path('adminHomePage') }}/ajax/custom-forms/fields/edit/%customFormFieldId%',
                     'documentsUploadPage' :       '{{ path('documentsUploadPage', {_format: 'json'}) }}',
                     'documentsBulkDeletePage' :   '{{ path('documentsBulkDeletePage') }}',
                     'documentsBulkDownloadPage' : '{{ path('documentsBulkDownloadPage') }}',
@@ -215,15 +213,14 @@
 
             var RozierRoot = temp;
         </script>
-
         {% if head.devMode %}
             <script src="{{ head.resourcesUrl }}vendor/vue.js"></script>
             <script src="{{ head.resourcesUrl }}vendor/vuex.js"></script>
             <script src="{{ head.resourcesUrl }}vendor/jquery.js"></script>
         {% else %}
-            <script src="https://unpkg.com/vue@2.5.13/dist/vue.min.js"></script>
-            <script src="https://unpkg.com/vuex@3.0.1/dist/vuex.min.js"></script>
-            <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/vue.min.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/vuex.min.js"></script>
+            <script src="{{ head.resourcesUrl }}vendor/jquery.min.js"></script>
         {% endif %}
 
         {# JS scripts inclusions / Using webpack #}

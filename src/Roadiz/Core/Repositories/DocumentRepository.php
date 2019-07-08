@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
@@ -63,11 +62,7 @@ class DocumentRepository extends EntityRepository
             ->setParameter(':id', $id)
             ->setMaxResults(1);
 
-        try {
-            return $qb->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -87,8 +82,7 @@ class DocumentRepository extends EntityRepository
                 return;
             }
 
-            if (is_array($criteria['folders']) ||
-                (is_object($criteria['folders']) && $criteria['folders'] instanceof Collection)) {
+            if (is_array($criteria['folders']) || $criteria['folders'] instanceof Collection) {
                 /*
                  * Do not filter if folder array is empty.
                  */
@@ -429,11 +423,7 @@ class DocumentRepository extends EntityRepository
              */
             return new Paginator($query);
         } else {
-            try {
-                return $query->getQuery()->getResult();
-            } catch (NoResultException $e) {
-                return [];
-            }
+            return $query->getQuery()->getResult();
         }
     }
 
@@ -464,11 +454,7 @@ class DocumentRepository extends EntityRepository
         $this->applyFilterByFolder($criteria, $query);
         $this->applyFilterByCriteria($criteria, $query);
 
-        try {
-            return $query->getQuery()->getSingleResult();
-        } catch (NoResultException $e) {
-            return null;
-        }
+        return $query->getQuery()->getOneOrNullResult();
     }
 
     /**
@@ -492,11 +478,7 @@ class DocumentRepository extends EntityRepository
         $this->applyFilterByFolder($criteria, $query);
         $this->applyFilterByCriteria($criteria, $query);
 
-        try {
-            return (int) $query->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $e) {
-            return 0;
-        }
+        return (int) $query->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -511,8 +493,10 @@ class DocumentRepository extends EntityRepository
     ) {
         $qb = $this->createQueryBuilder('d');
         $qb->addSelect('dt')
+            ->addSelect('dd')
             ->leftJoin('d.documentTranslations', 'dt', 'WITH', 'dt.translation = :translation')
             ->innerJoin('d.nodesSourcesByFields', 'nsf', 'WITH', 'nsf.nodeSource = :nodeSource')
+            ->leftJoin('d.downscaledDocument', 'dd')
             ->andWhere($qb->expr()->eq('nsf.field', ':field'))
             ->andWhere($qb->expr()->eq('d.raw', ':raw'))
             ->addOrderBy('nsf.position', 'ASC')
@@ -521,14 +505,12 @@ class DocumentRepository extends EntityRepository
             ->setParameter('translation', $nodeSource->getTranslation())
             ->setParameter('raw', false)
             ->setCacheable(true);
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
+     * @deprecated Use findByNodeSourceAndField because relying on field name **is not safe**.
      * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
      * @param string                              $fieldName
      *
@@ -540,7 +522,9 @@ class DocumentRepository extends EntityRepository
     ) {
         $qb = $this->createQueryBuilder('d');
         $qb->addSelect('dt')
+            ->addSelect('dd')
             ->leftJoin('d.documentTranslations', 'dt', 'WITH', 'dt.translation = :translation')
+            ->leftJoin('d.downscaledDocument', 'dd')
             ->innerJoin('d.nodesSourcesByFields', 'nsf', 'WITH', 'nsf.nodeSource = :nodeSource')
             ->innerJoin('nsf.field', 'f', 'WITH', 'f.name = :name')
             ->andWhere($qb->expr()->eq('d.raw', ':raw'))
@@ -550,11 +534,8 @@ class DocumentRepository extends EntityRepository
             ->setParameter('translation', $nodeSource->getTranslation())
             ->setParameter('raw', false)
             ->setCacheable(true);
-        try {
-            return $qb->getQuery()->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -573,11 +554,7 @@ class DocumentRepository extends EntityRepository
         ')->setParameter('type', AbstractField::DOCUMENTS_T)
             ->setParameter('raw', false);
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $query->getResult();
     }
 
     /**
@@ -628,10 +605,6 @@ class DocumentRepository extends EntityRepository
 
         $query = $qb->getQuery();
 
-        try {
-            return $query->getResult();
-        } catch (NoResultException $e) {
-            return [];
-        }
+        return $query->getResult();
     }
 }

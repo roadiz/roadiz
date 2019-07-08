@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Utils\Installer;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Yaml\Yaml;
 
 class ThemeInstaller

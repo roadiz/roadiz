@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Tests;
 
+use Doctrine\ORM\Tools\ToolsException;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\HttpFoundation\Request;
@@ -55,7 +56,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
     }
 
     /**
-     * @throws \Doctrine\ORM\Tools\ToolsException
+     * @throws ToolsException
      */
     public static function setUpBeforeClass()
     {

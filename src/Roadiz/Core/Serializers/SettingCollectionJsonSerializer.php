@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\SettingGroup;
 
 /**
  * Serialization class for Setting.
+ * @deprecated Use Serializer service.
  */
 class SettingCollectionJsonSerializer extends AbstractJsonSerializer
 {
@@ -113,6 +114,9 @@ class SettingCollectionJsonSerializer extends AbstractJsonSerializer
                             $newSetting->setVisible($setting['visible']);
                             if (isset($setting['default_values'])) {
                                 $newSetting->setDefaultValues($setting['default_values']);
+                            }
+                            if (isset($setting['description'])) {
+                                $newSetting->setDescription($setting['description']);
                             }
                             $newGroup->addSetting($newSetting);
                             $newSetting->setSettingGroup($newGroup);

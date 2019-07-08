@@ -1,0 +1,39 @@
+{% extends '@DefaultTheme/pages/base.html.twig' %}
+
+{% block inner_content %}
+    <h1 class="page-title">{{ nodeSource.title }}</h1>
+    <div class="page-text">{{ nodeSource.content|markdown }}</div>
+    <div class="page-blocks row">
+        {#
+         # Use a loop over children to display blocks
+         # according to their node-types.
+         # Here is the real power of Roadiz!
+         #}
+        {% set blocks = nodeSource|children({
+            'node.nodeType' : ['!=', bags.nodeTypes.get('Page')]
+        }) %}
+        {% for singleBlock in blocks %}
+            {#{{ singleBlock|render('DefaultTheme') }}#}
+            {% include '@DefaultTheme/blocks/' ~ singleBlock.node.nodeType.name|lower ~ '.html.twig' ignore missing with {
+                'nodeSource': singleBlock,
+                'parentNodeSource': nodeSource,
+                'themeServices': themeServices,
+                'head': head,
+                'node': singleBlock.node,
+                'nodeType': singleBlock.node.nodeType,
+                'loop': loop,
+                'blocksLength':blocks|length
+            } only %}
+        {% endfor %}
+    </div>
+
+    <div class="images row">
+        {% for image in nodeSource.pictures %}
+            {% set imageMetas = image.documentTranslations.first %}
+            <figure class="image col-md-3">
+                {{ image|display(imageFormats.thumbnail) }}
+                <figcaption><h5>{{ imageMetas.name }}</h5>{{ imageMetas.description|markdown }}</figcaption>
+            </figure>
+        {% endfor %}
+    </div>
+{% endblock %}

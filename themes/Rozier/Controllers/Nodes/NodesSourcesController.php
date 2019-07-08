@@ -34,15 +34,13 @@ use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Utils\Node\NodeNameChecker;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
@@ -61,7 +59,7 @@ class NodesSourcesController extends RozierApp
      * @param int $nodeId
      * @param int $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
@@ -114,17 +112,18 @@ class NodesSourcesController extends RozierApp
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid()) {
+                        /*
+                         * Dispatch pre-flush event
+                         */
+                        $event = new FilterNodesSourcesEvent($source);
+                        $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE, $event);
+
                         $this->get('em')->flush();
                         /*
-                         * Dispatch event
+                         * Dispatch post-flush event
                          */
                         $event = new FilterNodesSourcesEvent($source);
                         $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
-
-                        /*
-                         * Update nodeName against source title.
-                         */
-                        $this->updateNodeName($source);
 
                         $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
                             '%node_source%' => $source->getNode()->getNodeName(),
@@ -178,7 +177,7 @@ class NodesSourcesController extends RozierApp
      * @param Request $request
      * @param int     $nodeSourceId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
@@ -187,8 +186,23 @@ class NodesSourcesController extends RozierApp
         if (null === $ns) {
             throw new ResourceNotFoundException();
         }
+        /** @var Node $node */
+        $node = $ns->getNode();
+        $this->get("em")->refresh($ns->getNode());
 
-        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $ns->getNode()->getId());
+        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $node->getId());
+
+        /*
+         * Prevent deleting last node-source available in node.
+         */
+        if ($node->getNodeSources()->count() <= 1) {
+            $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [
+                '%node_source%' => $node->getNodeName(),
+                '%translation%' => $ns->getTranslation()->getName(),
+            ]);
+
+            throw new BadRequestHttpException($msg);
+        }
 
         $builder = $this->createFormBuilder()
                         ->add('nodeId', HiddenType::class, [
@@ -204,32 +218,24 @@ class NodesSourcesController extends RozierApp
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var Node $node */
             $node = $ns->getNode();
-            if ($node->getNodeSources()->count() <= 1) {
-                $msg = $this->getTranslator()->trans('node_source.%node_source%.%translation%.cant.deleted', [
-                    '%node_source%' => $node->getNodeName(),
-                    '%translation%' => $ns->getTranslation()->getName(),
-                ]);
+            /*
+             * Dispatch event
+             */
+            $event = new FilterNodesSourcesEvent($ns);
+            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
 
-                $this->publishErrorMessage($request, $msg);
-            } else {
-                /*
-                 * Dispatch event
-                 */
-                $event = new FilterNodesSourcesEvent($ns);
-                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
+            $this->get("em")->remove($ns);
+            $this->get("em")->flush();
 
-                $this->get("em")->remove($ns);
-                $this->get("em")->flush();
+            $ns = $node->getNodeSources()->first();
 
-                $ns = $node->getNodeSources()->first();
+            $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', [
+                '%node_source%' => $node->getNodeName(),
+                '%translation%' => $ns->getTranslation()->getName(),
+            ]);
 
-                $msg = $this->getTranslator()->trans('node_source.%node_source%.deleted.%translation%', [
-                    '%node_source%' => $node->getNodeName(),
-                    '%translation%' => $ns->getTranslation()->getName(),
-                ]);
+            $this->publishConfirmMessage($request, $msg);
 
-                $this->publishConfirmMessage($request, $msg);
-            }
             return $this->redirect($this->generateUrl(
                 'nodesEditSourcePage',
                 ['nodeId' => $node->getId(), "translationId" => $ns->getTranslation()->getId()]
@@ -240,49 +246,5 @@ class NodesSourcesController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         return $this->render('nodes/deleteSource.html.twig', $this->assignation);
-    }
-
-    /**
-     * Update nodeName when title is available.
-     *
-     * @param  NodesSources $nodeSource
-     */
-    protected function updateNodeName(NodesSources $nodeSource)
-    {
-        $title = $nodeSource->getTitle();
-
-        /*
-         * update node name if dynamic option enabled and
-         * default translation
-         */
-        if ("" != $title &&
-            true === $nodeSource->getNode()->isDynamicNodeName() &&
-            $nodeSource->getTranslation()->isDefaultTranslation()) {
-            $testingNodeName = StringHandler::slugify($title);
-
-            /*
-             * Node name wont be updated if name already taken OR
-             * if it is ALREADY suffixed with a unique ID.
-             */
-            if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
-                NodeNameChecker::isNodeNameValid($testingNodeName) &&
-                !NodeNameChecker::isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
-                $alreadyUsed = NodeNameChecker::isNodeNameAlreadyUsed($title, $this->get('em'));
-                if (!$alreadyUsed) {
-                    $nodeSource->getNode()->setNodeName($title);
-                } else {
-                    $nodeSource->getNode()->setNodeName($title . '-' . uniqid());
-                }
-                $this->get('em')->flush();
-
-                /*
-                 * Dispatch event
-                 */
-                $event = new FilterNodeEvent($nodeSource->getNode());
-                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
-            } else {
-                $this->get('logger')->debug('Node name has not be changed.');
-            }
-        }
     }
 }

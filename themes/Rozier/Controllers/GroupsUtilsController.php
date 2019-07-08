@@ -31,11 +31,16 @@
 
 namespace Themes\Rozier\Controllers;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -55,30 +60,27 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->get('em')
                               ->getRepository(Group::class)
                               ->findAll();
 
-        $serializer = new GroupCollectionJsonSerializer($this->get('em'));
-        $group = $serializer->serialize($existingGroup);
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
 
-        $response = new Response(
-            $group,
-            Response::HTTP_OK,
-            []
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingGroup,
+                'json',
+                SerializationContext::create()->setGroups(['group'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', 'group-all-' . date("YmdHis") . '.json'),
+            ],
+            true
         );
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-all-' . date("YmdHis") . '.rzt'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -91,30 +93,30 @@ class GroupsUtilsController extends RozierApp
      */
     public function exportAction(Request $request, $groupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         $existingGroup = $this->get('em')
                               ->find(Group::class, (int) $groupId);
 
-        $serializer = new GroupCollectionJsonSerializer($this->get('em'));
-        $group = $serializer->serialize([$existingGroup]);
+        if (null === $existingGroup) {
+            throw $this->createNotFoundException();
+        }
 
-        $response = new Response(
-            $group,
-            Response::HTTP_OK,
-            []
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $existingGroup,
+                'json',
+                SerializationContext::create()->setGroups(['group'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', 'group-' . $existingGroup->getName() . '-' . date("YmdHis") . '.json'),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                'group-' . $existingGroup->getName() . '-' . date("YmdHis") . '.rzt'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -126,7 +128,7 @@ class GroupsUtilsController extends RozierApp
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
         $form = $this->buildImportJsonFileForm();
 
@@ -134,17 +136,15 @@ class GroupsUtilsController extends RozierApp
 
         if ($form->isValid() &&
             !empty($form['group_file'])) {
+            /** @var UploadedFile $file */
             $file = $form['group_file']->getData();
 
             if ($file->isValid()) {
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    GroupsImporter::importJsonFile(
-                        $serializedData,
-                        $this->get('em'),
-                        $this->get('factory.handler')
-                    );
+                    $this->get(GroupsImporter::class)->import($serializedData);
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans('group.imported.updated');
                     $this->publishConfirmMessage($request, $msg);
@@ -153,20 +153,10 @@ class GroupsUtilsController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'groupsHomePage'
                     ));
-                } else {
-                    $msg = $this->getTranslator()->trans('file.format.not_valid');
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->error($msg);
-
-                    // redirect even if its null
-                    return $this->redirect($this->generateUrl(
-                        'groupsImportPage'
-                    ));
                 }
+                $form->addError(new FormError($this->getTranslator()->trans('file.format.not_valid')));
             } else {
-                $msg = $this->getTranslator()->trans('file.not_uploaded');
-                $request->getSession()->getFlashBag()->add('error', $msg);
-                $this->get('logger')->error($msg);
+                $form->addError(new FormError($this->getTranslator()->trans('file.not_uploaded')));
             }
         }
 

@@ -4,426 +4,426 @@
     <body>
       <trans-unit id="1">
         <source>Node name</source>
-        <target xml:lang="it" state="translated">Nome nodo</target>
+        <target state="translated">Nome nodo</target>
       </trans-unit>
       <trans-unit id="2">
         <source>See tree</source>
-        <target xml:lang="it" state="translated">Vedi albero</target>
+        <target state="translated">Vedi albero</target>
       </trans-unit>
       <trans-unit id="3">
         <source>_username</source>
-        <target xml:lang="it" state="translated">Nome utente</target>
+        <target state="translated">Nome utente</target>
       </trans-unit>
       <trans-unit id="4">
         <source>_password</source>
-        <target xml:lang="it" state="translated">Password</target>
+        <target state="translated">Password</target>
       </trans-unit>
       <trans-unit id="password.verify">
         <source>password.verify</source>
-        <target xml:lang="it" state="translated">Verifica password</target>
+        <target state="translated">Verifica password</target>
       </trans-unit>
       <trans-unit id="delete">
         <source>delete</source>
-        <target xml:lang="it" state="translated">Elimina</target>
+        <target state="translated">Elimina</target>
       </trans-unit>
       <trans-unit id="status">
         <source>status</source>
-        <target xml:lang="it" state="translated">Stato</target>
+        <target state="translated">Stato</target>
       </trans-unit>
       <!-- Welcome -->
       <trans-unit id="welcome.title">
         <source>welcome.title</source>
-        <target xml:lang="it" state="translated">Installazione di Roadiz</target>
+        <target state="translated">Installazione di Roadiz</target>
       </trans-unit>
       <trans-unit id="welcome.subtitle">
         <source>welcome.subtitle</source>
-        <target xml:lang="it" state="translated">Benvenuto su Roadiz CMS! </target>
+        <target state="translated">Benvenuto su Roadiz CMS! </target>
       </trans-unit>
       <trans-unit id="welcome.message">
         <source>welcome.message</source>
-        <target xml:lang="it" state="translated">&lt;p&gt; solo un po' di configurazione prima di farti giocare. Fai partire il motore! &lt;/p&gt;</target>
+        <target state="translated">&lt;p&gt; solo un po' di configurazione prima di farti giocare. Fai partire il motore! &lt;/p&gt;</target>
       </trans-unit>
       <!-- Requirements -->
       <trans-unit id="requirements.title">
         <source>requirements.title</source>
-        <target xml:lang="it" state="translated">Requisiti </target>
+        <target state="translated">Requisiti </target>
       </trans-unit>
       <trans-unit id="requirements.message">
         <source>requirements.message</source>
-        <target xml:lang="it" state="translated">&amp;It;p&gt; Per utilizzare Roadiz, il tuo server ha bisogno di alcuni requisiti, specialmente per quanto riguarda PHP. Se hai accesso al tuo file di configurazione (php.ini), dovresti essere in grado di modificarne alcuni. &amp;It;/p&gt;</target>
+        <target state="translated">&amp;It;p&gt; Per utilizzare Roadiz, il tuo server ha bisogno di alcuni requisiti, specialmente per quanto riguarda PHP. Se hai accesso al tuo file di configurazione (php.ini), dovresti essere in grado di modificarne alcuni. &amp;It;/p&gt;</target>
       </trans-unit>
       <trans-unit id="requirements.spec">
         <source>requirements.spec</source>
-        <target xml:lang="it" state="translated">Specificazioni</target>
+        <target state="translated">Specificazioni</target>
       </trans-unit>
       <trans-unit id="requirements.requirement">
         <source>requirements.requirement</source>
-        <target xml:lang="it" state="translated">Requisito</target>
+        <target state="translated">Requisito</target>
       </trans-unit>
       <trans-unit id="requirements.actual_value">
         <source>requirements.actual_value</source>
-        <target xml:lang="it" state="translated">Valore attuale</target>
+        <target state="translated">Valore attuale</target>
       </trans-unit>
       <!-- Database -->
       <trans-unit id="database.title">
         <source>database.title</source>
-        <target xml:lang="it" state="translated">Base di dati</target>
+        <target state="translated">Base di dati</target>
       </trans-unit>
       <trans-unit id="database.message">
         <source>database.message</source>
-        <target xml:lang="it" state="translated">&amp;It;p&gt;  Roadiz ha bisogno di un database per archiviare i tuoi contenuti. Puoi persino selezionare il tuo motore di database preferito e configurarlo. &amp;It;/p&gt;</target>
+        <target state="translated">&amp;It;p&gt;  Roadiz ha bisogno di un database per archiviare i tuoi contenuti. Puoi persino selezionare il tuo motore di database preferito e configurarlo. &amp;It;/p&gt;</target>
       </trans-unit>
       <trans-unit id="database.cannot_connect">
         <source>database.cannot_connect</source>
-        <target xml:lang="it" state="translated">Non è possibile connettersi al database</target>
+        <target state="translated">Non è possibile connettersi al database</target>
       </trans-unit>
       <trans-unit id="database.build">
         <source>database.build</source>
-        <target xml:lang="it" state="translated">Costruire il database</target>
+        <target state="translated">Costruire il database</target>
       </trans-unit>
       <!-- Database done -->
       <trans-unit id="database_done.title">
         <source>database_done.title</source>
-        <target xml:lang="it" state="translated">Database installato</target>
+        <target state="translated">Database installato</target>
       </trans-unit>
       <trans-unit id="database_done.message">
         <source>database_done.message</source>
-        <target xml:lang="it" state="translated">%It;p&gt; Il tuo database è stato installato con successo. Ora, importeremo alcuni contenuti e impostazioni di base per rendere il tuo sito attivo e funzionante. &amp;It;/p&gt;</target>
+        <target state="translated">%It;p&gt; Il tuo database è stato installato con successo. Ora, importeremo alcuni contenuti e impostazioni di base per rendere il tuo sito attivo e funzionante. &amp;It;/p&gt;</target>
       </trans-unit>
       <!-- Database fail -->
       <trans-unit id="database_fail.title">
         <source>database_fail.title</source>
-        <target xml:lang="it" state="translated">Il database non può essere installato</target>
+        <target state="translated">Il database non può essere installato</target>
       </trans-unit>
       <trans-unit id="database_fail.message">
         <source>database_fail.message</source>
-        <target xml:lang="it" state="translated">&amp;It;/p&gt; Impossibile installare il database per i seguenti motivi. Si prega di verificare se le credenziali del tuo database sono corrette o se il database non è già stato installato. &amp;It;/p&gt;</target>
+        <target state="translated">&amp;It;/p&gt; Impossibile installare il database per i seguenti motivi. Si prega di verificare se le credenziali del tuo database sono corrette o se il database non è già stato installato. &amp;It;/p&gt;</target>
       </trans-unit>
       <!-- Import -->
       <trans-unit id="import.title">
         <source>import.title</source>
-        <target xml:lang="it" state="translated">Importa dati base</target>
+        <target state="translated">Importa dati base</target>
       </trans-unit>
       <trans-unit id="import.message">
         <source>import.message</source>
-        <target xml:lang="it" state="translated">&amp;It;/p&gt; Importare impostazioni di base, ruoli e gruppi &amp;It;/p&gt;</target>
+        <target state="translated">&amp;It;/p&gt; Importare impostazioni di base, ruoli e gruppi &amp;It;/p&gt;</target>
       </trans-unit>
       <trans-unit id="import.step_name">
         <source>import.step_name</source>
-        <target xml:lang="it" state="translated">Step</target>
+        <target state="translated">Step</target>
       </trans-unit>
       <!-- User -->
       <trans-unit id="user.title">
         <source>user.title</source>
-        <target xml:lang="it" state="translated">Crea utente</target>
+        <target state="translated">Crea utente</target>
       </trans-unit>
       <trans-unit id="user.message">
         <source>user.message</source>
-        <target xml:lang="it" state="translated">&amp;It;/p&gt; Crea un utente per accedere allo spazio amministrativo del tuo sito. &amp;It;/p&gt;</target>
+        <target state="translated">&amp;It;/p&gt; Crea un utente per accedere allo spazio amministrativo del tuo sito. &amp;It;/p&gt;</target>
       </trans-unit>
       <trans-unit id="user.create">
         <source>user.create</source>
-        <target xml:lang="it" state="translated">Crea utente</target>
+        <target state="translated">Crea utente</target>
       </trans-unit>
       <trans-unit id="user.name">
         <source>user.name</source>
-        <target xml:lang="it" state="translated">Nome utente</target>
+        <target state="translated">Nome utente</target>
       </trans-unit>
       <trans-unit id="user.email">
         <source>user.email</source>
-        <target xml:lang="it" state="translated">Email</target>
+        <target state="translated">Email</target>
       </trans-unit>
       <trans-unit id="user.create_another">
         <source>user.create_another</source>
-        <target xml:lang="it" state="translated">Crea un altro utente</target>
+        <target state="translated">Crea un altro utente</target>
       </trans-unit>
       <!-- User summary -->
       <trans-unit id="user_summary.title">
         <source>user_summary.title</source>
-        <target xml:lang="it" state="translated">Utente creato </target>
+        <target state="translated">Utente creato </target>
       </trans-unit>
       <!-- Themes -->
       <trans-unit id="themes.title">
         <source>themes.title</source>
-        <target xml:lang="it" state="translated">Informazioni</target>
+        <target state="translated">Informazioni</target>
       </trans-unit>
       <trans-unit id="themes.message">
         <source>themes.message</source>
-        <target xml:lang="it" state="translated">&amp;It;/p&gt; Inserisci le informazioni di base del tuo sito &amp;It;/p&gt;</target>
+        <target state="translated">&amp;It;/p&gt; Inserisci le informazioni di base del tuo sito &amp;It;/p&gt;</target>
       </trans-unit>
       <trans-unit id="themes.save_informations">
         <source>themes.save_informations</source>
-        <target xml:lang="it" state="translated">Salva informazioni</target>
+        <target state="translated">Salva informazioni</target>
       </trans-unit>
       <trans-unit id="themes.frontend.description">
         <source>themes.frontend.description</source>
-        <target xml:lang="it" state="translated">Puoi installare un tema o più ed informazioni sul tuo sito</target>
+        <target state="translated">Puoi installare un tema o più ed informazioni sul tuo sito</target>
       </trans-unit>
       <!-- Import node type -->
       <trans-unit id="import_node_type.title">
         <source>import_node_type.title</source>
-        <target xml:lang="it" state="translated">Importa tipo di nodo</target>
+        <target state="translated">Importa tipo di nodo</target>
       </trans-unit>
       <trans-unit id="import_node_type.message">
         <source>import_node_type.message</source>
-        <target xml:lang="it" state="translated">Tipo di nodo</target>
+        <target state="translated">Tipo di nodo</target>
       </trans-unit>
       <trans-unit id="import_node_type.node_type">
         <source>import_node_type.node_type</source>
-        <target xml:lang="it" state="translated">Importa tipo di nodo</target>
+        <target state="translated">Importa tipo di nodo</target>
       </trans-unit>
       <trans-unit id="import_node_type.node">
         <source>import_node_type.node</source>
-        <target xml:lang="it" state="translated">Tipo di nodo</target>
+        <target state="translated">Tipo di nodo</target>
       </trans-unit>
       <trans-unit id="import_tags">
         <source>import_tags</source>
-        <target xml:lang="it" state="translated">Etichette</target>
+        <target state="translated">Etichette</target>
         <alt-trans>
-          <target xml:lang="it">etichette</target>
+          <target>etichette</target>
         </alt-trans>
       </trans-unit>
       <!-- Success -->
       <trans-unit id="success.title">
         <source>success.title</source>
-        <target xml:lang="it" state="translated">Complimenti!</target>
+        <target state="translated">Complimenti!</target>
       </trans-unit>
       <trans-unit id="success.message">
         <source>success.message</source>
-        <target xml:lang="it" state="translated">&amp;It;/p&gt; Roadiz è stato installato con successo &amp;It;/p&gt;</target>
+        <target state="translated">&amp;It;/p&gt; Roadiz è stato installato con successo &amp;It;/p&gt;</target>
       </trans-unit>
       <trans-unit id="success.quit_install">
         <source>success.quit_install</source>
-        <target xml:lang="it" state="translated">Esci dall'installazione</target>
+        <target state="translated">Esci dall'installazione</target>
       </trans-unit>
       <!-- Goto -->
       <trans-unit id="goto.requirements">
         <source>goto.requirements</source>
-        <target xml:lang="it" state="translated">Requisiti</target>
+        <target state="translated">Requisiti</target>
       </trans-unit>
       <trans-unit id="goto.welcome">
         <source>goto.welcome</source>
-        <target xml:lang="it" state="translated">Ritorna alla home</target>
+        <target state="translated">Ritorna alla home</target>
       </trans-unit>
       <trans-unit id="goto.database">
         <source>goto.database</source>
-        <target xml:lang="it" state="translated">Database</target>
+        <target state="translated">Database</target>
       </trans-unit>
       <trans-unit id="goto.import">
         <source>goto.import</source>
-        <target xml:lang="it" state="translated">Importa</target>
+        <target state="translated">Importa</target>
       </trans-unit>
       <trans-unit id="goto.user">
         <source>goto.user</source>
-        <target xml:lang="it" state="translated">Utente</target>
+        <target state="translated">Utente</target>
       </trans-unit>
       <trans-unit id="goto.theme">
         <source>goto.theme</source>
-        <target xml:lang="it" state="translated">Informazioni sul sito</target>
+        <target state="translated">Informazioni sul sito</target>
       </trans-unit>
       <trans-unit id="goto.informations">
         <source>goto.informations</source>
-        <target xml:lang="it" state="translated">Informazioni</target>
+        <target state="translated">Informazioni</target>
         <alt-trans>
-          <target xml:lang="it">informazioni</target>
+          <target>informazioni</target>
         </alt-trans>
       </trans-unit>
       <trans-unit id="skip.user.goto.theme">
         <source>skip.user.goto.theme</source>
-        <target xml:lang="it" state="translated">Salta</target>
+        <target state="translated">Salta</target>
         <alt-trans>
-          <target xml:lang="it">avanti</target>
+          <target>avanti</target>
         </alt-trans>
         <alt-trans>
-          <target xml:lang="it">continuare</target>
+          <target>continuare</target>
         </alt-trans>
         <alt-trans>
-          <target xml:lang="it">passa avanti</target>
+          <target>passa avanti</target>
         </alt-trans>
       </trans-unit>
       <trans-unit id="skip.user.goto.done">
         <source>skip.user.goto.done</source>
-        <target xml:lang="it" state="translated">Fine</target>
+        <target state="translated">Fine</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.import">
         <source>skip.database.goto.import</source>
-        <target xml:lang="it" state="translated">Salta</target>
+        <target state="translated">Salta</target>
       </trans-unit>
       <trans-unit id="choose.language">
         <source>choose.language</source>
-        <target xml:lang="it" state="translated">Scegli lingua</target>
+        <target state="translated">Scegli lingua</target>
       </trans-unit>
       <trans-unit id="choose.a.language">
         <source>choose.a.language</source>
-        <target xml:lang="it" state="translated">Scegli la tua lingua principale</target>
+        <target state="translated">Scegli la tua lingua principale</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.theme">
         <source>skip.database.goto.theme</source>
-        <target xml:lang="it" state="translated"> Salta</target>
+        <target state="translated"> Salta</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="theme.summary.title">
                 <source>theme.summary.title</source>
-                <target xml:lang="it" state="translated">Riassunto della configurazione del tema</target>
+                <target state="translated">Riassunto della configurazione del tema</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.version">
                 <source>check.version</source>
-                <target xml:lang="it" state="translated">Versione</target>
+                <target state="translated">Versione</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.name">
                 <source>theme.name</source>
-                <target xml:lang="it" state="translated">Nome</target>
+                <target state="translated">Nome</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.version">
                 <source>theme.version</source>
-                <target xml:lang="it" state="translated">Versione</target>
+                <target state="translated">Versione</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.version">
                 <source>cms.version</source>
-                <target xml:lang="it" state="translated">Versione del CMS</target>
-            <alt-trans><target xml:lang="it">versione del Cms</target></alt-trans></trans-unit>
+                <target state="translated">Versione del CMS</target>
+            <alt-trans><target>versione del Cms</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="theme.supportedLocale">
                 <source>theme.supportedLocale</source>
-                <target xml:lang="it" state="translated">Impostazioni locali supportate</target>
+                <target state="translated">Impostazioni locali supportate</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.locale">
                 <source>cms.locale</source>
-                <target xml:lang="it" state="translated">CMS locale</target>
+                <target state="translated">CMS locale</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="name">
                 <source>name</source>
-                <target xml:lang="it" state="translated">Nome</target>
+                <target state="translated">Nome</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="filename">
                 <source>filename</source>
-                <target xml:lang="it" state="translated">Nome del file</target>
+                <target state="translated">Nome del file</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodetypes">
                 <source>nodetypes</source>
-                <target xml:lang="it" state="translated">Tipi di nodi</target>
+                <target state="translated">Tipi di nodi</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodes">
                 <source>nodes</source>
-                <target xml:lang="it" state="translated">Nodi</target>
+                <target state="translated">Nodi</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install.theme">
                 <source>install.theme</source>
-                <target xml:lang="it" state="translated">Avvia l'istallazione del tema</target>
+                <target state="translated">Avvia l'istallazione del tema</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import.theme.content.title">
                 <source>import.theme.content.title</source>
-                <target xml:lang="it" state="translated">Importa il contenuto del tema</target>
+                <target state="translated">Importa il contenuto del tema</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="step.name">
                 <source>step.name</source>
-                <target xml:lang="it" state="translated">Tappa</target>
+                <target state="translated">Tappa</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="goto.done">
                 <source>goto.done</source>
-                <target xml:lang="it" state="translated">Finito</target>
+                <target state="translated">Finito</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_roles">
                 <source>import_roles</source>
-                <target xml:lang="it" state="translated">Ruoli</target>
+                <target state="translated">Ruoli</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_groups">
                 <source>import_groups</source>
-                <target xml:lang="it" state="translated">Ruoli gruppi</target>
+                <target state="translated">Ruoli gruppi</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_settings">
                 <source>import_settings</source>
-                <target xml:lang="it" state="translated">Impostazioni</target>
+                <target state="translated">Impostazioni</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.selector">
                 <source>theme.selector</source>
-                <target xml:lang="it" state="translated">Temi disponibili</target>
+                <target state="translated">Temi disponibili</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.locale">
                 <source>check.locale</source>
-                <target xml:lang="it" state="translated">Locale</target>
+                <target state="translated">Locale</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.import.files">
                 <source>check.import.files</source>
-                <target xml:lang="it" state="translated">File da importare</target>
+                <target state="translated">File da importare</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password.must_match">
                 <source>password.must_match</source>
-                <target xml:lang="it" state="translated">Le password devono corrispondere</target>
+                <target state="translated">Le password devono corrispondere</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="site_name">
                 <source>site_name</source>
-                <target xml:lang="it" state="translated">Nome del tuo sito</target>
+                <target state="translated">Nome del tuo sito</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender">
                 <source>email_sender</source>
-                <target xml:lang="it" state="translated">Email principale</target>
+                <target state="translated">Email principale</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender_name">
                 <source>email_sender_name</source>
-                <target xml:lang="it" state="translated">Nome dell'email principale</target>
+                <target state="translated">Nome dell'email principale</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="meta_description">
                 <source>meta_description</source>
-                <target xml:lang="it" state="translated">Descrizione SEO</target>
+                <target state="translated">Descrizione SEO</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="timezone">
                 <source>timezone</source>
-                <target xml:lang="it" state="translated">Fuso orario</target>
+                <target state="translated">Fuso orario</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install_theme">
                 <source>install_theme</source>
-                <target xml:lang="it" state="translated">Installare un tema?</target>
+                <target state="translated">Installare un tema?</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="driver">
                 <source>driver</source>
-                <target xml:lang="it" state="translated">Driver</target>
+                <target state="translated">Driver</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="host">
                 <source>host</source>
-                <target xml:lang="it" state="translated">Host</target>
+                <target state="translated">Host</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="port">
                 <source>port</source>
-                <target xml:lang="it" state="translated">Port</target>
+                <target state="translated">Port</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="unix_socket">
                 <source>unix_socket</source>
-                <target xml:lang="it" state="translated">Socket UNIX</target>
+                <target state="translated">Socket UNIX</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="path">
                 <source>path</source>
-                <target xml:lang="it" state="translated">Path</target>
-            <alt-trans><target xml:lang="it">Cammino</target></alt-trans></trans-unit>
+                <target state="translated">Path</target>
+            <alt-trans><target>Cammino</target></alt-trans></trans-unit>
       <trans-unit xml:space="preserve" id="user">
                 <source>user</source>
-                <target xml:lang="it" state="translated">Nome utente</target>
+                <target state="translated">Nome utente</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password">
                 <source>password</source>
-                <target xml:lang="it" state="translated">Password</target>
+                <target state="translated">Password</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="dbname">
                 <source>dbname</source>
-                <target xml:lang="it" state="translated">Nome del database</target>
+                <target state="translated">Nome del database</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.locale.message">
                 <source>error.locale.message</source>
-                <target xml:lang="it" state="translated">Un tema locale non esiste nel tuo sistema</target>
+                <target state="translated">Un tema locale non esiste nel tuo sistema</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.modal.title">
                 <source>error.modal.title</source>
-                <target xml:lang="it" state="translated">Correggi i seguenti problemi prima di procedere all'istallazione.</target>
+                <target state="translated">Correggi i seguenti problemi prima di procedere all'istallazione.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.version.message">
                 <source>error.version.message</source>
-                <target xml:lang="it" state="translated">Il tema richiede una versione più recente di Roadiz</target>
+                <target state="translated">Il tema richiede una versione più recente di Roadiz</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="warning.theme.continue">
                 <source>warning.theme.continue</source>
-                <target xml:lang="it" state="translated">Puoi ignorare questi messaggi e continuare comunque.</target>
+                <target state="translated">Puoi ignorare questi messaggi e continuare comunque.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz">
                 <source>now_you_can_delete_install_file_and_use_roadiz</source>
-                <target xml:lang="it" state="translated">L'installazione di Roadiz ora è completa, puoi cancellare il file install.php e iniziare a utilizzare il tuo nuovo sito web.</target>
+                <target state="translated">L'installazione di Roadiz ora è completa, puoi cancellare il file install.php e iniziare a utilizzare il tuo nuovo sito web.</target>
             </trans-unit>
     </body>
   </file>

@@ -30,15 +30,20 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Attribute\Model\AttributableInterface;
+use RZ\Roadiz\Attribute\Model\AttributableTrait;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Node entities are the central feature of RZ-CMS,
+ * Node entities are the central feature of Roadiz,
  * it describes a document-like object which can be inherited
  * with *NodesSources* to create complex data structures.
  *
@@ -56,9 +61,10 @@ use RZ\Roadiz\Utils\StringHandler;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class Node extends AbstractDateTimedPositioned implements LeafInterface
+class Node extends AbstractDateTimedPositioned implements LeafInterface, AttributableInterface
 {
     use LeafTrait;
+    use AttributableTrait;
 
     const DRAFT = 10;
     const PENDING = 20;
@@ -66,6 +72,10 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     const ARCHIVED = 40;
     const DELETED = 50;
 
+    /**
+     * @var array
+     * @Serializer\Exclude
+     */
     public static $orderingFields = [
         'position' => 'position',
         'nodeName' => 'nodeName',
@@ -97,6 +107,8 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
+     * @Serializer\Groups({"nodes_sources", "node", "log_sources"})
+     * @Serializer\Accessor(getter="getNodeName", setter="setNodeName")
      */
     private $nodeName;
 
@@ -149,6 +161,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="boolean", name="home", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $home = false;
 
@@ -172,6 +185,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $visible = true;
 
@@ -195,6 +209,8 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"nodes_sources", "node"})
+     * @internal You should use node Workflow to perform change on status.
      */
     private $status = Node::DRAFT;
 
@@ -209,10 +225,38 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @param int $status
      * @return $this
+     * @internal You should use node Workflow to perform change on status.
      */
     public function setStatus($status)
     {
         $this->status = (int) $status;
+
+        return $this;
+    }
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Serializer\Exclude()
+     */
+    private $ttl = 0;
+
+    /**
+     * @return int
+     */
+    public function getTtl(): int
+    {
+        return $this->ttl;
+    }
+
+    /**
+     * @param int $ttl
+     *
+     * @return Node
+     */
+    public function setTtl(int $ttl): Node
+    {
+        $this->ttl = $ttl;
 
         return $this;
     }
@@ -253,6 +297,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param boolean $published
      *
      * @return $this
+     * @deprecated You should use node Workflow to perform change on status.
      */
     public function setPublished($published)
     {
@@ -265,6 +310,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param boolean $pending
      *
      * @return $this
+     * @deprecated You should use node Workflow to perform change on status.
      */
     public function setPending($pending)
     {
@@ -275,6 +321,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node"})
      */
     private $locked = false;
 
@@ -300,6 +347,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="decimal", precision=2, scale=1)
+     * @Serializer\Groups({"node"})
      */
     private $priority = 0.8;
 
@@ -325,6 +373,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="boolean", name="hide_children", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node"})
      */
     protected $hideChildren = false;
 
@@ -379,6 +428,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @param boolean $archived
      *
      * @return $this
+     * @deprecated You should use node Workflow to perform change on status.
      */
     public function setArchived($archived)
     {
@@ -389,6 +439,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node"})
      */
     private $sterile = false;
 
@@ -414,6 +465,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="string", name="children_order")
+     * @Serializer\Groups({"node"})
      */
     private $childrenOrder = 'position';
 
@@ -439,6 +491,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\Column(type="string", name="children_order_direction", length=4)
+     * @Serializer\Groups({"node"})
      */
     private $childrenOrderDirection = 'ASC';
 
@@ -465,6 +518,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @ORM\ManyToOne(targetEntity="NodeType")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Serializer\Groups({"nodes_sources", "node"})
      * @var NodeType
      */
     private $nodeType;
@@ -490,32 +544,46 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EXTRA_LAZY")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EAGER")
      * @ORM\JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Node
+     * @Serializer\Exclude
      */
     protected $parent;
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection
+     * @var ArrayCollection<RZ\Roadiz\Core\Entities\Node>
+     * @Serializer\Groups({"node_children"})
      */
     protected $children;
 
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
-     * @var ArrayCollection
+     * @var ArrayCollection<RZ\Roadiz\Core\Entities\Tag>
+     * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $tags = null;
 
     /**
-     * @return ArrayCollection
+     * @return Collection<Tag>
      */
-    public function getTags()
+    public function getTags(): Collection
     {
         return $this->tags;
+    }
+
+    /**
+     * @param Collection<Tag> $tags
+     *
+     * @return Node
+     */
+    public function setTags(Collection $tags): self
+    {
+        $this->tags = $tags;
+        return $this;
     }
 
     /**
@@ -523,7 +591,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      *
      * @return $this
      */
-    public function removeTag(Tag $tag)
+    public function removeTag(Tag $tag): self
     {
         if ($this->getTags()->contains($tag)) {
             $this->getTags()->removeElement($tag);
@@ -537,7 +605,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      *
      * @return $this
      */
-    public function addTag(Tag $tag)
+    public function addTag(Tag $tag): self
     {
         if (!$this->getTags()->contains($tag)) {
             $this->getTags()->add($tag);
@@ -549,6 +617,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="node", fetch="EXTRA_LAZY")
      * @var ArrayCollection
+     * @Serializer\Exclude()
      */
     private $customForms = null;
 
@@ -564,6 +633,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * @ORM\ManyToMany(targetEntity="NodeType")
      * @ORM\JoinTable(name="stack_types")
      * @var ArrayCollection
+     * @Serializer\Groups({"node"})
      */
     private $stackTypes = null;
 
@@ -604,7 +674,8 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
+     * @Serializer\Groups({"node"})
      */
     private $nodeSources;
 
@@ -620,7 +691,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
      * Get node-sources using a given translation.
      *
      * @param Translation $translation
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getNodeSourcesByTranslation(Translation $translation)
     {
@@ -661,7 +732,9 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
+     * @ORM\OrderBy({"position" = "ASC"})
      * @var ArrayCollection
+     * @Serializer\Exclude()
      */
     protected $bNodes;
 
@@ -676,8 +749,22 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
+     * @param NodeTypeField $field
+     *
+     * @return ArrayCollection|Collection
+     */
+    public function getBNodesByField(NodeTypeField $field)
+    {
+        $criteria = Criteria::create();
+        $criteria->andWhere(Criteria::expr()->eq('field', $field));
+        $criteria->orderBy(['position' => 'ASC']);
+        return $this->getBNodes()->matching($criteria);
+    }
+
+    /**
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeB")
      * @var ArrayCollection
+     * @Serializer\Exclude()
      */
     protected $aNodes;
 
@@ -690,6 +777,14 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
     {
         return $this->aNodes;
     }
+
+    /**
+     * @var Collection<AttributeValueInterface>
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="node", orphanRemoval=true)
+     * @ORM\OrderBy({"position" = "ASC"})
+     * @Serializer\Groups({"nodes_sources", "node"})
+     */
+    protected $attributeValues;
 
     /**
      * Create a new empty Node according to given node-type.
@@ -705,6 +800,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
         $this->customForms = new ArrayCollection();
         $this->aNodes = new ArrayCollection();
         $this->bNodes = new ArrayCollection();
+        $this->attributeValues = new ArrayCollection();
 
         $this->setNodeType($nodeType);
     }
@@ -758,6 +854,16 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface
                 foreach ($nodeSources as $nodeSource) {
                     $cloneNodeSource = clone $nodeSource;
                     $cloneNodeSource->setNode($this);
+                }
+            }
+            $attributeValues = $this->getAttributeValues();
+            if ($attributeValues !== null) {
+                $this->attributeValues = new ArrayCollection();
+                /** @var AttributeValue $attributeValue */
+                foreach ($attributeValues as $attributeValue) {
+                    $cloneAttributeValue = clone $attributeValue;
+                    $cloneAttributeValue->setNode($this);
+                    $this->addAttributeValue($cloneAttributeValue);
                 }
             }
             // Get a random string after node-name.

@@ -75,6 +75,16 @@ installImportTags:
     requirements:
         filename: "^[a-zA-Z_/.-]+$"
         themeId: "[0-9]+"
+
+installImportAttributes:
+    path:     /install/import/attributes/{themeId}
+    methods: [POST]
+    defaults:
+        _controller: RZ\Roadiz\CMS\Controllers\ImportController::importAttributesAction
+    requirements:
+        filename: "^[a-zA-Z_/.-]+$"
+        themeId: "[0-9]+"
+
 installImportThemePage:
     path:     /install/import/theme/{id}
     defaults:

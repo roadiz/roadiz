@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Controllers\ImportController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * {@inheritdoc}
@@ -44,11 +45,11 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importSettingsAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importSettingsAction($request, $themeId);
     }
@@ -59,11 +60,11 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importRolesAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importRolesAction($request, $themeId);
     }
@@ -74,11 +75,11 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importGroupsAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importGroupsAction($request, $themeId);
     }
@@ -89,11 +90,11 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importNodeTypesAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importNodeTypesAction($request, $themeId);
     }
@@ -104,13 +105,28 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importTagsAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importTagsAction($request, $themeId);
+    }
+
+    /**
+     * Import Attributes file.
+     *
+     * @param Request $request
+     * @param int     $themeId
+     *
+     * @return Response
+     */
+    public function importAttributesAction(Request $request, $themeId = null)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
+
+        return parent::importAttributesAction($request, $themeId);
     }
 
     /**
@@ -119,11 +135,11 @@ class ThemesImportController extends ImportController
      * @param Request $request
      * @param int     $themeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importNodesAction(Request $request, $themeId = null)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_THEMES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         return parent::importNodesAction($request, $themeId);
     }

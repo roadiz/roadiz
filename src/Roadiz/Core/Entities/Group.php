@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * A group gather User and Roles.
@@ -44,25 +45,34 @@ class Group extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string", unique=true)
+     * @Serializer\Groups({"user", "role", "group"})
+     * @Serializer\Type("string")
      * @var string
      */
     private $name = '';
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
+     * @Serializer\Groups({"group_user"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\User>")
      * @var ArrayCollection
      */
     private $users;
     /**
-     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups")
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role", inversedBy="groups", cascade={"persist", "merge"})
      * @ORM\JoinTable(name="groups_roles",
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
-     * @var ArrayCollection
+     * @var ArrayCollection<Role>
+     * @Serializer\Groups({"group"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Role>")
+     * @Serializer\Accessor(getter="getRolesEntities", setter="setRolesEntities")
      */
     private $roles;
     /**
      * @var array|null
+     * @Serializer\Groups({"group", "user"})
+     * @Serializer\Type("array<string>")
      */
     private $rolesNames = null;
 
@@ -131,14 +141,31 @@ class Group extends AbstractEntity
     }
 
     /**
+     * Get roles entities.
+     *
+     * @param Collection $roles
+     *
+     * @return Group
+     */
+    public function setRolesEntities(Collection $roles): self
+    {
+        $this->roles = $roles;
+        /** @var Role $role */
+        foreach ($this->roles as $role) {
+            $role->addGroup($this);
+        }
+        return $this;
+    }
+
+    /**
      * @param \RZ\Roadiz\Core\Entities\Role $role
      *
      * @return $this
      */
     public function addRole(Role $role): Group
     {
-        if (!$this->getRolesEntities()->contains($role)) {
-            $this->getRolesEntities()->add($role);
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
         }
 
         return $this;
@@ -151,8 +178,8 @@ class Group extends AbstractEntity
      */
     public function removeRole(Role $role): Group
     {
-        if ($this->getRolesEntities()->contains($role)) {
-            $this->getRolesEntities()->removeElement($role);
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
         }
 
         return $this;

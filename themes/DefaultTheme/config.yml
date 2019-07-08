@@ -8,16 +8,20 @@ supportedLocale:
     - fr
     - ru
     - tr
-versionRequire: "1.1.0"
+versionRequire: "1.2.0"
 importFiles:
     roles: []
     groups: []
     settings: []
+    attributes:
+        - Resources/import/attributes.json
     nodetypes:
-        - "Resources/import/nodetype/Page.rzt"
-        - "Resources/import/nodetype/Neutral.rzt"
-        - "Resources/import/nodetype/BasicBlock.rzt"
-        - "Resources/import/nodetype/BasicNewsletter.rzt"
-    tags: []
+        - Resources/import/nodetype/BasicBlock.json
+        - Resources/import/nodetype/BasicNewsletter.json
+        - Resources/import/nodetype/Link.json
+        - Resources/import/nodetype/Neutral.json
+        - Resources/import/nodetype/Page.json
+    tags:
+        - Resources/import/tags.json
     nodes:
         - "Resources/import/node/node-main-menu.rzn"

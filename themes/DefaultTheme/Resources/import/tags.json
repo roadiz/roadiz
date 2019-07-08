@@ -1,0 +1,98 @@
+{
+  "tagName": "main",
+  "color": "#000000",
+  "visible": true,
+  "childrenOrder": "position",
+  "childrenOrderDirection": "ASC",
+  "locked": false,
+  "children": [
+    {
+      "tagName": "cras",
+      "color": "#000000",
+      "visible": true,
+      "childrenOrder": "position",
+      "childrenOrderDirection": "ASC",
+      "locked": false,
+      "children": [],
+      "translatedTags": [
+        {
+          "name": "Cras",
+          "translation": {
+            "locale": "fr"
+          },
+          "tagTranslationDocuments": []
+        }
+      ]
+    },
+    {
+      "tagName": "ullamcorper",
+      "color": "#000000",
+      "visible": true,
+      "childrenOrder": "position",
+      "childrenOrderDirection": "ASC",
+      "locked": false,
+      "children": [],
+      "translatedTags": [
+        {
+          "name": "Ullamcorper",
+          "translation": {
+            "locale": "fr"
+          },
+          "tagTranslationDocuments": []
+        }
+      ]
+    },
+    {
+      "tagName": "risus",
+      "color": "#000000",
+      "visible": true,
+      "childrenOrder": "position",
+      "childrenOrderDirection": "ASC",
+      "locked": false,
+      "children": [],
+      "translatedTags": [
+        {
+          "name": "Risus",
+          "translation": {
+            "locale": "fr"
+          },
+          "tagTranslationDocuments": []
+        }
+      ]
+    },
+    {
+      "tagName": "lorem",
+      "color": "#000000",
+      "visible": true,
+      "childrenOrder": "position",
+      "childrenOrderDirection": "ASC",
+      "locked": false,
+      "children": [],
+      "translatedTags": [
+        {
+          "name": "Lorem",
+          "translation": {
+            "locale": "fr"
+          },
+          "tagTranslationDocuments": []
+        }
+      ]
+    }
+  ],
+  "translatedTags": [
+    {
+      "name": "Main tag",
+      "translation": {
+        "locale": "en"
+      },
+      "tagTranslationDocuments": []
+    },
+    {
+      "name": "Étiquette principale",
+      "translation": {
+          "locale": "fr"
+      },
+      "tagTranslationDocuments": []
+    }
+  ]
+}

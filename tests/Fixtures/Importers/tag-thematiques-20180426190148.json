@@ -1,0 +1,50 @@
+{
+    "tagName": "thematiques",
+    "visible": true,
+    "locked": true,
+    "color": "#ff0000",
+    "children": [
+        {
+            "tagName": "environnement",
+            "visible": true,
+            "locked": false,
+            "color": "#000000",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "Environnement",
+                    "description": null
+                }
+            ]
+        },
+        {
+            "tagName": "vie-sociale",
+            "visible": true,
+            "locked": false,
+            "color": "#000000",
+            "children": [],
+            "translatedTags": [
+                {
+                    "translation": {
+                        "locale": "fr"
+                    },
+                    "name": "Vie sociale",
+                    "description": null
+                }
+            ]
+        }
+    ],
+    "translatedTags": [
+        {
+            "translation": {
+                "locale": "fr"
+            },
+            "name": "Thématiques",
+            "description": null
+        }
+    ]
+}
+

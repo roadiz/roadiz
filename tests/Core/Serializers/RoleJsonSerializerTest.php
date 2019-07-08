@@ -29,11 +29,10 @@
 
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Serializers\RoleJsonSerializer;
-use RZ\Roadiz\Core\Serializers\SettingJsonSerializer;
 use RZ\Roadiz\Tests\SchemaDependentCase;
 
 /**
- * Description.
+ * @deprecated
  */
 class RoleJsonSerializerTest extends SchemaDependentCase
 {

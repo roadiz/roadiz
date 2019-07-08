@@ -49,6 +49,10 @@ abstract class FrontendController extends AppController
     /**
      * {@inheritdoc}
      */
+    public static $priority = 10;
+    /**
+     * {@inheritdoc}
+     */
     protected static $themeName = 'Default theme';
     /**
      * {@inheritdoc}
@@ -66,11 +70,6 @@ abstract class FrontendController extends AppController
      * {@inheritdoc}
      */
     protected static $backendTheme = false;
-    /**
-     * {@inheritdoc}
-     */
-    public static $priority = 10;
-
     /**
      * Put here your node which need a specific controller
      * instead of a node-type controller.
@@ -99,6 +98,90 @@ abstract class FrontendController extends AppController
     protected $themeContainer = null;
 
     /**
+     * Append objects to global container.
+     *
+     * Add a request matcher on frontend to make securityTokenStorage
+     * available even when no user has logged in.
+     *
+     * @param Container $container
+     */
+    public static function setupDependencyInjection(Container $container)
+    {
+        parent::setupDependencyInjection($container);
+
+        /**
+         * You can override default frontend firewall
+         * by overriding addDefaultFirewallEntry method
+         *
+         * @see FrontendController::addDefaultFirewallEntry
+         */
+        static::addDefaultFirewallEntry($container);
+    }
+
+    /**
+     * Declare a default firewall for any routes and adds
+     * an Anonymous token and context listener to fetch current
+     * user information in front-end.
+     *
+     * Override this method to create a custom frontend security scheme
+     * with FirewallEntry.
+     *
+     * Always declare before ^/ any firewall base pattern that is INSIDE
+     * site base_path.
+     *
+     * @param Container $container
+     * @see FirewallEntry
+     */
+    public static function addDefaultFirewallEntry(Container $container)
+    {
+        $firewallBasePattern = '^/';
+        $firewallBasePath = '/';
+
+        $firewallEntry = new FirewallEntry(
+            $container,
+            $firewallBasePattern,
+            $firewallBasePath,
+            null,
+            null,
+            null,
+            'IS_AUTHENTICATED_ANONYMOUSLY'
+        );
+        $firewallEntry
+            ->withSwitchUserListener()
+            ->withAnonymousAuthenticationListener();
+
+        $container['firewallMap']->add(
+            $firewallEntry->getRequestMatcher(),
+            $firewallEntry->getListeners(),
+            $firewallEntry->getExceptionListener()
+        );
+    }
+
+    /**
+     * @return Node
+     */
+    public function getNode(): ?Node
+    {
+        return $this->node;
+    }
+
+    /**
+     * @return NodesSources
+     */
+    public function getNodeSource(): ?NodesSources
+    {
+        return $this->nodeSource;
+    }
+
+    /**
+     * @return Translation
+     */
+    public function getTranslation(): ?Translation
+    {
+        return $this->translation;
+    }
+
+    /**
      * Default action for any node URL.
      *
      * @param Request $request
@@ -118,121 +201,6 @@ abstract class FrontendController extends AppController
 
         //  Main node based routing method
         return $this->handle($request, $this->node, $this->translation);
-    }
-
-    /**
-     * Default action for default URL (homepage).
-     *
-     * @param Request $request
-     * @param string|null $_locale
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function homeAction(Request $request, $_locale = null)
-    {
-        /*
-         * If you use a static route for Home page
-         * we need to grab manually language.
-         *
-         * Get language from static route
-         */
-        $translation = $this->bindLocaleFromRoute($request, $_locale);
-
-        /*
-         * Grab home flagged node
-         */
-        $node = $this->getHome($translation);
-        $this->prepareThemeAssignation($node, $translation);
-
-        return $this->render('home.html.twig', $this->assignation);
-    }
-
-    /**
-     * Store current node and translation into controller.
-     *
-     * It makes following fields available into template assignation:
-     *
-     * * node
-     * * nodeSource
-     * * translation
-     * * pageMeta
-     *     * title
-     *     * description
-     *     * keywords
-     *
-     * @param Node        $node
-     * @param Translation $translation
-     */
-    public function storeNodeAndTranslation(Node $node = null, Translation $translation = null)
-    {
-        $this->node = $node;
-        $this->translation = $translation;
-        $this->assignation['translation'] = $this->translation;
-        $this->getRequest()->attributes->set('translation', $this->translation);
-
-        if (null !== $this->node) {
-            $this->getRequest()->attributes->set('node', $this->node);
-            $this->nodeSource = $this->node->getNodeSources()->first();
-            $this->assignation['node'] = $this->node;
-            $this->assignation['nodeSource'] = $this->nodeSource;
-        }
-
-        $this->assignation['pageMeta'] = $this->getNodeSEO();
-    }
-
-    /**
-     * Store current nodeSource and translation into controller.
-     *
-     * It makes following fields available into template assignation:
-     *
-     * * node
-     * * nodeSource
-     * * translation
-     * * pageMeta
-     *     * title
-     *     * description
-     *     * keywords
-     *
-     * @param NodesSources $nodeSource
-     * @param Translation $translation
-     */
-    public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
-    {
-        $this->nodeSource = $nodeSource;
-
-        if (null !== $this->nodeSource) {
-            $this->node = $this->nodeSource->getNode();
-            $this->translation = $this->nodeSource->getTranslation();
-
-            $this->getRequest()->attributes->set('translation', $this->translation);
-            $this->getRequest()->attributes->set('node', $this->node);
-
-            $this->assignation['translation'] = $this->translation;
-            $this->assignation['node'] = $this->node;
-            $this->assignation['nodeSource'] = $this->nodeSource;
-        } else {
-            $this->translation = $translation;
-            $this->assignation['translation'] = $this->translation;
-            $this->getRequest()->attributes->set('translation', $this->translation);
-        }
-
-        $this->assignation['pageMeta'] = $this->getNodeSEO();
-    }
-
-
-    /**
-     * Initialize controller with environment from an other controller
-     * in order to avoid initializing same component again.
-     *
-     * @param array $baseAssignation
-     * @param Container $themeContainer
-     */
-    public function __initFromOtherController(
-        array &$baseAssignation = [],
-        Container $themeContainer = null
-    ) {
-        $this->assignation = $baseAssignation;
-        $this->themeContainer = $themeContainer;
     }
 
     /**
@@ -299,30 +267,45 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * Add a default translation locale for static routes and
-     * node SEO data.
+     * Initialize controller with environment from an other controller
+     * in order to avoid initializing same component again.
      *
-     * * [parent assignations…]
-     * * **_default_locale**
-     * * meta
-     *     * siteName
-     *     * siteCopyright
-     *     * siteDescription
+     * @param array $baseAssignation
+     * @param Container $themeContainer
      */
-    public function prepareBaseAssignation()
+    public function __initFromOtherController(
+        array &$baseAssignation = [],
+        Container $themeContainer = null
+    ) {
+        $this->assignation = $baseAssignation;
+        $this->themeContainer = $themeContainer;
+    }
+
+    /**
+     * Default action for default URL (homepage).
+     *
+     * @param Request $request
+     * @param string|null $_locale
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function homeAction(Request $request, $_locale = null)
     {
-        parent::prepareBaseAssignation();
+        /*
+         * If you use a static route for Home page
+         * we need to grab manually language.
+         *
+         * Get language from static route
+         */
+        $translation = $this->bindLocaleFromRoute($request, $_locale);
 
-        $translation = $this->get('defaultTranslation');
+        /*
+         * Grab home flagged node
+         */
+        $node = $this->getHome($translation);
+        $this->prepareThemeAssignation($node, $translation);
 
-        $this->assignation['_default_locale'] = $translation->getLocale();
-        $this->assignation['meta'] = [
-            'siteName' => $this->get('settingsBag')->get('site_name'),
-            'siteCopyright' => $this->get('settingsBag')->get('site_copyright'),
-            'siteDescription' => $this->get('settingsBag')->get('seo_description'),
-        ];
-
-        return $this;
+        return $this->render('home.html.twig', $this->assignation);
     }
 
     /**
@@ -350,33 +333,36 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * Store basic information for your theme from a NodesSources object.
+     * Store current node and translation into controller.
      *
-     * @param NodesSources $nodeSource
+     * It makes following fields available into template assignation:
+     *
+     * * node
+     * * nodeSource
+     * * translation
+     * * pageMeta
+     *     * title
+     *     * description
+     *     * keywords
+     *
+     * @param Node        $node
      * @param Translation $translation
-     *
-     * @return void
      */
-    protected function prepareNodeSourceAssignation(NodesSources $nodeSource = null, Translation $translation = null)
+    public function storeNodeAndTranslation(Node $node = null, Translation $translation = null)
     {
-        $this->storeNodeSourceAndTranslation($nodeSource, $translation);
-        $this->assignation['home'] = $this->getHome($translation);
-        /*
-         * Use a DI container to delay API requests
-         */
-        $this->themeContainer = new Container();
+        $this->node = $node;
+        $this->translation = $translation;
+        $this->assignation['translation'] = $this->translation;
+        $this->getRequest()->attributes->set('translation', $this->translation);
 
-        $this->extendAssignation();
-    }
+        if (null !== $this->node) {
+            $this->getRequest()->attributes->set('node', $this->node);
+            $this->nodeSource = $this->node->getNodeSourcesByTranslation($translation)->first() ?: null;
+            $this->assignation['node'] = $this->node;
+            $this->assignation['nodeSource'] = $this->nodeSource;
+        }
 
-    /**
-     * Extends theme assignation with custom data.
-     *
-     * Override this method in your theme to add your own service
-     * and data.
-     */
-    protected function extendAssignation()
-    {
+        $this->assignation['pageMeta'] = $this->getNodeSEO();
     }
 
     /**
@@ -414,63 +400,40 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * Append objects to global container.
+     * Extends theme assignation with custom data.
      *
-     * Add a request matcher on frontend to make securityTokenStorage
-     * available even when no user has logged in.
-     *
-     * @param Container $container
+     * Override this method in your theme to add your own service
+     * and data.
      */
-    public static function setupDependencyInjection(Container $container)
+    protected function extendAssignation()
     {
-        parent::setupDependencyInjection($container);
-
-        /**
-         * You can override default frontend firewall
-         * by overriding addDefaultFirewallEntry method
-         *
-         * @see FrontendController::addDefaultFirewallEntry
-         */
-        static::addDefaultFirewallEntry($container);
     }
 
     /**
-     * Declare a default firewall for any routes and adds
-     * an Anonymous token and context listener to fetch current
-     * user information in front-end.
+     * Add a default translation locale for static routes and
+     * node SEO data.
      *
-     * Override this method to create a custom frontend security scheme
-     * with FirewallEntry.
-     *
-     * Always declare before ^/ any firewall base pattern that is INSIDE
-     * site base_path.
-     *
-     * @param Container $container
-     * @see FirewallEntry
+     * * [parent assignations…]
+     * * **_default_locale**
+     * * meta
+     *     * siteName
+     *     * siteCopyright
+     *     * siteDescription
      */
-    public static function addDefaultFirewallEntry(Container $container)
+    public function prepareBaseAssignation()
     {
-        $firewallBasePattern = '^/';
-        $firewallBasePath = '/';
+        parent::prepareBaseAssignation();
 
-        $firewallEntry = new FirewallEntry(
-            $container,
-            $firewallBasePattern,
-            $firewallBasePath,
-            null,
-            null,
-            null,
-            'IS_AUTHENTICATED_ANONYMOUSLY'
-        );
-        $firewallEntry
-            ->withSwitchUserListener()
-            ->withAnonymousAuthenticationListener();
+        $translation = $this->get('defaultTranslation');
 
-        $container['firewallMap']->add(
-            $firewallEntry->getRequestMatcher(),
-            $firewallEntry->getListeners(),
-            $firewallEntry->getExceptionListener()
-        );
+        $this->assignation['_default_locale'] = $translation->getLocale();
+        $this->assignation['meta'] = [
+            'siteName' => $this->get('settingsBag')->get('site_name'),
+            'siteCopyright' => $this->get('settingsBag')->get('site_copyright'),
+            'siteDescription' => $this->get('settingsBag')->get('seo_description'),
+        ];
+
+        return $this;
     }
 
     /**
@@ -486,5 +449,64 @@ abstract class FrontendController extends AppController
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
+    }
+
+    /**
+     * Store basic information for your theme from a NodesSources object.
+     *
+     * @param NodesSources $nodeSource
+     * @param Translation $translation
+     *
+     * @return void
+     */
+    protected function prepareNodeSourceAssignation(NodesSources $nodeSource = null, Translation $translation = null)
+    {
+        $this->storeNodeSourceAndTranslation($nodeSource, $translation);
+        $this->assignation['home'] = $this->getHome($translation);
+        /*
+         * Use a DI container to delay API requests
+         */
+        $this->themeContainer = new Container();
+
+        $this->extendAssignation();
+    }
+
+    /**
+     * Store current nodeSource and translation into controller.
+     *
+     * It makes following fields available into template assignation:
+     *
+     * * node
+     * * nodeSource
+     * * translation
+     * * pageMeta
+     *     * title
+     *     * description
+     *     * keywords
+     *
+     * @param NodesSources $nodeSource
+     * @param Translation $translation
+     */
+    public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
+    {
+        $this->nodeSource = $nodeSource;
+
+        if (null !== $this->nodeSource) {
+            $this->node = $this->nodeSource->getNode();
+            $this->translation = $this->nodeSource->getTranslation();
+
+            $this->getRequest()->attributes->set('translation', $this->translation);
+            $this->getRequest()->attributes->set('node', $this->node);
+
+            $this->assignation['translation'] = $this->translation;
+            $this->assignation['node'] = $this->node;
+            $this->assignation['nodeSource'] = $this->nodeSource;
+        } else {
+            $this->translation = $translation;
+            $this->assignation['translation'] = $this->translation;
+            $this->getRequest()->attributes->set('translation', $this->translation);
+        }
+
+        $this->assignation['pageMeta'] = $this->getNodeSEO();
     }
 }

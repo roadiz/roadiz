@@ -29,15 +29,13 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
-use RZ\Roadiz\CMS\Forms\GroupsType;
+use RZ\Roadiz\CMS\Forms\CreatePasswordType;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -74,16 +72,8 @@ class UserType extends AbstractType
                     ])
                 ],
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
+            ->add('plainPassword', CreatePasswordType::class, [
                 'invalid_message' => 'password.must.match',
-                'first_options' => [
-                    'label' => 'password',
-                ],
-                'second_options' => [
-                    'label' => 'passwordVerify',
-                ],
-                'required' => false,
             ])
         ;
     }
@@ -110,7 +100,7 @@ class UserType extends AbstractType
             'em',
         ]);
 
-        $resolver->setAllowedTypes('em', ObjectManager::class);
+        $resolver->setAllowedTypes('em', EntityManagerInterface::class);
         $resolver->setAllowedTypes('email', 'string');
         $resolver->setAllowedTypes('username', 'string');
     }

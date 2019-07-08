@@ -194,7 +194,7 @@ class TranslationViewer
                         $name = $attr["_route"] . "Locale";
                     }
 
-                    $attr["_route_params"]["_locale"] = $translation->getLocale();
+                    $attr["_route_params"]["_locale"] = $translation->getPreferredLocale();
                 } else {
                     if (in_array("_locale", array_keys($attr["_route_params"]), true)) {
                         unset($attr["_route_params"]["_locale"]);
@@ -224,11 +224,11 @@ class TranslationViewer
             }
 
             if (null !== $url) {
-                $return[$translation->getLocale()] = [
+                $return[$translation->getPreferredLocale()] = [
                     'name' => $name,
                     'url' => $url,
-                    'locale' => $translation->getLocale(),
-                    'active' => ($this->translation->getLocale() == $translation->getLocale()) ? true : false,
+                    'locale' => $translation->getPreferredLocale(),
+                    'active' => ($this->translation->getPreferredLocale() == $translation->getPreferredLocale()) ? true : false,
                     'translation' => $translation->getName(),
                 ];
             }

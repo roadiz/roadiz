@@ -87,7 +87,7 @@ class AboutController extends RozierApp
         try {
             $url = "https://api.github.com/repos/roadiz/roadiz/releases";
 
-            $client = new Client(['defaults' => ['debug' => false]]);
+            $client = new Client();
             $response = $client->get($url);
 
             if (Response::HTTP_OK == $response->getStatusCode()) {
@@ -124,7 +124,7 @@ class AboutController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_SUPERADMIN');
+        $this->denyAccessUnlessGranted('ROLE_SUPERADMIN');
         $lastRelease = $this->getLatestRelease();
 
         if ($lastRelease !== null) {

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
 /**
@@ -57,12 +58,16 @@ class NodeTypeField extends AbstractField
      *
      * @var bool
      * @ORM\Column(name="universal", type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("bool")
      */
     private $universal = false;
 
     /**
+     * @var NodeType
      * @ORM\ManyToOne(targetEntity="NodeType", inversedBy="fields")
      * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
+     * @Serializer\Exclude()
      */
     private $nodeType;
 
@@ -87,7 +92,22 @@ class NodeTypeField extends AbstractField
     }
 
     /**
+     * @return string
+     * @Serializer\VirtualProperty()
+     * @Serializer\Type("string")
+     * @Serializer\SerializedName("nodeTypeName")
+     * @Serializer\Groups({"node_type"})
+     */
+    public function getNodeTypeName(): string
+    {
+        return $this->getNodeType()->getName();
+    }
+
+    /**
+     * @var int|null
      * @ORM\Column(name="min_length", type="integer", nullable=true)
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("int")
      */
     private $minLength = null;
 
@@ -112,7 +132,10 @@ class NodeTypeField extends AbstractField
     }
 
     /**
+     * @var int|null
      * @ORM\Column(name="max_length", type="integer", nullable=true)
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("int")
      */
     private $maxLength = null;
 
@@ -137,7 +160,10 @@ class NodeTypeField extends AbstractField
     }
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("bool")
      */
     private $indexed = false;
 
@@ -162,7 +188,10 @@ class NodeTypeField extends AbstractField
     }
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("bool")
      */
     private $visible = true;
 

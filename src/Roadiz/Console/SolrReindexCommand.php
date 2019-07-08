@@ -111,6 +111,8 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
      * Delete Solr index and loop over every NodesSources to index them again.
      *
      * @param OutputInterface $output
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function reindexNodeSources(OutputInterface $output)
     {
@@ -122,8 +124,18 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $buffer = $this->solr->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        $countQuery = $this->entityManager->createQuery("select count(ns) from ".NodesSources::class." ns inner join ns.node n");
-        $q = $this->entityManager->createQuery("select ns,n from ".NodesSources::class." ns inner join ns.node n");
+        $countQuery = $this->entityManager
+            ->getRepository(NodesSources::class)
+            ->createQueryBuilder('ns')
+            ->select('count(ns)')
+            ->innerJoin('ns.node', 'n')
+            ->getQuery();
+        $q = $this->entityManager
+            ->getRepository(NodesSources::class)
+            ->createQueryBuilder('ns')
+            ->addSelect('n')
+            ->innerJoin('ns.node', 'n')
+            ->getQuery();
         $iterableResult = $q->iterate();
 
         $progress = new ProgressBar($output, $countQuery->getSingleScalarResult());
@@ -157,6 +169,8 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
      * Delete Solr index and loop over every Documents to index them again.
      *
      * @param OutputInterface $output
+     *
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     protected function reindexDocuments(OutputInterface $output)
     {
@@ -168,8 +182,14 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $buffer = $this->solr->getPlugin('bufferedadd');
         $buffer->setBufferSize(100);
 
-        $countQuery = $this->entityManager->createQuery("select count(d) from ".Document::class." d");
-        $q = $this->entityManager->createQuery("select d from ".Document::class." d");
+        $countQuery = $this->entityManager
+            ->getRepository(Document::class)
+            ->createQueryBuilder('d')
+            ->select('count(d)')
+            ->getQuery();
+        $q = $this->entityManager->getRepository(Document::class)
+            ->createQueryBuilder('d')
+            ->getQuery();
         $iterableResult = $q->iterate();
 
         $progress = new ProgressBar($output, $countQuery->getSingleScalarResult());

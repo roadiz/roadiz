@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectManager;
+use RZ\Roadiz\Core\Entities\AttributeValue;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -86,6 +87,7 @@ class NodeDuplicator
             }
 
             if ($parent !== null) {
+                /** @var Node $parent */
                 $parent = $this->em->find(Node::class, $parent->getId());
                 $node->setParent($parent);
             }
@@ -137,6 +139,16 @@ class NodeDuplicator
          * Duplicate Node to Node relationship
          */
         $this->doDuplicateNodeRelations($node);
+        /*
+         * Duplicate Node attributes values
+         */
+        /** @var AttributeValue $attributeValue */
+        foreach ($node->getAttributeValues() as $attributeValue) {
+            $this->em->persist($attributeValue);
+            foreach ($attributeValue->getAttributeValueTranslations() as $attributeValueTranslation) {
+                $this->em->persist($attributeValueTranslation);
+            }
+        }
 
         /*
          * Persist duplicated node

@@ -30,11 +30,13 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use JMS\Serializer\SerializationContext;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\DefaultTheme\DefaultThemeApp;
@@ -78,9 +80,6 @@ class PageController extends DefaultThemeApp
     ) {
         $this->prepareThemeAssignation($node, $translation);
 
-        if ($request->getRequestFormat() !== 'html') {
-            throw $this->createNotFoundException('Format is not supported.');
-        }
 
         if ($request->query->has('404') && $request->query->get('404') == true) {
             throw $this->createNotFoundException('This is a 404 page manually triggered via ' . ResourceNotFoundException::class);
@@ -96,19 +95,23 @@ class PageController extends DefaultThemeApp
          * Awesome isn’t it ?
          */
         if ($request->getRequestFormat() === 'json') {
-            $response = new JsonResponse([
-                'title' => $this->nodeSource->getTitle(),
-            ]);
+            $response = new JsonResponse(
+                $this->get('serializer')->serialize(
+                    $this->nodeSource,
+                    'json',
+                    SerializationContext::create()->setGroups(['nodes_sources', 'urls'])
+                ),
+                Response::HTTP_OK,
+                [],
+                true
+            );
         } else {
             $response = $this->render('pages/page.html.twig', $this->assignation);
         }
 
-        if (!$this->get('kernel')->isDebug() &&
-            !$this->get('kernel')->isPreview()) {
-            $response->setPublic();
-            $response->setSharedMaxAge(60*2);
+        if ($this->getNode()->getTtl() > 0) {
+            return $this->makeResponseCachable($request, $response, $this->getNode()->getTtl());
         }
-
         return $response;
     }
 

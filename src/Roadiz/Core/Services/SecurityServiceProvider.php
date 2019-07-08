@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\DBAL\Exception\ConnectionException;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
@@ -54,6 +56,7 @@ use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManager;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
@@ -241,42 +244,60 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new RememberMeListener(
                 $c['securityTokenStorage'],
                 $c['tokenBasedRememberMeServices'],
-                $c['authentificationManager'],
+                $c['authenticationManager'],
                 $c['kernel']->isDebug() ? $c['logger'] : null,
                 $c['dispatcher']
             );
         };
 
-        $container['authentificationManager'] = function ($c) {
+        $container['authenticationManager'] = function ($c) {
             return new AuthenticationProviderManager([
                 new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
             ]);
         };
+        $container['authentificationManager'] = function ($c) {
+            return $c['authenticationManager'];
+        };
+
+        $container['security.voters'] = function (Container $c) {
+            return [
+                new AuthenticatedVoter($c['securityAuthenticationTrustResolver']),
+                $c['roleHierarchyVoter'],
+                $c['groupVoter'],
+            ];
+        };
 
         /*
          * Main decision manager, set your voters here.
          */
         $container['accessDecisionManager'] = function ($c) {
-            return new AccessDecisionManager([
-                new AuthenticatedVoter($c['securityAuthentificationTrustResolver']),
-                $c['roleHierarchyVoter'],
-                $c['groupVoter'],
-            ]);
+            return new AccessDecisionManager($c['security.voters']);
         };
 
-        $container['securityAuthentificationTrustResolver'] = function ($c) {
+
+        $container['securityAuthenticationTrustResolver'] = function ($c) {
             return new AuthenticationTrustResolver(
                 AnonymousToken::class,
                 RememberMeToken::class
             );
         };
+        $container['securityAuthentificationTrustResolver'] = function ($c) {
+            return $c['securityAuthenticationTrustResolver'];
+        };
+
+        /*
+         * Alias with FQN interface
+         */
+        $container[AuthorizationCheckerInterface::class] = function (Container $c) {
+            return $c['securityAuthorizationChecker'];
+        };
 
         $container['securityAuthorizationChecker'] = function ($c) {
             return new AuthorizationChecker(
                 $c['securityTokenStorage'],
-                $c['authentificationManager'],
+                $c['authenticationManager'],
                 $c['accessDecisionManager']
             );
         };
@@ -290,17 +311,29 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['securityTokenStorage'],
                 $c['accessDecisionManager'],
                 $c['accessMap'],
-                $c['authentificationManager']
+                $c['authenticationManager']
             );
         };
 
         $container['roleHierarchy'] = function ($c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            if ($kernel->isInstallMode()) {
-                return new DoctrineRoleHierarchy(null);
+            try {
+                /** @var Kernel $kernel */
+                $kernel = $c['kernel'];
+                if ($kernel->isInstallMode()) {
+                    return new DoctrineRoleHierarchy();
+                }
+                return new DoctrineRoleHierarchy($c['em']);
+            } catch (ConnectionException $e) {
+                /*
+                 * Do not use DB roles when DB is not reachable
+                 */
+                return new DoctrineRoleHierarchy();
+            } catch (TableNotFoundException $e) {
+                /*
+                 * Do not use DB roles when DB tables are not created
+                 */
+                return new DoctrineRoleHierarchy();
             }
-            return new DoctrineRoleHierarchy($c['em']);
         };
 
         $container['roleHierarchyVoter'] = function ($c) {
@@ -347,7 +380,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
             $c['stopwatch']->start('firewall');
             $firewall = new TimedFirewall($c['firewallMap'], $c['dispatcher'], $c['stopwatch']);
             $c['stopwatch']->stop('firewall');
-
             return $firewall;
         };
 

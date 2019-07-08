@@ -26,7 +26,7 @@ security:
     session_cookie_secure: false
     session_cookie_httponly: true
     # Change default password algorithm from sha512 to argon2i
-    # algorithm: argon2i
+    algorithm: argon2i
 mailer:
     type: ~
     host: "localhost"
@@ -38,16 +38,6 @@ themes:
     - classname: \Themes\DefaultTheme\DefaultThemeApp
       hostname: '*'
       routePrefix: ''
-# Doctrine entities search paths
-# Append yours here if you want to create custom
-# entities in your theme.
-entities:
-    - "src/Roadiz/Core/Entities"
-    - "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities"
-    - "gen-src/GeneratedNodeSources"
-# Lifetime of remember-me cookie in seconds (30 days)
-rememberMeLifetime: 2592000
-additionalServiceProviders: []
 additionalCommands:
     - \Themes\DefaultTheme\Commands\DefaultThemeCommand
 # Image intervention and Intervention Request

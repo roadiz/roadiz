@@ -64,6 +64,17 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
         ]);
     }
 
+    public function getTestKernel(): Kernel
+    {
+        $kernel = new Kernel('test', true);
+        $kernel->boot();
+        $request = $this->getRequest();
+        $kernel->getContainer()->offsetSet('request', $request);
+        $kernel->get('requestContext')->fromRequest($request);
+        $kernel->get('requestStack')->push($request);
+        return $kernel;
+    }
+
     /**
      * @dataProvider documentUrlWithBasePathProvider
      * @param Document $document
@@ -73,11 +84,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testDocumentUrlWithBasePath(Document $document, array $options, $absolute, $expectedUrl)
     {
-        $kernel = new Kernel('test', true);
-        $kernel->boot();
-        $kernel->get('requestStack')->push($this->getRequest());
-        $kernel->get('requestContext')->fromRequest($this->getRequest());
-        $kernel->getContainer()->offsetSet('request', $this->getRequest());
+        $kernel = $this->getTestKernel();
 
         $this->assertEquals('/test', $kernel->get('requestContext')->getBaseUrl());
         $this->assertEquals(
@@ -101,9 +108,7 @@ class NonRootPackagesTest extends DefaultThemeDependentCase
      */
     public function testBaseUrl()
     {
-        $kernel = new Kernel('test', true);
-        $kernel->boot();
-        $kernel->handle($this->getRequest());
+        $kernel = $this->getTestKernel();
 
         $this->assertEquals(
             '/test',

@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Log Entity
@@ -58,30 +59,36 @@ class Log extends AbstractEntity
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", unique=false, onDelete="SET NULL")
      * @var User|null
+     * @Serializer\Groups({"log_user"})
      */
     protected $user = null;
     /**
      * @ORM\Column(type="text", name="message")
+     * @Serializer\Groups({"log"})
      * @var string
      */
     protected $message = '';
     /**
      * @ORM\Column(type="integer", name="level", nullable=false)
+     * @Serializer\Groups({"log"})
      * @var int
      */
     protected $level = Log::DEBUG;
     /**
      * @ORM\Column(type="datetime", name="datetime", nullable=false)
+     * @Serializer\Groups({"log"})
      * @var \DateTime
      */
     protected $datetime;
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="logs")
      * @ORM\JoinColumn(name="node_source_id", referencedColumnName="id", onDelete="SET NULL")
+     * @Serializer\Groups({"log_sources"})
      */
     protected $nodeSource = null;
     /**
      * @ORM\Column(type="string", name="client_ip", unique=false, nullable=true)
+     * @Serializer\Groups({"log"})
      * @var string|null
      */
     protected $clientIp = null;

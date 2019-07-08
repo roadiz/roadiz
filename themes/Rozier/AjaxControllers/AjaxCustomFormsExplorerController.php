@@ -50,7 +50,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         $arrayFilter = [];
         /*
@@ -94,7 +94,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
             throw new InvalidParameterException('Ids should be provided within an array');
         }
 
-        $this->validateAccessForRole('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         $cleanCustomFormsIds = array_filter($request->query->get('ids'));
 

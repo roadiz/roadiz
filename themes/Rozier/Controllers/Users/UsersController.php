@@ -36,6 +36,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\AddUserType;
 use Themes\Rozier\Forms\UserDetailsType;
 use Themes\Rozier\Forms\UserType;
 use Themes\Rozier\RozierApp;
@@ -56,7 +57,7 @@ class UsersController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /*
          * Manage get request to filter list
@@ -90,7 +91,7 @@ class UsersController extends RozierApp
      */
     public function editAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!($this->isGranted('ROLE_ACCESS_USERS')
             || $this->getUser()->getId() == $userId)) {
@@ -123,7 +124,6 @@ class UsersController extends RozierApp
                     ['%name%' => $user->getUsername()]
                 );
                 $this->publishConfirmMessage($request, $msg);
-
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -151,7 +151,7 @@ class UsersController extends RozierApp
      */
     public function editDetailsAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!($this->isGranted('ROLE_ACCESS_USERS')
             || $this->getUser()->getId() == $userId)) {
@@ -210,7 +210,7 @@ class UsersController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         $user = new User();
         $user->sendCreationConfirmationEmail(true);
@@ -218,8 +218,9 @@ class UsersController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(UserType::class, $user, [
+            $form = $this->createForm(AddUserType::class, $user, [
                 'em' => $this->get('em'),
+                'authorizationChecker' => $this->get('securityAuthorizationChecker')
             ]);
 
             $form->handleRequest($request);
@@ -252,7 +253,7 @@ class UsersController extends RozierApp
      */
     public function deleteAction(Request $request, $userId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_USERS_DELETE');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS_DELETE');
 
         /** @var User $user */
         $user = $this->get('em')->find(User::class, (int) $userId);

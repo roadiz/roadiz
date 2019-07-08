@@ -34,6 +34,8 @@ use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 
 /**
  * Class for create all importer.
+ *
+ * @deprecated
  */
 interface ImporterInterface
 {
@@ -44,6 +46,7 @@ interface ImporterInterface
      * @param EntityManager $em
      * @param HandlerFactoryInterface $handlerFactory
      * @return bool
+     * @deprecated
      */
     public static function importJsonFile($template, EntityManager $em, HandlerFactoryInterface $handlerFactory);
 }

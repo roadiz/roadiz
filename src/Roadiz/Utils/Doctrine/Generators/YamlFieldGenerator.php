@@ -36,6 +36,14 @@ namespace RZ\Roadiz\Utils\Doctrine\Generators;
 class YamlFieldGenerator extends NonVirtualFieldGenerator
 {
     /**
+     * @inheritDoc
+     */
+    protected function excludeFromSerialization()
+    {
+        return true;
+    }
+
+    /**
      * @return string
      */
     public function getFieldAlternativeGetter(): string
@@ -44,6 +52,9 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
         return '
     /**
      * @return mixed
+     * @Serializer\VirtualProperty
+     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'AsObject()
     {

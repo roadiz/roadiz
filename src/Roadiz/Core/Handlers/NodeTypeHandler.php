@@ -40,6 +40,7 @@ use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\Generators\EntityGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Handle operations with node-type entities.
@@ -102,15 +103,15 @@ class NodeTypeHandler extends AbstractHandler
     /**
      * Remove node type entity class file from server.
      *
-     * @return boolean
      */
     public function removeSourceEntityClass()
     {
-        $folder = $this->getGeneratedEntitiesFolder();
-        $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
+        $file = $this->getSourceClassPath();
+        $fileSystem = new Filesystem();
 
-        if (file_exists($file)) {
-            return unlink($file);
+        if ($fileSystem->exists($file) && is_file($file)) {
+            $fileSystem->remove($file);
+            return true;
         }
 
         return false;
@@ -124,31 +125,39 @@ class NodeTypeHandler extends AbstractHandler
     public function generateSourceEntityClass()
     {
         $folder = $this->getGeneratedEntitiesFolder();
-        $file = $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
+        $file = $this->getSourceClassPath();
+        $fileSystem = new Filesystem();
 
-        if (!file_exists($folder)) {
-            mkdir($folder, 0755, true);
+        if (!$fileSystem->exists($folder)) {
+            $fileSystem->mkdir($folder, 0775);
         }
 
-        if (!file_exists($file)) {
-            $classGenerator = new EntityGenerator($this->nodeType);
+        if (!$fileSystem->exists($file)) {
+            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag']);
             $content = $classGenerator->getClassContent();
 
             if (false === @file_put_contents($file, $content)) {
                 throw new IOException("Impossible to write entity class file (".$file.").", 1);
             }
-
             /*
              * Force Zend OPcache to reset file
              */
             if (function_exists('opcache_invalidate')) {
                 opcache_invalidate($file, true);
             }
+            if (function_exists('apcu_clear_cache')) {
+                apcu_clear_cache();
+            }
 
-            return "Source class “".$this->nodeType->getSourceEntityClassName()."” has been created.".PHP_EOL;
-        } else {
-            return "Source class “".$this->nodeType->getSourceEntityClassName()."” already exists.".PHP_EOL;
+            return true;
         }
+        return false;
+    }
+
+    public function getSourceClassPath(): string
+    {
+        $folder = $this->getGeneratedEntitiesFolder();
+        return $folder.'/'.$this->nodeType->getSourceEntityClassName().'.php';
     }
 
     /**
@@ -159,8 +168,10 @@ class NodeTypeHandler extends AbstractHandler
      */
     public function updateSchema()
     {
-        $this->clearCaches();
+        $this->clearCaches(false);
         $this->regenerateEntityClass();
+        // Clear cache only after generating NSEntity class.
+        $this->clearCaches();
 
         return $this;
     }
@@ -189,14 +200,17 @@ class NodeTypeHandler extends AbstractHandler
         return $this;
     }
 
-    protected function clearCaches()
+    /**
+     * @param bool $recreateProxies
+     */
+    protected function clearCaches(bool $recreateProxies = true)
     {
         $clearers = [
             new OPCacheClearer(),
         ];
 
         if ($this->objectManager instanceof EntityManagerInterface) {
-            $clearers[] = new DoctrineCacheClearer($this->objectManager, $this->kernel);
+            $clearers[] = new DoctrineCacheClearer($this->objectManager, $this->kernel, $recreateProxies);
         }
 
         foreach ($clearers as $clearer) {
@@ -258,6 +272,7 @@ class NodeTypeHandler extends AbstractHandler
      * This method does not flush ORM. You'll need to manually call it.
      *
      * @param \RZ\Roadiz\Core\Entities\NodeType $newNodeType
+     * @deprecated Use deserialization and denormalization.
      *
      * @throws \RuntimeException If newNodeType param is null
      */

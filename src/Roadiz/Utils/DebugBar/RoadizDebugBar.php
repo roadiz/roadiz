@@ -32,13 +32,13 @@ namespace RZ\Roadiz\Utils\DebugBar;
 use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MemoryCollector;
-use DebugBar\DataCollector\PhpInfoCollector;
-use DebugBar\DataCollector\RequestDataCollector;
 use DebugBar\DebugBar;
 use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AccessMapCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AuthCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\DispatcherCollector;
+use RZ\Roadiz\Utils\DebugBar\DataCollector\ThemesCollector;
+use RZ\Roadiz\Utils\DebugBar\DataCollector\VersionsCollector;
 
 class RoadizDebugBar extends DebugBar
 {
@@ -54,15 +54,15 @@ class RoadizDebugBar extends DebugBar
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->addCollector(new PhpInfoCollector());
-        $this->addCollector($this->container['messagescollector']);
-        $this->addCollector(new RequestDataCollector());
-        $this->addCollector(new StopwatchDataCollector($this->container['stopwatch'], $this->container['twig.profile']));
+        $this->addCollector($container['messagescollector']);
+        $this->addCollector(new ThemesCollector($container['themeResolver'], $container['requestStack']));
+        $this->addCollector(new VersionsCollector());
+        $this->addCollector(new StopwatchDataCollector($container['stopwatch'], $container['twig.profile']));
         $this->addCollector(new MemoryCollector());
-        $this->addCollector(new DoctrineCollector($this->container['doctrine.debugstack']));
-        $this->addCollector(new ConfigCollector($this->container['config']));
-        $this->addCollector(new AuthCollector($this->container['securityTokenStorage']));
-        $this->addCollector(new DispatcherCollector($this->container['dispatcher']));
-        $this->addCollector(new AccessMapCollector($this->container['accessMap'], $this->container['requestStack']));
+        $this->addCollector(new DoctrineCollector($container['doctrine.debugstack']));
+        $this->addCollector(new ConfigCollector($container['config']));
+        $this->addCollector(new AuthCollector($container['securityTokenStorage']));
+        $this->addCollector(new DispatcherCollector($container['dispatcher']));
+        $this->addCollector(new AccessMapCollector($container['accessMap'], $container['requestStack']));
     }
 }

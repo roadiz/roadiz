@@ -29,12 +29,14 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use Pimple\Container;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\ContainerAwareInterface;
+use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -52,8 +54,10 @@ use Twig\Error\RuntimeError;
  * Class ExceptionSubscriber
  * @package RZ\Roadiz\Core\Events
  */
-class ExceptionSubscriber implements EventSubscriberInterface
+class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * @var LoggerInterface
      */
@@ -72,26 +76,23 @@ class ExceptionSubscriber implements EventSubscriberInterface
      * @var ThemeResolverInterface
      */
     private $themeResolver;
-    /**
-     * @var Kernel
-     */
-    private $kernel;
 
     /**
      * ExceptionSubscriber constructor.
-     * @param Kernel $kernel
+     *
+     * @param Container              $container
      * @param ThemeResolverInterface $themeResolver
-     * @param LoggerInterface $logger
-     * @param bool $debug
+     * @param LoggerInterface        $logger
+     * @param bool                   $debug
      */
-    public function __construct(Kernel $kernel, ThemeResolverInterface $themeResolver, LoggerInterface $logger, $debug = false)
+    public function __construct(Container $container, ThemeResolverInterface $themeResolver, LoggerInterface $logger, $debug = false)
     {
         $this->logger = $logger;
         $this->debug = $debug;
 
         $this->viewer = new ExceptionViewer();
         $this->themeResolver = $themeResolver;
-        $this->kernel = $kernel;
+        $this->container = $container;
     }
 
     /**
@@ -135,7 +136,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
                 $event->setResponse($response);
                 return;
             } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
-                $event->setResponse($this->createThemeNotFoundResponse($theme, $exception));
+                $event->setResponse($this->createThemeNotFoundResponse($theme, $exception, $event));
                 return;
             }
         }
@@ -210,11 +211,13 @@ class ExceptionSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param Theme $theme
-     * @param \Exception $exception
+     * @param Theme                        $theme
+     * @param \Exception                   $exception
+     * @param GetResponseForExceptionEvent $event
+     *
      * @return Response
      */
-    protected function createThemeNotFoundResponse(Theme $theme, \Exception $exception)
+    protected function createThemeNotFoundResponse(Theme $theme, \Exception $exception, GetResponseForExceptionEvent $event)
     {
         /*
          * Create a new controller for serving
@@ -225,10 +228,15 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $controller = new $ctrlClass();
 
         if ($controller instanceof ContainerAwareInterface) {
-            $controller->setContainer($this->kernel->getContainer());
+            $controller->setContainer($this->getContainer());
         }
         if ($controller instanceof AppController) {
             $controller->__init();
+        }
+
+        if ($exception instanceof NoTranslationAvailableException ||
+            $exception->getPrevious() instanceof NoTranslationAvailableException) {
+            $event->getRequest()->setLocale($this->get('defaultTranslation')->getLocale());
         }
 
         return call_user_func_array([$controller, 'throw404'], [

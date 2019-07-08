@@ -1,0 +1,65 @@
+[
+  {
+    "code": "Weight",
+    "searchable": false,
+    "type": 0,
+    "attributeTranslations": [
+      {
+        "label": "Weight",
+        "options": [],
+        "translation": {
+          "locale": "en"
+        }
+      },
+      {
+        "label": "Poids",
+        "options": [],
+        "translation": {
+          "locale": "fr"
+        }
+      }
+    ]
+  },
+  {
+    "code": "Height",
+    "searchable": false,
+    "type": 0,
+    "attributeTranslations": [
+      {
+        "label": "Height",
+        "options": [],
+        "translation": {
+          "locale": "en"
+        }
+      },
+      {
+        "label": "Hauteur",
+        "options": [],
+        "translation": {
+          "locale": "fr"
+        }
+      }
+    ]
+  },
+  {
+    "code": "Length",
+    "searchable": false,
+    "type": 0,
+    "attributeTranslations": [
+      {
+        "label": "Length",
+        "options": [],
+        "translation": {
+          "locale": "en"
+        }
+      },
+      {
+        "label": "Longueur",
+        "options": [],
+        "translation": {
+          "locale": "fr"
+        }
+      }
+    ]
+  }
+]

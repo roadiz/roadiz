@@ -32,8 +32,6 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationToken;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -57,15 +55,7 @@ class LoginResetForm extends AbstractType
                 ]),
             ],
         ])
-        ->add('plainPassword', RepeatedType::class, [
-            'type' => PasswordType::class,
-            'invalid_message' => 'password.must.match',
-            'first_options' => [
-                'label' => 'choose.a.new.password',
-            ],
-            'second_options' => [
-                'label' => 'passwordVerify',
-            ],
+        ->add('plainPassword', CreatePasswordType::class, [
             'required' => true,
         ]);
     }

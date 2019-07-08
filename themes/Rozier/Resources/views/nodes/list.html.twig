@@ -98,12 +98,12 @@
                                 {% endif %}
                                 {% if node.isVisible == false %}
                                 <div class="uk-button-status uk-button-hidden" title="{% trans %}node.hidden{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-rz-hidden-o"></i>
+                                    <i class="uk-icon-eye-slash"></i>
                                 </div><!-- uk-badge-notification -->
                                 {% endif %}
                                 {% if node.isLocked %}
                                 <div class="uk-button-status uk-button-locked" title="{% trans %}locked{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                    <i class="uk-icon-rz-lock"></i>
+                                    <i class="uk-icon-lock"></i>
                                 </div><!-- uk-badge-notification -->
                                 {% endif %}
                                 {% if node.isArchived %}
@@ -118,12 +118,11 @@
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditPage', { nodeId: node.getId }) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}" title="{% trans %}see.nodetree{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-tree-mini"></i></a>
-                            {% if not node.locked %}
-                                {% if not node.isDeleted %}
-                                <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                                {% else %}
-                                <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}" data-uk-tooltip="{animation:true}" title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
-                                {% endif %}
+                            {% if workflow_can(node, 'delete') %}
+                            <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            {% endif %}
+                            {% if workflow_can(node, 'undelete') %}
+                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesUndeletePage', { nodeId: node.getId }) }}" data-uk-tooltip="{animation:true}" title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
                             {% endif %}
                         {% endspaceless %}
                         </td>

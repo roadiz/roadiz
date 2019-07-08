@@ -28,7 +28,8 @@
  * @file NodeTest.php
  * @author Ambroise Maupate
  */
-use Doctrine\Common\Collections\ArrayCollection;
+
+use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
@@ -74,34 +75,23 @@ class NodeTest extends DefaultThemeDependentCase
             ->getRepository(Translation::class)
             ->findDefault();
 
-        $collection = new ArrayCollection();
+        try {
+            $root = static::createPageNode('root node', $translation);
+            static::getManager()->flush();
+            $node1 = static::createPageNode('node 1', $translation, $root);
+            $node2 = static::createPageNode('node 2', $translation, $root);
+            $node3 = static::createPageNode('node 3', $translation, $root);
+            $node4 = static::createPageNode('node 4', $translation, $root);
+            static::getManager()->flush();
 
-        $root = $this->createPageNode('root node', $translation);
-        static::getManager()->flush();
-
-        $node1 = $this->createPageNode('node 1', $translation, $root);
-        $collection->add($node1);
-
-        $node2 = $this->createPageNode('node 2', $translation, $root);
-        $collection->add($node2);
-
-        $node3 = $this->createPageNode('node 3', $translation, $root);
-        $collection->add($node3);
-
-        $node4 = $this->createPageNode('node 4', $translation, $root);
-        $collection->add($node4);
-
-        static::getManager()->flush();
-
-        $this->assertEquals(4, $root->getChildren()->count());
-        $this->assertEquals(1, $node1->getPosition());
-        $this->assertEquals(2, $node2->getPosition());
-        $this->assertEquals(3, $node3->getPosition());
-        $this->assertEquals(4, $node4->getPosition());
-
-        foreach ($collection as $node) {
-            static::getManager()->remove($node);
+            $this->assertEquals(4, $root->getChildren()->count());
+            $this->assertEquals(1, $root->getPosition());
+            $this->assertEquals(1, $node1->getPosition());
+            $this->assertEquals(2, $node2->getPosition());
+            $this->assertEquals(3, $node3->getPosition());
+            $this->assertEquals(4, $node4->getPosition());
+        } catch (EntityNotFoundException $e) {
+            $this->markTestIncomplete($e->getMessage());
         }
-        static::getManager()->flush();
     }
 }

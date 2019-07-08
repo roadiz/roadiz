@@ -59,7 +59,7 @@ class SettingsController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         if (null !== $response = $this->commonSettingList($request)) {
             return $response->send();
@@ -76,7 +76,7 @@ class SettingsController extends RozierApp
      */
     public function byGroupAction(Request $request, $settingGroupId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         $settingGroup = $this->get('em')->find(SettingGroup::class, (int) $settingGroupId);
 
@@ -183,7 +183,7 @@ class SettingsController extends RozierApp
      */
     public function editAction(Request $request, $settingId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
         /** @var Setting|null $setting */
         $setting = $this->get('em')->find(Setting::class, (int) $settingId);
 
@@ -244,7 +244,7 @@ class SettingsController extends RozierApp
      */
     public function addAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         $setting = new Setting();
         $setting->setSettingGroup(null);
@@ -300,7 +300,7 @@ class SettingsController extends RozierApp
      */
     public function deleteAction(Request $request, $settingId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_SETTINGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         /** @var Setting|null $setting */
         $setting = $this->get('em')->find(Setting::class, (int) $settingId);

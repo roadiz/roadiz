@@ -1,0 +1,23 @@
+attributesEditPage:
+    path:     /edit/{id}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::editAction
+    requirements: { id : "[0-9]+" }
+attributesAddPage:
+    path:     /add
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::addAction
+attributesExportPage:
+    path:     /export-all
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::exportAction
+attributesImportPage:
+    path:     /import
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::importAction
+
+attributesDeletePage:
+    path:     /delete/{id}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::deleteAction
+    requirements: { id : "[0-9]+" }

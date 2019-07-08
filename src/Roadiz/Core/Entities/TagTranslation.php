@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Translated representation of Tags.
@@ -48,8 +49,61 @@ class TagTranslation extends AbstractEntity
 {
     /**
      * @ORM\Column(type="string")
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\Type("string")
      */
     protected $name;
+    /**
+     * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\Type("string")
+     */
+    protected $description;
+    /**
+     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
+     * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Tag
+     * @Serializer\Exclude()
+     */
+    protected $tag = null;
+    /**
+     * @ORM\ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
+     * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
+     * @var Translation|null
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
+     */
+    protected $translation = null;
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments",
+     *     mappedBy="tagTranslation",
+     *     orphanRemoval=true,
+     *     cascade={"persist", "merge"}
+     * )
+     * @ORM\OrderBy({"position" = "ASC"})
+     * @var ArrayCollection|null
+     * @Serializer\Groups({"tag"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslationDocuments>")
+     */
+    protected $tagTranslationDocuments = null;
+
+    /**
+     * Create a new TagTranslation with its origin Tag and Translation.
+     *
+     * @param Tag         $original
+     * @param Translation $translation
+     */
+    public function __construct(Tag $original = null, Translation $translation = null)
+    {
+        $this->setTag($original);
+        $this->setTranslation($translation);
+        $this->tagTranslationDocuments = new ArrayCollection();
+
+        if (null !== $original) {
+            $this->name = $original->getDirtyTagName() != '' ? $original->getDirtyTagName() : $original->getTagName();
+        }
+    }
 
     /**
      * @return string
@@ -58,6 +112,7 @@ class TagTranslation extends AbstractEntity
     {
         return $this->name;
     }
+
     /**
      * @param string $name
      *
@@ -69,11 +124,6 @@ class TagTranslation extends AbstractEntity
 
         return $this;
     }
-
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    protected $description;
 
     /**
      * @return string
@@ -96,48 +146,11 @@ class TagTranslation extends AbstractEntity
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
-     * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Tag
-     */
-    protected $tag = null;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="Translation", inversedBy="tagTranslations", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Translation
-     */
-    protected $translation = null;
-
-    /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="tagTranslation",
-     *     orphanRemoval=true, cascade={"persist"})
-     * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection|null
-     */
-    protected $tagTranslationDocuments = null;
-
-    /**
-     * Create a new TagTranslation with its origin Tag and Translation.
-     *
-     * @param Tag         $original
-     * @param Translation $translation
-     */
-    public function __construct(Tag $original, Translation $translation)
-    {
-        $this->setTag($original);
-        $this->setTranslation($translation);
-
-        $this->name = $original->getDirtyTagName() != '' ? $original->getDirtyTagName() : $original->getTagName();
-        $this->tagTranslationDocuments = new ArrayCollection();
-    }
-
-    /**
      * Gets the value of tag.
      *
      * @return Tag
      */
-    public function getTag(): Tag
+    public function getTag(): ?Tag
     {
         return $this->tag;
     }
@@ -149,7 +162,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return self
      */
-    public function setTag(Tag $tag): TagTranslation
+    public function setTag(?Tag $tag): TagTranslation
     {
         $this->tag = $tag;
 
@@ -161,7 +174,7 @@ class TagTranslation extends AbstractEntity
      *
      * @return Translation
      */
-    public function getTranslation(): Translation
+    public function getTranslation(): ?Translation
     {
         return $this->translation;
     }
@@ -173,39 +186,11 @@ class TagTranslation extends AbstractEntity
      *
      * @return self
      */
-    public function setTranslation(Translation $translation): TagTranslation
+    public function setTranslation(?Translation $translation): TagTranslation
     {
         $this->translation = $translation;
 
         return $this;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getTagTranslationDocuments(): Collection
-    {
-        return $this->tagTranslationDocuments;
-    }
-
-    /**
-     * @param ArrayCollection|null $tagTranslationDocuments
-     * @return TagTranslation
-     */
-    public function setTagTranslationDocuments($tagTranslationDocuments): TagTranslation
-    {
-        $this->tagTranslationDocuments = $tagTranslationDocuments;
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDocuments(): array
-    {
-        return array_map(function (TagTranslationDocuments $tagTranslationDocument) {
-            return $tagTranslationDocument->getDocument();
-        }, $this->getTagTranslationDocuments()->toArray());
     }
 
     /**
@@ -229,5 +214,33 @@ class TagTranslation extends AbstractEntity
                 }
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDocuments(): array
+    {
+        return array_map(function (TagTranslationDocuments $tagTranslationDocument) {
+            return $tagTranslationDocument->getDocument();
+        }, $this->getTagTranslationDocuments()->toArray());
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getTagTranslationDocuments(): Collection
+    {
+        return $this->tagTranslationDocuments;
+    }
+
+    /**
+     * @param ArrayCollection|null $tagTranslationDocuments
+     * @return TagTranslation
+     */
+    public function setTagTranslationDocuments($tagTranslationDocuments): TagTranslation
+    {
+        $this->tagTranslationDocuments = $tagTranslationDocuments;
+        return $this;
     }
 }

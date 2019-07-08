@@ -12,7 +12,7 @@ class NodeTypesImporterTest extends SchemaDependentCase
      */
     public function testImportJsonFile($json, $count)
     {
-        $this->assertTrue(NodeTypesImporter::importJsonFile($json, $this->get('em'), $this->get('factory.handler')));
+        $this->assertTrue($this->get(NodeTypesImporter::class)->import($json));
         $this->assertEquals(1, $this->countNodeTypes());
         $this->assertEquals($count, $this->countNodeTypeFields());
 
@@ -34,7 +34,11 @@ class NodeTypesImporterTest extends SchemaDependentCase
      */
     public function countNodeTypes()
     {
-        return $this->getNodeTypeRepository()->createQueryBuilder('t')->select('count(t)')->getQuery()->getSingleScalarResult();
+        return $this->getNodeTypeRepository()
+            ->createQueryBuilder('t')
+            ->select('count(t)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**
@@ -42,14 +46,18 @@ class NodeTypesImporterTest extends SchemaDependentCase
      */
     public function countNodeTypeFields()
     {
-        return $this->get('em')->getRepository(NodeTypeField::class)->createQueryBuilder('t')->select('count(t)')->getQuery()->getSingleScalarResult();
+        return $this->get('em')->getRepository(NodeTypeField::class)
+            ->createQueryBuilder('t')
+            ->select('count(t)')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public static function importJsonFileProvider()
     {
         return [
             [
-                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/Person.rzt'),
+                file_get_contents(dirname(__DIR__) . '/../Fixtures/Importers/Person.json'),
                 16,
             ]
         ];

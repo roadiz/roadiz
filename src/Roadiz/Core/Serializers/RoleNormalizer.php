@@ -35,6 +35,12 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\SerializerAwareInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * Class RoleNormalizer
+ *
+ * @package RZ\Roadiz\Core\Serializers
+ * @deprecated Use JMS Serializer component
+ */
 class RoleNormalizer implements NormalizerInterface, DenormalizerInterface, SerializerAwareInterface
 {
     /** @var SerializerInterface */

@@ -351,6 +351,7 @@ class InstallApp extends AppController
                     'Русский язык' => 'ru',
                     'Türkçe' => 'tr',
                     'Italiano' => 'it',
+                    'српска ћирилица' => 'sr_Cyrl',
                 ],
                 'constraints' => [
                     new NotBlank(),

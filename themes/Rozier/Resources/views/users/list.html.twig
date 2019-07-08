@@ -55,17 +55,17 @@
                                 <i class="uk-icon-check"></i>
                             </div>
                             {% else %}
-                            <div class="uk-button-status" title="{% trans %}user.disabled{% endtrans %}" data-uk-tooltip="{animation:true}">
+                            <div class="uk-button-status uk-button-danger" title="{% trans %}user.disabled{% endtrans %}" data-uk-tooltip="{animation:true}">
                                 <i class="uk-icon-close"></i>
                             </div>
                             {% endif %}
                             {% if not user.accountNonLocked %}
-                            <div class="uk-button-status" title="{% trans %}user.locked{% endtrans %}" data-uk-tooltip="{animation:true}">
+                            <div class="uk-button-status uk-button-warning" title="{% trans %}user.locked{% endtrans %}" data-uk-tooltip="{animation:true}">
                                 <i class="uk-icon-lock"></i>
                             </div>
                             {% endif %}
                             {% if not user.credentialsNonExpired or not user.accountNonExpired %}
-                            <div class="uk-button-status" title="{% trans %}user.expired{% endtrans %}" data-uk-tooltip="{animation:true}">
+                            <div class="uk-button-status uk-button-danger" title="{% trans %}user.expired{% endtrans %}" data-uk-tooltip="{animation:true}">
                                 <i class="uk-icon-bug"></i>
                             </div>
                             {% endif %}

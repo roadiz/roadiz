@@ -31,16 +31,21 @@
 
 namespace Themes\Rozier\Controllers\NodeTypes;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
+use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
-use RZ\Roadiz\Core\Serializers\NodeTypeJsonSerializer;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
+use ZipArchive;
 
 /**
  * {@inheritdoc}
@@ -53,33 +58,34 @@ class NodeTypesUtilsController extends RozierApp
      * @param Request $request
      * @param int     $nodeTypeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function exportJsonFileAction(Request $request, $nodeTypeId)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
         $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
 
-        $serializer = new NodeTypeJsonSerializer();
+        if (null === $nodeType) {
+            throw $this->createNotFoundException();
+        }
 
-        $response = new Response(
-            $serializer->serialize($nodeType),
-            Response::HTTP_OK,
-            []
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $nodeType,
+                'json',
+                SerializationContext::create()->setGroups(['node_type', 'position'])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $nodeType->getName() . '.json'),
+            ],
+            true
         );
-
-        $response->headers->set(
-            'Content-Disposition',
-            $response->headers->makeDisposition(
-                ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-                $nodeType->getName() . '.rzt'
-            )
-        ); // Rezo-Zero Type
-        $response->prepare($request);
-
-        return $response;
     }
 
     /**
@@ -88,20 +94,28 @@ class NodeTypesUtilsController extends RozierApp
      */
     public function exportAllAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $nodeTypes = $this->get('em')
             ->getRepository(NodeType::class)
             ->findAll();
 
-        $serializer = new NodeTypeJsonSerializer();
-        $zipArchive = new \ZipArchive();
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+        $zipArchive = new ZipArchive();
         $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
-        $zipArchive->open($tmpfname, \ZipArchive::CREATE);
+        $zipArchive->open($tmpfname, ZipArchive::CREATE);
 
         /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
-            $zipArchive->addFromString($nodeType->getName() . '.rzt', $serializer->serialize($nodeType));
+            $zipArchive->addFromString(
+                $nodeType->getName() . '.json',
+                $serializer->serialize(
+                    $nodeType,
+                    'json',
+                    SerializationContext::create()->setGroups(['node_type', 'position'])
+                )
+            );
         }
 
         $zipArchive->close();
@@ -120,11 +134,12 @@ class NodeTypesUtilsController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {
-        $this->validateAccessForRole('ROLE_ACCESS_NODETYPES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         $form = $this->buildImportJsonFileForm();
 
@@ -138,75 +153,17 @@ class NodeTypesUtilsController extends RozierApp
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {
-                    $serializer = new NodeTypeJsonSerializer();
-                    $nodeType = $serializer->deserialize($serializedData);
-                    /** @var NodeType $existingNT */
-                    $existingNT = $this->get('em')
-                                       ->getRepository(NodeType::class)
-                                       ->findOneBy(['name' => $nodeType->getName()]);
-
-                    if (null === $existingNT) {
-                        /*
-                         * New node-type…
-                         *
-                         * First persist node-type
-                         */
-                        $this->get('em')->persist($nodeType);
-                        // Flush before creating node-type fields.
-                        $this->get('em')->flush();
-
-                        $position = 1;
-                        /** @var NodeTypeField $field */
-                        foreach ($nodeType->getFields() as $field) {
-                            /*
-                             * then persist each field
-                             */
-                            $field->setNodeType($nodeType);
-                            $field->setPosition($position);
-                            $this->get('em')->persist($field);
-                            $position++;
-                        }
-
-                        $msg = $this->getTranslator()->trans('nodeType.imported.created');
-                        $this->publishConfirmMessage($request, $msg);
-                    } else {
-                        /*
-                         * Node-type already exists.
-                         * Must update fields.
-                         */
-                        /** @var NodeTypeHandler $handler */
-                        $handler = $this->get('factory.handler')->getHandler($existingNT);
-                        $handler->diff($nodeType);
-
-                        $msg = $this->getTranslator()->trans('nodeType.imported.updated');
-                        $this->publishConfirmMessage($request, $msg);
-                    }
-
+                    $this->get(NodeTypesImporter::class)->import($serializedData);
                     $this->get('em')->flush();
-
-                    /** @var NodeTypeHandler $handler */
-                    $handler = $this->get('factory.handler')->getHandler($nodeType);
-                    $handler->updateSchema();
 
                     /*
                      * Redirect to update schema page
                      */
                     return $this->redirect($this->generateUrl('nodeTypesSchemaUpdate'));
-                } else {
-                    $msg = $this->getTranslator()->trans('file.format.not_valid');
-                    $this->publishErrorMessage($request, $msg);
-
-                    // redirect even if its null
-                    return $this->redirect($this->generateUrl(
-                        'nodeTypesImportPage'
-                    ));
                 }
+                $form->addError(new FormError($this->getTranslator()->trans('file.format.not_valid')));
             } else {
-                $msg = $this->getTranslator()->trans('file.not_uploaded');
-                $this->publishErrorMessage($request, $msg);
-
-                // redirect even if its null
-                return $this->redirect($this->generateUrl('nodeTypesImportPage'));
+                $form->addError(new FormError($this->getTranslator()->trans('file.not_uploaded')));
             }
         }
 
@@ -216,7 +173,7 @@ class NodeTypesUtilsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return Form
      */
     private function buildImportJsonFileForm()
     {
