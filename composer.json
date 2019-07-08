@@ -59,7 +59,7 @@
         "symfony/asset":               "~3.4.29",
         "symfony/translation":         "~3.4.29",
         "symfony-cmf/routing":         "~2.1.0",
-        "twig/twig":                   "~2.*",
+        "twig/twig":                   "2.*",
         "twig/extensions":             "~1.5.4",
         "guzzlehttp/guzzle":           "^6.3",
         "swiftmailer/swiftmailer":     "~6.0.0",
@@ -78,7 +78,7 @@
         "jbzoo/pimpledumper": "^1.2",
         "phpoffice/phpspreadsheet": "^1.1",
         "composer/composer": "^1.8.6",
-        "symfony/workflow": "~4.3.2",
+        "symfony/workflow": "~4.2.10",
         "jms/serializer": "~2.3.0 || ~3.1.1",
         "rollerworks/password-strength-validator": "^1.1"
     },
