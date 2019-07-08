@@ -238,7 +238,6 @@ class Document extends AbstractDocument
     public function setEmbedId($embedId)
     {
         $this->embedId = $embedId;
-
         return $this;
     }
 
@@ -276,6 +275,9 @@ class Document extends AbstractDocument
     public function setPrivate($private)
     {
         $this->private = (boolean) $private;
+        if (null !== $raw = $this->getRawDocument()) {
+            $raw->setPrivate($private);
+        }
 
         return $this;
     }
