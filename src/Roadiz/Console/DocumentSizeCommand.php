@@ -57,8 +57,14 @@ class DocumentSizeCommand extends Command
 
         $batchSize = 20;
         $i = 0;
-        $count = $em->createQuery('select count(d) from '.Document::class.' d')->getSingleScalarResult();
-        $q = $em->createQuery('select d from '.Document::class.' d');
+        $count = $em->getRepository(Document::class)
+            ->createQueryBuilder('d')
+            ->select('count(d)')
+            ->getQuery()
+            ->getSingleScalarResult();
+        $q = $em->getRepository(Document::class)
+            ->createQueryBuilder('d')
+            ->getQuery();
         $iterableResult = $q->iterate();
 
         $progress = new ProgressBar($output, $count);
