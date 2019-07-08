@@ -197,7 +197,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 new NodesSourcesInheritanceSubscriber($c),
                 new TablePrefixSubscriber($prefix),
                 new FontLifeCycleSubscriber($c),
-                new DocumentLifeCycleSubscriber($c['kernel']),
+                new DocumentLifeCycleSubscriber($c['kernel'], $c),
                 new UserLifeCycleSubscriber($c),
                 new CustomFormFieldLifeCycleSubscriber($c),
                 new LeafEntityLifeCycleSubscriber($c['factory.handler']),

@@ -1163,62 +1163,6 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param array    $data
-     * @param Document $document
-     */
-    private function editDocument($data, Document $document)
-    {
-        /*
-         * Rename document file
-         */
-        if (!empty($data['filename']) &&
-            $data['filename'] != $document->getFilename()) {
-
-            /** @var Packages $packages */
-            $packages = $this->get('assetPackages');
-            $oldPath = $packages->getDocumentFilePath($document);
-
-            $fs = new Filesystem();
-            /*
-             * If file exists, just rename it
-             */
-            // set filename to clean given string before renaming file.
-            $document->setFilename($data['filename']);
-            $newPath = $packages->getDocumentFilePath($document);
-            $fs->rename(
-                $oldPath,
-                $newPath
-            );
-
-            unset($data['filename']);
-        }
-
-        /*
-         * Change privacy document status
-         */
-        if ($data['private'] != $document->isPrivate()) {
-            /** @var DocumentHandler $handler */
-            $handler = $this->get('document.handler');
-            $handler->setDocument($document);
-
-            if ($data['private'] === true) {
-                $handler->makePrivate();
-            } else {
-                $handler->makePublic();
-            }
-
-            unset($data['private']);
-        }
-
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            $document->$setter($value);
-        }
-
-        $this->get('em')->flush();
-    }
-
-    /**
      * Handle upload form data to create a Document.
      *
      * @param \Symfony\Component\Form\Form $data

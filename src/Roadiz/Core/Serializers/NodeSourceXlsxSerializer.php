@@ -30,20 +30,20 @@
 namespace RZ\Roadiz\Core\Serializers;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Translation\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * XLSX Serialization handler for NodeSource.
  */
 class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 {
-    /** @var EntityManager */
+    /** @var EntityManagerInterface */
     protected $em;
 
     /** @var Request */
@@ -59,12 +59,15 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 
     /**
      *
-     * @param EntityManager $em
-     * @param Translator $translator
+     * @param EntityManagerInterface $em
+     * @param TranslatorInterface $translator
      * @param UrlGeneratorInterface $urlGenerator
      */
-    public function __construct(EntityManager $em, Translator $translator, UrlGeneratorInterface $urlGenerator)
-    {
+    public function __construct(
+        EntityManagerInterface $em,
+        TranslatorInterface $translator,
+        UrlGeneratorInterface $urlGenerator
+    ) {
         parent::__construct($translator);
         $this->em = $em;
         $this->urlGenerator = $urlGenerator;

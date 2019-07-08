@@ -33,25 +33,10 @@ namespace RZ\Roadiz\Attribute\Event;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
-use Pimple\Container;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 
 class AttributeValueLifeCycleSubscriber implements EventSubscriber
 {
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * UserLifeCycleSubscriber constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
-
     /**
      * {@inheritdoc}
      */

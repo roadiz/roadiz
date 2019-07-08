@@ -83,7 +83,6 @@ class SerializationServiceProvider implements ServiceProviderInterface
         };
 
         $container['serializer.fallback_constructor'] = function () {
-            //return new UnserializeObjectConstructor();
             return new ObjectConstructor();
         };
 

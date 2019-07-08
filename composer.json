@@ -59,7 +59,7 @@
         "symfony/asset":               "~3.4.4",
         "symfony/translation":         "~3.4.4",
         "symfony-cmf/routing":         "~2.1.0",
-        "twig/twig":                   "~2.5.0",
+        "twig/twig":                   "~2.11.3",
         "twig/extensions":             "~1.5.1",
         "guzzlehttp/guzzle":           "^6.3",
         "swiftmailer/swiftmailer":     "~6.0.0",

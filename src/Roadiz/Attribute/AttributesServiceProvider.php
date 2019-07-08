@@ -70,7 +70,7 @@ class AttributesServiceProvider implements ServiceProviderInterface
         });
 
         $container->extend('em.eventSubscribers', function (array $subscribers, Container $c) {
-            array_push($subscribers, new AttributeValueLifeCycleSubscriber($c));
+            array_push($subscribers, new AttributeValueLifeCycleSubscriber());
             return $subscribers;
         });
 

@@ -74,6 +74,7 @@ class DocumentHandler extends AbstractHandler
      * to the secured /files/private folder.
      *
      * You must explicitly call flush after this method.
+     * @deprecated USe DocumentLifeCycle events
      */
     public function makePrivate()
     {
@@ -117,6 +118,7 @@ class DocumentHandler extends AbstractHandler
      * from the secured /files/private folder into /files folder.
      *
      * You must explicitly call flush after this method.
+     * @deprecated Use DocumentLifeCycle events
      */
     public function makePublic()
     {
