@@ -28,6 +28,7 @@
  */
 namespace RZ\Roadiz\Workflow;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Entities\Node;
@@ -61,7 +62,7 @@ class WorkflowServiceProvider implements ServiceProviderInterface
             return $dispatcher;
         });
 
-        $container->extend('twig.extensions', function ($extensions, $c) {
+        $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
             $extensions->add(new WorkflowExtension($c['workflow.registry']));
             return $extensions;
         });

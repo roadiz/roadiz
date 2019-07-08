@@ -31,6 +31,7 @@ declare(strict_types=1);
 
 namespace Themes\DefaultTheme;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
@@ -171,7 +172,7 @@ class DefaultThemeApp extends FrontendController
     {
         parent::setupDependencyInjection($container);
 
-        $container->extend('twig.extensions', function ($extensions, $c) {
+        $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
             $extensions->add(new ImageFormatsExtension());
             return $extensions;
         });

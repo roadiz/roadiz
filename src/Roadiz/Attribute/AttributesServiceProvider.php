@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Event\AttributeValueIndexingSubscriber;
@@ -64,7 +65,7 @@ class AttributesServiceProvider implements ServiceProviderInterface
             return $dispatcher;
         });
 
-        $container->extend('twig.extensions', function ($extensions, $c) {
+        $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
             $extensions->add(new AttributesExtension());
             return $extensions;
         });
