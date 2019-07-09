@@ -32,9 +32,9 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\StringInput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Process\Process;
 
 class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterface
 {
@@ -70,7 +70,7 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
         } else {
             $this->runCommand(sprintf('themes:install --data "%s" -v', $input->getArgument('classname')));
             $this->runCommand(sprintf('generate:nsentities -v'));
-            $this->runCommand(sprintf('orm:schema-tool:update --dump-sql --force -v'));
+            $this->runCommand(sprintf('orm:schema-tool:update --dump-sql --force -v'), 'dev', false);
             $this->runCommand(sprintf('cache:clear -v'), 'dev', false);
             $this->runCommand(sprintf('cache:clear -v'), 'dev', true);
             $this->runCommand(sprintf('cache:clear -v'), 'prod', false);
@@ -89,17 +89,14 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
      */
     protected function runCommand(string $command, $environment = 'dev', $preview = false)
     {
-        /*
-         * Need to get exact Kernel class: for standard edition
-         */
+        /** @var Kernel $existingKernel */
         $existingKernel = $this->getHelper('kernel')->getKernel();
-        $kernelClass = get_class($existingKernel);
-        
-        $kernel = new $kernelClass($environment, true, $preview);
-        $kernel->boot();
-        $application = new RoadizApplication($kernel);
-        $application->setAutoExit(false);
-        $application->setCatchExceptions(false);
-        $application->run(new StringInput($command));
+        $process = new Process(
+            'bin/roadiz ' . $command . ' -e ' . $environment . ($preview ? ' --preview' : '')
+        );
+        $process->setWorkingDirectory($existingKernel->getProjectDir());
+        $process->setTty(true);
+        $process->run();
+        $process->wait();
     }
 }
