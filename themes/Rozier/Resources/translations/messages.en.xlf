@@ -4832,13 +4832,13 @@
           <source>nodeType.color</source>
           <target state="translated">Color</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType.defaultTtl">
+      <trans-unit xml:space="preserve" id="nodeType.defaultTtl" approved="yes">
           <source>nodeType.defaultTtl</source>
             <target state="translated">Front TTL for new nodes</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType_default_ttl_when_creating_nodes">
+      <trans-unit xml:space="preserve" id="nodeType_default_ttl_when_creating_nodes" approved="yes">
           <source>nodeType_default_ttl_when_creating_nodes</source>
-            <target state="translated">Front cache time-to-live for nodes created against this type.</target>
+            <target state="translated">Front cache time-to-live for nodes created against this type (given in minutes).</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.numberFields" approved="yes">
           <source>nodeType.numberFields</source>
@@ -6059,13 +6059,13 @@
           <source>node.childrenOrderDirection</source>
           <target state="translated">Children nodes order direction</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.ttl">
+      <trans-unit xml:space="preserve" id="node.ttl" approved="yes">
           <source>node.ttl</source>
             <target state="translated">Front TTL</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node_time_to_live_cache_on_front_controller">
+      <trans-unit xml:space="preserve" id="node_time_to_live_cache_on_front_controller" approved="yes">
           <source>node_time_to_live_cache_on_front_controller</source>
-            <target state="translated">Front cache time to live for this node (given in minutes)</target>
+            <target state="translated">Front cache time to live for this node (given in minutes).</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="createdAt" approved="yes">
           <source>createdAt</source>
