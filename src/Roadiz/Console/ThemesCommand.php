@@ -81,10 +81,10 @@ class ThemesCommand extends Command
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return string
      */
-    public function validateThemeName($name)
+    public function validateThemeName(string $name)
     {
         if (false !== strpos($name, '\\')) {
             if (null !== $reflection = $this->getThemeReflectionClass($name)) {
