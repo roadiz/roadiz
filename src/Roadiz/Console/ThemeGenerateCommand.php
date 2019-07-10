@@ -28,6 +28,7 @@
  */
 namespace RZ\Roadiz\Console;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Config\ConfigurationHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
@@ -36,6 +37,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessBuilder;
 
 class ThemeGenerateCommand extends ThemesCommand
@@ -70,7 +72,7 @@ class ThemeGenerateCommand extends ThemesCommand
      * @param $name
      * @return string
      */
-    public function validateThemeName($name)
+    public function validateThemeName(string $name)
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
@@ -108,38 +110,21 @@ class ThemeGenerateCommand extends ThemesCommand
 
         if ($input->getOption('develop')) {
             $branch = 'develop';
-            $output->writeln('Using <info>develop</info> branch.');
         }
-
         if ($input->getOption('branch')) {
             $branch = $input->getOption('branch');
-            $output->writeln('Using <info>'.$branch.'</info> branch.');
         }
-
-        if ($input->getOption('relative')) {
-            $expectedMethod = self::METHOD_RELATIVE_SYMLINK;
-            $output->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
-        } elseif ($input->getOption('symlink')) {
-            $expectedMethod = self::METHOD_ABSOLUTE_SYMLINK;
-            $output->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
-        } else {
-            $expectedMethod = self::METHOD_COPY;
-            $output->writeln('Installing theme assets as <info>hard copy</info>.');
-        }
+        $output->writeln('Using <info>'.$branch.'</info> branch.');
 
         /*
          * Clone BaseTheme
          */
-        $builder = new ProcessBuilder([
-            'git',
-            'clone',
-            '-b',
-            $branch,
-            'https://github.com/roadiz/BaseTheme.git',
-            $themePath
-        ]);
-        $builder->getProcess()->run();
-        $output->writeln('BaseTheme cloned into ' . $themePath);
+        $repository = 'https://github.com/roadiz/BaseTheme.git';
+        $process = new Process(
+            ['git', 'clone', '-b', $branch, $repository, $themePath]
+        );
+        $process->run();
+        $output->writeln('BaseTheme cloned into <info>' . $themePath . '</info>');
 
         /*
          * Remove existing Git history.
@@ -152,48 +137,72 @@ class ThemeGenerateCommand extends ThemesCommand
          */
         $this->filesystem->rename($themePath . '/BaseThemeApp.php', $themePath . '/' . $name . 'ThemeApp.php');
         $output->writeln('Rename main theme class.');
+        $this->filesystem->rename($themePath . '/Services/BaseThemeServiceProvider.php', $themePath . '/Services/' . $name . 'ThemeServiceProvider.php');
+        $output->writeln('Rename theme service provider class.');
 
         /*
          * Rename every occurrences of BaseTheme in your theme.
          */
-        $builder = new ProcessBuilder();
-        $builder->setEnv('LC_ALL', 'C');
-        $builder->setPrefix(['find']);
-        $builder->setArguments([
-            $themePath, '-type', 'f', '-exec', 'sed', '-i.bak',
-            '-e', 's/BaseTheme/' . $name . 'Theme/g', '{}', ';'
-        ]);
-        $builder->getProcess()->run();
-
-        $builder->setArguments([
-            $themePath, '-type', 'f', '-exec', 'sed', '-i.bak',
-            '-e', 's/Base theme/' . $name . ' theme/g', '{}', ';'
-        ]);
-        $builder->getProcess()->run();
-
-        $builder->setArguments([
-            $themePath . '/static', '-type', 'f', '-exec', 'sed', '-i.bak',
-            '-e', 's/Base/' . $name . '/g', '{}', ';'
-        ]);
-        $builder->getProcess()->run();
-
-        $builder->setArguments([
-            $themePath , '-type', 'f', '-name', '*.bak', '-exec', 'rm', '-f', '{}', ';'
-        ]);
-        $builder->getProcess()->run();
-
+        $processes = new ArrayCollection();
+        $processes->add(new Process(
+            [
+                'find', $themePath, '-type', 'f', '-exec', 'sed', '-i.bak',
+                '-e', 's/BaseTheme/' . $name . 'Theme/g', '{}', ';',
+            ],
+            null,
+            ['LC_ALL' => 'C']
+        ));
+        $processes->add(new Process(
+            [
+                'find', $themePath, '-type', 'f', '-exec', 'sed', '-i.bak',
+                '-e', 's/Base theme/' . $name . ' theme/g', '{}', ';',
+            ],
+            null,
+            ['LC_ALL' => 'C']
+        ));
+        $processes->add(new Process(
+            [
+                'find', $themePath . '/static', '-type', 'f', '-exec', 'sed', '-i.bak',
+                '-e', 's/Base/' . $name . '/g', '{}', ';',
+            ],
+            null,
+            ['LC_ALL' => 'C']
+        ));
+        $processes->add(new Process(
+            [
+                'find', $themePath , '-type', 'f', '-name', '*.bak', '-exec', 'rm', '-f', '{}', ';',
+            ],
+            null,
+            ['LC_ALL' => 'C']
+        ));
         $output->writeln('Rename every occurrences of BaseTheme in your theme.');
+        /** @var Process $process */
+        foreach ($processes as $process) {
+            $process->run();
+        }
 
+        if ($input->getOption('relative')) {
+            $expectedMethod = self::METHOD_RELATIVE_SYMLINK;
+            $output->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
+        } elseif ($input->getOption('symlink')) {
+            $expectedMethod = self::METHOD_ABSOLUTE_SYMLINK;
+            $output->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
+        } else {
+            $expectedMethod = self::METHOD_COPY;
+            $output->writeln('Installing theme assets as <info>hard copy</info>.');
+        }
         $this->generateThemeSymlink($themeName, $expectedMethod);
+
+        $output->writeln('Register Theme into your configuration.');
         $this->registerTheme($themeName);
 
         $output->writeln('<info>Your new theme is ready to install, have fun!</info>');
     }
 
     /**
-     * @param string $className
+     * @param string $themeName
      */
-    protected function registerTheme($themeName)
+    protected function registerTheme(string $themeName)
     {
         $className = '\\Themes\\'.$themeName.'\\'.$themeName. 'App';
         /** @var ConfigurationHandler $configHandler */
