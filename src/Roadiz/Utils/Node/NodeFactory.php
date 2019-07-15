@@ -65,6 +65,7 @@ final class NodeFactory implements ContainerAwareInterface
      * @param Node|null        $parent
      *
      * @return Node
+     * @throws \Doctrine\ORM\ORMException
      */
     public function create(
         string $title,
@@ -101,7 +102,9 @@ final class NodeFactory implements ContainerAwareInterface
 
         $node->setNodeName($nodeName);
         $node->setTtl($node->getNodeType()->getDefaultTtl());
-        $node->setParent($parent);
+        if (null !== $parent) {
+            $node->setParent($parent);
+        }
         $entityManager->persist($node);
 
         $sourceClass = $node->getNodeType()->getSourceEntityFullQualifiedClassName();

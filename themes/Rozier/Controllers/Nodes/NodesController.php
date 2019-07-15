@@ -389,7 +389,7 @@ class NodesController extends RozierApp
         if (null !== $translation) {
             $node = new Node();
             if (null !== $parentNode) {
-                $parentNode->addChild($node);
+                $node->setParent($parentNode);
             }
 
             /** @var Form $form */
