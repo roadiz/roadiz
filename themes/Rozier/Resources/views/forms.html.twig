@@ -335,7 +335,7 @@
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
-        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="uk-form-label-title">{{- label|trans -}}</span>{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}{% if attr['data-desc'] %} <small class="form-row-desc uk-form-label-description">{{- attr['data-desc']|trans -}}</small>{% endif %}</label>
+        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}><span class="uk-form-label-title">{{- label|trans -}}</span>{% if attr['data-universal'] %}  <i data-uk-tooltip="{animation:true}" title="{% trans %}universal{% endtrans %}" class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}{% if attr['data-desc'] %} <small class="form-row-desc uk-form-label-description">{{- attr['data-desc']|trans|inlineMarkdown -}}</small>{% endif %}</label>
     {%- endif %}
 {%- endblock form_label %}
 
