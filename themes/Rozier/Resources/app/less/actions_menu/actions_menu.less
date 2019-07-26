@@ -151,6 +151,13 @@
                 background-color: @alert-color;
             }
         }
+
+        &.uk-active {
+            box-shadow: none;
+            background-color: #e2e1e1 !important;
+            color: #716d6d;
+            text-shadow: none;
+        }
     }
 
     // for Classic button
@@ -320,9 +327,50 @@
                 top:13px; // top: 21px;
             }
         }
+        nav {
+            // TODO: Find a way to limit and scroll
+            //max-height: 400px;
+            //overflow: scroll;
+
+            .uk-button {
+                line-height: 1.4em;
+                white-space: normal;
+                flex-wrap: wrap;
+                align-content: center;
+
+                time {
+                    margin-right: 1em;
+                }
+            }
+
+            &.versions-nav {
+                .uk-button {
+                    line-height: 1.4em;
+                    white-space: normal;
+                    flex-wrap: wrap;
+                    align-content: center;
+                    height: auto;
+                    padding: 5px 15px;
+                }
+            }
+        }
         &:hover {
             nav,ul, header .label  {
                 display: block;
+            }
+
+            &:before,
+            &:after {
+                content: '';
+                display: block;
+                width: 15px;
+                height: 20px;
+                z-index: 999999;
+                position: absolute;
+            }
+
+            &:before {
+                top: -20px;
             }
         }
     }

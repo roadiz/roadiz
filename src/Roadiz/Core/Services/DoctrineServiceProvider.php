@@ -29,13 +29,17 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Setup;
+use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
@@ -78,6 +82,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     "../vendor/roadiz/roadiz/src/Roadiz/Core/Entities",
                     "../vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
                     "gen-src/GeneratedNodeSources",
+                    "../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity",
                 ];
             } else {
                 /*
@@ -87,6 +92,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     "src/Roadiz/Core/Entities",
                     "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
                     "gen-src/GeneratedNodeSources",
+                    "vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity",
                 ];
             }
 
@@ -132,6 +138,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     $cache,
                     false
                 );
+                /*
+                 * Create a cached annotation driver with configured cache driver.
+                 */
+                $config->setMetadataDriverImpl($c[AnnotationDriver::class]);
                 $config->setProxyDir($proxyFolder);
                 $config->setProxyNamespace('Proxies');
                 /*
@@ -201,6 +211,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 new UserLifeCycleSubscriber($c),
                 new CustomFormFieldLifeCycleSubscriber($c),
                 new LeafEntityLifeCycleSubscriber($c['factory.handler']),
+                $c[LoggableListener::class],
             ];
         };
 
@@ -228,6 +239,24 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             }
             return $cache;
         });
+
+        $container[LoggableListener::class] = function (Container $c) {
+            $loggableListener = new LoggableListener();
+            $loggableListener->setAnnotationReader($c[CachedReader::class]);
+            $loggableListener->setUsername('anonymous');
+            return $loggableListener;
+        };
+
+        $container[AnnotationDriver::class] = function (Container $c) {
+            return new AnnotationDriver(
+                new CachedReader(new AnnotationReader(), new ArrayCache()),
+                $c['doctrine.entities_paths']
+            );
+        };
+
+        $container[CachedReader::class] = function (Container $c) {
+            return new CachedReader(new AnnotationReader(), $c[CacheProvider::class]);
+        };
 
         return $container;
     }

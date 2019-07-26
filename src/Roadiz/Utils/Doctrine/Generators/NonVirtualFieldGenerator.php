@@ -77,6 +77,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     /**
      * ' . $this->field->getLabel() .'
      *
+     * @Gedmo\Versioned
      * @ORM\Column(' . static::flattenORMParameters($ormParams) . ')
      * ' . $exclusion . '
      */'.PHP_EOL;

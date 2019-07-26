@@ -33,6 +33,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Loggable\Loggable;
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
 use RZ\Roadiz\Attribute\Model\AttributableTrait;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
@@ -41,6 +42,7 @@ use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Node entities are the central feature of Roadiz,
@@ -60,8 +62,9 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"home"})
  * })
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\Loggable
  */
-class Node extends AbstractDateTimedPositioned implements LeafInterface, AttributableInterface
+class Node extends AbstractDateTimedPositioned implements LeafInterface, AttributableInterface, Loggable
 {
     use LeafTrait;
     use AttributableTrait;
@@ -132,8 +135,9 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", name="dynamic_node_name", nullable=false, options={"default" = true})
+     * @Gedmo\Versioned
      */
-    protected $dynamicNodeName = true;
+    private $dynamicNodeName = true;
 
     /**
      * Dynamic node name will be updated against default
@@ -185,6 +189,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
+     * @Gedmo\Versioned
      * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $visible = true;
@@ -237,6 +242,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @var int
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
+     * @Gedmo\Versioned
      * @Serializer\Exclude()
      */
     private $ttl = 0;
@@ -321,6 +327,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
      */
     private $locked = false;
@@ -347,6 +354,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="decimal", precision=2, scale=1)
+     * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
      */
     private $priority = 0.8;
@@ -373,9 +381,10 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", name="hide_children", nullable=false, options={"default" = false})
+     * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
      */
-    protected $hideChildren = false;
+    private $hideChildren = false;
 
     /**
      * @return mixed
@@ -439,6 +448,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
      */
     private $sterile = false;
@@ -465,6 +475,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="children_order")
+     * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
      */
     private $childrenOrder = 'position';
@@ -491,6 +502,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="children_order_direction", length=4)
+     * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
      */
     private $childrenOrderDirection = 'ASC';

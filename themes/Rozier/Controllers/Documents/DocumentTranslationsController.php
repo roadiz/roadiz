@@ -84,8 +84,7 @@ class DocumentTranslationsController extends RozierApp
             $documentTr = $this->createDocumentTranslation($document, $translation);
         }
 
-        if ($documentTr !== null &&
-            $document !== null) {
+        if ($documentTr !== null && $document !== null) {
             $this->assignation['document'] = $document;
             $this->assignation['translation'] = $translation;
             $this->assignation['documentTr'] = $documentTr;
@@ -162,6 +161,7 @@ class DocumentTranslationsController extends RozierApp
      * @param int     $translationId
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $documentId, $translationId)
     {
