@@ -28,18 +28,28 @@
  */
 namespace Themes\Rozier\Controllers\Documents;
 
+use Exception;
+use Gedmo\Loggable\Entity\LogEntry;
+use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\DocumentTranslationType;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Class DocumentTranslationsController
@@ -48,11 +58,17 @@ use Themes\Rozier\RozierApp;
 class DocumentTranslationsController extends RozierApp
 {
     /**
+     * @var bool
+     */
+    private $isReadOnly = false;
+
+    /**
      * @param Request $request
      * @param int     $documentId
      * @param int     $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function editAction(Request $request, $documentId, $translationId = null)
     {
@@ -78,9 +94,7 @@ class DocumentTranslationsController extends RozierApp
                            ->getRepository(DocumentTranslation::class)
                            ->findOneBy(['document' => (int) $documentId, 'translation' => (int) $translationId]);
 
-        if ($documentTr === null &&
-            $document !== null &&
-            $translation !== null) {
+        if ($documentTr === null && $document !== null && $translation !== null) {
             $documentTr = $this->createDocumentTranslation($document, $translation);
         }
 
@@ -89,14 +103,26 @@ class DocumentTranslationsController extends RozierApp
             $this->assignation['translation'] = $translation;
             $this->assignation['documentTr'] = $documentTr;
 
+            /**
+             * Versioning
+             */
+            if ($this->isGranted('ROLE_ACCESS_VERSIONS')) {
+                if (null !== $response = $this->handleVersions($request, $documentTr)) {
+                    return $response;
+                }
+            }
+
             /*
              * Handle main form
              */
-            $form = $this->buildEditForm($documentTr);
+            $form = $this->createForm(DocumentTranslationType::class, $documentTr, [
+                'referer' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
+                'disabled' => $this->isReadOnly,
+            ]);
             $form->handleRequest($request);
 
             if ($form->isValid()) {
-                $this->editDocument($form->getData(), $documentTr);
+                $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
                     '%name%' => $document->getFilename(),
                 ]);
@@ -128,6 +154,7 @@ class DocumentTranslationsController extends RozierApp
             }
 
             $this->assignation['form'] = $form->createView();
+            $this->assignation['readOnly'] = $this->isReadOnly;
 
             return $this->render('document-translations/edit.html.twig', $this->assignation);
         }
@@ -148,7 +175,6 @@ class DocumentTranslationsController extends RozierApp
         $dt->setTranslation($translation);
 
         $this->get('em')->persist($dt);
-        $this->get('em')->flush();
 
         return $dt;
     }
@@ -160,8 +186,8 @@ class DocumentTranslationsController extends RozierApp
      * @param int     $documentId
      * @param int     $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $documentId, $translationId)
     {
@@ -188,7 +214,7 @@ class DocumentTranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('document.translation.%name%.deleted', ['%name%' => $document->getFilename()]);
                     $this->publishConfirmMessage($request, $msg);
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', ['%name%' => $document->getFilename()]);
                     $request->getSession()->getFlashBag()->add('error', $msg);
                     $this->get('logger')->warning($msg);
@@ -213,7 +239,7 @@ class DocumentTranslationsController extends RozierApp
     /**
      * @param DocumentTranslation $doc
      *
-     * @return \Symfony\Component\Form\Form
+     * @return Form
      */
     private function buildDeleteForm(DocumentTranslation $doc)
     {
@@ -230,51 +256,74 @@ class DocumentTranslationsController extends RozierApp
 
         return $builder->getForm();
     }
+
     /**
-     * @param DocumentTranslation $document
+     * @param Request             $request
+     * @param DocumentTranslation $documentTranslation
      *
-     * @return \Symfony\Component\Form\Form
+     * @return Response|null
      */
-    private function buildEditForm(DocumentTranslation $document)
+    protected function handleVersions(Request $request, DocumentTranslation $documentTranslation): ?Response
     {
-        $defaults = [
-            'name' => $document->getName(),
-            'description' => $document->getDescription(),
-            'copyright' => $document->getCopyright(),
-        ];
+        /**
+         * Versioning.
+         *
+         * @var LogEntryRepository $repo
+         */
+        $repo = $this->get('em')->getRepository(LogEntry::class);
+        $logs = $repo->getLogEntries($documentTranslation);
 
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('referer', HiddenType::class, [
-                            'data' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
-                            'mapped' => false,
-                        ])
-                        ->add('name', TextType::class, [
-                            'label' => 'name',
-                            'required' => false,
-                        ])
-                        ->add('description', MarkdownType::class, [
-                            'label' => 'description',
-                            'required' => false,
-                        ])
-                        ->add('copyright', TextType::class, [
-                            'label' => 'copyright',
-                            'required' => false,
-                        ]);
+        if ($request->get('version', null) !== null &&
+            $request->get('version', null) > 0) {
+            $versionNumber = (int) $request->get('version', null);
+            $repo->revert($documentTranslation, $versionNumber);
+            $this->isReadOnly = true;
+            $this->assignation['currentVersionNumber'] = $versionNumber;
+            /** @var LogEntry $log */
+            foreach ($logs as $log) {
+                if ($log->getVersion() === $versionNumber) {
+                    $this->assignation['currentVersion'] = $log;
+                }
+            }
+            $revertForm = $this->createNamedFormBuilder('revertVersion')
+                ->add('version', HiddenType::class, ['data' => $versionNumber])
+                ->getForm();
+            $revertForm->handleRequest($request);
 
-        return $builder->getForm();
-    }
+            $this->assignation['revertForm'] = $revertForm->createView();
 
-    /**
-     * @param array               $data
-     * @param DocumentTranslation $document
-     */
-    private function editDocument($data, DocumentTranslation $document)
-    {
-        foreach ($data as $key => $value) {
-            $setter = 'set' . ucwords($key);
-            $document->$setter($value);
+            if ($revertForm->isSubmitted() && $revertForm->isValid()) {
+                $this->get('em')->persist($documentTranslation);
+                /*
+                 * Dispatch pre-flush event
+                 */
+                $this->get('em')->flush();
+                $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
+                    '%name%' => $documentTranslation->getDocument()->getFilename(),
+                ]);
+                $this->publishConfirmMessage($request, $msg);
+
+                $this->get("dispatcher")->dispatch(
+                    DocumentEvents::DOCUMENT_TRANSLATION_UPDATED,
+                    new FilterDocumentEvent($documentTranslation->getDocument())
+                );
+
+                $routeParams = [
+                    'documentId' => $documentTranslation->getDocument()->getId(),
+                    'translationId' => $documentTranslation->getTranslation()->getId(),
+                ];
+                /*
+                 * Force redirect to avoid resending form when refreshing page
+                 */
+                return $this->redirect($this->generateUrl(
+                    'documentsMetaPage',
+                    $routeParams
+                ));
+            }
         }
 
-        $this->get('em')->flush();
+        $this->assignation['versions'] = $logs;
+
+        return null;
     }
 }
