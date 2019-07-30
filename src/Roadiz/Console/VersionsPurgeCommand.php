@@ -40,7 +40,8 @@ class VersionsPurgeCommand extends Command
     protected function configure()
     {
         $this->setName('versions:purge')
-            ->setDescription(<<<EOT
+            ->setDescription('Purge entities versions')
+            ->setHelp(<<<EOT
 Purge entities versions <info>before</info> a given date-time 
 OR by keeping at least <info>count</info> versions.
 
