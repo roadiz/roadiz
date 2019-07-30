@@ -1,0 +1,13 @@
+<a class="uk-button{% if currentVersion.id == version.id %} uk-active{% endif %}" href="{{ url }}">
+    <time>{{- version.loggedAt|localizeddate('short', 'short') -}}</time><br />
+    {% if version.user %}
+        <img width="30" height="30"
+             data-uk-tooltip="{animation:true}"
+             title="{{- version.user.identifier|default(version.user.username) -}}"
+             class="uk-thumbnail gravatar user-image user-image-mini"
+             src="{{ version.user.pictureUrl }}"
+             alt="{{ version.user.identifier }}" />
+    {% else %}
+        <span class="uk-text-small">{{- version.username -}}</span>
+    {% endif %}
+</a>

@@ -26,7 +26,8 @@
                         theme: 'mbo',
                         tabSize: 2,
                         lineWrapping: true,
-                        dragDrop: false
+                        dragDrop: false,
+                        readOnly: false
                     }
                 }
             }
@@ -71,6 +72,10 @@
                         this.$emit('input', cm.getValue())
                     }
                 })
+                if (this.$el.hasAttribute('disabled')) {
+                    // disabled codemirror.
+                    this.editor.setOption('readOnly', true)
+                }
                 this.editor.setValue(this.initialValue)
                 this.editor.refresh()
             }

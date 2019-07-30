@@ -251,11 +251,12 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['authenticationManager'] = function ($c) {
-            return new AuthenticationProviderManager([
+            $authenticationManager = new AuthenticationProviderManager([
                 new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
             ]);
+            return $authenticationManager;
         };
         $container['authentificationManager'] = function ($c) {
             return $c['authenticationManager'];

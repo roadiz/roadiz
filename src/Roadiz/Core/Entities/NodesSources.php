@@ -36,8 +36,10 @@ use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectManagerAware;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Loggable\Loggable;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use JMS\Serializer\Annotation as Serializer;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * NodesSources store Node content according to a translation and a NodeType.
@@ -52,8 +54,9 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\HasLifecycleCallbacks
+ * @Gedmo\Loggable(logEntryClass="RZ\Roadiz\Core\Entities\UserLogEntry")
  */
-class NodesSources extends AbstractEntity implements ObjectManagerAware
+class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggable
 {
     /**
      * @var ObjectManager
@@ -239,6 +242,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
      * @Serializer\Groups({"nodes_sources", "log_sources"})
+     * @Gedmo\Versioned
      */
     protected $title = '';
 
@@ -266,6 +270,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
      * @var \DateTime
      * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
      * @Serializer\Groups({"nodes_sources"})
+     * @Gedmo\Versioned
      */
     protected $publishedAt;
 
@@ -290,6 +295,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\Column(type="string", name="meta_title", unique=false)
      * @Serializer\Groups({"nodes_sources"})
+     * @Gedmo\Versioned
      */
     protected $metaTitle = '';
 
@@ -315,6 +321,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\Column(type="text", name="meta_keywords")
      * @Serializer\Groups({"nodes_sources"})
+     * @Gedmo\Versioned
      */
     protected $metaKeywords = '';
 
@@ -340,6 +347,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware
     /**
      * @ORM\Column(type="text", name="meta_description")
      * @Serializer\Groups({"nodes_sources"})
+     * @Gedmo\Versioned
      */
     protected $metaDescription = '';
 

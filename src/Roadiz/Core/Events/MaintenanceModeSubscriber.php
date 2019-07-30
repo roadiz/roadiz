@@ -61,6 +61,8 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
             'loginRequestConfirmPage',
             'loginResetConfirmPage',
             'loginResetPage',
+            'loginFailedPage',
+            'loginCheckPage',
             'logoutPage',
             'FontFile',
             'FontFaceCSS',
@@ -83,7 +85,7 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::REQUEST => ['onRequest', 33],
+            KernelEvents::REQUEST => ['onRequest', 31], // Should be lower than RouterListener (32) to be executed after!
         ];
     }
 

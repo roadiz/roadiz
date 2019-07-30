@@ -6895,6 +6895,31 @@
             <target state="translated">Aucun média embarqué</target>
             <note>Document form</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="versions" approved="yes">
+            <source>versions</source>
+            <target state="translated">Versions</target>
+            <note>Version management</note>
+        <alt-trans><target>Révisions</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="versions.working_copy" approved="yes">
+            <source>versions.working_copy</source>
+            <target state="translated">Version actuelle</target>
+            <note>Version management : latest version aka working copy</note>
+        <alt-trans><target>Copie de travail</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="versions.viewing_a_previous_version" approved="yes">
+            <source>versions.viewing_a_previous_version</source>
+            <target state="translated">Vous êtes en train de consulter une version précédente. Le formulaire est en lecture-seule.</target>
+            <note>Version management : Disclaimer that user is viewing a previous version</note>
+        <alt-trans><target>Vous êtes en train de consulter une révision précédente. Le formulaire est en lecture-seule.</target></alt-trans></trans-unit>
+      <trans-unit xml:space="preserve" id="versions.revert_to_this_version" approved="yes">
+            <source>versions.revert_to_this_version</source>
+            <target state="translated">Restaurer cette version</target>
+            <note>Version management : Button label to revert to current viewing version</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="versions.back_to_working_copy" approved="yes">
+            <source>versions.back_to_working_copy</source>
+            <target state="translated">Retour à la version actuelle</target>
+            <note>Version management : Button label to go back to working copy</note>
+        <alt-trans><target>Retour à la copie de travail</target></alt-trans></trans-unit>
     </body>
   </file>
 </xliff>
