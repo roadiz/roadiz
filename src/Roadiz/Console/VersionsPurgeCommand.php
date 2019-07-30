@@ -147,7 +147,7 @@ EOT)
             ;
 
             foreach ($objects as $object) {
-                $lowestVersion = ((int) $object['maxVersion']) - $count;
+                $lowestVersion = (int) $object['maxVersion'] - $count;
                 if ($lowestVersion > 1) {
                     $deleteCount += $deleteQuery->execute([
                         'objectId' => $object['objectId'],
