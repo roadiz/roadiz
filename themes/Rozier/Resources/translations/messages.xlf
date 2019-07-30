@@ -7075,10 +7075,10 @@
             <target></target>
             <note>Version management : Button label to revert to current viewing version</note>
         </trans-unit>
-        <trans-unit xml:space="preserve" id="versions.back_to_working_copy">
-            <source>versions.back_to_working_copy</source>
+        <trans-unit xml:space="preserve" id="max_versions_showed">
+            <source>max_versions_showed</source>
             <target></target>
-            <note>Version management : Button label to go back to working copy</note>
+            <note>Version management : setting label to choose how many version to display in action-menu</note>
         </trans-unit>
 
     </body>
