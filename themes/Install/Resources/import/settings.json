@@ -13,6 +13,7 @@
     {
         "name": "force_locale",
         "visible": true,
+        "description": "Force displaying translation locale in every node’ paths. This should be *ON* if you redirect users based on their language on homepage.",
         "settingGroup": {
             "name": "Development",
             "inMenu": true
@@ -23,6 +24,7 @@
     {
         "name": "leaflet_map_tile_url",
         "value": "https:\/\/{s}.tile.osm.org\/{z}\/{x}\/{y}.png",
+        "description": "Default maps tiles layout when using *Leaflet*.",
         "visible": true,
         "settingGroup": {
             "name": "Development",
@@ -34,6 +36,7 @@
     {
         "name": "maps_style",
         "value": "[{\"featureType\":\"administrative.country\",\"elementType\":\"geometry\",\"stylers\":[{\"visibility\":\"on\"},{\"color\":\"#949494\"}]},{\"featureType\":\"water\",\"elementType\":\"all\",\"stylers\":[{\"color\":\"#636363\"}]},{\"featureType\":\"landscape.natural\",\"elementType\":\"all\",\"stylers\":[{\"color\":\"#f8f8f8\"}]},{\"featureType\":\"administrative.land_parcel\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"off\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.fill\",\"stylers\":[{\"color\":\"#c7c7c7\"}]},{\"featureType\":\"road\",\"elementType\":\"geometry.stroke\",\"stylers\":[{\"visibility\":\"off\"},{\"color\":\"#cfcfcf\"}]},{\"featureType\":\"road\",\"elementType\":\"labels.text.stroke\",\"stylers\":[{\"visibility\":\"simplified\"},{\"color\":\"#ffffff\"},{\"weight\":3.04}]},{\"featureType\":\"poi\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"simplified\"},{\"saturation\":-100},{\"lightness\":28}]},{\"featureType\":\"landscape.man_made\",\"elementType\":\"all\",\"stylers\":[{\"visibility\":\"simplified\"},{\"color\":\"#f8f8f8\"}]},{\"featureType\":\"transit\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":-100}]},{\"featureType\":\"road.highway.controlled_access\",\"elementType\":\"labels\",\"stylers\":[{\"saturation\":-100}]},{\"featureType\":\"road.arterial\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":-100}]},{\"featureType\":\"road\",\"elementType\":\"all\",\"stylers\":[{\"saturation\":-100},{\"lightness\":-11}]}]",
+        "description": "Default maps tiles layout when using *Google Maps*.",
         "visible": true,
         "settingGroup": {
             "name": "Development",
@@ -45,6 +48,7 @@
     {
         "name": "maps_default_location",
         "value": "{\"lat\":45.769785, \"lng\":4.833967, \"zoom\":14}",
+        "description": "Default maps marker location.",
         "visible": true,
         "settingGroup": {
             "name": "Development",
@@ -65,8 +69,20 @@
         "defaultValues": ""
     },
     {
+        "name": "max_versions_showed",
+        "description": "Maximum versions count showed in actions menu.",
+        "value": "10",
+        "visible": true,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 6
+    },
+    {
         "name": "email_sender",
         "visible": true,
+        "description": "Default sender email, used as origin for every system email sent. This email **must be allowed by your SMTP server.**",
         "settingGroup": {
             "name": "Emailings",
             "inMenu": true
@@ -257,6 +273,7 @@
     {
         "name": "maintenance_mode",
         "visible": true,
+        "description": "Switch maintenance mode. Only login page will be available for public requests.",
         "settingGroup": {
             "name": "Site informations",
             "inMenu": true
@@ -298,6 +315,7 @@
     {
         "name": "login_image",
         "visible": true,
+        "description": "Replace random *Splashbase* login images with your own.",
         "settingGroup": {
             "name": "Site informations",
             "inMenu": true

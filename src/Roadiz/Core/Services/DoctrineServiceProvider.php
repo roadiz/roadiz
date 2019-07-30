@@ -52,6 +52,7 @@ use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
+use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -82,7 +83,6 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     "../vendor/roadiz/roadiz/src/Roadiz/Core/Entities",
                     "../vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
                     "gen-src/GeneratedNodeSources",
-                    "../vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity",
                 ];
             } else {
                 /*
@@ -92,7 +92,6 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     "src/Roadiz/Core/Entities",
                     "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities",
                     "gen-src/GeneratedNodeSources",
-                    "vendor/gedmo/doctrine-extensions/lib/Gedmo/Loggable/Entity",
                 ];
             }
 
@@ -241,9 +240,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         });
 
         $container[LoggableListener::class] = function (Container $c) {
-            $loggableListener = new LoggableListener();
+            $loggableListener = new UserLoggableListener();
             $loggableListener->setAnnotationReader($c[CachedReader::class]);
             $loggableListener->setUsername('anonymous');
+            $loggableListener->setUser(null);
             return $loggableListener;
         };
 

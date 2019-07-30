@@ -54,7 +54,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
  * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable
+ * @Gedmo\Loggable(logEntryClass="RZ\Roadiz\Core\Entities\UserLogEntry")
  */
 class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggable
 {

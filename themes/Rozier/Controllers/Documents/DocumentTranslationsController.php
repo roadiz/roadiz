@@ -29,27 +29,21 @@
 namespace Themes\Rozier\Controllers\Documents;
 
 use Exception;
-use Gedmo\Loggable\Entity\LogEntry;
-use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
-use RZ\Roadiz\CMS\Forms\MarkdownType;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\DocumentTranslationType;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
+use Themes\Rozier\Traits\VersionedControllerTrait;
+use Twig\Error\RuntimeError;
 
 /**
  * Class DocumentTranslationsController
@@ -57,10 +51,7 @@ use Twig_Error_Runtime;
  */
 class DocumentTranslationsController extends RozierApp
 {
-    /**
-     * @var bool
-     */
-    private $isReadOnly = false;
+    use VersionedControllerTrait;
 
     /**
      * @param Request $request
@@ -68,7 +59,7 @@ class DocumentTranslationsController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function editAction(Request $request, $documentId, $translationId = null)
     {
@@ -187,7 +178,7 @@ class DocumentTranslationsController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function deleteAction(Request $request, $documentId, $translationId)
     {
@@ -239,7 +230,7 @@ class DocumentTranslationsController extends RozierApp
     /**
      * @param DocumentTranslation $doc
      *
-     * @return Form
+     * @return \Symfony\Component\Form\FormInterface
      */
     private function buildDeleteForm(DocumentTranslation $doc)
     {
@@ -258,72 +249,48 @@ class DocumentTranslationsController extends RozierApp
     }
 
     /**
-     * @param Request             $request
-     * @param DocumentTranslation $documentTranslation
-     *
-     * @return Response|null
+     * @param AbstractEntity $entity
+     * @param Request        $request
      */
-    protected function handleVersions(Request $request, DocumentTranslation $documentTranslation): ?Response
+    protected function onPostUpdate(AbstractEntity $entity, Request $request): void
     {
-        /**
-         * Versioning.
-         *
-         * @var LogEntryRepository $repo
+        /*
+         * Dispatch pre-flush event
          */
-        $repo = $this->get('em')->getRepository(LogEntry::class);
-        $logs = $repo->getLogEntries($documentTranslation);
+        if ($entity instanceof DocumentTranslation) {
+            $this->get('em')->flush();
+            $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
+                '%name%' => $entity->getDocument()->getFilename(),
+            ]);
+            $this->publishConfirmMessage($request, $msg);
 
-        if ($request->get('version', null) !== null &&
-            $request->get('version', null) > 0) {
-            $versionNumber = (int) $request->get('version', null);
-            $repo->revert($documentTranslation, $versionNumber);
-            $this->isReadOnly = true;
-            $this->assignation['currentVersionNumber'] = $versionNumber;
-            /** @var LogEntry $log */
-            foreach ($logs as $log) {
-                if ($log->getVersion() === $versionNumber) {
-                    $this->assignation['currentVersion'] = $log;
-                }
-            }
-            $revertForm = $this->createNamedFormBuilder('revertVersion')
-                ->add('version', HiddenType::class, ['data' => $versionNumber])
-                ->getForm();
-            $revertForm->handleRequest($request);
-
-            $this->assignation['revertForm'] = $revertForm->createView();
-
-            if ($revertForm->isSubmitted() && $revertForm->isValid()) {
-                $this->get('em')->persist($documentTranslation);
-                /*
-                 * Dispatch pre-flush event
-                 */
-                $this->get('em')->flush();
-                $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
-                    '%name%' => $documentTranslation->getDocument()->getFilename(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                $this->get("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_TRANSLATION_UPDATED,
-                    new FilterDocumentEvent($documentTranslation->getDocument())
-                );
-
-                $routeParams = [
-                    'documentId' => $documentTranslation->getDocument()->getId(),
-                    'translationId' => $documentTranslation->getTranslation()->getId(),
-                ];
-                /*
-                 * Force redirect to avoid resending form when refreshing page
-                 */
-                return $this->redirect($this->generateUrl(
-                    'documentsMetaPage',
-                    $routeParams
-                ));
-            }
+            $this->get("dispatcher")->dispatch(
+                DocumentEvents::DOCUMENT_TRANSLATION_UPDATED,
+                new FilterDocumentEvent($entity->getDocument())
+            );
         }
+    }
 
-        $this->assignation['versions'] = $logs;
-
+    /**
+     * @param AbstractEntity $entity
+     *
+     * @return Response
+     */
+    protected function getPostUpdateRedirection(AbstractEntity $entity): ?Response
+    {
+        if ($entity instanceof DocumentTranslation) {
+            $routeParams = [
+                'documentId' => $entity->getDocument()->getId(),
+                'translationId' => $entity->getTranslation()->getId(),
+            ];
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            return $this->redirect($this->generateUrl(
+                'documentsMetaPage',
+                $routeParams
+            ));
+        }
         return null;
     }
 }

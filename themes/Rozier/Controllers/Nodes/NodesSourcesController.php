@@ -30,9 +30,8 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
-use Gedmo\Loggable\Entity\LogEntry;
-use Gedmo\Loggable\Entity\Repository\LogEntryRepository;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -47,6 +46,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Traits\VersionedControllerTrait;
+use Twig\Error\RuntimeError;
 
 /**
  * Nodes sources controller.
@@ -55,10 +56,7 @@ use Themes\Rozier\RozierApp;
  */
 class NodesSourcesController extends RozierApp
 {
-    /**
-     * @var bool
-     */
-    private $isReadOnly = false;
+    use VersionedControllerTrait;
 
     /**
      * Return an edition form for requested node.
@@ -68,7 +66,7 @@ class NodesSourcesController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
@@ -162,10 +160,7 @@ class NodesSourcesController extends RozierApp
                             ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }
 
-                        return $this->redirect($this->generateUrl(
-                            'nodesEditSourcePage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
-                        ));
+                        return $this->getPostUpdateRedirection($source);
                     }
 
                     if ($this->isReadOnly) {
@@ -196,80 +191,13 @@ class NodesSourcesController extends RozierApp
     }
 
     /**
-     * @param Request      $request
-     * @param NodesSources $nodesSources
-     *
-     * @return Response|null
-     */
-    protected function handleVersions(Request $request, NodesSources $nodesSources): ?Response
-    {
-        /**
-         * Versioning.
-         *
-         * @var LogEntryRepository $repo
-         */
-        $repo = $this->get('em')->getRepository(LogEntry::class);
-        $logs = $repo->getLogEntries($nodesSources);
-
-        if ($request->get('version', null) !== null &&
-            $request->get('version', null) > 0) {
-            $versionNumber = (int) $request->get('version', null);
-            $repo->revert($nodesSources, $versionNumber);
-            $this->isReadOnly = true;
-            $this->assignation['currentVersionNumber'] = $versionNumber;
-            /** @var LogEntry $log */
-            foreach ($logs as $log) {
-                if ($log->getVersion() === $versionNumber) {
-                    $this->assignation['currentVersion'] = $log;
-                }
-            }
-            $revertForm = $this->createNamedFormBuilder('revertVersion')
-                ->add('version', HiddenType::class, ['data' => $versionNumber])
-                ->getForm();
-            $revertForm->handleRequest($request);
-
-            $this->assignation['revertForm'] = $revertForm->createView();
-
-            if ($revertForm->isSubmitted() && $revertForm->isValid()) {
-                $this->get('em')->persist($nodesSources);
-                /*
-                 * Dispatch pre-flush event
-                 */
-                $event = new FilterNodesSourcesEvent($nodesSources);
-                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE, $event);
-                $this->get('em')->flush();
-                $event = new FilterNodesSourcesEvent($nodesSources);
-                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
-
-                $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
-                    '%node_source%' => $nodesSources->getNode()->getNodeName(),
-                    '%translation%' => $nodesSources->getTranslation()->getName(),
-                ]);
-
-                $this->publishConfirmMessage($request, $msg, $nodesSources);
-
-                return $this->redirect($this->generateUrl(
-                    'nodesEditSourcePage',
-                    [
-                        'nodeId' => $nodesSources->getNode()->getId(),
-                        'translationId' => $nodesSources->getTranslation()->getId()
-                    ]
-                ));
-            }
-        }
-
-        $this->assignation['versions'] = $logs;
-
-        return null;
-    }
-
-    /**
      * Return an remove form for requested nodeSource.
      *
      * @param Request $request
      * @param int     $nodeSourceId
      *
      * @return Response
+     * @throws RuntimeError
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
@@ -338,5 +266,40 @@ class NodesSourcesController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         return $this->render('nodes/deleteSource.html.twig', $this->assignation);
+    }
+
+    protected function onPostUpdate(AbstractEntity $entity, Request $request): void
+    {
+        /*
+         * Dispatch pre-flush event
+         */
+        if ($entity instanceof NodesSources) {
+            $event = new FilterNodesSourcesEvent($entity);
+            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE, $event);
+            $this->get('em')->flush();
+            $event = new FilterNodesSourcesEvent($entity);
+            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
+            $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
+                '%node_source%' => $entity->getNode()->getNodeName(),
+                '%translation%' => $entity->getTranslation()->getName(),
+            ]);
+
+            $this->publishConfirmMessage($request, $msg, $entity);
+        }
+    }
+
+    protected function getPostUpdateRedirection(AbstractEntity $entity): ?Response
+    {
+        if ($entity instanceof NodesSources) {
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                [
+                    'nodeId' => $entity->getNode()->getId(),
+                    'translationId' => $entity->getTranslation()->getId()
+                ]
+            ));
+        }
+        return null;
     }
 }

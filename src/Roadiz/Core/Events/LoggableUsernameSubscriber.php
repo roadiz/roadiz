@@ -30,6 +30,8 @@ use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
+use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -70,7 +72,13 @@ class LoggableUsernameSubscriber implements EventSubscriberInterface, ContainerA
             $tokenStorage = $this->get('securityTokenStorage');
 
             if ($tokenStorage->getToken() && $tokenStorage->getToken()->getUsername() !== '') {
-                $this->get(LoggableListener::class)->setUsername($tokenStorage->getToken()->getUsername());
+                $loggableListener = $this->get(LoggableListener::class);
+                if ($loggableListener instanceof UserLoggableListener &&
+                    $tokenStorage->getToken()->getUser() instanceof User) {
+                    $loggableListener->setUser($tokenStorage->getToken()->getUser());
+                } else {
+                    $loggableListener->setUsername($tokenStorage->getToken()->getUsername());
+                }
             }
         }
     }

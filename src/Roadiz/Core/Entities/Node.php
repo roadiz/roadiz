@@ -62,7 +62,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     @ORM\Index(columns={"home"})
  * })
  * @ORM\HasLifecycleCallbacks
- * @Gedmo\Loggable
+ * @Gedmo\Loggable(logEntryClass="RZ\Roadiz\Core\Entities\UserLogEntry")
  */
 class Node extends AbstractDateTimedPositioned implements LeafInterface, AttributableInterface, Loggable
 {
