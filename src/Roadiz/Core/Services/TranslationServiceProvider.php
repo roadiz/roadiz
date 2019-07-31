@@ -217,20 +217,21 @@ class TranslationServiceProvider implements ServiceProviderInterface
     }
 
     /**
-     * @param Translator $translator
-     * @param string     $path
-     * @param string     $extension
-     * @param string     $locale
-     * @param string|null     $domain
+     * @param Translator  $translator
+     * @param string      $path
+     * @param string      $extension
+     * @param string      $locale
+     * @param string|null $domain
+     * @param string      $filename
      */
     protected function addTranslatorResource(
         Translator $translator,
         string $path,
         string $extension,
         string $locale,
-        string $domain = null
+        string $domain = null,
+        string $filename = 'messages'
     ) {
-        $filename = 'messages';
         if ($domain !== null && $domain !== '') {
             $filename = $domain;
         }

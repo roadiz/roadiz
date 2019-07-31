@@ -39,6 +39,7 @@ use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Symfony\Component\Translation\Translator;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;
@@ -170,6 +171,18 @@ class RozierApp extends BackendController
     {
         parent::setupDependencyInjection($container);
 
+
+        $container->extend('translator', function (Translator $translator, $c) {
+            $settingPath = __DIR__ . '/Resources/translations/settings.' . $c['translator.locale'] .  '.xlf';
+            if (file_exists($settingPath)) {
+                $translator->addResource(
+                    'xlf',
+                    $settingPath,
+                    $c['translator.locale']
+                );
+            }
+            return $translator;
+        });
         $container->extend('backoffice.entries', function (array $entries, $c) {
             /** @var UrlGenerator $urlGenerator */
             $urlGenerator = $c['urlGenerator'];
