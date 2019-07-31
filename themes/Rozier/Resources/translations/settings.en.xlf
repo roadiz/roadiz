@@ -26,10 +26,6 @@
                 <source>Default maps marker location.</source>
                 <target state="translated">Default maps marker location.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="maps_default_location.description">
-                <source>Default maps marker location.</source>
-                <target state="translated">Default maps marker location.</target>
-            </trans-unit>
       <trans-unit xml:space="preserve" id="maps_style.description">
                 <source>Default maps tiles layout when using *Google Maps*.</source>
                 <target state="translated">Default maps tiles layout when using *Google Maps*.</target>
