@@ -6915,6 +6915,11 @@
             <target state="translated">Revert working copy to this version</target>
             <note>Version management : Button label to revert to current viewing version</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="max_versions_showed">
+            <source>max_versions_showed</source>
+            <target state="translated">Maximum showed versions count </target>
+            <note>Version management : setting label to choose how many version to display in action-menu</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="versions.back_to_working_copy">
             <source>versions.back_to_working_copy</source>
             <target state="translated">Back to working copy</target>

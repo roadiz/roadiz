@@ -7080,7 +7080,11 @@
             <target></target>
             <note>Version management : setting label to choose how many version to display in action-menu</note>
         </trans-unit>
-
+        <trans-unit xml:space="preserve" id="versions.back_to_working_copy">
+            <source>versions.back_to_working_copy</source>
+            <target></target>
+            <note>Version management : Button label to go back to working copy</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

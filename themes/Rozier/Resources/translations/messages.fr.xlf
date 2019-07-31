@@ -6915,11 +6915,16 @@
             <target state="translated">Restaurer cette version</target>
             <note>Version management : Button label to revert to current viewing version</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="versions.back_to_working_copy" approved="yes">
+      <trans-unit xml:space="preserve" id="max_versions_showed">
+            <source>max_versions_showed</source>
+            <target state="translated">Nombre maximum de versions à afficher</target>
+            <note>Version management : setting label to choose how many version to display in action-menu</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="versions.back_to_working_copy">
             <source>versions.back_to_working_copy</source>
             <target state="translated">Retour à la version actuelle</target>
             <note>Version management : Button label to go back to working copy</note>
-        <alt-trans><target>Retour à la copie de travail</target></alt-trans></trans-unit>
+        </trans-unit>
     </body>
   </file>
 </xliff>
