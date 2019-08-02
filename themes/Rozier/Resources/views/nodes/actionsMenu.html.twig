@@ -112,7 +112,7 @@
                                {% if node.isDraft %}checked{% endif %} />
                     </li>
                     {% endif %}
-                    {% if workflow_can(node, 'unarchive') or node.isDraft %}
+                    {% if workflow_can(node, 'unarchive') %}
                         <li class="node-statuses-item node-draft">
                             <i class="uk-icon-rz-draft-nodes"></i>
                             <span class="label">{% trans %}draft{% endtrans %}</span>
