@@ -57,6 +57,10 @@ class UserType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['email'],
                     ]),
+                    new UniqueUsername([
+                        'entityManager' => $options['em'],
+                        'currentValue' => $options['username'],
+                    ]),
                 ],
             ])
             ->add('username', TextType::class, [
@@ -66,6 +70,10 @@ class UserType extends AbstractType
                     new UniqueUsername([
                         'entityManager' => $options['em'],
                         'currentValue' => $options['username'],
+                    ]),
+                    new UniqueEmail([
+                        'entityManager' => $options['em'],
+                        'currentValue' => $options['email'],
                     ]),
                     new Length([
                         'max' => 200

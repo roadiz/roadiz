@@ -41,7 +41,7 @@ class UniqueEmailValidator extends ConstraintValidator
          * If value is already the node name
          * do nothing.
          */
-        if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
+        if (null !== $constraint->currentValue && strtolower($value) == strtolower($constraint->currentValue)) {
             return;
         }
 
@@ -62,7 +62,7 @@ class UniqueEmailValidator extends ConstraintValidator
      */
     protected function emailExists($email, $entityManager)
     {
-        $user = $entityManager->getRepository(User::class)->findOneByEmail($email);
+        $user = $entityManager->getRepository(User::class)->findOneByEmail(strtolower($email));
         return (null !== $user);
     }
 }

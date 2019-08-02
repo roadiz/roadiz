@@ -41,12 +41,12 @@ class UniqueUsernameValidator extends ConstraintValidator
          * If value is already the node name
          * do nothing.
          */
-        if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
+        if (null !== $constraint->currentValue && strtolower($value) == strtolower($constraint->currentValue)) {
             return;
         }
 
         if (null !== $constraint->entityManager) {
-            if (true === $this->emailExists($value, $constraint->entityManager)) {
+            if (true === $this->userNameExists($value, $constraint->entityManager)) {
                 $this->context->addViolation($constraint->message);
             }
         } else {
@@ -60,7 +60,7 @@ class UniqueUsernameValidator extends ConstraintValidator
      *
      * @return bool
      */
-    protected function emailExists($username, $entityManager)
+    protected function userNameExists($username, $entityManager)
     {
         $user = $entityManager->getRepository(User::class)->findOneByUsername($username);
 
