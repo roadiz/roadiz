@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
+use Swift_TransportException;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserLifeCycleSubscriber implements EventSubscriber
@@ -158,13 +159,22 @@ class UserLifeCycleSubscriber implements EventSubscriber
 
     /**
      * @param LifecycleEventArgs $event
+     *
+     * @throws \Exception
      */
     public function postPersist(LifecycleEventArgs $event)
     {
         $user = $event->getEntity();
         if ($user instanceof User) {
             if ($user->willSendCreationConfirmationEmail()) {
-                $this->sendSignInConfirmation($user);
+                try {
+                    $this->sendSignUpConfirmation($user);
+                } catch (Swift_TransportException $e) {
+                    $this->container->offsetGet('logger')->emergency('Cannot send user sign-up confirmation by email', [
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString()
+                    ]);
+                }
             }
             $userEvent = new FilterUserEvent($user);
             $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_CREATED, $userEvent);
@@ -204,9 +214,11 @@ class UserLifeCycleSubscriber implements EventSubscriber
      * Send an email with credentials details to user.
      *
      * @param User $user
+     *
      * @return bool
+     * @throws \Exception
      */
-    private function sendSignInConfirmation(User $user)
+    private function sendSignUpConfirmation(User $user)
     {
         $emailContact = $this->container['settingsBag']->get('email_sender');
         if (empty($emailContact)) {
