@@ -78,8 +78,10 @@ class UserViewer
      * Send an email to reset user password.
      *
      * @param UrlGeneratorInterface $urlGenerator
-     * @param string $route
+     * @param string                $route
+     *
      * @return bool
+     * @throws \Exception
      */
     public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator, $route = 'loginResetPage')
     {
