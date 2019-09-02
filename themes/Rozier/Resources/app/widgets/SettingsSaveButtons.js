@@ -45,6 +45,11 @@ export default class SettingsSaveButtons {
             return false
         }
 
+        if ($form.hasClass('uk-has-errors')) {
+            $form.find('.uk-alert').remove()
+            $form.removeClass('uk-has-errors')
+        }
+
         window.Rozier.lazyload.canvasLoader.show()
         let formData = new window.FormData($form[0])
         let sendData = {
@@ -57,8 +62,13 @@ export default class SettingsSaveButtons {
         }
 
         this.currentRequest = $.ajax(sendData)
-            .done(() => {
-                console.debug('Saved setting with success.')
+            .fail((data) => {
+                if (data.responseJSON && data.responseJSON.errors && data.responseJSON.errors.value) {
+                    for (let key in data.responseJSON.errors.value) {
+                        $form.addClass('uk-has-errors')
+                        $form.append('<span class="uk-alert uk-alert-danger">' + data.responseJSON.errors.value[key] + '</span>')
+                    }
+                }
             })
             .always(() => {
                 window.Rozier.lazyload.canvasLoader.hide()
