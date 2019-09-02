@@ -46,6 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 
 class AttributeValueTranslationType extends AbstractType
 {
@@ -60,7 +61,12 @@ class AttributeValueTranslationType extends AbstractType
             $defaultOptions = [
                 'required' => false,
                 'empty_data' => null,
-                'label' => false
+                'label' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 254
+                    ])
+                ]
             ];
             switch ($attributeValueTranslation->getAttributeValue()->getType()) {
                 case AttributeInterface::INTEGER_T:

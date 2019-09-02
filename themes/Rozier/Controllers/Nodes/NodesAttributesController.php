@@ -42,6 +42,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
@@ -131,7 +132,18 @@ class NodesAttributesController extends RozierApp
                         'translationId' => $translation->getId(),
                     ]));
                 } else {
-                    foreach ($this->getErrorsAsArray($attributeValueTranslationForm) as $error) {
+                    $errors = $this->getErrorsAsArray($attributeValueTranslationForm);
+                    /*
+                     * Handle errors when Ajax POST requests
+                     */
+                    if ($request->isXmlHttpRequest()) {
+                        return new JsonResponse([
+                            'status' => 'fail',
+                            'errors' => $errors,
+                            'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                        ], JsonResponse::HTTP_BAD_REQUEST);
+                    }
+                    foreach ($errors as $error) {
                         $this->publishErrorMessage($request, $error);
                     }
                 }
