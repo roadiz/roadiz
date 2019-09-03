@@ -47,7 +47,8 @@ OR by keeping at least <info>count</info> versions.
 
 This command does not alter active node-sources, document translations 
 or tag translations, it only deletes versioned log entries.
-EOT)
+EOT
+            )
             ->addOption(
                 'before',
                 'b',
