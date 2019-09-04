@@ -15,8 +15,14 @@ export default class JsonEditor {
             mode: {name: 'javascript', json: true},
             theme: 'mbo',
             tabSize: 2,
+            indentWithTabs: false,
             lineWrapping: true,
-            dragDrop: false
+            dragDrop: false,
+            readOnly: (this.textarea.hasAttribute('disabled') && this.textarea.getAttribute('disabled') === 'disabled'),
+            extraKeys: {
+                Tab: (cm) => cm.execCommand('indentMore'),
+                'Shift-Tab': (cm) => cm.execCommand('indentLess')
+            }
         }
 
         if (this.$settingRow.length) {
@@ -59,14 +65,6 @@ export default class JsonEditor {
      */
     textareaChange () {
         this.editor.save()
-
-        // if (this.limit) {
-        //     setTimeout(function () {
-        //         let textareaVal = this.editor.getValue()
-        //         let textareaValStripped = stripTags(textareaVal)
-        //         let textareaValLength = textareaValStripped.length
-        //     }, 100)
-        // }
     }
 
     /**

@@ -18,7 +18,7 @@ import request from 'axios'
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             },
-            withCredentials: true,
+            withCredentials: false,
             responseType: 'json'
         })
         .then((response) => {
@@ -30,7 +30,7 @@ import request from 'axios'
             }
         })
         .catch((error) => {
-            throw new Error(error.response.data.humanMessage)
+            console.error(error.response.data.humanMessage)
         })
     }
 

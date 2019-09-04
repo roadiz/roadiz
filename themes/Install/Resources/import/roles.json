@@ -1,5 +1,13 @@
 [
     {
+        "name": "ROLE_ACCESS_VERSIONS",
+        "groups": [
+            {
+                "name": "Editors"
+            }
+        ]
+    },
+    {
         "name": "ROLE_ACCESS_ATTRIBUTES",
         "groups": [
             {

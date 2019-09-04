@@ -21,6 +21,9 @@
 
 #simple-body {
     background-color: @global-background;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
 }
 
 #main-content-scrollable{
@@ -158,6 +161,18 @@
         padding-top: 0;
     }
 
+    & > .uk-alert:first-child {
+        margin: (@main-content-padding-top * -1) 0 @main-content-padding-top 0;
+        border: none;
+
+        @media (max-width: @screen-md-max) {
+            margin: -30px 0 30px 0;
+        }
+        @media (max-width: @screen-xs-max) {
+            margin: 0 0 30px 0;
+        }
+    }
+
     & > * {
         padding:0 @main-content-padding-right 0 @main-content-padding-left;
 
@@ -172,7 +187,6 @@
     &.content-first {
         padding-bottom: 0px;
     }
-
 
     &.content-upload{
         padding:0;

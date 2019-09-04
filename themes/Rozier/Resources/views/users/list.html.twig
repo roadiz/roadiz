@@ -37,7 +37,14 @@
                 <tbody>
                     {% for user in users %}
                     <tr>
-                        <td class="mobile-hidden uk-visible-xlarge"><img width="45" height="45" class="uk-thumbnail gravatar user-image" src="{{ user.getPictureUrl }}" alt="{{ user.getUsername }}" /></td>
+                        <td class="mobile-hidden uk-visible-xlarge">
+                            <img width="45" height="45"
+                                 data-uk-tooltip="{animation:true}"
+                                 title="{{- user.identifier|default(user.username) -}}"
+                                 class="uk-thumbnail gravatar user-image"
+                                 src="{{ user.getPictureUrl }}"
+                                 alt="{{ user.identifier }}" />
+                        </td>
                         <td>
                             {% if is_granted('ROLE_SUPERADMIN') or not user.SuperAdmin %}
                             <a href="{{ path('usersEditPage', { userId: user.getId }) }}">

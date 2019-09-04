@@ -31,12 +31,14 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,6 +46,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Traits\VersionedControllerTrait;
+use Twig\Error\RuntimeError;
 
 /**
  * Nodes sources controller.
@@ -52,14 +56,17 @@ use Themes\Rozier\RozierApp;
  */
 class NodesSourcesController extends RozierApp
 {
+    use VersionedControllerTrait;
+
     /**
      * Return an edition form for requested node.
      *
      * @param Request $request
-     * @param int $nodeId
-     * @param int $translationId
+     * @param int     $nodeId
+     * @param int     $translationId
      *
      * @return Response
+     * @throws RuntimeError
      */
     public function editSourceAction(Request $request, $nodeId, $translationId)
     {
@@ -95,6 +102,15 @@ class NodesSourcesController extends RozierApp
                 $this->assignation['node'] = $node;
                 $this->assignation['source'] = $source;
 
+                /**
+                 * Versioning
+                 */
+                if ($this->isGranted('ROLE_ACCESS_VERSIONS')) {
+                    if (null !== $response = $this->handleVersions($request, $source)) {
+                        return $response;
+                    }
+                }
+
                 $form = $this->createForm(
                     NodeSourceType::class,
                     $source,
@@ -106,12 +122,13 @@ class NodesSourcesController extends RozierApp
                         'container' => $this->getContainer(),
                         'withVirtual' => true,
                         'withTitle' => true,
+                        'disabled' => $this->isReadOnly,
                     ]
                 );
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted()) {
-                    if ($form->isValid()) {
+                    if ($form->isValid() && !$this->isReadOnly) {
                         /*
                          * Dispatch pre-flush event
                          */
@@ -139,14 +156,15 @@ class NodesSourcesController extends RozierApp
                             return new JsonResponse([
                                 'status' => 'success',
                                 'public_url' => $source->getNode()->isPublished() ? $url : $previewUrl,
-                                'errors' => []
+                                'errors' => [],
                             ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }
 
-                        return $this->redirect($this->generateUrl(
-                            'nodesEditSourcePage',
-                            ['nodeId' => $node->getId(), 'translationId' => $translation->getId()]
-                        ));
+                        return $this->getPostUpdateRedirection($source);
+                    }
+
+                    if ($this->isReadOnly) {
+                        $form->addError(new FormError('nodeSource.form.is_read_only'));
                     }
 
                     /*
@@ -163,6 +181,7 @@ class NodesSourcesController extends RozierApp
                 }
 
                 $this->assignation['form'] = $form->createView();
+                $this->assignation['readOnly'] = $this->isReadOnly;
 
                 return $this->render('nodes/editSource.html.twig', $this->assignation);
             }
@@ -178,6 +197,7 @@ class NodesSourcesController extends RozierApp
      * @param int     $nodeSourceId
      *
      * @return Response
+     * @throws RuntimeError
      */
     public function removeAction(Request $request, $nodeSourceId)
     {
@@ -246,5 +266,40 @@ class NodesSourcesController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         return $this->render('nodes/deleteSource.html.twig', $this->assignation);
+    }
+
+    protected function onPostUpdate(AbstractEntity $entity, Request $request): void
+    {
+        /*
+         * Dispatch pre-flush event
+         */
+        if ($entity instanceof NodesSources) {
+            $event = new FilterNodesSourcesEvent($entity);
+            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE, $event);
+            $this->get('em')->flush();
+            $event = new FilterNodesSourcesEvent($entity);
+            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+
+            $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
+                '%node_source%' => $entity->getNode()->getNodeName(),
+                '%translation%' => $entity->getTranslation()->getName(),
+            ]);
+
+            $this->publishConfirmMessage($request, $msg, $entity);
+        }
+    }
+
+    protected function getPostUpdateRedirection(AbstractEntity $entity): ?Response
+    {
+        if ($entity instanceof NodesSources) {
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                [
+                    'nodeId' => $entity->getNode()->getId(),
+                    'translationId' => $entity->getTranslation()->getId()
+                ]
+            ));
+        }
+        return null;
     }
 }

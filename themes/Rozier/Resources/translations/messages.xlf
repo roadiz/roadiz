@@ -7054,6 +7054,37 @@
             <target></target>
             <note>Document form</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="versions">
+            <source>versions</source>
+            <target></target>
+            <note>Version management</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.working_copy">
+            <source>versions.working_copy</source>
+            <target></target>
+            <note>Version management : latest version aka working copy</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.viewing_a_previous_version">
+            <source>versions.viewing_a_previous_version</source>
+            <target></target>
+            <note>Version management : Disclaimer that user is viewing a previous version</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.revert_to_this_version">
+            <source>versions.revert_to_this_version</source>
+            <target></target>
+            <note>Version management : Button label to revert to current viewing version</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="max_versions_showed">
+            <source>max_versions_showed</source>
+            <target></target>
+            <note>Version management : setting label to choose how many version to display in action-menu</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="versions.back_to_working_copy">
+            <source>versions.back_to_working_copy</source>
+            <target></target>
+            <note>Version management : Button label to go back to working copy</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

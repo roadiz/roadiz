@@ -31,7 +31,8 @@ export default class MarkdownEditor {
             lineWrapping: true,
             viewportMargin: Infinity,
             enterMode: 'keep',
-            direction: (this.textarea.hasAttribute('dir') && this.textarea.getAttribute('dir') === 'rtl') ? ('rtl') : ('ltr')
+            direction: (this.textarea.hasAttribute('dir') && this.textarea.getAttribute('dir') === 'rtl') ? ('rtl') : ('ltr'),
+            readOnly: (this.textarea.hasAttribute('disabled') && this.textarea.getAttribute('disabled') === 'disabled')
         })
 
         this.editor.addKeyMap({
@@ -90,6 +91,9 @@ export default class MarkdownEditor {
             this.$editor = this.$cont.find('.CodeMirror').eq(0)
 
             this.$cont.addClass('markdown-editor')
+            if (this.editor.getOption('readOnly') === true) {
+                this.$cont.addClass('markdown-editor__disabled')
+            }
             this.$buttons = this.$cont.find('[data-markdowneditor-button]')
             // Selectors
             this.$content = this.$cont.find('.markdown-editor-content')
@@ -226,6 +230,9 @@ export default class MarkdownEditor {
      * @param {Event} event
      */
     buttonClick (event) {
+        if (this.editor.getOption('readOnly') === true) {
+            return false
+        }
         let $button = $(event.currentTarget)
         let sel = this.editor.getSelections()
 
