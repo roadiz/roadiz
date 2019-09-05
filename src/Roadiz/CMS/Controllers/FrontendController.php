@@ -509,4 +509,19 @@ abstract class FrontendController extends AppController
 
         $this->assignation['pageMeta'] = $this->getNodeSEO();
     }
+
+    /**
+     * Deny access (404) node-source access if its publication date is in the future.
+     *
+     * @throws \Exception
+     */
+    protected function denyAccessUnlessPublished()
+    {
+        if (null !== $this->nodeSource) {
+            if ($this->nodeSource->getPublishedAt() > new \DateTime() &&
+                !$this->get('kernel')->isPreview()) {
+                throw $this->createNotFoundException();
+            }
+        }
+    }
 }
