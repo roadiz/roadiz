@@ -90,7 +90,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 ];
             }
 
-            if (isset($c['config']['entities'])) {
+            if (isset($container['config']['entities'])) {
                 $relPaths = array_merge($relPaths, $container['config']['entities']);
             }
 
