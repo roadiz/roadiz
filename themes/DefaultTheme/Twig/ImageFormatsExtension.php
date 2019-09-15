@@ -54,6 +54,7 @@ class ImageFormatsExtension extends AbstractExtension implements GlobalsInterfac
                 'columnedImage' => [
                     'width' => 720,
                     'progressive' => true,
+                    'picture' => true,
                     'class' => 'img-fluid img-responsive',
                 ],
                 'thumbnail' => [
@@ -61,6 +62,7 @@ class ImageFormatsExtension extends AbstractExtension implements GlobalsInterfac
                     'controls' => true,
                     'embed' => true,
                     'progressive' => true,
+                    'picture' => true,
                     'class' => 'img-fluid img-responsive',
                 ],
                 'shareImage' => [
