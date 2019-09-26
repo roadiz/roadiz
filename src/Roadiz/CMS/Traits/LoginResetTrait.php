@@ -49,15 +49,30 @@ trait LoginResetTrait
 
     /**
      * @param FormInterface $form
-     * @param User $user
+     * @param User          $user
      * @param EntityManager $entityManager
+     *
      * @return bool
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function updateUserPassword(FormInterface $form, User $user, EntityManager $entityManager)
     {
         $user->setConfirmationToken(null);
         $user->setPasswordRequestedAt(null);
         $user->setPlainPassword($form->get('plainPassword')->getData());
+        /*
+         * If user was forced to update its credentials,
+         * we remove expiration.
+         */
+        if (!$user->isCredentialsNonExpired()) {
+            if ($user->getCredentialsExpired() === true) {
+                $user->setCredentialsExpired(false);
+            }
+            if (null !== $user->getCredentialsExpiresAt()) {
+                $user->setCredentialsExpiresAt(null);
+            }
+        }
         $entityManager->flush();
 
         return true;
