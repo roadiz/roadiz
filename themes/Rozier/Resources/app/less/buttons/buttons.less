@@ -216,81 +216,89 @@
 }
 
 .uk-button-success {
-    background: @grey-form-submit;
-    border-color: @grey-form-submit-border;
-    color: @grey-form-submit-color;
+    &:not(:disabled) {
+        background: @grey-form-submit;
+        border-color: @grey-form-submit-border;
+        color: @grey-form-submit-color;
 
-    &:hover, &:active, &:focus {
-        background-color: @grey-form-submit-hover;
-        border-color: #888888;
-        color: #333;
+        &:hover, &:active, &:focus {
+            background-color: @grey-form-submit-hover;
+            border-color: #888888;
+            color: #333;
+        }
     }
 }
 
 // .uk-button-hidden,
 .uk-button-locked,
 .uk-button-warning {
-    background: fade(@warning-color, 20%);
-    border-color: @warning-color;
-    color: darken(@warning-color, 15%);
-    text-shadow: none;
-
-    [class*=uk-icon-]{
-        color: darken(@warning-color, 15%);
-    }
-
-    &:hover, &:active, &:focus {
-        background: @warning-color;
+    &:not(:disabled) {
+        background: fade(@warning-color, 20%);
         border-color: @warning-color;
-        color: white;
+        color: darken(@warning-color, 15%);
+        text-shadow: none;
 
-        [class*=uk-icon-]{
+        [class*=uk-icon-] {
+            color: darken(@warning-color, 15%);
+        }
+
+        &:hover, &:active, &:focus {
+            background: @warning-color;
+            border-color: @warning-color;
             color: white;
+
+            [class*=uk-icon-] {
+                color: white;
+            }
         }
     }
 }
 .uk-button-deleted,
 .uk-button-danger {
-    background: fade(@alert-color, 20%);
-    border-color: @alert-color;
-    color: darken(@alert-color, 15%);
-    text-shadow: none;
-
-    [class*=uk-icon-]{
-        color: darken(@alert-color, 15%);
-    }
-
-    &:hover, &:active, &:focus {
-        background: @alert-color;
+    &:not(:disabled) {
+        background: fade(@alert-color, 20%);
         border-color: @alert-color;
-        color: white;
+        color: darken(@alert-color, 15%);
+        text-shadow: none;
 
-        [class*=uk-icon-]{
+        [class*=uk-icon-] {
+            color: darken(@alert-color, 15%);
+        }
+
+        &:hover, &:active, &:focus {
+            background: @alert-color;
+            border-color: @alert-color;
             color: white;
+
+            [class*=uk-icon-] {
+                color: white;
+            }
         }
     }
 }
 
 .uk-button-primary {
-    background: @contrast-color-darker;
-    border-color: transparent;
-    color: white;
-    text-shadow: none;
-
-    [class*=uk-icon-]{
-        color: white;
-    }
-
-    &:hover, &:active, &:focus {
-        background: @contrast-color;
+    &:not(:disabled) {
+        background: @contrast-color-darker;
         border-color: transparent;
         color: white;
+        text-shadow: none;
+
+        [class*=uk-icon-]{
+            color: white;
+        }
+
+        &:hover, &:active, &:focus {
+            background: @contrast-color;
+            border-color: transparent;
+            color: white;
+        }
     }
 }
 
+.uk-button:disabled,
 .uk-button-disabled {
     .opacity(0.4);
-    pointer-events: none;
 }
 
 .uk-icon-button {
