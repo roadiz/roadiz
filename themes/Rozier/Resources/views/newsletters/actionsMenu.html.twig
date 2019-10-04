@@ -5,12 +5,12 @@
 {#     {% if (is_granted('ROLE_ACCESS_NODES_DELETE') and not node.locked ) %}
 
         {% if node.isDeleted %}
-        <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesUndeletePage', { nodeId: node.getId}) }}">
+        <a class="uk-button uk-button-danger" href="{{ path('nodesUndeletePage', { nodeId: node.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-untrash"></i></span>
             <span class="label"><span class="label-text">{% trans %}undelete{% endtrans %}</span></span>
         </a>
         {% else %}
-        <a class="uk-button uk-button-primary uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
+        <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-trash"></i></span>
             <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
         </a>

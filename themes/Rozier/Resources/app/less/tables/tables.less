@@ -13,61 +13,73 @@
 @form-head-border-color :   #cccccc;
 @form-row-border-color :     #e2e2e2;
 
+.uk-table {
+    font-size: 12px;
 
-/* -------- STYLES -------- */
+    td, th {
+        padding: 10px 8px;
+    }
 
-.content-table {
-    font-size:12px;
-    thead{
-        th{
-            vertical-align: top;
-            height:43px;
-            position: relative;
-            color:@form-head-color;
-            padding:5px 10px 0;
-            border-left:1px solid @form-head-border-color;
-            .box-sizing();
+    td {
+        .uk-form {
+            display: flex;
+            justify-content: space-between;
+        }
 
-            a {
-                margin-left:5px;
-
-                &.active {
-                    color: @contrast-color-darker;
-                }
+        &:not(:first-child) {
+            .uk-form:first-child {
+                margin-left: -8px;
             }
+        }
 
-            @media screen and (min-width: 1380px) {
-                padding:5px 15px 0;
+        .CodeMirror {
+            max-width: 300px;
+            font-size: 10px;
+            line-height: 16px;
+            margin: -10px 0 -10px 0;
+
+            pre {
+                font-size: 10px;
+                line-height: 16px;
             }
         }
     }
 
-    tbody{
-        tr{
-            height:54px;
+    th {
+        vertical-align: middle;
+        position: relative;
+        color:@form-head-color;
+        border-left:1px solid @form-head-border-color;
+        .box-sizing();
+
+        a {
+            margin-left:5px;
+
+            &.active {
+                color: @contrast-color-darker;
+            }
+        }
+    }
+
+    tr {
+        td {
             background-color:white;
             border-top:1px solid white;
             border-bottom:1px solid @form-row-border-color;
             .transition(0.7s background-color @easeOutExpo);
-
-            &:nth-of-type(2n){
-                background-color:#F4F4F4;
-            }
-        }
-        td{
             vertical-align: middle;
-            padding:2px 10px 0;
-            line-height:13px;
-            font-weight: 600;
             color:@grey-medium;
+        }
 
-            @media screen and (min-width: 1380px) {
-                padding:5px 15px 0;
+        &:nth-of-type(2n){
+            td {
+                background-color: #f8f8f8;
             }
         }
     }
 
-    a{
+
+    a {
         color:@grey-medium;
         .transition(0.4s color ease);
 
@@ -80,8 +92,8 @@
     textarea{
         min-width:200px;
         min-height: 100px;
-        margin:5px 0;
-        padding:10px;
+        margin: 5px 0;
+        padding: 10px;
     }
 
     .uk-htmleditor {
@@ -104,7 +116,7 @@
     white-space: nowrap;
 
     td& {
-        padding: 0 10px 0 0 !important;
+        padding-left: 0 !important;
     }
 }
 
