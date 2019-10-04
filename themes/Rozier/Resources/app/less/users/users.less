@@ -7,11 +7,19 @@ table.users {
 
 img.user-image {
     object-fit: cover;
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
+
+    .uk-table td & {
+        margin: -8px 0;
+    }
 
     @media screen and (min-width: 1380px) {
         width: 45px;
         height: 45px;
+
+        .uk-table td & {
+            margin: -5px 0;
+        }
     }
 }
