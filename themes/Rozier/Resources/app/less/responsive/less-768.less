@@ -714,27 +714,10 @@
         border-top: 3px solid #E5E5E5;
         z-index:4;
 
-        header{
-            display: inline-block;
-            vertical-align:top;
-            width:52px; min-height:52px; height:auto;
-        }
-
+        header,
         .uk-button {
             display: inline-block;
-            vertical-align:top;
-            width:auto;
-            height:32px;
-            background: #999;
             margin: 0 8px 8px 0;
-            padding:0 12px;
-            text-shadow: none;
-            box-shadow: none;
-            border: 0 none;
-
-            &.uk-button-danger{
-                background: @alert-color;
-            }
 
             &:before{
                 display: none;
@@ -749,22 +732,11 @@
                 padding: 0;
                 vertical-align: middle;
                 box-shadow: none;
-
-                i {
-                    width:auto;
-                    height: auto;
-                    margin-right:4px;
-                    background: none;
-                    border:none;
-                    color:#fff;
-                }
             }
 
-            .label{
+            .label {
                 position: relative;
                 display: inline-block;
-                line-height: 30px;
-                font-size: 11px;
 
                 .label-text{
                     padding: 0;
@@ -786,7 +758,7 @@
             &.node-parameters,
             &.node-status {
                 width: auto;
-                margin:30px -15px;
+                margin: 30px -15px;
 
                 header {
                     background: none;
@@ -799,19 +771,19 @@
 
                     .label{
                         display: inline-block;
-                        left:52px;
+                        left: 1em;
                         background: none;
 
-                        &:after{ display: none; }
+                        &:after { display: none; }
 
-                        .label-text{
+                        .label-text {
                             padding:0;
                             color:#444;
                         }
                     }
                 }
 
-                ul{
+                ul {
                     position: relative;
                     display: block;
                     border:none;

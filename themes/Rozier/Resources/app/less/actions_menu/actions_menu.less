@@ -23,13 +23,15 @@
     background: @item-global-background;
     vertical-align: middle;
     border: 1px solid @item-global-border-color;
-    color: @item-global-color;
+    color: @item-global-color !important;
     width: 32px;
     height: 32px;
     margin: 0;
     text-align: center;
     z-index: 2;
     font-size: 16px;
+
+    border-color: @item-global-border-color !important;
 
     &:before {
         position: relative;
@@ -39,116 +41,123 @@
 }
 
 .actions-menu {
-    position: fixed;
-    top: 220px;
-    right: -56px;
-    z-index: 9999;
-    width:56px;
-    .box-sizing();
-    background:white;
-    box-shadow: 3px 5px 30px rgba(0,0,0,0.1);
+    @media (min-width: @screen-sm-min) {
+        position: fixed;
+        top: 220px;
+        right: -56px;
+        z-index: 9999;
+        width:56px;
+        .box-sizing();
+        background:white;
+        box-shadow: 3px 5px 30px rgba(0,0,0,0.1);
+    }
 
     @media (min-width: @screen-sm-min) and (min-height: 700px) {
         top: 50%;
         transform: translateY(-50%);
     }
 
-    header,
-    .uk-button {
-        position: relative;
-        .rounded(0);
-        .box-sizing();
-        border: 0 none;
-        height: @action-menu-H;
-        width: 100%;
-        white-space: nowrap;
-        text-align: left;
-        padding: 9px 9px 9px 13px;
-        border-top: 1px solid @separation-border-color;
-        background-image: none;
-        background-color: white;
-        z-index: 999;
-        justify-content: inherit;
+    @media (min-width: @screen-sm-min) {
+        header,
+        .uk-button {
+            position: relative;
+            .rounded(0);
+            .box-sizing();
+            border: 0 none;
+            height: @action-menu-H;
+            width: 100%;
+            white-space: nowrap;
+            text-align: left;
+            padding: 9px 9px 9px 13px;
+            border-top: 1px solid @separation-border-color !important;
+            background-image: none;
+            background-color: white;
+            z-index: 999;
+            justify-content: inherit;
 
-        &.uk-button:first-child, &.uk-button:first-child .label {
-            border-top: 0 none;
-        }
-
-        i {
-            .action-menu-icon();
-            .transition(~'border-color ease 0.3s, color ease 0.3s');
-        }
-
-        &:hover {
-            &.uk-button-danger,
-            &.uk-button-primary {
-                border-color: @separation-border-color;
-                background: white;
+            &.uk-button:first-child,
+            &.uk-button:first-child .label {
+                border-top: 0 none !important;
             }
+
             i {
-                border-color: darken(@item-global-border-color, 10%);
-                color: darken(@item-global-color, 20%)
+                .action-menu-icon();
+                .transition(~'border-color ease 0.3s, color ease 0.3s');
             }
-        }
 
-        &:before {
-            content: "";
-            position: absolute;
-            top: 0px;
-            bottom: 0px;
-            left: 0px;
-            width: 4px;
-            background-color: @item-global-label-color;
-            z-index: 99999;
-        }
-        &.uk-button-primary:before {
-            background-color: @contrast-color-darker;
-        }
-        &.uk-button-danger:before {
-            background-color: @alert-color;
+            &:hover {
+                &.uk-button-danger,
+                &.uk-button-primary {
+                    border-color: @separation-border-color !important;
+                    background: white;
+                }
+                i {
+                    border-color: darken(@item-global-border-color, 10%) !important;
+                    color: darken(@item-global-color, 20%) !important;
+                }
+            }
+
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                width: 4px;
+                background-color: @item-global-label-color;
+                z-index: 99999;
+            }
+            &.uk-button-primary:before {
+                background-color: @contrast-color-darker;
+            }
+            &.uk-button-danger:before {
+                background-color: @alert-color;
+            }
         }
     }
 
-    // for Save button  and other too !
-    .uk-button {
-        .icon-container {
-            position: absolute;
-            z-index: 9999;
-            background-color: white;
-            // width: 100%;
-            top: 0; right:0; bottom:0; left: 0;
-            text-align: center;
-            padding: 7px 9px 9px 13px;
-            .box-sizing();
-            display: block;
+    @media (min-width: @screen-sm-min) {
+        // for Save button  and other too !
+        .uk-button {
+            .icon-container {
+                position: absolute;
+                z-index: 9999;
+                background-color: white;
+                // width: 100%;
+                top: 0; right:0; bottom:0; left: 0;
+                text-align: center;
+                padding: 7px 9px 9px 13px;
+                .box-sizing();
+                display: block;
 
-            z-index: 2;
-        }
-        .label {
-            z-index: 0;
-        }
-        .label-text {
-            background-color: #999999;
-        }
-        &:hover {
-            border-color: transparent;
+                z-index: 2;
+            }
+            .label {
+                z-index: 0;
+            }
+            .label-text {
+                background-color: #999999;
+            }
+            &:hover {
+                border-color: transparent;
 
-            @media (min-width: @screen-sm-min) {
-                .label-text {
-                    left: -100%;
+                @media (min-width: @screen-sm-min) {
+                    .label-text {
+                        left: -100%;
+                    }
                 }
             }
-        }
 
 
-        &.uk-button-primary {
-            .label-text {
-                background-color: @contrast-color-darker;
+            &.uk-button-primary {
+                .label-text {
+                    background-color: @contrast-color-darker;
+                }
             }
-        }
-        &.uk-button-danger {
-            .label-text {
-                background-color: @alert-color;
+            &.uk-button-danger {
+                .label-text {
+                    background-color: @alert-color;
+                }
             }
         }
 
@@ -159,6 +168,7 @@
             text-shadow: none;
         }
     }
+
 
     // for Classic button
     .no-subnav {
@@ -174,32 +184,35 @@
             }
         }
     }
-    .label {
-        position: absolute;
-        display: block;
-        font-size: 12px;
-        line-height: 52px;
-        font-weight: bold;
-        color: #444;
-        text-shadow: none;
-        height: 100%;
-        top: 0;
-        left: 0;
-        border:none;
-        // border-top: 1px solid transparent;
-        .box-sizing();
-
-        .label-text {
-            position: relative;
+    @media (min-width: @screen-sm-min) {
+        .label {
+            position: absolute;
             display: block;
-            color: white;
+            font-size: 12px;
+            line-height: 52px;
+            font-weight: bold;
+            color: #444;
+            text-shadow: none;
             height: 100%;
-            padding: 0 20px;
-            z-index: 999;
+            top: 0;
             left: 0;
-            .transition(left 0.3s ease);
+            border:none;
+            // border-top: 1px solid transparent;
+            .box-sizing();
+
+            .label-text {
+                position: relative;
+                display: block;
+                color: white;
+                height: 100%;
+                padding: 0 20px;
+                z-index: 999;
+                left: 0;
+                .transition(left 0.3s ease);
+            }
         }
     }
+
 
     // for Subnav button
     .with-subnav {

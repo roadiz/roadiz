@@ -41,6 +41,7 @@ import {
 import NodeTreeContextActions from './components/trees/NodeTreeContextActions'
 import RozierMobile from './RozierMobile'
 
+require('gsap/ScrollToPlugin')
 /**
  * Rozier root entry
  */
@@ -674,7 +675,6 @@ export default class Rozier {
      */
     backTopBtnClick () {
         TweenLite.to(this.$mainContentScrollable, 0.6, {scrollTo: {y: 0}, ease: Expo.easeOut})
-
         return false
     }
 
