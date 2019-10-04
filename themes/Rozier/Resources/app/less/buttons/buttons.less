@@ -401,6 +401,11 @@
     padding: 8px 6px;
     margin-left:-1px;
 
+    @media (max-width: @screen-xs-max) {
+        width:  50px;
+        height: 50px !important;
+    }
+
     [class*=uk-icon-] {
         width:34px;
         height:34px;
@@ -411,24 +416,21 @@
         .rounded(18px);
         border:1px solid #cbcbcb;
         .box-sizing();
+
+        transition: 0.35s ease border-color, 0.5s ease background;
     }
 
     &.uk-button-bulk-delete{
-
         [class*=uk-icon-] {
             border-color: @alert-color;
         }
-
-        &:hover{
-            [class*=uk-icon-] {
-                border-color: darken(@alert-color, 15%);
-            }
-        }
     }
 
-    &:hover, &:focus{
+    &:hover,
+    &:focus {
         [class*=uk-icon-] {
-            border-color: #888888;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.2);
         }
     }
 }
