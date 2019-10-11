@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,65 +23,54 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file DocumentViewer.php
- * @author Ambroise Maupate
+ * @file DocumentFinder.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Viewers;
+declare(strict_types=1);
 
+namespace RZ\Roadiz\Document;
+
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 
-/**
- * Class DocumentViewer
- * @package RZ\Roadiz\Core\Viewers
- * @deprecated Use ChainRenderer
- */
-class DocumentViewer extends AbstractDocumentViewer
+final class DocumentFinder implements DocumentFinderInterface
 {
-    /**
-     * @inheritDoc
-     */
-    protected function getDocumentAlt()
-    {
-        if ($this->document instanceof Document &&
-            false !== $this->document->getDocumentTranslations()->first()) {
-            return $this->document->getDocumentTranslations()->first()->getName();
-        }
+    /** @var EntityManagerInterface */
+    private $entityManager;
 
-        return "";
+    /**
+     * DocumentFinder constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
     }
 
     /**
      * @inheritDoc
      */
-    protected function getTemplatesBasePath()
-    {
-        return "documents";
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getDocumentsByFilenames($filenames): array
+    public function findAllByFilenames(array $fileNames)
     {
         return $this->entityManager
             ->getRepository(Document::class)
-            ->findBy(["filename" => $filenames]);
+            ->findBy([
+                "filename" => $fileNames,
+                "raw" => false,
+            ]);
     }
 
     /**
      * @inheritDoc
-     *
-     * @param $filenames
-     *
-     * @return object|null
      */
-    public function getOneDocumentByFilenames($filenames): ?DocumentInterface
+    public function findOneByFilenames(array $fileNames): ?DocumentInterface
     {
         return $this->entityManager
             ->getRepository(Document::class)
             ->findOneBy([
-                "filename" => $filenames,
+                "filename" => $fileNames,
                 "raw" => false,
             ]);
     }

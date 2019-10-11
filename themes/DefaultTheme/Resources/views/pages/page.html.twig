@@ -38,10 +38,16 @@
     <div class="images row">
         {% for image in nodeSource.pictures %}
             {% set imageMetas = image.documentTranslations.first %}
-            <figure class="image col-md-3">
+            <figure class="image col-sm-6 col-md-4">
                 {{ image|display(imageFormats.thumbnail) }}
-                <figcaption><h5>{{ imageMetas.name }}</h5>{{ imageMetas.description|markdown }}</figcaption>
+                {% if imageMetas.name or imageMetas.description %}
+                    <figcaption><h5>{{ imageMetas.name }}</h5>{{ imageMetas.description|markdown }}</figcaption>
+                {% endif %}
             </figure>
+            {#{% set embedFinder = (image|embedFinder) %}
+            {% if embedFinder %}
+                <pre>{{ embedFinder.source }}</pre>
+            {% endif %}#}
         {% endfor %}
     </div>
 

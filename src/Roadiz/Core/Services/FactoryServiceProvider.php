@@ -48,9 +48,22 @@ use RZ\Roadiz\Core\Handlers\TranslationHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use RZ\Roadiz\Core\Viewers\UserViewer;
+use RZ\Roadiz\Document\DocumentFinder;
+use RZ\Roadiz\Document\DocumentFinderInterface;
+use RZ\Roadiz\Document\Renderer\AudioRenderer;
+use RZ\Roadiz\Document\Renderer\ChainRenderer;
+use RZ\Roadiz\Document\Renderer\EmbedRenderer;
+use RZ\Roadiz\Document\Renderer\ImageRenderer;
+use RZ\Roadiz\Document\Renderer\InlineSvgRenderer;
+use RZ\Roadiz\Document\Renderer\PdfRenderer;
+use RZ\Roadiz\Document\Renderer\PictureRenderer;
+use RZ\Roadiz\Document\Renderer\RendererInterface;
+use RZ\Roadiz\Document\Renderer\SvgRenderer;
+use RZ\Roadiz\Document\Renderer\VideoRenderer;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
+use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\Node\NodeFactory;
 use RZ\Roadiz\Utils\Tag\TagFactory;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
@@ -139,7 +152,52 @@ class FactoryServiceProvider implements ServiceProviderInterface
         /*
          * Viewers
          */
+        $container['document.renderers'] = function ($c) {
+            return [
+                new ImageRenderer(
+                    $c[EmbedFinderFactory::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new PictureRenderer(
+                    $c[EmbedFinderFactory::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new VideoRenderer(
+                    $c['assetPackages'],
+                    $c[DocumentFinderInterface::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new AudioRenderer(
+                    $c['assetPackages'],
+                    $c[DocumentFinderInterface::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new PdfRenderer(
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new SvgRenderer($c['assetPackages']),
+                new InlineSvgRenderer($c['assetPackages']),
+                new EmbedRenderer($c[EmbedFinderFactory::class]),
+            ];
+        };
+        $container[RendererInterface::class] = function($c) {
+            return new ChainRenderer($c['document.renderers']);
+        };
 
+        $container[EmbedFinderFactory::class] = function ($c) {
+            return new EmbedFinderFactory($c['document.platforms']);
+        };
+
+        $container[DocumentFinderInterface::class] = function ($c) {
+            return new DocumentFinder($c['em']);
+        };
+
+        /** @deprecated */
         $container['document.viewer'] = $container->factory(function ($c) {
             return new DocumentViewer(
                 $c['requestStack'],
