@@ -185,7 +185,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
                 new EmbedRenderer($c[EmbedFinderFactory::class]),
             ];
         };
-        $container[RendererInterface::class] = function($c) {
+        $container[RendererInterface::class] = function ($c) {
             return new ChainRenderer($c['document.renderers']);
         };
 

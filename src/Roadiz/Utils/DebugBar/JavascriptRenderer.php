@@ -100,7 +100,7 @@ class JavascriptRenderer extends BaseJavascriptRenderer
         $suffix = !$initialize ? '(ajax)' : null;
         $js .= $this->getAddDatasetCode($this->debugBar->getCurrentRequestId(), $this->debugBar->getData(), $suffix);
 
-        if ($this->useRequireJs){
+        if ($this->useRequireJs) {
             return "<script>\nrequire(['debugbar'], function(PhpDebugBar){ $js });\n</script>\n";
         } else {
             return "<script>\n$js\n</script>\n";
