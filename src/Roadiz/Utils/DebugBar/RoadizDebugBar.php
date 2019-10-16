@@ -33,6 +33,7 @@ use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DebugBar;
+use RZ\Roadiz\Utils\DebugBar\JavascriptRenderer;
 use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AccessMapCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AuthCollector;
@@ -64,5 +65,19 @@ class RoadizDebugBar extends DebugBar
         $this->addCollector(new AuthCollector($container['securityTokenStorage']));
         $this->addCollector(new DispatcherCollector($container['dispatcher']));
         $this->addCollector(new AccessMapCollector($container['accessMap'], $container['requestStack']));
+    }
+
+    /**
+     * Returns a JavascriptRenderer for this instance
+     * @param string $baseUrl
+     * @param string $basePath
+     * @return JavascriptRenderer
+     */
+    public function getJavascriptRenderer($baseUrl = null, $basePath = null)
+    {
+        if ($this->jsRenderer === null) {
+            $this->jsRenderer = new JavascriptRenderer($this, $baseUrl, $basePath);
+        }
+        return $this->jsRenderer;
     }
 }
