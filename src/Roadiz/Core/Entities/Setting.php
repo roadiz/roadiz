@@ -195,7 +195,8 @@ class Setting extends AbstractEntity
      */
     public function setValue($value)
     {
-        if ($this->getType() == NodeTypeField::DATETIME_T) {
+        if (($this->getType() === NodeTypeField::DATETIME_T || $this->getType() === NodeTypeField::DATE_T) &&
+            $value instanceof \DateTime) {
             $this->value = $value->format('Y-m-d H:i:s'); // $value is instance of \DateTime
         } else {
             $this->value = $value;
