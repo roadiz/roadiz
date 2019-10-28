@@ -87,6 +87,7 @@ class AttributeValueTranslationType extends AbstractType
                         'attr' => [
                             'class' => 'rz-datetime-field',
                         ],
+                        'constraints' => []
                     ]));
                     break;
                 case AttributeInterface::COLOUR_T:
@@ -111,6 +112,7 @@ class AttributeValueTranslationType extends AbstractType
                         'attr' => [
                             'class' => 'rz-datetime-field',
                         ],
+                        'constraints' => []
                     ]));
                     break;
                 case AttributeInterface::BOOLEAN_T:

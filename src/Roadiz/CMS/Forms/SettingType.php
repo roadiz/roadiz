@@ -200,6 +200,15 @@ class SettingType extends AbstractType
                 ];
             case AbstractField::DATETIME_T:
                 return [
+                    'placeholder' => [
+                        'hour' => 'hour',
+                        'minute' => 'minute',
+                    ],
+                    'date_widget' => 'single_text',
+                    'date_format' => 'yyyy-MM-dd',
+                    'attr' => [
+                        'class' => 'rz-datetime-field',
+                    ],
                     'label' => $label,
                     'years' => range(date('Y') - 10, date('Y') + 10),
                     'required' => false,
