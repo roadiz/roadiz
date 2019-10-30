@@ -31,6 +31,9 @@ namespace Themes\Rozier\Explorer;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @package Themes\Rozier\Explorer
+ */
 abstract class AbstractDoctrineExplorerProvider extends AbstractExplorerProvider
 {
     /**
