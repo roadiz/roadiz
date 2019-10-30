@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
- *
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -22,53 +22,57 @@
  * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file SettingsProvider.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
+declare(strict_types=1);
 
-namespace Themes\Rozier\Explorer;
+namespace RZ\Roadiz\CMS\Forms\Extension;
 
-use RZ\Roadiz\Core\Entities\User;
+use Pimple\Container;
+use Symfony\Component\Form\FormExtensionInterface;
 
-final class UsersProvider extends AbstractDoctrineExplorerProvider
+/**
+ * Loads FormType from Pimple Container to enable
+ * passing arguments to form constructor.
+ *
+ * @package RZ\Roadiz\CMS\Forms\Extension
+ */
+final class ContainerFormExtension implements FormExtensionInterface
 {
-    protected function getProvidedClassname(): string
+    /** @var Container  */
+    protected $container;
+
+    /**
+     * ContainerFormExtension constructor.
+     *
+     * @param $container
+     */
+    public function __construct(Container $container)
     {
-        return User::class;
+        $this->container = $container;
     }
 
-    protected function getDefaultCriteria(): array
+    public function getType($name)
+    {
+        return $this->container->offsetGet($name);
+    }
+
+    public function hasType($name)
+    {
+        return $this->container->offsetExists($name);
+    }
+
+    public function getTypeExtensions($name)
     {
         return [];
     }
 
-    protected function getDefaultOrdering(): array
+    public function hasTypeExtensions($name)
     {
-        return ['username' =>'ASC'];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function supports($item)
-    {
-        if ($item instanceof User) {
-            return true;
-        }
-
         return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function toExplorerItem($item)
+    public function getTypeGuesser()
     {
-        if ($item instanceof User) {
-            return new UserExplorerItem($item);
-        }
-
         return null;
     }
 }

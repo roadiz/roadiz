@@ -35,6 +35,7 @@ use Rollerworks\Component\PasswordStrength\Blacklist\ArrayProvider;
 use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
+use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -102,6 +103,7 @@ class FormServiceProvider implements ServiceProviderInterface
                 new HttpFoundationExtension(),
                 new CsrfExtension($c['csrfTokenManager']),
                 new ValidatorExtension($c['formValidator']),
+                new ContainerFormExtension($c)
             ];
         };
 
