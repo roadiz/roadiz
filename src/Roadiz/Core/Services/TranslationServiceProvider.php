@@ -51,27 +51,27 @@ class TranslationServiceProvider implements ServiceProviderInterface
     /**
      * Initialize translator services.
      *
-     * @param \Pimple\Container $container
+     * @param Container $container
      *
-     * @return \Pimple\Container
+     * @return Container
      */
     public function register(Container $container)
     {
         /**
-         * @param $c
+         * @param Container $c
          * @return Translation
          */
-        $container['defaultTranslation'] = function ($c) {
+        $container['defaultTranslation'] = function (Container $c) {
             return $c['em']->getRepository(Translation::class)->findDefault();
         };
 
         /**
          * This service have to be called once a controller has
          * been matched! Never before.
-         * @param $c
+         * @param Container $c
          * @return string
          */
-        $container['translator.locale'] = function ($c) {
+        $container['translator.locale'] = function (Container $c) {
             /** @var RequestStack $requestStack */
             $requestStack = $c['requestStack'];
             $request = $requestStack->getMasterRequest();
@@ -87,10 +87,10 @@ class TranslationServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param $c
+         * @param Container $c
          * @return Translator
          */
-        $container['translator'] = function ($c) {
+        $container['translator'] = function (Container $c) {
             $c['stopwatch']->start('initTranslator');
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];

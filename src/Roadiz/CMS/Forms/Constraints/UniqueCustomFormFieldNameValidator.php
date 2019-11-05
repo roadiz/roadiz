@@ -29,6 +29,8 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
@@ -40,33 +42,34 @@ class UniqueCustomFormFieldNameValidator extends ConstraintValidator
     {
         $value = StringHandler::variablize($value);
 
-        /*
-         * If value is already the node name
-         * do nothing.
-         */
-        if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
-            return;
-        }
-
-        if (null !== $constraint->entityManager &&
-            null !== $constraint->customForm) {
-            if (true === $this->nameExists($value, $constraint->customForm, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message);
+        if ($constraint instanceof UniqueCustomFormFieldName) {
+            /*
+             * If value is already the node name
+             * do nothing.
+             */
+            if (null !== $constraint->currentValue && $value == $constraint->currentValue) {
+                return;
             }
-        } else {
-            $this->context->addViolation('UniqueCustomFormFieldNameValidator constraint requires a valid EntityManager');
+
+            if (null !== $constraint->entityManager &&
+                null !== $constraint->customForm) {
+                if (true === $this->nameExists($value, $constraint->customForm, $constraint->entityManager)) {
+                    $this->context->addViolation($constraint->message);
+                }
+            } else {
+                $this->context->addViolation('UniqueCustomFormFieldNameValidator constraint requires a valid EntityManager');
+            }
         }
     }
 
     /**
      * @param string $name
-     *
-     * @param $customForm
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param CustomForm $customForm
+     * @param EntityManager $entityManager
      *
      * @return bool
      */
-    protected function nameExists($name, $customForm, $entityManager)
+    protected function nameExists(string $name, CustomForm $customForm, EntityManager $entityManager)
     {
         $entity = $entityManager->getRepository(CustomFormField::class)
                              ->findOneBy([

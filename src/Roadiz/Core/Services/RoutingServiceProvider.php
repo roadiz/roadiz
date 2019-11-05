@@ -57,7 +57,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['httpKernel'] = function ($c) {
+        $container['httpKernel'] = function (Container $c) {
             return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack'], $c['argumentResolver']);
         };
 
@@ -77,7 +77,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new ArgumentResolver();
         };
 
-        $container['router'] = function ($c) {
+        $container['router'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $router = new ChainRouter($c['logger']);
@@ -92,7 +92,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
             return $router;
         };
-        $container['staticRouter'] = function ($c) {
+        $container['staticRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $config = [
@@ -112,7 +112,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['logger']
             );
         };
-        $container['nodeRouter'] = function ($c) {
+        $container['nodeRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $router = new NodeRouter(
@@ -133,7 +133,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return $router;
         };
 
-        $container['redirectionRouter'] = function ($c) {
+        $container['redirectionRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return new RedirectionRouter(
@@ -152,15 +152,15 @@ class RoutingServiceProvider implements ServiceProviderInterface
          * As we are using CMF ChainRouter, it take responsability for
          * URL generation.
          */
-        $container['urlGenerator'] = function ($c) {
+        $container['urlGenerator'] = function (Container $c) {
             return $c['router'];
         };
 
-        $container['httpUtils'] = function ($c) {
+        $container['httpUtils'] = function (Container $c) {
             return new HttpUtils($c['router'], $c['router']);
         };
 
-        $container['routeListener'] = function ($c) {
+        $container['routeListener'] = function (Container $c) {
             return new TimedRouteListener(
                 $c['router'],
                 $c['requestContext'],
@@ -170,7 +170,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container['routeCollection'] = function ($c) {
+        $container['routeCollection'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             if (true === $kernel->isInstallMode()) {

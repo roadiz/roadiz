@@ -689,7 +689,9 @@ class NodeRepository extends StatusAwareRepository
 
     /**
      * @param UrlAlias $urlAlias
+     *
      * @return null|Node
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneWithUrlAlias(UrlAlias $urlAlias)
     {
@@ -708,7 +710,9 @@ class NodeRepository extends StatusAwareRepository
 
     /**
      * @param string $urlAliasAlias
+     *
      * @return null|Node
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneWithAliasAndAvailableTranslation($urlAliasAlias)
     {
@@ -731,7 +735,9 @@ class NodeRepository extends StatusAwareRepository
 
     /**
      * @param string $urlAliasAlias
+     *
      * @return null|Node
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneWithAlias($urlAliasAlias)
     {
@@ -752,14 +758,18 @@ class NodeRepository extends StatusAwareRepository
 
     /**
      * @param $nodeName
+     *
      * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function exists($nodeName)
     {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select($qb->expr()->countDistinct('n.nodeName'))
             ->andWhere($qb->expr()->eq('n.nodeName', ':nodeName'))
-            ->setParameter('nodeName', $nodeName);
+            ->setParameter('nodeName', $nodeName)
+            ->setMaxResults(1)
+        ;
 
         return (boolean) $qb->getQuery()->getSingleScalarResult();
     }

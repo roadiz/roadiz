@@ -124,7 +124,8 @@ class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
         $identifierList = [];
 
         foreach ($classMetadata->getIdentifierFieldNames() as $name) {
-            if (isset($metadata->propertyMetadata[$name])) {
+            if (isset($metadata->propertyMetadata[$name]) &&
+                isset($metadata->propertyMetadata[$name]->serializedName)) {
                 $dataName = $metadata->propertyMetadata[$name]->serializedName;
             } else {
                 $dataName = $name;

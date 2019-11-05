@@ -58,7 +58,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['logger.handlers'] = function ($c) {
+        $container['logger.handlers'] = function (Container $c) {
             $handlers = [];
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -159,7 +159,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
             return $handlers;
         };
 
-        $container['logger.path'] = function ($c) {
+        $container['logger.path'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return $kernel->getLogDir() . '/' .
@@ -167,7 +167,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
             $kernel->getEnvironment().'.log';
         };
 
-        $container['logger'] = function ($c) {
+        $container['logger'] = function (Container $c) {
             $log = new Logger('roadiz');
 
             foreach ($c['logger.handlers'] as $handler) {

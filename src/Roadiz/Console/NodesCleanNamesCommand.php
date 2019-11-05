@@ -114,7 +114,7 @@ class NodesCleanNamesCommand extends Command
                             $output->writeln($node->getNodeName(). ' ---> ' . $prefixNameSlug . '-' . uniqid());
                             $node->setNodeName($prefixName . '-' . uniqid());
                         }
-                        $this->entityManager->flush($node);
+                        $this->entityManager->flush();
                         $renameCount++;
                     }
                 }

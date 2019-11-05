@@ -108,7 +108,7 @@ class Roles extends ParameterBag
         if (null === $role) {
             $role = new Role($key);
             $this->entityManager->persist($role);
-            $this->entityManager->flush($role);
+            $this->entityManager->flush();
         }
 
         return $role;

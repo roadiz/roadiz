@@ -73,9 +73,8 @@ class DocumentViewer extends AbstractDocumentViewer
     /**
      * @inheritDoc
      *
-     * @param $filenames
-     *
-     * @return object|null
+     * @param array|string $filenames
+     * @return Document|null
      */
     public function getOneDocumentByFilenames($filenames): ?DocumentInterface
     {

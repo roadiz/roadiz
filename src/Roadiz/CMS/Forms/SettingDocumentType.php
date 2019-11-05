@@ -70,7 +70,7 @@ class SettingDocumentType extends AbstractType
 
                     if (null !== $document && $document instanceof Document) {
                         $options['entityManager']->persist($document);
-                        $options['entityManager']->flush($document);
+                        $options['entityManager']->flush();
 
                         return $document->getId();
                     }

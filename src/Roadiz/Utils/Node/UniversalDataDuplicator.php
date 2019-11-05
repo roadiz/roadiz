@@ -35,6 +35,8 @@ use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
+use RZ\Roadiz\Core\Repositories\NodeTypeFieldRepository;
+use RZ\Roadiz\Core\Repositories\TranslationRepository;
 
 class UniversalDataDuplicator
 {
@@ -67,15 +69,14 @@ class UniversalDataDuplicator
          * Non-default translation source should not contain universal fields.
          */
         if ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source)) {
-            $universalFields = $this->em
-                ->getRepository(NodeTypeField::class)
-                ->findAllUniversal($source->getNode()->getNodeType());
+            /** @var NodeTypeFieldRepository<NodeTypeField> $nodeTypeFieldRepository */
+            $nodeTypeFieldRepository = $this->em->getRepository(NodeTypeField::class);
+            $universalFields = $nodeTypeFieldRepository->findAllUniversal($source->getNode()->getNodeType());
 
             if (count($universalFields) > 0) {
-                /** @var NodesSourcesRepository $repository */
-                $repository = $this->em
-                    ->getRepository(NodesSources::class)
-                    ->setDisplayingAllNodesStatuses(true)
+                /** @var NodesSourcesRepository<NodesSources> $repository */
+                $repository = $this->em->getRepository(NodesSources::class);
+                $repository->setDisplayingAllNodesStatuses(true)
                     ->setDisplayingNotPublishedNodes(true)
                 ;
                 $otherSources = $repository->findBy([
@@ -115,11 +116,14 @@ class UniversalDataDuplicator
      */
     private function hasDefaultTranslation(NodesSources $source)
     {
+        /** @var TranslationRepository<Translation> $translationRepository */
+        $translationRepository = $this->em->getRepository(Translation::class);
         /** @var Translation $defaultTranslation */
-        $defaultTranslation = $this->em->getRepository(Translation::class)->findDefault();
+        $defaultTranslation = $translationRepository->findDefault();
 
-        $sourceCount = $this->em->getRepository(NodesSources::class)
-            ->setDisplayingAllNodesStatuses(true)
+        /** @var NodesSourcesRepository<NodesSources> $repository */
+        $repository = $this->em->getRepository(NodesSources::class);
+        $sourceCount = $repository->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
             ->countBy([
                 'node' => $source->getNode(),
@@ -143,9 +147,11 @@ class UniversalDataDuplicator
     }
 
     /**
-     * @param NodesSources $universalSource
-     * @param NodesSources $destSource
+     * @param NodesSources  $universalSource
+     * @param NodesSources  $destSource
      * @param NodeTypeField $field
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
     protected function duplicateDocumentsField(NodesSources $universalSource, NodesSources $destSource, NodeTypeField $field)
     {

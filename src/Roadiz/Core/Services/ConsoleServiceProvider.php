@@ -17,7 +17,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['console.commands'] = function (Container $c) {
+        $container['console.commands'] = function () {
             return [
                 new Console\DispatcherDebugCommand(),
                 new Console\ConfigurationDebugCommand(),

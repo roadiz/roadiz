@@ -97,13 +97,14 @@ class AssetsController extends CmsController
      * Request a single protected font file from Roadiz.
      *
      * @param Request $request
-     * @param string $filename
-     * @param $variant
-     * @param string $extension
+     * @param string  $filename
+     * @param int  $variant
+     * @param string  $extension
      *
      * @return Response
+     * @throws \Exception
      */
-    public function fontFileAction(Request $request, $filename, $variant, $extension)
+    public function fontFileAction(Request $request, string $filename, int $variant, string $extension)
     {
         /** @var FontRepository $repository */
         $repository = $this->get('em')->getRepository(Font::class);

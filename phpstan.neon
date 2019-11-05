@@ -1,6 +1,7 @@
 parameters:
     doctrine:
-        repositoryClass:  RZ\Roadiz\Core\Repositories\EntityRepository
+        repositoryClass: RZ\Roadiz\Core\Repositories\EntityRepository
+        objectManagerLoader: tests/object-manager.php
     ignoreErrors:
         - '#Class GeneratedNodeSources\\NS([a-zA-Z]+) not found#'
         - '#Call to method ([a-zA-Z]+)\(\) on an unknown class GeneratedNodeSources\\NS([a-zA-Z]+)#'

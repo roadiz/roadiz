@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -114,7 +115,7 @@ class ContactFormManager extends EmailManager
      * @param TranslatorInterface $translator
      * @param Environment $templating
      * @param \Swift_Mailer $mailer
-     * @param Settings|null $settingsBag
+     * @param Settings $settingsBag
      * @param DocumentUrlGenerator $documentUrlGenerator
      */
     public function __construct(
@@ -239,7 +240,7 @@ class ContactFormManager extends EmailManager
     }
 
     /**
-     * @param string $honeypotName
+     * @param string $consentDescription
      *
      * @return $this
      */
@@ -336,9 +337,9 @@ class ContactFormManager extends EmailManager
                         ];
                         return new JsonResponse($responseArray);
                     } else {
-                        $this->request
-                             ->getSession()
-                             ->getFlashBag()
+                        /** @var Session $session */
+                        $session = $this->request->getSession();
+                        $session->getFlashBag()
                              ->add('confirm', $this->translator->trans($this->successMessage));
                         $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
                         return new RedirectResponse($this->redirectUrl);

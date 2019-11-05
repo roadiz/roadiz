@@ -63,7 +63,7 @@ class NodeNameChecker
      * @param string $nodeName Node name to test
      * @return bool
      */
-    public function isNodeNameWithUniqId($canonicalNodeName, $nodeName)
+    public function isNodeNameWithUniqId(string $canonicalNodeName, string $nodeName)
     {
         $pattern = '#^' . preg_quote($canonicalNodeName) . '\-[0-9a-z]{13}$#';
         $returnState = preg_match_all($pattern, $nodeName);
@@ -76,11 +76,11 @@ class NodeNameChecker
     }
 
     /**
-     * @param $nodeName
+     * @param string $nodeName
      *
      * @return bool
      */
-    public function isNodeNameValid($nodeName)
+    public function isNodeNameValid(string $nodeName): bool
     {
         if (preg_match('#^[a-zA-Z0-9\-]+$#', $nodeName) === 1) {
             return true;
@@ -94,7 +94,7 @@ class NodeNameChecker
      * @param string $nodeName
      * @return bool
      */
-    public function isNodeNameAlreadyUsed($nodeName)
+    public function isNodeNameAlreadyUsed(string $nodeName): bool
     {
         $nodeName = StringHandler::slugify($nodeName);
 

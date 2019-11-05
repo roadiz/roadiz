@@ -60,7 +60,7 @@ class SerializationServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container[SerializerBuilder::class] = function ($c) {
+        $container[SerializerBuilder::class] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return SerializerBuilder::create()
@@ -86,7 +86,7 @@ class SerializationServiceProvider implements ServiceProviderInterface
             return new ObjectConstructor();
         };
 
-        $container[ChainDoctrineObjectConstructor::class] = function ($c) {
+        $container[ChainDoctrineObjectConstructor::class] = function (Container $c) {
             $constructor = new ChainDoctrineObjectConstructor(
                 $c['em'],
                 $c['serializer.fallback_constructor']
@@ -122,7 +122,7 @@ class SerializationServiceProvider implements ServiceProviderInterface
             return $constructor;
         };
 
-        $container['serializer.subscribers'] = function ($c) {
+        $container['serializer.subscribers'] = function () {
             return [
                 new DoctrineProxySubscriber(),
             ];
@@ -131,16 +131,16 @@ class SerializationServiceProvider implements ServiceProviderInterface
         /*
          * Alias with FQN
          */
-        $container[Serializer::class] = function ($c) {
+        $container[Serializer::class] = function (Container $c) {
             return $c['serializer'];
         };
 
         /**
-         * @param $c
+         * @param Container $c
          *
          * @return Serializer
          */
-        $container['serializer'] = function ($c) {
+        $container['serializer'] = function (Container $c) {
             return $c[SerializerBuilder::class]->build();
         };
     }

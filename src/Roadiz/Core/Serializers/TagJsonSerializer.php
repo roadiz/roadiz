@@ -76,11 +76,11 @@ class TagJsonSerializer extends AbstractJsonSerializer
     }
 
     /**
-     * @param $data
+     * @param array $data
      *
      * @return Tag
      */
-    protected function makeTagRec($data)
+    protected function makeTagRec(array $data): Tag
     {
         $tag = new Tag();
         $tag->setTagName($data['tag_name']);

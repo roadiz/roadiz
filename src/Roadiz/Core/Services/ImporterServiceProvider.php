@@ -41,7 +41,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Attribute\Importer\AttributeImporter;
 use RZ\Roadiz\CMS\Importers\ChainImporter;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\NodesImporter;
@@ -57,7 +56,7 @@ class ImporterServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container[ChainImporter::class] = $container->factory(function ($c) {
+        $container[ChainImporter::class] = $container->factory(function (Container $c) {
             return new ChainImporter([
                 $c[GroupsImporter::class],
                 $c[NodesImporter::class],
@@ -68,22 +67,22 @@ class ImporterServiceProvider implements ServiceProviderInterface
             ]);
         });
 
-        $container[GroupsImporter::class] = $container->factory(function ($c) {
+        $container[GroupsImporter::class] = $container->factory(function (Container $c) {
             return new GroupsImporter($c);
         });
-        $container[NodesImporter::class] = $container->factory(function ($c) {
+        $container[NodesImporter::class] = $container->factory(function (Container $c) {
             return new NodesImporter($c);
         });
-        $container[NodeTypesImporter::class] = $container->factory(function ($c) {
+        $container[NodeTypesImporter::class] = $container->factory(function (Container $c) {
             return new NodeTypesImporter($c);
         });
-        $container[RolesImporter::class] = $container->factory(function ($c) {
+        $container[RolesImporter::class] = $container->factory(function (Container $c) {
             return new RolesImporter($c);
         });
-        $container[SettingsImporter::class] = $container->factory(function ($c) {
+        $container[SettingsImporter::class] = $container->factory(function (Container $c) {
             return new SettingsImporter($c);
         });
-        $container[TagsImporter::class] = $container->factory(function ($c) {
+        $container[TagsImporter::class] = $container->factory(function (Container $c) {
             return new TagsImporter($c);
         });
     }

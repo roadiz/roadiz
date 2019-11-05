@@ -337,7 +337,7 @@ class AjaxNodesController extends AbstractAjaxController
         $workflow = $this->get('workflow.registry')->get($node);
 
         $workflow->apply($node, $transition);
-        $this->em()->flush($node);
+        $this->em()->flush();
         $event = new FilterNodeEvent($node);
         $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
             '%name%' => $node->getNodeName(),

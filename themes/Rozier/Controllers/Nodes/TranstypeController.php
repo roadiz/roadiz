@@ -30,6 +30,7 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -37,6 +38,7 @@ use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Repositories\NodeTypeFieldRepository;
@@ -54,9 +56,10 @@ class TranstypeController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param $nodeId
+     * @param int $nodeId
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @throws \Twig_Error_Runtime
      */
     public function transtypeAction(Request $request, $nodeId)
     {
@@ -123,7 +126,7 @@ class TranstypeController extends RozierApp
     {
         /*
          * Get an association between old fields and new fields
-         * to find data that can be transfered during transtyping.
+         * to find data that can be transferred during trans-typing.
          */
         $fieldAssociations = [];
         $oldFields = $node->getNodeType()->getFields();
@@ -150,61 +153,87 @@ class TranstypeController extends RozierApp
         /*
          * Testing if new nodeSource class is available
          * and cache have been cleared before actually performing
-         * transtype, not to get an orphan node.
+         * trans-type, not to get an orphan node.
          */
         $this->mockTranstype($nodeType);
 
         /*
-         * Perform actual transtyping
+         * Perform actual trans-typing
          */
+        /** @var NodesSources $existingSource */
         foreach ($node->getNodeSources() as $existingSource) {
-            /** @var NodesSources $source */
-            $source = new $sourceClass($node, $existingSource->getTranslation());
-            $source->setTitle($existingSource->getTitle());
-            $nsDocuments = new ArrayCollection();
-
-            foreach ($fieldAssociations as $fields) {
-                $oldField = $fields[0];
-                $matchingField = $fields[1];
-
-                if (!$oldField->isVirtual()) {
-                    /*
-                     * Copy simple data from source to another
-                     */
-                    $setter = $oldField->getSetterName();
-                    $getter = $oldField->getGetterName();
-
-                    $source->$setter($existingSource->$getter());
-                } elseif ($oldField->getType() === NodeTypeField::DOCUMENTS_T) {
-                    /*
-                     * Copy documents.
-                     */
-                    $documents = $this->get('em')
-                        ->getRepository(Document::class)
-                        ->findByNodeSourceAndField($existingSource, $oldField);
-
-                    foreach ($documents as $document) {
-                        $nsDocuments->add(new NodesSourcesDocuments($source, $document, $matchingField));
-                    }
-                }
-            }
-            // First plan old source deletion.
-            $this->get('em')->remove($existingSource);
-            $node->removeNodeSources($existingSource);
-            $this->get('em')->flush($existingSource);
-
-            foreach ($nsDocuments as $nsDoc) {
-                $source->getDocumentsByFields()->add($nsDoc);
-                $this->get('em')->persist($nsDoc);
-            }
-
-            $node->addNodeSources($source);
-            $this->get('em')->persist($source);
-            $this->get('em')->flush($source);
+            $this->doTranstypeSingleSource($node, $existingSource, $sourceClass, $fieldAssociations);
         }
 
         $node->setNodeType($nodeType);
         $this->get('em')->flush();
+    }
+
+    /**
+     * @param Node         $node
+     * @param NodesSources $existingSource
+     * @param string       $sourceClass
+     * @param array        $fieldAssociations
+     *
+     * @return NodesSources
+     */
+    protected function doTranstypeSingleSource(
+        Node $node,
+        NodesSources $existingSource,
+        string $sourceClass,
+        array $fieldAssociations
+    ): NodesSources {
+        // First plan old source deletion.
+        $node->removeNodeSources($existingSource);
+        $this->get('em')->remove($existingSource);
+        // Need to flush before creating new sources
+        // to avoid unique constraints
+        $this->get('em')->flush();
+
+        /** @var NodesSources $source */
+        $source = new $sourceClass($node, $existingSource->getTranslation());
+        $this->get('em')->persist($source);
+        $source->setTitle($existingSource->getTitle());
+
+        foreach ($fieldAssociations as $fields) {
+            /** @var NodeTypeField $oldField */
+            $oldField = $fields[0];
+            /** @var NodeTypeField $matchingField */
+            $matchingField = $fields[1];
+
+            if (!$oldField->isVirtual()) {
+                /*
+                 * Copy simple data from source to another
+                 */
+                $setter = $oldField->getSetterName();
+                $getter = $oldField->getGetterName();
+                $source->$setter($existingSource->$getter());
+            } elseif ($oldField->getType() === NodeTypeField::DOCUMENTS_T) {
+                /*
+                 * Copy documents.
+                 */
+                $documents = $existingSource->getDocumentsByFieldsWithName($oldField->getName());
+                foreach ($documents as $document) {
+                    $nsDoc = new NodesSourcesDocuments($source, $document, $matchingField);
+                    $this->get('em')->persist($nsDoc);
+                    $source->getDocumentsByFields()->add($nsDoc);
+                }
+            }
+        }
+
+        /*
+         * Recreate url-aliases too.
+         */
+        /** @var UrlAlias $urlAlias */
+        foreach ($existingSource->getUrlAliases() as $urlAlias) {
+            $newUrlAlias = new UrlAlias($source);
+            $newUrlAlias->setAlias($urlAlias->getAlias());
+            $source->addUrlAlias($newUrlAlias);
+            $this->get('em')->persist($newUrlAlias);
+        }
+
+        $this->get('em')->flush();
+        return $source;
     }
 
     /**

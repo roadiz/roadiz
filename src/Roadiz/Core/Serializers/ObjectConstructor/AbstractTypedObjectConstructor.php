@@ -60,7 +60,7 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
     }
 
     /**
-     * @param                        $data
+     * @param mixed $data
      * @param DeserializationContext $context
      *
      * @return object|null
@@ -116,7 +116,7 @@ abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorI
 
                 if ($context->hasAttribute(static::FLUSH_NEW_OBJECTS) &&
                     true === $context->hasAttribute(static::FLUSH_NEW_OBJECTS)) {
-                    $this->entityManager->flush($object);
+                    $this->entityManager->flush();
                 }
             }
         }

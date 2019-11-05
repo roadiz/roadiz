@@ -40,7 +40,7 @@ use RZ\Roadiz\Core\Kernel;
 class YamlConfigurationServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Container $container [description]
+     * @param Container $container
      * @return Container
      */
     public function register(Container $container)

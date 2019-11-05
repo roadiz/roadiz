@@ -210,7 +210,7 @@ class SettingType extends AbstractType
                         'class' => 'rz-datetime-field',
                     ],
                     'label' => $label,
-                    'years' => range(date('Y') - 10, date('Y') + 10),
+                    'years' => range((int) date('Y') - 10, (int) date('Y') + 10),
                     'required' => false,
                 ];
             case AbstractField::INTEGER_T:

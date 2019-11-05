@@ -84,7 +84,7 @@ class NodeTypesImporter implements EntityImporterInterface, ContainerAwareInterf
         );
 
         $em->merge($nodeType);
-        $em->flush($nodeType);
+        $em->flush();
 
         /** @var HandlerFactoryInterface $handlerFactory */
         $handlerFactory = $this->get('factory.handler');

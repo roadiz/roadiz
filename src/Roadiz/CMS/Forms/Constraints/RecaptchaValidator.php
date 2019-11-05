@@ -45,29 +45,31 @@ class RecaptchaValidator extends ConstraintValidator
      */
     public function validate($data, Constraint $constraint)
     {
-        $propertyPath = $this->context->getPropertyPath();
-        $responseField = $constraint->request->request->get('g-recaptcha-response');
+        if ($constraint instanceof Recaptcha) {
+            $propertyPath = $this->context->getPropertyPath();
+            $responseField = $constraint->request->request->get('g-recaptcha-response');
 
-        if (empty($responseField)) {
-            $this->context->buildViolation($constraint->emptyMessage)
-                ->atPath($propertyPath)
-                ->addViolation();
-        } elseif (false === $this->check($constraint, $responseField)) {
-            $this->context->buildViolation($constraint->invalidMessage)
-                ->atPath($propertyPath)
-                ->addViolation();
+            if (empty($responseField)) {
+                $this->context->buildViolation($constraint->emptyMessage)
+                    ->atPath($propertyPath)
+                    ->addViolation();
+            } elseif (false === $this->check($constraint, $responseField)) {
+                $this->context->buildViolation($constraint->invalidMessage)
+                    ->atPath($propertyPath)
+                    ->addViolation();
+            }
         }
     }
 
     /**
      * Makes a request to recaptcha service and checks if recaptcha field is valid.
      *
-     * @param Constraint $constraint
+     * @param Recaptcha $constraint
      * @param string $responseField
      *
      * @return bool
      */
-    protected function check(Constraint $constraint, $responseField)
+    protected function check(Recaptcha $constraint, $responseField)
     {
         $server = $constraint->request->server;
 

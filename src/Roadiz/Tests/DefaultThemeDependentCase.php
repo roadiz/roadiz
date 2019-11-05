@@ -66,14 +66,15 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     /**
      * No need to persist
      *
-     * @param             $title
+     * @param string      $title
      * @param Translation $translation
      * @param Node|null   $parent
      *
      * @return Node
      * @throws EntityNotFoundException
+     * @throws \Doctrine\ORM\ORMException
      */
-    protected static function createPageNode($title, Translation $translation, Node $parent = null): Node
+    protected static function createPageNode(string $title, Translation $translation, Node $parent = null): Node
     {
         /** @var NodeFactory $nodeFactory */
         $nodeFactory = static::$kernel->getContainer()->offsetGet(NodeFactory::class);
@@ -87,11 +88,11 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     }
 
     /**
-     * @param $title
+     * @param string $title
      * @param Translation $translation
      * @return Tag
      */
-    protected static function createTag($title, Translation $translation): Tag
+    protected static function createTag(string $title, Translation $translation): Tag
     {
         /** @var TagFactory $tagFactory */
         $tagFactory = static::$kernel->getContainer()->offsetGet(TagFactory::class);

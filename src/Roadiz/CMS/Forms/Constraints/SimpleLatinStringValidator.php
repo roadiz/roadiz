@@ -36,8 +36,10 @@ class SimpleLatinStringValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if (preg_match('#[^a-z_\s\-]#', strtolower($value)) === 1) {
-            $this->context->addViolation($constraint->message);
+        if ($constraint instanceof SimpleLatinString) {
+            if (preg_match('#[^a-z_\s\-]#', strtolower($value)) === 1) {
+                $this->context->addViolation($constraint->message);
+            }
         }
     }
 }

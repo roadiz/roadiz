@@ -59,7 +59,7 @@ class MailerServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['mailer.transport'] = function ($c) {
+        $container['mailer.transport'] = function (Container $c) {
             if ($c['config']['mailer']['type'] == "smtp") {
                 $transport = new \Swift_SmtpTransport();
 
@@ -88,7 +88,7 @@ class MailerServiceProvider implements ServiceProviderInterface
             }
         };
 
-        $container['mailer'] = function ($c) {
+        $container['mailer'] = function (Container $c) {
             return new \Swift_Mailer($c['mailer.transport']);
         };
 

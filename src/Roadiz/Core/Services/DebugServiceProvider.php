@@ -35,6 +35,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\DebugBar\RoadizDebugBar;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DebugServiceProvider implements ServiceProviderInterface
 {
@@ -43,7 +44,7 @@ class DebugServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container->extend('dispatcher', function ($dispatcher, $c) {
+        $container->extend('dispatcher', function (EventDispatcherInterface $dispatcher, Container $c) {
             return new TraceableEventDispatcher($dispatcher, $c['stopwatch']);
         });
 
@@ -55,11 +56,11 @@ class DebugServiceProvider implements ServiceProviderInterface
             return new DebugStack();
         };
 
-        $container['debugbar'] = function ($c) {
+        $container['debugbar'] = function (Container $c) {
             return new RoadizDebugBar($c);
         };
 
-        $container['debugbar.renderer'] = function ($c) {
+        $container['debugbar.renderer'] = function (Container $c) {
             return $c['debugbar']->getJavascriptRenderer('/themes/Debug/static');
         };
     }

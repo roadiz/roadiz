@@ -46,7 +46,7 @@ class ThemeServiceProvider implements ServiceProviderInterface
          *
          * @return ThemeResolverInterface
          */
-        $container['themeResolver'] = function ($c) {
+        $container['themeResolver'] = function (Container $c) {
             return new StaticThemeResolver($c['config'], $c['stopwatch'], $c['kernel']->isInstallMode());
         };
 

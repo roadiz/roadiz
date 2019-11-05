@@ -86,7 +86,7 @@ class TranslationViewer
     }
 
     /**
-     * @return \Doctrine\ORM\EntityRepository|TranslationRepository
+     * @return TranslationRepository<Translation>
      */
     public function getRepository()
     {

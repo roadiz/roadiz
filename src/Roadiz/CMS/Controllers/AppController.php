@@ -51,6 +51,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -512,15 +513,16 @@ abstract class AppController extends Controller
      * Publish a message in Session flash bag and
      * logger interface.
      *
-     * @param Request $request
-     * @param string  $msg
-     * @param string  $level
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param Request      $request
+     * @param string       $msg
+     * @param string       $level
+     * @param NodesSources $source
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
-        if (null !== $request->getSession()) {
-            $request->getSession()->getFlashBag()->add($level, $msg);
+        $session = $request->getSession();
+        if (null !== $session && $session instanceof Session) {
+            $session->getFlashBag()->add($level, $msg);
         }
 
         switch ($level) {
@@ -536,9 +538,9 @@ abstract class AppController extends Controller
      * Publish a confirm message in Session flash bag and
      * logger interface.
      *
-     * @param Request $request
-     * @param string  $msg
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param Request      $request
+     * @param string       $msg
+     * @param NodesSources $source
      */
     public function publishConfirmMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -549,9 +551,9 @@ abstract class AppController extends Controller
      * Publish an error message in Session flash bag and
      * logger interface.
      *
-     * @param Request $request
-     * @param string  $msg
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param Request      $request
+     * @param string       $msg
+     * @param NodesSources $source
      */
     public function publishErrorMessage(Request $request, $msg, NodesSources $source = null)
     {

@@ -158,7 +158,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         /*
          * Alias with FQN interface
          */
-        $container[EntityManagerInterface::class] = function ($c) {
+        $container[EntityManagerInterface::class] = function (Container $c) {
             return $c['em'];
         };
 
@@ -218,7 +218,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return CacheProvider
          */
-        $container['nodesSourcesUrlCacheProvider'] = function ($c) {
+        $container['nodesSourcesUrlCacheProvider'] = function (Container $c) {
             $cache = $c[CacheProvider::class];
             $cache->setNamespace($cache->getNamespace() . "_nsurls_"); // to avoid collisions
             return $cache;
