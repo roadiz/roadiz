@@ -86,16 +86,13 @@ use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -111,7 +108,9 @@ use Themes\Rozier\Events\SvgDocumentSubscriber;
 use Themes\Rozier\Events\TranslationSubscriber;
 
 /**
+ * Roadiz Kernel.
  *
+ * @package RZ\Roadiz\Core
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
@@ -568,28 +567,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getBundles()
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBundle($name, $first = true)
-    {
-        return [];
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function locateResource($name, $dir = null, $first = true)
-    {
-        return false;
-    }
-    /**
-     * {@inheritdoc}
-     */
     public function getName()
     {
         return 'roadiz';
@@ -677,35 +654,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public function getCharset()
     {
         return 'UTF-8';
-    }
-
-    /**
-     * Returns an array of bundles to register.
-     *
-     * @return BundleInterface[] An array of bundle instances.
-     */
-    public function registerBundles()
-    {
-        return [];
-    }
-
-    /**
-     *
-     */
-    public function initializeBundles()
-    {
-        return;
-    }
-
-    /**
-     * Loads the container configuration.
-     *
-     * @param LoaderInterface $loader A LoaderInterface instance
-     * @return bool
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader)
-    {
-        return false;
     }
 
     /**

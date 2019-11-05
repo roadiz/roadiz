@@ -1,0 +1,15 @@
+parameters:
+    doctrine:
+        repositoryClass:  RZ\Roadiz\Core\Repositories\EntityRepository
+    ignoreErrors:
+        - '#Class GeneratedNodeSources\\NS([a-zA-Z]+) not found#'
+        - '#Call to method ([a-zA-Z]+)\(\) on an unknown class GeneratedNodeSources\\NS([a-zA-Z]+)#'
+        - '#Call to an undefined method ([^:]+)\:\:get(?:External|Internal)Link(?:Sources)?\(\)#'
+        - '#NodesSources\|null but returns GeneratedNodeSources\\NS(?:[a-zA-Z]+)#'
+        - '#GeneratedNodeSources\\NS(?:[a-zA-Z]+)#'
+        - '#Call to an undefined method RZ\\Roadiz\\Core\\AbstractEntities\\LeafInterface#'
+        - '#Instantiated class Memcached not found#'
+        - '#Instantiated class Redis not found#'
+    reportUnmatchedIgnoredErrors: false
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon

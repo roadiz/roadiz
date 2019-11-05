@@ -36,11 +36,12 @@ use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
- * informations for a route.
+ * information for a route.
  */
 class RedirectionMatcher extends UrlMatcher
 {
@@ -56,7 +57,6 @@ class RedirectionMatcher extends UrlMatcher
      * @var LoggerInterface
      */
     private $logger;
-
     /**
      * @var EntityRepository
      */
@@ -75,7 +75,7 @@ class RedirectionMatcher extends UrlMatcher
         Stopwatch $stopwatch,
         LoggerInterface $logger
     ) {
-        $this->context = $context;
+        parent::__construct(new RouteCollection(), $context);
         $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;

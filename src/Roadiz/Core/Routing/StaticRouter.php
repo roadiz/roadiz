@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Routing;
 
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Config\NullLoader;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Router;
 
@@ -38,6 +39,9 @@ use Symfony\Component\Routing\Router;
  */
 class StaticRouter extends Router
 {
+    /**
+     * @var DeferredRouteCollection
+     */
     protected $routeCollection;
 
     /**
@@ -53,10 +57,14 @@ class StaticRouter extends Router
         RequestContext $context = null,
         LoggerInterface $logger = null
     ) {
+        parent::__construct(
+            new NullLoader(),
+            null,
+            $options,
+            $context,
+            $logger
+        );
         $this->routeCollection = $routeCollection;
-        $this->logger = $logger;
-        $this->context = $context ?: new RequestContext();
-        $this->setOptions($options);
     }
 
     /**

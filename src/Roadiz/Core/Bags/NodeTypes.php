@@ -38,6 +38,10 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class NodeTypes extends ParameterBag
 {
     /**
+     * @var bool
+     */
+    private $ready;
+    /**
      * @var EntityManager
      */
     private $entityManager;
@@ -53,7 +57,9 @@ class NodeTypes extends ParameterBag
      */
     public function __construct(EntityManager $entityManager)
     {
+        parent::__construct();
         $this->entityManager = $entityManager;
+        $this->ready = false;
     }
 
     /**
@@ -79,6 +85,7 @@ class NodeTypes extends ParameterBag
         } catch (DBALException $e) {
             $this->parameters = [];
         }
+        $this->ready = true;
     }
 
     /**
@@ -88,7 +95,7 @@ class NodeTypes extends ParameterBag
      */
     public function get($key, $default = null)
     {
-        if (!is_array($this->parameters)) {
+        if (!$this->ready) {
             $this->populateParameters();
         }
 
@@ -100,7 +107,7 @@ class NodeTypes extends ParameterBag
      */
     public function all(): array
     {
-        if (!is_array($this->parameters)) {
+        if (!$this->ready) {
             $this->populateParameters();
         }
 
@@ -108,8 +115,9 @@ class NodeTypes extends ParameterBag
     }
 
 
-    public function reset():void
+    public function reset(): void
     {
-        $this->parameters = null;
+        $this->parameters = [];
+        $this->ready = false;
     }
 }

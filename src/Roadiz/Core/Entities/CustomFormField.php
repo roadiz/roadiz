@@ -92,6 +92,7 @@ class CustomFormField extends AbstractField
      */
     public function __construct()
     {
+        parent::__construct();
         $this->customFormFieldAttributes = new ArrayCollection();
     }
 

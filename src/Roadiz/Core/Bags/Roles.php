@@ -46,6 +46,10 @@ class Roles extends ParameterBag
      * @var RoleRepository
      */
     private $repository;
+    /**
+     * @var bool
+     */
+    private $ready;
 
     /**
      * SettingsBag constructor.
@@ -53,7 +57,9 @@ class Roles extends ParameterBag
      */
     public function __construct(EntityManager $entityManager)
     {
+        parent::__construct();
         $this->entityManager = $entityManager;
+        $this->ready = false;
     }
 
     /**
@@ -79,18 +85,22 @@ class Roles extends ParameterBag
         } catch (DBALException $e) {
             $this->parameters = [];
         }
+        $this->ready = true;
     }
 
     /**
-     * Get role by name or create it if non-existant.
+     * Get role by name or create it if non-existent.
      *
      * @param string $key
-     * @param null $default
+     * @param null   $default
+     *
      * @return Role
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function get($key, $default = null): Role
     {
-        if (!is_array($this->parameters)) {
+        if (!$this->ready) {
             $this->populateParameters();
         }
         $role = parent::get($key, null);
@@ -109,10 +119,16 @@ class Roles extends ParameterBag
      */
     public function all(): array
     {
-        if (!is_array($this->parameters)) {
+        if (!$this->ready) {
             $this->populateParameters();
         }
 
         return parent::all();
+    }
+
+    public function reset(): void
+    {
+        $this->parameters = [];
+        $this->ready = false;
     }
 }

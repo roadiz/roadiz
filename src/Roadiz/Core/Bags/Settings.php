@@ -51,6 +51,10 @@ class Settings extends ParameterBag
      * @var SettingRepository
      */
     private $repository;
+    /**
+     * @var bool
+     */
+    private $ready;
 
     /**
      * SettingsBag constructor.
@@ -58,7 +62,9 @@ class Settings extends ParameterBag
      */
     public function __construct(EntityManager $entityManager)
     {
+        parent::__construct();
         $this->entityManager = $entityManager;
+        $this->ready = false;
     }
 
     /**
@@ -84,6 +90,7 @@ class Settings extends ParameterBag
         } catch (DBALException $e) {
             $this->parameters = [];
         }
+        $this->ready = true;
     }
 
     /**
@@ -93,7 +100,7 @@ class Settings extends ParameterBag
      */
     public function get($key, $default = false)
     {
-        if (!is_array($this->parameters)) {
+        if (!$this->ready) {
             $this->populateParameters();
         }
 
@@ -125,15 +132,16 @@ class Settings extends ParameterBag
      */
     public function all(): array
     {
-        if (!is_array($this->parameters)) {
+        if (!$this->ready) {
             $this->populateParameters();
         }
 
         return parent::all();
     }
 
-    public function reset():void
+    public function reset(): void
     {
-        $this->parameters = null;
+        $this->parameters = [];
+        $this->ready = false;
     }
 }

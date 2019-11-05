@@ -73,13 +73,11 @@ class SolariumDocument extends AbstractSolarium
      * Create a new SolariumDocument.
      *
      * @param Document $rzDocument
-     * @param EntityManager $entityManager
      * @param Client $client
      * @param Logger $logger
      */
     public function __construct(
         Document $rzDocument,
-        EntityManager $entityManager,
         Client $client = null,
         Logger $logger = null
     ) {

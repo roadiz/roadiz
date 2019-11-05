@@ -32,15 +32,18 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Config\NullLoader;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
@@ -102,11 +105,15 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         Stopwatch $stopwatch = null,
         $preview = false
     ) {
+        parent::__construct(
+            new NullLoader(),
+            null,
+            $options,
+            $context,
+            $logger
+        );
         $this->em = $em;
         $this->stopwatch = $stopwatch;
-        $this->logger = $logger;
-        $this->context = $context ?: new RequestContext();
-        $this->setOptions($options);
         $this->preview = $preview;
         $this->themeResolver = $themeResolver;
         $this->settingsBag = $settingsBag;
@@ -140,9 +147,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * Gets the UrlMatcher instance associated with this Router.
      *
-     * @return NodeUrlMatcher
+     * @return UrlMatcherInterface
      */
-    public function getMatcher(): NodeUrlMatcher
+    public function getMatcher(): UrlMatcherInterface
     {
         if (null !== $this->matcher) {
             return $this->matcher;

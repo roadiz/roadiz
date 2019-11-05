@@ -199,7 +199,6 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         while (($row = $iterableResult->next()) !== false) {
             $solarium = new SolariumDocument(
                 $row[0],
-                $this->entityManager,
                 $this->solr,
                 $this->getHelper('logger')->getLogger()
             );

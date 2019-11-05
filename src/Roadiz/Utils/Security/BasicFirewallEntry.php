@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Utils\Security;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\EntryPoint\BasicAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
@@ -61,28 +60,16 @@ class BasicFirewallEntry extends FirewallEntry
         $firewallBasePath,
         $firewallBaseRole = 'ROLE_USER'
     ) {
-        $this->container = $container;
-        $this->firewallBasePattern = $firewallBasePattern;
-        $this->firewallBasePath = $firewallBasePath;
-        $this->firewallLogin = null;
-        $this->firewallLogout = null;
-        $this->firewallLoginCheck = null;
-        $this->accessDeniedHandler = null;
-
-        if (is_array($firewallBaseRole)) {
-            $this->firewallBaseRole = $firewallBaseRole;
-        } else {
-            $this->firewallBaseRole = [$firewallBaseRole];
-        }
-
-        $this->requestMatcher = new RequestMatcher($this->firewallBasePattern);
-        /*
-         * Add an access map entry only if basePath pattern is valid and
-         * not root level.
-         */
-        if (null !== $this->firewallBasePattern && "" !== $this->firewallBasePattern) {
-            $this->container['accessMap']->add($this->requestMatcher, $this->firewallBaseRole);
-        }
+        parent::__construct(
+            $container,
+            $firewallBasePattern,
+            $firewallBasePath,
+            null,
+            null,
+            null,
+            $firewallBaseRole
+        );
+        $this->listeners = [];
     }
 
     /**

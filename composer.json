@@ -88,7 +88,14 @@
         "php-coveralls/php-coveralls": "~2.1",
         "squizlabs/php_codesniffer": "@stable",
         "sentry/sentry": "^1.9",
-        "friendsofphp/php-cs-fixer": "^2.13"
+        "friendsofphp/php-cs-fixer": "^2.13",
+        "phpstan/phpstan": "^0.11.19",
+        "phpstan/phpstan-doctrine": "^0.11.6"
+    },
+    "suggest": {
+        "ext-apcu": "Allows APCU system cache",
+        "ext-redis": "Allows Redis system cache",
+        "ext-memcached": "Allows Memcached system cache"
     },
     "autoload": {
         "psr-4": {

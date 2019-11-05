@@ -38,13 +38,14 @@ use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
  * information for a route.
  */
-class DynamicUrlMatcher extends UrlMatcher
+abstract class DynamicUrlMatcher extends UrlMatcher
 {
     /** @var EntityManagerInterface */
     protected $em;
@@ -79,7 +80,7 @@ class DynamicUrlMatcher extends UrlMatcher
         LoggerInterface $logger = null,
         $preview = false
     ) {
-        $this->context = $context;
+        parent::__construct(new RouteCollection(), $context);
         $this->em = $em;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;

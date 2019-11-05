@@ -88,6 +88,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param string $decodedUrl
      *
      * @return array|bool
+     * @throws \ReflectionException
      */
     protected function matchNode($decodedUrl)
     {
