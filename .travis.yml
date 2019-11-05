@@ -13,6 +13,7 @@ jobs:
           language: node_js
           node_js:
               - "lts/*"
+              - "10"
               - "8"
           script:
               - cd themes/DefaultTheme/static
@@ -23,6 +24,7 @@ jobs:
           language: node_js
           node_js:
               - "lts/*"
+              - "10"
               - "8"
           script:
               - cd themes/Install/static
@@ -33,6 +35,7 @@ jobs:
           language: node_js
           node_js:
               - "lts/*"
+              - "10"
               - "8"
           script:
               - cd themes/Rozier
