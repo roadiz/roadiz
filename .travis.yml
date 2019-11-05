@@ -88,4 +88,5 @@ jobs:
             - php bin/roadiz users:create -n --email=test2@test.com --password=secret2 --back-end test2
             - php bin/roadiz orm:schema-tool:drop --force
             - php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/
+            - php bin/phpstan analyse -c phpstan.neon -l 1 src
 
