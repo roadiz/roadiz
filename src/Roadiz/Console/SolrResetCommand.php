@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Console;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing nodes from terminal.
@@ -49,31 +50,25 @@ class SolrResetCommand extends SolrCommand
         $questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
-
-        $text = "";
+        $this->io = new SymfonyStyle($input, $output);
 
         if (null !== $this->solr) {
             if (true === $this->getHelper('solr')->ready()) {
+
                 $confirmation = new ConfirmationQuestion(
-                    '<question>Are you sure to reset Solr index?</question> [y/N]: ',
+                    '<question>Are you sure to reset Solr index?</question>',
                     false
                 );
-                if ($questionHelper->ask(
-                    $input,
-                    $output,
-                    $confirmation
-                )) {
+                if ($this->io->askQuestion($confirmation)) {
                     $this->emptySolr($output);
-                    $text = '<info>Solr index resetted…</info>' . PHP_EOL;
+                    $this->io->success('Solr index resetted.');
                 }
             } else {
-                $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
-                $text .= 'See your config.yml file to correct your Solr connexion settings.' . PHP_EOL;
+                $this->io->error('Solr search engine server does not respond…');
+                $this->io->note('See your config.yml file to correct your Solr connexion settings.');
             }
         } else {
-            $text .= $this->displayBasicConfig();
+            $this->io->note($this->displayBasicConfig());
         }
-
-        $output->writeln($text);
     }
 }

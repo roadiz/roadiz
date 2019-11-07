@@ -36,6 +36,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing nodes from terminal.
@@ -59,10 +60,7 @@ class NodesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
-        $table = new Table($output);
-        $table->setHeaders(['Id', 'Name', 'Type', 'Hidden', 'Published']);
-        $tableContent = [];
+        $io = new SymfonyStyle($input, $output);
         $nodes = [];
 
         if ($input->getOption('type')) {
@@ -92,9 +90,7 @@ class NodesCommand extends Command
                 ($node->isPublished() ? 'X' : ''),
             ];
         }
-        $table->setRows($tableContent);
-        $table->render();
 
-        $output->writeln($text);
+        $io->table(['Id', 'Name', 'Type', 'Hidden', 'Published'], $tableContent);
     }
 }

@@ -38,9 +38,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DocumentSizeCommand extends Command
 {
+    /** @var SymfonyStyle */
+    protected $io;
+
     protected function configure()
     {
         $this->setName('documents:size')
@@ -54,6 +58,7 @@ class DocumentSizeCommand extends Command
         $em = $this->getHelper('entityManager')->getEntityManager();
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();
+        $this->io = new SymfonyStyle($input, $output);
 
         $batchSize = 20;
         $i = 0;
@@ -67,9 +72,7 @@ class DocumentSizeCommand extends Command
             ->getQuery();
         $iterableResult = $q->iterate();
 
-        $progress = new ProgressBar($output, $count);
-        $progress->setFormat('verbose');
-        $progress->start();
+        $this->io->progressStart($count);
         foreach ($iterableResult as $row) {
             /** @var Document $document */
             $document = $row[0];
@@ -79,10 +82,10 @@ class DocumentSizeCommand extends Command
                 $em->clear(); // Detaches all objects from Doctrine!
             }
             ++$i;
-            $progress->advance();
+            $this->io->progressAdvance();
         }
         $em->flush();
-        $progress->finish();
+        $this->io->progressFinish();
     }
 
     private function updateDocumentSize(Document $document, Packages $packages, OutputInterface $output)
@@ -100,7 +103,7 @@ class DocumentSizeCommand extends Command
                  * Do nothing
                  * just return 0 width and height
                  */
-                $output->writeln('<error>'. $documentPath . ' is not a readable image.</error>');
+                $this->io->error($documentPath . ' is not a readable image.');
             }
         }
     }

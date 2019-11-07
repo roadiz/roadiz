@@ -39,6 +39,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class NodeApplyUniversalFieldsCommand extends Command
 {
@@ -55,10 +56,11 @@ class NodeApplyUniversalFieldsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $questionHelper = $this->getHelper('question');
 
         $translation = $this->entityManager->getRepository(Translation::class)
                             ->findDefault();
+
+        $io = new SymfonyStyle($input, $output);
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('ns')
@@ -72,32 +74,28 @@ class NodeApplyUniversalFieldsCommand extends Command
             ->setParameter(':translation', $translation);
         try {
             $sources = $qb->getQuery()->getResult();
-            $output->writeln('<info>'.count($sources).' node(s)</info> with universal fields were found.');
+            $io->note(count($sources).' node(s) with universal fields were found.');
 
             $question = new ConfirmationQuestion(
-                '<question>Are you sure to force every universal fields?</question> [y/N]:',
+                '<question>Are you sure to force every universal fields?</question>',
                 false
             );
-            if ($questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $question
             )) {
                 $duplicator = new UniversalDataDuplicator($this->entityManager);
-                $progress = new ProgressBar($output, count($sources));
-                $progress->setFormat('verbose');
-                $progress->start();
+                $io->progressStart(count($sources));
 
                 /** @var NodesSources $source */
                 foreach ($sources as $source) {
                     $duplicator->duplicateUniversalContents($source);
-                    $progress->advance();
+                    $io->progressAdvance();
                 }
                 $this->entityManager->flush();
-                $progress->finish();
+                $io->progressFinish();
             }
         } catch (NoResultException $e) {
-            $output->writeln('<error>No node with universal fields were found.</error>');
+            $io->warning('No node with universal fields were found.');
         }
     }
 }
