@@ -34,6 +34,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
 class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterface
@@ -59,8 +60,9 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $question = new ConfirmationQuestion('<question>Are you sure to migrate against this theme?</question> This can lead in data loss. [y|N] ', false);
-        if ($this->getHelper('question')->ask($input, $output, $question) === false) {
+        $io = new SymfonyStyle($input, $output);
+        $question = new ConfirmationQuestion('<question>Are you sure to migrate against this theme?</question> This can lead in data loss.', false);
+        if ($io->askQuestion($question) === false) {
             $output->writeln('Nothing was done…');
             return 0;
         }

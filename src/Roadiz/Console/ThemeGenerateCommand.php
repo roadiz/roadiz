@@ -104,6 +104,7 @@ class ThemeGenerateCommand extends ThemesCommand
     {
         /** @var string $name */
         $name = $this->validateThemeName($input->getArgument('name'));
+        $io = new SymfonyStyle($input, $output);
         $themeName = $this->getThemeName($name);
         $themePath = $this->getNewThemePath($themeName);
         $branch = 'master';
@@ -114,7 +115,7 @@ class ThemeGenerateCommand extends ThemesCommand
         if ($input->getOption('branch')) {
             $branch = $input->getOption('branch');
         }
-        $output->writeln('Using <info>'.$branch.'</info> branch.');
+        $io->writeln('Using <info>'.$branch.'</info> branch.');
 
         /*
          * Clone BaseTheme
@@ -124,21 +125,21 @@ class ThemeGenerateCommand extends ThemesCommand
             ['git', 'clone', '-b', $branch, $repository, $themePath]
         );
         $process->run();
-        $output->writeln('BaseTheme cloned into <info>' . $themePath . '</info>');
+        $io->writeln('BaseTheme cloned into <info>' . $themePath . '</info>');
 
         /*
          * Remove existing Git history.
          */
         $this->filesystem->remove($themePath . '/.git');
-        $output->writeln('Remove Git history.');
+        $io->writeln('Remove Git history.');
 
         /*
          * Rename main theme class.
          */
         $this->filesystem->rename($themePath . '/BaseThemeApp.php', $themePath . '/' . $name . 'ThemeApp.php');
-        $output->writeln('Rename main theme class.');
+        $io->writeln('Rename main theme class.');
         $this->filesystem->rename($themePath . '/Services/BaseThemeServiceProvider.php', $themePath . '/Services/' . $name . 'ThemeServiceProvider.php');
-        $output->writeln('Rename theme service provider class.');
+        $io->writeln('Rename theme service provider class.');
 
         /*
          * Rename every occurrences of BaseTheme in your theme.
@@ -175,7 +176,7 @@ class ThemeGenerateCommand extends ThemesCommand
             null,
             ['LC_ALL' => 'C']
         ));
-        $output->writeln('Rename every occurrences of BaseTheme in your theme.');
+        $io->writeln('Rename every occurrences of BaseTheme in your theme.');
         /** @var Process $process */
         foreach ($processes as $process) {
             $process->run();
@@ -183,20 +184,20 @@ class ThemeGenerateCommand extends ThemesCommand
 
         if ($input->getOption('relative')) {
             $expectedMethod = self::METHOD_RELATIVE_SYMLINK;
-            $output->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
+            $io->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
         } elseif ($input->getOption('symlink')) {
             $expectedMethod = self::METHOD_ABSOLUTE_SYMLINK;
-            $output->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
+            $io->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
         } else {
             $expectedMethod = self::METHOD_COPY;
-            $output->writeln('Installing theme assets as <info>hard copy</info>.');
+            $io->writeln('Installing theme assets as <info>hard copy</info>.');
         }
         $this->generateThemeSymlink($themeName, $expectedMethod);
 
-        $output->writeln('Register Theme into your configuration.');
+        $io->writeln('Register Theme into your configuration.');
         $this->registerTheme($themeName);
 
-        $output->writeln('<info>Your new theme is ready to install, have fun!</info>');
+        $io->success('Your new theme is ready to install, have fun!');
     }
 
     /**

@@ -36,6 +36,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing node-types from terminal.
@@ -57,9 +58,8 @@ class NodeTypesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = new Table($output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
+        $io = new SymfonyStyle($input, $output);
         $name = $input->getArgument('name');
 
         if ($name) {
@@ -73,7 +73,6 @@ class NodeTypesCommand extends Command
                         'nodeType' => $nodetype,
                     ], ['position' => 'ASC']);
 
-                $table->setHeaders(['Id', 'Label', 'Name', 'Type', 'Visible', 'Index']);
                 $tableContent = [];
                 foreach ($fields as $field) {
                     $tableContent[] = [
@@ -85,10 +84,9 @@ class NodeTypesCommand extends Command
                         ($field->isIndexed() ? 'X' : ''),
                     ];
                 }
-                $table->setRows($tableContent);
-                $table->render();
+                $io->table(['Id', 'Label', 'Name', 'Type', 'Visible', 'Index'], $tableContent);
             } else {
-                $text .= '<error>"' . $name . '" node type does not exist.</error>' . PHP_EOL;
+                $io->error($name . ' node type does not exist.');
             }
         } else {
             $nodetypes = $this->entityManager
@@ -96,7 +94,6 @@ class NodeTypesCommand extends Command
                 ->findBy([], ['name' => 'ASC']);
 
             if (count($nodetypes) > 0) {
-                $table->setHeaders(['Id', 'Title', 'Visible']);
                 $tableContent = [];
 
                 foreach ($nodetypes as $nt) {
@@ -107,13 +104,10 @@ class NodeTypesCommand extends Command
                     ];
                 }
 
-                $table->setRows($tableContent);
-                $table->render();
+                $io->table(['Id', 'Title', 'Visible'], $tableContent);
             } else {
-                $text .= '<info>No available node-types…</info>' . PHP_EOL;
+                $io->error('No available node-types…');
             }
         }
-
-        $output->writeln($text);
     }
 }

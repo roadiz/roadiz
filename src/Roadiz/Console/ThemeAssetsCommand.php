@@ -35,6 +35,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ThemeAssetsCommand extends ThemesCommand
 {
@@ -61,23 +62,26 @@ class ThemeAssetsCommand extends ThemesCommand
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
+        $io = new SymfonyStyle($input, $output);
         $name = str_replace('/', '\\', $input->getArgument('name'));
         $name = $this->validateThemeName($name);
         $themeName = $this->getThemeName($name);
-        $output->writeln('Theme name is: <info>'. $themeName .'</info>.');
-        $output->writeln('Theme folder name is: <info>'. $this->getThemeFolderName($themeName) .'</info>.');
-        $output->writeln('Theme assets are located in <info>'. $this->getThemePath($themeName) .'/static</info>.');
+        $io->note(
+            'Theme name is: '. $themeName . PHP_EOL .
+            'Theme folder name is: '. $this->getThemeFolderName($themeName) . PHP_EOL .
+            'Theme assets are located in '. $this->getThemePath($themeName) .'/static'
+        );
 
         if ($kernel->getRootDir() !== $kernel->getPublicDir()) {
             if ($input->getOption('relative')) {
                 $expectedMethod = self::METHOD_RELATIVE_SYMLINK;
-                $output->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
+                $io->writeln('Trying to install theme assets as <info>relative symbolic link</info>.');
             } elseif ($input->getOption('symlink')) {
                 $expectedMethod = self::METHOD_ABSOLUTE_SYMLINK;
-                $output->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
+                $io->writeln('Trying to install theme assets as <info>absolute symbolic link</info>.');
             } else {
                 $expectedMethod = self::METHOD_COPY;
-                $output->writeln('Installing theme assets as <info>hard copy</info>.');
+                $io->writeln('Installing theme assets as <info>hard copy</info>.');
             }
 
             if (null === $this->generateThemeSymlink($themeName, $expectedMethod)) {
