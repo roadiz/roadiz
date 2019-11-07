@@ -54,7 +54,6 @@ class SolrResetCommand extends SolrCommand
 
         if (null !== $this->solr) {
             if (true === $this->getHelper('solr')->ready()) {
-
                 $confirmation = new ConfirmationQuestion(
                     '<question>Are you sure to reset Solr index?</question>',
                     false

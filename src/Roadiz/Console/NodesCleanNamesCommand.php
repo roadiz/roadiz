@@ -159,7 +159,6 @@ class NodesCleanNamesCommand extends Command
                 } else {
                     $io->success($renameCount . ' nodes would have been affected. Nothing was saved to database.');
                 }
-
             } else {
                 $io->warning('Renaming cancelled…');
             }
