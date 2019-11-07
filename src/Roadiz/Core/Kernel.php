@@ -353,7 +353,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
              */
             if (!$kernel->isInstallMode() && $kernel->isDebug()) {
                 $dispatcher->addSubscriber(new DebugBarSubscriber($c));
-                $dispatcher->addSubscriber(new PimpleDumperSubscriber($c));
             }
 
             return $dispatcher;

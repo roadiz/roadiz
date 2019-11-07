@@ -89,7 +89,7 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
 
                     $stopwatch->stop('global');
                     $duration = $stopwatch->getEvent('global')->getDuration();
-                    $this->io->success(sprintf('<info>Node and document database has been re-indexed in %.2d ms.</info>', $duration));
+                    $this->io->success(sprintf('Node and document database has been re-indexed in %.2d ms.', $duration));
                 }
             } else {
                 $this->io->error('Solr search engine server does not respond…');
