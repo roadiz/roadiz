@@ -94,23 +94,17 @@ export default class Lazyload {
 
         this.parseLinks()
 
-        // this hack resolves safari triggering popstate
-        // at initial load.
-        window.addEventListener('load', () => {
-            window.setTimeout(() => {
-                $(window).off('popstate', this.onPopState)
-                $(window).on('popstate', this.onPopState)
-            }, 0)
-        })
+        window.removeEventListener('popstate', this.onPopState)
+        window.addEventListener('popstate', this.onPopState)
 
         this.$canvasLoaderContainer = $('#canvasloader-container')
-        this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#ffffff'
+        this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#00deab'
         this.initLoader()
 
         /*
          * Start history with first hard loaded page
          */
-        history.pushState({}, null, window.location.href)
+        window.history.pushState({}, document.title, window.location.href)
     }
 
     /**
@@ -150,9 +144,9 @@ export default class Lazyload {
             }
 
             this.clickTimeout = window.setTimeout(() => {
-                history.pushState({}, null, $link.attr('href'))
+                window.history.pushState({}, null, $link.attr('href'))
                 this.onPopState(null)
-            }, 50)
+            }, 0)
 
             return false
         }
@@ -165,7 +159,7 @@ export default class Lazyload {
     onPopState (event) {
         let state = null
 
-        if (event !== null) {
+        if (event !== null && event.originalEvent) {
             state = event.originalEvent.state
         }
 
@@ -205,7 +199,10 @@ export default class Lazyload {
                 type: 'get',
                 dataType: 'html',
                 cache: false,
-                data: state.headerData
+                data: state.headerData,
+                beforeSend: (xhr) => {
+                    xhr.setRequestHeader('X-Partial', true)
+                }
             })
                 .done(data => {
                     this.applyContent(data)
@@ -267,6 +264,14 @@ export default class Lazyload {
         let $old = $container.find('.content-global')
 
         let $tempData = $(data)
+        /*
+         * If AJAX request data is an entire HTML page.
+         */
+        const $ajaxRoot = $tempData.find('[data-ajax-root]')
+        if ($ajaxRoot.length) {
+            $tempData = $($ajaxRoot.html())
+        }
+
         $tempData.addClass('new-content-global')
         $container.append($tempData)
         $tempData = $container.find('.new-content-global')

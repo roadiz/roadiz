@@ -63,7 +63,7 @@ class InstallCommand extends Command implements ContainerAwareInterface
         $io = new SymfonyStyle($input, $output);
 
         $io->note('Before installing Roadiz, did you create database schema? ' . PHP_EOL .
-            'If not execute: <info>bin/roadiz orm:schema-tool:create</info>');
+            'If not execute: bin/roadiz orm:schema-tool:create');
         $question = new ConfirmationQuestion(
             '<question>Are you sure to perform installation?</question>',
             false

@@ -276,7 +276,8 @@ class Setting extends AbstractEntity
 
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Exclude()
+     * @Serializer\Groups({"setting"})
+     * @Serializer\Type("bool")
      */
     private $encrypted = false;
 

@@ -1,22 +1,23 @@
-
 {% set currentTitle = node.nodeSources.first.title|default(node.nodeName) %}
+{% set pageTitle = "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') %}
 
 {% extends '@Rozier/layout.html.twig' %}
 
-{% block content %}
-<section class="content-global">
+{% block title %}
+    {{ pageTitle }} – {% trans %}back_office{% endtrans %}
+{% endblock %}
 
+{% block content %}
+<section class="content-global" data-page-title="{{ pageTitle }} – {% trans %}back_office{% endtrans %}">
     <header class="content-header header-node header-node-edit-tags">
         {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-tags-title">
-            {{ "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
+            {{ pageTitle }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
         {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
     </header>
-
     <article class="content content-node-edit-tags">
-        <h2 class="content-subtitle">{% trans %}tags{% endtrans %}</h2>
         {% form_theme form '@Rozier/forms.html.twig' %}
         {{ form_start(form, { attr: {id: 'edit-node-tags-form'}}) }}
             {{ form_widget(form) }}
@@ -30,7 +31,6 @@
             </fieldset>
         {{ form_end(form) }}
     </article>
-
     {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}
