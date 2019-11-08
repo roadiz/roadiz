@@ -73,10 +73,6 @@ class LoggerServiceProvider implements ServiceProviderInterface
                         switch ($config['type']) {
                             case 'default':
                                 $handlers[] = new StreamHandler($c['logger.path'], constant('\Monolog\Logger::'.$config['level']));
-                                if (null !== $c['em'] &&
-                                    true === $kernel->isDebug()) {
-                                    $handlers[] = new StreamHandler($c['logger.path'], constant('\Monolog\Logger::'.$config['level']));
-                                }
                                 break;
                             case 'stream':
                                 if (empty($config['path'])) {
@@ -135,25 +131,11 @@ class LoggerServiceProvider implements ServiceProviderInterface
                 /*
                  * Default handlers
                  */
-                $handlers[] = new StreamHandler($c['logger.path'], Logger::NOTICE);
-                if (null !== $c['em'] &&
-                    true === $kernel->isDebug()) {
+                if (null !== $c['em'] && true === $kernel->isDebug()) {
                     $handlers[] = new StreamHandler($c['logger.path'], Logger::DEBUG);
+                } else {
+                    $handlers[] = new StreamHandler($c['logger.path'], Logger::NOTICE);
                 }
-            }
-
-            /*
-             * Only activate doctrine logger for production.
-             */
-            if (null !== $c['em'] &&
-                false === $kernel->isInstallMode() &&
-                $kernel->getEnvironment() == 'prod') {
-                $handlers[] = new DoctrineHandler(
-                    $c['em'],
-                    $c['securityTokenStorage'],
-                    $c['requestStack'],
-                    Logger::INFO
-                );
             }
 
             return $handlers;
@@ -167,11 +149,45 @@ class LoggerServiceProvider implements ServiceProviderInterface
             $kernel->getEnvironment().'.log';
         };
 
+        $container['logger.doctrine'] = function (Container $c) {
+            $log = new Logger('doctrine');
+
+            foreach ($c['logger.handlers'] as $handler) {
+                $log->pushHandler($handler);
+            }
+
+            /*
+             * Add processors
+             */
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $log->pushProcessor(new RequestProcessor($requestStack));
+            $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+
+            return $log;
+        };
+
         $container['logger'] = function (Container $c) {
             $log = new Logger('roadiz');
 
             foreach ($c['logger.handlers'] as $handler) {
                 $log->pushHandler($handler);
+            }
+
+            /*
+             * Only activate doctrine logger for production.
+             */
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            if (null !== $c['em'] &&
+                false === $kernel->isInstallMode() &&
+                $kernel->getEnvironment() == 'prod') {
+                $log->pushHandler(new DoctrineHandler(
+                    $c['em'],
+                    $c['securityTokenStorage'],
+                    $c['requestStack'],
+                    Logger::INFO
+                ));
             }
 
             /*

@@ -42,8 +42,10 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Settings controller
@@ -55,7 +57,8 @@ class SettingsController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -72,7 +75,8 @@ class SettingsController extends RozierApp
      * @param Request $request
      * @param int     $settingGroupId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function byGroupAction(Request $request, $settingGroupId)
     {
@@ -132,6 +136,7 @@ class SettingsController extends RozierApp
             if ($form->isSubmitted()) {
                 if ($form->isValid()) {
                     try {
+                        $this->resetSettingsCache();
                         $this->get('em')->flush();
                         $msg = $this->getTranslator()->trans(
                             'setting.%name%.updated',
@@ -179,7 +184,8 @@ class SettingsController extends RozierApp
      * @param Request $request
      * @param int     $settingId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function editAction(Request $request, $settingId)
     {
@@ -206,13 +212,8 @@ class SettingsController extends RozierApp
 
             if ($form->isValid()) {
                 try {
+                    $this->resetSettingsCache();
                     $this->get('em')->flush();
-
-                    /** @var CacheProvider $cacheDriver */
-                    $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
-                    if ($cacheDriver !== null) {
-                        $cacheDriver->deleteAll();
-                    }
                     $msg = $this->getTranslator()->trans('setting.%name%.updated', ['%name%' => $setting->getName()]);
                     $this->publishConfirmMessage($request, $msg);
                     /*
@@ -235,12 +236,23 @@ class SettingsController extends RozierApp
         throw $this->createNotFoundException();
     }
 
+    protected function resetSettingsCache(): void
+    {
+        $this->get('settingsBag')->reset();
+        /** @var CacheProvider $cacheDriver */
+        $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
+        if ($cacheDriver !== null) {
+            $cacheDriver->deleteAll();
+        }
+    }
+
     /**
      * Return an creation form for requested setting.
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -268,14 +280,9 @@ class SettingsController extends RozierApp
 
         if ($form->isValid()) {
             try {
+                $this->resetSettingsCache();
                 $this->get('em')->persist($setting);
                 $this->get('em')->flush();
-
-                /** @var CacheProvider $cacheDriver */
-                $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
-                if ($cacheDriver !== null) {
-                    $cacheDriver->deleteAll();
-                }
                 $msg = $this->getTranslator()->trans('setting.%name%.created', ['%name%' => $setting->getName()]);
                 $this->publishConfirmMessage($request, $msg);
 
@@ -296,7 +303,8 @@ class SettingsController extends RozierApp
      * @param Request $request
      * @param int     $settingId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $settingId)
     {
@@ -312,14 +320,9 @@ class SettingsController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isValid()) {
+                $this->resetSettingsCache();
                 $this->get('em')->remove($setting);
                 $this->get('em')->flush();
-
-                /** @var CacheProvider $cacheDriver */
-                $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
-                if ($cacheDriver !== null) {
-                    $cacheDriver->deleteAll();
-                }
 
                 $msg = $this->getTranslator()->trans('setting.%name%.deleted', ['%name%' => $setting->getName()]);
                 $this->publishConfirmMessage($request, $msg);

@@ -70,7 +70,7 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
      * After a controller has been matched. We need to inject current
      * Kernel instance and main DI container.
      *
-     * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
+     * @param FilterControllerEvent $event
      */
     public function onControllerMatched(FilterControllerEvent $event)
     {

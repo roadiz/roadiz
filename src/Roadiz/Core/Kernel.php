@@ -265,12 +265,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
-            $dispatcher->addSubscriber(new NodeNameSubscriber($c['logger'], $c['utils.nodeNameChecker']));
+            $dispatcher->addSubscriber(new NodeNameSubscriber($c['logger.doctrine'], $c['utils.nodeNameChecker']));
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
             $dispatcher->addSubscriber(new ExceptionSubscriber(
                 $c,
                 $c['themeResolver'],
-                $c['logger'],
+                $c['logger.doctrine'],
                 $kernel->isDebug()
             ));
             $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));

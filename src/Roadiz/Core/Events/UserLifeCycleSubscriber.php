@@ -170,7 +170,7 @@ class UserLifeCycleSubscriber implements EventSubscriber
                 try {
                     $this->sendSignUpConfirmation($user);
                 } catch (Swift_TransportException $e) {
-                    $this->container->offsetGet('logger')->emergency('Cannot send user sign-up confirmation by email', [
+                    $this->container->offsetGet('logger.doctrine')->emergency('Cannot send user sign-up confirmation by email', [
                         'message' => $e->getMessage(),
                         'trace' => $e->getTraceAsString()
                     ]);

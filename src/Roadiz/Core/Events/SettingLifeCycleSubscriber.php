@@ -76,14 +76,14 @@ class SettingLifeCycleSubscriber implements EventSubscriber
                 /*
                  * Set raw value and do not encode it if setting is not encrypted no more.
                  */
-                $this->container['logger']->info(sprintf('Disabled encryption for %s setting.', $setting->getName()));
+                $this->container['logger.doctrine']->info(sprintf('Disabled encryption for %s setting.', $setting->getName()));
                 $setting->setValue($setting->getRawValue());
             } elseif ($event->hasChangedField('encrypted') &&
                 $event->getNewValue('encrypted') === true) {
                 /*
                  * Encode value for the first time.
                  */
-                $this->container['logger']->info(sprintf('Encode %s value for the first time.', $setting->getName()));
+                $this->container['logger.doctrine']->info(sprintf('Encode %s value for the first time.', $setting->getName()));
                 $setting->setValue($this->getEncoder()->encode(new HiddenString($setting->getRawValue())));
             } elseif ($setting->isEncrypted() &&
                 $event->hasChangedField('value') &&
@@ -92,8 +92,9 @@ class SettingLifeCycleSubscriber implements EventSubscriber
                 /*
                  * Encode setting if value has changed
                  */
-                $this->container['logger']->info(sprintf('Encode %s value.', $setting->getName()));
+                $this->container['logger.doctrine']->info(sprintf('Encode %s value.', $setting->getName()));
                 $event->setNewValue('value', $this->getEncoder()->encode(new HiddenString($event->getNewValue('value'))));
+                $setting->setClearValue($event->getNewValue('value'));
             }
         }
     }
@@ -109,12 +110,12 @@ class SettingLifeCycleSubscriber implements EventSubscriber
             null !== $this->getEncoder()
         ) {
             try {
-                $this->container['logger']->info(sprintf('Decode %s value', $setting->getName()));
+                $this->container['logger.doctrine']->debug(sprintf('Decode %s value', $setting->getName()));
                 $setting->setClearValue($this->getEncoder()->decode($setting->getRawValue())->getString());
             } catch (InvalidKey $exception) {
-                $this->container['logger']->error(sprintf('Failed to decode %s value', $setting->getName()));
+                $this->container['logger.doctrine']->debug(sprintf('Failed to decode %s value', $setting->getName()));
             } catch (InvalidMessage $exception) {
-                $this->container['logger']->error(sprintf('Failed to decode %s value', $setting->getName()));
+                $this->container['logger.doctrine']->debug(sprintf('Failed to decode %s value', $setting->getName()));
             }
         }
     }

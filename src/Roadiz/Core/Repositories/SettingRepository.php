@@ -35,11 +35,10 @@ namespace RZ\Roadiz\Core\Repositories;
 class SettingRepository extends EntityRepository
 {
     /**
-     * Return Setting raw value.
+     * @param $name
      *
-     * @param string $name
-     *
-     * @return string
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getValue($name)
     {
@@ -55,9 +54,10 @@ class SettingRepository extends EntityRepository
     }
 
     /**
-     * @param string $name
+     * @param $name
      *
-     * @return boolean
+     * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function exists($name)
     {

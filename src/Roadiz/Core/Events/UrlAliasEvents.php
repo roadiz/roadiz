@@ -38,7 +38,7 @@ final class UrlAliasEvents
      * Event urlAlias.created is triggered each time an url-alias
      * is created.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
@@ -49,7 +49,7 @@ final class UrlAliasEvents
      * Event urlAlias.updated is triggered each time an url-alias
      * is updated.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
@@ -60,7 +60,7 @@ final class UrlAliasEvents
      * Event urlAlias.deleted is triggered each time an url-alias
      * is deleted.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
