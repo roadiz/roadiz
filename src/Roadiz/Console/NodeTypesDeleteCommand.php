@@ -35,13 +35,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing node-types from terminal.
  */
 class NodeTypesDeleteCommand extends Command
 {
-    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -50,17 +50,20 @@ class NodeTypesDeleteCommand extends Command
             ->setDescription('Delete a node-type')
             ->addArgument(
                 'name',
-                InputArgument::OPTIONAL,
+                InputArgument::REQUIRED,
                 'Node-type name'
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('name');
+
+        if (empty($name)) {
+            throw new \InvalidArgumentException('Name must not be empty.');
+        }
 
         /** @var NodeType $nodetype */
         $nodetype = $this->entityManager
@@ -68,31 +71,28 @@ class NodeTypesDeleteCommand extends Command
             ->findOneByName($name);
 
         if ($nodetype !== null) {
-            $question = new ConfirmationQuestion(
-                '///////////////////////////////' . PHP_EOL .
+            $io->note('///////////////////////////////' . PHP_EOL .
                 '/////////// WARNING ///////////' . PHP_EOL .
                 '///////////////////////////////' . PHP_EOL .
                 'This operation cannot be undone.' . PHP_EOL .
-                'Deleting a node-type, you will automatically delete every <info>nodes</info> of this type.' . PHP_EOL .
-                '<question>Are you sure to delete ' . $nodetype->getName() . ' node-type?</question> [y/N]:',
+                'Deleting a node-type, you will automatically delete every nodes of this type.');
+            $question = new ConfirmationQuestion(
+                '<question>Are you sure to delete ' . $nodetype->getName() . ' node-type?</question>',
                 false
             );
-            if ($this->questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $question
             )) {
                 $handler = $this->getHelper('handlerFactory')->getHandler($nodetype);
                 $handler->removeSourceEntityClass();
                 $this->entityManager->remove($nodetype);
                 $this->entityManager->flush();
-                $text .= '<info>Node-type deleted.</info>' . PHP_EOL .
-                    'Do not forget to update database schema! <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info>' . PHP_EOL;
+                $io->success('Node-type deleted.' . PHP_EOL .
+                    'Do not forget to update database schema! ' . PHP_EOL .
+                    'bin/roadiz orm:schema-tool:update --dump-sql --force');
             }
         } else {
-            $text .= '<error>"' . $name . '" node type does not exist.</error>' . PHP_EOL;
+            $io->error('"' . $name . '" node type does not exist');
         }
-
-        $output->writeln($text);
     }
 }

@@ -85,7 +85,6 @@ class UsersCommand extends Command
                     $tableContent
                 );
             }
-
         } else {
             $users = $this->entityManager
                 ->getRepository(User::class)

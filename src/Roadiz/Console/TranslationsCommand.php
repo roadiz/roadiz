@@ -70,7 +70,7 @@ class TranslationsCommand extends Command
             }
             $io->table(['Id', 'Name', 'Locale', 'Disabled', 'Default'], $tableContent);
         } else {
-            $output->writeln('<info>No available translations.</info>' . PHP_EOL);
+            $io->error('No available translations.');
         }
     }
 }

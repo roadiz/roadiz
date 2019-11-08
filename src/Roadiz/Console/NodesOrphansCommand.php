@@ -33,7 +33,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -63,9 +62,12 @@ class NodesOrphansCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int|null|void
+     *
+     * @return int|void|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -111,7 +113,7 @@ class NodesOrphansCommand extends Command
 
                 $io->success('Orphan nodes have been removed from your database.');
             } else {
-                $io->note('Use <info>--delete</info> option to actually remove these nodes.');
+                $io->note('Use --delete option to actually remove these nodes.');
             }
         } else {
             $io->success('That’s OK, you don’t have any orphan node.');

@@ -115,7 +115,7 @@ EOF
                         $fs->dumpFile($filePath, $process->getOutput());
                         $fs->chmod($filePath, 0640);
                     } else {
-                        $output->write($process->getOutput());
+                        $output->writeln($process->getOutput());
                     }
                     return 0;
                 }

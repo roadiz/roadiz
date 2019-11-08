@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
@@ -61,7 +60,6 @@ class InstallCommand extends Command implements ContainerAwareInterface
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
         $io = new SymfonyStyle($input, $output);
 
         $io->note('Before installing Roadiz, did you create database schema? ' . PHP_EOL .

@@ -63,7 +63,6 @@ class FilesImportCommand extends Command
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         $configuration = $this->getHelper('configuration')->getConfiguration();
-        $questionHelper = $this->getHelper('question');
         $io = new SymfonyStyle($input, $output);
 
         $confirmation = new ConfirmationQuestion(

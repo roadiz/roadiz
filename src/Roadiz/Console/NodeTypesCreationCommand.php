@@ -38,13 +38,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing node-types from terminal.
  */
 class NodeTypesCreationCommand extends Command
 {
-    protected $questionHelper;
     /**
      * @var EntityManager
      */
@@ -63,82 +63,70 @@ class NodeTypesCreationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $name = $input->getArgument('name');
 
+        if (empty($name)) {
+            throw new \InvalidArgumentException('Name must not be empty.');
+        }
+
+        /** @var NodeType $nodetype */
         $nodetype = $this->entityManager
             ->getRepository(NodeType::class)
             ->findOneBy(['name' => $name]);
 
         if ($nodetype !== null) {
-            $text = '<error>Node-type "' . $name . '" already exists.</error>';
+            $io->error('Node-type "' . $name . '" already exists.');
         } else {
-            $text = $this->executeCreation($input, $output);
+            $this->executeCreation($input, $output);
         }
-
-        $output->writeln($text);
     }
 
     private function executeCreation(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         $name = $input->getArgument('name');
         $nt = new NodeType();
         $nt->setName($name);
 
-        $output->writeln(PHP_EOL . 'OK! Let’s create that "' . $nt->getName() . '" node-type together!');
+        $io->note('OK! Let’s create that "' . $nt->getName() . '" node-type together!');
 
-        $question0 = new Question('<question>Enter your node-type display name</question>: ', 'Neutral');
-        $displayName = $this->questionHelper->ask(
-            $input,
-            $output,
-            $question0
-        );
+        $question0 = new Question('<question>Enter your node-type display name</question>', ucwords($name));
+        $displayName = $io->askQuestion($question0);
         $nt->setDisplayName($displayName);
 
-        $question1 = new Question('<question>Enter your node-type description</question>: ', '');
-        $description = $this->questionHelper->ask(
-            $input,
-            $output,
-            $question1
-        );
+        $question1 = new Question('<question>Enter your node-type description</question>', ucwords($name));
+        $description = $io->askQuestion($question1);
         $nt->setDescription($description);
         $this->entityManager->persist($nt);
 
         // Begin nt-field creation loop
-        $this->addNodeTypeField($nt, 1, $input, $output);
+        $this->addNodeTypeField($nt, 1, $io);
 
         $this->entityManager->flush();
         $handler = $this->getHelper('handlerFactory')->getHandler($nt);
         $handler->regenerateEntityClass();
 
-        $success = 'Node type <info>' . $nt->getName() . '</info> has been created.' . PHP_EOL .
-            'Do not forget to update database schema! <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info>';
-        return $success;
+        $io->success('Node type ' . $nt->getName() . ' has been created.' . PHP_EOL .
+            'Do not forget to update database schema!' . PHP_EOL .
+            'bin/roadiz orm:schema-tool:update --dump-sql --force');
     }
 
-    protected function addNodeTypeField(NodeType $nodeType, $position, InputInterface $input, OutputInterface $output)
+    protected function addNodeTypeField(NodeType $nodeType, $position, SymfonyStyle $io)
     {
         $field = new NodeTypeField();
         $field->setPosition($position);
 
-        $questionfName = new Question('[Field ' . $position . '] <question>Enter field name</question>: ', 'content');
-        $fName = $this->questionHelper->ask(
-            $input,
-            $output,
-            $questionfName
-        );
+        $questionfName = new Question('[Field ' . $position . '] <question>Enter field name</question>', 'content');
+        $fName = $io->askQuestion($questionfName);
         $field->setName($fName);
 
-        $questionfLabel = new Question('[Field ' . $position . '] <question>Enter field label</question>: ', 'Your content');
-        $fLabel = $this->questionHelper->ask(
-            $input,
-            $output,
-            $questionfLabel
-        );
+        $questionfLabel = new Question('[Field ' . $position . '] <question>Enter field label</question>', 'Your content');
+        $fLabel = $io->askQuestion($questionfLabel);
         $field->setLabel($fLabel);
 
-        $questionfType = new Question('[Field ' . $position . '] <question>Enter field type</question>: ', 'STRING_T');
+        $questionfType = new Question('[Field ' . $position . '] <question>Enter field type</question>', 'STRING_T');
         $questionfType->setAutocompleterValues([
             'STRING_T',
             'DATETIME_T',
@@ -162,20 +150,12 @@ class NodeTypesCreationCommand extends Command
             'CSS_T',
         ]);
 
-        $fType = $this->questionHelper->ask(
-            $input,
-            $output,
-            $questionfType
-        );
+        $fType = $io->askQuestion($questionfType);
         $fType = constant(NodeTypeField::class . '::' . $fType);
         $field->setType($fType);
 
-        $questionIndexed = new ConfirmationQuestion('[Field ' . $position . '] <question>Must this field be indexed?</question> [y/N]: ', false);
-        if ($this->questionHelper->ask(
-            $input,
-            $output,
-            $questionIndexed
-        )) {
+        $questionIndexed = new ConfirmationQuestion('[Field ' . $position . '] <question>Must this field be indexed?</question>', false);
+        if ($io->askQuestion($questionIndexed)) {
             $field->setIndexed(true);
         }
 
@@ -184,13 +164,9 @@ class NodeTypesCreationCommand extends Command
         $this->entityManager->persist($field);
         $field->setNodeType($nodeType);
 
-        $questionAdd = new ConfirmationQuestion('<question>Do you want to add another field?</question> [Y/n]: ', true);
-        if ($this->questionHelper->ask(
-            $input,
-            $output,
-            $questionAdd
-        )) {
-            $this->addNodeTypeField($nodeType, $position + 1, $input, $output);
+        $questionAdd = new ConfirmationQuestion('<question>Do you want to add another field?</question>', true);
+        if ($io->askQuestion($questionAdd)) {
+            $this->addNodeTypeField($nodeType, $position + 1, $io);
         }
     }
 }

@@ -63,7 +63,7 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
         $io = new SymfonyStyle($input, $output);
         $question = new ConfirmationQuestion('<question>Are you sure to migrate against this theme?</question> This can lead in data loss.', false);
         if ($io->askQuestion($question) === false) {
-            $output->writeln('Nothing was done…');
+            $io->note('Nothing was done…');
             return 0;
         }
 

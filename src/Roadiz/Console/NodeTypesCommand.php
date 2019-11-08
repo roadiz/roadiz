@@ -32,7 +32,6 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -68,6 +67,7 @@ class NodeTypesCommand extends Command
                 ->findOneByName($name);
 
             if ($nodetype !== null) {
+                /** @var array<NodeTypeField> $fields */
                 $fields = $this->entityManager->getRepository(NodeTypeField::class)
                     ->findBy([
                         'nodeType' => $nodetype,
@@ -89,6 +89,7 @@ class NodeTypesCommand extends Command
                 $io->error($name . ' node type does not exist.');
             }
         } else {
+            /** @var array<NodeType> $nodetypes */
             $nodetypes = $this->entityManager
                 ->getRepository(NodeType::class)
                 ->findBy([], ['name' => 'ASC']);
