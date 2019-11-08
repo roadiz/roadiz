@@ -67,6 +67,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\DocumentSizeCommand(),
                 new Console\ThemeMigrateCommand(),
                 new Console\VersionsPurgeCommand(),
+                new Console\GeneratePrivateKeyCommand(),
             ];
         };
     }

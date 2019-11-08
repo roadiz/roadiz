@@ -1,7 +1,6 @@
 <?php
 /**
- * Copyright © 2016, Ambroise Maupate and Julien Blanchet
- *
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
@@ -23,43 +22,43 @@
  * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file SolrOptimizeCommand.php
- * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\Console;
 
+use RZ\Crypto\KeyChain\KeyChainInterface;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Command line utils for managing nodes from terminal.
+ * Class GeneratePrivateKeyCommand
+ *
+ * @package RZ\Roadiz\Console
  */
-class SolrOptimizeCommand extends SolrCommand
+class GeneratePrivateKeyCommand extends Command
 {
     protected function configure()
     {
-        $this->setName('solr:optimize')
-            ->setDescription('Optimize Solr search engine index');
+        $this->setName('generate:private-key')
+            ->setDescription('Generate a default private key to encode data in your database.')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $this->solr = $this->getHelper('solr')->getSolr();
-        $this->io = new SymfonyStyle($input, $output);
+        $io = new SymfonyStyle($input, $output);
+        /** @var Kernel $kernel */
+        $kernel = $this->getHelper('kernel')->getKernel();
+        $privateKeyPath = $kernel->get('crypto.absolute_private_key_path');
 
-        if (null !== $this->solr) {
-            if (true === $this->getHelper('solr')->ready()) {
-                $this->optimizeSolr();
-                $this->io->success('<info>Solr core has been optimized.</info>');
-            } else {
-                $this->io->error('Solr search engine server does not respond…');
-                $this->io->note('See your config.yml file to correct your Solr connexion settings.');
-            }
+        if (file_exists($privateKeyPath)) {
+            $io->note(sprintf('A private already exists at %s.', $privateKeyPath));
         } else {
-            $this->io->note($this->displayBasicConfig());
+            $filename = pathinfo($privateKeyPath, PATHINFO_FILENAME);
+            $kernel->get(KeyChainInterface::class)->generate($filename);
+            $io->success(sprintf('Private key has been generated in %s', $privateKeyPath));
         }
     }
 }

@@ -47,7 +47,6 @@ class SolrResetCommand extends SolrCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
         $this->io = new SymfonyStyle($input, $output);
@@ -59,7 +58,7 @@ class SolrResetCommand extends SolrCommand
                     false
                 );
                 if ($this->io->askQuestion($confirmation)) {
-                    $this->emptySolr($output);
+                    $this->emptySolr();
                     $this->io->success('Solr index resetted.');
                 }
             } else {

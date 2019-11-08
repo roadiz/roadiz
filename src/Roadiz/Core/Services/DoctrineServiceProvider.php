@@ -47,6 +47,7 @@ use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\LeafEntityLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\NodesSourcesInheritanceSubscriber;
+use RZ\Roadiz\Core\Events\SettingLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\TablePrefixSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
@@ -208,6 +209,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 new FontLifeCycleSubscriber($c),
                 new DocumentLifeCycleSubscriber($c['kernel']),
                 new UserLifeCycleSubscriber($c),
+                new SettingLifeCycleSubscriber($c),
                 new CustomFormFieldLifeCycleSubscriber($c),
                 new LeafEntityLifeCycleSubscriber($c['factory.handler']),
                 $c[LoggableListener::class],

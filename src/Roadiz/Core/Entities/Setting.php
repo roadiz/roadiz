@@ -116,6 +116,7 @@ class Setting extends AbstractEntity
      * @Serializer\Type("string")
      */
     private $name;
+
     /**
      * @return string
      */
@@ -123,6 +124,7 @@ class Setting extends AbstractEntity
     {
         return $this->name;
     }
+
     /**
      * @param string $name
      *
@@ -171,22 +173,50 @@ class Setting extends AbstractEntity
      * @Serializer\Type("string")
      */
     private $value;
+
     /**
-     * @return mixed
+     * Holds clear setting value after value is decoded by postLoad Doctrine event.
+     *
+     * READ ONLY: Not persisted value to hold clear value if setting is encrypted.
+     *
+     * @var string
+     * @Serializer\Exclude()
+     */
+    private $clearValue;
+
+    /**
+     * @return string|null
+     */
+    public function getRawValue(): ?string
+    {
+        return $this->value;
+    }
+
+    /**
+     * Getter for setting value OR clear value, if encrypted.
+     *
+     * @return bool|\DateTime|int
+     * @throws \Exception
      */
     public function getValue()
     {
-        if ($this->getType() == NodeTypeField::BOOLEAN_T) {
-            return (boolean) $this->value;
-        }
-        if ($this->getType() == NodeTypeField::DATETIME_T) {
-            return new \DateTime($this->value);
-        }
-        if ($this->getType() == NodeTypeField::DOCUMENTS_T) {
-            return (int) $this->value;
+        if ($this->isEncrypted()) {
+            $value = $this->clearValue;
+        } else {
+            $value = $this->value;
         }
 
-        return $this->value;
+        if ($this->getType() == NodeTypeField::BOOLEAN_T) {
+            return (boolean) $value;
+        }
+        if ($this->getType() == NodeTypeField::DATETIME_T) {
+            return new \DateTime($value);
+        }
+        if ($this->getType() == NodeTypeField::DOCUMENTS_T) {
+            return (int) $value;
+        }
+
+        return $value;
     }
     /**
      * @param mixed $value
@@ -201,6 +231,20 @@ class Setting extends AbstractEntity
         } else {
             $this->value = $value;
         }
+
+        return $this;
+    }
+
+    /**
+     * Holds clear setting value after value is decoded by postLoad Doctrine event.
+     *
+     * @param string $clearValue
+     *
+     * @return Setting
+     */
+    public function setClearValue(?string $clearValue): Setting
+    {
+        $this->clearValue = $clearValue;
 
         return $this;
     }
@@ -226,6 +270,32 @@ class Setting extends AbstractEntity
     public function setVisible($visible)
     {
         $this->visible = (boolean) $visible;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Exclude()
+     */
+    private $encrypted = false;
+
+    /**
+     * @return bool
+     */
+    public function isEncrypted(): bool
+    {
+        return $this->encrypted;
+    }
+
+    /**
+     * @param bool $encrypted
+     *
+     * @return Setting
+     */
+    public function setEncrypted(bool $encrypted): Setting
+    {
+        $this->encrypted = $encrypted;
 
         return $this;
     }

@@ -78,6 +78,10 @@ class SettingType extends AbstractType
                     'label' => 'visible',
                     'required' => false,
                 ])
+                ->add('encrypted', CheckboxType::class, [
+                    'label' => 'encrypted',
+                    'required' => false,
+                ])
                 ->add('type', ChoiceType::class, [
                     'label' => 'type',
                     'required' => true,

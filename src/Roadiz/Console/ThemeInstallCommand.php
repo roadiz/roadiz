@@ -119,9 +119,9 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
         }
 
         if ($input->getOption('data')) {
-            $this->importThemeData($reflectionClass->getName(), $input, $output);
+            $this->importThemeData($reflectionClass->getName());
         } elseif ($input->getOption('nodes')) {
-            $this->importThemeNodes($reflectionClass->getName(), $input, $output);
+            $this->importThemeNodes($reflectionClass->getName());
         } else {
             $this->io->writeln('Frontend themes are no more registered into database. <info>You should use --data or --nodes option.</info>');
         }

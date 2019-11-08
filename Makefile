@@ -9,8 +9,6 @@ cache :
 	bin/roadiz cache:clear
 	bin/roadiz cache:clear -e prod
 	bin/roadiz cache:clear -e prod --preview
-	bin/roadiz cache:clear-fpm -e prod -d ${DEV_DOMAIN}
-	bin/roadiz cache:clear-fpm -e prod --preview -d ${DEV_DOMAIN}
 	bin/roadiz cache:clear-fpm -e prod
 	bin/roadiz cache:clear-fpm -e prod --preview
 

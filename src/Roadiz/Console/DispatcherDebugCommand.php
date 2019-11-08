@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -74,7 +73,7 @@ EOF
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         $io = new SymfonyStyle($input, $output);
-
+        $tableContent = [];
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $kernel->get('dispatcher');
 

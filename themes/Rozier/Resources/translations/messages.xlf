@@ -7085,6 +7085,12 @@
             <target></target>
             <note>Version management : Button label to go back to working copy</note>
         </trans-unit>
+
+        <trans-unit xml:space="preserve" id="encrypted">
+            <source>encrypted</source>
+            <target></target>
+            <note>Settings : defaines if setting value will be encrypted in database.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

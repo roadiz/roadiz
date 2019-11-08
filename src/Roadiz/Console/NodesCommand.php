@@ -61,6 +61,7 @@ class NodesCommand extends Command
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $io = new SymfonyStyle($input, $output);
         $nodes = [];
+        $tableContent = [];
 
         if ($input->getOption('type')) {
             $nodeType = $this->entityManager
