@@ -51,7 +51,7 @@ class CryptoServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['crypto.absolute_private_key_path'] = function (Container $c) {
-            return $c['kernel']->getProjectDir() .
+            return $c['kernel']->getRootDir() .
                 DIRECTORY_SEPARATOR .
                 $c['config']['security']['private_key_path']
             ;

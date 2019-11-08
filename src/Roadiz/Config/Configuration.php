@@ -108,7 +108,7 @@ class Configuration implements ConfigurationInterface
                         ->info('When using sha512 or pbkdf2 algorithm')
                     ->end()
                     ->scalarNode('private_key_path')
-                        ->defaultValue('private/default.key')
+                        ->defaultValue('conf/default.key')
                         ->info('Asymmetric cryptographic key location.')
                     ->end()
                     ->scalarNode('iterations')
