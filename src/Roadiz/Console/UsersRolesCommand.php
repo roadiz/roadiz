@@ -37,6 +37,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing users from terminal.
@@ -68,14 +69,14 @@ class UsersRolesCommand extends UsersCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         /** @var RolesBagHelper $rolesBag */
         $rolesBag = $this->getHelper('rolesBag');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('username');
 
         if ($name) {
+            /** @var User|null $user */
             $user = $this->entityManager
                 ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
@@ -87,44 +88,37 @@ class UsersRolesCommand extends UsersCommand
                         ->getAllRoleName();
 
                     $question = new Question(
-                        'Enter the role name to add (empty to stop): ',
-                        ''
+                        'Enter the role name to add'
                     );
                     $question->setAutocompleterValues($roles);
 
                     do {
-                        $role = $this->questionHelper->ask($input, $output, $question);
+                        $role = $io->askQuestion($question);
                         if ($role != "") {
                             $user->addRole($rolesBag->get($role));
-                            $text .= '<info>— Role: ' . $role . ' added.</info>' . PHP_EOL;
+                            $this->entityManager->flush();
+                            $io->success('Role: ' . $role . ' added.');
                         }
                     } while ($role != "");
-
-                    $this->entityManager->flush();
                 } elseif ($input->getOption('remove')) {
                     do {
                         $roles = $user->getRoles();
                         $question = new Question(
-                            'Enter the role name to remove (empty to stop): ',
-                            ''
+                            'Enter the role name to remove'
                         );
                         $question->setAutocompleterValues($roles);
 
-                        $role = $this->questionHelper->ask($input, $output, $question);
+                        $role = $io->askQuestion($question);
                         if (in_array($role, $roles)) {
                             $user->removeRole($rolesBag->get($role));
-                            $text .= '<info>— Role: ' . $role . ' removed.</info>' . PHP_EOL;
+                            $this->entityManager->flush();
+                            $io->success('Role: ' . $role . ' removed.');
                         }
                     } while ($role != "");
-                    $this->entityManager->flush();
-                } else {
-                    $text = '<info>' . $user . '</info>' . PHP_EOL;
                 }
             } else {
                 throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
-
-        $output->writeln($text);
     }
 }

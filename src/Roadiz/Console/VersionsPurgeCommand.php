@@ -34,6 +34,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class VersionsPurgeCommand extends Command
 {
@@ -80,6 +81,7 @@ EOT
 
     private function purgeByDate(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         /** @var EntityManagerInterface $em */
         $em = $this->getHelper('entityManager')->getEntityManager();
         $dateTime = new \DateTime($input->getOption('before'));
@@ -96,13 +98,11 @@ EOT
             ->getSingleScalarResult()
         ;
         $question = new ConfirmationQuestion(sprintf(
-            'Do you want to purge <info>%s</info> version(s) before <info>%s</info>? [y/N] ',
+            'Do you want to purge <info>%s</info> version(s) before <info>%s</info>?',
             $count,
             $dateTime->format('c')
         ), false);
-        if (!$input->isInteractive() || $this->getHelper('question')->ask(
-            $input,
-            $output,
+        if (!$input->isInteractive() || $io->askQuestion(
             $question
         )) {
             /** @var QueryBuilder $qb */
@@ -113,24 +113,23 @@ EOT
                 ->getQuery()
                 ->execute()
             ;
-            $output->writeln(sprintf('<info>%s</info> version(s) were deleted.', $result));
+            $io->success(sprintf('%s version(s) were deleted.', $result));
         }
     }
 
     private function purgeByCount(InputInterface $input, OutputInterface $output)
     {
         $deleteCount = 0;
+        $io = new SymfonyStyle($input, $output);
         $count = (int) $input->getOption('count');
         /** @var EntityManagerInterface $em */
         $em = $this->getHelper('entityManager')->getEntityManager();
 
         $question = new ConfirmationQuestion(sprintf(
-            'Do you want to purge all entities versions and to keep only the <info>latest %s</info>? [y/N] ',
+            'Do you want to purge all entities versions and to keep only the <info>latest %s</info>?',
             $count
         ), false);
-        if (!$input->isInteractive() || $this->getHelper('question')->ask(
-            $input,
-            $output,
+        if (!$input->isInteractive() || $io->askQuestion(
             $question
         )) {
             /** @var QueryBuilder $qb */
@@ -158,7 +157,7 @@ EOT
                 }
             }
 
-            $output->writeln(sprintf('<info>%s</info> version(s) were deleted.', $deleteCount));
+            $io->success(sprintf('%s version(s) were deleted.', $deleteCount));
         }
     }
 }

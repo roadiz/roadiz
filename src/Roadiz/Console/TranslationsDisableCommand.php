@@ -35,13 +35,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing translations.
  */
 class TranslationsDisableCommand extends Command
 {
-    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -57,9 +57,8 @@ class TranslationsDisableCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $locale = $input->getArgument('locale');
 
         $translation = $this->entityManager
@@ -68,22 +67,18 @@ class TranslationsDisableCommand extends Command
 
         if ($translation !== null) {
             $confirmation = new ConfirmationQuestion(
-                '<question>Are you sure to disable ' . $translation->getName() . ' (' . $translation->getLocale() . ') translation?</question> [y/N]:',
+                '<question>Are you sure to disable ' . $translation->getName() . ' (' . $translation->getLocale() . ') translation?</question>',
                 false
             );
-            if ($this->questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $confirmation
             )) {
                 $translation->setAvailable(false);
                 $this->entityManager->flush();
-                $text .= '<info>Translation disabled.</info>' . PHP_EOL;
+                $io->success('Translation disabled.');
             }
         } else {
-            $text .= '<error>Translation for locale ' . $locale . ' does not exist.</error>' . PHP_EOL;
+            $io->error('Translation for locale ' . $locale . ' does not exist.');
         }
-
-        $output->writeln($text);
     }
 }

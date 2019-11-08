@@ -34,6 +34,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing users from terminal.
@@ -53,37 +54,33 @@ class UsersDisableCommand extends UsersCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('username');
 
         if ($name) {
+            /** @var User|null $user */
             $user = $this->entityManager
                 ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
             if (null !== $user) {
                 $confirmation = new ConfirmationQuestion(
-                    '<question>Do you really want to disable user “' . $user->getUsername() . '”?</question> [y/N]:',
+                    '<question>Do you really want to disable user “' . $user->getUsername() . '”?</question>',
                     false
                 );
-                if (!$input->isInteractive() || $this->questionHelper->ask(
-                    $input,
-                    $output,
+                if (!$input->isInteractive() || $io->askQuestion(
                     $confirmation
                 )) {
                     $user->setEnabled(false);
                     $this->entityManager->flush();
-                    $text = PHP_EOL . '<info>[OK]</info> User “' . $name . '” disabled.' . PHP_EOL;
+                    $io->success('User “' . $name . '” disabled.');
                 } else {
-                    $text = PHP_EOL . '<info>[Cancelled]</info> User “' . $name . '” was not disabled.' . PHP_EOL;
+                    $io->warning('User “' . $name . '” was not disabled.');
                 }
             } else {
                 throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
-
-        $output->writeln($text);
     }
 }

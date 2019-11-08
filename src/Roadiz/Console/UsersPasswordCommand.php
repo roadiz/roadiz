@@ -35,6 +35,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing users from terminal.
@@ -54,39 +55,34 @@ class UsersPasswordCommand extends UsersCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('username');
 
         if ($name) {
+            /** @var User|null $user */
             $user = $this->entityManager
                 ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
             if (null !== $user) {
                 $confirmation = new ConfirmationQuestion(
-                    '<question>Do you really want to regenerate user “' . $user->getUsername() . '” password?</question> [y/N]: ',
+                    '<question>Do you really want to regenerate user “' . $user->getUsername() . '” password?</question>',
                     false
                 );
-                if (!$input->isInteractive() || $this->questionHelper->ask(
-                    $input,
-                    $output,
+                if (!$input->isInteractive() || $io->askQuestion(
                     $confirmation
                 )) {
                     $passwordGenerator = new PasswordGenerator();
                     $user->setPlainPassword($passwordGenerator->generatePassword(12));
                     $this->entityManager->flush();
-                    $text = '<info>User password regenerated…</info>' . PHP_EOL;
-                    $text .= 'Password: <info>' . $user->getPlainPassword() . '</info>' . PHP_EOL;
+                    $io->success('A new password was regenerated for '.$name.': '. $user->getPlainPassword());
                 } else {
-                    $text = '<info>[Cancelled]</info> User password was not changed.' . PHP_EOL;
+                    $io->warning('User password was not changed.');
                 }
             } else {
                 throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
-
-        $output->writeln($text);
     }
 }

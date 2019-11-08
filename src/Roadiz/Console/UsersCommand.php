@@ -32,17 +32,16 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing users from terminal.
  */
 class UsersCommand extends Command
 {
-    protected $questionHelper;
     protected $entityManager;
 
     protected function configure()
@@ -58,29 +57,41 @@ class UsersCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('username');
 
         if ($name) {
+            /** @var User|null $user */
             $user = $this->entityManager
                 ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
 
-            if ($user !== null) {
-                $text = '<info>' . $user . '</info>' . PHP_EOL;
+            if ($user === null) {
+                $io->error('User “' . $name . '” does not exist… use users:create to add a new user.');
             } else {
-                $text = '<error>User “' . $name . '” does not exist… use users:create to add a new user.</error>' . PHP_EOL;
+                $tableContent = [[
+                    $user->getId(),
+                    $user->getUsername(),
+                    $user->getEmail(),
+                    (!$user->isEnabled() ? 'X' : ''),
+                    ($user->getExpired() ? 'X' : ''),
+                    (!$user->isAccountNonLocked() ? 'X' : ''),
+                    implode(' ', $user->getGroupNames()),
+                    implode(' ', $user->getRoles()),
+                ]];
+                $io->table(
+                    ['Id', 'Username', 'Email', 'Disabled', 'Expired', 'Locked', 'Groups', 'Roles'],
+                    $tableContent
+                );
             }
-        } else {
-            $table = new Table($output);
 
+        } else {
             $users = $this->entityManager
                 ->getRepository(User::class)
                 ->findAll();
 
             if (count($users) > 0) {
-                $table->setHeaders(['Id', 'Username', 'Email', 'Disabled', 'Expired', 'Locked', 'Groups', 'Roles']);
                 $tableContent = [];
                 foreach ($users as $user) {
                     $tableContent[] = [
@@ -94,14 +105,15 @@ class UsersCommand extends Command
                         implode(' ', $user->getRoles()),
                     ];
                 }
-                $table->setRows($tableContent);
-                $table->render();
+
+                $io->table(
+                    ['Id', 'Username', 'Email', 'Disabled', 'Expired', 'Locked', 'Groups', 'Roles'],
+                    $tableContent
+                );
             } else {
-                $text = '<info>No available users</info>' . PHP_EOL;
+                $io->warning('No available users.');
             }
         }
-
-        $output->writeln($text);
     }
 
     /**

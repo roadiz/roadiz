@@ -36,13 +36,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing translations
  */
 class TranslationsCreationCommand extends Command
 {
-    private $questionHelper;
     /**
      * @var EntityManager
      */
@@ -66,9 +66,8 @@ class TranslationsCreationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('name');
         $locale = $input->getArgument('locale');
 
@@ -81,18 +80,16 @@ class TranslationsCreationCommand extends Command
                 ->findOneByLocale($locale);
 
             $confirmation = new ConfirmationQuestion(
-                '<question>Are you sure to create ' . $name . ' (' . $locale . ') translation?</question> [y/N]:',
+                '<question>Are you sure to create ' . $name . ' (' . $locale . ') translation?</question>',
                 false
             );
 
             if (null !== $translationByName) {
-                $text .= '<error>Translation ' . $name . ' already exists.</error>' . PHP_EOL;
+                $io->error('Translation ' . $name . ' already exists.');
             } elseif (null !== $translationByLocale) {
-                $text .= '<error>Translation locale ' . $locale . ' is already used.</error>' . PHP_EOL;
+                $io->error('Translation locale ' . $locale . ' is already used.');
             } else {
-                if ($this->questionHelper->ask(
-                    $input,
-                    $output,
+                if ($io->askQuestion(
                     $confirmation
                 )) {
                     $newTrans = new Translation();
@@ -102,11 +99,9 @@ class TranslationsCreationCommand extends Command
                     $this->entityManager->persist($newTrans);
                     $this->entityManager->flush();
 
-                    $text = 'New <info>' . $newTrans->getName() . '</info> translation for <info>' . $newTrans->getLocale() . '</info> locale.' . PHP_EOL;
+                    $io->success('New ' . $newTrans->getName() . ' translation for ' . $newTrans->getLocale() . ' locale.');
                 }
             }
         }
-
-        $output->writeln($text);
     }
 }

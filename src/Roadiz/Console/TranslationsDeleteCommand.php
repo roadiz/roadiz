@@ -36,13 +36,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing translations.
  */
 class TranslationsDeleteCommand extends Command
 {
-    private $questionHelper;
     /**
      * @var EntityManager
      */
@@ -61,9 +61,8 @@ class TranslationsDeleteCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $locale = $input->getArgument('locale');
 
         $translation = $this->entityManager
@@ -74,30 +73,26 @@ class TranslationsDeleteCommand extends Command
             ->countBy([]);
 
         if ($translationCount < 2) {
-            $text .= '<error>You cannot delete the only one available translation!</error>' . PHP_EOL;
+            $io->error('You cannot delete the only one available translation!');
         } elseif ($translation !== null) {
-            $confirmation = new ConfirmationQuestion(
-                '///////////////////////////////' . PHP_EOL .
+            $io->note('///////////////////////////////' . PHP_EOL .
                 '/////////// WARNING ///////////' . PHP_EOL .
                 '///////////////////////////////' . PHP_EOL .
                 'This operation cannot be undone.' . PHP_EOL .
-                'Deleting a translation, you will automatically delete every translated <info>tags</info>, <info>nodes</info> and <info>documents</info>.' . PHP_EOL .
-                '<question>Are you sure to delete ' . $translation->getName() . ' (' . $translation->getLocale() . ') translation?</question> [y/N]:',
+                'Deleting a translation, you will automatically delete every translated tags, node-sources, url-aliases and documents.');
+            $confirmation = new ConfirmationQuestion(
+                '<question>Are you sure to delete ' . $translation->getName() . ' (' . $translation->getLocale() . ') translation?</question>',
                 false
             );
-            if ($this->questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $confirmation
             )) {
                 $this->entityManager->remove($translation);
                 $this->entityManager->flush();
-                $text .= '<info>Translation deleted.</info>' . PHP_EOL;
+                $io->success('Translation deleted.');
             }
         } else {
-            $text .= '<error>Translation for locale ' . $locale . ' does not exist.</error>' . PHP_EOL;
+            $io->error('Translation for locale ' . $locale . ' does not exist.');
         }
-
-        $output->writeln($text);
     }
 }

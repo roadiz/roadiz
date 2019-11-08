@@ -29,10 +29,10 @@
 
 namespace RZ\Roadiz\Console;
 
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ThemeInfoCommand extends ThemesCommand
 {
@@ -55,20 +55,18 @@ class ThemeInfoCommand extends ThemesCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         $name = str_replace('/', '\\', $input->getArgument('name'));
         $name = $this->validateThemeName($name);
         $themeName = $this->getThemeName($name);
 
-        $table = new Table($output);
-        $table->setHeaders([
+        $io->table([
             'Description', 'Value'
-        ]);
-        $table->setRows([
+        ], [
             ['Given name', $themeName],
             ['Folder name', $this->getThemeFolderName($themeName)],
             ['Source path', $this->getThemePath($themeName)],
             ['Assets path', $this->getThemePath($themeName).'/static'],
         ]);
-        $table->render();
     }
 }

@@ -36,10 +36,10 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -74,10 +74,6 @@ class ThemesCommand extends Command
         parent::__construct();
 
         $this->filesystem = new Filesystem();
-
-        if (!defined('ROADIZ_ROOT')) {
-            throw new \RuntimeException('ROADIZ_ROOT constant should be defined to point to your project root directory.');
-        }
     }
 
     /**
@@ -256,13 +252,11 @@ class ThemesCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         /** @var ThemeResolverInterface $themeResolver */
         $themeResolver = $this->getHelper('themeResolver')->getThemeResolver();
-        $text = "";
         $name = $input->getArgument('classname');
 
-        $table = new Table($output);
-        $table->setHeaders(['Class (with / instead of \)', 'Enabled', 'Type']);
         $tableContent = [];
 
         if ($name) {
@@ -278,7 +272,6 @@ class ThemesCommand extends Command
             ];
         } else {
             $themes = $themeResolver->findAll();
-
             if (count($themes) > 0) {
                 /** @var Theme $theme */
                 foreach ($themes as $theme) {
@@ -289,12 +282,11 @@ class ThemesCommand extends Command
                     ];
                 }
             } else {
-                $text = '<info>No available themes</info>' . PHP_EOL;
+                $io->warning('No available themes');
             }
         }
-        $table->setRows($tableContent);
-        $table->render();
-        $output->writeln($text);
+
+        $io->table(['Class (with / instead of \)', 'Enabled', 'Type'], $tableContent);
     }
 
     /**
