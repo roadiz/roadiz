@@ -58,7 +58,6 @@ export function getItemsByIds ({ ids = [], filters }) {
             }
         })
         .catch((error) => {
-            // TODO
             // Log request error or display a message
             throw new Error(error.response.data.humanMessage)
         })

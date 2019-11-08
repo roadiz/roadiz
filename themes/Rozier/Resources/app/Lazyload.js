@@ -52,7 +52,6 @@ import YamlEditor from './widgets/YamlEditor'
 import MarkdownEditor from './widgets/MarkdownEditor'
 import JsonEditor from './widgets/JsonEditor'
 import CssEditor from './widgets/CssEditor'
-import { isMobile } from './utils/plugins'
 import LeafletGeotagField from './widgets/LeafletGeotagField'
 import MultiLeafletGeotagField from './widgets/MultiLeafletGeotagField'
 
@@ -87,6 +86,7 @@ export default class Lazyload {
         this.jsonEditors = []
         this.cssEditors = []
         this.yamlEditors = []
+        this.$window = $(window)
 
         // Binded methods
         this.onPopState = this.onPopState.bind(this)
@@ -331,13 +331,10 @@ export default class Lazyload {
 
         this.stackNodeTrees = new StackNodeTree()
 
-        if (isMobile.any() === null) {
-            if (this.saveButtons) {
-                this.saveButtons.unbind()
-            }
-
-            this.saveButtons = new SaveButtons()
+        if (this.saveButtons) {
+            this.saveButtons.unbind()
         }
+        this.saveButtons = new SaveButtons()
 
         this.tagAutocomplete = new TagAutocomplete()
         this.folderAutocomplete = new FolderAutocomplete()
@@ -360,7 +357,7 @@ export default class Lazyload {
         this.initCollectionsForms()
 
         // Animate actions menu
-        if ($('.actions-menu').length && isMobile.any() === null) {
+        if ($('.actions-menu').length) {
             TweenLite.to('.actions-menu', 0.5, {right: 0, delay: 0.4, ease: Expo.easeOut})
         }
 

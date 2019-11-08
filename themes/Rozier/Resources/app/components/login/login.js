@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import { isMobile } from '../../utils/plugins'
 import request from 'axios'
 
 (function () {
@@ -34,7 +33,7 @@ import request from 'axios'
         })
     }
 
-    if (typeof window.RozierRoot.routes.splashRequest !== 'undefined' && !isMobile.any()) {
+    if (typeof window.RozierRoot.routes.splashRequest !== 'undefined') {
         requestImage()
     }
 })()

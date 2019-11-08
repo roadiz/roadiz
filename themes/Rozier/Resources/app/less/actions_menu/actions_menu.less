@@ -85,6 +85,7 @@
                 .transition(~'border-color ease 0.3s, color ease 0.3s');
             }
 
+            &:focus,
             &:hover {
                 &.uk-button-danger,
                 &.uk-button-primary {
@@ -121,7 +122,6 @@
         .uk-button {
             .icon-container {
                 position: absolute;
-                z-index: 9999;
                 background-color: white;
                 // width: 100%;
                 top: 0; right:0; bottom:0; left: 0;
@@ -129,7 +129,6 @@
                 padding: 7px 9px 9px 13px;
                 .box-sizing();
                 display: block;
-
                 z-index: 2;
             }
             .label {
@@ -341,10 +340,6 @@
             }
         }
         nav {
-            // TODO: Find a way to limit and scroll
-            //max-height: 400px;
-            //overflow: scroll;
-
             .uk-button {
                 line-height: 1.4em;
                 white-space: normal;
@@ -367,6 +362,12 @@
                 }
             }
         }
+
+        &:focus {
+            outline: none;
+        }
+
+        &:focus,
         &:hover {
             nav,ul, header .label  {
                 display: block;

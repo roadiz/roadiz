@@ -116,7 +116,9 @@
                     return this.$store.getters.getExplorerSearchTerms
                 },
                 set: debounce(function (searchTerms) {
-                    this.$store.dispatch('explorerUpdateSearch', { searchTerms })
+                    if (this.isOpen) {
+                        this.$store.dispatch('explorerUpdateSearch', { searchTerms })
+                    }
                 }, 450)
             }
         },

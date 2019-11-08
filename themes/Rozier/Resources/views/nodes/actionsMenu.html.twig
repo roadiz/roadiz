@@ -3,19 +3,19 @@
     {% if node and not readOnly %}
         {# Delete current node #}
         {% if workflow_can(node, 'undelete') %}
-        <a class="uk-button uk-button-danger" href="{{ path('nodesUndeletePage', { nodeId: node.getId}) }}">
+        <a role="button" tabindex="0" class="uk-button uk-button-danger" href="{{ path('nodesUndeletePage', { nodeId: node.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-untrash"></i></span>
             <span class="label"><span class="label-text">{% trans %}undelete{% endtrans %}</span></span>
         </a>
         {% endif %}
         {% if workflow_can(node, 'delete') and (node.nodeSources|length == 1 or source.translation.defaultTranslation)  %}
-        <a class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
+        <a role="button" tabindex="0" class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
             <span class="icon-container"><i class="uk-icon-rz-trash"></i></span>
             <span class="label"><span class="label-text">{% trans %}delete.node{% endtrans %}</span></span>
         </a>
         {% endif %}
         {% if workflow_can(node, 'delete') and node.nodeSources|length > 1 and source %}
-        <a class="uk-button uk-button-danger" href="{{ path('nodesDeleteSourcePage', { nodeSourceId: source.id}) }}">
+        <a role="button" tabindex="0" class="uk-button uk-button-danger" href="{{ path('nodesDeleteSourcePage', { nodeSourceId: source.id}) }}">
             <span class="icon-container"><i class="uk-icon-flag"></i></span>
             <span class="label"><span class="label-text">{% trans %}delete.translation{% endtrans %}</span></span>
         </a>
@@ -23,7 +23,7 @@
     {% endif %}
 
     {% if versions and versions|length > 1 %}
-        <div class="node-actions with-subnav">
+        <div role="button" tabindex="0" class="node-actions with-subnav">
             <header><i class="uk-icon-code-fork"></i><span class="label"><span class="label-text">{% trans %}versions{% endtrans %}</span></span></header>
             <nav class="versions-nav">
                 <a class="uk-button{% if not currentVersion %} uk-active{% endif %}" href="{{ path('nodesEditSourcePage', {
@@ -46,12 +46,12 @@
             </nav>
         </div>
     {% endif %}
-    
+
     {% if node and not node.isDeleted %}
         {#
          # Node actions
          #}
-        <div class="node-actions with-subnav">
+        <div role="button" tabindex="0" class="node-actions with-subnav">
             <header><i class="uk-icon-rz-actions"></i><span class="label"><span class="label-text">{% trans %}actions{% endtrans %}</span></span></header>
             <nav>
                 {% if workflow_can(node, 'publish') %}
@@ -83,7 +83,7 @@
          # Node parameters
          #}
         {% if node and (is_granted('ROLE_ACCESS_NODES_STATUS')) %}
-        <div class="node-statuses node-parameters with-subnav">
+        <div role="button" tabindex="0" class="node-statuses node-parameters with-subnav">
             <header><i class="uk-icon-rz-settings-general"></i><span class="label"><span class="label-text">{% trans %}parameters{% endtrans %}</span></span></header>
             <ul>
                 <li class="node-visibility">
@@ -113,7 +113,7 @@
             {#
              # Node statuses
              #}
-            <div class="node-statuses node-status with-subnav uk-form">
+            <div role="button" tabindex="0" class="node-statuses node-status with-subnav uk-form">
                 {% if node.isDraft %}
                     {% set iconClass = 'uk-icon-rz-draft-nodes' %}
                 {% elseif node.isPending %}
