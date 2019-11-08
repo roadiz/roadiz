@@ -192,6 +192,24 @@
 
     .form-col-choice{
         min-width: 100px;
+
+        /*
+         * Simplify expanded choices
+         */
+        .uk-form-group {
+            &.uk-margin-bottom {
+                margin-bottom: 0 !important;
+            }
+
+            .uk-form-label:before {
+                content: none;
+                display: none;
+            }
+
+            .bootstrap-switch {
+                margin-bottom: 2px;
+            }
+        }
     }
 
     .form-col-percent,
