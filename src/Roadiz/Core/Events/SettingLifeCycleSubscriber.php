@@ -79,7 +79,8 @@ class SettingLifeCycleSubscriber implements EventSubscriber
                 $this->container['logger.doctrine']->info(sprintf('Disabled encryption for %s setting.', $setting->getName()));
                 $setting->setValue($setting->getRawValue());
             } elseif ($event->hasChangedField('encrypted') &&
-                $event->getNewValue('encrypted') === true) {
+                $event->getNewValue('encrypted') === true &&
+                null !== $this->getEncoder()) {
                 /*
                  * Encode value for the first time.
                  */
