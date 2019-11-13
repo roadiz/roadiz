@@ -72,7 +72,8 @@ class SettingLifeCycleSubscriber implements EventSubscriber
         $setting = $event->getEntity();
         if ($setting instanceof Setting) {
             if ($event->hasChangedField('encrypted') &&
-                $event->getNewValue('encrypted') === false) {
+                $event->getNewValue('encrypted') === false &&
+                null !== $setting->getRawValue()) {
                 /*
                  * Set raw value and do not encode it if setting is not encrypted no more.
                  */
@@ -80,6 +81,7 @@ class SettingLifeCycleSubscriber implements EventSubscriber
                 $setting->setValue($setting->getRawValue());
             } elseif ($event->hasChangedField('encrypted') &&
                 $event->getNewValue('encrypted') === true &&
+                null !== $setting->getRawValue() &&
                 null !== $this->getEncoder()) {
                 /*
                  * Encode value for the first time.
@@ -88,6 +90,7 @@ class SettingLifeCycleSubscriber implements EventSubscriber
                 $setting->setValue($this->getEncoder()->encode(new HiddenString($setting->getRawValue())));
             } elseif ($setting->isEncrypted() &&
                 $event->hasChangedField('value') &&
+                null !== $event->getNewValue('value') &&
                 null !== $this->getEncoder()
             ) {
                 /*
@@ -108,6 +111,7 @@ class SettingLifeCycleSubscriber implements EventSubscriber
         $setting = $event->getEntity();
         if ($setting instanceof Setting &&
             $setting->isEncrypted() &&
+            null !== $setting->getRawValue() &&
             null !== $this->getEncoder()
         ) {
             try {
