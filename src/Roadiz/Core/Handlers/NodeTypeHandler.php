@@ -246,15 +246,15 @@ class NodeTypeHandler extends AbstractHandler
         }
 
         /*
-         * Remove class and database table
-         */
-        $this->deleteSchema();
-
-        /*
          * Remove node type
          */
         $this->objectManager->remove($this->getNodeType());
         $this->objectManager->flush();
+
+        /*
+         * Remove class and database table
+         */
+        $this->deleteSchema();
 
         return $this;
     }
