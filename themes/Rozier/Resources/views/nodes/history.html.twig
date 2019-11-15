@@ -4,7 +4,6 @@
 <section class="content-global content-nav-and-filters">
     <header class="content-header content-header-filters manage-history-header">
         <h1 class="content-title manage-history-title">{{ "history.for.%name%"|trans({"%name%":node.nodeName}) }}</h1>
-        {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         {% include '@Rozier/nodes/navBar.html.twig' with {current:'history'} %}
     </header>

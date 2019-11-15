@@ -229,8 +229,7 @@ class NodesTreesController extends RozierApp
                 $form = $this->buildBulkStatusForm(
                     $request->get('statusForm')['referer'],
                     $nodesIds,
-                    (int) $request->get('statusForm')['status'],
-                    false
+                    (int) $request->get('statusForm')['status']
                 );
 
                 $form->handleRequest($request);
@@ -492,15 +491,13 @@ class NodesTreesController extends RozierApp
      * @param bool  $referer
      * @param array $nodesIds
      * @param int   $status
-     * @param bool  $submit
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildBulkStatusForm(
         $referer = false,
         $nodesIds = [],
-        $status = Node::DRAFT,
-        $submit = true
+        $status = Node::DRAFT
     ) {
         /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
@@ -530,16 +527,6 @@ class NodesTreesController extends RozierApp
         if (false !== $referer) {
             $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
-            ]);
-        }
-        if (true === $submit) {
-            $builder->add('submitStatus', SubmitType::class, [
-                'label' => 'change.nodes.status',
-                'attr' => [
-                    'class' => 'uk-button uk-button-primary',
-                    'title' => 'change.nodes.status',
-                    'data-uk-tooltip' => "{animation:true}",
-                ],
             ]);
         }
 

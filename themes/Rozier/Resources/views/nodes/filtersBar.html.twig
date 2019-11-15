@@ -81,6 +81,12 @@
                               action="{{ path('nodesBulkStatusPage') }}"
                               method="get">
                             {{ form_widget(statusNodesForm) }}
+                            <div class="uk-form-row form-col-submit">
+                                <button type="submit"
+                                        class="uk-button uk-button-primary uk-button-small"
+                                        title="{% trans %}change.nodes.status{% endtrans %}"
+                                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save"></i></button>
+                            </div>
                         </form>
                     </div>
                 {% endif %}
