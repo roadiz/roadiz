@@ -99,6 +99,7 @@ use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
 use Themes\Rozier\Events\DocumentSizeSubscriber;
 use Themes\Rozier\Events\ExifDocumentSubscriber;
+use Themes\Rozier\Events\ImageColorDocumentSubscriber;
 use Themes\Rozier\Events\NodeDuplicationSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
@@ -309,7 +310,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                     )
                 );
                 /*
-                 * Add custom event subscriber to manage image document size
+                 * Add custom event subscriber to manage image document size and color
                  */
                 $dispatcher->addSubscriber(
                     new DocumentSizeSubscriber(
@@ -317,7 +318,13 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                         $c['logger']
                     )
                 );
-
+                $dispatcher->addSubscriber(
+                    new ImageColorDocumentSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
                 /*
                  * Add custom event subscriber to manage document EXIF
                  */

@@ -103,13 +103,15 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
 
     /**
      * @param FilterDocumentEvent $event
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
     public function onImageUploaded(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
-        if ($this->supports($document)) {
+        if ($this->supports($document) && function_exists('exif_read_data')) {
             $filePath = $this->packages->getDocumentFilePath($document);
-            $exif = exif_read_data($filePath, null, false);
+            $exif = @exif_read_data($filePath, null, false);
 
             if (false !== $exif) {
                 $copyright = $this->getCopyright($exif);

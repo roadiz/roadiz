@@ -1,13 +1,13 @@
 <?php
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
- *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -22,9 +22,6 @@
  * Except as contained in this notice, the name of the ROADIZ shall not
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file DocumentSizeCommand.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
 namespace RZ\Roadiz\Console;
@@ -34,12 +31,13 @@ use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\Document\AverageColorResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class DocumentSizeCommand extends Command
+class DocumentAverageColorCommand extends Command
 {
     /** @var SymfonyStyle */
     protected $io;
@@ -47,11 +45,15 @@ class DocumentSizeCommand extends Command
      * @var ImageManager
      */
     private $manager;
+    /**
+     * @var AverageColorResolver
+     */
+    private $colorResolver;
 
     protected function configure()
     {
-        $this->setName('documents:size')
-            ->setDescription('Fetch every document size (width and height) and write it in database.')
+        $this->setName('documents:color')
+            ->setDescription('Fetch every document medium color and write it in database.')
         ;
     }
 
@@ -63,6 +65,7 @@ class DocumentSizeCommand extends Command
         $packages = $this->getHelper('assetPackages')->getPackages();
         $this->io = new SymfonyStyle($input, $output);
         $this->manager = new ImageManager();
+        $this->colorResolver = new AverageColorResolver();
 
         $batchSize = 20;
         $i = 0;
@@ -80,7 +83,7 @@ class DocumentSizeCommand extends Command
         foreach ($iterableResult as $row) {
             /** @var Document $document */
             $document = $row[0];
-            $this->updateDocumentSize($document, $packages);
+            $this->updateDocumentColor($document, $packages);
             if (($i % $batchSize) === 0) {
                 $em->flush(); // Executes all updates.
                 $em->clear(); // Detaches all objects from Doctrine!
@@ -92,14 +95,13 @@ class DocumentSizeCommand extends Command
         $this->io->progressFinish();
     }
 
-    private function updateDocumentSize(Document $document, Packages $packages)
+    private function updateDocumentColor(Document $document, Packages $packages)
     {
         if ($document->isImage()) {
             $documentPath = $packages->getDocumentFilePath($document);
             try {
-                $imageProcess = $this->manager->make($documentPath);
-                $document->setImageWidth($imageProcess->width());
-                $document->setImageHeight($imageProcess->height());
+                $mediumColor = $this->colorResolver->getAverageColor($this->manager->make($documentPath));
+                $document->setImageAverageColor($mediumColor);
             } catch (NotReadableException $exception) {
                 /*
                  * Do nothing

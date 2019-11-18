@@ -147,6 +147,13 @@ class Document extends AbstractDocument
      * @Serializer\Type("int")
      */
     private $imageHeight = 0;
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
+     */
+    protected $imageAverageColor;
 
     /**
      * Document constructor.
@@ -467,6 +474,26 @@ class Document extends AbstractDocument
     public function setImageHeight(int $imageHeight): Document
     {
         $this->imageHeight = $imageHeight;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImageAverageColor(): ?string
+    {
+        return $this->imageAverageColor;
+    }
+
+    /**
+     * @param string|null $imageAverageColor
+     *
+     * @return Document
+     */
+    public function setImageAverageColor(?string $imageAverageColor): Document
+    {
+        $this->imageAverageColor = $imageAverageColor;
 
         return $this;
     }
