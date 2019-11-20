@@ -207,11 +207,10 @@ class DocumentExtension extends AbstractExtension
             }
         }
 
-        if (null !== $document && $document->isImage()) {
-            $size = $this->getImageSize($document);
-            if ($size['height'] > 0) {
-                return $size['width']/$size['height'];
-            }
+        if (null !== $document &&
+            $document->isImage() &&
+            null !== $ratio = $document->getImageRatio()) {
+            return $ratio;
         }
 
         return 0.0;
