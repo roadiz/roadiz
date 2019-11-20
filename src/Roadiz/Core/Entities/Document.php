@@ -479,6 +479,17 @@ class Document extends AbstractDocument
     }
 
     /**
+     * @return float|null
+     */
+    public function getImageRatio(): ?float
+    {
+        if ($this->getImageWidth() > 0 && $this->getImageHeight() > 0) {
+            return $this->getImageWidth() / $this->getImageHeight();
+        }
+        return null;
+    }
+
+    /**
      * @return string|null
      */
     public function getImageAverageColor(): ?string
