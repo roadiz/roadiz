@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -8,7 +8,6 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -24,57 +23,88 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file RawDocumentsSubscriber.php
- * @author Ambroise Maupate
+ * @file DocumentSizeSubscriber.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
+
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentEvents;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
-use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileNotFoundException;
+use Symfony\Component\HttpFoundation\File\File;
 
-/**
- * Create a raw image and downscale it to a new image file for a better web usage.
- */
-class RawDocumentsSubscriber implements EventSubscriberInterface
+class DocumentFilesizeSubscriber implements EventSubscriberInterface
 {
-    /** @var DownscaleImageManager */
-    protected $manager;
+    /**
+     * @var Packages
+     */
+    private $packages;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
-     * @param EntityManager $em
      * @param Packages $packages
      * @param LoggerInterface $logger
-     * @param EntityManager|string $imageDriver
-     * @param integer $maxPixelSize
-     * @param string $rawImageSuffix
      */
     public function __construct(
-        EntityManager $em,
         Packages $packages,
-        LoggerInterface $logger = null,
-        $imageDriver = 'gd',
-        $maxPixelSize = 0,
-        $rawImageSuffix = ".raw"
+        LoggerInterface $logger = null
     ) {
-        $this->manager = new DownscaleImageManager($em, $packages, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
+        $this->packages = $packages;
+        $this->logger = $logger;
+
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onDocumentImageUploaded', -1],
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onImageUploaded',
         ];
     }
 
-    public function onDocumentImageUploaded(FilterDocumentEvent $event)
+    /**
+     * @param DocumentInterface $document
+     *
+     * @return bool
+     */
+    protected function supports(DocumentInterface $document)
     {
-        if (null !== $event->getDocument() && $event->getDocument()->isProcessable()) {
-            $this->manager->processAndOverrideDocument($event->getDocument());
+        if (null !== $document->getRelativePath()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param FilterDocumentEvent $event
+     */
+    public function onImageUploaded(FilterDocumentEvent $event)
+    {
+        $document = $event->getDocument();
+        if ($this->supports($document) && $document instanceof Document) {
+            try {
+                $documentPath = $this->packages->getDocumentFilePath($document);
+                $file = new File($documentPath);
+                $document->setFilesize($file->getSize());
+            } catch (FileNotFoundException $exception) {
+                /*
+                 * Do nothing
+                 * just return 0 width and height
+                 */
+                $this->logger->warning('Document file not found.', [
+                    'id' => $document->getId(),
+                    'path' => $documentPath,
+                ]);
+            }
         }
     }
 }

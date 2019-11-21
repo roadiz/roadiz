@@ -97,6 +97,7 @@ use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
+use Themes\Rozier\Events\DocumentFilesizeSubscriber;
 use Themes\Rozier\Events\DocumentSizeSubscriber;
 use Themes\Rozier\Events\ExifDocumentSubscriber;
 use Themes\Rozier\Events\ImageColorDocumentSubscriber;
@@ -314,6 +315,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                  */
                 $dispatcher->addSubscriber(
                     new DocumentSizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new DocumentFilesizeSubscriber(
                         $c['assetPackages'],
                         $c['logger']
                     )

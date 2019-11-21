@@ -389,12 +389,11 @@ class DocumentsController extends RozierApp
 
             if (file_exists($documentPath)) {
                 $this->assignation['infos'] = [
-                    'filesize' => sprintf('%.3f MB', (filesize($documentPath))/pow(1024, 2)),
+                    'filesize' => sprintf('%.3f MB', ($document->getFilesize())/pow(1024, 2)),
                 ];
-                if ($document->isImage()) {
-                    list($width, $height) = getimagesize($documentPath);
-                    $this->assignation['infos']['width'] = $width . 'px';
-                    $this->assignation['infos']['height'] = $height . 'px';
+                if ($document->isProcessable()) {
+                    $this->assignation['infos']['width'] = $document->getImageWidth() . 'px';
+                    $this->assignation['infos']['height'] = $document->getImageHeight() . 'px';
                 }
             }
 

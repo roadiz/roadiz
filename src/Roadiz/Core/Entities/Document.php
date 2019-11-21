@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\Models\AbstractDocument;
+use RZ\Roadiz\Core\Models\AdvancedDocumentInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
@@ -49,7 +50,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
-class Document extends AbstractDocument
+class Document extends AbstractDocument implements AdvancedDocumentInterface
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
@@ -154,6 +155,13 @@ class Document extends AbstractDocument
      * @Serializer\Type("string")
      */
     protected $imageAverageColor;
+    /**
+     * @var int|null The filesize in bytes.
+     * @ORM\Column(type="integer", nullable=true, unique=false)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("int")
+     */
+    private $filesize;
 
     /**
      * Document constructor.
@@ -451,7 +459,7 @@ class Document extends AbstractDocument
      *
      * @return Document
      */
-    public function setImageWidth(int $imageWidth): Document
+    public function setImageWidth(int $imageWidth)
     {
         $this->imageWidth = $imageWidth;
 
@@ -471,7 +479,7 @@ class Document extends AbstractDocument
      *
      * @return Document
      */
-    public function setImageHeight(int $imageHeight): Document
+    public function setImageHeight(int $imageHeight)
     {
         $this->imageHeight = $imageHeight;
 
@@ -502,10 +510,27 @@ class Document extends AbstractDocument
      *
      * @return Document
      */
-    public function setImageAverageColor(?string $imageAverageColor): Document
+    public function setImageAverageColor(?string $imageAverageColor)
     {
         $this->imageAverageColor = $imageAverageColor;
+        return $this;
+    }
 
+    /**
+     * @return int|null
+     */
+    public function getFilesize(): ?int
+    {
+        return $this->filesize;
+    }
+
+    /**
+     * @param int|null $filesize
+     * @return Document
+     */
+    public function setFilesize(?int $filesize)
+    {
+        $this->filesize = $filesize;
         return $this;
     }
 
