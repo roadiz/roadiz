@@ -103,7 +103,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
             NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
             TagEvents::TAG_UPDATED => 'onSolariumTagUpdate',
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onSolariumDocumentUpdate',
+            DocumentEvents::DOCUMENT_FILE_UPLOADED => 'onSolariumDocumentUpdate',
             DocumentEvents::DOCUMENT_TRANSLATION_UPDATED => 'onSolariumDocumentUpdate',
             DocumentEvents::DOCUMENT_IN_FOLDER => 'onSolariumDocumentUpdate',
             DocumentEvents::DOCUMENT_OUT_FOLDER => 'onSolariumDocumentUpdate',

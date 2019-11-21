@@ -65,7 +65,7 @@ class DocumentFilesizeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 0],
+            DocumentEvents::DOCUMENT_FILE_UPLOADED => ['onFileUploaded', 0],
         ];
     }
 
@@ -86,7 +86,7 @@ class DocumentFilesizeSubscriber implements EventSubscriberInterface
     /**
      * @param FilterDocumentEvent $event
      */
-    public function onImageUploaded(FilterDocumentEvent $event)
+    public function onFileUploaded(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
         if ($this->supports($document) && $document instanceof Document) {
