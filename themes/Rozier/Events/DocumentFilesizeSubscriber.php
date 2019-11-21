@@ -60,13 +60,12 @@ class DocumentFilesizeSubscriber implements EventSubscriberInterface
     ) {
         $this->packages = $packages;
         $this->logger = $logger;
-
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onImageUploaded',
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 0],
         ];
     }
 

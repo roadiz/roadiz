@@ -73,7 +73,7 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onImageUploaded',
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 101], // read EXIF before processing Raw documents
         ];
     }
 

@@ -71,7 +71,7 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onImageUploaded',
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 0],
         ];
     }
 

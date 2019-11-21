@@ -67,11 +67,13 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onDocumentImageUploaded', -1],
+            // Keeps Raw document process before any other document subscribers to perform operations
+            // on a lower image
+            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 100],
         ];
     }
 
-    public function onDocumentImageUploaded(FilterDocumentEvent $event)
+    public function onImageUploaded(FilterDocumentEvent $event)
     {
         if (null !== $event->getDocument() && $event->getDocument()->isProcessable()) {
             $this->manager->processAndOverrideDocument($event->getDocument());
