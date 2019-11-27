@@ -49,6 +49,8 @@ class FolderRepository extends EntityRepository
      * @param string $folderPath
      *
      * @return \RZ\Roadiz\Core\Entities\Folder
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOrCreateByPath($folderPath)
     {
@@ -58,13 +60,6 @@ class FolderRepository extends EntityRepository
         $folders = array_filter($folders);
 
         $folderName = $folders[count($folders) - 1];
-        $parentFolder = null;
-
-        if (count($folders) > 1) {
-            $parentName = $folders[count($folders) - 2];
-            $parentFolder = $this->findOneByFolderName($parentName);
-        }
-
         $folder = $this->findOneByFolderName($folderName);
 
         if (null === $folder) {
@@ -72,6 +67,12 @@ class FolderRepository extends EntityRepository
              * Creation of a new folder
              * before linking it to the node
              */
+            $parentFolder = null;
+
+            if (count($folders) > 1) {
+                $parentName = $folders[count($folders) - 2];
+                $parentFolder = $this->findOneByFolderName($parentName);
+            }
             $folder = new Folder();
             $folder->setFolderName($folderName);
 
