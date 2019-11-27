@@ -592,6 +592,8 @@ class TagRepository extends EntityRepository
      * @param string $tagPath
      *
      * @return \RZ\Roadiz\Core\Entities\Tag
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOrCreateByPath($tagPath)
     {
@@ -600,21 +602,6 @@ class TagRepository extends EntityRepository
         $tags = array_filter($tags);
 
         $tagName = $tags[count($tags) - 1];
-        $parentName = null;
-        $parentTag = null;
-
-        if (count($tags) > 1) {
-            $parentName = $tags[count($tags) - 2];
-            $parentTag = $this->findOneByTagName(StringHandler::slugify($parentName));
-
-            if (null === $parentTag) {
-                $ttagParent = $this->_em->getRepository(TagTranslation::class)->findOneByName($parentName);
-                if (null !== $ttagParent) {
-                    $parentTag = $ttagParent->getTag();
-                }
-            }
-        }
-
         $tag = $this->findOneByTagName(StringHandler::slugify($tagName));
 
         if (null === $tag) {
@@ -630,6 +617,20 @@ class TagRepository extends EntityRepository
              * Creation of a new tag
              * before linking it to the node
              */
+            $parentName = null;
+            $parentTag = null;
+
+            if (count($tags) > 1) {
+                $parentName = $tags[count($tags) - 2];
+                $parentTag = $this->findOneByTagName(StringHandler::slugify($parentName));
+
+                if (null === $parentTag) {
+                    $ttagParent = $this->_em->getRepository(TagTranslation::class)->findOneByName($parentName);
+                    if (null !== $ttagParent) {
+                        $parentTag = $ttagParent->getTag();
+                    }
+                }
+            }
             $trans = $this->_em->getRepository(Translation::class)->findDefault();
 
             $tag = new Tag();
