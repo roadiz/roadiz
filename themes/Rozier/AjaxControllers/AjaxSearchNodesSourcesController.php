@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\SearchEngine\GlobalNodeSourceSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -97,20 +98,22 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             ];
 
             foreach ($nodesSources as $source) {
-                $responseArray['data'][] = [
-                    'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
-                    'nodeId' => $source->getNode()->getId(),
-                    'translationId' => $source->getTranslation()->getId(),
-                    'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
-                    'typeColor' => $source->getNode()->getNodeType()->getColor(),
-                    'url' => $this->generateUrl(
-                        'nodesEditSourcePage',
-                        [
-                            'nodeId' => $source->getNode()->getId(),
-                            'translationId' => $source->getTranslation()->getId(),
-                        ]
-                    ),
-                ];
+                if (null !== $source && $source instanceof NodesSources) {
+                    $responseArray['data'][] = [
+                        'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
+                        'nodeId' => $source->getNode()->getId(),
+                        'translationId' => $source->getTranslation()->getId(),
+                        'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
+                        'typeColor' => $source->getNode()->getNodeType()->getColor(),
+                        'url' => $this->generateUrl(
+                            'nodesEditSourcePage',
+                            [
+                                'nodeId' => $source->getNode()->getId(),
+                                'translationId' => $source->getTranslation()->getId(),
+                            ]
+                        ),
+                    ];
+                }
             }
 
             return new JsonResponse(
