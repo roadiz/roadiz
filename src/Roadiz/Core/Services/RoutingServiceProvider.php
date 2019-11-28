@@ -81,7 +81,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
             if (false === $kernel->isInstallMode()) {
                 $router->add($c['nodeRouter'], 1);
-                $router->add($c['redirectionRouter'], 0);
+                // Redirection must be first to be able to redirect nodes urls
+                $router->add($c['redirectionRouter'], 3);
             }
 
             return $router;
