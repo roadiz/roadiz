@@ -211,7 +211,7 @@ class DocumentRepository extends EntityRepository
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {
