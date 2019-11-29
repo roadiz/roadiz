@@ -79,6 +79,7 @@ class DocumentEditType extends AbstractType
             ])
             ->add('private', CheckboxType::class, [
                 'label' => 'private',
+                'help' => 'document.private.help',
                 'required' => false,
             ])
             ->add('newDocument', FileType::class, [
@@ -97,6 +98,7 @@ class DocumentEditType extends AbstractType
             ])
             ->add('imageAverageColor', TextType::class, [
                 'label' => 'document.imageAverageColor',
+                'help' => 'document.imageAverageColor.help',
                 'required' => false,
                 'attr' => ['class' => 'colorpicker-input'],
                 'constraints' => [

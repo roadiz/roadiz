@@ -51,6 +51,7 @@ class TagType extends AbstractType
     {
         $builder->add('tagName', TextType::class, [
                 'label' => 'tagName',
+                'help' => 'tag.tagName.help',
                 'constraints' => [
                     new NotBlank(),
                     new UniqueTagName([
@@ -62,6 +63,16 @@ class TagType extends AbstractType
                     ])
                 ],
             ])
+
+            ->add('locked', CheckboxType::class, [
+                'label' => 'locked',
+                'help' => 'tag.locked.help',
+                'required' => false,
+            ])
+            ->add('visible', CheckboxType::class, [
+                'label' => 'visible',
+                'required' => false,
+            ])
             ->add('color', TextType::class, [
                 'label' => 'tag.color',
                 'required' => false,
@@ -69,14 +80,6 @@ class TagType extends AbstractType
                 'constraints' => [
                     new HexadecimalColor(),
                 ],
-            ])
-            ->add('visible', CheckboxType::class, [
-                'label' => 'visible',
-                'required' => false,
-            ])
-            ->add('locked', CheckboxType::class, [
-                'label' => 'locked',
-                'required' => false,
             ])
             ->add('childrenOrder', ChoiceType::class, [
                 'label' => 'tag.childrenOrder',

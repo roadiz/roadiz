@@ -52,6 +52,7 @@ class NodeType extends AbstractType
     {
         $builder->add('nodeName', TextType::class, [
                 'label' => 'nodeName',
+                'help' => 'node.nodeName.help',
                 'constraints' => [
                     new NotBlank(),
                     new UniqueNodeName([

@@ -52,6 +52,7 @@ class NodeSourceSeoType extends AbstractType
     {
         $builder->add('metaTitle', TextType::class, [
                 'label' => 'metaTitle',
+                'help' => 'nodeSource.metaTitle.help',
                 'required' => false,
                 'attr' => [
                     'data-max-length' => 60,
@@ -62,17 +63,19 @@ class NodeSourceSeoType extends AbstractType
                     ])
                 ]
             ])
-            ->add('metaKeywords', TextType::class, [
-                'label' => 'metaKeywords',
-                'required' => false,
-                'constraints' => [
-                    new Length([
-                        'max' => 255
-                    ])
-                ]
-            ])
+//            ->add('metaKeywords', TextType::class, [
+//                'label' => 'metaKeywords',
+//                'help' => 'nodeSource.metaKeywords.help',
+//                'required' => false,
+//                'constraints' => [
+//                    new Length([
+//                        'max' => 255
+//                    ])
+//                ]
+//            ])
             ->add('metaDescription', TextareaType::class, [
                 'label' => 'metaDescription',
+                'help' => 'nodeSource.metaDescription.help',
                 'required' => false,
             ])
         ;

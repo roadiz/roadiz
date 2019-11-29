@@ -136,6 +136,7 @@ class RozierApp extends BackendController
      * @param Request $request
      *
      * @return Response $response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -146,6 +147,9 @@ class RozierApp extends BackendController
      * @param Request $request
      *
      * @return Response $response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function cssAction(Request $request)
     {
@@ -177,6 +181,14 @@ class RozierApp extends BackendController
                 $translator->addResource(
                     'xlf',
                     $settingPath,
+                    $c['translator.locale']
+                );
+            }
+            $helpPath = __DIR__ . '/Resources/translations/helps.' . $c['translator.locale'] .  '.xlf';
+            if (file_exists($helpPath)) {
+                $translator->addResource(
+                    'xlf',
+                    $helpPath,
                     $c['translator.locale']
                 );
             }
