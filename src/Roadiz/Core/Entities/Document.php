@@ -154,7 +154,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
      * @Serializer\Groups({"document", "nodes_sources", "tag"})
      * @Serializer\Type("string")
      */
-    protected $imageAverageColor;
+    private $imageAverageColor;
     /**
      * @var int|null The filesize in bytes.
      * @ORM\Column(type="integer", nullable=true, unique=false)
