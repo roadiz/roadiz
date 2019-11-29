@@ -342,7 +342,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                         break;
                     case 'LIKE':
                         $fullKey = sprintf('LOWER(%s)', $alias . '.' . $key);
-                        $res = $qb->expr()->like($fullKey, $qb->expr()->literal(strtolower($value[1])));
+                        $res = $qb->expr()->like($fullKey, $qb->expr()->literal($value[1]));
                         break;
                     case 'INSTANCE OF':
                         $res = $qb->expr()->isInstanceOf($alias . '.' . $key, $value[1]);
@@ -492,7 +492,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                 $field != 'folder' &&
                 $field != 'childrenOrder' &&
                 $field != 'childrenOrderDirection') {
-                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
             }
         }
 
