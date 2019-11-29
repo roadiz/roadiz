@@ -344,7 +344,7 @@ class PrefixAwareRepository extends EntityRepository
                 $field != 'folder' &&
                 $field != 'childrenOrder' &&
                 $field != 'childrenOrderDirection') {
-                $criteriaFields[$field] = '%' . strip_tags(strtolower($pattern)) . '%';
+                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
             }
         }
 
