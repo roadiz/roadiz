@@ -56,7 +56,7 @@ assetsProcessing:
 #        localhost:
 #            host: "localhost"
 #            port: "8983"
-#            path: "/solr"
+#            path: "/"
 #            core: "mycore"
 #            timeout: 3
 #            username: ""
