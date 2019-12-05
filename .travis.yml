@@ -6,6 +6,7 @@ node_js:
 php:
   - 7.2
   - 7.3
+  - 7.4
 
 jobs:
     include:
@@ -46,6 +47,7 @@ jobs:
           php:
             - 7.2
             - 7.3
+            - 7.4
           install:
             - curl -s http://getcomposer.org/installer | php
             - php composer.phar install --dev --no-interaction
@@ -58,6 +60,7 @@ jobs:
           php:
             - 7.2
             - 7.3
+            - 7.4
           env:
             - DB=mysql
             - DB=pgsql
