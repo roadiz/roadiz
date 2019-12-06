@@ -33,9 +33,12 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -153,77 +156,87 @@ class AjaxNodesController extends AbstractAjaxController
      */
     protected function updatePosition($parameters, Node $node)
     {
-        /*
-         * First, we set the new parent
-         */
-        $parent = null;
-
         if ($node->isLocked()) {
             throw new BadRequestHttpException('Locked node cannot be moved.');
         }
-
-        if (!empty($parameters['newParent']) &&
-            $parameters['newParent'] > 0) {
-
-            /** @var Node $parent */
-            $parent = $this->get('em')->find(Node::class, (int) $parameters['newParent']);
-
-            if ($parent !== null) {
-                $parent->addChild($node);
-            }
-        } else {
-            if (null !== $this->getUser() && null !== $this->getUser()->getChroot()) {
-                // If user is jailed in a node, prevent moving nodes out.
-                $node->setParent($this->getUser()->getChroot());
-            } else {
-                // if no parent or null we place node at root level
-                $node->setParent(null);
-            }
-        }
-
+        /*
+         * First, we set the new parent
+         */
+        $parent = $this->parseParentNode($parameters, $node->getParent());
         /*
          * Then compute new position
          */
-        if (!empty($parameters['nextNodeId']) &&
-            $parameters['nextNodeId'] > 0) {
+        $position = $this->parsePosition($parameters, $node->getPosition());
 
-            /** @var Node $nextNode */
-            $nextNode = $this->get('em')
-                ->find(Node::class, (int) $parameters['nextNodeId']);
-            if ($nextNode !== null) {
-                $node->setPosition($nextNode->getPosition() - 0.5);
-            }
-        } elseif (!empty($parameters['prevNodeId']) &&
-            $parameters['prevNodeId'] > 0) {
-
-            /** @var Node $prevNode */
-            $prevNode = $this->get('em')
-                ->find(Node::class, (int) $parameters['prevNodeId']);
-            if ($prevNode !== null) {
-                $node->setPosition($prevNode->getPosition() + 0.5);
-            }
-        } elseif (!empty($parameters['firstPosition']) &&
-            (boolean) $parameters['firstPosition'] === true) {
-            $node->setPosition(-0.5);
-        } elseif (!empty($parameters['lastPosition']) &&
-            (boolean) $parameters['lastPosition'] === true) {
-            $node->setPosition(9999999);
+        /** @var NodeMover $nodeMover */
+        $nodeMover = $this->get(NodeMover::class);
+        if ($node->getNodeType()->isReachable()) {
+            $oldPaths = $nodeMover->getNodeSourcesUrls($node);
         }
-        // Apply position update before cleaning
-        $this->get('em')->flush();
 
-        /** @var NodeHandler $nodeHandler */
-        $nodeHandler = $this->get('node.handler');
-        $nodeHandler->setNode($node);
-        $nodeHandler->cleanPositions();
+        $nodeMover->move($node, $parent, $position);
 
         $this->get('em')->flush();
 
+        if ($node->getNodeType()->isReachable() && isset($oldPaths) && count($oldPaths) > 0) {
+            $nodeMover->redirectAll($node, $oldPaths);
+            $this->get('em')->flush();
+        }
         /*
          * Dispatch event
          */
         $event = new FilterNodeEvent($node);
         $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+        foreach ($node->getNodeSources() as $nodeSource) {
+            $event = new FilterNodesSourcesEvent($nodeSource);
+            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+        }
+    }
+
+    /**
+     * @param array $parameters
+     * @param Node $default
+     *
+     * @return Node|null
+     */
+    protected function parseParentNode(array $parameters, ?Node $default): ?Node
+    {
+        if (!empty($parameters['newParent']) && $parameters['newParent'] > 0) {
+            /** @var Node|null $parent */
+            return $this->get('em')->find(Node::class, (int) $parameters['newParent']);
+        } elseif (null !== $this->getUser() && null !== $this->getUser()->getChroot()) {
+            // If user is jailed in a node, prevent moving nodes out.
+            return $this->getUser()->getChroot();
+        }
+        return null;
+    }
+
+    /**
+     * @param array $parameters
+     * @param float $default
+     *
+     * @return float
+     */
+    protected function parsePosition(array $parameters, float $default = 0): float
+    {
+        if (key_exists('nextNodeId', $parameters) && (int) $parameters['nextNodeId'] > 0) {
+            /** @var Node $nextNode */
+            $nextNode = $this->get('em')->find(Node::class, (int) $parameters['nextNodeId']);
+            if ($nextNode !== null) {
+                return $nextNode->getPosition() - 0.5;
+            }
+        } elseif (key_exists('prevNodeId', $parameters) && $parameters['prevNodeId'] > 0) {
+            /** @var Node $prevNode */
+            $prevNode = $this->get('em')->find(Node::class, (int) $parameters['prevNodeId']);
+            if ($prevNode !== null) {
+                return $prevNode->getPosition() + 0.5;
+            }
+        } elseif (key_exists('firstPosition', $parameters) && (boolean) $parameters['firstPosition'] === true) {
+            return -0.5;
+        } elseif (key_exists('lastPosition', $parameters) && (boolean) $parameters['lastPosition'] === true) {
+            return 99999999;
+        }
+        return $default;
     }
 
     /**
@@ -232,6 +245,8 @@ class AjaxNodesController extends AbstractAjaxController
      * @param Request $request
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function statusesAction(Request $request)
     {

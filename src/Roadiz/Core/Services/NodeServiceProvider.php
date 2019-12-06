@@ -30,6 +30,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\NodeTranstyper;
 
 class NodeServiceProvider implements ServiceProviderInterface
@@ -45,7 +46,18 @@ class NodeServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container[NodeTranstyper::class] = function (Container $c) {
-            return new NodeTranstyper($c['em'], $c['logger']);
+            return new NodeTranstyper($c['em'], $c['logger.doctrine']);
+        };
+
+        $container[NodeMover::class] = function (Container $c) {
+            return new NodeMover(
+                $c['em'],
+                $c['router'],
+                $c['factory.handler'],
+                $c['dispatcher'],
+                $c['nodesSourcesUrlCacheProvider'],
+                $c['logger.doctrine']
+            );
         };
     }
 }

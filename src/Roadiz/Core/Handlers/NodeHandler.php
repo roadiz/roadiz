@@ -539,7 +539,7 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            $parentHandler = new NodeHandler($this->objectManager, $this->registry);
+            $parentHandler = new static($this->objectManager, $this->registry);
             $parentHandler->setNode($this->node->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
