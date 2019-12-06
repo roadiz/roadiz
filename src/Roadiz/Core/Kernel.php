@@ -63,6 +63,7 @@ use RZ\Roadiz\Core\Services\FormServiceProvider;
 use RZ\Roadiz\Core\Services\ImporterServiceProvider;
 use RZ\Roadiz\Core\Services\LoggerServiceProvider;
 use RZ\Roadiz\Core\Services\MailerServiceProvider;
+use RZ\Roadiz\Core\Services\NodeServiceProvider;
 use RZ\Roadiz\Core\Services\RoutingServiceProvider;
 use RZ\Roadiz\Core\Services\SecurityServiceProvider;
 use RZ\Roadiz\Core\Services\SerializationServiceProvider;
@@ -396,6 +397,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new UtilsServiceProvider());
         $container->register(new AttributesServiceProvider());
         $container->register(new CryptoServiceProvider());
+        $container->register(new NodeServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
@@ -683,7 +685,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function unserialize($data)
     {
-        list($environment, $debug, $preview) = unserialize($data);
+        [$environment, $debug, $preview] = unserialize($data);
         $this->__construct($environment, $debug, $preview);
     }
 
