@@ -33,9 +33,11 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\FilterNodePathEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -63,9 +65,10 @@ class NodesController extends RozierApp
      * List every nodes.
      *
      * @param Request $request
-     * @param string $filter
+     * @param string  $filter
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $filter = null)
     {
@@ -151,6 +154,7 @@ class NodesController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
@@ -209,6 +213,9 @@ class NodesController extends RozierApp
                 'em' => $this->get('em'),
                 'nodeName' => $node->getNodeName(),
             ]);
+            if ($node->getNodeType()->isReachable()) {
+                $oldPaths = $this->get(NodeMover::class)->getNodeSourcesUrls($node);
+            }
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -217,8 +224,14 @@ class NodesController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterNodeEvent($node);
+                    if (isset($oldPaths) && count($oldPaths) > 0) {
+                        $event = new FilterNodePathEvent($node, $oldPaths);
+                    } else {
+                        $event = new FilterNodeEvent($node);
+                    }
                     $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+
+                    $this->get('em')->flush();
 
                     $msg = $this->getTranslator()->trans('node.%name%.updated', [
                         '%name%' => $node->getNodeName(),

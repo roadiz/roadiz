@@ -172,6 +172,11 @@ final class NodeMover
         if ($previousPath !== $newPath) {
             /** @var EntityRepository $redirectionRepo */
             $redirectionRepo = $this->entityManager->getRepository(Redirection::class);
+
+            /*
+             * Checks if new node path is already registered as
+             * a redirection --> remove redirection.
+             */
             $loopingRedirection = $redirectionRepo->findOneBy([
                 'query' => $newPath,
             ]);

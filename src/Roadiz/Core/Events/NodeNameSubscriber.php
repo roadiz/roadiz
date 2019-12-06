@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use Monolog\Logger;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -43,9 +44,12 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NodeNameSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @var NodeMover
+     */
+    protected $nodeMover;
     /** @var Logger */
     private $logger;
-
     /** @var NodeNameChecker */
     private $nodeNameChecker;
 
@@ -54,11 +58,13 @@ class NodeNameSubscriber implements EventSubscriberInterface
      *
      * @param Logger          $logger
      * @param NodeNameChecker $nodeNameChecker
+     * @param NodeMover       $nodeMover
      */
-    public function __construct(Logger $logger, NodeNameChecker $nodeNameChecker)
+    public function __construct(Logger $logger, NodeNameChecker $nodeNameChecker, NodeMover $nodeMover)
     {
         $this->logger = $logger;
         $this->nodeNameChecker = $nodeNameChecker;
+        $this->nodeMover = $nodeMover;
     }
 
     /**
@@ -97,6 +103,10 @@ class NodeNameSubscriber implements EventSubscriberInterface
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
                 $this->nodeNameChecker->isNodeNameValid($testingNodeName) &&
                 !$this->nodeNameChecker->isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
+
+                if ($nodeSource->getNode()->getNodeType()->isReachable()) {
+                    $oldPaths = $this->nodeMover->getNodeSourcesUrls($nodeSource->getNode());
+                }
                 $alreadyUsed = $this->nodeNameChecker->isNodeNameAlreadyUsed($title);
                 if (!$alreadyUsed) {
                     $nodeSource->getNode()->setNodeName($title);
@@ -107,7 +117,11 @@ class NodeNameSubscriber implements EventSubscriberInterface
                 /*
                  * Dispatch event
                  */
-                $event = new FilterNodeEvent($nodeSource->getNode());
+                if (isset($oldPaths) && count($oldPaths) > 0) {
+                    $event = new FilterNodePathEvent($nodeSource->getNode(), $oldPaths);
+                } else {
+                    $event = new FilterNodeEvent($nodeSource->getNode());
+                }
                 $dispatcher->dispatch(NodeEvents::NODE_UPDATED, $event);
             } else {
                 $this->logger->debug('Node name has not be changed.');

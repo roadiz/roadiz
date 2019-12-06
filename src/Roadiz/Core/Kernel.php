@@ -84,6 +84,7 @@ use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -103,6 +104,7 @@ use Themes\Rozier\Events\DocumentSizeSubscriber;
 use Themes\Rozier\Events\ExifDocumentSubscriber;
 use Themes\Rozier\Events\ImageColorDocumentSubscriber;
 use Themes\Rozier\Events\NodeDuplicationSubscriber;
+use Themes\Rozier\Events\NodeRedirectionSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
@@ -268,7 +270,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
-            $dispatcher->addSubscriber(new NodeNameSubscriber($c['logger.doctrine'], $c['utils.nodeNameChecker']));
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
             $dispatcher->addSubscriber(new ExceptionSubscriber(
                 $c,
@@ -494,6 +495,16 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
          */
         $this->get('dispatcher')->addSubscriber(
             new NodeDuplicationSubscriber($this->get('em'), $this->get('node.handler'))
+        );
+
+        $this->get('dispatcher')->addSubscriber(
+            new NodeNameSubscriber($this->get('logger.doctrine'), $this->get('utils.nodeNameChecker'), $this->get(NodeMover::class))
+        );
+        /*
+         * Add event to create redirection after renaming a node.
+         */
+        $this->get('dispatcher')->addSubscriber(
+            new NodeRedirectionSubscriber($this->get(NodeMover::class))
         );
     }
 
