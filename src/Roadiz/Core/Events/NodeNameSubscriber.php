@@ -106,6 +106,7 @@ class NodeNameSubscriber implements EventSubscriberInterface
 
                 if ($nodeSource->getNode()->getNodeType()->isReachable()) {
                     $oldPaths = $this->nodeMover->getNodeSourcesUrls($nodeSource->getNode());
+                    $oldUpdateAt = $nodeSource->getNode()->getUpdatedAt();
                 }
                 $alreadyUsed = $this->nodeNameChecker->isNodeNameAlreadyUsed($title);
                 if (!$alreadyUsed) {
@@ -117,8 +118,8 @@ class NodeNameSubscriber implements EventSubscriberInterface
                 /*
                  * Dispatch event
                  */
-                if (isset($oldPaths) && count($oldPaths) > 0) {
-                    $event = new FilterNodePathEvent($nodeSource->getNode(), $oldPaths);
+                if (isset($oldPaths) && isset($oldUpdateAt) && count($oldPaths) > 0) {
+                    $event = new FilterNodePathEvent($nodeSource->getNode(), $oldPaths, $oldUpdateAt);
                 } else {
                     $event = new FilterNodeEvent($nodeSource->getNode());
                 }

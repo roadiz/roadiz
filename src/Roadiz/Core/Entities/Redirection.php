@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -38,8 +38,9 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="redirections")
+ * @ORM\HasLifecycleCallbacks
  */
-class Redirection extends AbstractEntity
+class Redirection extends AbstractDateTimed
 {
     /**
      * @ORM\Column(type="string", unique=true)
@@ -48,8 +49,8 @@ class Redirection extends AbstractEntity
     private $query = "";
 
     /**
-     * @ORM\Column(type="string")
-     * @var string
+     * @ORM\Column(type="string", nullable=true)
+     * @var string|null
      */
     private $redirectUri = "";
 
@@ -65,7 +66,7 @@ class Redirection extends AbstractEntity
      * @var int
      */
     private $type;
-    
+
     /**
      * @return string
      */
@@ -85,15 +86,15 @@ class Redirection extends AbstractEntity
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRedirectUri(): string
+    public function getRedirectUri(): ?string
     {
         return $this->redirectUri;
     }
 
     /**
-     * @param string $redirectUri
+     * @param string|null $redirectUri
      * @return Redirection
      */
     public function setRedirectUri($redirectUri): Redirection

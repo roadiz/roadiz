@@ -69,10 +69,11 @@ class NodeRedirectionSubscriber implements EventSubscriberInterface
      */
     public function redirectOldPaths(FilterNodeEvent $event)
     {
-        if ($event instanceof FilterNodePathEvent) {
-            if ($event->getNode()->getNodeType()->isReachable() && count($event->getPaths()) > 0) {
-                $this->nodeMover->redirectAll($event->getNode(), $event->getPaths());
-            }
+        if ($event instanceof FilterNodePathEvent &&
+            $event->getNode()->isPublished() &&
+            $event->getNode()->getNodeType()->isReachable() &&
+            count($event->getPaths()) > 0) {
+            $this->nodeMover->redirectAll($event->getNode(), $event->getPaths());
         }
     }
 }

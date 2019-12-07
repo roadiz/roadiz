@@ -40,17 +40,23 @@ class FilterNodePathEvent extends FilterNodeEvent
      * @var array
      */
     protected $paths;
+    /**
+     * @var \DateTime
+     */
+    protected $updatedAt;
 
     /**
-     * FilterNodeEvent constructor.
+     * FilterNodePathEvent constructor.
      *
-     * @param Node  $node
-     * @param array $paths
+     * @param Node           $node
+     * @param array          $paths
+     * @param \DateTime|null $updatedAt
      */
-    public function __construct(Node $node, array $paths = [])
+    public function __construct(Node $node, array $paths = [], \DateTime $updatedAt = null)
     {
         parent::__construct($node);
         $this->paths = $paths;
+        $this->updatedAt = $updatedAt;
     }
 
     /**
@@ -62,14 +68,10 @@ class FilterNodePathEvent extends FilterNodeEvent
     }
 
     /**
-     * @param array $paths
-     *
-     * @return FilterNodePathEvent
+     * @return \DateTime|null
      */
-    public function setPaths(array $paths): FilterNodePathEvent
+    public function getUpdatedAt(): ?\DateTime
     {
-        $this->paths = $paths;
-
-        return $this;
+        return $this->updatedAt;
     }
 }

@@ -53,7 +53,8 @@ class RedirectionController extends AppController
             return $this->redirect($this->generateUrl($redirection->getRedirectNodeSource()), $redirection->getType());
         }
 
-        if (strlen($redirection->getRedirectUri()) > 0) {
+        if (null !== $redirection->getRedirectUri() &&
+            strlen($redirection->getRedirectUri()) > 0) {
             return $this->redirect($redirection->getRedirectUri(), $redirection->getType());
         }
 

@@ -42,7 +42,13 @@
                         <td>
                             <a href="{{ path('redirectionsEditPage', { redirectionId: redirection.id }) }}">{{ redirection.query }}</a>
                         </td>
-                        <td>{{ redirection.redirectUri }}</td>
+                        <td>
+                            {% if redirection.redirectNodeSource %}
+                                <i class="uk-icon uk-icon-magic"></i> {{ path(redirection.redirectNodeSource) }}
+                            {% else %}
+                                {{ redirection.redirectUri }}
+                            {% endif %}
+                        </td>
                         <td>{{ redirection.typeAsString|trans }}</td>
                         <td class="table-actions-row">
                         {% spaceless %}
