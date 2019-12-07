@@ -33,17 +33,16 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\FilterNodePathEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Workflow\Workflow;
 
@@ -175,22 +174,22 @@ class AjaxNodesController extends AbstractAjaxController
         }
 
         $nodeMover->move($node, $parent, $position);
-
         $this->get('em')->flush();
-
-        if ($node->getNodeType()->isReachable() && isset($oldPaths) && count($oldPaths) > 0) {
-            $nodeMover->redirectAll($node, $oldPaths);
-            $this->get('em')->flush();
-        }
         /*
          * Dispatch event
          */
-        $event = new FilterNodeEvent($node);
+        if (isset($oldPaths) && count($oldPaths) > 0) {
+            $event = new FilterNodePathEvent($node, $oldPaths);
+        } else {
+            $event = new FilterNodeEvent($node);
+        }
         $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
         foreach ($node->getNodeSources() as $nodeSource) {
             $event = new FilterNodesSourcesEvent($nodeSource);
             $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
         }
+
+        $this->get('em')->flush();
     }
 
     /**
