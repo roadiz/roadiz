@@ -60,7 +60,6 @@ class RedirectionType extends AbstractType
         ])
         ->add('type', ChoiceType::class, [
             'label' => 'redirection.type',
-            'choices_as_values' => true,
             'choices' => [
                 'redirection.moved_permanently' => Response::HTTP_MOVED_PERMANENTLY,
                 'redirection.moved_temporarily' => Response::HTTP_FOUND,

@@ -65,7 +65,7 @@ class UsersRolesController extends RozierApp
             $form = $this->buildEditRolesForm($user);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $role = $this->addUserRole($form->getData(), $user);
 
                 $msg = $this->getTranslator()->trans('user.%user%.role.%role%.linked', [
@@ -124,7 +124,7 @@ class UsersRolesController extends RozierApp
             $form = $this->createForm();
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $user->removeRole($role);
                 $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans(

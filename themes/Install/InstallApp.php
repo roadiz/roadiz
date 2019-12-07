@@ -105,7 +105,7 @@ class InstallApp extends AppController
         $form = $this->buildLanguageForm($request);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $locale = $form->getData()['language'];
             $request->setLocale($locale);
             $this->get('session')->set('_locale', $locale);
@@ -343,7 +343,6 @@ class InstallApp extends AppController
     {
         $builder = $this->createFormBuilder()
             ->add('language', ChoiceType::class, [
-                'choices_as_values' => true,
                 'choices' => [
                     'English' => 'en',
                     'Español' => 'es',

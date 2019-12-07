@@ -50,7 +50,7 @@ class LoginRequestController extends RozierApp
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if (true === $this->sendConfirmationEmail(
                 $form,
                 $this->get('em'),

@@ -67,7 +67,6 @@ class TranslateNodeType extends AbstractType
         $builder->add('translation', ChoiceType::class, [
             'label' => 'translation',
             'choices' => $choices,
-            'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
         ])

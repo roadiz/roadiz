@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Utils\DebugBar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use Symfony\Component\EventDispatcher\Debug\WrappedListener;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DispatcherCollector extends DataCollector implements Renderable

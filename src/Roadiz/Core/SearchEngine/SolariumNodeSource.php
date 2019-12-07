@@ -43,7 +43,7 @@ use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Wrap a Solarium and a NodeSource together to ease indexing.

@@ -57,7 +57,7 @@ class TagMultiCreationController extends RozierApp
             $form = $this->buildAddForm();
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
                 $names = explode(',', $data['names']);
                 $names = array_map('trim', $names);

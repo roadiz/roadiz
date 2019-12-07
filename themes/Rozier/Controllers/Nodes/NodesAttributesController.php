@@ -109,7 +109,7 @@ class NodesAttributesController extends RozierApp
             $attributeValueTranslationForm->handleRequest($request);
 
             if ($attributeValueTranslationForm->isSubmitted()) {
-                if ($attributeValueTranslationForm->isValid()) {
+                if ($attributeValueTranslationForm->isSubmitted() && $attributeValueTranslationForm->isValid()) {
                     $this->get('em')->merge($attributeValueTranslation);
                     $this->get('em')->flush();
 
@@ -177,7 +177,7 @@ class NodesAttributesController extends RozierApp
         ]);
         $addAttributeForm->handleRequest($request);
 
-        if ($addAttributeForm->isValid()) {
+        if ($addAttributeForm->isSubmitted() && $addAttributeForm->isValid()) {
             $this->get('em')->persist($attributeValue);
             $this->get('em')->flush();
 
@@ -235,7 +235,7 @@ class NodesAttributesController extends RozierApp
         $form = $this->createForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('em')->remove($item);
                 $this->get('em')->flush();

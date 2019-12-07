@@ -112,7 +112,7 @@ class NodesTreesController extends RozierApp
          */
         $tagNodesForm = $this->buildBulkTagForm();
         $tagNodesForm->handleRequest($request);
-        if ($tagNodesForm->isValid()) {
+        if ($tagNodesForm->isSubmitted() && $tagNodesForm->isValid()) {
             $data = $tagNodesForm->getData();
 
             if ($tagNodesForm->get('submitTag')->isClicked()) {
@@ -512,7 +512,6 @@ class NodesTreesController extends RozierApp
                         ->add('status', ChoiceType::class, [
                             'label' => false,
                             'data' => $status,
-                            'choices_as_values' => true,
                             'choices' => [
                                 Node::getStatusLabel(Node::DRAFT) => 'reject',
                                 Node::getStatusLabel(Node::PENDING) => 'review',

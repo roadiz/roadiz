@@ -77,7 +77,7 @@ class TranstypeController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             /** @var NodeType $newNodeType */

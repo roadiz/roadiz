@@ -97,7 +97,6 @@ class AddNodeType extends AbstractType
         ->add('status', ChoiceType::class, [
             'label' => 'node.status',
             'required' => true,
-            'choices_as_values' => true,
             'choices' => [
                 Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
                 Node::getStatusLabel(Node::PENDING) => Node::PENDING,

@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Workflow;
 
 use RZ\Roadiz\Core\Entities\Node;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use Symfony\Component\Workflow\Transition;

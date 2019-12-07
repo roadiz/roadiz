@@ -78,7 +78,8 @@ class TranslationsController extends RozierApp
             // Make default forms
             $form = $this->buildMakeDefaultForm($translation);
             $form->handleRequest($request);
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
 
                 /** @var TranslationHandler $handler */
@@ -136,7 +137,7 @@ class TranslationsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans('translation.%name%.updated', ['%name%' => $translation->getName()]);
@@ -183,7 +184,7 @@ class TranslationsController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->get('em')->persist($translation);
             $this->get('em')->flush();
 
@@ -227,7 +228,8 @@ class TranslationsController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['translationId'] == $translation->getId()) {
                 try {
                     $this->deleteTranslation($form->getData(), $translation);

@@ -188,7 +188,7 @@ class UrlAliasesController extends RozierApp
              */
             $form = $this->buildAddUrlAliasForm($node);
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $ua = $this->addNodeUrlAlias($form->getData(), $node);
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.created.%translation%', [

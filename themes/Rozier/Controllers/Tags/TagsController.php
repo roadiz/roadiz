@@ -172,7 +172,7 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /*
                  * Update tag slug if not locked
                  * only from default translation.
@@ -243,7 +243,7 @@ class TagsController extends RozierApp
                 );
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $msg = $this->bulkDeleteTags($form->getData());
 
                     $this->publishConfirmMessage($request, $msg);
@@ -293,7 +293,7 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /*
                  * Get latest position to add tags after.
                  */
@@ -358,7 +358,7 @@ class TagsController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
                 /*
                  * Dispatch event
@@ -446,7 +446,8 @@ class TagsController extends RozierApp
             $form = $this->buildDeleteForm($tag);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['tagId'] == $tag->getId()) {
                 /*
                  * Dispatch event
@@ -506,7 +507,7 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     /*
                      * Get latest position to add tags after.

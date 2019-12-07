@@ -45,7 +45,7 @@ use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;

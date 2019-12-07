@@ -85,7 +85,7 @@ class NodesTagsController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
                 /*
                  * Dispatch event
@@ -138,7 +138,7 @@ class NodesTagsController extends RozierApp
             $form = $this->buildRemoveTagForm($node, $tag);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->removeNodeTag($form->getData(), $node, $tag);
                 /*
                  * Dispatch event

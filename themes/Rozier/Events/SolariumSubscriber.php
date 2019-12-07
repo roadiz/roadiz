@@ -33,7 +33,12 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentDeletedEvent;
+use RZ\Roadiz\Core\Events\DocumentFileUploadedEvent;
+use RZ\Roadiz\Core\Events\DocumentInFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentOutFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;
+use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
@@ -49,7 +54,7 @@ use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\Exception\HttpException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -114,12 +119,12 @@ class SolariumSubscriber implements EventSubscriberInterface
             NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
             NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
             TagEvents::TAG_UPDATED => 'onSolariumTagUpdate',
-            DocumentEvents::DOCUMENT_FILE_UPLOADED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_TRANSLATION_UPDATED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_IN_FOLDER => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_OUT_FOLDER => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_UPDATED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_DELETED => 'onSolariumDocumentDelete',
+            DocumentFileUploadedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentTranslationUpdatedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentInFolderEvent::class => 'onSolariumDocumentUpdate',
+            DocumentOutFolderEvent::class => 'onSolariumDocumentUpdate',
+            DocumentUpdatedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentDeletedEvent::class => 'onSolariumDocumentDelete',
             FolderEvents::FOLDER_UPDATED => 'onSolariumFolderUpdate',
         ];
     }

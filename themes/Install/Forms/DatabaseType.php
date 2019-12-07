@@ -50,7 +50,6 @@ class DatabaseType extends AbstractType
                     'pdo_pgsql' => 'pdo_pgsql',
                     'pdo_sqlite' => 'pdo_sqlite',
                 ],
-                'choices_as_values' => true,
                 'label' => 'driver',
                 'constraints' => [
                     new NotBlank(),

@@ -134,7 +134,7 @@ class SettingsController extends RozierApp
             ])->getForm();
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     try {
                         $this->resetSettingsCache();
                         $this->get('em')->flush();
@@ -210,7 +210,7 @@ class SettingsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->resetSettingsCache();
                     $this->get('em')->flush();
@@ -278,7 +278,7 @@ class SettingsController extends RozierApp
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->resetSettingsCache();
                 $this->get('em')->persist($setting);
@@ -319,7 +319,7 @@ class SettingsController extends RozierApp
             $form = $this->createForm(FormType::class, $setting);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->resetSettingsCache();
                 $this->get('em')->remove($setting);
                 $this->get('em')->flush();

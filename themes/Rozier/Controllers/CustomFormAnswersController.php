@@ -99,7 +99,8 @@ class CustomFormAnswersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['customFormAnswerId'] == $customFormAnswer->getId()) {
                 $this->get("em")->remove($customFormAnswer);
 

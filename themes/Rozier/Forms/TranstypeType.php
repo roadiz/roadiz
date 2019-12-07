@@ -55,7 +55,6 @@ class TranstypeType extends AbstractType
             'nodeTypeId',
             ChoiceType::class,
             [
-                'choices_as_values' => true,
                 'choices' => $this->getAvailableTypes($options['em'], $options['currentType']),
                 'label' => 'nodeType',
                 'constraints' => [

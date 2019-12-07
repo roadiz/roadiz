@@ -50,7 +50,6 @@ class RolesType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'choices_as_values' => true,
             'roles' => new ArrayCollection(),
             'multiple' => false,
         ]);

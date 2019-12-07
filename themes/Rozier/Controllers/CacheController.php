@@ -54,7 +54,7 @@ class CacheController extends RozierApp
         $form = $this->buildDeleteDoctrineForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var EventDispatcher $dispatcher */
             $dispatcher = $this->get('dispatcher');
             $event = new FilterCacheEvent($this->get('kernel'));
@@ -133,7 +133,7 @@ class CacheController extends RozierApp
         $form = $this->buildDeleteAssetsForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var EventDispatcher $dispatcher */
             $dispatcher = $this->get('dispatcher');
             $event = new FilterCacheEvent($this->get('kernel'));

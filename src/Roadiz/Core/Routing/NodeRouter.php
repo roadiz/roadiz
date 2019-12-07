@@ -40,7 +40,7 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;

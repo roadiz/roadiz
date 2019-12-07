@@ -60,7 +60,6 @@ class TestType extends AbstractType
                 'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
             ])
             ->add('choice', ChoiceType::class, [
-                'choices_as_values' => true,
                 'choices' => [
                     'Fusce' => 'Fusce',
                     'Inceptos Bibendum' => 'Inceptos Bibendum',
@@ -68,7 +67,6 @@ class TestType extends AbstractType
                 'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
             ])
             ->add('choice_bullet', ChoiceType::class, [
-                'choices_as_values' => true,
                 'expanded' => true,
                 'choices' => [
                     'Fusce' => 'Fusce',

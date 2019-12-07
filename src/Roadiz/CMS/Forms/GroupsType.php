@@ -47,10 +47,7 @@ class GroupsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'choices_as_values' => true,
-        ]);
-
+        $resolver->setDefaults([]);
         $resolver->setRequired('authorizationChecker');
         $resolver->setAllowedTypes('authorizationChecker', [AuthorizationCheckerInterface::class]);
         $resolver->setRequired('entityManager');

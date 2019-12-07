@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -26,7 +27,6 @@
  * @file NodeDuplicationSubscriber.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;

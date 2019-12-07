@@ -600,14 +600,12 @@ class SearchController extends RozierApp
                     $option["expanded"] = true;
                 }
                 $option["choices"] = $choices;
-                $option["choices_as_values"] = true;
             } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
                 $choices = explode(',', $field->getDefaultValues());
                 $choices = array_map('trim', $choices);
                 $choices = array_combine(array_values($choices), array_values($choices));
                 $type = ChoiceType::class;
                 $option["choices"] = $choices;
-                $option["choices_as_values"] = true;
                 $option['placeholder'] = 'ignore';
                 $option['required'] = false;
                 $option["multiple"] = true;

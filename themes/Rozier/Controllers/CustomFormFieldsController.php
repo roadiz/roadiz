@@ -97,7 +97,7 @@ class CustomFormFieldsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans('customFormField.%name%.updated', ['%name%' => $field->getName()]);
@@ -149,7 +149,7 @@ class CustomFormFieldsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('em')->persist($field);
                     $this->get('em')->flush();
@@ -211,7 +211,8 @@ class CustomFormFieldsController extends RozierApp
             $form = $this->buildDeleteForm($field);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['customFormFieldId'] == $field->getId()) {
                 $customFormId = $field->getCustomForm()->getId();
 

@@ -31,7 +31,7 @@ namespace Themes\DefaultTheme\Event;
 use GeneratedNodeSources\NSLink;
 use RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class LinkPathSubscriber implements EventSubscriberInterface

@@ -54,7 +54,6 @@ class NodeStatesType extends AbstractType
 
         $resolver->setDefaults([
             'choices' => $choices,
-            'choices_as_values' => true,
             'placeholder' => 'ignore',
         ]);
     }

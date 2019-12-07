@@ -68,7 +68,7 @@ class UsersSecurityController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(

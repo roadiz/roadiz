@@ -31,7 +31,7 @@ use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -71,7 +71,7 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 0],
+            DocumentImageUploadedEvent::class => ['onImageUploaded', 0],
         ];
     }
 

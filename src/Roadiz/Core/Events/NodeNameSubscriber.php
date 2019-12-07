@@ -36,7 +36,7 @@ use Monolog\Logger;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**

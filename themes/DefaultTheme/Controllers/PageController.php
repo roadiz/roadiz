@@ -138,7 +138,7 @@ class PageController extends DefaultThemeApp
             ]
         );
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->get('em')->flush();
             return $this->redirect($this->generateUrl($this->nodeSource));
         }

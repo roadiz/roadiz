@@ -77,7 +77,7 @@ class CustomFormHelper
      */
     public function parseAnswerFormData(FormInterface $form, CustomFormAnswer $answer = null, $ipAddress = "")
     {
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /*
              * Create answer if null.
              */

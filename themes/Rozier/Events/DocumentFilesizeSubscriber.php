@@ -31,7 +31,7 @@ namespace Themes\Rozier\Events;
 
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentFileUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -65,7 +65,7 @@ class DocumentFilesizeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_FILE_UPLOADED => ['onFileUploaded', 0],
+            DocumentFileUploadedEvent::class => ['onFileUploaded', 0],
         ];
     }
 

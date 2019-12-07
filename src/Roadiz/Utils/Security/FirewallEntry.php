@@ -338,10 +338,13 @@ class FirewallEntry
 
     /**
      * @param bool $useForward
-     * @return AuthenticationEntryPointInterface
+     * @return AuthenticationEntryPointInterface|null
      */
     protected function getAuthenticationEntryPoint($useForward = false)
     {
+        if (null === $this->firewallLogin) {
+            return null;
+        }
         return new FormAuthenticationEntryPoint(
             $this->container['httpKernel'],
             $this->container['httpUtils'],

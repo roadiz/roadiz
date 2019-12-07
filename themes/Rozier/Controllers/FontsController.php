@@ -98,7 +98,7 @@ class FontsController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('em')->persist($font);
                 $this->get('em')->flush();
@@ -141,7 +141,8 @@ class FontsController extends RozierApp
             $form = $this->buildDeleteForm($font);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['fontId'] == $font->getId()) {
                 try {
                     $this->get('em')->remove($font);
@@ -200,7 +201,7 @@ class FontsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     /*
                      * Force updating files if uploaded

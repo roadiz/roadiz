@@ -78,7 +78,6 @@ class NodeTypeFieldType extends AbstractType
             'label' => 'type',
             'required' => true,
             'choices' => array_flip(NodeTypeField::$typeToHuman),
-            'choices_as_values' => true,
         ])
         ->add('description', TextType::class, [
             'label' => 'description',

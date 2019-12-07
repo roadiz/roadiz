@@ -107,7 +107,7 @@ class NodeTypesController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('em')->flush();
                     /** @var NodeTypeHandler $handler */
@@ -157,7 +157,7 @@ class NodeTypesController extends RozierApp
             ]);
 
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('em')->persist($nodeType);
                     $this->get('em')->flush();
@@ -211,7 +211,8 @@ class NodeTypesController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['nodeTypeId'] == $nodeType->getId()) {
                 /*
                  * Delete All node-type association and schema

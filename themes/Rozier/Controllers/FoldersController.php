@@ -101,7 +101,7 @@ class FoldersController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 /** @var Translation $translation */
                 $translation = $this->get('defaultTranslation');
@@ -156,7 +156,8 @@ class FoldersController extends RozierApp
             $form = $this->buildDeleteForm($folder);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['folder_id'] == $folder->getId()) {
                 try {
                     $this->deleteFolder($folder);

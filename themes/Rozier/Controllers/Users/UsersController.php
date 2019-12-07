@@ -116,7 +116,7 @@ class UsersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
@@ -168,7 +168,7 @@ class UsersController extends RozierApp
             $form = $this->createForm(UserDetailsType::class, $user);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /*
                  * If pictureUrl is empty, use default Gravatar image.
                  */
@@ -225,7 +225,7 @@ class UsersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->persist($user);
                 $this->get('em')->flush();
 
@@ -267,7 +267,8 @@ class UsersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['userId'] == $user->getId()) {
                 $this->deleteUser($form->getData(), $user);
                 $msg = $this->getTranslator()->trans(

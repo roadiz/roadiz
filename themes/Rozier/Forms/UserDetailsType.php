@@ -135,7 +135,6 @@ class UserDetailsType extends AbstractType
                     'Italiano' => 'it',
                     'српска ћирилица' => 'sr_Cyrl',
                 ],
-                'choices_as_values' => true,
                 'placeholder' => 'use.website.default_language'
             ])
         ;

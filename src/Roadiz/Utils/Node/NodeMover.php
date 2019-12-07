@@ -12,7 +12,7 @@ use RZ\Roadiz\Core\Entities\Redirection;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
