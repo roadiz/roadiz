@@ -32,7 +32,7 @@ namespace Themes\Rozier\Events;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -42,24 +42,24 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class NodeDuplicationSubscriber implements EventSubscriberInterface
 {
     /**
+     * @var HandlerFactory
+     */
+    protected $handlerFactory;
+    /**
      * @var EntityManager
      */
     private $entityManager;
-    /**
-     * @var NodeHandler
-     */
-    private $nodeHandler;
 
     /**
      * NodeDuplicationSubscriber constructor.
      *
-     * @param EntityManager $entityManager
-     * @param NodeHandler $nodeHandler
+     * @param EntityManager  $entityManager
+     * @param HandlerFactory $handlerFactory
      */
-    public function __construct(EntityManager $entityManager, NodeHandler $nodeHandler)
+    public function __construct(EntityManager $entityManager, HandlerFactory $handlerFactory)
     {
         $this->entityManager = $entityManager;
-        $this->nodeHandler = $nodeHandler;
+        $this->handlerFactory = $handlerFactory;
     }
 
     public static function getSubscribedEvents()
@@ -74,9 +74,10 @@ class NodeDuplicationSubscriber implements EventSubscriberInterface
      */
     public function cleanPosition(FilterNodeEvent $event)
     {
-        $this->nodeHandler->setNode($event->getNode());
-        $this->nodeHandler->cleanChildrenPositions();
-        $this->nodeHandler->cleanPositions();
+        $nodeHandler = $this->handlerFactory->getHandler($event->getNode());
+        $nodeHandler->setNode($event->getNode());
+        $nodeHandler->cleanChildrenPositions();
+        $nodeHandler->cleanPositions();
 
         $this->entityManager->flush();
     }

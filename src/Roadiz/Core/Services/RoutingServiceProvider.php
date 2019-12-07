@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Events\TimedRouteListener;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;

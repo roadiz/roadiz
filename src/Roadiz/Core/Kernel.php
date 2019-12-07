@@ -249,7 +249,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         /** @var Stopwatch $stopWatch */
         $stopWatch = $container['stopwatch'];
         $stopWatch->openSection();
-        $stopWatch->start('registerServices');
+        $stopWatch->start('kernel.registerServices');
 
         $container->register(new YamlConfigurationServiceProvider());
 
@@ -423,7 +423,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             // Do nothing if no configuration file is found.
         }
 
-        $stopWatch->stop('registerServices');
+        $stopWatch->stop('kernel.registerServices');
     }
 
     /**
@@ -477,6 +477,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     protected function initEvents()
     {
+        $this->get('stopwatch')->start('kernel.initEvents');
         $this->get('dispatcher')->addSubscriber($this->get('firewall'));
         $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
         /*
@@ -498,18 +499,28 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
          * Add custom event subscriber to manage node duplication
          */
         $this->get('dispatcher')->addSubscriber(
-            new NodeDuplicationSubscriber($this->get('em'), $this->get('node.handler'))
+            new NodeDuplicationSubscriber(
+                $this->get('em'),
+                $this->get('factory.handler')
+            )
         );
 
         $this->get('dispatcher')->addSubscriber(
-            new NodeNameSubscriber($this->get('logger.doctrine'), $this->get('utils.nodeNameChecker'), $this->get(NodeMover::class))
+            new NodeNameSubscriber(
+                $this->get('logger.doctrine'),
+                $this->get('utils.nodeNameChecker'),
+                $this->get(NodeMover::class)
+            )
         );
         /*
          * Add event to create redirection after renaming a node.
          */
-        $this->get('dispatcher')->addSubscriber(
-            new NodeRedirectionSubscriber($this->get(NodeMover::class))
-        );
+        if ($this->isProdMode() && !$this->isPreview()) {
+            $this->get('dispatcher')->addSubscriber(
+                new NodeRedirectionSubscriber($this->get(NodeMover::class))
+            );
+        }
+        $this->get('stopwatch')->stop('kernel.initEvents');
     }
 
     /**
