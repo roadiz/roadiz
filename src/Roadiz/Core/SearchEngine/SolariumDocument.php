@@ -28,10 +28,9 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManager;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
 
@@ -74,24 +73,23 @@ class SolariumDocument extends AbstractSolarium
      *
      * @param Document $rzDocument
      * @param Client $client
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Document $rzDocument,
         Client $client = null,
-        Logger $logger = null
+        LoggerInterface $logger = null,
+        MarkdownInterface $markdown = null
     ) {
-        if (null === $client) {
-            throw new SolrServerNotConfiguredException("No Solr server available", 1);
-        }
-
+        parent::__construct($client, $logger, $markdown);
         $this->documentTranslationItems = [];
 
         foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
             $this->documentTranslationItems[] = new SolariumDocumentTranslation(
                 $documentTranslation,
                 $client,
-                $logger
+                $logger,
+                $markdown
             );
         }
     }

@@ -41,7 +41,7 @@ use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
-use RZ\Roadiz\Utils\Security\TimedFirewall;
+use RZ\Roadiz\Utils\Security\Firewall;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -378,9 +378,9 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['firewall'] = function (Container $c) {
-            $c['stopwatch']->start('firewall');
-            $firewall = new TimedFirewall($c['firewallMap'], $c['dispatcher'], $c['stopwatch']);
-            $c['stopwatch']->stop('firewall');
+            $c['stopwatch']->start('firewall.build');
+            $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
+            $c['stopwatch']->stop('firewall.build');
             return $firewall;
         };
 

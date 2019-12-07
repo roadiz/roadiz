@@ -86,7 +86,10 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
                             * Use locale to create field name
                             * with right language
                             */
-                            if (in_array($event->getNodeSource()->getTranslation()->getLocale(), AbstractSolarium::$availableLocalizedTextFields)) {
+                            if (in_array(
+                                $event->getNodeSource()->getTranslation()->getLocale(),
+                                AbstractSolarium::$availableLocalizedTextFields
+                            )) {
                                 $fieldName .= '_txt_' . $event->getNodeSource()->getTranslation()->getLocale();
                             } else {
                                 $fieldName .= '_t';
@@ -94,7 +97,9 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
                             /*
                              * Strip markdown syntax
                              */
-                            $content = AbstractSolarium::cleanTextContent($data);
+                            $content = $event->getSolariumDocument() ?
+                                $event->getSolariumDocument()->cleanTextContent($data) :
+                                $data;
                             $associations[$fieldName] = $content;
                             $associations['collection_txt'][] = $content;
                             break;

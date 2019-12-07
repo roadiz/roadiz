@@ -2,7 +2,7 @@
 
 {% block inner_content %}
     <h1 class="page-title">{{ nodeSource.title }}</h1>
-    <div class="page-text">{{ nodeSource.content|markdown }}</div>
+    <div class="page-text">{{ nodeSource.content|markdownExtra }}</div>
     <div class="page-blocks row">
         {#
          # Use a loop over children to display blocks

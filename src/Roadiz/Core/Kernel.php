@@ -73,6 +73,8 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Markdown\MarkdownInterface;
+use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
@@ -281,7 +283,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
 
             if (!$kernel->isInstallMode()) {
-                $dispatcher->addSubscriber(new LocaleSubscriber($kernel, $c['stopwatch']));
+                $dispatcher->addSubscriber(new LocaleSubscriber($kernel));
                 $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
 
                 /*
@@ -399,6 +401,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new AttributesServiceProvider());
         $container->register(new CryptoServiceProvider());
         $container->register(new NodeServiceProvider());
+        $container->register(new MarkdownServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
@@ -487,7 +490,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $this->get('solr'),
                 $this->get('dispatcher'),
                 $this->get('logger'),
-                $this->get('factory.handler')
+                $this->get('factory.handler'),
+                $this->get(MarkdownInterface::class)
             )
         );
         /*

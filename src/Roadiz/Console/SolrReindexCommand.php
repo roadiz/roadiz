@@ -33,8 +33,8 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocument;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -137,7 +137,8 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
                 $this->solr,
                 $this->getHelper('kernel')->getKernel()->get('dispatcher'),
                 $this->getHelper('handlerFactory')->getHandlerFactory(),
-                $this->getHelper('logger')->getLogger()
+                $this->getHelper('logger')->getLogger(),
+                $this->getHelper('kernel')->getKernel()->get(MarkdownInterface::class)
             );
             $solarium->createEmptyDocument($update);
             $solarium->index();
@@ -185,7 +186,8 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
             $solarium = new SolariumDocument(
                 $row[0],
                 $this->solr,
-                $this->getHelper('logger')->getLogger()
+                $this->getHelper('logger')->getLogger(),
+                $this->getHelper('kernel')->getKernel()->get(MarkdownInterface::class)
             );
             $solarium->createEmptyDocument($update);
             $solarium->index();

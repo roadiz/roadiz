@@ -44,7 +44,6 @@ use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HandlerExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HttpKernelExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
-use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use RZ\Roadiz\Utils\TwigExtensions\RoadizExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
@@ -207,7 +206,6 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions = new ArrayCollection();
 
             $extensions->add(new FormExtension());
-            $extensions->add(new ParsedownExtension());
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c['requestStack']));

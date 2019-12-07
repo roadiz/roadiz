@@ -32,6 +32,12 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
+/**
+ * Class ParsedownExtension
+ *
+ * @package RZ\Roadiz\Utils\TwigExtensions
+ * @deprecated Use \RZ\Roadiz\Markdown\MarkdownExtension
+ */
 class ParsedownExtension extends AbstractExtension
 {
     /**

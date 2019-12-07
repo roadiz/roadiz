@@ -33,7 +33,6 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * Event dispatched to setup theme configuration at kernel request.
@@ -41,16 +40,13 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class LocaleSubscriber implements EventSubscriberInterface
 {
     private $kernel;
-    private $stopwatch;
 
     /**
      * @param Kernel $kernel
-     * @param Stopwatch $stopwatch
      */
-    public function __construct(Kernel $kernel, Stopwatch $stopwatch)
+    public function __construct(Kernel $kernel)
     {
         $this->kernel = $kernel;
-        $this->stopwatch = $stopwatch;
     }
 
     /**
@@ -79,7 +75,6 @@ class LocaleSubscriber implements EventSubscriberInterface
             /*
              * Set default locale
              */
-            $this->stopwatch->start('setRequestLocale');
             if ($request->attributes->has('_locale') &&
                 $request->attributes->get('_locale') !== '') {
                 $locale = $request->attributes->get('_locale');
@@ -90,7 +85,6 @@ class LocaleSubscriber implements EventSubscriberInterface
                 $event->getRequest()->setLocale($shortLocale);
                 \Locale::setDefault($shortLocale);
             }
-            $this->stopwatch->stop('setRequestLocale');
         }
     }
 }

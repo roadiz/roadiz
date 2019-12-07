@@ -29,53 +29,11 @@
  */
 namespace RZ\Roadiz\Utils\Security;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\HttpKernel\Event\FinishRequestEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Http\Firewall;
-use Symfony\Component\Security\Http\FirewallMapInterface;
-use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\Security\Http\Firewall as BaseFirewall;
 
-class TimedFirewall extends Firewall
+class Firewall extends BaseFirewall
 {
-    protected $stopwatch;
-
-    /**
-     * Constructor.
-     *
-     * @param FirewallMapInterface     $map        A FirewallMapInterface instance
-     * @param EventDispatcherInterface $dispatcher An EventDispatcherInterface instance
-     * @param Stopwatch                $stopwatch
-     */
-    public function __construct(
-        FirewallMapInterface $map,
-        EventDispatcherInterface $dispatcher,
-        Stopwatch $stopwatch
-    ) {
-        parent::__construct($map, $dispatcher);
-        $this->stopwatch = $stopwatch;
-    }
-
-    /**
-     * Handles security.
-     *
-     * @param GetResponseEvent $event An GetResponseEvent instance
-     */
-    public function onKernelRequest(GetResponseEvent $event)
-    {
-        $this->stopwatch->start('firewallHandle');
-        parent::onKernelRequest($event);
-        $this->stopwatch->stop('firewallHandle');
-    }
-
-    public function onKernelFinishRequest(FinishRequestEvent $event)
-    {
-        $this->stopwatch->start('firewallFinish');
-        parent::onKernelFinishRequest($event);
-        $this->stopwatch->stop('firewallFinish');
-    }
-
     /**
      * {@inheritdoc}
      */

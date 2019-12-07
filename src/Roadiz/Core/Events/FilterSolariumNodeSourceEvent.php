@@ -30,23 +30,36 @@
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\SearchEngine\AbstractSolarium;
 use Symfony\Component\EventDispatcher\Event;
 
 class FilterSolariumNodeSourceEvent extends Event
 {
+    /**
+     * @var NodesSources
+     */
     protected $nodeSource;
-
+    /**
+     * @var array
+     */
     protected $associations;
+    /**
+     * @var AbstractSolarium|null
+     */
+    protected $solariumDocument;
 
     /**
      * FilterSolariumNodeSourceEvent constructor.
-     * @param NodesSources $nodeSource
-     * @param array $associations
+     *
+     * @param NodesSources     $nodeSource
+     * @param array            $associations
+     * @param AbstractSolarium $solariumDocument
      */
-    public function __construct(NodesSources $nodeSource, array $associations)
+    public function __construct(NodesSources $nodeSource, array $associations, AbstractSolarium $solariumDocument)
     {
         $this->nodeSource = $nodeSource;
         $this->associations = $associations;
+        $this->solariumDocument = $solariumDocument;
     }
 
     public function getNodeSource()
@@ -73,6 +86,26 @@ class FilterSolariumNodeSourceEvent extends Event
     public function setAssociations($associations)
     {
         $this->associations = $associations;
+        return $this;
+    }
+
+    /**
+     * @return AbstractSolarium|null
+     */
+    public function getSolariumDocument(): ?AbstractSolarium
+    {
+        return $this->solariumDocument;
+    }
+
+    /**
+     * @param AbstractSolarium $solariumDocument
+     *
+     * @return FilterSolariumNodeSourceEvent
+     */
+    public function setSolariumDocument(AbstractSolarium $solariumDocument): FilterSolariumNodeSourceEvent
+    {
+        $this->solariumDocument = $solariumDocument;
+
         return $this;
     }
 }

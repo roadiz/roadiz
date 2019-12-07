@@ -54,9 +54,9 @@ class TimedRouteListener extends RouterListener
      */
     public function __construct(
         ChainRouter $router,
+        RequestStack $requestStack = null,
         RequestContext $context = null,
         LoggerInterface $logger = null,
-        RequestStack $requestStack = null,
         Stopwatch $stopwatch = null
     ) {
         parent::__construct($router, $requestStack, $context, $logger);

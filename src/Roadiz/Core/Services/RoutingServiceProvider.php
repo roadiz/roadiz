@@ -42,6 +42,7 @@ use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -161,12 +162,11 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container['routeListener'] = function (Container $c) {
-            return new TimedRouteListener(
+            return new RouterListener(
                 $c['router'],
-                $c['requestContext'],
-                null,
                 $c['requestStack'],
-                $c['stopwatch']
+                $c['requestContext'],
+                null
             );
         };
 

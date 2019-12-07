@@ -83,7 +83,7 @@ class UrlAliasesController extends RozierApp
                        ->setDisplayingAllNodesStatuses(true)
                        ->setDisplayingNotPublishedNodes(true)
                        ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
-        
+
         if ($source !== null && null !== $node = $source->getNode()) {
             $uas = $this->get('em')
                         ->getRepository(UrlAlias::class)

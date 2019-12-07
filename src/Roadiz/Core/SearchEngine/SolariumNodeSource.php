@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\Common\Collections\Criteria;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -67,7 +68,7 @@ class SolariumNodeSource extends AbstractSolarium
      */
     protected $client;
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger;
 
@@ -78,22 +79,18 @@ class SolariumNodeSource extends AbstractSolarium
      * @param Client $client
      * @param EventDispatcherInterface $dispatcher
      * @param HandlerFactory $handlerFactory
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
     public function __construct(
         NodesSources $nodeSource,
         Client $client,
         EventDispatcherInterface $dispatcher,
         HandlerFactory $handlerFactory,
-        Logger $logger = null
+        LoggerInterface $logger = null,
+        MarkdownInterface $markdown = null
     ) {
-        if (null === $client) {
-            throw new SolrServerNotConfiguredException("No Solr server available", 1);
-        }
-
-        $this->client = $client;
+        parent::__construct($client, $logger, $markdown);
         $this->nodeSource = $nodeSource;
-        $this->logger = $logger;
         $this->dispatcher = $dispatcher;
         $this->handlerFactory = $handlerFactory;
     }
@@ -192,7 +189,7 @@ class SolariumNodeSource extends AbstractSolarium
             /*
              * Strip markdown syntax
              */
-            $content = static::cleanTextContent($content);
+            $content = $this->cleanTextContent($content);
 
             /*
              * Use locale to create field name
@@ -214,7 +211,7 @@ class SolariumNodeSource extends AbstractSolarium
          */
         $assoc['collection_txt'] = $collection;
 
-        $event = new FilterSolariumNodeSourceEvent($this->nodeSource, $assoc);
+        $event = new FilterSolariumNodeSourceEvent($this->nodeSource, $assoc, $this);
         $this->dispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_INDEXING, $event);
         /*
          * Override associations
@@ -227,7 +224,7 @@ class SolariumNodeSource extends AbstractSolarium
     /**
      * Remove any document linked to current node-source.
      *
-     * @param \Solarium\QueryType\Update\Query\Query $update
+     * @param Query $update
      * @return boolean
      */
     public function clean(Query $update)
