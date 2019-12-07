@@ -239,7 +239,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $extensions->add(new FontExtension($c));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
-                    $c['nodes_sources.handler'],
+                    $c['factory.handler'],
                     $c['nodeSourceApi'],
                     $kernel->isPreview()
                 ));

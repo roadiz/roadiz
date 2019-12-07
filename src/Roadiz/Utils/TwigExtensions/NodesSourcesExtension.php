@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\CMS\Utils\NodeSourceApi;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Twig\Error\RuntimeError;
@@ -45,28 +46,30 @@ class NodesSourcesExtension extends AbstractExtension
     protected $preview;
     protected $securityAuthorizationChecker;
     /**
+     * @var HandlerFactory
+     */
+    protected $handlerFactory;
+    /**
      * @var bool
      */
     private $throwExceptions;
-    /**
-     * @var NodesSourcesHandler
-     */
-    private $nodesSourcesHandler;
     /**
      * @var NodeSourceApi
      */
     private $nodeSourceApi;
 
     /**
+     * NodesSourcesExtension constructor.
+     *
      * @param AuthorizationChecker $securityAuthorizationChecker
-     * @param NodesSourcesHandler $nodesSourcesHandler
-     * @param NodeSourceApi $nodeSourceApi
-     * @param boolean $preview
-     * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
+     * @param HandlerFactory       $handlerFactory
+     * @param NodeSourceApi        $nodeSourceApi
+     * @param bool                 $preview
+     * @param bool                 $throwExceptions
      */
     public function __construct(
         AuthorizationChecker $securityAuthorizationChecker,
-        NodesSourcesHandler $nodesSourcesHandler,
+        HandlerFactory $handlerFactory,
         NodeSourceApi $nodeSourceApi,
         $preview = false,
         $throwExceptions = false
@@ -74,8 +77,8 @@ class NodesSourcesExtension extends AbstractExtension
         $this->securityAuthorizationChecker = $securityAuthorizationChecker;
         $this->preview = $preview;
         $this->throwExceptions = $throwExceptions;
-        $this->nodesSourcesHandler = $nodesSourcesHandler;
         $this->nodeSourceApi = $nodeSourceApi;
+        $this->handlerFactory = $handlerFactory;
     }
 
     public function getFilters()
@@ -144,9 +147,8 @@ class NodesSourcesExtension extends AbstractExtension
                 return null;
             }
         }
-
-        $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getNext($criteria, $order);
+        $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
+        return $nodeSourceHandler->getNext($criteria, $order);
     }
 
     /**
@@ -166,8 +168,8 @@ class NodesSourcesExtension extends AbstractExtension
             }
         }
 
-        $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getPrevious($criteria, $order);
+        $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
+        return $nodeSourceHandler->getPrevious($criteria, $order);
     }
 
     /**
@@ -187,8 +189,8 @@ class NodesSourcesExtension extends AbstractExtension
             }
         }
 
-        $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getLastSibling($criteria, $order);
+        $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
+        return $nodeSourceHandler->getLastSibling($criteria, $order);
     }
 
     /**
@@ -208,8 +210,8 @@ class NodesSourcesExtension extends AbstractExtension
             }
         }
 
-        $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getFirstSibling($criteria, $order);
+        $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
+        return $nodeSourceHandler->getFirstSibling($criteria, $order);
     }
 
     /**
@@ -247,8 +249,8 @@ class NodesSourcesExtension extends AbstractExtension
             }
         }
 
-        $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getParents($criteria);
+        $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
+        return $nodeSourceHandler->getParents($criteria);
     }
 
     /**
@@ -266,7 +268,7 @@ class NodesSourcesExtension extends AbstractExtension
             }
         }
 
-        $this->nodesSourcesHandler->setNodeSource($ns);
-        return $this->nodesSourcesHandler->getTags();
+        $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
+        return $nodeSourceHandler->getTags();
     }
 }
