@@ -29,9 +29,24 @@
 
 namespace RZ\Roadiz\Core\Events;
 
+/**
+ * Class QueryBuilderEvents
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 final class QueryBuilderEvents
 {
+    /**
+     * @deprecated
+     */
     const QUERY_BUILDER_SELECT = 'qb.select';
+    /**
+     * @deprecated
+     */
     const QUERY_BUILDER_BUILD_FILTER = 'qb.build_filter';
+    /**
+     * @deprecated
+     */
     const QUERY_BUILDER_APPLY_FILTER = 'qb.apply_filter';
 }

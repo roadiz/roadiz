@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,35 +23,16 @@ declare(strict_types=1);
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FilterUserEvent.php
+ * @file UserDisabledEvent.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Events;
+declare(strict_types=1);
 
-use RZ\Roadiz\Core\Entities\User;
-use Symfony\Contracts\EventDispatcher\Event;
+namespace RZ\Roadiz\Core\Events\User;
 
-abstract class FilterUserEvent extends Event
+use RZ\Roadiz\Core\Events\FilterUserEvent;
+
+class UserDisabledEvent extends FilterUserEvent
 {
-    /**
-     * @var User
-     */
-    private $user;
 
-    /**
-     * FilterUserEvent constructor.
-     * @param User $user
-     */
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
-
-    /**
-     * @return User
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
 }

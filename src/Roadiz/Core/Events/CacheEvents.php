@@ -31,8 +31,20 @@ namespace RZ\Roadiz\Core\Events;
 
 final class CacheEvents
 {
+    /**
+     * @deprecated
+     */
     const PURGE_REQUEST = 'cache.purge_request';
+    /**
+     * @deprecated
+     */
     const PURGE_ASSETS_REQUEST = 'cache.purge_assets_request';
+    /**
+     * @deprecated
+     */
     const PURGE_HTTP_RESPONSE = 'cache.purge_http_response';
+    /**
+     * @deprecated
+     */
     const PURGE_TEXT_RESPONSE = 'cache.purge_text_response';
 }

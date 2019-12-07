@@ -35,6 +35,12 @@ use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Events;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Events\User\UserCreatedEvent;
+use RZ\Roadiz\Core\Events\User\UserDeletedEvent;
+use RZ\Roadiz\Core\Events\User\UserDisabledEvent;
+use RZ\Roadiz\Core\Events\User\UserEnabledEvent;
+use RZ\Roadiz\Core\Events\User\UserPasswordChangedEvent;
+use RZ\Roadiz\Core\Events\User\UserUpdatedEvent;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
 use RZ\Roadiz\Utils\Security\PasswordGenerator;
@@ -80,14 +86,14 @@ class UserLifeCycleSubscriber implements EventSubscriber
         if ($user instanceof User) {
             if ($event->hasChangedField('enabled') &&
                 true === $event->getNewValue('enabled')) {
-                $userEvent = new FilterUserEvent($user);
-                $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_ENABLED, $userEvent);
+                $userEvent = new UserEnabledEvent($user);
+                $this->container->offsetGet('dispatcher')->dispatch($userEvent);
             }
 
             if ($event->hasChangedField('enabled') &&
                 false === $event->getNewValue('enabled')) {
-                $userEvent = new FilterUserEvent($user);
-                $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_DISABLED, $userEvent);
+                $userEvent = new UserDisabledEvent($user);
+                $this->container->offsetGet('dispatcher')->dispatch($userEvent);
             }
 
             if ($event->hasChangedField('facebookName')) {
@@ -111,8 +117,8 @@ class UserLifeCycleSubscriber implements EventSubscriber
                 null !== $user->getPlainPassword() &&
                 '' !== $user->getPlainPassword()) {
                 $this->setPassword($user, $user->getPlainPassword());
-                $userEvent = new FilterUserEvent($user);
-                $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_PASSWORD_CHANGED, $userEvent);
+                $userEvent = new UserPasswordChangedEvent($user);
+                $this->container->offsetGet('dispatcher')->dispatch($userEvent);
             }
         }
     }
@@ -140,8 +146,8 @@ class UserLifeCycleSubscriber implements EventSubscriber
     {
         $user = $event->getEntity();
         if ($user instanceof User) {
-            $userEvent = new FilterUserEvent($user);
-            $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_UPDATED, $userEvent);
+            $userEvent = new UserUpdatedEvent($user);
+            $this->container->offsetGet('dispatcher')->dispatch($userEvent);
         }
     }
 
@@ -152,8 +158,8 @@ class UserLifeCycleSubscriber implements EventSubscriber
     {
         $user = $event->getEntity();
         if ($user instanceof User) {
-            $userEvent = new FilterUserEvent($user);
-            $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_DELETED, $userEvent);
+            $userEvent = new UserDeletedEvent($user);
+            $this->container->offsetGet('dispatcher')->dispatch($userEvent);
         }
     }
 
@@ -176,8 +182,8 @@ class UserLifeCycleSubscriber implements EventSubscriber
                     ]);
                 }
             }
-            $userEvent = new FilterUserEvent($user);
-            $this->container->offsetGet('dispatcher')->dispatch(UserEvents::USER_CREATED, $userEvent);
+            $userEvent = new UserCreatedEvent($user);
+            $this->container->offsetGet('dispatcher')->dispatch($userEvent);
         }
     }
 

@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 /**
- *
+ * @deprecated
  */
 final class UrlAliasEvents
 {
@@ -42,6 +42,7 @@ final class UrlAliasEvents
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
+     * @deprecated
      */
     const URL_ALIAS_CREATED = 'urlAlias.created';
 
@@ -53,6 +54,7 @@ final class UrlAliasEvents
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
+     * @deprecated
      */
     const URL_ALIAS_UPDATED = 'urlAlias.updated';
 
@@ -64,6 +66,7 @@ final class UrlAliasEvents
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
+     * @deprecated
      */
     const URL_ALIAS_DELETED = 'urlAlias.deleted';
 }

@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 /**
- *
+ * @deprecated
  */
 final class TranslationEvents
 {
@@ -42,6 +42,7 @@ final class TranslationEvents
      * RZ\Roadiz\Core\Events\FilterTranslationEvent instance
      *
      * @var string
+     * @deprecated
      */
     const TRANSLATION_CREATED = 'translation.created';
 
@@ -53,6 +54,7 @@ final class TranslationEvents
      * RZ\Roadiz\Core\Events\FilterTranslationEvent instance
      *
      * @var string
+     * @deprecated
      */
     const TRANSLATION_UPDATED = 'translation.updated';
 
@@ -64,6 +66,7 @@ final class TranslationEvents
      * RZ\Roadiz\Core\Events\FilterTranslationEvent instance
      *
      * @var string
+     * @deprecated
      */
     const TRANSLATION_DELETED = 'translation.deleted';
 }

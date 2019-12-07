@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 /**
- *
+ * @deprecated
  */
 final class NodesSourcesEvents
 {
@@ -42,6 +42,7 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_SOURCE_CREATED = 'nodeSource.created';
 
@@ -54,6 +55,7 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_SOURCE_PRE_UPDATE = 'nodeSource.pre_update';
 
@@ -66,6 +68,7 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_SOURCE_UPDATED = 'nodeSource.updated';
 
@@ -79,6 +82,7 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_SOURCE_DELETED = 'nodeSource.deleted';
 
@@ -90,6 +94,7 @@ final class NodesSourcesEvents
      * \RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_SOURCE_INDEXING = 'nodeSource.indexing';
 
@@ -101,6 +106,7 @@ final class NodesSourcesEvents
      * \RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_SOURCE_PATH_GENERATING = 'nodeSource.pathGenerating';
 }

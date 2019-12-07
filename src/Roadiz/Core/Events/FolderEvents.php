@@ -29,6 +29,12 @@
 
 namespace RZ\Roadiz\Core\Events;
 
+/**
+ * Class FolderEvents
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 final class FolderEvents
 {
     /**
@@ -39,6 +45,7 @@ final class FolderEvents
      * RZ\Roadiz\Core\Events\FilterFolderEvent instance
      *
      * @var string
+     * @deprecated
      */
     const FOLDER_CREATED = 'folder.created';
 
@@ -50,6 +57,7 @@ final class FolderEvents
      * RZ\Roadiz\Core\Events\FilterFolderEvent instance
      *
      * @var string
+     * @deprecated
      */
     const FOLDER_UPDATED = 'folder.updated';
 
@@ -61,6 +69,7 @@ final class FolderEvents
      * RZ\Roadiz\Core\Events\FilterFolderEvent instance
      *
      * @var string
+     * @deprecated
      */
     const FOLDER_DELETED = 'folder.deleted';
 }

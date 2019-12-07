@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 /**
- *
+ * @deprecated
  */
 final class NodeEvents
 {
@@ -42,6 +42,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_CREATED = 'node.created';
 
@@ -53,6 +54,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_UPDATED = 'node.updated';
 
@@ -64,6 +66,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_DELETED = 'node.deleted';
 
@@ -75,6 +78,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_DUPLICATED = 'node.duplicated';
 
@@ -86,6 +90,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_UNDELETED = 'node.undeleted';
 
@@ -97,6 +102,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_TAGGED = 'node.tagged';
 
@@ -108,6 +114,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_VISIBILITY_CHANGED = 'node.visibilityChanged';
 
@@ -119,6 +126,7 @@ final class NodeEvents
      * RZ\Roadiz\Core\Events\FilterNodeEvent instance
      *
      * @var string
+     * @deprecated
      */
     const NODE_STATUS_CHANGED = 'node.statusChanged';
 }

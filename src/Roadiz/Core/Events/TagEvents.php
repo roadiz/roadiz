@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 /**
- *
+ * @deprecated
  */
 final class TagEvents
 {
@@ -42,6 +42,7 @@ final class TagEvents
      * RZ\Roadiz\Core\Events\FilterTagEvent instance
      *
      * @var string
+     * @deprecated
      */
     const TAG_CREATED = 'tag.created';
 
@@ -53,6 +54,7 @@ final class TagEvents
      * RZ\Roadiz\Core\Events\FilterTagEvent instance
      *
      * @var string
+     * @deprecated
      */
     const TAG_UPDATED = 'tag.updated';
 
@@ -64,6 +66,7 @@ final class TagEvents
      * RZ\Roadiz\Core\Events\FilterTagEvent instance
      *
      * @var string
+     * @deprecated
      */
     const TAG_DELETED = 'tag.deleted';
 }
