@@ -445,6 +445,10 @@ if (typeof(PhpDebugBar) == 'undefined') {
                     for (var i = 0; i < data.measures.length; i++) {
                         var measure = data.measures[i];
 
+                        if (measure.label === '__section__' || measure.label === '__section__.child') {
+                            continue
+                        }
+
                         if(!aggregate[measure.label])
                             aggregate[measure.label] = { count: 0, duration: 0, measures: [] };
 
