@@ -92,10 +92,8 @@ class CacheFpmCommand extends Command
             $io->success('PHP-FPM caches were cleared for '.$kernel->getEnvironment().' environement.');
         } catch (ConnectException $exception) {
             $io->warning('Cannot reach ' . $url . ' [' . $exception->getCode() . ']');
-            return 1;
         } catch (ClientException $exception) {
             $io->warning('Cannot GET ' . $url . ' [' . $exception->getCode() . ']');
-            return 1;
         }
         return 0;
     }
