@@ -46,7 +46,6 @@ use Themes\Rozier\RozierApp;
  */
 class NewslettersUtilsController extends RozierApp
 {
-
     /**
      * Duplicate node by ID.
      *
@@ -140,14 +139,15 @@ class NewslettersUtilsController extends RozierApp
         . $newsletter->getNode()->getNodeType()->getName()
         . "Controller";
         // force the twig path
-        $this->get('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
-
-        // get html from the controller
-        $front = new $classname();
-        if ($front instanceof AppController && method_exists($front, 'makeHtml')) {
-            $front->setContainer($this->getContainer());
-            $front->prepareBaseAssignation();
-            return $front->makeHtml($request, $newsletter);
+        if (method_exists($classname, 'getViewsFolder')) {
+            $this->get('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
+            // get html from the controller
+            $front = new $classname();
+            if ($front instanceof AppController && method_exists($front, 'makeHtml')) {
+                $front->setContainer($this->getContainer());
+                $front->prepareBaseAssignation();
+                return $front->makeHtml($request, $newsletter);
+            }
         }
 
         throw new \RuntimeException(sprintf(
