@@ -389,10 +389,6 @@ class AjaxTagsController extends AbstractAjaxController
 
         /** @var Tag $tag */
         $tag = $this->getRepository()->findOrCreateByPath($request->get('tagName'));
-        /*
-         * Dispatch event
-         */
-        $this->get('dispatcher')->dispatch(new TagCreatedEvent($tag));
         $tagModel = new TagModel($tag, $this->getContainer());
 
         return new JsonResponse(

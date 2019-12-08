@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -29,6 +30,10 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Events\Translation\TranslationCreatedEvent;
+use RZ\Roadiz\Core\Events\Translation\TranslationDeletedEvent;
+use RZ\Roadiz\Core\Events\Translation\TranslationUpdatedEvent;
+
 /**
  * @deprecated
  */
@@ -44,7 +49,7 @@ final class TranslationEvents
      * @var string
      * @deprecated
      */
-    const TRANSLATION_CREATED = 'translation.created';
+    const TRANSLATION_CREATED = TranslationCreatedEvent::class;
 
     /**
      * Event translation.updated is triggered each time a translation
@@ -56,7 +61,7 @@ final class TranslationEvents
      * @var string
      * @deprecated
      */
-    const TRANSLATION_UPDATED = 'translation.updated';
+    const TRANSLATION_UPDATED = TranslationUpdatedEvent::class;
 
     /**
      * Event translation.deleted is triggered each time a translation
@@ -68,5 +73,5 @@ final class TranslationEvents
      * @var string
      * @deprecated
      */
-    const TRANSLATION_DELETED = 'translation.deleted';
+    const TRANSLATION_DELETED = TranslationDeletedEvent::class;
 }

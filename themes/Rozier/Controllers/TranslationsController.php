@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -34,8 +35,9 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterTranslationEvent;
-use RZ\Roadiz\Core\Events\TranslationEvents;
+use RZ\Roadiz\Core\Events\Translation\TranslationCreatedEvent;
+use RZ\Roadiz\Core\Events\Translation\TranslationDeletedEvent;
+use RZ\Roadiz\Core\Events\Translation\TranslationUpdatedEvent;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,11 +92,7 @@ class TranslationsController extends RozierApp
                 $msg = $this->getTranslator()->trans('translation.%name%.made_default', ['%name%' => $translation->getName()]);
                 $this->publishConfirmMessage($request, $msg);
 
-                /*
-                 * Dispatch event
-                 */
-                $event = new FilterTranslationEvent($translation);
-                $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(new TranslationUpdatedEvent($translation));
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -143,11 +141,7 @@ class TranslationsController extends RozierApp
                 $msg = $this->getTranslator()->trans('translation.%name%.updated', ['%name%' => $translation->getName()]);
                 $this->publishConfirmMessage($request, $msg);
 
-                /*
-                 * Dispatch event
-                 */
-                $event = new FilterTranslationEvent($translation);
-                $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(new TranslationUpdatedEvent($translation));
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -190,11 +184,8 @@ class TranslationsController extends RozierApp
 
             $msg = $this->getTranslator()->trans('translation.%name%.created', ['%name%' => $translation->getName()]);
             $this->publishConfirmMessage($request, $msg);
-            /*
-             * Dispatch event
-             */
-            $event = new FilterTranslationEvent($translation);
-            $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_CREATED, $event);
+
+            $this->get('dispatcher')->dispatch(new TranslationCreatedEvent($translation));
             /*
              * Force redirect to avoid resending form when refreshing page
              */
@@ -236,11 +227,8 @@ class TranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans('translation.%name%.deleted', ['%name%' => $translation->getName()]);
                     $this->publishConfirmMessage($request, $msg);
-                    /*
-                     * Dispatch event
-                     */
-                    $event = new FilterTranslationEvent($translation);
-                    $this->get('dispatcher')->dispatch(TranslationEvents::TRANSLATION_DELETED, $event);
+
+                    $this->get('dispatcher')->dispatch(new TranslationDeletedEvent($translation));
                 } catch (\Exception $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }

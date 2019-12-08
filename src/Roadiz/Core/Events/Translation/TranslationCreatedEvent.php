@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -9,7 +8,6 @@ declare(strict_types=1);
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -25,28 +23,16 @@ declare(strict_types=1);
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file FilterTranslationEvent.php
- * @author Ambroise Maupate
+ * @file TranslationCreatedEvent.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Events;
+declare(strict_types=1);
 
-use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\EventDispatcher\Event;
+namespace RZ\Roadiz\Core\Events\Translation;
 
-/**
- * @deprecated
- */
-class FilterTranslationEvent extends Event
+use RZ\Roadiz\Core\Events\FilterTranslationEvent;
+
+final class TranslationCreatedEvent extends FilterTranslationEvent
 {
-    protected $translation;
 
-    public function __construct(Translation $translation)
-    {
-        $this->translation = $translation;
-    }
-
-    public function getTranslation()
-    {
-        return $this->translation;
-    }
 }
