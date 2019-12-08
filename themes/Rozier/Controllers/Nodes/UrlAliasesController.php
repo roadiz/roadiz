@@ -170,7 +170,7 @@ class UrlAliasesController extends RozierApp
                     return $this->redirect($this->generateUrl(
                         'nodesEditSEOPage',
                         ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    ));
+                    ).'#manage-aliases');
                 } catch (EntityAlreadyExistsException $e) {
                     $addAliasForm->addError(new FormError($e->getMessage()));
                 } catch (NoTranslationAvailableException $e) {
@@ -392,7 +392,7 @@ class UrlAliasesController extends RozierApp
                             'nodeId' => $alias->getNodeSource()->getNode()->getId(),
                             'translationId' => $alias->getNodeSource()->getTranslation()->getId()
                         ]
-                    ));
+                    ).'#manage-aliases');
                 } else {
                     $msg = $this->getTranslator()->trans(
                         'url_alias.%alias%.no_update.already_exists',
@@ -424,7 +424,7 @@ class UrlAliasesController extends RozierApp
                     'nodeId' => $alias->getNodeSource()->getNode()->getId(),
                     'translationId' => $alias->getNodeSource()->getTranslation()->getId()
                 ]
-            ));
+            ).'#manage-aliases');
         }
 
         $this->assignation['aliases'][] = [
@@ -466,7 +466,7 @@ class UrlAliasesController extends RozierApp
                     'nodeId' => $redirection->getRedirectNodeSource()->getNode()->getId(),
                     'translationId' => $redirection->getRedirectNodeSource()->getTranslation()->getId()
                 ]
-            ));
+            ).'#manage-redirections');
         }
 
         $this->assignation['addRedirection'] = $addForm->createView();
@@ -499,7 +499,7 @@ class UrlAliasesController extends RozierApp
                     'nodeId' => $redirection->getRedirectNodeSource()->getNode()->getId(),
                     'translationId' => $redirection->getRedirectNodeSource()->getTranslation()->getId()
                 ]
-            ));
+            ).'#manage-redirections');
         }
 
         // Match delete
@@ -513,7 +513,7 @@ class UrlAliasesController extends RozierApp
                     'nodeId' => $redirection->getRedirectNodeSource()->getNode()->getId(),
                     'translationId' => $redirection->getRedirectNodeSource()->getTranslation()->getId()
                 ]
-            ));
+            ).'#manage-redirections');
         }
         $this->assignation['redirections'][] = [
             'redirection' => $redirection,
