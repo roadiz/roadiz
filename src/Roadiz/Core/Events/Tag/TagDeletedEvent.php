@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -9,7 +8,6 @@ declare(strict_types=1);
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -25,53 +23,16 @@ declare(strict_types=1);
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TagEvents.php
- * @author Ambroise Maupate
+ * @file TagDeletedEvent.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Events;
+declare(strict_types=1);
 
-use RZ\Roadiz\Core\Events\Tag\TagCreatedEvent;
-use RZ\Roadiz\Core\Events\Tag\TagDeletedEvent;
-use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
+namespace RZ\Roadiz\Core\Events\Tag;
 
-/**
- * @deprecated
- */
-final class TagEvents
+use RZ\Roadiz\Core\Events\FilterTagEvent;
+
+final class TagDeletedEvent extends FilterTagEvent
 {
-    /**
-     * Event tag.created is triggered each time a node-source
-     * is created.
-     *
-     * Evetn listener will be given a:
-     * RZ\Roadiz\Core\Events\FilterTagEvent instance
-     *
-     * @var string
-     * @deprecated
-     */
-    const TAG_CREATED = TagCreatedEvent::class;
 
-    /**
-     * Event tag.updated is triggered each time a node-source
-     * is updated.
-     *
-     * Evetn listener will be given a:
-     * RZ\Roadiz\Core\Events\FilterTagEvent instance
-     *
-     * @var string
-     * @deprecated
-     */
-    const TAG_UPDATED = TagUpdatedEvent::class;
-
-    /**
-     * Event tag.deleted is triggered each time a node-source
-     * is deleted.
-     *
-     * Evetn listener will be given a:
-     * RZ\Roadiz\Core\Events\FilterTagEvent instance
-     *
-     * @var string
-     * @deprecated
-     */
-    const TAG_DELETED = TagDeletedEvent::class;
 }

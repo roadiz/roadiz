@@ -54,15 +54,15 @@ use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
-use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\Exception\HttpException;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Subscribe to Node and NodesSources event to update
@@ -126,7 +126,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             NodeUndeletedEvent::class => 'onSolariumNodeUpdate',
             NodeTaggedEvent::class => 'onSolariumNodeUpdate',
             NodeCreatedEvent::class => 'onSolariumNodeUpdate',
-            TagEvents::TAG_UPDATED => 'onSolariumTagUpdate',
+            TagUpdatedEvent::class => 'onSolariumTagUpdate',
             DocumentFileUploadedEvent::class => 'onSolariumDocumentUpdate',
             DocumentTranslationUpdatedEvent::class => 'onSolariumDocumentUpdate',
             DocumentInFolderEvent::class => 'onSolariumDocumentUpdate',
