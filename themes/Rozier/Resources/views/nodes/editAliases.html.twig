@@ -59,12 +59,50 @@
                         </td>
                     </tr>
                     {% for urlAlias in aliases %}
-                        {% include '@Rozier/url-aliases/editRow.html.twig' %}
+                        {% include '@Rozier/url-aliases/editRow.html.twig' with {
+                            'urlAlias': urlAlias
+                        } %}
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
+        <hr />
+        <h2 class="content-subtitle">{% trans %}manage.redirections{% endtrans %}</h2>
+        <p class="form-row-desc"><small>{% trans %}nodeSource.redirections.help{% endtrans %}</small></p>
+
+        <div class="content-table-cont">
+            <table class="redirections content-table uk-table">
+                <thead>
+                <tr>
+                    <th>{% trans %}redirection.query{% endtrans %}</th>
+                    <th>{% trans %}redirection.redirect_uri{% endtrans %}</th>
+                    <th>{% trans %}translation{% endtrans %}</th>
+                    <th>{% trans %}actions{% endtrans %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        {% form_theme addRedirection 'horizontalForms.html.twig' %}
+                        {{ form_start(addRedirection) }}
+                        {{ form_widget(addRedirection) }}
+                        <button class="uk-button uk-button-primary" type="submit">
+                            <i class="uk-icon-rz-plus"></i> {% trans %}add.a.redirection{% endtrans %}
+                        </button>
+                        {{ form_end(addRedirection) }}
+                    </td>
+                </tr>
+                {% for redirection in redirections %}
+                    {% include '@Rozier/redirections/editRow.html.twig' with {
+                        'redirection': redirection
+                    } %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </article>
+
     {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

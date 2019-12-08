@@ -49,22 +49,27 @@ class RedirectionType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('query', TextType::class, [
-            'label' => 'redirection.query',
+            'label' => (!$options['only_query']) ? 'redirection.query' : false,
+            'attr' => [
+                'placeholder' => $options['placeholder']
+            ],
             'constraints' => [
                 new NotBlank(),
             ],
-        ])
-        ->add('redirectUri', TextType::class, [
-            'label' => 'redirection.redirect_uri',
-            'required' => false,
-        ])
-        ->add('type', ChoiceType::class, [
-            'label' => 'redirection.type',
-            'choices' => [
-                'redirection.moved_permanently' => Response::HTTP_MOVED_PERMANENTLY,
-                'redirection.moved_temporarily' => Response::HTTP_FOUND,
-            ]
         ]);
+        if ($options['only_query'] === false) {
+            $builder->add('redirectUri', TextType::class, [
+                'label' => 'redirection.redirect_uri',
+                'required' => false,
+            ])
+            ->add('type', ChoiceType::class, [
+                'label' => 'redirection.type',
+                'choices' => [
+                    'redirection.moved_permanently' => Response::HTTP_MOVED_PERMANENTLY,
+                    'redirection.moved_temporarily' => Response::HTTP_FOUND,
+                ]
+            ]);
+        }
     }
 
     public function getBlockPrefix()
@@ -76,6 +81,8 @@ class RedirectionType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Redirection::class,
+            'only_query' => false,
+            'placeholder' => null,
             'attr' => [
                 'class' => 'uk-form redirection-form',
             ],

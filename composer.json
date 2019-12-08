@@ -65,8 +65,6 @@
         "twig/extensions":                         "~1.5.4",
         "guzzlehttp/guzzle":                       "^6.3",
         "swiftmailer/swiftmailer":                 "^6.0.0",
-        "erusev/parsedown":                        "^1.8.0-beta-7 | ^1.8.0",
-        "erusev/parsedown-extra":                  "^0.8.0-beta-1 | ^0.8.0",
         "solarium/solarium":                       "^5.0.0",
         "pimple/pimple":                           "^3.2.3",
         "inlinestyle/inlinestyle":                 "~1.2.0",
