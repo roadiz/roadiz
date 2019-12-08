@@ -34,6 +34,12 @@ use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class FilterCacheEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 abstract class FilterCacheEvent extends Event
 {
     /**

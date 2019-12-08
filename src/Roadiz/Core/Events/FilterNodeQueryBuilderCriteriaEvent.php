@@ -32,8 +32,15 @@ namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 
-class FilterNodeQueryBuilderCriteriaEvent extends FilterQueryBuilderCriteriaEvent
+/**
+ * Class FilterNodeQueryBuilderCriteriaEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
+class FilterNodeQueryBuilderCriteriaEvent extends QueryBuilderBuildEvent
 {
     /**
      * @inheritDoc

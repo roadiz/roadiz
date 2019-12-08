@@ -3,7 +3,7 @@
 
 Vagrant.configure(2) do |config|
     config.vm.box = "roadiz/standard-edition"
-    config.vm.box_version = "1.3.1"
+    config.vm.box_version = "1.4.0"
     #
     # Use forwarded ports with your local network
     # Be careful to change port if you want to run multiple

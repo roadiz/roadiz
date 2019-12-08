@@ -29,12 +29,14 @@
 namespace Themes\DefaultTheme\Controllers;
 
 use GeneratedNodeSources\NSPage;
+use RZ\Roadiz\CMS\Utils\NodeSourceApi;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
-use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\DefaultTheme\DefaultThemeApp;
 
@@ -46,7 +48,7 @@ class SearchController extends DefaultThemeApp
      * @param Request $request
      * @param string $_locale
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function defaultAction(
         Request $request,
@@ -63,19 +65,19 @@ class SearchController extends DefaultThemeApp
             if ($event->supports(NodesSources::class) || $event->supports(NSPage::class)) {
                 $qb = $event->getQueryBuilder();
                 $qb->andWhere($qb->expr()->neq($qb->expr()->lower('ns.title'), ':neq'));
-                $qb->setParameter('neq', 'about');
+                $qb->setParameter('neq', 'FOOBAR');
             }
         };
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->get('dispatcher');
         $eventDispatcher->addListener(
-            QueryBuilderEvents::QUERY_BUILDER_SELECT,
+            QueryBuilderSelectEvent::class,
             $callable
         );
 
         /** @var NodeSourceSearchHandler|null $searchHandler */
         $searchHandler = $this->get('solr.search.nodeSource');
-        if (null !== $searchHandler) {
+        if (false /*null !== $searchHandler*/) {
             /*
              * Use Apache Solr when available
              */
@@ -92,12 +94,18 @@ class SearchController extends DefaultThemeApp
             /*
              * Use simple search over title and meta fields.
              */
+            /** @var NodeSourceApi $nodeSourceApi */
+            $nodeSourceApi = $this->get('nodeSourceApi');
             /** @var NodesSources[] $nodeSources */
-            $nodeSources = $this->get('nodeSourceApi')->searchBy(
+            $nodeSources = $nodeSourceApi->searchBy(
                 $request->query->get('query'),
                 10,
                 [
                     $this->get('nodeTypesBag')->get('Page')
+                ],
+                true,
+                [
+                    'node.nodeType.reachable' => true,
                 ]
             );
         }
@@ -106,7 +114,7 @@ class SearchController extends DefaultThemeApp
         $this->assignation['query'] = $request->query->get('query');
 
         $eventDispatcher->removeListener(
-            QueryBuilderEvents::QUERY_BUILDER_SELECT,
+            FilterQueryBuilderEvent::class,
             $callable
         );
 

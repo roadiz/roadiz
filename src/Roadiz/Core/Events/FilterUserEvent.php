@@ -32,6 +32,12 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class FilterUserEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 abstract class FilterUserEvent extends Event
 {
     /**

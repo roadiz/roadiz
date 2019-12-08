@@ -44,8 +44,9 @@ use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
-use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
-use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -125,8 +126,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $initialQueryBuilderEvent = new FilterQueryBuilderEvent($qb, $entityClass);
-        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_SELECT, $initialQueryBuilderEvent);
+        $eventDispatcher->dispatch(new QueryBuilderSelectEvent($qb, $entityClass));
     }
 
     /**
@@ -140,10 +140,13 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterQueryBuilderCriteriaEvent($qb, $this->getEntityName(), $property, $value, $this->getEntityName());
-        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
-
-        return $event;
+        return $eventDispatcher->dispatch(new QueryBuilderBuildEvent(
+            $qb,
+            $this->getEntityName(),
+            $property,
+            $value,
+            $this->getEntityName()
+        ));
     }
 
     /**
@@ -157,10 +160,13 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterQueryBuilderCriteriaEvent($qb, $this->getEntityName(), $property, $value, $this->getEntityName());
-        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
-
-        return $event;
+        return $eventDispatcher->dispatch(new QueryBuilderApplyEvent(
+            $qb,
+            $this->getEntityName(),
+            $property,
+            $value,
+            $this->getEntityName()
+        ));
     }
 
     /**
@@ -572,7 +578,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function buildTagFiltering(array &$criteria, QueryBuilder $qb, $nodeAlias = 'n')
     {
-        if (in_array('tags', array_keys($criteria))) {
+        if (key_exists('tags', $criteria)) {
             /*
              * Do not filter if tag is null
              */
@@ -627,7 +633,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function applyFilterByTag(array &$criteria, QueryBuilder $qb)
     {
-        if (in_array('tags', array_keys($criteria))) {
+        if (key_exists('tags', $criteria)) {
             if ($criteria['tags'] instanceof Tag) {
                 $qb->setParameter('tags', $criteria['tags']->getId());
             } elseif (is_array($criteria['tags']) || $criteria['tags'] instanceof Collection) {

@@ -33,7 +33,7 @@ use RZ\Roadiz\Core\Entities\UrlAlias;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- *
+ * @deprecated
  */
 class FilterUrlAliasEvent extends Event
 {

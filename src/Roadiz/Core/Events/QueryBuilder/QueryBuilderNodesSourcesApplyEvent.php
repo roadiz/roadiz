@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,34 +23,16 @@ declare(strict_types=1);
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file QueryBuilderEvents.php
+ * @file QueryBuilderNodesSourcesApplyEvent.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
+declare(strict_types=1);
 
-namespace RZ\Roadiz\Core\Events;
+namespace RZ\Roadiz\Core\Events\QueryBuilder;
 
-use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
-use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
-use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
+use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
 
-/**
- * Class QueryBuilderEvents
- *
- * @package RZ\Roadiz\Core\Events
- * @deprecated
- */
-final class QueryBuilderEvents
+class QueryBuilderNodesSourcesApplyEvent extends FilterNodesSourcesQueryBuilderCriteriaEvent
 {
-    /**
-     * @deprecated
-     */
-    const QUERY_BUILDER_SELECT = QueryBuilderSelectEvent::class;
-    /**
-     * @deprecated
-     */
-    const QUERY_BUILDER_BUILD_FILTER = QueryBuilderBuildEvent::class;
-    /**
-     * @deprecated
-     */
-    const QUERY_BUILDER_APPLY_FILTER = QueryBuilderApplyEvent::class;
+
 }

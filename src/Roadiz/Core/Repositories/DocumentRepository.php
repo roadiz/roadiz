@@ -74,7 +74,7 @@ class DocumentRepository extends EntityRepository
      */
     protected function filterByFolder(array &$criteria, QueryBuilder $qb, $prefix = 'd')
     {
-        if (in_array('folders', array_keys($criteria))) {
+        if (key_exists('folders', $criteria)) {
             /*
              * Do not filter if folder is null
              */
@@ -252,7 +252,7 @@ class DocumentRepository extends EntityRepository
      */
     protected function applyFilterByFolder(array &$criteria, QueryBuilder $qb)
     {
-        if (in_array('folders', array_keys($criteria))) {
+        if (key_exists('folders', $criteria)) {
             if ($criteria['folders'] instanceof Folder) {
                 $qb->setParameter('folders', $criteria['folders']->getId());
             } elseif (is_array($criteria['folders']) || $criteria['folders'] instanceof Collection) {

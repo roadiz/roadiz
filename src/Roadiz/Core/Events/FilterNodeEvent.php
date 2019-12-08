@@ -33,6 +33,12 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class FilterNodeEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 abstract class FilterNodeEvent extends Event
 {
     /**

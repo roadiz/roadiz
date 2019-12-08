@@ -33,6 +33,12 @@ namespace RZ\Roadiz\Core\Events;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class FilterQueryBuilderCriteriaEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 class FilterQueryBuilderCriteriaEvent extends Event
 {
     /**

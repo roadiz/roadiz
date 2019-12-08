@@ -35,6 +35,7 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Class FilterFolderEvent
  * @package RZ\Roadiz\Core\Events
+ * @deprecated
  */
 abstract class FilterFolderEvent extends Event
 {

@@ -35,6 +35,7 @@ use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -70,7 +71,7 @@ class PageController extends DefaultThemeApp
      * @param Translation $translation
      * @param string      $_format
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(
         Request $request,
@@ -117,7 +118,8 @@ class PageController extends DefaultThemeApp
 
     /**
      * @param Request $request
-     * @return null|\Symfony\Component\HttpFoundation\RedirectResponse
+     *
+     * @return null|RedirectResponse
      */
     protected function handleEditForm(Request $request)
     {

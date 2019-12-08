@@ -34,6 +34,12 @@ use RZ\Roadiz\Core\Entities\Theme;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Routing\RequestContext;
 
+/**
+ * Class FilterNodeSourcePathEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 class FilterNodeSourcePathEvent extends Event
 {
     /**
