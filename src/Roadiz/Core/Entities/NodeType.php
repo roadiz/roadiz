@@ -307,7 +307,7 @@ class NodeType extends AbstractEntity
      * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @Serializer\Groups("node_type")
-     * @Serializer\Type("ArrayCollection<\RZ\Roadiz\Core\Entities\NodeTypeField>")
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\NodeTypeField>")
      * @Serializer\Accessor(getter="getFields", setter="setFields")
      */
     private $fields;
