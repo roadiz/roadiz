@@ -30,7 +30,6 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
-use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -97,8 +96,8 @@ class DocumentFilesizeCommand extends Command
     private function updateDocumentFilesize(Document $document, Packages $packages)
     {
         if (null !== $document->getRelativePath()) {
+            $documentPath = $packages->getDocumentFilePath($document);
             try {
-                $documentPath = $packages->getDocumentFilePath($document);
                 $file = new File($documentPath);
                 $document->setFilesize($file->getSize());
             } catch (FileNotFoundException $exception) {

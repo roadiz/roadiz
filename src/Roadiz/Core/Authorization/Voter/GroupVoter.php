@@ -84,7 +84,7 @@ class GroupVoter extends RoleVoter
     /**
      * @param Group $group
      *
-     * @return \Symfony\Component\Security\Core\Role\RoleInterface[]
+     * @return Role[]
      */
     protected function extractGroupRoles(Group $group)
     {
