@@ -55,7 +55,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 1800, 'RZTranslationDefault');
+        $query->enableResultCache(1800, 'RZTranslationDefault');
 
         return $query->getOneOrNullResult();
     }
@@ -73,7 +73,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 1800, 'RZTranslationAllAvailable');
+        $query->enableResultCache(1800, 'RZTranslationAllAvailable');
 
         return $query->getResult();
     }
@@ -92,7 +92,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationExists-' . $locale);
+        $query->enableResultCache(120, 'RZTranslationExists-' . $locale);
 
         return (boolean) $query->getSingleScalarResult();
     }
@@ -111,7 +111,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationGetAvailableLocales');
+        $query->enableResultCache(120, 'RZTranslationGetAvailableLocales');
 
         return array_map('current', $query->getScalarResult());
     }
@@ -128,7 +128,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationGetAllLocales');
+        $query->enableResultCache(120, 'RZTranslationGetAllLocales');
 
         return array_map('current', $query->getScalarResult());
     }
@@ -150,7 +150,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationGetAvailableOverrideLocales');
+        $query->enableResultCache(120, 'RZTranslationGetAvailableOverrideLocales');
 
         return array_map('current', $query->getScalarResult());
     }
@@ -170,7 +170,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationGetAllOverrideLocales');
+        $query->enableResultCache(120, 'RZTranslationGetAllOverrideLocales');
 
         return array_map('current', $query->getScalarResult());
     }
@@ -178,7 +178,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get all available translations by locale.
      *
-     * @param $locale
+     * @param string $locale
      *
      * @return Translation[]
      */
@@ -192,11 +192,9 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(
-            true,
-            60,
-            'RZTranslationAllByLocaleAndAvailable-' .
-            $locale
+        $query->enableResultCache(
+            120,
+            'RZTranslationAllByLocaleAndAvailable-' . $locale
         );
 
         return $query->getResult();
@@ -205,7 +203,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get all available translations by overrideLocale.
      *
-     * @param $overrideLocale
+     * @param string $overrideLocale
      * @return Translation[]
      */
     public function findByOverrideLocaleAndAvailable($overrideLocale)
@@ -218,9 +216,8 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(
-            true,
-            60,
+        $query->enableResultCache(
+            120,
             'RZTranslationAllByOverrideAndAvailable-' . $overrideLocale
         );
 
@@ -230,7 +227,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one translation by locale or override locqle.
      *
-     * @param $locale
+     * @param string $locale
      *
      * @return Translation|null
      */
@@ -246,7 +243,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'findOneByLocaleOrOverrideLocale_' . $locale);
+        $query->enableResultCache(120, 'findOneByLocaleOrOverrideLocale_' . $locale);
 
         return $query->getOneOrNullResult();
     }
@@ -254,7 +251,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one available translation by locale or override locqle.
      *
-     * @param $locale
+     * @param string $locale
      *
      * @return Translation|null
      */
@@ -272,7 +269,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'findOneAvailableByLocaleOrOverrideLocale_' . $locale);
+        $query->enableResultCache(120, 'findOneAvailableByLocaleOrOverrideLocale_' . $locale);
 
         return $query->getOneOrNullResult();
     }
@@ -280,7 +277,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one available translation by locale.
      *
-     * @param $locale
+     * @param string $locale
      *
      * @return Translation|null
      */
@@ -295,7 +292,7 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(true, 60, 'RZTranslationOneByLocaleAndAvailable-' . $locale);
+        $query->enableResultCache(120, 'RZTranslationOneByLocaleAndAvailable-' . $locale);
 
         return $query->getOneOrNullResult();
     }
@@ -303,7 +300,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get one available translation by overrideLocale.
      *
-     * @param $overrideLocale
+     * @param string $overrideLocale
      *
      * @return Translation|null
      */
@@ -318,9 +315,8 @@ class TranslationRepository extends EntityRepository
             ->setCacheable(true);
 
         $query = $qb->getQuery();
-        $query->useResultCache(
-            true,
-            60,
+        $query->enableResultCache(
+            120,
             'RZTranslationOneByOverrideAndAvailable-' . $overrideLocale
         );
 

@@ -50,7 +50,7 @@ class DocumentRepository extends EntityRepository
     /**
      * Get a document with its translation id.
      *
-     * @param $id
+     * @param int $id
      * @return mixed|null
      */
     public function findOneByDocumentTranslationId($id)

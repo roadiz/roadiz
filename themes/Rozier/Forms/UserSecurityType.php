@@ -5,18 +5,13 @@ declare(strict_types=1);
 namespace Themes\Rozier\Forms;
 
 use Doctrine\ORM\EntityManagerInterface;
-use RZ\Roadiz\CMS\Forms\Constraints\ValidFacebookName;
 use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
 
 class UserSecurityType extends AbstractType
 {
@@ -33,7 +28,7 @@ class UserSecurityType extends AbstractType
             ->add('expiresAt', DateTimeType::class, [
                 'label' => 'user.expiresAt',
                 'required' => false,
-                'years' => range(date('Y'), date('Y') + 2),
+                'years' => range(date('Y'), ((int) date('Y')) + 2),
                 'date_widget' => 'single_text',
                 'date_format' => 'yyyy-MM-dd',
                 'attr' => [
@@ -51,7 +46,7 @@ class UserSecurityType extends AbstractType
             ->add('credentialsExpiresAt', DateTimeType::class, [
                 'label' => 'user.credentialsExpiresAt',
                 'required' => false,
-                'years' => range(date('Y'), date('Y') + 2),
+                'years' => range(date('Y'), ((int) date('Y')) + 2),
                 'date_widget' => 'single_text',
                 'date_format' => 'yyyy-MM-dd',
                 'attr' => [

@@ -32,6 +32,7 @@ namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
@@ -202,7 +203,9 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['newParent']) && $parameters['newParent'] > 0) {
             /** @var Node|null $parent */
             return $this->get('em')->find(Node::class, (int) $parameters['newParent']);
-        } elseif (null !== $this->getUser() && null !== $this->getUser()->getChroot()) {
+        } elseif (null !== $this->getUser() &&
+            $this->getUser() instanceof User &&
+            null !== $this->getUser()->getChroot()) {
             // If user is jailed in a node, prevent moving nodes out.
             return $this->getUser()->getChroot();
         }
@@ -215,7 +218,7 @@ class AjaxNodesController extends AbstractAjaxController
      *
      * @return float
      */
-    protected function parsePosition(array $parameters, float $default = 0): float
+    protected function parsePosition(array $parameters, float $default = 0.0): float
     {
         if (key_exists('nextNodeId', $parameters) && (int) $parameters['nextNodeId'] > 0) {
             /** @var Node $nextNode */

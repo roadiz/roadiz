@@ -81,7 +81,7 @@ class CustomFormAnswersController extends RozierApp
      * Return an deletion form for requested node-type.
      *
      * @param Request $request
-     * @param         $customFormAnswerId
+     * @param int $customFormAnswerId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

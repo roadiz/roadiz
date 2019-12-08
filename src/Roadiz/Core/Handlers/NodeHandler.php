@@ -38,6 +38,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -518,7 +519,7 @@ class NodeHandler extends AbstractHandler
 
         do {
             $parent = $parent->getParent();
-            if ($parent !== null && !($user !== null && $parent == $user->getChroot())) {
+            if ($parent !== null && !($user !== null && $user instanceof User && $parent === $user->getChroot())) {
                 $parentsArray[] = $parent;
             } else {
                 break;

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -55,12 +56,12 @@ class UniqueUsernameValidator extends ConstraintValidator
     }
 
     /**
-     * @param $username
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param string $username
+     * @param EntityManagerInterface $entityManager
      *
      * @return bool
      */
-    protected function userNameExists($username, $entityManager)
+    protected function userNameExists($username, EntityManagerInterface $entityManager)
     {
         $user = $entityManager->getRepository(User::class)->findOneByUsername($username);
 

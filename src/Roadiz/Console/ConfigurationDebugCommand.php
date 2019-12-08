@@ -70,8 +70,8 @@ class ConfigurationDebugCommand extends Command implements ThemeAwareCommandInte
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      *
      * @return array
      */

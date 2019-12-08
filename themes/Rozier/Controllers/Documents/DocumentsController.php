@@ -166,7 +166,7 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param $documentId
+     * @param int $documentId
      * @return JsonResponse|Response
      */
     public function adjustAction(Request $request, $documentId)

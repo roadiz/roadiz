@@ -44,7 +44,7 @@ final class ContainerFormExtension implements FormExtensionInterface
     /**
      * ContainerFormExtension constructor.
      *
-     * @param $container
+     * @param Container $container
      */
     public function __construct(Container $container)
     {

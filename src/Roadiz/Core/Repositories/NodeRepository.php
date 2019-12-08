@@ -755,7 +755,7 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
-     * @param $nodeName
+     * @param string $nodeName
      *
      * @return bool
      * @throws NonUniqueResultException
@@ -863,7 +863,7 @@ class NodeRepository extends StatusAwareRepository
      *
      * @deprecated Use findByNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
-     * @param $fieldName
+     * @param string $fieldName
      * @param Translation $translation
      * @return array|null
      */
@@ -980,7 +980,7 @@ class NodeRepository extends StatusAwareRepository
     /**
      * @deprecated Use findByReverseNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
-     * @param $fieldName
+     * @param string $fieldName
      * @param Translation $translation
      * @return array|null
      */

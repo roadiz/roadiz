@@ -342,10 +342,10 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
-     * @param  QueryBuilder &$qb
-     * @param  string $name
-     * @param  string $key
-     * @param  array $value
+     * @param QueryBuilder $qb
+     * @param string $name
+     * @param string $key
+     * @param array $value
      *
      * @return Query\Expr\Func
      */
@@ -572,9 +572,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
-     * @param  array &$criteria
-     * @param  QueryBuilder $qb
-     * @param  string $nodeAlias
+     * @param array $criteria
+     * @param QueryBuilder $qb
+     * @param string $nodeAlias
      */
     protected function buildTagFiltering(array &$criteria, QueryBuilder $qb, $nodeAlias = 'n')
     {

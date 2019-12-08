@@ -147,6 +147,7 @@ class NodesSourcesExtension extends AbstractExtension
                 return null;
             }
         }
+        /** @var NodesSourcesHandler $nodeSourceHandler */
         $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
         return $nodeSourceHandler->getNext($criteria, $order);
     }
@@ -167,7 +168,7 @@ class NodesSourcesExtension extends AbstractExtension
                 return null;
             }
         }
-
+        /** @var NodesSourcesHandler $nodeSourceHandler */
         $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
         return $nodeSourceHandler->getPrevious($criteria, $order);
     }
@@ -188,7 +189,7 @@ class NodesSourcesExtension extends AbstractExtension
                 return null;
             }
         }
-
+        /** @var NodesSourcesHandler $nodeSourceHandler */
         $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
         return $nodeSourceHandler->getLastSibling($criteria, $order);
     }
@@ -209,7 +210,7 @@ class NodesSourcesExtension extends AbstractExtension
                 return null;
             }
         }
-
+        /** @var NodesSourcesHandler $nodeSourceHandler */
         $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
         return $nodeSourceHandler->getFirstSibling($criteria, $order);
     }
@@ -248,7 +249,7 @@ class NodesSourcesExtension extends AbstractExtension
                 return [];
             }
         }
-
+        /** @var NodesSourcesHandler $nodeSourceHandler */
         $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
         return $nodeSourceHandler->getParents($criteria);
     }
@@ -267,7 +268,7 @@ class NodesSourcesExtension extends AbstractExtension
                 return [];
             }
         }
-
+        /** @var NodesSourcesHandler $nodeSourceHandler */
         $nodeSourceHandler = $this->handlerFactory->getHandler($ns);
         return $nodeSourceHandler->getTags();
     }

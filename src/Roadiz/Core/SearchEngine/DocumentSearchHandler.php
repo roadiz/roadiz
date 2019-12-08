@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -121,7 +122,7 @@ class DocumentSearchHandler extends AbstractSearchHandler
     }
 
     /**
-     * @param $args
+     * @param array $args
      * @return mixed
      */
     protected function argFqProcess(&$args)
@@ -185,7 +186,7 @@ class DocumentSearchHandler extends AbstractSearchHandler
     }
 
     /**
-     * @param $response
+     * @param array|null $response
      * @return array
      */
     protected function parseSolrResponse($response)

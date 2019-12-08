@@ -42,7 +42,7 @@ use RZ\Roadiz\Attribute\Serializer\AttributeObjectConstructor;
 use RZ\Roadiz\Attribute\Twig\AttributesExtension;
 use RZ\Roadiz\CMS\Importers\ChainImporter;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\ChainDoctrineObjectConstructor;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Translation\Translator;
 
 class AttributesServiceProvider implements ServiceProviderInterface

@@ -51,8 +51,8 @@ class NodesAttributesController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param         $nodeId
-     * @param         $translationId
+     * @param int $nodeId
+     * @param int $translationId
      *
      * @return Response
      */
@@ -192,9 +192,9 @@ class NodesAttributesController extends RozierApp
 
     /**
      * @param Request $request
-     * @param         $nodeId
-     * @param         $translationId
-     * @param         $attributeValueId
+     * @param int $nodeId
+     * @param int $translationId
+     * @param int $attributeValueId
      *
      * @return RedirectResponse|Response
      */

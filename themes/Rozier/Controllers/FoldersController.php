@@ -253,8 +253,8 @@ class FoldersController extends RozierApp
 
     /**
      * @param Request $request
-     * @param $folderId
-     * @param $translationId
+     * @param int $folderId
+     * @param int $translationId
      *
      * @return Response
      */

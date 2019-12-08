@@ -122,7 +122,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @return Node
      * @throws EntityAlreadyExistsException
      * @throws EntityNotFoundException

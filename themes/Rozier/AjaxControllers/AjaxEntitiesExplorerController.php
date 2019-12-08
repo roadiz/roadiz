@@ -167,7 +167,7 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
     /**
      * Normalize response Node list result.
      *
-     * @param $entities
+     * @param array|\Traversable $entities
      * @param array $configuration
      * @return array
      */

@@ -166,13 +166,12 @@ class NodesUtilsController extends RozierApp
                         ["nodeId" => $newNode->getId()]
                     ));
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add(
-                'error',
+            $this->publishErrorMessage(
+                $request,
                 $this->getTranslator()->trans("impossible.duplicate.node.%name%", [
                     '%name%' => $existingNode->getNodeName(),
                 ])
             );
-            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
 
             return $this->redirect($this->get('urlGenerator')
                     ->generate(

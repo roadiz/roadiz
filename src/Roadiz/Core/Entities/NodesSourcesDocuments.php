@@ -67,9 +67,9 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
      *
-     * @param mixed                                $nodeSource NodesSources and inherited types
-     * @param \RZ\Roadiz\Core\Entities\Document      $document   Document to link
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field      NodeTypeField
+     * @param NodesSources  $nodeSource NodesSources and inherited types
+     * @param Document      $document   Document to link
+     * @param NodeTypeField $field      NodeTypeField
      */
     public function __construct(NodesSources $nodeSource, Document $document, NodeTypeField $field)
     {

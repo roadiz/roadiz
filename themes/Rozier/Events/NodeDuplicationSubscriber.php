@@ -33,6 +33,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -74,6 +75,7 @@ class NodeDuplicationSubscriber implements EventSubscriberInterface
      */
     public function cleanPosition(FilterNodeEvent $event)
     {
+        /** @var NodeHandler $nodeHandler */
         $nodeHandler = $this->handlerFactory->getHandler($event->getNode());
         $nodeHandler->setNode($event->getNode());
         $nodeHandler->cleanChildrenPositions();

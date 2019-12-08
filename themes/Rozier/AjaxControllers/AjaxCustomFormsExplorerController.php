@@ -122,7 +122,7 @@ class AjaxCustomFormsExplorerController extends AbstractAjaxController
     /**
      * Normalize response CustomForm list result.
      *
-     * @param $customForms
+     * @param array|\Traversable $customForms
      * @return array
      */
     private function normalizeCustomForms($customForms)

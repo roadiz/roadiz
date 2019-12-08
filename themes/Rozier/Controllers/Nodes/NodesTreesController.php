@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -72,7 +73,7 @@ class NodesTreesController extends RozierApp
             }
 
             $this->get('em')->refresh($node);
-        } elseif (null !== $this->getUser()) {
+        } elseif (null !== $this->getUser() && $this->getUser() instanceof User) {
             $node = $this->getUser()->getChroot();
         } else {
             $node = null;

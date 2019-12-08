@@ -72,7 +72,7 @@ class RedirectionsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param $redirectionId
+     * @param int $redirectionId
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $redirectionId)

@@ -125,7 +125,7 @@ class UserLifeCycleSubscriber implements EventSubscriber
 
     /**
      * @param User $user
-     * @param $plainPassword
+     * @param string $plainPassword
      */
     protected function setPassword(User $user, $plainPassword)
     {

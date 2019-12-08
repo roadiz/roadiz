@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -85,7 +86,7 @@ class RozierApp extends BackendController
         $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
 
         $this->themeContainer['nodeTree'] = function () {
-            if (null !== $this->getUser()) {
+            if (null !== $this->getUser() && $this->getUser() instanceof User) {
                 $parent = $this->getUser()->getChroot();
             } else {
                 $parent = null;

@@ -86,13 +86,7 @@ class NewslettersUtilsController extends RozierApp
                                                 ]
                                             ));
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                $this->getTranslator()->trans("impossible.duplicate.newsletter.%name%", [
-                    '%name%' => $existingNewsletter->getNode()->getNodeName(),
-                ])
-            );
-            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->publishErrorMessage($request, $e->getMessage());
 
             return $this->redirect($this->get('urlGenerator')
                                             ->generate(

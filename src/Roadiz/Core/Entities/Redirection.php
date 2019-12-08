@@ -112,7 +112,7 @@ class Redirection extends AbstractDateTimed
     }
 
     /**
-     * @param mixed $redirectNodeSource
+     * @param NodesSources|null $redirectNodeSource
      * @return Redirection
      */
     public function setRedirectNodeSource(NodesSources $redirectNodeSource = null): Redirection

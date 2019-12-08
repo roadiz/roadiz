@@ -70,7 +70,7 @@ class SearchController extends RozierApp
     protected $itemPerPage = null;
 
     /**
-     * @param $var
+     * @param mixed $var
      * @return bool
      */
     public function isBlank($var)
@@ -79,7 +79,7 @@ class SearchController extends RozierApp
     }
 
     /**
-     * @param $var
+     * @param mixed $var
      * @return bool
      */
     public function notBlank($var)
@@ -156,7 +156,7 @@ class SearchController extends RozierApp
     }
 
     /**
-     * @param $data
+     * @param array|\Traversable $data
      * @param NodeType $nodetype
      * @return mixed
      */
@@ -254,7 +254,7 @@ class SearchController extends RozierApp
 
     /**
      * @param Request $request
-     * @param         $nodetypeId
+     * @param int $nodetypeId
      *
      * @return null|RedirectResponse|Response
      * @throws Twig_Error_Runtime

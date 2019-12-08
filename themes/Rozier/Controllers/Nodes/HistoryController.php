@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -44,9 +45,9 @@ class HistoryController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param $nodeId
+     * @param int $nodeId
      * @param int $page
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function historyAction(Request $request, $nodeId, $page = 1)
     {

@@ -120,7 +120,7 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
     /**
      * Normalize response NodeType list result.
      *
-     * @param $nodeTypes
+     * @param array|\Traversable $nodeTypes
      * @return array
      */
     private function normalizeNodeType($nodeTypes)

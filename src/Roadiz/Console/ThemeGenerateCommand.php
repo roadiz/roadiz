@@ -70,7 +70,7 @@ class ThemeGenerateCommand extends ThemesCommand
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return string
      */
     public function validateThemeName(string $name)

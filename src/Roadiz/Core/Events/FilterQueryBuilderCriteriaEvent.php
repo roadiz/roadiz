@@ -69,7 +69,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
      * @param string $entityClass
      * @param string $property
      * @param mixed $value
-     * @param $actualEntityName
+     * @param string $actualEntityName
      */
     public function __construct(QueryBuilder $queryBuilder, $entityClass, $property, $value, $actualEntityName)
     {

@@ -35,7 +35,7 @@ namespace RZ\Roadiz\Core\Repositories;
 class SettingRepository extends EntityRepository
 {
     /**
-     * @param $name
+     * @param string $name
      *
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -54,7 +54,7 @@ class SettingRepository extends EntityRepository
     }
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return bool
      * @throws \Doctrine\ORM\NonUniqueResultException

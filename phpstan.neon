@@ -13,8 +13,9 @@ parameters:
         - '#NodesSources\|null but returns GeneratedNodeSources\\NS(?:[a-zA-Z]+)#'
         - '#GeneratedNodeSources\\NS(?:[a-zA-Z]+)#'
         - '#Call to an undefined method RZ\\Roadiz\\Core\\AbstractEntities\\LeafInterface#'
-        - '#Instantiated class Memcached not found#'
-        - '#Instantiated class Redis not found#'
+        - '#Instantiated class (Memcached|Redis) not found#'
+        - '#on an unknown class (Memcached|Redis)#'
+
     reportUnmatchedIgnoredErrors: false
 includes:
     - vendor/phpstan/phpstan-doctrine/extension.neon

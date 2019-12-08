@@ -94,7 +94,7 @@ class Log extends AbstractEntity
     protected $clientIp = null;
 
     /**
-     * @param mixed  $level
+     * @param int $level
      * @param string $message
      */
     public function __construct(int $level, string $message)

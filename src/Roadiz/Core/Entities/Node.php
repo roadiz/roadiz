@@ -170,7 +170,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     private $home = false;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isHome(): bool
     {
@@ -178,7 +178,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $home
+     * @param bool $home
      * @return $this
      */
     public function setHome(bool $home): Node
@@ -566,7 +566,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection<RZ\Roadiz\Core\Entities\Node>
+     * @var ArrayCollection<Node>
      * @Serializer\Groups({"node_children"})
      */
     protected $children;
@@ -574,7 +574,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
-     * @var ArrayCollection<RZ\Roadiz\Core\Entities\Tag>
+     * @var ArrayCollection<Tag>
      * @Serializer\Groups({"nodes_sources", "node"})
      */
     private $tags = null;

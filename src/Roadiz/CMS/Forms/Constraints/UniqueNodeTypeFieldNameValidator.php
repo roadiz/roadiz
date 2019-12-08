@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Validator\Constraint;
@@ -63,7 +64,7 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
-     * @param $nodeType
+     * @param NodeType $nodeType
      * @param EntityManager $entityManager
      *
      * @return bool
