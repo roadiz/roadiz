@@ -77,19 +77,19 @@ class SearchController extends DefaultThemeApp
 
         /** @var NodeSourceSearchHandler|null $searchHandler */
         $searchHandler = $this->get('solr.search.nodeSource');
-        if (false /*null !== $searchHandler*/) {
+        if (null !== $searchHandler) {
             /*
              * Use Apache Solr when available
              */
             $searchHandler->boostByPublicationDate();
             $nodeSources = $searchHandler->search(
-                    $request->query->get('query'), # Use ?query query parameter to search with
-                    [
-                        'translation' => $translation,
-                    ], # a simple criteria array to filter search results
-                    10, # result count
-                    true # Search in tags too
-                );
+                $request->query->get('query'), # Use ?query query parameter to search with
+                [
+                    'translation' => $translation,
+                ], # a simple criteria array to filter search results
+                10, # result count
+                true # Search in tags too
+            );
         } else {
             /*
              * Use simple search over title and meta fields.

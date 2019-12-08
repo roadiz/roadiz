@@ -106,7 +106,6 @@ class NodeNameSubscriber implements EventSubscriberInterface
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
                 $this->nodeNameChecker->isNodeNameValid($testingNodeName) &&
                 !$this->nodeNameChecker->isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
-
                 if ($nodeSource->getNode()->getNodeType()->isReachable()) {
                     $oldPaths = $this->nodeMover->getNodeSourcesUrls($nodeSource->getNode());
                     $oldUpdateAt = $nodeSource->getNode()->getUpdatedAt();
