@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -89,6 +90,7 @@ class RequirementsCommand extends Command
             $this->folderWritable($kernel->getFontsFilesPath()),
             $this->folderWritable($kernel->getRootDir() . '/gen-src'),
         ]);
+        return 0;
     }
 
     protected function testPHPIntValue($name, $expected): string

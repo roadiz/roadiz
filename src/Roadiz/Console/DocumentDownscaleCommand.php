@@ -35,7 +35,6 @@ use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -64,7 +63,6 @@ class DocumentDownscaleCommand extends Command
         $packages = $this->getHelper('assetPackages')->getPackages();
         $this->configuration = $this->getHelper('configuration')->getConfiguration();
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $questionHelper = $this->getHelper('question');
         $io = new SymfonyStyle($input, $output);
 
         if (!empty($this->configuration['assetsProcessing']['maxPixelSize']) &&
@@ -112,9 +110,11 @@ class DocumentDownscaleCommand extends Command
                 $assetsClearer->clear();
                 $io->writeln($assetsClearer->getOutput());
             }
+            return 0;
         } else {
             $io->warning('Your configuration is not set for downscaling documents.');
             $io->note('Add <info>assetsProcessing.maxPixelSize</info> parameter in your <info>config.yml</info> file.');
+            return 1;
         }
     }
 }

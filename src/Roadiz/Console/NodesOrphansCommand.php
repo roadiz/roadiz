@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -118,5 +119,6 @@ class NodesOrphansCommand extends Command
         } else {
             $io->success('That’s OK, you don’t have any orphan node.');
         }
+        return 0;
     }
 }

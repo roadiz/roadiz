@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -248,7 +249,7 @@ class ThemesCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|null|void
+     * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -287,6 +288,7 @@ class ThemesCommand extends Command
         }
 
         $io->table(['Class (with / instead of \)', 'Enabled', 'Type'], $tableContent);
+        return 0;
     }
 
     /**

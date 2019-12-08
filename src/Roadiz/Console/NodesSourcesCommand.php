@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -77,8 +78,10 @@ class NodesSourcesCommand extends Command
                     $io->writeln("\t<info>".$handler->getSourceClassPath()."</info>");
                 }
             }
+            return 0;
         } else {
             $io->error('No available node-types…');
+            return 1;
         }
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -91,6 +92,7 @@ class FilesExportCommand extends Command
 
         // Zip archive will be created only after closing object
         $zip->close();
+        return 0;
     }
 
 

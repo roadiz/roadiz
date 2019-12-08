@@ -91,6 +91,7 @@ class DocumentFilesizeCommand extends Command
         }
         $em->flush();
         $this->io->progressFinish();
+        return 0;
     }
 
     private function updateDocumentFilesize(Document $document, Packages $packages)

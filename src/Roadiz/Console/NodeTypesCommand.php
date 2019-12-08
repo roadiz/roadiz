@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -87,6 +88,7 @@ class NodeTypesCommand extends Command
                 $io->table(['Id', 'Label', 'Name', 'Type', 'Visible', 'Index'], $tableContent);
             } else {
                 $io->error($name . ' node type does not exist.');
+                return 1;
             }
         } else {
             /** @var array<NodeType> $nodetypes */
@@ -108,7 +110,9 @@ class NodeTypesCommand extends Command
                 $io->table(['Id', 'Title', 'Visible'], $tableContent);
             } else {
                 $io->error('No available node-types…');
+                return 1;
             }
         }
+        return 0;
     }
 }

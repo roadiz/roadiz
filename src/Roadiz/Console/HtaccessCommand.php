@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -103,6 +104,7 @@ class HtaccessCommand extends Command
         }
 
         $io->listing($outputs);
+        return 0;
     }
 
     protected function protectFolders(array $paths): array

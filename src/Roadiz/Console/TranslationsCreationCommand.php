@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -86,8 +87,10 @@ class TranslationsCreationCommand extends Command
 
             if (null !== $translationByName) {
                 $io->error('Translation ' . $name . ' already exists.');
+                return 1;
             } elseif (null !== $translationByLocale) {
                 $io->error('Translation locale ' . $locale . ' is already used.');
+                return 1;
             } else {
                 if ($io->askQuestion(
                     $confirmation
@@ -103,5 +106,6 @@ class TranslationsCreationCommand extends Command
                 }
             }
         }
+        return 0;
     }
 }

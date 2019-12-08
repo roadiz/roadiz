@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -100,8 +101,10 @@ class FilesImportCommand extends Command
 
                 $fs->remove($tempDir);
             }
+            return 0;
         } else {
             $io->error('Zip archive does not exist or is invalid.');
+            return 1;
         }
     }
 }

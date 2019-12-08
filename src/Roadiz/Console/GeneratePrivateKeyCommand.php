@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -60,5 +61,6 @@ class GeneratePrivateKeyCommand extends Command
             $kernel->get(KeyChainInterface::class)->generate($filename);
             $io->success(sprintf('Private key has been generated in %s', $privateKeyPath));
         }
+        return 0;
     }
 }

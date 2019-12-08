@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -92,5 +93,6 @@ class NodesCommand extends Command
         }
 
         $io->table(['Id', 'Name', 'Type', 'Hidden', 'Published'], $tableContent);
+        return 0;
     }
 }

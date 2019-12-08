@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -43,10 +44,10 @@ class VersionsPurgeCommand extends Command
         $this->setName('versions:purge')
             ->setDescription('Purge entities versions')
             ->setHelp(<<<EOT
-Purge entities versions <info>before</info> a given date-time 
+Purge entities versions <info>before</info> a given date-time
 OR by keeping at least <info>count</info> versions.
 
-This command does not alter active node-sources, document translations 
+This command does not alter active node-sources, document translations
 or tag translations, it only deletes versioned log entries.
 EOT
             )
@@ -77,6 +78,7 @@ EOT
         } else {
             throw new \InvalidArgumentException('Choose an option between --before or --count');
         }
+        return 0;
     }
 
     private function purgeByDate(InputInterface $input, OutputInterface $output)

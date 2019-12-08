@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -78,9 +79,11 @@ class NodeTypesCreationCommand extends Command
 
         if ($nodetype !== null) {
             $io->error('Node-type "' . $name . '" already exists.');
+            return 1;
         } else {
             $this->executeCreation($input, $output);
         }
+        return 0;
     }
 
     private function executeCreation(InputInterface $input, OutputInterface $output)
