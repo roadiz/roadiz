@@ -34,6 +34,7 @@ use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\CacheEvents;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
@@ -252,22 +253,19 @@ class InstallApp extends AppController
                     $kernelClass = get_class($this->get('kernel'));
 
                     // Clear cache for install
-                    $installEvent = new FilterCacheEvent($this->get('kernel'));
-                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $installEvent);
+                    $dispatcher->dispatch(new CachePurgeRequestEvent($this->get('kernel')));
 
                     // Clear cache for prod
                     /** @var Kernel $prodKernel */
                     $prodKernel = new $kernelClass('prod', false);
                     $prodKernel->boot();
-                    $prodEvent = new FilterCacheEvent($prodKernel);
-                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodEvent);
+                    $dispatcher->dispatch(new CachePurgeRequestEvent($prodKernel));
 
                     // Clear cache for prod preview
                     /** @var Kernel $prodPreviewKernel */
                     $prodPreviewKernel = new $kernelClass('prod', false, true);
                     $prodPreviewKernel->boot();
-                    $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
-                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);
+                    $dispatcher->dispatch(new CachePurgeRequestEvent($prodPreviewKernel));
 
                     /*
                      * Force redirect to avoid resending form when refreshing page

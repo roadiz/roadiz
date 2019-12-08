@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -26,8 +27,11 @@
  * @file FolderEvents.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\Core\Events;
+
+use RZ\Roadiz\Core\Events\Folder\FolderCreatedEvent;
+use RZ\Roadiz\Core\Events\Folder\FolderDeletedEvent;
+use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
 
 /**
  * Class FolderEvents
@@ -47,7 +51,7 @@ final class FolderEvents
      * @var string
      * @deprecated
      */
-    const FOLDER_CREATED = 'folder.created';
+    const FOLDER_CREATED = FolderCreatedEvent::class;
 
     /**
      * Event folder.updated is triggered each time a node-source
@@ -59,7 +63,7 @@ final class FolderEvents
      * @var string
      * @deprecated
      */
-    const FOLDER_UPDATED = 'folder.updated';
+    const FOLDER_UPDATED = FolderUpdatedEvent::class;
 
     /**
      * Event folder.deleted is triggered each time a node-source
@@ -71,5 +75,5 @@ final class FolderEvents
      * @var string
      * @deprecated
      */
-    const FOLDER_DELETED = 'folder.deleted';
+    const FOLDER_DELETED = FolderDeletedEvent::class;
 }

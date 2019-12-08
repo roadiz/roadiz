@@ -45,7 +45,7 @@ class FilterNodesSourcesQueryBuilderCriteriaEvent extends FilterQueryBuilderCrit
     /**
      * @inheritDoc
      */
-    public function supports()
+    public function supports(): bool
     {
         if ($this->actualEntityName === NodesSources::class) {
             return true;

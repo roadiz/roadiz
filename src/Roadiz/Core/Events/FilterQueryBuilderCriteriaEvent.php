@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -76,7 +77,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
     /**
      * @return QueryBuilder
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
@@ -85,7 +86,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
      * @param QueryBuilder $queryBuilder
      * @return FilterQueryBuilderCriteriaEvent
      */
-    public function setQueryBuilder(QueryBuilder $queryBuilder)
+    public function setQueryBuilder(QueryBuilder $queryBuilder): self
     {
         $this->queryBuilder = $queryBuilder;
         return $this;
@@ -110,7 +111,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
     /**
      * @return bool
      */
-    public function supports()
+    public function supports(): bool
     {
         return $this->entityClass === $this->actualEntityName;
     }

@@ -35,7 +35,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -207,7 +207,7 @@ class DefaultThemeApp extends FrontendController
         $dispatcher = $container['dispatcher'];
         $dispatcher->addSubscriber(new LinkPathSubscriber());
         $dispatcher->addListener(
-            NodesSourcesEvents::NODE_SOURCE_INDEXING,
+            NodesSourcesIndexingEvent::class,
             function (FilterSolariumNodeSourceEvent $event) {
                 $assoc = $event->getAssociations();
                 $assoc['defaulttheme_txt'] = 'This is injected by Default theme during indexing.';

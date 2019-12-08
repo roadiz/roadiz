@@ -62,7 +62,7 @@ class FilterSolariumNodeSourceEvent extends Event
         $this->solariumDocument = $solariumDocument;
     }
 
-    public function getNodeSource()
+    public function getNodeSource(): NodesSources
     {
         return $this->nodeSource;
     }

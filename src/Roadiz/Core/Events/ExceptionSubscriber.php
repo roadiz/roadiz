@@ -43,7 +43,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -85,8 +85,12 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
      * @param LoggerInterface        $logger
      * @param bool                   $debug
      */
-    public function __construct(Container $container, ThemeResolverInterface $themeResolver, LoggerInterface $logger, $debug = false)
-    {
+    public function __construct(
+        Container $container,
+        ThemeResolverInterface $themeResolver,
+        LoggerInterface $logger,
+        $debug = false
+    ) {
         $this->logger = $logger;
         $this->debug = $debug;
 
@@ -109,12 +113,12 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
     }
 
     /**
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      */
-    public function onKernelException(GetResponseForExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event)
     {
         // You get the exception object from the received event
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
 
         /*
          * Get previous exception if thrown in Twig execution context.
@@ -183,12 +187,12 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
     }
 
     /**
-     * @param GetResponseForExceptionEvent $event
+     * @param ExceptionEvent $event
      * @return null|Theme
      */
-    protected function isNotFoundExceptionWithTheme(GetResponseForExceptionEvent $event)
+    protected function isNotFoundExceptionWithTheme(ExceptionEvent $event)
     {
-        $exception = $event->getException();
+        $exception = $event->getThrowable();
         $request = $event->getRequest();
 
         if ($exception instanceof ResourceNotFoundException ||
@@ -211,13 +215,13 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
     }
 
     /**
-     * @param Theme                        $theme
-     * @param \Exception                   $exception
-     * @param GetResponseForExceptionEvent $event
+     * @param Theme          $theme
+     * @param \Exception     $exception
+     * @param ExceptionEvent $event
      *
      * @return Response
      */
-    protected function createThemeNotFoundResponse(Theme $theme, \Exception $exception, GetResponseForExceptionEvent $event)
+    protected function createThemeNotFoundResponse(Theme $theme, \Exception $exception, ExceptionEvent $event)
     {
         /*
          * Create a new controller for serving

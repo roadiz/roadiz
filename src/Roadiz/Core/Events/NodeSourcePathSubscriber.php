@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
@@ -28,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
 use RZ\Roadiz\Utils\UrlGenerators\NodesSourcesUrlGenerator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -39,7 +41,7 @@ class NodeSourcePathSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING => [['onNodesSourcesPath', -100]],
+            NodesSourcesPathGeneratingEvent::class => [['onNodesSourcesPath', -100]],
         ];
     }
 

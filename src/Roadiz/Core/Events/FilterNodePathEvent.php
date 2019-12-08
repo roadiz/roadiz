@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -32,9 +33,11 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Entities\Node;
 
 /**
+ * Class FilterNodePathEvent
  *
+ * @package RZ\Roadiz\Core\Events
  */
-class FilterNodePathEvent extends FilterNodeEvent
+abstract class FilterNodePathEvent extends FilterNodeEvent
 {
     /**
      * @var array

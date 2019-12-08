@@ -29,10 +29,12 @@
  */
 namespace Themes\Rozier\Events;
 
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\FilterNodePathEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\NodeMover;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -44,36 +46,44 @@ class NodeRedirectionSubscriber implements EventSubscriberInterface
      * @var NodeMover
      */
     protected $nodeMover;
+    /**
+     * @var Kernel
+     */
+    protected $kernel;
 
     /**
      * NodeRedirectionSubscriber constructor.
      *
      * @param NodeMover $nodeMover
+     * @param Kernel    $kernel
      */
-    public function __construct(NodeMover $nodeMover)
+    public function __construct(NodeMover $nodeMover, Kernel $kernel)
     {
         $this->nodeMover = $nodeMover;
+        $this->kernel = $kernel;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            NodeEvents::NODE_UPDATED => 'redirectOldPaths'
+            NodePathChangedEvent::class => 'redirectOldPaths'
         ];
     }
 
     /**
      * Empty nodeSources Url cache
      *
-     * @param FilterNodeEvent $event
+     * @param FilterNodePathEvent $event
      */
-    public function redirectOldPaths(FilterNodeEvent $event)
+    public function redirectOldPaths(FilterNodePathEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
-        if ($event instanceof FilterNodePathEvent &&
+        if (null !== $event->getNode() &&
             $event->getNode()->isPublished() &&
             $event->getNode()->getNodeType()->isReachable() &&
             count($event->getPaths()) > 0) {
             $this->nodeMover->redirectAll($event->getNode(), $event->getPaths());
+
+            $dispatcher->dispatch(new CachePurgeRequestEvent($this->kernel));
         }
     }
 }

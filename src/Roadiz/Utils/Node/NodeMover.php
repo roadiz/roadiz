@@ -165,7 +165,9 @@ final class NodeMover
             $this->logger->warning('Cannot redirect empty or root path: ' . $nodeSource->getTitle());
             return $nodeSource;
         }
-        $newPath = $this->urlGenerator->generate($nodeSource);
+        $newPath = $this->urlGenerator->generate($nodeSource, [
+            'noCache' => true // do not use nodeSourceUrl cache provider
+        ]);
         /*
          * Only creates redirection if path changed
          */

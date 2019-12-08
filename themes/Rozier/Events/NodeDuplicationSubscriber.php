@@ -31,7 +31,7 @@ namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -65,7 +65,7 @@ class NodeDuplicationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodeEvents::NODE_DUPLICATED => 'cleanPosition',
+            NodeDuplicatedEvent::class => 'cleanPosition',
         ];
     }
 

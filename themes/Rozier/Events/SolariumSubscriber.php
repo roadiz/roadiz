@@ -44,9 +44,16 @@ use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
-use RZ\Roadiz\Core\Events\FolderEvents;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeTaggedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUndeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Core\Events\TagEvents;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
@@ -54,8 +61,8 @@ use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\Exception\HttpException;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Subscribe to Node and NodesSources event to update
@@ -110,14 +117,15 @@ class SolariumSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodeEvents::NODE_STATUS_CHANGED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_VISIBILITY_CHANGED => 'onSolariumNodeUpdate',
-            NodesSourcesEvents::NODE_SOURCE_UPDATED => 'onSolariumSingleUpdate',
-            NodesSourcesEvents::NODE_SOURCE_DELETED => 'onSolariumSingleDelete',
-            NodeEvents::NODE_DELETED => 'onSolariumNodeDelete',
-            NodeEvents::NODE_UNDELETED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
+            NodeUpdatedEvent::class => 'onSolariumNodeUpdate',
+            NodeStatusChangedEvent::class => 'onSolariumNodeUpdate',
+            NodeVisibilityChangedEvent::class => 'onSolariumNodeUpdate',
+            NodesSourcesUpdatedEvent::class => 'onSolariumSingleUpdate',
+            NodesSourcesDeletedEvent::class => 'onSolariumSingleDelete',
+            NodeDeletedEvent::class => 'onSolariumNodeDelete',
+            NodeUndeletedEvent::class => 'onSolariumNodeUpdate',
+            NodeTaggedEvent::class => 'onSolariumNodeUpdate',
+            NodeCreatedEvent::class => 'onSolariumNodeUpdate',
             TagEvents::TAG_UPDATED => 'onSolariumTagUpdate',
             DocumentFileUploadedEvent::class => 'onSolariumDocumentUpdate',
             DocumentTranslationUpdatedEvent::class => 'onSolariumDocumentUpdate',
@@ -125,7 +133,7 @@ class SolariumSubscriber implements EventSubscriberInterface
             DocumentOutFolderEvent::class => 'onSolariumDocumentUpdate',
             DocumentUpdatedEvent::class => 'onSolariumDocumentUpdate',
             DocumentDeletedEvent::class => 'onSolariumDocumentDelete',
-            FolderEvents::FOLDER_UPDATED => 'onSolariumFolderUpdate',
+            FolderUpdatedEvent::class => 'onSolariumFolderUpdate',
         ];
     }
 
@@ -209,6 +217,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                     $solrSource->getDocumentFromIndex();
                     $solrSource->updateAndCommit();
                 }
+                $event->stopPropagation();
             } catch (HttpException $exception) {
                 $this->logger->error($exception->getMessage());
             }

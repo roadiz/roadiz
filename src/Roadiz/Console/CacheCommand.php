@@ -31,6 +31,8 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\CacheEvents;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
@@ -165,9 +167,9 @@ class CacheCommand extends Command
             } else {
                 /** @var EventDispatcher $dispatcher */
                 $dispatcher = $kernel->get('dispatcher');
-                $event = new FilterCacheEvent($kernel);
-                $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
-                $dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
+                $event = new CachePurgeRequestEvent($kernel);
+                $dispatcher->dispatch($event);
+                $dispatcher->dispatch(new CachePurgeAssetsRequestEvent($kernel));
 
                 foreach ($event->getMessages() as $message) {
                     $outputs[] = sprintf('<info>%s</info>: %s', $message['description'], $message['message']);

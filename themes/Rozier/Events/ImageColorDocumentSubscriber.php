@@ -27,6 +27,7 @@
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
@@ -92,7 +93,7 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     /**
      * @param FilterDocumentEvent $event
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function onImageUploaded(FilterDocumentEvent $event)
     {

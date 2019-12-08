@@ -32,12 +32,12 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesCreatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\Node\TranslateNodeType;
 use Themes\Rozier\RozierApp;
@@ -52,7 +52,7 @@ class TranslateController extends RozierApp
      * @param Request $request
      * @param int $nodeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function translateAction(Request $request, $nodeId)
     {
@@ -139,8 +139,7 @@ class TranslateController extends RozierApp
                 /*
                  * Dispatch event
                  */
-                $event = new FilterNodesSourcesEvent($source);
-                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_CREATED, $event);
+                $this->get('dispatcher')->dispatch(new NodesSourcesCreatedEvent($source));
             }
         }
     }

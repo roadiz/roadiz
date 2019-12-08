@@ -35,6 +35,9 @@ use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterFolderEvent;
+use RZ\Roadiz\Core\Events\Folder\FolderCreatedEvent;
+use RZ\Roadiz\Core\Events\Folder\FolderDeletedEvent;
+use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
 use RZ\Roadiz\Core\Events\FolderEvents;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -121,8 +124,7 @@ class FoldersController extends RozierApp
                  * Dispatch event
                  */
                 $this->get('dispatcher')->dispatch(
-                    FolderEvents::FOLDER_CREATED,
-                    new FilterFolderEvent($folder)
+                    new FolderCreatedEvent($folder)
                 );
             } catch (\RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
@@ -171,8 +173,7 @@ class FoldersController extends RozierApp
                      * Dispatch event
                      */
                     $this->get('dispatcher')->dispatch(
-                        FolderEvents::FOLDER_DELETED,
-                        new FilterFolderEvent($folder)
+                        new FolderDeletedEvent($folder)
                     );
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -231,8 +232,7 @@ class FoldersController extends RozierApp
                      * Dispatch event
                      */
                     $this->get('dispatcher')->dispatch(
-                        FolderEvents::FOLDER_UPDATED,
-                        new FilterFolderEvent($folder)
+                        new FolderUpdatedEvent($folder)
                     );
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
@@ -303,8 +303,7 @@ class FoldersController extends RozierApp
                      * Dispatch event
                      */
                     $this->get('dispatcher')->dispatch(
-                        FolderEvents::FOLDER_UPDATED,
-                        new FilterFolderEvent($folder)
+                        new FolderUpdatedEvent($folder)
                     );
                 } catch (\RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());

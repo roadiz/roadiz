@@ -32,11 +32,13 @@ namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\FilterNodePathEvent;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
@@ -111,9 +113,8 @@ class AjaxNodesController extends AbstractAjaxController
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterNodeEvent($newNode);
-                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
-                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_DUPLICATED, $event);
+                    $this->get('dispatcher')->dispatch(new NodeCreatedEvent($newNode));
+                    $this->get('dispatcher')->dispatch(new NodeDuplicatedEvent($newNode));
 
                     $msg = $this->getTranslator()->trans('duplicated.node.%name%', [
                         '%name%' => $node->getNodeName(),
@@ -179,14 +180,12 @@ class AjaxNodesController extends AbstractAjaxController
          * Dispatch event
          */
         if (isset($oldPaths) && count($oldPaths) > 0) {
-            $event = new FilterNodePathEvent($node, $oldPaths);
-        } else {
-            $event = new FilterNodeEvent($node);
+            $this->get('dispatcher')->dispatch(new NodePathChangedEvent($node, $oldPaths));
         }
-        $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+        $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
+
         foreach ($node->getNodeSources() as $nodeSource) {
-            $event = new FilterNodesSourcesEvent($nodeSource);
-            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+            $this->get('dispatcher')->dispatch(new NodesSourcesUpdatedEvent($nodeSource));
         }
 
         $this->get('em')->flush();
@@ -297,7 +296,6 @@ class AjaxNodesController extends AbstractAjaxController
                 /*
                  * Dispatch event
                  */
-                $event = new FilterNodeEvent($node);
 
                 if ($request->get('statusName') === 'visible') {
                     $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
@@ -305,7 +303,7 @@ class AjaxNodesController extends AbstractAjaxController
                         '%visible%' => $node->isVisible() ? $this->getTranslator()->trans('visible') : $this->getTranslator()->trans('invisible'),
                     ]);
                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_VISIBILITY_CHANGED, $event);
+                    $this->get('dispatcher')->dispatch(new NodeVisibilityChangedEvent($node));
                 } else {
                     $msg = $this->getTranslator()->trans('node.%name%.%field%.updated', [
                         '%name%' => $node->getNodeName(),
@@ -313,7 +311,7 @@ class AjaxNodesController extends AbstractAjaxController
                     ]);
                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                 }
-                $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
 
                 $responseArray = [
                     'statusCode' => Response::HTTP_PARTIAL_CONTENT,
@@ -352,14 +350,13 @@ class AjaxNodesController extends AbstractAjaxController
 
         $workflow->apply($node, $transition);
         $this->em()->flush();
-        $event = new FilterNodeEvent($node);
         $msg = $this->getTranslator()->trans('node.%name%.status_changed_to.%status%', [
             '%name%' => $node->getNodeName(),
             '%status%' => $this->getTranslator()->trans(Node::getStatusLabel($node->getStatus())),
         ]);
         $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-        $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
-        $this->get('dispatcher')->dispatch(NodeEvents::NODE_STATUS_CHANGED, $event);
+        $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
+        $this->get('dispatcher')->dispatch(new NodeStatusChangedEvent($node));
 
         return new JsonResponse(
             [
@@ -393,8 +390,7 @@ class AjaxNodesController extends AbstractAjaxController
             /*
              * Dispatch event
              */
-            $event = new FilterNodeEvent($source->getNode());
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+            $this->get('dispatcher')->dispatch(new NodeCreatedEvent($source->getNode()));
 
             $msg = $this->getTranslator()->trans(
                 'added.node.%name%',

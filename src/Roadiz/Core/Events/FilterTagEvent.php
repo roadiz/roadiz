@@ -45,6 +45,7 @@ class FilterTagEvent extends Event
 
     /**
      * FilterTagEvent constructor.
+     *
      * @param Tag $tag
      */
     public function __construct(Tag $tag)

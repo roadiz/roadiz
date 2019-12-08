@@ -33,10 +33,15 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
+ * Class FilterNodesSourcesEvent
  *
+ * @package RZ\Roadiz\Core\Events
  */
 class FilterNodesSourcesEvent extends Event
 {
+    /**
+     * @var NodesSources
+     */
     protected $nodeSource;
 
     public function __construct(NodesSources $nodeSource)
@@ -44,7 +49,7 @@ class FilterNodesSourcesEvent extends Event
         $this->nodeSource = $nodeSource;
     }
 
-    public function getNodeSource()
+    public function getNodeSource(): NodesSources
     {
         return $this->nodeSource;
     }

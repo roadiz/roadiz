@@ -39,10 +39,10 @@ use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
@@ -54,7 +54,7 @@ class NodesAttributesController extends RozierApp
      * @param         $nodeId
      * @param         $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $nodeId, $translationId)
     {
@@ -116,8 +116,7 @@ class NodesAttributesController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterNodesSourcesEvent($nodeSource);
-                    $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+                    $this->get('dispatcher')->dispatch(new NodesSourcesUpdatedEvent($nodeSource));
 
                     $msg = $this->getTranslator()->trans(
                         'attribute_value_translation.%name%.updated_from_node.%nodeName%',
@@ -165,7 +164,7 @@ class NodesAttributesController extends RozierApp
      * @param Node        $node
      * @param Translation $translation
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+     * @return RedirectResponse|null
      */
     protected function handleAddAttributeForm(Request $request, Node $node, Translation $translation)
     {
@@ -197,7 +196,7 @@ class NodesAttributesController extends RozierApp
      * @param         $translationId
      * @param         $attributeValueId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
     public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
     {

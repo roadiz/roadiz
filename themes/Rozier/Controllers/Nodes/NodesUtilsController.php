@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -31,8 +32,8 @@
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\HttpFoundation\Request;
@@ -150,9 +151,8 @@ class NodesUtilsController extends RozierApp
             /*
              * Dispatch event
              */
-            $event = new FilterNodeEvent($newNode);
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_DUPLICATED, $event);
+            $this->get('dispatcher')->dispatch(new NodeCreatedEvent($newNode));
+            $this->get('dispatcher')->dispatch(new NodeDuplicatedEvent($newNode));
 
             $msg = $this->getTranslator()->trans("duplicated.node.%name%", [
                 '%name%' => $existingNode->getNodeName(),

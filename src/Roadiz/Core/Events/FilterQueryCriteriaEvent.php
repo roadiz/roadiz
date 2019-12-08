@@ -70,7 +70,7 @@ class FilterQueryCriteriaEvent extends Event
     /**
      * @return Query
      */
-    public function getQuery()
+    public function getQuery(): Query
     {
         return $this->query;
     }
@@ -108,7 +108,7 @@ class FilterQueryCriteriaEvent extends Event
      * @param string $entityClass
      * @return bool
      */
-    public function supports($entityClass)
+    public function supports($entityClass): bool
     {
         return $this->entityClass === $entityClass;
     }

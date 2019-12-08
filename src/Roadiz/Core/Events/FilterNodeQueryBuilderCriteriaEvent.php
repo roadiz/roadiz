@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -45,7 +46,7 @@ class FilterNodeQueryBuilderCriteriaEvent extends FilterQueryBuilderCriteriaEven
     /**
      * @inheritDoc
      */
-    public function supports()
+    public function supports(): bool
     {
         if ($this->actualEntityName === Node::class) {
             return true;

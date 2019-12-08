@@ -34,7 +34,7 @@ use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\Event;
 
-class FilterCacheEvent extends Event
+abstract class FilterCacheEvent extends Event
 {
     /**
      * @var Kernel
@@ -66,7 +66,7 @@ class FilterCacheEvent extends Event
     /**
      * @return Kernel
      */
-    public function getKernel()
+    public function getKernel(): Kernel
     {
         return $this->kernel;
     }

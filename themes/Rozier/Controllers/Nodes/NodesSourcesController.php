@@ -35,8 +35,9 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -129,25 +130,7 @@ class NodesSourcesController extends RozierApp
 
                 if ($form->isSubmitted()) {
                     if ($form->isValid() && !$this->isReadOnly) {
-                        /*
-                         * Dispatch pre-flush event
-                         */
-                        $event = new FilterNodesSourcesEvent($source);
-                        $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE, $event);
-
-                        $this->get('em')->flush();
-                        /*
-                         * Dispatch post-flush event
-                         */
-                        $event = new FilterNodesSourcesEvent($source);
-                        $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
-
-                        $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
-                            '%node_source%' => $source->getNode()->getNodeName(),
-                            '%translation%' => $source->getTranslation()->getName(),
-                        ]);
-
-                        $this->publishConfirmMessage($request, $msg, $source);
+                        $this->onPostUpdate($source, $request);
 
                         if ($request->isXmlHttpRequest()) {
                             $url = $this->generateUrl($source);
@@ -241,8 +224,7 @@ class NodesSourcesController extends RozierApp
             /*
              * Dispatch event
              */
-            $event = new FilterNodesSourcesEvent($ns);
-            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_DELETED, $event);
+            $this->get('dispatcher')->dispatch(new NodesSourcesDeletedEvent($ns));
 
             $this->get("em")->remove($ns);
             $this->get("em")->flush();
@@ -274,11 +256,9 @@ class NodesSourcesController extends RozierApp
          * Dispatch pre-flush event
          */
         if ($entity instanceof NodesSources) {
-            $event = new FilterNodesSourcesEvent($entity);
-            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE, $event);
+            $this->get('dispatcher')->dispatch(new NodesSourcesPreUpdatedEvent($entity));
             $this->get('em')->flush();
-            $event = new FilterNodesSourcesEvent($entity);
-            $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+            $this->get('dispatcher')->dispatch(new NodesSourcesUpdatedEvent($entity));
 
             $msg = $this->getTranslator()->trans('node_source.%node_source%.updated.%translation%', [
                 '%node_source%' => $entity->getNode()->getNodeName(),

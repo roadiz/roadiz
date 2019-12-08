@@ -34,7 +34,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\Routing\RequestContext;
 
-final class FilterNodeSourcePathEvent extends Event
+class FilterNodeSourcePathEvent extends Event
 {
     /**
      * @var Theme|null
@@ -72,11 +72,11 @@ final class FilterNodeSourcePathEvent extends Event
     /**
      * FilterNodeSourcePathEvent constructor.
      *
-     * @param Theme|null        $theme
-     * @param NodesSources|null $nodeSource
-     * @param RequestContext|null      $requestContext
-     * @param array             $parameters
-     * @param bool              $forceLocale
+     * @param Theme|null          $theme
+     * @param NodesSources|null   $nodeSource
+     * @param RequestContext|null $requestContext
+     * @param array               $parameters
+     * @param bool                $forceLocale
      */
     public function __construct(
         ?Theme $theme,

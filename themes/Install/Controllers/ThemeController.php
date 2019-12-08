@@ -136,7 +136,7 @@ class ThemeController extends InstallApp
         ]);
         $informationForm->handleRequest($request);
 
-        if ($informationForm->isValid()) {
+        if ($informationForm->isSubmitted() && $informationForm->isValid()) {
             $informationData = $informationForm->getData();
             /*
              * Save information

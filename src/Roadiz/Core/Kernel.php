@@ -517,7 +517,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
          */
         if ($this->isProdMode() && !$this->isPreview()) {
             $this->get('dispatcher')->addSubscriber(
-                new NodeRedirectionSubscriber($this->get(NodeMover::class))
+                new NodeRedirectionSubscriber($this->get(NodeMover::class), $this)
             );
         }
         $this->get('stopwatch')->stop('kernel.initEvents');

@@ -58,7 +58,7 @@ class FilterQueryBuilderEvent extends Event
     /**
      * @return QueryBuilder
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
@@ -78,7 +78,7 @@ class FilterQueryBuilderEvent extends Event
      * @param string $entityClass
      * @return bool
      */
-    public function supports($entityClass)
+    public function supports($entityClass): bool
     {
         return $this->entityClass === $entityClass;
     }

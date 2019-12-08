@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -32,11 +33,11 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\EventDispatcher\Event;
 
-/**
- *
- */
-class FilterNodeEvent extends Event
+abstract class FilterNodeEvent extends Event
 {
+    /**
+     * @var Node
+     */
     protected $node;
 
     /**
@@ -52,7 +53,7 @@ class FilterNodeEvent extends Event
     /**
      * @return Node
      */
-    public function getNode()
+    public function getNode(): Node
     {
         return $this->node;
     }

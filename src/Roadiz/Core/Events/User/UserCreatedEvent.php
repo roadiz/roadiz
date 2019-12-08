@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Events\User;
 
 use RZ\Roadiz\Core\Events\FilterUserEvent;
 
-class UserCreatedEvent extends FilterUserEvent
+final class UserCreatedEvent extends FilterUserEvent
 {
 
 }

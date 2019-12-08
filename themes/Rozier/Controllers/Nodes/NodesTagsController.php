@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -32,8 +33,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Events\Node\NodeTaggedEvent;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -90,8 +90,7 @@ class NodesTagsController extends RozierApp
                 /*
                  * Dispatch event
                  */
-                $event = new FilterNodeEvent($node);
-                $this->get('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+                $this->get('dispatcher')->dispatch(new NodeTaggedEvent($node));
 
                 $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
                     '%node%' => $node->getNodeName(),
@@ -143,8 +142,7 @@ class NodesTagsController extends RozierApp
                 /*
                  * Dispatch event
                  */
-                $event = new FilterNodeEvent($node);
-                $this->get('dispatcher')->dispatch(NodeEvents::NODE_TAGGED, $event);
+                $this->get('dispatcher')->dispatch(new NodeTaggedEvent($node));
 
                 $msg = $this->getTranslator()->trans(
                     'tag.%name%.removed',

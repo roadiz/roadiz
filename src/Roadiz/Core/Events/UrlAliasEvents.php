@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -29,6 +30,10 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasCreatedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasDeletedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasUpdatedEvent;
+
 /**
  * @deprecated
  */
@@ -44,7 +49,7 @@ final class UrlAliasEvents
      * @var string
      * @deprecated
      */
-    const URL_ALIAS_CREATED = 'urlAlias.created';
+    const URL_ALIAS_CREATED = UrlAliasCreatedEvent::class;
 
     /**
      * Event urlAlias.updated is triggered each time an url-alias
@@ -56,7 +61,7 @@ final class UrlAliasEvents
      * @var string
      * @deprecated
      */
-    const URL_ALIAS_UPDATED = 'urlAlias.updated';
+    const URL_ALIAS_UPDATED = UrlAliasUpdatedEvent::class;
 
     /**
      * Event urlAlias.deleted is triggered each time an url-alias
@@ -68,5 +73,5 @@ final class UrlAliasEvents
      * @var string
      * @deprecated
      */
-    const URL_ALIAS_DELETED = 'urlAlias.deleted';
+    const URL_ALIAS_DELETED = UrlAliasDeletedEvent::class;
 }

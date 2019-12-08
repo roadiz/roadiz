@@ -107,8 +107,8 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      *
      * It returns a relative url to Roadiz, not relative to your server root.
      *
-     * @param \RZ\Roadiz\Core\Entities\Theme $theme
-     * @param array                          $parameters
+     * @param Theme $theme
+     * @param array $parameters
      *
      * @return string
      */

@@ -33,7 +33,7 @@ use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
@@ -63,9 +63,9 @@ class LoggableUsernameSubscriber implements EventSubscriberInterface, ContainerA
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onRequest(GetResponseEvent $event)
+    public function onRequest(RequestEvent $event)
     {
         if ($event->isMasterRequest()) {
             /** @var TokenStorage $tokenStorage */
