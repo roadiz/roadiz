@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -32,8 +33,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
-use themes\Rozier\Explorer\ExplorerItemInterface;
-use themes\Rozier\Explorer\ExplorerProviderInterface;
+use Themes\Rozier\Explorer\ExplorerItemInterface;
+use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 /**
  * {@inheritdoc}

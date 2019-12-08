@@ -57,12 +57,14 @@ class NewslettersUtilsController extends RozierApp
     public function duplicateAction(Request $request, $newsletterId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NEWSLETTERS');
-
         $translation = $this->get('defaultTranslation');
+        /** @var Newsletter $existingNewsletter */
+        $existingNewsletter = $this->get('em')->find(Newsletter::class, (int) $newsletterId);
+        if (null === $existingNewsletter) {
+            throw $this->createNotFoundException();
+        }
 
         try {
-            /** @var Newsletter $existingNewsletter */
-            $existingNewsletter = $this->get('em')->find(Newsletter::class, (int) $newsletterId);
             /** @var NewsletterHandler $handler */
             $handler = $this->get('newsletter.handler');
             $handler->setNewsletter($existingNewsletter);

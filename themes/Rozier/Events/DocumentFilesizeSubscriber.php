@@ -90,8 +90,8 @@ class DocumentFilesizeSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         if ($this->supports($document) && $document instanceof Document) {
+            $documentPath = $this->packages->getDocumentFilePath($document);
             try {
-                $documentPath = $this->packages->getDocumentFilePath($document);
                 $file = new File($documentPath);
                 $document->setFilesize($file->getSize());
             } catch (FileNotFoundException $exception) {

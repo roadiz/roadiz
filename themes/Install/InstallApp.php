@@ -35,8 +35,6 @@ use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
-use RZ\Roadiz\Core\Events\CacheEvents;
-use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -166,7 +164,7 @@ class InstallApp extends AppController
         if ($userForm !== null) {
             $userForm->handleRequest($request);
 
-            if ($userForm->isValid()) {
+            if ($userForm->isSubmitted() && $userForm->isValid()) {
                 /*
                  * Create user
                  */
@@ -236,7 +234,8 @@ class InstallApp extends AppController
         if ($doneForm !== null) {
             $doneForm->handleRequest($request);
 
-            if ($doneForm->isValid() &&
+            if ($doneForm->isSubmitted() &&
+                $doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {
                 /*
                  * Save information

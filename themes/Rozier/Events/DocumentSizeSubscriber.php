@@ -91,9 +91,9 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         if ($this->supports($document) && $document instanceof Document) {
+            $documentPath = $this->packages->getDocumentFilePath($document);
             try {
                 $manager = new ImageManager();
-                $documentPath = $this->packages->getDocumentFilePath($document);
                 $imageProcess = $manager->make($documentPath);
 
                 $document->setImageWidth($imageProcess->width());

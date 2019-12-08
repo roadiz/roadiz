@@ -1,4 +1,8 @@
 parameters:
+    excludes_analyse:
+        - */node_modules/*
+        - */bower_components/*
+        - */static/*
     doctrine:
         repositoryClass: RZ\Roadiz\Core\Repositories\EntityRepository
         objectManagerLoader: tests/object-manager.php

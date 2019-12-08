@@ -99,9 +99,9 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         if ($this->supports($document)) {
+            $documentPath = $this->packages->getDocumentFilePath($document);
             try {
                 $manager = new ImageManager();
-                $documentPath = $this->packages->getDocumentFilePath($document);
                 $mediumColor = (new AverageColorResolver())->getAverageColor($manager->make($documentPath));
                 $document->setImageAverageColor($mediumColor);
             } catch (NotReadableException $exception) {

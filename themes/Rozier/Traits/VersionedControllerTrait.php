@@ -54,7 +54,7 @@ trait VersionedControllerTrait
     /**
      * @param bool $isReadOnly
      *
-     * @return VersionedControllerTrait
+     * @return self
      */
     public function setIsReadOnly(bool $isReadOnly)
     {

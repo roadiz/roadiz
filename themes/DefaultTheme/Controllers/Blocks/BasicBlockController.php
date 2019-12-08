@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -27,10 +28,11 @@
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace themes\DefaultTheme\Controllers\Blocks;
+namespace Themes\DefaultTheme\Controllers\Blocks;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 class BasicBlockController extends DefaultThemeApp
@@ -40,7 +42,7 @@ class BasicBlockController extends DefaultThemeApp
      * @param NodesSources $source
      * @param $assignation
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function blockAction(Request $request, NodesSources $source, $assignation)
     {
