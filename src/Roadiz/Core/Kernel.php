@@ -273,7 +273,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
-
             if (!$kernel->isDebug()) {
                 /**
                  * Do not prevent Symfony Debug tool to perform
@@ -439,9 +438,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      * Roadiz default handling is by-passed for assets serving.
      *
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
+     *
      * @return Response
+     * @throws \Exception
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
