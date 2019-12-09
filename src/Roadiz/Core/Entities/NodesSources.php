@@ -185,7 +185,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @param $fieldName
+     * @param string $fieldName
      * @return Document[]
      */
     public function getDocumentsByFieldsWithName($fieldName): array

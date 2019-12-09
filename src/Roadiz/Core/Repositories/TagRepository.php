@@ -52,7 +52,7 @@ class TagRepository extends EntityRepository
      */
     protected function filterByNodes($criteria, QueryBuilder $qb)
     {
-        if (in_array('nodes', array_keys($criteria))) {
+        if (key_exists('nodes', $criteria)) {
             if (is_array($criteria['nodes']) || $criteria['nodes'] instanceof Collection) {
                 $qb->innerJoin(
                     'tg.nodes',
@@ -79,7 +79,7 @@ class TagRepository extends EntityRepository
      */
     protected function applyFilterByNodes(array &$criteria, QueryBuilder $qb)
     {
-        if (in_array('nodes', array_keys($criteria))) {
+        if (key_exists('nodes', $criteria)) {
             if ($criteria['nodes'] instanceof Node) {
                 $qb->setParameter('nodes', $criteria['nodes']->getId());
             } elseif (is_array($criteria['nodes']) ||

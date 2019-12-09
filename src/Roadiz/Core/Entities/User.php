@@ -272,7 +272,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @param $username
+     * @param string $username
      *
      * @return $this
      */
@@ -293,7 +293,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @param $facebookName
+     * @param string $facebookName
      * @return $this
      */
     public function setFacebookName($facebookName): User
@@ -311,7 +311,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @param $pictureUrl
+     * @param string $pictureUrl
      * @return $this
      */
     public function setPictureUrl($pictureUrl): User
@@ -329,7 +329,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @param $salt
+     * @param string $salt
      * @return $this
      */
     public function setSalt($salt): User
@@ -347,7 +347,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * @param $password
+     * @param string $password
      * @return $this
      */
     public function setPassword($password): User
@@ -424,7 +424,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * Check if password reset request has expired.
      *
-     * @param  int $ttl Password request time to live.
+     * @param int $ttl Password request time to live.
      *
      * @return boolean
      */
@@ -459,7 +459,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * Add a role object to current user.
      *
-     * @param \RZ\Roadiz\Core\Entities\Role $role
+     * @param Role $role
      *
      * @return $this
      */
@@ -497,7 +497,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * Remove role from current user.
      *
-     * @param \RZ\Roadiz\Core\Entities\Role $role
+     * @param Role $role
      *
      * @return $this
      */
@@ -523,7 +523,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * Insert user into group.
      *
-     * @param \RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      *
      * @return $this
      */
@@ -547,7 +547,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * Remove user from group
      *
-     * @param \RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      *
      * @return $this
      */
@@ -902,14 +902,14 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
             unset($data[4], $data[7], $data[8]);
             $data = array_values($data);
         }
-        list(
+        [
             $this->password,
             $this->salt,
             $this->username,
             $this->enabled,
             $this->id,
             $this->email,
-            ) = $data;
+            ] = $data;
     }
 
     /**

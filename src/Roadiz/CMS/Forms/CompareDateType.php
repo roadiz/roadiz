@@ -41,7 +41,6 @@ class CompareDateType extends AbstractType
     {
         $builder->add('compareOp', ChoiceType::class, [
             'label' => false,
-            'choices_as_values' => true,
             'choices' => [
                 '<' => '<',
                 '>' => '>',

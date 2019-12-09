@@ -35,7 +35,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\DebugBar\RoadizDebugBar;
 use Symfony\Component\EventDispatcher\Debug\TraceableEventDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DebugServiceProvider implements ServiceProviderInterface
 {

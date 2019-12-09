@@ -38,6 +38,10 @@
                 <source>nodeSource.urlAlias.help</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="nodeSource.redirections.help">
+                <source>nodeSource.redirections.help</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

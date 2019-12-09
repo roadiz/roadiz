@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -29,9 +30,28 @@
 
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
+
+/**
+ * Class QueryBuilderEvents
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 final class QueryBuilderEvents
 {
-    const QUERY_BUILDER_SELECT = 'qb.select';
-    const QUERY_BUILDER_BUILD_FILTER = 'qb.build_filter';
-    const QUERY_BUILDER_APPLY_FILTER = 'qb.apply_filter';
+    /**
+     * @deprecated
+     */
+    const QUERY_BUILDER_SELECT = QueryBuilderSelectEvent::class;
+    /**
+     * @deprecated
+     */
+    const QUERY_BUILDER_BUILD_FILTER = QueryBuilderBuildEvent::class;
+    /**
+     * @deprecated
+     */
+    const QUERY_BUILDER_APPLY_FILTER = QueryBuilderApplyEvent::class;
 }

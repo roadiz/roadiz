@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -93,6 +94,8 @@ class NodeTypesDeleteCommand extends Command
             }
         } else {
             $io->error('"' . $name . '" node type does not exist');
+            return 1;
         }
+        return 0;
     }
 }

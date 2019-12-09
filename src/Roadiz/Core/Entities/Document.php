@@ -229,7 +229,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     /**
      * Set folder name.
      *
-     * @param $folder
+     * @param string $folder
      * @return $this
      */
     public function setFolder($folder)

@@ -59,7 +59,7 @@ interface ExplorerProviderInterface extends ContainerAwareInterface
     /**
      * Check if object can be handled be current ExplorerProvider.
      *
-     * @param $item
+     * @param mixed $item
      * @return boolean
      */
     public function supports($item);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -110,9 +111,12 @@ class NodesCreationCommand extends Command
                 $this->executeNodeCreation($input->getArgument('node-name'), $type, $translation);
             } else {
                 $this->io->error('"' . $typeName . '" node type does not exist.');
+                return 1;
             }
+            return 0;
         } else {
             $this->io->error($existingNode->getNodeName() . ' node already exists.');
+            return 1;
         }
     }
 

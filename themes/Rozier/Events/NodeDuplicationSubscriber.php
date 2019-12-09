@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -26,13 +27,13 @@
  * @file NodeDuplicationSubscriber.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -65,7 +66,7 @@ class NodeDuplicationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodeEvents::NODE_DUPLICATED => 'cleanPosition',
+            NodeDuplicatedEvent::class => 'cleanPosition',
         ];
     }
 
@@ -74,6 +75,7 @@ class NodeDuplicationSubscriber implements EventSubscriberInterface
      */
     public function cleanPosition(FilterNodeEvent $event)
     {
+        /** @var NodeHandler $nodeHandler */
         $nodeHandler = $this->handlerFactory->getHandler($event->getNode());
         $nodeHandler->setNode($event->getNode());
         $nodeHandler->cleanChildrenPositions();

@@ -96,5 +96,6 @@ class NodeApplyUniversalFieldsCommand extends Command
         } catch (NoResultException $e) {
             $io->warning('No node with universal fields were found.');
         }
+        return 0;
     }
 }

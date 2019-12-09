@@ -91,7 +91,7 @@ class RolesController extends RozierApp
         $form = $this->buildAddForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $role = $this->addRole($form->getData());
                 $msg = $this->getTranslator()->trans(
@@ -135,7 +135,8 @@ class RolesController extends RozierApp
             $form = $this->buildDeleteForm($role);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {
                 try {
                     $this->deleteRole($form->getData(), $role);
@@ -185,7 +186,8 @@ class RolesController extends RozierApp
             $form = $this->buildEditForm($role);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['roleId'] == $role->getId()) {
                 try {
                     $this->editRole($form->getData(), $role);

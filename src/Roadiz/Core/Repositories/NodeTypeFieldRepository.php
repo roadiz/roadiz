@@ -87,7 +87,7 @@ class NodeTypeFieldRepository extends EntityRepository
      *
      * Parent can be null for tag root
      *
-     * @param  NodeType|null $nodeType
+     * @param NodeType $nodeType
      *
      * @return int
      */

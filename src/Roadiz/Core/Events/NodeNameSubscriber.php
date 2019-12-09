@@ -33,6 +33,9 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use Monolog\Logger;
+use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
@@ -73,16 +76,16 @@ class NodeNameSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_PRE_UPDATE => ['onBeforeUpdate', 0],
+            NodesSourcesPreUpdatedEvent::class => ['onBeforeUpdate', 0],
         ];
     }
 
     /**
-     * @param FilterNodesSourcesEvent  $event
-     * @param string               $eventName
-     * @param EventDispatcherInterface $dispatcher
+     * @param NodesSourcesPreUpdatedEvent  $event
+     * @param string                       $eventName
+     * @param EventDispatcherInterface     $dispatcher
      */
-    public function onBeforeUpdate(FilterNodesSourcesEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    public function onBeforeUpdate(NodesSourcesPreUpdatedEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
         $nodeSource = $event->getNodeSource();
         $title = $nodeSource->getTitle();
@@ -103,7 +106,6 @@ class NodeNameSubscriber implements EventSubscriberInterface
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
                 $this->nodeNameChecker->isNodeNameValid($testingNodeName) &&
                 !$this->nodeNameChecker->isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
-
                 if ($nodeSource->getNode()->getNodeType()->isReachable()) {
                     $oldPaths = $this->nodeMover->getNodeSourcesUrls($nodeSource->getNode());
                     $oldUpdateAt = $nodeSource->getNode()->getUpdatedAt();
@@ -119,11 +121,9 @@ class NodeNameSubscriber implements EventSubscriberInterface
                  * Dispatch event
                  */
                 if (isset($oldPaths) && isset($oldUpdateAt) && count($oldPaths) > 0) {
-                    $event = new FilterNodePathEvent($nodeSource->getNode(), $oldPaths, $oldUpdateAt);
-                } else {
-                    $event = new FilterNodeEvent($nodeSource->getNode());
+                    $dispatcher->dispatch(new NodePathChangedEvent($nodeSource->getNode(), $oldPaths, $oldUpdateAt));
                 }
-                $dispatcher->dispatch(NodeEvents::NODE_UPDATED, $event);
+                $dispatcher->dispatch(new NodeUpdatedEvent($nodeSource->getNode()));
             } else {
                 $this->logger->debug('Node name has not be changed.');
             }

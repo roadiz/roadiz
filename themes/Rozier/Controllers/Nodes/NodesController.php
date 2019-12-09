@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -32,9 +33,11 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\FilterNodePathEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
+use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUndeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Utils\Node\NodeMover;
@@ -225,11 +228,9 @@ class NodesController extends RozierApp
                      * Dispatch event
                      */
                     if (isset($oldPaths) && count($oldPaths) > 0) {
-                        $event = new FilterNodePathEvent($node, $oldPaths);
-                    } else {
-                        $event = new FilterNodeEvent($node);
+                        $this->get('dispatcher')->dispatch(new NodePathChangedEvent($node, $oldPaths));
                     }
-                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+                    $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
 
                     $this->get('em')->flush();
 
@@ -256,8 +257,8 @@ class NodesController extends RozierApp
 
     /**
      * @param Request $request
-     * @param $nodeId
-     * @param $typeId
+     * @param int $nodeId
+     * @param int $typeId
      * @return Response
      */
     public function removeStackTypeAction(Request $request, $nodeId, $typeId)
@@ -316,7 +317,9 @@ class NodesController extends RozierApp
         if ($type !== null && $translation !== null) {
             $node = new Node($type);
 
-            if (null !== $this->getUser() && null !== $this->getUser()->getChroot()) {
+            if (null !== $this->getUser() &&
+                $this->getUser() instanceof User &&
+                null !== $this->getUser()->getChroot()) {
                 // If user is jailed in a node, prevent moving nodes out.
                 $node->setParent($this->getUser()->getChroot());
             }
@@ -335,8 +338,7 @@ class NodesController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterNodeEvent($node);
-                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(new NodeCreatedEvent($node));
 
                     $msg = $this->getTranslator()->trans(
                         'node.%name%.created',
@@ -420,8 +422,7 @@ class NodesController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterNodeEvent($node);
-                    $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(new NodeCreatedEvent($node));
 
                     $msg = $this->getTranslator()->trans(
                         'child_node.%name%.created',
@@ -489,8 +490,7 @@ class NodesController extends RozierApp
             /*
              * Dispatch event
              */
-            $event = new FilterNodeEvent($node);
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_DELETED, $event);
+            $this->get('dispatcher')->dispatch(new NodeDeletedEvent($node));
 
             /** @var NodeHandler $nodeHandler */
             $nodeHandler = $this->get('node.handler')->setNode($node);
@@ -605,8 +605,7 @@ class NodesController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $event = new FilterNodeEvent($node);
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_UNDELETED, $event);
+            $this->get('dispatcher')->dispatch(new NodeUndeletedEvent($node));
 
             /** @var NodeHandler $nodeHandler */
             $nodeHandler = $this->get('node.handler')->setNode($node);
@@ -647,8 +646,7 @@ class NodesController extends RozierApp
             /*
              * Dispatch event
              */
-            $event = new FilterNodeEvent($source->getNode());
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_CREATED, $event);
+            $this->get('dispatcher')->dispatch(new NodeCreatedEvent($source->getNode()));
 
             return $this->redirect($this->generateUrl(
                 'nodesEditSourcePage',

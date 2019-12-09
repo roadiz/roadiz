@@ -86,11 +86,9 @@ class SettingType extends AbstractType
                     'label' => 'type',
                     'required' => true,
                     'choices' => array_flip(Setting::$typeToHuman),
-                    'choices_as_values' => true,
                 ])
                 ->add('settingGroup', ChoiceType::class, [
                     'label' => 'setting.group',
-                    'choices_as_values' => true,
                     'choices' => $choices,
                     'required' => false,
                     'placeholder' => '---------',
@@ -190,7 +188,6 @@ class SettingType extends AbstractType
                     'label' => $label,
                     'placeholder' => 'choose.value',
                     'required' => false,
-                    'choices_as_values' => true,
                     'choices' => array_combine($values, $values),
                     'multiple' => $setting->getType() === AbstractField::MULTIPLE_T ? true : false,
                 ];

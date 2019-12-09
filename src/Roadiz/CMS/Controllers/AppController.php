@@ -37,7 +37,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -57,7 +57,6 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ConstraintViolation;
-use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 
 /**
  * Base class for Roadiz themes.

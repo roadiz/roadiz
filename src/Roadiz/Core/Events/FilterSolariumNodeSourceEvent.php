@@ -33,6 +33,12 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\SearchEngine\AbstractSolarium;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class FilterSolariumNodeSourceEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 class FilterSolariumNodeSourceEvent extends Event
 {
     /**
@@ -62,7 +68,7 @@ class FilterSolariumNodeSourceEvent extends Event
         $this->solariumDocument = $solariumDocument;
     }
 
-    public function getNodeSource()
+    public function getNodeSource(): NodesSources
     {
         return $this->nodeSource;
     }

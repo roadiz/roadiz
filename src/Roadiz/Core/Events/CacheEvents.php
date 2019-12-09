@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -26,13 +27,19 @@
  * @file CacheEvents.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\Core\Events;
+
+use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 
 final class CacheEvents
 {
-    const PURGE_REQUEST = 'cache.purge_request';
-    const PURGE_ASSETS_REQUEST = 'cache.purge_assets_request';
-    const PURGE_HTTP_RESPONSE = 'cache.purge_http_response';
-    const PURGE_TEXT_RESPONSE = 'cache.purge_text_response';
+    /**
+     * @deprecated
+     */
+    const PURGE_REQUEST = CachePurgeRequestEvent::class;
+    /**
+     * @deprecated
+     */
+    const PURGE_ASSETS_REQUEST = CachePurgeAssetsRequestEvent::class;
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +24,6 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  */
-
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\ContainerAwareInterface;
@@ -80,6 +80,7 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
             $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', false);
             $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', true);
         }
+        return 0;
     }
 
     /**

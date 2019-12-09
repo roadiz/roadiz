@@ -30,10 +30,15 @@
 namespace Themes\Rozier\Events;
 
 use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUndeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesCreatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
 use RZ\Roadiz\Core\Events\TranslationEvents;
-use RZ\Roadiz\Core\Events\UrlAliasEvents;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasCreatedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasDeletedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasUpdatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -51,16 +56,16 @@ class NodesSourcesUrlSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_CREATED => 'purgeNSUrlCache',
-            NodesSourcesEvents::NODE_SOURCE_DELETED => 'purgeNSUrlCache',
+            NodesSourcesCreatedEvent::class => 'purgeNSUrlCache',
+            NodesSourcesDeletedEvent::class => 'purgeNSUrlCache',
             TranslationEvents::TRANSLATION_UPDATED => 'purgeNSUrlCache',
             TranslationEvents::TRANSLATION_DELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_DELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_UNDELETED => 'purgeNSUrlCache',
-            NodeEvents::NODE_UPDATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_CREATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_UPDATED => 'purgeNSUrlCache',
-            UrlAliasEvents::URL_ALIAS_DELETED => 'purgeNSUrlCache',
+            NodeDeletedEvent::class => 'purgeNSUrlCache',
+            NodeUndeletedEvent::class => 'purgeNSUrlCache',
+            NodeUpdatedEvent::class => 'purgeNSUrlCache',
+            UrlAliasCreatedEvent::class => 'purgeNSUrlCache',
+            UrlAliasUpdatedEvent::class => 'purgeNSUrlCache',
+            UrlAliasDeletedEvent::class => 'purgeNSUrlCache',
         ];
     }
 

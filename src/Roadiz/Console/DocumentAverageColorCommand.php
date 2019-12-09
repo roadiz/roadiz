@@ -93,6 +93,7 @@ class DocumentAverageColorCommand extends Command
         }
         $em->flush();
         $this->io->progressFinish();
+        return 0;
     }
 
     private function updateDocumentColor(Document $document, Packages $packages)

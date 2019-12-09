@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -77,6 +78,7 @@ class UsersCreationCommand extends UsersCommand
                 throw new \InvalidArgumentException('User “' . $name . '” already exists.');
             }
         }
+        return 0;
     }
 
     /**

@@ -39,7 +39,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -90,10 +90,10 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      * @throws MaintenanceModeException
      */
-    public function onRequest(GetResponseEvent $event)
+    public function onRequest(RequestEvent $event)
     {
         if ($event->isMasterRequest()) {
             if (!in_array($event->getRequest()->get('_route'), $this->getAuthorizedRoutes()) &&

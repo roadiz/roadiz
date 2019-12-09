@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -31,10 +32,8 @@ namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\NodeTranstyper;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -77,7 +76,7 @@ class TranstypeController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             /** @var NodeType $newNodeType */
@@ -91,12 +90,10 @@ class TranstypeController extends RozierApp
             /*
              * Dispatch event
              */
-            $event = new FilterNodeEvent($node);
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
 
             foreach ($node->getNodeSources() as $nodeSource) {
-                $event = new FilterNodesSourcesEvent($nodeSource);
-                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(new NodesSourcesUpdatedEvent($nodeSource));
             }
 
             $msg = $this->getTranslator()->trans('%node%.transtyped_to.%type%', [

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -39,8 +40,8 @@ class CollectionFieldConfiguration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $builder = new TreeBuilder();
-        $root = $builder->root('collection');
+        $builder = new TreeBuilder('collection');
+        $root = $builder->getRootNode();
         $root->children()
             ->scalarNode('entry_type')
                 ->isRequired()

@@ -137,7 +137,7 @@ class AjaxFoldersController extends AbstractAjaxController
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @param Folder $folder
      */
     protected function updatePosition($parameters, Folder $folder)

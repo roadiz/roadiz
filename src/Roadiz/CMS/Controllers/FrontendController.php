@@ -355,7 +355,7 @@ abstract class FrontendController extends AppController
         $this->assignation['translation'] = $this->translation;
         $this->getRequest()->attributes->set('translation', $this->translation);
 
-        if (null !== $this->node) {
+        if (null !== $this->node && null !== $translation) {
             $this->getRequest()->attributes->set('node', $this->node);
             $this->nodeSource = $this->node->getNodeSourcesByTranslation($translation)->first() ?: null;
             $this->assignation['node'] = $this->node;

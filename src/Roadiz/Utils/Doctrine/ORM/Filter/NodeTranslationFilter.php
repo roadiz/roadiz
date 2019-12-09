@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -26,20 +27,19 @@
  * @file NodeTranslationFilter.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
-use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
-use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodeTypeFilter.
+ * Class NodeTranslationFilter.
  *
- * Filter on nodeType fields when criteria contains nodeType. prefix.
+ * Filter on translation fields when criteria contains translation. prefix.
  *
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter
  */
@@ -48,7 +48,7 @@ class NodeTranslationFilter implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER => [
+            QueryBuilderBuildEvent::class => [
                 // This event must be the last to perform
                 ['onTranslationPrefixFilter', 0],
                 ['onTranslationFilter', -10],
@@ -63,12 +63,9 @@ class NodeTranslationFilter implements EventSubscriberInterface
      */
     protected function supports(FilterQueryBuilderCriteriaEvent $event): bool
     {
-        if ($event instanceof FilterNodeQueryBuilderCriteriaEvent &&
-            $event->supports()) {
-            return true;
-        }
-
-        return false;
+        return $event->supports() &&
+            $event->getActualEntityName() === Node::class &&
+            false !== strpos($event->getProperty(), 'translation');
     }
 
     /**

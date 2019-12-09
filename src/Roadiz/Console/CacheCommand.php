@@ -31,8 +31,8 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Events\CacheEvents;
-use RZ\Roadiz\Core\Events\FilterCacheEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\AppCacheClearer;
 use RZ\Roadiz\Utils\Clearer\AssetsClearer;
@@ -165,9 +165,9 @@ class CacheCommand extends Command
             } else {
                 /** @var EventDispatcher $dispatcher */
                 $dispatcher = $kernel->get('dispatcher');
-                $event = new FilterCacheEvent($kernel);
-                $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
-                $dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
+                $event = new CachePurgeRequestEvent($kernel);
+                $dispatcher->dispatch($event);
+                $dispatcher->dispatch(new CachePurgeAssetsRequestEvent($kernel));
 
                 foreach ($event->getMessages() as $message) {
                     $outputs[] = sprintf('<info>%s</info>: %s', $message['description'], $message['message']);
@@ -183,5 +183,6 @@ class CacheCommand extends Command
         } catch (ConnectionException $e) {
             $io->warning('Can’t connect to database to empty Doctrine caches.');
         }
+        return 0;
     }
 }

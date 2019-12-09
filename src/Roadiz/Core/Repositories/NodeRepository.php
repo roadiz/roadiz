@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -36,12 +37,11 @@ use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
-use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
-use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -61,10 +61,9 @@ class NodeRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterNodeQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
-        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
-
-        return $event;
+        return $eventDispatcher->dispatch(
+            new QueryBuilderBuildEvent($qb, Node::class, $property, $value, $this->getEntityName())
+        );
     }
 
     /**
@@ -78,10 +77,9 @@ class NodeRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterNodeQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
-        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
-
-        return $event;
+        return $eventDispatcher->dispatch(
+            new QueryBuilderApplyEvent($qb, Node::class, $property, $value, $this->getEntityName())
+        );
     }
 
     /**
@@ -170,7 +168,7 @@ class NodeRepository extends StatusAwareRepository
      */
     protected function filterByTag(array &$criteria, QueryBuilder $qb)
     {
-        if (in_array('tags', array_keys($criteria))) {
+        if (key_exists('tags', $criteria)) {
             $this->buildTagFiltering($criteria, $qb);
         }
     }
@@ -691,7 +689,7 @@ class NodeRepository extends StatusAwareRepository
      * @param UrlAlias $urlAlias
      *
      * @return null|Node
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findOneWithUrlAlias(UrlAlias $urlAlias)
     {
@@ -712,7 +710,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $urlAliasAlias
      *
      * @return null|Node
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findOneWithAliasAndAvailableTranslation($urlAliasAlias)
     {
@@ -737,7 +735,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $urlAliasAlias
      *
      * @return null|Node
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function findOneWithAlias($urlAliasAlias)
     {
@@ -757,10 +755,10 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
-     * @param $nodeName
+     * @param string $nodeName
      *
      * @return bool
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function exists($nodeName)
     {
@@ -865,7 +863,7 @@ class NodeRepository extends StatusAwareRepository
      *
      * @deprecated Use findByNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
-     * @param $fieldName
+     * @param string $fieldName
      * @param Translation $translation
      * @return array|null
      */
@@ -982,7 +980,7 @@ class NodeRepository extends StatusAwareRepository
     /**
      * @deprecated Use findByReverseNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
      * @param Node $node
-     * @param $fieldName
+     * @param string $fieldName
      * @param Translation $translation
      * @return array|null
      */

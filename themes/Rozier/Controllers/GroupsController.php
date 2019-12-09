@@ -86,7 +86,7 @@ class GroupsController extends RozierApp
         $form = $this->buildAddForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $group = $this->addGroup($form->getData());
                 $msg = $this->getTranslator()->trans(
@@ -129,7 +129,8 @@ class GroupsController extends RozierApp
             $form = $this->buildDeleteForm($group);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
                 try {
                     $this->deleteGroup($form->getData(), $group);
@@ -177,7 +178,8 @@ class GroupsController extends RozierApp
             $form = $this->buildEditForm($group);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['groupId'] == $group->getId()) {
                 try {
                     $this->editGroup($form->getData(), $group);
@@ -227,7 +229,7 @@ class GroupsController extends RozierApp
             $form = $this->buildEditRolesForm($group);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $role = $this->addRole($form->getData(), $group);
 
                 $msg = $this->getTranslator()->trans('role.%role%.linked_group.%group%', [
@@ -279,7 +281,7 @@ class GroupsController extends RozierApp
             $form = $this->buildRemoveRoleForm($group, $role);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->removeRole($form->getData(), $group, $role);
                 $msg = $this->getTranslator()->trans('role.%role%.removed_from_group.%group%', [
                     '%role%' => $role->getRole(),
@@ -323,7 +325,7 @@ class GroupsController extends RozierApp
             $form = $this->buildEditUsersForm($group);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $user = $this->addUser($form->getData(), $group);
 
                 $msg = $this->getTranslator()->trans('user.%user%.linked.group.%group%', [
@@ -375,7 +377,7 @@ class GroupsController extends RozierApp
             $form = $this->buildRemoveUserForm($group, $user);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->removeUser($form->getData(), $group, $user);
                 $msg = $this->getTranslator()->trans('user.%user%.removed_from_group.%group%', [
                     '%user%' => $user->getUserName(),

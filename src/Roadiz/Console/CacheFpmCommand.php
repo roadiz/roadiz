@@ -95,5 +95,6 @@ class CacheFpmCommand extends Command
         } catch (ClientException $exception) {
             $io->warning('Cannot GET ' . $url . ' [' . $exception->getCode() . ']');
         }
+        return 0;
     }
 }

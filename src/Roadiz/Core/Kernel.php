@@ -273,12 +273,16 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
-            $dispatcher->addSubscriber(new ExceptionSubscriber(
-                $c,
-                $c['themeResolver'],
-                $c['logger.doctrine'],
-                $kernel->isDebug()
-            ));
+
+            if (!$kernel->isDebug()) {
+                $dispatcher->addSubscriber(new ExceptionSubscriber(
+                    $c,
+                    $c['themeResolver'],
+                    $c['logger.doctrine'],
+                    $kernel->isDebug()
+                ));
+            }
+
             $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));
             $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
 
@@ -517,7 +521,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
          */
         if ($this->isProdMode() && !$this->isPreview()) {
             $this->get('dispatcher')->addSubscriber(
-                new NodeRedirectionSubscriber($this->get(NodeMover::class))
+                new NodeRedirectionSubscriber($this->get(NodeMover::class), $this)
             );
         }
         $this->get('stopwatch')->stop('kernel.initEvents');

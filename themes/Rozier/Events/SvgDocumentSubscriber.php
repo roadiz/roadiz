@@ -31,7 +31,7 @@ namespace Themes\Rozier\Events;
 
 use enshrined\svgSanitize\Sanitizer;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentSvgUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -62,7 +62,7 @@ class SvgDocumentSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_SVG_UPLOADED => 'onSvgUploaded',
+            DocumentSvgUploadedEvent::class => 'onSvgUploaded',
         ];
     }
 

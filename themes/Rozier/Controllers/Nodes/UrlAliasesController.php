@@ -34,22 +34,27 @@ use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceSeoType;
 use RZ\Roadiz\CMS\Forms\TranslationsType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Redirection;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\FilterUrlAliasEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Events\UrlAliasEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasCreatedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasDeletedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Themes\Rozier\Forms\RedirectionType;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -64,7 +69,7 @@ class UrlAliasesController extends RozierApp
      * @param int     $nodeId
      * @param int     $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      * @throws \Twig_Error_Runtime
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
@@ -85,6 +90,11 @@ class UrlAliasesController extends RozierApp
                        ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
 
         if ($source !== null && null !== $node = $source->getNode()) {
+            $redirections = $this->get('em')
+                ->getRepository(Redirection::class)
+                ->findBy([
+                    'redirectNodeSource' => $node->getNodeSources()->toArray()
+                ]);
             $uas = $this->get('em')
                         ->getRepository(UrlAlias::class)
                         ->findAllFromNode($node->getId());
@@ -95,6 +105,7 @@ class UrlAliasesController extends RozierApp
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $source;
             $this->assignation['aliases'] = [];
+            $this->assignation['redirections'] = [];
             $this->assignation['translation'] = $translation;
             $this->assignation['available_translations'] = $availableTranslations;
 
@@ -103,94 +114,49 @@ class UrlAliasesController extends RozierApp
              */
             $seoForm = $this->createForm(NodeSourceSeoType::class, $source);
             $seoForm->handleRequest($request);
-            if ($seoForm->isValid()) {
+            if ($seoForm->isSubmitted() && $seoForm->isValid()) {
                 $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans('node.seo.updated');
                 $this->publishConfirmMessage($request, $msg, $source);
                 /*
                  * Dispatch event
                  */
-                $event = new FilterNodesSourcesEvent($source);
-                $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
-
+                $this->get('dispatcher')->dispatch(new NodesSourcesUpdatedEvent($source));
                 return $this->redirect($this->generateUrl(
                     'nodesEditSEOPage',
                     ['nodeId' => $node->getId(), 'translationId' => $translationId]
                 ));
             }
 
+            if (null !== $response = $this->handleAddRedirection($source, $request)) {
+                return $response;
+            }
             /*
              * each url alias edit form
              */
             /** @var UrlAlias $alias */
             foreach ($uas as $alias) {
-                $editForm = $this->buildEditUrlAliasForm($alias);
-                $deleteForm = $this->createNamedFormBuilder('delete_urlalias_'.$alias->getId())->getForm();
-                // Match edit
-                $editForm->handleRequest($request);
-                if ($editForm->isValid()) {
-                    try {
-                        if ($this->editUrlAlias($editForm->getData(), $alias)) {
-                            $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
-                            $this->publishConfirmMessage($request, $msg, $source);
-                            /*
-                             * Dispatch event
-                             */
-                            $event = new FilterUrlAliasEvent($alias);
-                            $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_UPDATED, $event);
-
-                            return $this->redirect($this->generateUrl(
-                                'nodesEditSEOPage',
-                                ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                            ));
-                        } else {
-                            $msg = $this->getTranslator()->trans(
-                                'url_alias.%alias%.no_update.already_exists',
-                                ['%alias%' => $alias->getAlias()]
-                            );
-                            $editForm->addError(new FormError($msg));
-                        }
-                    } catch (EntityAlreadyExistsException $e) {
-                        $editForm->addError(new FormError($e->getMessage()));
-                    }
+                if (null !== $response = $this->handleSingleUrlAlias($alias, $request)) {
+                    return $response;
                 }
+            }
 
-                // Match delete
-                $deleteForm->handleRequest($request);
-                if ($deleteForm->isValid()) {
-                    $this->get('em')->remove($alias);
-                    $this->get('em')->flush();
-                    $msg = $this->getTranslator()->trans('url_alias.%alias%.deleted', ['%alias%' => $alias->getAlias()]);
-                    $this->publishConfirmMessage($request, $msg, $source);
-
-                    /*
-                     * Dispatch event
-                     */
-                    $event = new FilterUrlAliasEvent($alias);
-                    $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_DELETED, $event);
-
-                    return $this->redirect($this->generateUrl(
-                        'nodesEditSEOPage',
-                        ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    ));
+            /** @var Redirection $redirection */
+            foreach ($redirections as $redirection) {
+                if (null !== $response = $this->handleSingleRedirection($redirection, $request)) {
+                    return $response;
                 }
-
-                $this->assignation['aliases'][] = [
-                    'alias' => $alias,
-                    'editForm' => $editForm->createView(),
-                    'deleteForm' => $deleteForm->createView(),
-                ];
             }
 
             /*
              * =======================
              * Main ADD url alias form
              */
-            $form = $this->buildAddUrlAliasForm($node);
-            $form->handleRequest($request);
-            if ($form->isValid()) {
+            $addAliasForm = $this->buildAddUrlAliasForm($node);
+            $addAliasForm->handleRequest($request);
+            if ($addAliasForm->isSubmitted() && $addAliasForm->isValid()) {
                 try {
-                    $ua = $this->addNodeUrlAlias($form->getData(), $node);
+                    $ua = $this->addNodeUrlAlias($addAliasForm->getData(), $node);
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.created.%translation%', [
                         '%alias%' => $ua->getAlias(),
                         '%translation%' => $ua->getNodeSource()->getTranslation()->getName(),
@@ -199,21 +165,20 @@ class UrlAliasesController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterUrlAliasEvent($ua);
-                    $this->get('dispatcher')->dispatch(UrlAliasEvents::URL_ALIAS_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(new UrlAliasCreatedEvent($ua));
 
                     return $this->redirect($this->generateUrl(
                         'nodesEditSEOPage',
                         ['nodeId' => $node->getId(), 'translationId' => $translationId]
-                    ));
+                    ).'#manage-aliases');
                 } catch (EntityAlreadyExistsException $e) {
-                    $form->addError(new FormError($e->getMessage()));
+                    $addAliasForm->addError(new FormError($e->getMessage()));
                 } catch (NoTranslationAvailableException $e) {
-                    $form->addError(new FormError($e->getMessage()));
+                    $addAliasForm->addError(new FormError($e->getMessage()));
                 }
             }
 
-            $this->assignation['form'] = $form->createView();
+            $this->assignation['form'] = $addAliasForm->createView();
             $this->assignation['seoForm'] = $seoForm->createView();
 
             return $this->render('nodes/editAliases.html.twig', $this->assignation);
@@ -397,5 +362,165 @@ class UrlAliasesController extends RozierApp
                         ]);
 
         return $builder->getForm();
+    }
+
+    /**
+     * @param UrlAlias $alias
+     * @param Request  $request
+     *
+     * @return RedirectResponse|null
+     */
+    private function handleSingleUrlAlias(UrlAlias $alias, Request $request): ?RedirectResponse
+    {
+        $editForm = $this->buildEditUrlAliasForm($alias);
+        $deleteForm = $this->createNamedFormBuilder('delete_urlalias_'.$alias->getId())->getForm();
+        // Match edit
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            try {
+                if ($this->editUrlAlias($editForm->getData(), $alias)) {
+                    $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
+                    $this->publishConfirmMessage($request, $msg, $alias->getNodeSource());
+                    /*
+                     * Dispatch event
+                     */
+                    $this->get('dispatcher')->dispatch(new UrlAliasUpdatedEvent($alias));
+
+                    return $this->redirect($this->generateUrl(
+                        'nodesEditSEOPage',
+                        [
+                            'nodeId' => $alias->getNodeSource()->getNode()->getId(),
+                            'translationId' => $alias->getNodeSource()->getTranslation()->getId()
+                        ]
+                    ).'#manage-aliases');
+                } else {
+                    $msg = $this->getTranslator()->trans(
+                        'url_alias.%alias%.no_update.already_exists',
+                        ['%alias%' => $alias->getAlias()]
+                    );
+                    $editForm->addError(new FormError($msg));
+                }
+            } catch (EntityAlreadyExistsException $e) {
+                $editForm->addError(new FormError($e->getMessage()));
+            }
+        }
+
+        // Match delete
+        $deleteForm->handleRequest($request);
+        if ($deleteForm->isSubmitted() && $deleteForm->isValid()) {
+            $this->get('em')->remove($alias);
+            $this->get('em')->flush();
+            $msg = $this->getTranslator()->trans('url_alias.%alias%.deleted', ['%alias%' => $alias->getAlias()]);
+            $this->publishConfirmMessage($request, $msg, $alias->getNodeSource());
+
+            /*
+             * Dispatch event
+             */
+            $this->get('dispatcher')->dispatch(new UrlAliasDeletedEvent($alias));
+
+            return $this->redirect($this->generateUrl(
+                'nodesEditSEOPage',
+                [
+                    'nodeId' => $alias->getNodeSource()->getNode()->getId(),
+                    'translationId' => $alias->getNodeSource()->getTranslation()->getId()
+                ]
+            ).'#manage-aliases');
+        }
+
+        $this->assignation['aliases'][] = [
+            'alias' => $alias,
+            'editForm' => $editForm->createView(),
+            'deleteForm' => $deleteForm->createView(),
+        ];
+
+        return null;
+    }
+
+    private function handleAddRedirection(NodesSources $source, Request $request): ?RedirectResponse
+    {
+        $redirection = new Redirection();
+        $redirection->setRedirectNodeSource($source);
+        $redirection->setType(Response::HTTP_MOVED_PERMANENTLY);
+
+        /** @var FormFactory $formFactory */
+        $formFactory = $this->get('formFactory');
+        /** @var FormInterface $editForm */
+        $addForm = $formFactory->createNamedBuilder(
+            'add_redirection',
+            RedirectionType::class,
+            $redirection,
+            [
+                'placeholder' => $this->generateUrl($source),
+                'entityManager' => $this->get('em'),
+                'only_query' => true
+            ]
+        )->getForm();
+
+        $addForm->handleRequest($request);
+        if ($addForm->isSubmitted() && $addForm->isValid()) {
+            $this->get('em')->persist($redirection);
+            $this->get('em')->flush();
+            return $this->redirect($this->generateUrl(
+                'nodesEditSEOPage',
+                [
+                    'nodeId' => $redirection->getRedirectNodeSource()->getNode()->getId(),
+                    'translationId' => $redirection->getRedirectNodeSource()->getTranslation()->getId()
+                ]
+            ).'#manage-redirections');
+        }
+
+        $this->assignation['addRedirection'] = $addForm->createView();
+
+        return null;
+    }
+
+    private function handleSingleRedirection(Redirection $redirection, Request $request): ?RedirectResponse
+    {
+        /** @var FormFactory $formFactory */
+        $formFactory = $this->get('formFactory');
+        /** @var FormInterface $editForm */
+        $editForm = $formFactory->createNamedBuilder(
+            'edit_redirection_'.$redirection->getId(),
+            RedirectionType::class,
+            $redirection,
+            [
+                'entityManager' => $this->get('em'),
+                'only_query' => true
+            ]
+        )->getForm();
+        $deleteForm = $this->createNamedFormBuilder('delete_redirection_'.$redirection->getId())->getForm();
+
+        $editForm->handleRequest($request);
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $this->get('em')->flush();
+            return $this->redirect($this->generateUrl(
+                'nodesEditSEOPage',
+                [
+                    'nodeId' => $redirection->getRedirectNodeSource()->getNode()->getId(),
+                    'translationId' => $redirection->getRedirectNodeSource()->getTranslation()->getId()
+                ]
+            ).'#manage-redirections');
+        }
+
+        // Match delete
+        $deleteForm->handleRequest($request);
+        if ($deleteForm->isSubmitted() && $deleteForm->isValid()) {
+            $this->get('em')->remove($redirection);
+            $this->get('em')->flush();
+            return $this->redirect($this->generateUrl(
+                'nodesEditSEOPage',
+                [
+                    'nodeId' => $redirection->getRedirectNodeSource()->getNode()->getId(),
+                    'translationId' => $redirection->getRedirectNodeSource()->getTranslation()->getId()
+                ]
+            ).'#manage-redirections');
+        }
+        $this->assignation['redirections'][] = [
+            'redirection' => $redirection,
+            'editForm' => $editForm->createView(),
+            'deleteForm' => $deleteForm->createView(),
+        ];
+
+        return null;
     }
 }

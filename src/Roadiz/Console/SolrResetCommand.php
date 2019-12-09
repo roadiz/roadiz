@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -64,9 +65,11 @@ class SolrResetCommand extends SolrCommand
             } else {
                 $this->io->error('Solr search engine server does not respond…');
                 $this->io->note('See your config.yml file to correct your Solr connexion settings.');
+                return 1;
             }
         } else {
             $this->io->note($this->displayBasicConfig());
         }
+        return 0;
     }
 }

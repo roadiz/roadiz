@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -74,6 +75,7 @@ class TranslationsDeleteCommand extends Command
 
         if ($translationCount < 2) {
             $io->error('You cannot delete the only one available translation!');
+            return 1;
         } elseif ($translation !== null) {
             $io->note('///////////////////////////////' . PHP_EOL .
                 '/////////// WARNING ///////////' . PHP_EOL .
@@ -93,6 +95,8 @@ class TranslationsDeleteCommand extends Command
             }
         } else {
             $io->error('Translation for locale ' . $locale . ' does not exist.');
+            return 1;
         }
+        return 0;
     }
 }

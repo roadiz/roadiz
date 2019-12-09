@@ -98,6 +98,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
+        /** @var Group $group */
         $group = $serializer->deserialize($string, Group::class, 'json');
 
         /*
@@ -112,6 +113,7 @@ class GroupJsonSerializer extends AbstractJsonSerializer
         if (!empty($tempArray['roles'])) {
             foreach ($tempArray['roles'] as $roleAssoc) {
                 $role = $this->roleSerializer->deserialize(json_encode($roleAssoc));
+                /** @var Role|null $role */
                 $role = $this->em->getRepository(Role::class)
                              ->findOneByName($role->getRole());
                 $group->addRole($role);

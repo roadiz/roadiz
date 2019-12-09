@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -35,9 +36,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Markdown\MarkdownInterface;
@@ -211,8 +210,8 @@ class SolariumNodeSource extends AbstractSolarium
          */
         $assoc['collection_txt'] = $collection;
 
-        $event = new FilterSolariumNodeSourceEvent($this->nodeSource, $assoc, $this);
-        $this->dispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_INDEXING, $event);
+        $event = new NodesSourcesIndexingEvent($this->nodeSource, $assoc, $this);
+        $this->dispatcher->dispatch($event);
         /*
          * Override associations
          */

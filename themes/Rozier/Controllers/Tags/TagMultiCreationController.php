@@ -31,9 +31,7 @@ namespace Themes\Rozier\Controllers\Tags;
 
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\TagTranslation;
-use RZ\Roadiz\Core\Events\FilterTagEvent;
-use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Core\Events\Tag\TagCreatedEvent;
 use RZ\Roadiz\Utils\Tag\TagFactory;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,7 +55,7 @@ class TagMultiCreationController extends RozierApp
             $form = $this->buildAddForm();
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $data = $form->getData();
                 $names = explode(',', $data['names']);
                 $names = array_map('trim', $names);
@@ -86,8 +84,7 @@ class TagMultiCreationController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterTagEvent($tag);
-                    $this->get('dispatcher')->dispatch(TagEvents::TAG_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(new TagCreatedEvent($tag));
 
                     $msg = $this->getTranslator()->trans('child.tag.%name%.created', ['%name%' => $tag->getTagName()]);
                     $this->publishConfirmMessage($request, $msg);

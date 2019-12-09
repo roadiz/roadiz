@@ -61,6 +61,7 @@ class CacheInfosCommand extends Command
         $this->nsCacheHelper = $this->getHelper('ns-cache');
 
         $io->listing($this->getInformation());
+        return 0;
     }
 
     public function getInformation(): array

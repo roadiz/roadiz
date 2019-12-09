@@ -200,7 +200,6 @@ class CustomFormsType extends AbstractType
                 }
                 $option["choices"] = $this->getChoices($field);
                 $option["expanded"] = $field->isExpanded();
-                $option["choices_as_values"] = true;
 
                 if ($formOptions['forceExpanded']) {
                     $option["expanded"] = true;
@@ -215,7 +214,6 @@ class CustomFormsType extends AbstractType
                 }
                 $option["choices"] = $this->getChoices($field);
                 $option["multiple"] = true;
-                $option["choices_as_values"] = true;
                 $option["expanded"] = $field->isExpanded();
 
                 if ($formOptions['forceExpanded']) {

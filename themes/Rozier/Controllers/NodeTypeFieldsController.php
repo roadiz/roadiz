@@ -99,7 +99,7 @@ class NodeTypeFieldsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
 
                 /** @var NodeTypeHandler $handler */
@@ -163,7 +163,7 @@ class NodeTypeFieldsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('em')->persist($field);
                     $this->get('em')->flush();
@@ -191,8 +191,7 @@ class NodeTypeFieldsController extends RozierApp
                     ));
                 } catch (\Exception $e) {
                     $msg = $e->getMessage();
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->error($msg);
+                    $this->publishErrorMessage($request, $msg);
                     /*
                      * Redirect to add page
                      */
@@ -231,7 +230,8 @@ class NodeTypeFieldsController extends RozierApp
             $form = $this->buildDeleteForm($field);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['nodeTypeFieldId'] == $field->getId()) {
                 $nodeTypeId = $field->getNodeType()->getId();
                 $this->get('em')->remove($field);

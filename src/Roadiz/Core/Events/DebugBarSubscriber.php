@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -31,7 +32,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -64,11 +65,11 @@ final class DebugBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      *
      * @return bool
      */
-    protected function supports(FilterResponseEvent $event)
+    protected function supports(ResponseEvent $event)
     {
         $response = $event->getResponse();
         if ($this->container['settingsBag']->get('display_debug_panel') == true &&
@@ -80,9 +81,9 @@ final class DebugBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         if (!$event->isMasterRequest()) {
             return;

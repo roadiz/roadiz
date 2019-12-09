@@ -1,5 +1,4 @@
 #!/bin/bash
-
 export DEBIAN_FRONTEND=noninteractive
 
 sudo cp /var/www/samples/vagrant/nginx-vhost.conf /etc/nginx/sites-available/default;

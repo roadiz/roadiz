@@ -35,8 +35,9 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterTagEvent;
-use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Core\Events\Tag\TagCreatedEvent;
+use RZ\Roadiz\Core\Events\Tag\TagDeletedEvent;
+use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
@@ -172,7 +173,7 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /*
                  * Update tag slug if not locked
                  * only from default translation.
@@ -186,8 +187,7 @@ class TagsController extends RozierApp
                  * Dispatch event
                  */
                 $this->get('dispatcher')->dispatch(
-                    TagEvents::TAG_UPDATED,
-                    new FilterTagEvent($tag)
+                    new TagUpdatedEvent($tag)
                 );
 
                 $msg = $this->getTranslator()->trans('tag.%name%.updated', [
@@ -243,7 +243,7 @@ class TagsController extends RozierApp
                 );
                 $form->handleRequest($request);
 
-                if ($form->isValid()) {
+                if ($form->isSubmitted() && $form->isValid()) {
                     $msg = $this->bulkDeleteTags($form->getData());
 
                     $this->publishConfirmMessage($request, $msg);
@@ -293,7 +293,7 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /*
                  * Get latest position to add tags after.
                  */
@@ -312,8 +312,7 @@ class TagsController extends RozierApp
                 /*
                  * Dispatch event
                  */
-                $event = new FilterTagEvent($tag);
-                $this->get('dispatcher')->dispatch(TagEvents::TAG_CREATED, $event);
+                $this->get('dispatcher')->dispatch(new TagCreatedEvent($tag));
 
                 $msg = $this->getTranslator()->trans('tag.%name%.created', ['%name%' => $tag->getTagName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -358,13 +357,12 @@ class TagsController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
                 /*
                  * Dispatch event
                  */
-                $event = new FilterTagEvent($tag);
-                $this->get('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
+                $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
 
                 $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
                 $this->publishConfirmMessage($request, $msg);
@@ -446,13 +444,13 @@ class TagsController extends RozierApp
             $form = $this->buildDeleteForm($tag);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['tagId'] == $tag->getId()) {
                 /*
                  * Dispatch event
                  */
-                $event = new FilterTagEvent($tag);
-                $this->get('dispatcher')->dispatch(TagEvents::TAG_DELETED, $event);
+                $this->get('dispatcher')->dispatch(new TagDeletedEvent($tag));
 
                 $this->get('em')->remove($tag);
                 $this->get('em')->flush();
@@ -506,7 +504,7 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     /*
                      * Get latest position to add tags after.
@@ -525,8 +523,7 @@ class TagsController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterTagEvent($tag);
-                    $this->get('dispatcher')->dispatch(TagEvents::TAG_CREATED, $event);
+                    $this->get('dispatcher')->dispatch(new TagCreatedEvent($tag));
 
                     $msg = $this->getTranslator()->trans('child.tag.%name%.created', ['%name%' => $tag->getTagName()]);
                     $this->publishConfirmMessage($request, $msg);
@@ -682,8 +679,7 @@ class TagsController extends RozierApp
              * Dispatch event
              */
             $this->get('dispatcher')->dispatch(
-                TagEvents::TAG_UPDATED,
-                new FilterTagEvent($entity->getTag())
+                new TagUpdatedEvent($entity->getTag())
             );
 
             $msg = $this->getTranslator()->trans('tag.%name%.updated', [

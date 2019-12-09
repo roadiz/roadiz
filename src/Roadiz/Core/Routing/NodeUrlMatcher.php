@@ -48,7 +48,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     }
 
     /**
-     * @return array
+     * @return string
      */
     public function getDefaultSupportedFormatExtension(): string
     {
@@ -221,11 +221,11 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     /**
      * Parse Node from UrlAlias.
      *
-     * @param array &$tokens
+     * @param array $tokens
      *
      * @return Node
      */
-    protected function parseFromUrlAlias(&$tokens): ?Node
+    protected function parseFromUrlAlias(array &$tokens): ?Node
     {
         if (count($tokens) > 0) {
             $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
@@ -245,7 +245,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * Cannot use securityAuthorizationChecker here as firewall
      * has not been hit yet.
      *
-     * @param array       &$tokens
+     * @param array $tokens
      * @param Translation $translation
      *
      * @return Node

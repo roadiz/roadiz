@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -149,7 +150,7 @@ class ThemesCommand extends Command
     }
 
     /**
-     * @param $className
+     * @param string $className
      *
      * @return null|ReflectionClass
      */
@@ -168,7 +169,7 @@ class ThemesCommand extends Command
     }
 
     /**
-     * @param $className
+     * @param string $className
      *
      * @return string|null
      */
@@ -201,7 +202,7 @@ class ThemesCommand extends Command
     }
 
     /**
-     * @param $themeName
+     * @param string $themeName
      *
      * @return string
      */
@@ -248,7 +249,7 @@ class ThemesCommand extends Command
      * @param InputInterface $input
      * @param OutputInterface $output
      *
-     * @return int|null|void
+     * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -287,6 +288,7 @@ class ThemesCommand extends Command
         }
 
         $io->table(['Class (with / instead of \)', 'Enabled', 'Type'], $tableContent);
+        return 0;
     }
 
     /**
@@ -294,8 +296,8 @@ class ThemesCommand extends Command
      *
      * Falling back to absolute symlink and finally hard copy.
      *
-     * @param $originDir
-     * @param $targetDir
+     * @param string $originDir
+     * @param string $targetDir
      * @return string
      */
     private function relativeSymlinkWithFallback($originDir, $targetDir)
@@ -314,8 +316,8 @@ class ThemesCommand extends Command
      *
      * Falling back to hard copy.
      *
-     * @param $originDir
-     * @param $targetDir
+     * @param string $originDir
+     * @param string $targetDir
      * @return string
      */
     private function absoluteSymlinkWithFallback($originDir, $targetDir)
@@ -333,8 +335,8 @@ class ThemesCommand extends Command
     /**
      * Creates symbolic link.
      *
-     * @param $originDir
-     * @param $targetDir
+     * @param string $originDir
+     * @param string $targetDir
      * @param bool $relative
      */
     private function symlink($originDir, $targetDir, $relative = false)
@@ -352,8 +354,8 @@ class ThemesCommand extends Command
     /**
      * Copies origin to target.
      *
-     * @param $originDir
-     * @param $targetDir
+     * @param string $originDir
+     * @param string $targetDir
      * @return string
      */
     private function hardCopy($originDir, $targetDir)

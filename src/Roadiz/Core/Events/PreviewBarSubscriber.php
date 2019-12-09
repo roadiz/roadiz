@@ -32,7 +32,7 @@ namespace RZ\Roadiz\Core\Events;
 use Pimple\Container;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class PreviewBarSubscriber implements EventSubscriberInterface
@@ -59,11 +59,11 @@ class PreviewBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      *
      * @return bool
      */
-    protected function supports(FilterResponseEvent $event)
+    protected function supports(ResponseEvent $event)
     {
         $response = $event->getResponse();
         if ($event->isMasterRequest() &&
@@ -77,9 +77,9 @@ class PreviewBarSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterResponseEvent $event
+     * @param ResponseEvent $event
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         if ($this->supports($event)) {
             $response = $event->getResponse();

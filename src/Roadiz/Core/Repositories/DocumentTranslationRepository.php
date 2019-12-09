@@ -37,7 +37,7 @@ use RZ\Roadiz\Core\Entities\DocumentTranslation;
 class DocumentTranslationRepository extends EntityRepository
 {
     /**
-     * @param $id
+     * @param int $id
      * @return DocumentTranslation|null
      */
     public function findOneWithDocument($id)

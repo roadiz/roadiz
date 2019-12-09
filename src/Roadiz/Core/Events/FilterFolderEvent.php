@@ -35,8 +35,9 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Class FilterFolderEvent
  * @package RZ\Roadiz\Core\Events
+ * @deprecated
  */
-class FilterFolderEvent extends Event
+abstract class FilterFolderEvent extends Event
 {
     /**
      * @var Folder
@@ -55,7 +56,7 @@ class FilterFolderEvent extends Event
     /**
      * @return Folder
      */
-    public function getFolder()
+    public function getFolder(): Folder
     {
         return $this->folder;
     }

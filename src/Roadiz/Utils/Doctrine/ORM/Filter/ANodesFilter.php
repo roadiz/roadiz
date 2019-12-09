@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -26,13 +27,13 @@
  * @file ANodesFilter.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
-use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
-use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,12 +46,8 @@ class ANodesFilter implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER => [
-                // NodesSources should be first as properties are
-                // more detailed and precise.
-                ['onNodesSourcesQueryBuilderBuild', 40],
-                ['onNodeQueryBuilderBuild', 30],
-            ]
+            QueryBuilderNodesSourcesBuildEvent::class => [['onNodesSourcesQueryBuilderBuild', 40]],
+            QueryBuilderBuildEvent::class => [['onNodeQueryBuilderBuild', 30]]
         ];
     }
 
@@ -83,8 +80,7 @@ class ANodesFilter implements EventSubscriberInterface
      */
     public function onNodeQueryBuilderBuild(FilterQueryBuilderCriteriaEvent $event)
     {
-        if ($event instanceof FilterNodeQueryBuilderCriteriaEvent &&
-            $event->supports()) {
+        if ($event->supports() && $event->getActualEntityName() === Node::class) {
             $simpleQB = new SimpleQueryBuilder($event->getQueryBuilder());
             if (false !== strpos($event->getProperty(), $this->getProperty() . '.')) {
                 // Prevent other query builder filters to execute
@@ -124,9 +120,9 @@ class ANodesFilter implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterQueryBuilderCriteriaEvent $event
+     * @param FilterNodesSourcesQueryBuilderCriteriaEvent $event
      */
-    public function onNodesSourcesQueryBuilderBuild(FilterQueryBuilderCriteriaEvent $event)
+    public function onNodesSourcesQueryBuilderBuild(FilterNodesSourcesQueryBuilderCriteriaEvent $event)
     {
         if ($event instanceof FilterNodesSourcesQueryBuilderCriteriaEvent &&
             $event->supports()) {

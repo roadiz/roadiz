@@ -30,6 +30,7 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\CacheEvents;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
@@ -127,8 +128,8 @@ class ThemesController extends RozierApp
 
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $this->get('dispatcher');
-        $event = new FilterCacheEvent($this->get('kernel'));
-        $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
+        $event = new CachePurgeRequestEvent($this->get('kernel'));
+        $dispatcher->dispatch($event);
 
         if ($importFile === false) {
             return $this->redirect($this->generateUrl(

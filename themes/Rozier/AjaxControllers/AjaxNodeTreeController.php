@@ -33,6 +33,7 @@ namespace Themes\Rozier\AjaxControllers;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -75,7 +76,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                     Node::class,
                                     (int) $request->get('parentNodeId')
                                 );
-                } elseif (null !== $this->getUser()) {
+                } elseif (null !== $this->getUser() && $this->getUser() instanceof User) {
                     $node = $this->getUser()->getChroot();
                 } else {
                     $node = null;
@@ -110,7 +111,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
              */
             case 'requestMainNodeTree':
                 $parent = null;
-                if (null !== $this->getUser()) {
+                if (null !== $this->getUser() && $this->getUser() instanceof User) {
                     $parent = $this->getUser()->getChroot();
                 }
 

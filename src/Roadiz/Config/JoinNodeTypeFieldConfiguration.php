@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -39,8 +40,8 @@ class JoinNodeTypeFieldConfiguration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $builder = new TreeBuilder();
-        $root = $builder->root('join');
+        $builder = new TreeBuilder('join');
+        $root = $builder->getRootNode();
         $root->children()
             ->scalarNode('classname')
                 ->isRequired()

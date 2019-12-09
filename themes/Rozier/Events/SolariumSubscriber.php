@@ -33,16 +33,28 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentDeletedEvent;
+use RZ\Roadiz\Core\Events\DocumentFileUploadedEvent;
+use RZ\Roadiz\Core\Events\DocumentInFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentOutFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;
+use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
-use RZ\Roadiz\Core\Events\FolderEvents;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeTaggedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUndeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
@@ -105,22 +117,23 @@ class SolariumSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodeEvents::NODE_STATUS_CHANGED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_VISIBILITY_CHANGED => 'onSolariumNodeUpdate',
-            NodesSourcesEvents::NODE_SOURCE_UPDATED => 'onSolariumSingleUpdate',
-            NodesSourcesEvents::NODE_SOURCE_DELETED => 'onSolariumSingleDelete',
-            NodeEvents::NODE_DELETED => 'onSolariumNodeDelete',
-            NodeEvents::NODE_UNDELETED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
-            TagEvents::TAG_UPDATED => 'onSolariumTagUpdate',
-            DocumentEvents::DOCUMENT_FILE_UPLOADED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_TRANSLATION_UPDATED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_IN_FOLDER => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_OUT_FOLDER => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_UPDATED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_DELETED => 'onSolariumDocumentDelete',
-            FolderEvents::FOLDER_UPDATED => 'onSolariumFolderUpdate',
+            NodeUpdatedEvent::class => 'onSolariumNodeUpdate',
+            NodeStatusChangedEvent::class => 'onSolariumNodeUpdate',
+            NodeVisibilityChangedEvent::class => 'onSolariumNodeUpdate',
+            NodesSourcesUpdatedEvent::class => 'onSolariumSingleUpdate',
+            NodesSourcesDeletedEvent::class => 'onSolariumSingleDelete',
+            NodeDeletedEvent::class => 'onSolariumNodeDelete',
+            NodeUndeletedEvent::class => 'onSolariumNodeUpdate',
+            NodeTaggedEvent::class => 'onSolariumNodeUpdate',
+            NodeCreatedEvent::class => 'onSolariumNodeUpdate',
+            TagUpdatedEvent::class => 'onSolariumTagUpdate',
+            DocumentFileUploadedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentTranslationUpdatedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentInFolderEvent::class => 'onSolariumDocumentUpdate',
+            DocumentOutFolderEvent::class => 'onSolariumDocumentUpdate',
+            DocumentUpdatedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentDeletedEvent::class => 'onSolariumDocumentDelete',
+            FolderUpdatedEvent::class => 'onSolariumFolderUpdate',
         ];
     }
 
@@ -204,6 +217,7 @@ class SolariumSubscriber implements EventSubscriberInterface
                     $solrSource->getDocumentFromIndex();
                     $solrSource->updateAndCommit();
                 }
+                $event->stopPropagation();
             } catch (HttpException $exception) {
                 $this->logger->error($exception->getMessage());
             }

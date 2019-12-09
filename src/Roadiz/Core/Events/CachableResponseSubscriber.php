@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class CachableResponseSubscriber implements EventSubscriberInterface
@@ -29,7 +29,7 @@ class CachableResponseSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         if (!$event->isMasterRequest()) {
             return;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -26,7 +27,6 @@
  * @file LogsCleanupCommand.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
@@ -90,5 +90,6 @@ class LogsCleanupCommand extends Command
                 $io->writeln('No log entries were deleted.');
             }
         }
+        return 0;
     }
 }

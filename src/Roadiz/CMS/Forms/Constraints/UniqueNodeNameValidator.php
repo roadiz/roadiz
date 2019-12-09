@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -29,14 +30,20 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueNodeNameValidator extends ConstraintValidator
 {
+    /**
+     * @param mixed      $value
+     * @param UniqueNodeName $constraint
+     */
     public function validate($value, Constraint $constraint)
     {
         $value = StringHandler::slugify($value);
@@ -62,7 +69,7 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param EntityManager $entityManager
      *
      * @return bool
      */
@@ -73,14 +80,15 @@ class UniqueNodeNameValidator extends ConstraintValidator
 
     /**
      * @param string $name
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param EntityManager $entityManager
      *
      * @return bool
      */
     protected function nodeNameExists($name, $entityManager)
     {
-        return (boolean) $entityManager->getRepository(Node::class)
-                                       ->setDisplayingNotPublishedNodes(true)
-                                       ->exists($name);
+        /** @var NodeRepository $nodeRepo */
+        $nodeRepo = $entityManager->getRepository(Node::class);
+        return (boolean) $nodeRepo->setDisplayingNotPublishedNodes(true)
+                                  ->exists($name);
     }
 }

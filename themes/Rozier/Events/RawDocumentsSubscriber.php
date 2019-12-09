@@ -31,7 +31,7 @@ namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
@@ -69,7 +69,7 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
         return [
             // Keeps Raw document process before any other document subscribers to perform operations
             // on a lower image
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 100],
+            DocumentImageUploadedEvent::class => ['onImageUploaded', 100],
         ];
     }
 

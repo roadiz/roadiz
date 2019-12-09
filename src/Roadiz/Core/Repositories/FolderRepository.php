@@ -140,7 +140,7 @@ class FolderRepository extends EntityRepository
     }
 
     /**
-     * @param                  $folderName
+     * @param string $folderName
      * @param Translation|null $translation
      *
      * @return mixed|null

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016.
  *
@@ -161,7 +162,10 @@ class NodesCleanNamesCommand extends Command
                 }
             } else {
                 $io->warning('Renaming cancelled…');
+                return 1;
             }
         }
+
+        return 0;
     }
 }

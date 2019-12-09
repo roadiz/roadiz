@@ -78,7 +78,6 @@ class SiteInformationType extends AbstractType
             ])
             ->add('timezone', ChoiceType::class, [
                 'choices' => $timeZoneList,
-                'choices_as_values' => true,
                 'label' => 'timezone',
                 'required' => true,
             ]);

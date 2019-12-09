@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016.
  *
@@ -30,7 +31,6 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -98,6 +98,8 @@ class NodesDetailsCommand extends Command
             }
         } else {
             $io->error('No node found.');
+            return 1;
         }
+        return 0;
     }
 }

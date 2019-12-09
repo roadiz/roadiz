@@ -35,6 +35,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Themes\Rozier\RozierApp;
@@ -61,7 +62,7 @@ class HistoryController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -92,14 +93,14 @@ class HistoryController extends RozierApp
      * @param Request $request
      * @param integer $userId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function userAction(Request $request, $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
         if (!($this->isGranted('ROLE_ACCESS_USERS')
-            || (is_object($this->getUser()) && $this->getUser()->getId() == $userId))) {
+            || ($this->getUser() instanceof User && $this->getUser()->getId() == $userId))) {
             throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 

@@ -27,11 +27,12 @@
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -71,7 +72,7 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => ['onImageUploaded', 0],
+            DocumentImageUploadedEvent::class => ['onImageUploaded', 0],
         ];
     }
 
@@ -92,15 +93,15 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     /**
      * @param FilterDocumentEvent $event
      *
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function onImageUploaded(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
         if ($this->supports($document)) {
+            $documentPath = $this->packages->getDocumentFilePath($document);
             try {
                 $manager = new ImageManager();
-                $documentPath = $this->packages->getDocumentFilePath($document);
                 $mediumColor = (new AverageColorResolver())->getAverageColor($manager->make($documentPath));
                 $document->setImageAverageColor($mediumColor);
             } catch (NotReadableException $exception) {

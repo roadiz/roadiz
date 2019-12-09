@@ -110,7 +110,7 @@ class AttributeController extends RozierApp
         $form = $this->createForm(AttributeImportType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var UploadedFile $file */
             $file = $form->get('file')->getData();
 
@@ -146,7 +146,7 @@ class AttributeController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('em')->persist($item);
                 $this->get('em')->flush();
@@ -192,7 +192,7 @@ class AttributeController extends RozierApp
             'entityManager' => $this->get('em'),
         ]);
         $form->handleRequest($request);
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans(
@@ -232,7 +232,7 @@ class AttributeController extends RozierApp
         $form = $this->createForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('em')->remove($item);
                 $this->get('em')->flush();

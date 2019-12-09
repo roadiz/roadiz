@@ -149,7 +149,7 @@ class AjaxDocumentsExplorerController extends AbstractAjaxController
     /**
      * Normalize response Document list result.
      *
-     * @param $documents
+     * @param array|\Traversable $documents
      * @return array
      */
     private function normalizeDocuments($documents)

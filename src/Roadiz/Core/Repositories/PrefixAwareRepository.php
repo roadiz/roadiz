@@ -124,7 +124,7 @@ class PrefixAwareRepository extends EntityRepository
 
     /**
      * @param QueryBuilder $qb
-     * @param $key
+     * @param string $key
      * @return array
      */
     protected function getRealKey(QueryBuilder $qb, $key)
@@ -175,10 +175,10 @@ class PrefixAwareRepository extends EntityRepository
     /**
      * Count entities using a Criteria object or a simple filter array.
      *
-     * @param Criteria|mixed|array $criteria or array
+     * @param array $criteria
      * @param array $order
-     * @param null $limit
-     * @param null $offset
+     * @param int|null $limit
+     * @param int|null $offset
      * @return array|Paginator
      */
     public function findBy(
@@ -223,8 +223,8 @@ class PrefixAwareRepository extends EntityRepository
     /**
      * Count entities using a Criteria object or a simple filter array.
      *
-     * @param Criteria|mixed|array $criteria or array
-     * @param array $order
+     * @param array $criteria
+     * @param array|null $order
      * @return Entity
      */
     public function findOneBy(

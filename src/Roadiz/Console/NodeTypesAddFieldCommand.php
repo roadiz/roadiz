@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -76,8 +77,10 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
             $io->success('Node type ' . $nodetype->getName() . ' has been updated.' . PHP_EOL .
                 'Do not forget to update database schema!' . PHP_EOL .
                 'bin/roadiz orm:schema-tool:update --dump-sql --force');
+            return 0;
         } else {
             $io->error('Node-type "' . $name . '" does not exist.');
+            return 1;
         }
     }
 }

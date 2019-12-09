@@ -91,11 +91,11 @@ abstract class DynamicUrlMatcher extends UrlMatcher
     /**
      * Parse translation from URL tokens.
      *
-     * @param array &$tokens
+     * @param array $tokens
      *
      * @return Translation|null
      */
-    protected function parseTranslation(&$tokens): ?Translation
+    protected function parseTranslation(array &$tokens): ?Translation
     {
         /** @var TranslationRepository $repository */
         $repository = $this->em->getRepository(Translation::class);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -179,7 +180,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
     /**
      * Remove any document linked to current node-source.
      *
-     * @param \Solarium\QueryType\Update\Query\Query $update
+     * @param Query $update
      * @return boolean
      */
     public function clean(Query $update)

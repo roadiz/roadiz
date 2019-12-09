@@ -120,10 +120,8 @@ EOF
                     return 0;
                 }
             }
-
             throw new \RuntimeException('SQL dump binary is not installed on your system.');
         }
-
         throw new \RuntimeException('database:dump command only supports MySQL');
     }
 }

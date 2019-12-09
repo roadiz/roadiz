@@ -46,7 +46,6 @@ use Themes\Rozier\RozierApp;
  */
 class NewslettersUtilsController extends RozierApp
 {
-
     /**
      * Duplicate node by ID.
      *
@@ -58,12 +57,14 @@ class NewslettersUtilsController extends RozierApp
     public function duplicateAction(Request $request, $newsletterId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NEWSLETTERS');
-
         $translation = $this->get('defaultTranslation');
+        /** @var Newsletter $existingNewsletter */
+        $existingNewsletter = $this->get('em')->find(Newsletter::class, (int) $newsletterId);
+        if (null === $existingNewsletter) {
+            throw $this->createNotFoundException();
+        }
 
         try {
-            /** @var Newsletter $existingNewsletter */
-            $existingNewsletter = $this->get('em')->find(Newsletter::class, (int) $newsletterId);
             /** @var NewsletterHandler $handler */
             $handler = $this->get('newsletter.handler');
             $handler->setNewsletter($existingNewsletter);
@@ -85,13 +86,7 @@ class NewslettersUtilsController extends RozierApp
                                                 ]
                                             ));
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                $this->getTranslator()->trans("impossible.duplicate.newsletter.%name%", [
-                    '%name%' => $existingNewsletter->getNode()->getNodeName(),
-                ])
-            );
-            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->publishErrorMessage($request, $e->getMessage());
 
             return $this->redirect($this->get('urlGenerator')
                                             ->generate(
@@ -140,14 +135,15 @@ class NewslettersUtilsController extends RozierApp
         . $newsletter->getNode()->getNodeType()->getName()
         . "Controller";
         // force the twig path
-        $this->get('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
-
-        // get html from the controller
-        $front = new $classname();
-        if ($front instanceof AppController && method_exists($front, 'makeHtml')) {
-            $front->setContainer($this->getContainer());
-            $front->prepareBaseAssignation();
-            return $front->makeHtml($request, $newsletter);
+        if (method_exists($classname, 'getViewsFolder')) {
+            $this->get('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
+            // get html from the controller
+            $front = new $classname();
+            if ($front instanceof AppController && method_exists($front, 'makeHtml')) {
+                $front->setContainer($this->getContainer());
+                $front->prepareBaseAssignation();
+                return $front->makeHtml($request, $newsletter);
+            }
         }
 
         throw new \RuntimeException(sprintf(

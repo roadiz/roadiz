@@ -32,8 +32,8 @@ namespace RZ\Roadiz\Core\Events;
 use Pimple\Container;
 use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -65,10 +65,10 @@ class PreviewModeSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterControllerEvent $event
+     * @param ControllerEvent $event
      * @throws PreviewNotAllowedException
      */
-    public function onControllerMatched(FilterControllerEvent $event)
+    public function onControllerMatched(ControllerEvent $event)
     {
         if ($event->isMasterRequest()) {
             if (null === $this->container['securityTokenStorage']->getToken() ||
@@ -83,9 +83,9 @@ class PreviewModeSubscriber implements EventSubscriberInterface
     /**
      * Enforce cache disabling.
      *
-     * @param  FilterResponseEvent $event
+     * @param  ResponseEvent $event
      */
-    public function onResponse(FilterResponseEvent $event)
+    public function onResponse(ResponseEvent $event)
     {
         $response = $event->getResponse();
         $response->expire();

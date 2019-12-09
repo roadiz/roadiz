@@ -56,7 +56,7 @@ class ThemeAssetsCommand extends ThemesCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return int|null|void
+     * @return int|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -90,5 +90,6 @@ class ThemeAssetsCommand extends ThemesCommand
         } else {
             throw new LogicException('You are not using Roadiz Standard edition, no need to install your theme assets in public directory.');
         }
+        return 0;
     }
 }

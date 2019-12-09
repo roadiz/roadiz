@@ -31,7 +31,7 @@ namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
-use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -48,10 +48,7 @@ class NodesSourcesNodeFilter implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER => [
-                // This event must be the last to perform
-                ['onNodesSourcesQueryBuilderBuild', -10],
-            ]
+            QueryBuilderNodesSourcesBuildEvent::class => [['onNodesSourcesQueryBuilderBuild', -10]],
         ];
     }
 

@@ -81,7 +81,7 @@ class CustomFormAnswersController extends RozierApp
      * Return an deletion form for requested node-type.
      *
      * @param Request $request
-     * @param         $customFormAnswerId
+     * @param int $customFormAnswerId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -99,7 +99,8 @@ class CustomFormAnswersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['customFormAnswerId'] == $customFormAnswer->getId()) {
                 $this->get("em")->remove($customFormAnswer);
 

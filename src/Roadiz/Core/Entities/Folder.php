@@ -164,7 +164,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * @return mixed
+     * @return Collection
      */
     public function getTranslatedFolders(): Collection
     {
@@ -172,7 +172,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * @param mixed $translatedFolders
+     * @param Collection $translatedFolders
      * @return Folder
      */
     public function setTranslatedFolders(Collection $translatedFolders)
@@ -183,7 +183,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
 
     /**
      * @param Translation $translation
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getTranslatedFoldersByTranslation(Translation $translation): Collection
     {

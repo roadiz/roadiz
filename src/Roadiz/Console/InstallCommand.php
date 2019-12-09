@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -122,6 +123,7 @@ class InstallCommand extends Command implements ContainerAwareInterface
                 $cacheDriver->deleteAll();
             }
         }
+        return 0;
     }
 
     /**

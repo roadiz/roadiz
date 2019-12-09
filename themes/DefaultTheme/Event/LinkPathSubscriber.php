@@ -30,6 +30,7 @@ namespace Themes\DefaultTheme\Event;
 
 use GeneratedNodeSources\NSLink;
 use RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
 use RZ\Roadiz\Core\Events\NodesSourcesEvents;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -45,7 +46,7 @@ class LinkPathSubscriber implements EventSubscriberInterface
             /*
              * Needs to execute this BEFORE default nodes-sources path generation
              */
-            NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING => [['onNodesSourcesPath', 0]],
+            NodesSourcesPathGeneratingEvent::class => [['onNodesSourcesPath', 0]],
         ];
     }
 
@@ -64,7 +65,12 @@ class LinkPathSubscriber implements EventSubscriberInterface
                  * with linked nodeSource.
                  */
                 $event->setNodeSource($source->getRefNodeSources()[0]);
-                $dispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING, $event);
+                if ($event instanceof NodesSourcesPathGeneratingEvent) {
+                    $dispatcher->dispatch($event);
+                } else {
+                    /** @deprecated */
+                    $dispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING, $event);
+                }
             } else {
                 $event->setPath('');
             }

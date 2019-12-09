@@ -113,11 +113,12 @@ class SettingsUtilsController extends RozierApp
 
         $form->handleRequest($request);
 
-        if ($form->isValid() &&
+        if ($form->isSubmitted() &&
+            $form->isValid() &&
             !empty($form['setting_file'])) {
             $file = $form['setting_file']->getData();
 
-            if ($file->isValid()) {
+            if ($form->isSubmitted() && $file->isValid()) {
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {

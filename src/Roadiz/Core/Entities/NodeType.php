@@ -303,7 +303,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @var ArrayCollection<RZ\Roadiz\Core\Entities\NodeTypeField>
+     * @var ArrayCollection<NodeTypeField>
      * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @Serializer\Groups("node_type")

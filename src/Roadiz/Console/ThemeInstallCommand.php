@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -125,6 +126,7 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
         } else {
             $this->io->writeln('Frontend themes are no more registered into database. <info>You should use --data or --nodes option.</info>');
         }
+        return 0;
     }
 
     /**

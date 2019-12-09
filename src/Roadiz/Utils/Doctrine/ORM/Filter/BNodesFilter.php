@@ -29,7 +29,8 @@
 
 namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
-use RZ\Roadiz\Core\Events\QueryBuilderEvents;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 
 /**
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter
@@ -39,12 +40,8 @@ class BNodesFilter extends ANodesFilter
     public static function getSubscribedEvents()
     {
         return [
-            QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER => [
-                // NodesSources should be first as properties are
-                // more detailed and precise.
-                ['onNodesSourcesQueryBuilderBuild', 40],
-                ['onNodeQueryBuilderBuild', 30],
-            ]
+            QueryBuilderNodesSourcesBuildEvent::class => [['onNodesSourcesQueryBuilderBuild', 40]],
+            QueryBuilderBuildEvent::class => [['onNodeQueryBuilderBuild', 30]]
         ];
     }
 

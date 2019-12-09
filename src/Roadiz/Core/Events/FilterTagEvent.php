@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -35,6 +36,7 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Class FilterTagEvent
  * @package RZ\Roadiz\Core\Events
+ * @deprecated
  */
 class FilterTagEvent extends Event
 {
@@ -45,6 +47,7 @@ class FilterTagEvent extends Event
 
     /**
      * FilterTagEvent constructor.
+     *
      * @param Tag $tag
      */
     public function __construct(Tag $tag)

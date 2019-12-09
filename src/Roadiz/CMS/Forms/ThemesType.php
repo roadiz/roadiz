@@ -46,7 +46,6 @@ class ThemesType extends AbstractType
     {
         $resolver->setDefaults([
             'choices' => [],
-            'choices_as_values' => true,
         ]);
         $resolver->setRequired('themes_config');
         $resolver->setAllowedTypes('themes_config', 'array');

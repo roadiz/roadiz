@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -72,5 +73,6 @@ class TranslationsCommand extends Command
         } else {
             $io->error('No available translations.');
         }
+        return 0;
     }
 }

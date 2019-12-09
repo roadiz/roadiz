@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -68,5 +69,6 @@ class ThemeInfoCommand extends ThemesCommand
             ['Source path', $this->getThemePath($themeName)],
             ['Assets path', $this->getThemePath($themeName).'/static'],
         ]);
+        return 0;
     }
 }

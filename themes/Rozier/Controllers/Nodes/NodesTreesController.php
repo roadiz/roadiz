@@ -33,6 +33,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -72,7 +73,7 @@ class NodesTreesController extends RozierApp
             }
 
             $this->get('em')->refresh($node);
-        } elseif (null !== $this->getUser()) {
+        } elseif (null !== $this->getUser() && $this->getUser() instanceof User) {
             $node = $this->getUser()->getChroot();
         } else {
             $node = null;
@@ -112,7 +113,7 @@ class NodesTreesController extends RozierApp
          */
         $tagNodesForm = $this->buildBulkTagForm();
         $tagNodesForm->handleRequest($request);
-        if ($tagNodesForm->isValid()) {
+        if ($tagNodesForm->isSubmitted() && $tagNodesForm->isValid()) {
             $data = $tagNodesForm->getData();
 
             if ($tagNodesForm->get('submitTag')->isClicked()) {
@@ -512,7 +513,6 @@ class NodesTreesController extends RozierApp
                         ->add('status', ChoiceType::class, [
                             'label' => false,
                             'data' => $status,
-                            'choices_as_values' => true,
                             'choices' => [
                                 Node::getStatusLabel(Node::DRAFT) => 'reject',
                                 Node::getStatusLabel(Node::PENDING) => 'review',

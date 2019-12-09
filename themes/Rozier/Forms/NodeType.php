@@ -81,12 +81,10 @@ class NodeType extends AbstractType
 
         $builder->add('childrenOrder', ChoiceType::class, [
                 'label' => 'node.childrenOrder',
-                'choices_as_values' => true,
                 'choices' => Node::$orderingFields,
             ])
             ->add('childrenOrderDirection', ChoiceType::class, [
                 'label' => 'node.childrenOrderDirection',
-                'choices_as_values' => true,
                 'choices' => [
                     'ascendant' => 'ASC',
                     'descendant' => 'DESC',

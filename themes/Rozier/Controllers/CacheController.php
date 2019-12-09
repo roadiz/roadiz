@@ -30,11 +30,16 @@
  */
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\CacheEvents;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -45,7 +50,7 @@ class CacheController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteDoctrineCache(Request $request)
     {
@@ -54,19 +59,19 @@ class CacheController extends RozierApp
         $form = $this->buildDeleteDoctrineForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var EventDispatcher $dispatcher */
             $dispatcher = $this->get('dispatcher');
-            $event = new FilterCacheEvent($this->get('kernel'));
-            $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
+            $event = new CachePurgeRequestEvent($this->get('kernel'));
+            $dispatcher->dispatch($event);
 
             // Clear cache for prod preview
             $kernelClass = get_class($this->get('kernel'));
             /** @var Kernel $prodPreviewKernel */
             $prodPreviewKernel = new $kernelClass('prod', false, true);
             $prodPreviewKernel->boot();
-            $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
-            $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);
+            $prodPreviewEvent = new CachePurgeRequestEvent($prodPreviewKernel);
+            $dispatcher->dispatch($prodPreviewEvent);
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
@@ -112,7 +117,7 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteDoctrineForm()
     {
@@ -124,7 +129,7 @@ class CacheController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAssetsCache(Request $request)
     {
@@ -133,11 +138,11 @@ class CacheController extends RozierApp
         $form = $this->buildDeleteAssetsForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             /** @var EventDispatcher $dispatcher */
             $dispatcher = $this->get('dispatcher');
-            $event = new FilterCacheEvent($this->get('kernel'));
-            $dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
+            $event = new CachePurgeAssetsRequestEvent($this->get('kernel'));
+            $dispatcher->dispatch($event);
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
@@ -160,7 +165,7 @@ class CacheController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteAssetsForm()
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -30,10 +31,9 @@
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Events\FilterTagEvent;
-use RZ\Roadiz\Core\Events\TagEvents;
+use RZ\Roadiz\Core\Events\Tag\TagCreatedEvent;
+use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Repositories\TagRepository;
 use RZ\Roadiz\Utils\StringHandler;
@@ -366,8 +366,7 @@ class AjaxTagsController extends AbstractAjaxController
         /*
          * Dispatch event
          */
-        $event = new FilterTagEvent($tag);
-        $this->get('dispatcher')->dispatch(TagEvents::TAG_UPDATED, $event);
+        $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
     }
 
     /**

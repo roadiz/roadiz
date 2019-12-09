@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -84,5 +85,6 @@ class UsersPasswordCommand extends UsersCommand
                 throw new \InvalidArgumentException('User “' . $name . '” does not exist.');
             }
         }
+        return 0;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -106,14 +107,13 @@ class CustomFormsUtilsController extends RozierApp
     public function duplicateAction(Request $request, $customFormId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
+        /** @var CustomForm $existingCustomForm */
+        $existingCustomForm = $this->get('em')->find(CustomForm::class, (int) $customFormId);
+        if (null === $existingCustomForm) {
+            throw $this->createNotFoundException();
+        }
 
         try {
-            /** @var CustomForm $existingCustomForm */
-            $existingCustomForm = $this->get('em')->find(CustomForm::class, (int) $customFormId);
-            if (null === $existingCustomForm) {
-                throw $this->createNotFoundException();
-            }
-
             $newCustomForm = clone $existingCustomForm;
             $newCustomForm->setCreatedAt(new \DateTime());
             $newCustomForm->setUpdatedAt(new \DateTime());

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -70,10 +71,12 @@ class SolrCommand extends Command
             } else {
                 $this->io->error('Solr search engine server does not respond…');
                 $this->io->note('See your config.yml file to correct your Solr connexion settings.');
+                return 1;
             }
         } else {
             $this->io->note($this->displayBasicConfig());
         }
+        return 0;
     }
 
     protected function displayBasicConfig()

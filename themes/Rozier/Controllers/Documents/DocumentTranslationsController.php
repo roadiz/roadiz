@@ -33,8 +33,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\DocumentEvents;
-use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -112,7 +111,7 @@ class DocumentTranslationsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
                     '%name%' => $document->getFilename(),
@@ -120,8 +119,7 @@ class DocumentTranslationsController extends RozierApp
                 $this->publishConfirmMessage($request, $msg);
 
                 $this->get("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_TRANSLATION_UPDATED,
-                    new FilterDocumentEvent($document)
+                    new DocumentTranslationUpdatedEvent($document)
                 );
 
                 $routeParams = [
@@ -197,18 +195,24 @@ class DocumentTranslationsController extends RozierApp
             $form = $this->buildDeleteForm($documentTr);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['documentId'] == $documentTr->getId()) {
                 try {
                     $this->get('em')->remove($documentTr);
                     $this->get('em')->flush();
 
-                    $msg = $this->getTranslator()->trans('document.translation.%name%.deleted', ['%name%' => $document->getFilename()]);
+                    $msg = $this->getTranslator()->trans(
+                        'document.translation.%name%.deleted',
+                        ['%name%' => $document->getFilename()]
+                    );
                     $this->publishConfirmMessage($request, $msg);
                 } catch (Exception $e) {
-                    $msg = $this->getTranslator()->trans('document.translation.%name%.cannot_delete', ['%name%' => $document->getFilename()]);
-                    $request->getSession()->getFlashBag()->add('error', $msg);
-                    $this->get('logger')->warning($msg);
+                    $msg = $this->getTranslator()->trans(
+                        'document.translation.%name%.cannot_delete',
+                        ['%name%' => $document->getFilename()]
+                    );
+                    $this->publishErrorMessage($request, $msg);
                 }
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -265,8 +269,7 @@ class DocumentTranslationsController extends RozierApp
             $this->publishConfirmMessage($request, $msg);
 
             $this->get("dispatcher")->dispatch(
-                DocumentEvents::DOCUMENT_TRANSLATION_UPDATED,
-                new FilterDocumentEvent($entity->getDocument())
+                new DocumentTranslationUpdatedEvent($entity->getDocument())
             );
         }
     }
