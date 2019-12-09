@@ -127,7 +127,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.2.14";
+    public static $cmsVersion = "1.2.15";
 
     protected $environment;
     protected $debug;
@@ -275,14 +275,17 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
 
             if (!$kernel->isDebug()) {
+                /**
+                 * Do not prevent Symfony Debug tool to perform
+                 * in debug mode.
+                 */
                 $dispatcher->addSubscriber(new ExceptionSubscriber(
                     $c,
                     $c['themeResolver'],
-                    $c['logger.doctrine'],
+                    $c['logger'],
                     $kernel->isDebug()
                 ));
             }
-
             $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));
             $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
 

@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use GuzzleHttp\Client;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -71,25 +72,15 @@ class RecaptchaValidator extends ConstraintValidator
      */
     protected function check(Recaptcha $constraint, $responseField)
     {
-        $server = $constraint->request->server;
+        $client = new Client();
+        $response = $client->post($constraint->verifyUrl, [
+            'form_params' => [
+                'secret' => $constraint->privateKey,
+                'response' => $responseField,
+            ]
+        ]);
+        $response = json_decode($response->getBody()->getContents(), true);
 
-        $data = [
-            'secret' => $constraint->privateKey,
-            'remoteip' => $server->get('REMOTE_ADDR'),
-            'response' => $responseField,
-        ];
-
-        $curl = curl_init($constraint->verifyUrl);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-        curl_setopt($curl, CURLOPT_USERAGENT, 'reCAPTCHA/PHP');
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        $response = curl_exec($curl);
-        $response = explode("\r\n\r\n", $response, 2);
-
-        return (isset($response[1]) && preg_match('/true/', $response[1]));
+        return (key_exists('success', $response) && $response['success'] === true);
     }
 }

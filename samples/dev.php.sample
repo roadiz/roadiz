@@ -60,6 +60,7 @@ define('ROADIZ_ROOT', dirname(__FILE__));
 require("vendor/autoload.php");
 
 Debug::enable();
+
 // Use DevKernel on Vagrant box to use a cache dir not
 // in the shared folder.
 //$kernel = new DevKernel('dev', true, false, 'my_site');

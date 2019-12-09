@@ -60,6 +60,7 @@ define('ROADIZ_ROOT', dirname(__FILE__));
 require("vendor/autoload.php");
 
 Debug::enable();
+
 $kernel = new Kernel('install', true);
 $request = Request::createFromGlobals();
 
