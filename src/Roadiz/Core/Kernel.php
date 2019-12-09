@@ -120,7 +120,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.2.14";
+    public static $cmsVersion = "1.2.15";
 
     protected $environment;
     protected $debug;
@@ -266,12 +266,18 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
             $dispatcher->addSubscriber(new NodeNameSubscriber($c['logger'], $c['utils.nodeNameChecker']));
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
-            $dispatcher->addSubscriber(new ExceptionSubscriber(
-                $c,
-                $c['themeResolver'],
-                $c['logger'],
-                $kernel->isDebug()
-            ));
+            if (!$this->isDebug()) {
+                /**
+                 * Do not prevent Symfony Debug tool to perform
+                 * in debug mode.
+                 */
+                $dispatcher->addSubscriber(new ExceptionSubscriber(
+                    $c,
+                    $c['themeResolver'],
+                    $c['logger'],
+                    $kernel->isDebug()
+                ));
+            }
             $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));
             $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
 
@@ -719,7 +725,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function unserialize($data)
     {
-        list($environment, $debug, $preview) = unserialize($data);
+        [$environment, $debug, $preview] = unserialize($data);
         $this->__construct($environment, $debug, $preview);
     }
 
