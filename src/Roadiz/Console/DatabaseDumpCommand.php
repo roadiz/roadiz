@@ -86,6 +86,7 @@ EOF
             $processArray = [
                 'mysqldump',
                 '-h' . $configuration['doctrine']['host'],
+                (null !== $configuration['doctrine']['port']) ? ('-p' . $configuration['doctrine']['port']) : (''),
                 '-u' . $configuration['doctrine']['user'],
                 '-p' . $configuration['doctrine']['password'],
                 $configuration['doctrine']['dbname']
