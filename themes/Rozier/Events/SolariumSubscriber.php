@@ -126,21 +126,21 @@ class SolariumSubscriber implements EventSubscriberInterface
             NodeUndeletedEvent::class => 'onSolariumNodeUpdate',
             NodeTaggedEvent::class => 'onSolariumNodeUpdate',
             NodeCreatedEvent::class => 'onSolariumNodeUpdate',
-            TagUpdatedEvent::class => 'onSolariumTagUpdate',
+            //TagUpdatedEvent::class => 'onSolariumTagUpdate', // Possibly too greedy if lots of nodes tagged
             DocumentFileUploadedEvent::class => 'onSolariumDocumentUpdate',
             DocumentTranslationUpdatedEvent::class => 'onSolariumDocumentUpdate',
             DocumentInFolderEvent::class => 'onSolariumDocumentUpdate',
             DocumentOutFolderEvent::class => 'onSolariumDocumentUpdate',
             DocumentUpdatedEvent::class => 'onSolariumDocumentUpdate',
             DocumentDeletedEvent::class => 'onSolariumDocumentDelete',
-            FolderUpdatedEvent::class => 'onSolariumFolderUpdate',
+            //FolderUpdatedEvent::class => 'onSolariumFolderUpdate', // Possibly too greedy if lots of docs tagged
         ];
     }
 
     /**
      * Update or create Solr document for current Node-source.
      *
-     * @param  FilterNodesSourcesEvent $event
+     * @param FilterNodesSourcesEvent $event
      */
     public function onSolariumSingleUpdate(FilterNodesSourcesEvent $event)
     {
@@ -274,7 +274,8 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Update solr documents linked to current event Tag.
      *
-     * @param  FilterTagEvent $event
+     * @param FilterTagEvent $event
+     * @deprecated This can lead to a timeout if more than 500 nodes use that tag!
      */
     public function onSolariumTagUpdate(FilterTagEvent $event)
     {
@@ -312,6 +313,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      * Update solr documents linked to current event Folder.
      *
      * @param FilterFolderEvent $event
+     * @deprecated This can lead to a timeout if more than 500 documents use that folder!
      */
     public function onSolariumFolderUpdate(FilterFolderEvent $event)
     {
