@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;

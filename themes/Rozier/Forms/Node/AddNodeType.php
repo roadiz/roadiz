@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\DataTransformer\NodeTypeTransformer;
 use RZ\Roadiz\Core\Entities\Node;

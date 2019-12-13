@@ -11,7 +11,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFolderName;
 use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Component\Form\AbstractType;

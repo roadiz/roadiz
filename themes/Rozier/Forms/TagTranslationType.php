@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\TagTranslation;

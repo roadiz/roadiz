@@ -1,5 +1,8 @@
 {# For performance matters, recursive nav is not enable by default. #}
-{#{% set children = source|children %}#}
+{% set children = source|children({
+   'node.visible': true,
+   'node.nodeType.reachable': true
+}) %}
 
 {% set itemClasses = ['nav-item'] %}
 {% set linkClasses = ['nav-link'] %}
@@ -9,9 +12,9 @@
     {% set linkClasses = linkClasses|merge(['active']) %}
 {% endif %}
 
-{#{% if children|length %}
+{% if children|length %}
     {% set itemClasses = itemClasses|merge(['dropdown', 'has-children']) %}
-{% endif %}#}
+{% endif %}
 
 <li class="{{ itemClasses|join(' ') }}"
     id="nav-item-{{ source.node.nodeName }}"
@@ -21,7 +24,7 @@
        id="nav-link-{{ source.node.nodeName }}"
        href="{{ path(source) }}">{{ source.title|default(source.node.nodeName) }}</a>
 
-    {#{% if children|length %}
+    {% if children|length %}
     <ul class="dropdown-menu nav-children">
         {% for subsource in children %}
             {% include '@DefaultTheme/common/nav-item.html.twig' with {
@@ -31,5 +34,5 @@
             } only %}
         {% endfor %}
     </ul>
-    {% endif %}#}
+    {% endif %}
 </li>

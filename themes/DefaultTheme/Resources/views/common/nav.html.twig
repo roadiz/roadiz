@@ -27,15 +27,6 @@
                 <input name="query" {% if query %}value="{{ query }}"{% endif %}  class="form-control" type="search" placeholder="{{ 'search'|trans }}"/>
             </div>
         </form>
-        {# Lang #}
-        {% if translation %}
-            <ul class="nav-list nav navbar-nav navbar-right" id="nav-lang">
-                {% for id, trans in translation|menu %}
-                    <li class="nav-item nav-item-lang{% if trans.active %} active{% endif %}">
-                        <a class="nav-link nav-link-lang{% if trans.active %} active{% endif %}" href="{{ trans.url }}">{{ trans.translation }}</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+        {% include '@DefaultTheme/common/translations.html.twig' %}
     </div>
 </nav>

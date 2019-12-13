@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;

@@ -29,7 +29,7 @@
 
 namespace RZ\Roadiz\Utils\MediaFinders;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use GuzzleHttp\Exception\ClientException;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;

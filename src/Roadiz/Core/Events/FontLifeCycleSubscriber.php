@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Monolog\Logger;
 use Pimple\Container;

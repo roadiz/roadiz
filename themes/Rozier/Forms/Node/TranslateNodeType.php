@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;

@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Exceptions\InvalidEmbedId;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
@@ -84,7 +85,7 @@ class DocumentExtension extends AbstractExtension
 
     /**
      * @param Document|null $document
-     * @return null|\RZ\Roadiz\Utils\MediaFinders\EmbedFinderInterface
+     * @return null|EmbedFinderInterface
      * @throws RuntimeError
      */
     public function getEmbedFinder(Document $document = null): ?EmbedFinderInterface
@@ -97,15 +98,24 @@ class DocumentExtension extends AbstractExtension
             }
         }
 
-        /** @var EmbedFinderFactory $embedFinderFactory */
-        $embedFinderFactory = $this->container[EmbedFinderFactory::class];
-        if (null !== $document->getEmbedPlatform() &&
-            $embedFinderFactory->supports($document->getEmbedPlatform())) {
-            return $embedFinderFactory->createForPlatform(
-                $document->getEmbedPlatform(),
-                $document->getEmbedId()
-            );
+        try {
+            /** @var EmbedFinderFactory $embedFinderFactory */
+            $embedFinderFactory = $this->container[EmbedFinderFactory::class];
+            if (null !== $document->getEmbedPlatform() &&
+                $embedFinderFactory->supports($document->getEmbedPlatform())) {
+                return $embedFinderFactory->createForPlatform(
+                    $document->getEmbedPlatform(),
+                    $document->getEmbedId()
+                );
+            }
+        } catch (InvalidEmbedId $embedException) {
+            if ($this->throwExceptions) {
+                throw new RuntimeError($embedException->getMessage());
+            } else {
+                return null;
+            }
         }
+
         return null;
     }
 
@@ -129,6 +139,12 @@ class DocumentExtension extends AbstractExtension
             /** @var RendererInterface $renderer */
             $renderer = $this->container[RendererInterface::class];
             return $renderer->render($document, $options);
+        } catch (InvalidEmbedId $embedException) {
+            if ($this->throwExceptions) {
+                throw new RuntimeError($embedException->getMessage());
+            } else {
+                return '<p>'.$embedException->getMessage().'</p>';
+            }
         } catch (InvalidArgumentException $e) {
             throw new RuntimeError($e->getMessage(), -1, null, $e);
         }

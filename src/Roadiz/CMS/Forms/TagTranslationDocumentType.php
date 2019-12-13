@@ -28,7 +28,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TagTranslationDocumentsTransformer;

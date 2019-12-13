@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;

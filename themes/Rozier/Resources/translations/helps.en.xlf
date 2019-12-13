@@ -38,6 +38,10 @@
                 <source>nodeSource.urlAlias.help</source>
                 <target state="translated">URL aliases allow you to rewrite the last part of the URL of your page for each translation. They must be different from the node name and unique throughout your site.</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.redirections.help">
+                <source>nodeSource.redirections.help</source>
+                <target state="translated">Automatic redirections always redirect visitors from a given request path to the up-to-date current node URL, for this translation. Created redirections will be "permanent" type.</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>

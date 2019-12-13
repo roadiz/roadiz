@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 

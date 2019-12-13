@@ -1,6 +1,8 @@
 #
 # Roadiz
 #
+/.env
+/.data
 /*.sql
 /dev.php
 /install.php

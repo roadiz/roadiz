@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;

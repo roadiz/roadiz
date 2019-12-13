@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\DataTransformer;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
