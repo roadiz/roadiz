@@ -831,16 +831,19 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     public function getRoles(): array
     {
         $this->rolesNames = [];
-        foreach ($this->getRolesEntities() as $role) {
-            if (null !== $role) {
-                $this->rolesNames[] = $role->getName();
+        if (null !== $this->getRolesEntities()) {
+            foreach ($this->getRolesEntities() as $role) {
+                if (null !== $role) {
+                    $this->rolesNames[] = $role->getName();
+                }
             }
         }
-
-        foreach ($this->getGroups() as $group) {
-            if ($group instanceof Group) {
-                // User roles > Groups roles
-                $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
+        if (null !== $this->getGroups()) {
+            foreach ($this->getGroups() as $group) {
+                if ($group instanceof Group) {
+                    // User roles > Groups roles
+                    $this->rolesNames = array_merge($group->getRoles(), $this->rolesNames);
+                }
             }
         }
 
@@ -876,14 +879,14 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      */
     public function serialize()
     {
-        return serialize(array(
+        return serialize([
             $this->password,
             $this->salt,
             $this->username,
             $this->enabled,
             $this->id,
             $this->email,
-        ));
+        ]);
     }
     /**
      * {@inheritdoc}
@@ -909,7 +912,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
             $this->enabled,
             $this->id,
             $this->email,
-            ] = $data;
+        ] = $data;
     }
 
     /**

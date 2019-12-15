@@ -36,11 +36,13 @@ use RZ\Roadiz\Core\Entities\Group;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Security\Core\Role\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class GroupVoter extends RoleVoter
 {
+    /**
+     * @var RoleHierarchyInterface
+     */
     private $roleHierarchy;
 
     public function __construct(RoleHierarchyInterface $roleHierarchy, $prefix = 'ROLE_')
@@ -54,7 +56,7 @@ class GroupVoter extends RoleVoter
      */
     protected function extractRoles(TokenInterface $token)
     {
-        return $this->roleHierarchy->getReachableRoles($token->getRoles());
+        return $this->roleHierarchy->getReachableRoleNames($token->getRoleNames());
     }
 
     /**
@@ -63,6 +65,7 @@ class GroupVoter extends RoleVoter
     public function vote(TokenInterface $token, $subject, array $attributes)
     {
         $result = VoterInterface::ACCESS_ABSTAIN;
+        /** @var string[] $roles */
         $roles = $this->extractRoles($token);
 
         foreach ($attributes as $attribute) {
@@ -84,26 +87,24 @@ class GroupVoter extends RoleVoter
     /**
      * @param Group $group
      *
-     * @return Role[]
+     * @return string[]
      */
     protected function extractGroupRoles(Group $group)
     {
-        return $this->roleHierarchy->getReachableRoles($group->getRolesEntities()->toArray());
+        return $this->roleHierarchy->getReachableRoleNames($group->getRoles());
     }
 
     /**
-     * @param Role $role
-     * @param Role[] $roles
+     * @param string $role
+     * @param string[] $roles
      *
      * @return bool
      */
-    protected function isRoleContained(Role $role, $roles)
+    protected function isRoleContained(string $role, $roles)
     {
         foreach ($roles as $singleRole) {
-            if ($singleRole instanceof Role) {
-                if ($role->getRole() === $singleRole->getRole()) {
-                    return true;
-                }
+            if ($role === $singleRole) {
+                return true;
             }
         }
         return false;
