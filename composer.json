@@ -41,7 +41,7 @@
         "roadiz/models":                           "dev-develop",
         "roadiz/documents":                        "dev-develop",
         "roadiz/markdown":                         "dev-master",
-        "ambroisemaupate/intervention-request":    "dev-develop",
+        "ambroisemaupate/intervention-request":    "^2.4.0",
         "doctrine/orm":                            "^2.6.3",
         "symfony/yaml":                            "~4.4.1",
         "symfony/console":                         "~4.4.1",

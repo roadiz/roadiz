@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -48,7 +49,8 @@ use Twig\Error\Error;
 use Twig\Error\SyntaxError;
 
 /**
- * Class ExceptionViewer
+ * ExceptionViewer for production exception handling only.
+ *
  * @package RZ\Roadiz\Core\Viewers
  */
 class ExceptionViewer

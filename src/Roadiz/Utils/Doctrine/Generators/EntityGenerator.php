@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -137,6 +138,7 @@ class EntityGenerator
          * are using ::class syntax!
          */
         return '<?php
+declare(strict_types=1);
 /*
  * THIS IS A GENERATED FILE, DO NOT EDIT IT
  * IT WILL BE RECREATED AT EACH NODE-TYPE UPDATE
@@ -204,10 +206,10 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
 
         if (count($constructorArray) > 0) {
             return '
-    public function __construct(Node $node, Translation $translation) 
+    public function __construct(Node $node, Translation $translation)
     {
         parent::__construct($node, $translation);
-        
+
         '.implode(PHP_EOL, $constructorArray).'
     }'.PHP_EOL;
         }
@@ -220,7 +222,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
      */
     protected function getClassMethods(): string
     {
-        return '    
+        return '
     public function __toString()
     {
         return \'['.$this->nodeType->getSourceEntityClassName().'] \' . parent::__toString();

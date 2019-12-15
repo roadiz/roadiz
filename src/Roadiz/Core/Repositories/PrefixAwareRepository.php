@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -29,7 +30,6 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;

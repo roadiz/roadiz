@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -183,6 +184,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function buildComparison($value, $prefix, $key, $baseKey, QueryBuilder $qb)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use SimpleQueryBuilder::buildExpressionWithoutBinding',
+            E_USER_DEPRECATED
+        );
+
         $simpleQB = new SimpleQueryBuilder($qb);
         $baseKey = $simpleQB->getParameterKey($baseKey);
         return $simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey);
@@ -200,6 +206,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function directComparison(array &$criteria, QueryBuilder $qb, $prefix)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use findBy or manual QueryBuilder methods.',
+            E_USER_DEPRECATED
+        );
+
         $simpleQB = new SimpleQueryBuilder($qb);
         foreach ($criteria as $key => $value) {
             $qb = $simpleQB->buildExpressionWithBinding($value, $prefix, $key);
@@ -255,6 +266,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function applyComparisons(array &$criteria, Query $finalQuery)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated.',
+            E_USER_DEPRECATED
+        );
+
         foreach ($criteria as $key => $value) {
             $this->applyComparison($key, $value, $finalQuery);
         }
@@ -273,6 +289,10 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use SimpleQueryBuilder::buildExpressionWithBinding',
+            E_USER_DEPRECATED
+        );
         if ($value instanceof PersistableInterface) {
             $res = $qb->expr()->eq($alias . '.' . $key, $value->getId());
         } elseif (is_array($value)) {
@@ -376,6 +396,11 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      */
     protected function applyComparison($key, $value, Query $finalQuery)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use SimpleQueryBuilder::bindValue',
+            E_USER_DEPRECATED
+        );
+
         $key = str_replace('.', '_', $key);
 
         if ($value instanceof PersistableInterface) {

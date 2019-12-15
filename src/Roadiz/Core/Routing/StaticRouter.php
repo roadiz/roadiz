@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -32,6 +33,7 @@ namespace RZ\Roadiz\Core\Routing;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Config\NullLoader;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
 
 /**
@@ -68,7 +70,7 @@ class StaticRouter extends Router
     }
 
     /**
-     * @return null|DeferredRouteCollection|\Symfony\Component\Routing\RouteCollection
+     * @return null|DeferredRouteCollection|RouteCollection
      */
     public function getRouteCollection()
     {

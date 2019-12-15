@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -46,7 +47,6 @@ class Settings extends ParameterBag
      * @var EntityManager
      */
     private $entityManager;
-
     /**
      * @var SettingRepository
      */

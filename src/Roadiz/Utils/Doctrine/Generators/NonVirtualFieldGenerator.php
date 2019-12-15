@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -58,7 +59,9 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldAnnotation(): string
     {
-        $exclusion = $this->excludeFromSerialization() ? '@Serializer\Exclude()' : '@Serializer\Groups({"nodes_sources"})';
+        $exclusion = $this->excludeFromSerialization() ?
+            '@Serializer\Exclude()' :
+            '@Serializer\Groups({"nodes_sources"})';
         $ormParams = [
             'type' => '"' . NodeTypeField::$typeToDoctrine[$this->field->getType()] . '"',
             'nullable' => 'true',

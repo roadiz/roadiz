@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -31,6 +32,7 @@
 namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use RZ\Roadiz\Core\Bags\Settings;
 use Rz\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -131,7 +133,7 @@ class TranslationViewer
      * @param boolean $absolute Generate absolute url or relative paths
      *
      * @return array
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function getTranslationMenuAssignation(Request $request, $absolute = false)
     {

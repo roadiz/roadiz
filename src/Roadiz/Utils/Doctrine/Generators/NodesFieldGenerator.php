@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -103,8 +104,11 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      */
     public function '.$this->field->getGetterName().'()
     {
-        trigger_error(\'Method \' . __METHOD__ . \' is deprecated. Use '.$this->field->getGetterName().'Sources instead to deal with NodesSources.\', E_USER_DEPRECATED);
-        
+        trigger_error(
+            \'Method \' . __METHOD__ . \' is deprecated and will be removed in Roadiz v1.4. Use '.$this->field->getGetterName().'Sources instead to deal with NodesSources.\',
+            E_USER_DEPRECATED
+        );
+
         if (null === $this->' . $this->field->getName() . ') {
             if (null !== $this->objectManager) {
                  $this->' . $this->field->getName() . ' = $this->objectManager
@@ -127,7 +131,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      * @var NodesSources[]|null
      */
     private $'.$this->getFieldSourcesName().';
-    
+
     /**
      * @return NodesSources[] '.$this->field->getName().' nodes-sources array
      * @Serializer\VirtualProperty

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -29,6 +30,8 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Document;
@@ -48,9 +51,9 @@ class FolderRepository extends EntityRepository
      *
      * @param string $folderPath
      *
-     * @return \RZ\Roadiz\Core\Entities\Folder
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @return Folder
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function findOrCreateByPath($folderPath)
     {
@@ -101,7 +104,7 @@ class FolderRepository extends EntityRepository
      *
      * @param string $folderPath
      *
-     * @return \RZ\Roadiz\Core\Entities\Folder|null
+     * @return Folder|null
      */
     public function findByPath($folderPath)
     {

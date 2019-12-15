@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -54,7 +55,7 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
                 $this->' . $this->field->getName() . ' = $this->objectManager
                     ->getRepository(Document::class)
                     ->findByNodeSourceAndField(
-                        $this, 
+                        $this,
                         $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getName().'")
                     );
             } else {

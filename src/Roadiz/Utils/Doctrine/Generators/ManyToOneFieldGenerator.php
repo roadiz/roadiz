@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -92,7 +93,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     public function '.$this->field->getSetterName().'($'.$this->field->getName().' = null)
     {
         $this->'.$this->field->getName().' = $'.$this->field->getName().';
-        
+
         return $this;
     }'.PHP_EOL;
     }

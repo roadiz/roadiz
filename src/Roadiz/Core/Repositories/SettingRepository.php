@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -48,7 +49,7 @@ class SettingRepository extends EntityRepository
                 ->setParameter(':name', $name);
 
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZSettingValue_'.$name);
+        $query->enableResultCache(3600, 'RZSettingValue_'.$name);
 
         return $query->getSingleScalarResult();
     }
@@ -67,7 +68,7 @@ class SettingRepository extends EntityRepository
             ->setParameter(':name', $name);
 
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZSettingExists_'.$name);
+        $query->enableResultCache(3600, 'RZSettingExists_'.$name);
 
         return (boolean) $query->getSingleScalarResult();
     }
@@ -82,7 +83,7 @@ class SettingRepository extends EntityRepository
         $builder = $this->createQueryBuilder('s');
         $builder->select('s.name');
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZSettingAll');
+        $query->enableResultCache(3600, 'RZSettingAll');
 
         return array_map('current', $query->getScalarResult());
     }

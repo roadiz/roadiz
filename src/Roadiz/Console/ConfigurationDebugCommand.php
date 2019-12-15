@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *

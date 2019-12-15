@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -57,18 +58,17 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var Stopwatch|null
      */
     protected $stopwatch;
-
     /**
      * @var bool
      */
     protected $preview;
-
     /**
      * @var ThemeResolverInterface
      */
     private $themeResolver;
-
-    /** @var CacheProvider */
+    /**
+     * @var CacheProvider
+     */
     private $nodeSourceUrlCacheProvider;
     /**
      * @var Settings

@@ -165,6 +165,10 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use findBy or manual QueryBuilder methods',
+            E_USER_DEPRECATED
+        );
         if (false !== strpos($key, 'node.')) {
             if (!$this->hasJoinedNode($qb, $alias)) {
                 $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
@@ -204,7 +208,6 @@ class NodesSourcesRepository extends StatusAwareRepository
 
 
     /**
-     *
      * @param QueryBuilder $qb
      * @param string $prefix
      * @return QueryBuilder
@@ -402,7 +405,6 @@ class NodesSourcesRepository extends StatusAwareRepository
     /**
      * A secure findOneBy with which user must be a backend user
      * to see unpublished nodes.
-     *
      *
      * @param array $criteria
      * @param array $orderBy
@@ -727,6 +729,10 @@ class NodesSourcesRepository extends StatusAwareRepository
         NodesSources $nodesSources,
         string $fieldName
     ) {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use findByNodesSourcesAndFieldAndTranslation instead because filtering on field name is not safe.',
+            E_USER_DEPRECATED
+        );
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->select('ns, n, ua')
             ->innerJoin('ns.node', static::NODE_ALIAS)
