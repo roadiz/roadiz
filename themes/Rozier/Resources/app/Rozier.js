@@ -346,6 +346,50 @@ export default class Rozier {
     }
 
     /**
+     * Refresh only main tagTree.
+     *
+     */
+    refreshMainTagTree () {
+        let $currentTagTree = $('#tree-container').find('.tagtree-widget')
+
+        if ($currentTagTree.length) {
+            let postData = {
+                '_token': this.ajaxToken,
+                '_action': 'requestMainTagTree'
+            }
+
+            let url = this.routes.tagsTreeAjax
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                cache: false,
+                dataType: 'json',
+                data: postData
+            })
+            .done(data => {
+                if ($currentTagTree.length &&
+                    typeof data.tagTree !== 'undefined') {
+                    $currentTagTree.fadeOut('slow', () => {
+                        $currentTagTree.replaceWith(data.tagTree)
+                        $currentTagTree = $('#tree-container').find('.tagtree-widget')
+                        $currentTagTree.fadeIn()
+                        this.initNestables()
+                        this.bindMainTrees()
+                        this.resize()
+                        this.lazyload.bindAjaxLink()
+                    })
+                }
+            })
+            .always(() => {
+                this.lazyload.canvasLoader.hide()
+            })
+        } else {
+            console.error('No main tag-tree available.')
+        }
+    }
+
+    /**
      * Toggle trees panel
      * @param  {[type]} event [description]
      * @return {[type]}       [description]

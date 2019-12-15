@@ -31,6 +31,12 @@ nodesTreeAjax:
         translationId: null
         _format: json
     requirements: { translationId : "[0-9]+" }
+tagsTreeAjax:
+    path:     /tags/tree
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxTagTreeController::getTreeAction
+        _format: json
 nodesQuickAddAjax:
     path:     /nodes/add
     defaults:

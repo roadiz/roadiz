@@ -26,112 +26,84 @@ declare(strict_types=1);
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  *
- * @file AjaxNodeTreeController.php
+ * @file AjaxTagTreeController.php
  * @author Ambroise Maupate
  */
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\Widgets\NodeTreeWidget;
+use Themes\Rozier\Widgets\TagTreeWidget;
 
 /**
  * {@inheritdoc}
  */
-class AjaxNodeTreeController extends AbstractAjaxController
+class AjaxTagTreeController extends AbstractAjaxController
 {
     /**
      * @param Request $request
      * @param null $translationId
      * @return JsonResponse
      */
-    public function getTreeAction(Request $request, $translationId = null)
+    public function getTreeAction(Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
-        if (null === $translationId) {
-            $translation = $this->get('defaultTranslation');
-        } else {
-            $translation = $this->get('em')
-                                ->find(
-                                    Translation::class,
-                                    (int) $translationId
-                                );
-        }
-
-        /** @var NodeTreeWidget|null $nodeTree */
-        $nodeTree = null;
+        /** @var TagTreeWidget|null $tagTree */
+        $tagTree = null;
 
         switch ($request->get("_action")) {
             /*
-             * Inner node edit for nodeTree
+             * Inner tag edit for tagTree
              */
-            case 'requestNodeTree':
-                if ($request->get('parentNodeId') > 0) {
-                    $node = $this->get('em')
+            case 'requestTagTree':
+                if ($request->get('parentTagId') > 0) {
+                    $tag = $this->get('em')
                                 ->find(
-                                    Node::class,
-                                    (int) $request->get('parentNodeId')
+                                    Tag::class,
+                                    (int) $request->get('parentTagId')
                                 );
                 } elseif (null !== $this->getUser() && $this->getUser() instanceof User) {
-                    $node = $this->getUser()->getChroot();
+                    $tag = $this->getUser()->getChroot();
                 } else {
-                    $node = null;
+                    $tag = null;
                 }
 
-                $nodeTree = new NodeTreeWidget(
+                $tagTree = new TagTreeWidget(
                     $this->getRequest(),
                     $this,
-                    $node,
-                    $translation
+                    $tag
                 );
 
-                if ($request->get('tagId') &&
-                    $request->get('tagId') > 0) {
-                    $filterTag = $this->get('em')
-                                        ->find(
-                                            Tag::class,
-                                            (int) $request->get('tagId')
-                                        );
+                $this->assignation['mainTagTree'] = false;
 
-                    $nodeTree->setTag($filterTag);
-                }
-
-                $this->assignation['mainNodeTree'] = false;
-
-                if (true === (boolean) $request->get('stackTree')) {
-                    $nodeTree->setStackTree(true);
-                }
                 break;
             /*
-             * Main panel tree nodeTree
+             * Main panel tree tagTree
              */
-            case 'requestMainNodeTree':
+            case 'requestMainTagTree':
                 $parent = null;
                 if (null !== $this->getUser() && $this->getUser() instanceof User) {
                     $parent = $this->getUser()->getChroot();
                 }
 
-                $nodeTree = new NodeTreeWidget(
+                $tagTree = new TagTreeWidget(
                     $this->getRequest(),
                     $this,
-                    $parent,
-                    $translation
+                    $parent
                 );
-                $this->assignation['mainNodeTree'] = true;
+                $this->assignation['mainTagTree'] = true;
                 break;
         }
 
-        $this->assignation['nodeTree'] = $nodeTree;
+        $this->assignation['tagTree'] = $tagTree;
 
         $responseArray = [
             'statusCode' => '200',
             'status' => 'success',
-            'nodeTree' => $this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation),
+            'tagTree' => $this->getTwig()->render('widgets/tagTree/tagTree.html.twig', $this->assignation),
         ];
 
         return new JsonResponse(

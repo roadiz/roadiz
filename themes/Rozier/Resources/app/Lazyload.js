@@ -54,6 +54,7 @@ import JsonEditor from './widgets/JsonEditor'
 import CssEditor from './widgets/CssEditor'
 import LeafletGeotagField from './widgets/LeafletGeotagField'
 import MultiLeafletGeotagField from './widgets/MultiLeafletGeotagField'
+import TagEdit from './components/tag/TagEdit'
 
 /**
  * Lazyload
@@ -81,6 +82,7 @@ export default class Lazyload {
         this.settingsSaveButtons = null
         this.nodeTypeFieldEdit = null
         this.nodeEditSource = null
+        this.tagEdit = null
         this.customFormFieldEdit = null
         this.markdownEditors = []
         this.jsonEditors = []
@@ -316,6 +318,7 @@ export default class Lazyload {
             this.settingsSaveButtons,
             this.nodeTypeFieldEdit,
             this.nodeEditSource,
+            this.tagEdit,
             this.nodeTree,
             this.customFormFieldEdit
         ])
@@ -349,6 +352,7 @@ export default class Lazyload {
         this.settingsSaveButtons = new SettingsSaveButtons()
         this.nodeTypeFieldEdit = new NodeTypeFieldEdit()
         this.nodeEditSource = new NodeEditSource()
+        this.tagEdit = new TagEdit()
         this.nodeTree = new NodeTree()
         this.customFormFieldEdit = new CustomFormFieldEdit()
 
