@@ -25,3 +25,7 @@ migrate:
 
 ngrok:
 	ngrok http ${DEV_DOMAIN}
+
+test:
+	bin/phpcs --report=full --report-file=./report.txt -p ./
+	bin/phpstan analyse -c phpstan.neon -l 1 src themes/Rozier themes/Install
