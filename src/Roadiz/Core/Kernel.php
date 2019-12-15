@@ -96,6 +96,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
+use Symfony\Component\HttpKernel\EventListener\SessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\RebootableInterface;
@@ -227,9 +228,18 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
          * not-required configuration elements.
          */
         @date_default_timezone_set($this->container['config']["timezone"]);
-        @ini_set('session.name', $this->container['config']["security"]["session_name"]);
-        @ini_set('session.cookie_secure', $this->container['config']["security"]["session_cookie_secure"]);
-        @ini_set('session.cookie_httponly', $this->container['config']["security"]["session_cookie_httponly"]);
+        @ini_set(
+            'session.name',
+            (string) $this->container['config']["security"]["session_name"]
+        );
+        @ini_set(
+            'session.cookie_secure',
+            (string) $this->container['config']["security"]["session_cookie_secure"]
+        );
+        @ini_set(
+            'session.cookie_httponly',
+            (string) $this->container['config']["security"]["session_cookie_httponly"]
+        );
     }
 
     /**
@@ -258,7 +268,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $dispatcher = new EventDispatcher();
-            $dispatcher->addSubscriber(new SaveSessionListener());
+            $dispatcher->addSubscriber(new SessionListener(new \Pimple\Psr11\Container($c)));
             $dispatcher->addSubscriber(new AppCacheEventSubscriber());
             $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
             $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());

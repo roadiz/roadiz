@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -33,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 
 use InlineStyle\InlineStyle;
 use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\CMS\Controllers\NewsletterRendererInterface;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Utils\DomHandler;
@@ -123,9 +125,9 @@ class NewslettersUtilsController extends RozierApp
      * @param Request $request
      * @param Newsletter $newsletter
      *
-     * @return mixed
+     * @return string
      */
-    private function getNewsletterHTML(Request $request, Newsletter $newsletter)
+    private function getNewsletterHTML(Request $request, Newsletter $newsletter): string
     {
         $baseNamespace = $this->getBaseNamespace();
 
@@ -134,12 +136,11 @@ class NewslettersUtilsController extends RozierApp
         . "\\NewsletterControllers\\"
         . $newsletter->getNode()->getNodeType()->getName()
         . "Controller";
-        // force the twig path
-        if (method_exists($classname, 'getViewsFolder')) {
-            $this->get('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
-            // get html from the controller
+        if (class_exists($classname)) {
             $front = new $classname();
-            if ($front instanceof AppController && method_exists($front, 'makeHtml')) {
+            if ($front instanceof AppController &&
+                $front instanceof NewsletterRendererInterface) {
+                $this->get('twig.loaderFileSystem')->prependPath($front::getViewsFolder());
                 $front->setContainer($this->getContainer());
                 $front->prepareBaseAssignation();
                 return $front->makeHtml($request, $newsletter);
@@ -147,10 +148,10 @@ class NewslettersUtilsController extends RozierApp
         }
 
         throw new \RuntimeException(sprintf(
-            '""%s" class does not inherit "%s" or does not implements "%s" method.',
+            '""%s" class does not inherit "%s" or does not implements "%s" interface.',
             $classname,
             AppController::class,
-            'makeHtml'
+            NewsletterRendererInterface::class
         ));
     }
 

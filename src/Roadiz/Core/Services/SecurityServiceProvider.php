@@ -102,7 +102,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return null;
         };
 
-        $container['session.storage'] = function (Container $c) {
+        $container['session_storage'] = function (Container $c) {
             try {
                 if ($c['config'] !== null &&
                     isset($c['config']["sessionStorage"])) {
@@ -128,7 +128,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             /** @var RequestStack $requestStack */
             $requestStack = $c['requestStack'];
             $request = $requestStack->getCurrentRequest();
-            $session = new Session($c['session.storage']);
+            $session = new Session($c['session_storage']);
             if (null !== $request) {
                 $request->setSession($session);
             }

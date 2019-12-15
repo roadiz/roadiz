@@ -352,12 +352,16 @@ class RozierApp extends BackendController
                         'icon' => 'uk-icon-rz-surveys',
                         'roles' => ['ROLE_ACCESS_CUSTOMFORMS'],
                     ],
-                    'manage.newsletters' => [
+                    /*
+                     * Newsletter is not maintained anymore
+                     * because never used…
+                     */
+                    /*'manage.newsletters' => [
                         'name' => 'manage.newsletters',
                         'path' => $urlGenerator->generate('newslettersIndexPage'),
                         'icon' => 'uk-icon-rz-newsletters',
                         'roles' => ['ROLE_ACCESS_NEWSLETTERS'],
-                    ],
+                    ],*/
                 ],
             ];
 

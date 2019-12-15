@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 /**
- * Copyright © 2016, Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -9,7 +8,6 @@ declare(strict_types=1);
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is furnished
  * to do so, subject to the following conditions:
- *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
@@ -25,24 +23,17 @@ declare(strict_types=1);
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file BasicNewsletterController.php
- * @author Maxime Constantinian
+ * @file NewsletterController.php
+ * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace Themes\DefaultTheme\NewsletterControllers;
+declare(strict_types=1);
 
-use RZ\Roadiz\CMS\Controllers\NewsletterRendererInterface;
+namespace RZ\Roadiz\CMS\Controllers;
+
 use RZ\Roadiz\Core\Entities\Newsletter;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\DefaultTheme\DefaultThemeApp;
 
-/**
- * Class BasicNewsletterController.
- *
- * Class to generate html form BasicNewsletter newsletter nodetype.
- *
- * @package Themes\DefaultTheme\NewsletterControllers
- */
-class BasicNewsletterController extends DefaultThemeApp implements NewsletterRendererInterface
+interface NewsletterRendererInterface
 {
     /**
      * Generate HTML. The function name makeHtml is important because it will be used
@@ -53,11 +44,5 @@ class BasicNewsletterController extends DefaultThemeApp implements NewsletterRen
      *
      * @return string
      */
-    public function makeHtml(Request $request, Newsletter $newsletter): string
-    {
-        $this->prepareThemeAssignation($newsletter->getNode(), null);
-        $this->assignation["nodeSource"] = $newsletter->getNode()->getNodeSources()->first();
-
-        return $this->getTwig()->render('newsletters/basicNewsletter.html.twig', $this->assignation);
-    }
+    public function makeHtml(Request $request, Newsletter $newsletter): string;
 }
