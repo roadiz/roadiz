@@ -142,7 +142,6 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         $kernel->boot();
         $kernel->get('settingsBag')->get('static_domain_name'); //trigger populate before changing setting
         $kernel->get('settingsBag')->set('static_domain_name', $domainName);
-        $kernel->handle($request);
 
         $packages = new Packages(new EmptyVersionStrategy(), $requestStack, $kernel, $domainName);
         $documentUrlGenerator = new DocumentUrlGenerator($requestStack, $packages, $kernel->get('urlGenerator'));
