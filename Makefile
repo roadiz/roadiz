@@ -1,5 +1,5 @@
 # Use a local available port
-DEV_DOMAIN="roadiz.test"
+DEV_DOMAIN="0.0.0.0:8080"
 THEME_PREFIX=Default
 THEME=${THEME_PREFIX}Theme
 

@@ -295,7 +295,8 @@ class ExceptionViewer
             return true;
         }
 
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+        if ($request->headers->get('Content-Type') &&
+            0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
             return true;
         }
 
