@@ -534,6 +534,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
         return $this;
     }
 
+    public function getAlternativeText(): string
+    {
+        $documentTranslation = $this->getDocumentTranslations()->first();
+        return $documentTranslation && !empty($documentTranslation->getName()) ?
+            $documentTranslation->getName() :
+            $this->getFilename();
+    }
+
     /**
      * Clone current document.
      */
