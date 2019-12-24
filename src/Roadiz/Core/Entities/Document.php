@@ -539,7 +539,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
         $documentTranslation = $this->getDocumentTranslations()->first();
         return $documentTranslation && !empty($documentTranslation->getName()) ?
             $documentTranslation->getName() :
-            $this->getFilename();
+            parent::getAlternativeText();
     }
 
     /**
