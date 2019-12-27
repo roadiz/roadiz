@@ -59,6 +59,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldAnnotation(): string
     {
+        $serializationType = '';
         $exclusion = $this->excludeFromSerialization() ?
             '@Serializer\Exclude()' :
             '@Serializer\Groups({"nodes_sources"})';
@@ -71,9 +72,13 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
         if ($this->field->getType() == NodeTypeField::DECIMAL_T) {
             $ormParams['precision'] = 18;
             $ormParams['scale'] = 3;
+            $serializationType = '@Serializer\Type("double")';
         } elseif ($this->field->getType() == NodeTypeField::BOOLEAN_T) {
             $ormParams['nullable'] = 'false';
             $ormParams['options'] = '{"default" = false}';
+            $serializationType = '@Serializer\Type("boolean")';
+        } elseif ($this->field->getType() == NodeTypeField::INTEGER_T) {
+            $serializationType = '@Serializer\Type("integer")';
         }
 
         return '
@@ -83,6 +88,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      * @Gedmo\Versioned
      * @ORM\Column(' . static::flattenORMParameters($ormParams) . ')
      * ' . $exclusion . '
+     * ' . $serializationType . '
      */'.PHP_EOL;
     }
 
