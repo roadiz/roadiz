@@ -55,7 +55,7 @@ class GeneratePrivateKeyCommand extends Command
         $privateKeyPath = $kernel->get('crypto.absolute_private_key_path');
 
         if (file_exists($privateKeyPath)) {
-            $io->note(sprintf('A private already exists at %s.', $privateKeyPath));
+            $io->note(sprintf('A private key already exists at %s.', $privateKeyPath));
         } else {
             $filename = pathinfo($privateKeyPath, PATHINFO_FILENAME);
             $kernel->get(KeyChainInterface::class)->generate($filename);
