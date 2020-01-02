@@ -211,11 +211,10 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['collection_txt'] = $collection;
 
         $event = new NodesSourcesIndexingEvent($this->nodeSource, $assoc, $this);
-        $this->dispatcher->dispatch($event);
         /*
          * Override associations
          */
-        $assoc = $event->getAssociations();
+        $assoc = $this->dispatcher->dispatch($event)->getAssociations();
 
         return $assoc;
     }
