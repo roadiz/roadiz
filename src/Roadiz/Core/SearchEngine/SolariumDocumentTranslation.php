@@ -102,7 +102,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
      * @return array
      * @throws \Exception
      */
-    protected function getFieldsAssoc()
+    public function getFieldsAssoc(): array
     {
         $assoc = [];
         $collection = [];
