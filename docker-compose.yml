@@ -1,0 +1,55 @@
+version: '3'
+services:
+    db:
+        image: mysql:5.7
+        volumes:
+            - "./.data/db:/var/lib/mysql:delegated"
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    pma:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - ${PMA_PORT}:80/tcp
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    app:
+        build:
+            #context: ./docker/php72-nginx-alpine
+            #context: ./docker/php73-nginx-alpine
+            context: ./docker/php74-nginx-alpine
+            args:
+                USER_UID: ${USER_UID}
+        ports:
+            - ${APP_PORT}:80/tcp
+        depends_on:
+            - db
+            - solr
+        volumes:
+            - ./:/var/www/html:consistent
+        environment:
+            USE_APP_CACHE: ${USE_APP_CACHE}
+            USER_UID: ${USER_UID}
+    solr:
+        image: solr
+        ports:
+            - "${SOLR_PORT}:8983/tcp"
+        volumes:
+            - "./.data/solr:/opt/solr/server/solr/mycores:delegated"
+        entrypoint:
+            - docker-entrypoint.sh
+            - solr-precreate
+            - roadiz
+
+networks:
+    default:
+        ipam:
+            driver: default
+            config:
+                -   subnet: ${DEFAULT_GATEWAY}/16
