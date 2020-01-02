@@ -3,6 +3,22 @@
 {% block inner_content %}
     <h1 class="page-title">{{ nodeSource.title }}</h1>
     <div class="page-text">{{ nodeSource.content|markdownExtra }}</div>
+    <ul class="block-attributes">
+        {% for attributeValueTranslation in nodeSource|attributes %}
+            <li>
+                <strong>{{ attributeValueTranslation|attribute_label(translation) }}:</strong>
+                {% if attributeValueTranslation is datetime %}
+                    {{ attributeValueTranslation.value|localizeddate('medium', 'short') }}
+                {% elseif attributeValueTranslation is date %}
+                    {{ attributeValueTranslation.value|localizeddate('medium') }}
+                {% elseif attributeValueTranslation is country %}
+                    {{ attributeValueTranslation.value|country_iso(request.locale) }}
+                {% else %}
+                    {{ attributeValueTranslation.value }}
+                {% endif%}
+            </li>
+        {% endfor %}
+    </ul>
     <div class="page-blocks row">
         {#
          # Use a loop over children to display blocks
