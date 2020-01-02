@@ -27,7 +27,7 @@ class SolariumFactory implements SolariumFactoryInterface
      */
     protected $markdown;
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     protected $dispatcher;
     /**
@@ -38,11 +38,11 @@ class SolariumFactory implements SolariumFactoryInterface
     /**
      * SolariumFactory constructor.
      *
-     * @param Client                  $solr
-     * @param LoggerInterface         $logger
-     * @param MarkdownInterface       $markdown
-     * @param EventDispatcher         $dispatcher
-     * @param HandlerFactoryInterface $handlerFactory
+     * @param Client|null              $solr
+     * @param LoggerInterface          $logger
+     * @param MarkdownInterface        $markdown
+     * @param EventDispatcherInterface $dispatcher
+     * @param HandlerFactoryInterface  $handlerFactory
      */
     public function __construct(
         ?Client $solr,

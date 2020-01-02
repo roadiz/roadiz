@@ -44,7 +44,6 @@ use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
-use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
@@ -54,15 +53,11 @@ use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
-use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
-use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\Exception\HttpException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -88,10 +83,8 @@ class SolariumSubscriber implements EventSubscriberInterface
      * SolariumSubscriber constructor.
      *
      * @param Client|null              $solr
-     * @param EventDispatcherInterface $dispatcher
      * @param LoggerInterface          $logger
-     * @param HandlerFactory           $handlerFactory
-     * @param MarkdownInterface        $markdown
+     * @param SolariumFactoryInterface $solariumFactory
      */
     public function __construct(
         ?Client $solr,

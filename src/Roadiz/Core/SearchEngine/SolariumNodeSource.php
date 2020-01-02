@@ -72,13 +72,14 @@ class SolariumNodeSource extends AbstractSolarium
     protected $logger;
 
     /**
-     * Create a new SolariumNodeSource.
+     * SolariumNodeSource constructor.
      *
-     * @param NodesSources $nodeSource
-     * @param Client $client
+     * @param NodesSources             $nodeSource
+     * @param Client                   $client
      * @param EventDispatcherInterface $dispatcher
-     * @param HandlerFactory $handlerFactory
-     * @param LoggerInterface $logger
+     * @param HandlerFactory           $handlerFactory
+     * @param LoggerInterface|null     $logger
+     * @param MarkdownInterface|null   $markdown
      */
     public function __construct(
         NodesSources $nodeSource,

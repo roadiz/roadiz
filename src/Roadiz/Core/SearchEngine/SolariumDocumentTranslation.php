@@ -38,7 +38,7 @@ use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
 
 /**
- * Wrap a Solarium and a DocumenTranslation together to ease indexing.
+ * Wrap a Solarium and a DocumentTranslation together to ease indexing.
  *
  * @package RZ\Roadiz\Core\SearchEngine
  */

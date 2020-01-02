@@ -94,9 +94,9 @@ class SolariumDocument extends AbstractSolarium
     }
 
     /**
-     * Get document fron Solr index.
+     * Get document from Solr index.
      *
-     * @return boolean *FALSE* if no document found linked to current roadiz document.
+     * @return boolean *FALSE* if no document found linked to current Roadiz document.
      */
     public function getDocumentFromIndex()
     {
