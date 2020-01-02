@@ -509,7 +509,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             new SolariumSubscriber(
                 $this->get('solr'),
                 $this->get('logger'),
-                $this->get(SolariumFactoryInterface::class),
+                $this->get(SolariumFactoryInterface::class)
             )
         );
         /*
