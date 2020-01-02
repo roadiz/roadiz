@@ -49,6 +49,7 @@ use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
@@ -507,10 +508,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $this->get('dispatcher')->addSubscriber(
             new SolariumSubscriber(
                 $this->get('solr'),
-                $this->get('dispatcher'),
                 $this->get('logger'),
-                $this->get('factory.handler'),
-                $this->get(MarkdownInterface::class)
+                $this->get(SolariumFactoryInterface::class),
             )
         );
         /*

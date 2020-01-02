@@ -33,6 +33,7 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocument;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
@@ -133,16 +134,11 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $iterableResult = $q->iterate();
 
         $this->io->progressStart($countQuery->getSingleScalarResult());
+        /** @var SolariumFactoryInterface $solariumFactory */
+        $solariumFactory = $this->getHelper('kernel')->getKernel()->get(SolariumFactoryInterface::class);
 
         while (($row = $iterableResult->next()) !== false) {
-            $solarium = new SolariumNodeSource(
-                $row[0],
-                $this->solr,
-                $this->getHelper('kernel')->getKernel()->get('dispatcher'),
-                $this->getHelper('handlerFactory')->getHandlerFactory(),
-                $this->getHelper('logger')->getLogger(),
-                $this->getHelper('kernel')->getKernel()->get(MarkdownInterface::class)
-            );
+            $solarium = $solariumFactory->createWithNodesSources($row[0]);
             $solarium->createEmptyDocument($update);
             $solarium->index();
             $buffer->addDocument($solarium->getDocument());
@@ -184,14 +180,11 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $iterableResult = $q->iterate();
 
         $this->io->progressStart($countQuery->getSingleScalarResult());
+        /** @var SolariumFactoryInterface $solariumFactory */
+        $solariumFactory = $this->getHelper('kernel')->getKernel()->get(SolariumFactoryInterface::class);
 
         while (($row = $iterableResult->next()) !== false) {
-            $solarium = new SolariumDocument(
-                $row[0],
-                $this->solr,
-                $this->getHelper('logger')->getLogger(),
-                $this->getHelper('kernel')->getKernel()->get(MarkdownInterface::class)
-            );
+            $solarium = $solariumFactory->createWithDocument($row[0]);
             $solarium->createEmptyDocument($update);
             $solarium->index();
             foreach ($solarium->getDocuments() as $document) {

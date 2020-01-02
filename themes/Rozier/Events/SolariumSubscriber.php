@@ -57,6 +57,7 @@ use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
@@ -79,17 +80,9 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     protected $logger;
     /**
-     * @var MarkdownInterface
+     * @var SolariumFactoryInterface
      */
-    protected $markdown;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-    /**
-     * @var HandlerFactory
-     */
-    private $handlerFactory;
+    protected $solariumFactory;
 
     /**
      * SolariumSubscriber constructor.
@@ -102,16 +95,12 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         ?Client $solr,
-        EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
-        HandlerFactory $handlerFactory,
-        MarkdownInterface $markdown
+        SolariumFactoryInterface $solariumFactory
     ) {
         $this->solr = $solr;
         $this->logger = $logger;
-        $this->dispatcher = $dispatcher;
-        $this->handlerFactory = $handlerFactory;
-        $this->markdown = $markdown;
+        $this->solariumFactory = $solariumFactory;
     }
 
     public static function getSubscribedEvents()
@@ -355,14 +344,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     protected function getSolariumNodeSource(NodesSources $nodeSource): SolariumNodeSource
     {
-        return new SolariumNodeSource(
-            $nodeSource,
-            $this->solr,
-            $this->dispatcher,
-            $this->handlerFactory,
-            $this->logger,
-            $this->markdown
-        );
+        return $this->solariumFactory->createWithNodesSources($nodeSource);
     }
 
     /**
@@ -372,11 +354,6 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     protected function getSolariumDocumentTranslation(DocumentTranslation $documentTranslation): SolariumDocumentTranslation
     {
-        return new SolariumDocumentTranslation(
-            $documentTranslation,
-            $this->solr,
-            $this->logger,
-            $this->markdown
-        );
+        return $this->solariumFactory->createWithDocumentTranslation($documentTranslation);
     }
 }

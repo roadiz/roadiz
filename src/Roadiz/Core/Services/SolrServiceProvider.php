@@ -33,6 +33,9 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 
 /**
@@ -109,6 +112,20 @@ class SolrServiceProvider implements ServiceProviderInterface
                 return null;
             }
         });
+
+        /**
+         * @param Container $c
+         * @return SolariumFactoryInterface
+         */
+        $container[SolariumFactoryInterface::class] = function (Container $c) {
+            return new SolariumFactory(
+                $c['solr'],
+                $c['logger'],
+                $c[MarkdownInterface::class],
+                $c['dispatcher'],
+                $c['factory.handler']
+            );
+        };
 
         return $container;
     }

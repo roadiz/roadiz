@@ -70,14 +70,17 @@ class SolariumDocument extends AbstractSolarium
     }
 
     /**
-     * Create a new SolariumDocument.
+     * SolariumDocument constructor.
      *
-     * @param Document $rzDocument
-     * @param Client $client
-     * @param LoggerInterface $logger
+     * @param Document                 $rzDocument
+     * @param SolariumFactoryInterface $solariumFactory
+     * @param Client|null              $client
+     * @param LoggerInterface|null     $logger
+     * @param MarkdownInterface|null   $markdown
      */
     public function __construct(
         Document $rzDocument,
+        SolariumFactoryInterface $solariumFactory,
         Client $client = null,
         LoggerInterface $logger = null,
         MarkdownInterface $markdown = null
@@ -86,12 +89,7 @@ class SolariumDocument extends AbstractSolarium
         $this->documentTranslationItems = [];
 
         foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
-            $this->documentTranslationItems[] = new SolariumDocumentTranslation(
-                $documentTranslation,
-                $client,
-                $logger,
-                $markdown
-            );
+            $this->documentTranslationItems[] = $solariumFactory->createWithDocumentTranslation($documentTranslation);
         }
     }
 
