@@ -28,9 +28,10 @@
  * @author Ambroise Maupate
  */
 
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
-use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Tests\DefaultThemeDependentCase;
 use Solarium\Exception\HttpException;
 
@@ -57,13 +58,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
 
         if (null !== $nodeSource) {
             try {
-                $solrDoc = new SolariumNodeSource(
-                    $nodeSource,
-                    $this->get('solr'),
-                    $this->get('dispatcher'),
-                    $this->get('factory.handler')
-                );
-
+                $solrDoc = $this->get(SolariumFactoryInterface::class)->createWithNodesSources($nodeSource);
                 $solrDoc->indexAndCommit();
                 static::$documentCollection[] = $solrDoc;
 
@@ -101,20 +96,14 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
         }
 
         $testTitle = "Ipsum Lorem Vehicula";
-        /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
+        /** @var NodesSources $nodeSource */
         $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
         if (null !== $nodeSource) {
             try {
-                $solrDoc = new SolariumNodeSource(
-                    $nodeSource,
-                    $this->get('solr'),
-                    $this->get('dispatcher'),
-                    $this->get('factory.handler')
-                );
-
+                $solrDoc = $this->get(SolariumFactoryInterface::class)->createWithNodesSources($nodeSource);
                 $this->assertTrue($solrDoc->getDocumentFromIndex());
             } catch (SolrServerNotConfiguredException $e) {
                 $this->markTestSkipped('Solr is not available.');
@@ -134,20 +123,14 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
         }
 
         $testTitle = "Ipsum Lorem Vehicula";
-        /** @var \RZ\Roadiz\Core\Entities\NodesSources $nodeSource */
+        /** @var NodesSources $nodeSource */
         $nodeSource = static::getManager()
             ->getRepository('GeneratedNodeSources\NSPage')
             ->findOneBy(array('title' => $testTitle));
 
         if (null !== $nodeSource) {
             try {
-                $solrDoc = new SolariumNodeSource(
-                    $nodeSource,
-                    $this->get('solr'),
-                    $this->get('dispatcher'),
-                    $this->get('factory.handler')
-                );
-
+                $solrDoc = $this->get(SolariumFactoryInterface::class)->createWithNodesSources($nodeSource);
                 $solrDoc->cleanAndCommit();
 
                 $this->assertFalse($solrDoc->getDocumentFromIndex());
