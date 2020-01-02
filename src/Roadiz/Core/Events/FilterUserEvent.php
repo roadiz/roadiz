@@ -36,7 +36,6 @@ use Symfony\Component\EventDispatcher\Event;
  * Class FilterUserEvent
  *
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
 abstract class FilterUserEvent extends Event
 {

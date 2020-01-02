@@ -37,7 +37,6 @@ use Symfony\Component\EventDispatcher\Event;
  * Class FilterNodeEvent
  *
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
 abstract class FilterNodeEvent extends Event
 {
