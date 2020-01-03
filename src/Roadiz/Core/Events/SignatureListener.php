@@ -56,7 +56,7 @@ final class SignatureListener implements EventSubscriberInterface
     /**
      * Filters the Response.
      *
-     * @param ResponseEvent $event A FilterResponseEvent instance
+     * @param ResponseEvent $event A ResponseEvent instance
      */
     public function onKernelResponse(ResponseEvent $event)
     {
