@@ -13,7 +13,7 @@ parameters:
         - '#NodesSources\|null but returns GeneratedNodeSources\\NS(?:[a-zA-Z]+)#'
         - '#GeneratedNodeSources\\NS(?:[a-zA-Z]+)#'
         - '#Call to an undefined method RZ\\Roadiz\\Core\\AbstractEntities\\LeafInterface#'
-        - '#Instantiated class (Memcached|Redis) not found#'
+        - '#Instantiated class (Memcached|Redis|Raven_Client|Raven_ErrorHandler) not found#'
         - '#on an unknown class (Memcached|Redis)#'
 
     reportUnmatchedIgnoredErrors: false
