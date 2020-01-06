@@ -86,10 +86,12 @@
         "phpunit/phpunit": "^5.7.27",
         "php-coveralls/php-coveralls": "^2.1",
         "squizlabs/php_codesniffer": "@stable",
-        "sentry/sentry": "^1.9",
         "friendsofphp/php-cs-fixer": "^2.13",
         "phpstan/phpstan": "^0.11.19",
-        "phpstan/phpstan-doctrine": "^0.11.6"
+        "phpstan/phpstan-doctrine": "^0.11.6",
+        "sentry/sentry": "^2.2",
+        "php-http/curl-client": "^2.1",
+        "guzzlehttp/psr7": "^1.6"
     },
     "suggest": {
         "ext-apcu": "Allows APCU system cache",

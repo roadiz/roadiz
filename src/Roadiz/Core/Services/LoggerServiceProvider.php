@@ -105,22 +105,34 @@ class LoggerServiceProvider implements ServiceProviderInterface
                                 );
                                 break;
                             case 'sentry':
-                                if (!class_exists('Raven_Client')) {
+                                if (empty($config['url'])) {
+                                    throw new InvalidConfigurationException('A Sentry handler must declare a DSN "url".');
+                                }
+                                if (function_exists('\Sentry\init') &&
+                                    class_exists('\Sentry\Monolog\Handler')) {
+                                    $sentryConfig = ['dsn' => $config['url']];
+                                    \Sentry\init($sentryConfig);
+                                    $client = \Sentry\ClientBuilder::create($sentryConfig)->getClient();
+                                    $handler = new \Sentry\Monolog\Handler(
+                                        new \Sentry\State\Hub($client),
+                                        constant('\Monolog\Logger::'.$config['level'])
+                                    );
+                                    $handlers[] = $handler;
+                                } elseif (class_exists('Raven_Client')) {
+                                    $client = new \Raven_Client($config['url']);
+                                    $error_handler = new \Raven_ErrorHandler($client);
+                                    $error_handler->registerExceptionHandler();
+                                    $error_handler->registerErrorHandler();
+                                    $error_handler->registerShutdownFunction();
+                                    $handler = new RavenHandler(
+                                        $client,
+                                        constant('\Monolog\Logger::'.$config['level'])
+                                    );
+                                    $handlers[] = $handler;
+                                } else {
                                     throw new InvalidConfigurationException('Sentry handler requires sentry/sentry library.');
                                 }
-                                if (empty($config['url'])) {
-                                    throw new InvalidConfigurationException('A monolog RavenHandler must define a log "url".');
-                                }
-                                $client = new \Raven_Client($config['url']);
-                                $error_handler = new \Raven_ErrorHandler($client);
-                                $error_handler->registerExceptionHandler();
-                                $error_handler->registerErrorHandler();
-                                $error_handler->registerShutdownFunction();
-                                $handler = new RavenHandler(
-                                    $client,
-                                    constant('\Monolog\Logger::'.$config['level'])
-                                );
-                                $handlers[] = $handler;
+
                                 break;
                         }
                     } else {

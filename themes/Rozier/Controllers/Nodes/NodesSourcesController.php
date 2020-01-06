@@ -94,14 +94,6 @@ class NodesSourcesController extends RozierApp
             if (null !== $source) {
                 $this->get('em')->refresh($source);
                 $node = $source->getNode();
-                $availableTranslations = $this->get('em')
-                    ->getRepository(Translation::class)
-                    ->findAvailableTranslationsForNode($gnode);
-
-                $this->assignation['translation'] = $translation;
-                $this->assignation['available_translations'] = $availableTranslations;
-                $this->assignation['node'] = $node;
-                $this->assignation['source'] = $source;
 
                 /**
                  * Versioning
@@ -163,6 +155,14 @@ class NodesSourcesController extends RozierApp
                     }
                 }
 
+                $availableTranslations = $this->get('em')
+                    ->getRepository(Translation::class)
+                    ->findAvailableTranslationsForNode($gnode);
+
+                $this->assignation['translation'] = $translation;
+                $this->assignation['available_translations'] = $availableTranslations;
+                $this->assignation['node'] = $node;
+                $this->assignation['source'] = $source;
                 $this->assignation['form'] = $form->createView();
                 $this->assignation['readOnly'] = $this->isReadOnly;
 

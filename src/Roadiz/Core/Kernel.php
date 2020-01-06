@@ -496,7 +496,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     protected function initEvents()
     {
         $this->get('stopwatch')->start('kernel.initEvents');
-        $this->get('dispatcher')->addSubscriber($this->get('firewall'));
+
+        if (!$this->isInstallMode()) {
+            $this->get('dispatcher')->addSubscriber($this->get('firewall'));
+        }
+
         $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
         /*
          * Add custom event subscribers to the general dispatcher.
