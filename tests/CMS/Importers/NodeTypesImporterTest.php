@@ -13,6 +13,7 @@ class NodeTypesImporterTest extends SchemaDependentCase
     public function testImportJsonFile($json, $count)
     {
         $this->assertTrue($this->get(NodeTypesImporter::class)->import($json));
+        $this->get('em')->flush();
         $this->assertEquals(1, $this->countNodeTypes());
         $this->assertEquals($count, $this->countNodeTypeFields());
 
