@@ -36,12 +36,8 @@ use JMS\Serializer\Serializer;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
-use RZ\Roadiz\Core\Serializers\SettingCollectionJsonSerializer;
 
 /**
  * {@inheritdoc}
@@ -78,7 +74,7 @@ class SettingsImporter implements EntityImporterInterface, ContainerAwareInterfa
         $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $settings = $serializer->deserialize(
+        $serializer->deserialize(
             $serializedData,
             'array<' . Setting::class . '>',
             'json',
@@ -86,12 +82,6 @@ class SettingsImporter implements EntityImporterInterface, ContainerAwareInterfa
                 ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
                 ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
         );
-
-        /** @var Setting $setting */
-        foreach ($settings as $setting) {
-            $em->merge($setting);
-            $em->flush();
-        }
 
         // Clear result cache
         $cacheDriver = $em->getConfiguration()->getResultCacheImpl();

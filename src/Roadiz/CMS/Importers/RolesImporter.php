@@ -29,17 +29,13 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
-use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
-use RZ\Roadiz\Core\Serializers\RoleCollectionJsonSerializer;
 
 /**
  * {@inheritdoc}
@@ -72,11 +68,9 @@ class RolesImporter implements EntityImporterInterface, ContainerAwareInterface
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $roles = $serializer->deserialize(
+        $serializer->deserialize(
             $serializedData,
             'array<' . Role::class . '>',
             'json',
@@ -84,12 +78,6 @@ class RolesImporter implements EntityImporterInterface, ContainerAwareInterface
                 ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
                 ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
         );
-
-        /** @var Role $role */
-        foreach ($roles as $role) {
-            $em->merge($role);
-            $em->flush();
-        }
 
         return true;
     }

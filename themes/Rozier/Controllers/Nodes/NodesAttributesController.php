@@ -100,6 +100,7 @@ class NodesAttributesController extends RozierApp
                 $attributeValueTranslation = new AttributeValueTranslation();
                 $attributeValueTranslation->setAttributeValue($attributeValue);
                 $attributeValueTranslation->setTranslation($translation);
+                $this->get('em')->persist($attributeValueTranslation);
             }
             $attributeValueTranslationForm = $formFactory->createNamedBuilder(
                 $name,
@@ -110,7 +111,6 @@ class NodesAttributesController extends RozierApp
 
             if ($attributeValueTranslationForm->isSubmitted()) {
                 if ($attributeValueTranslationForm->isSubmitted() && $attributeValueTranslationForm->isValid()) {
-                    $this->get('em')->merge($attributeValueTranslation);
                     $this->get('em')->flush();
 
                     /*
