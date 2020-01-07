@@ -12,6 +12,7 @@ class SettingsImporterTest extends SchemaDependentCase
     public function testImportJsonFile($json, $count)
     {
         $this->assertTrue($this->get(SettingsImporter::class)->import($json));
+        $this->get('em')->flush();
         $this->assertEquals($count, $this->countSettings());
 
         $this->getSettingRepository()->createQueryBuilder('t')->delete()->getQuery()->execute();

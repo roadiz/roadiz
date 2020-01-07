@@ -75,7 +75,6 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
-use RZ\Roadiz\Markdown\MarkdownInterface;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
@@ -125,11 +124,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 {
     use ContainerAwareTrait;
 
-    const CMS_VERSION = 'develop';
+    const CMS_VERSION = 'master';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.3.0-dev";
+    public static $cmsVersion = "1.3.0";
 
     protected $environment;
     protected $debug;
@@ -497,7 +496,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     protected function initEvents()
     {
         $this->get('stopwatch')->start('kernel.initEvents');
-        $this->get('dispatcher')->addSubscriber($this->get('firewall'));
+
+        if (!$this->isInstallMode()) {
+            $this->get('dispatcher')->addSubscriber($this->get('firewall'));
+        }
+
         $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
         /*
          * Add custom event subscribers to the general dispatcher.

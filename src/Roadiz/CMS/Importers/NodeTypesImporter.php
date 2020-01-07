@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2020, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,11 +25,10 @@
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
  * @file NodeTypesImporter.php
- * @author Maxime Constantinian
+ * @author Ambroise Maupate
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
@@ -70,8 +69,6 @@ class NodeTypesImporter implements EntityImporterInterface, ContainerAwareInterf
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
         $nodeType = $serializer->deserialize(
@@ -82,9 +79,6 @@ class NodeTypesImporter implements EntityImporterInterface, ContainerAwareInterf
                 ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
                 ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
         );
-
-        $em->merge($nodeType);
-        $em->flush();
 
         /** @var HandlerFactoryInterface $handlerFactory */
         $handlerFactory = $this->get('factory.handler');

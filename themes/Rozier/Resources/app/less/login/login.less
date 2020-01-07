@@ -6,8 +6,8 @@
 /* -------- VARS -------- */
 
 @login-H: 450px;
-@login-FormW: 400px;
 @login-BarW: 128px;
+@login-FormW: 550px - @login-BarW;
 @login-W: @login-FormW + @login-BarW;
 
 /* -------- STYLES -------- */
@@ -46,7 +46,8 @@
 #purge-caches,
 #login {
     position: absolute;
-    width: @login-W; height: @login-H;
+    width: @login-W;
+    height: auto;
     background-color: white;
     margin: 0;
     transform: translate(-50%, -50%);
@@ -56,15 +57,30 @@
     text-align: center;
     .box-sizing();
 
+    .purge-inner,
+    .login-inner {
+        display: flex;
+
+        .uk-form {
+            padding-bottom: 1.5em;
+        }
+
+        .uk-alert {
+            margin: 5px 0px;
+            text-align: center;
+            padding: 1em 1.5em;
+        }
+    }
+
     #login-infos {
-        position: absolute;
+        position: relative;
         width: @login-BarW;
+        background-color: @grey-interface;
     }
 
     #login-logo {
-        position: absolute;
-        display: table-row;
-        width: 128px; height: 116px;
+        width: @login-BarW;
+        height: 116px;
         background-color: @contrast-color;
         top: 0px; left: 0;
         text-align: center;
@@ -88,7 +104,6 @@
         svg,
         object {
             position: relative;
-            display: block;
             max-width: 80%;
             height: auto;
             max-height: 100px;
@@ -99,17 +114,15 @@
     }
 
     #login-credit {
+        width: 100%;
+        bottom: 1em;
         position: absolute;
-        width: @login-BarW; height: (@login-H)-116px;
-        background-color: @grey-interface;
-        top: 116px; left: 0;
 
         .uk-icon-rz-rezozero {
             font-size: 18px;
         }
 
         .uk-icon-rz-rezozero{
-            position: absolute;
             color: @grey-medium;
             bottom: 50px;
             width: 100%;
@@ -117,7 +130,6 @@
         }
 
         #login-version {
-            position: absolute;
             color: @grey-medium;
             font-size: 10px;
             bottom: 26px;
@@ -127,11 +139,9 @@
     }
 
     #login-formGlobal {
-        position: absolute;
-        width: @login-FormW;
-        height: @login-H;
-        left: @login-BarW;
-        padding: 50px 40px;
+        width: 100%;
+        position: relative;
+        padding: 50px 40px 30px;
         .box-sizing();
 
         h1 {
@@ -159,7 +169,7 @@
             }
         }
         #login-link {
-            position: absolute;
+            padding-top: 1em;
             text-align: left;
             bottom: 30px;
 

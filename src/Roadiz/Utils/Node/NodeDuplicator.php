@@ -126,10 +126,10 @@ class NodeDuplicator
             foreach ($nodeSource->getDocumentsByFields() as $nsDoc) {
                 $nsDoc->setNodeSource($nodeSource);
                 /** @var Document $doc */
-                $doc = $this->em->merge($nsDoc->getDocument());
+                $doc = $nsDoc->getDocument();
                 $nsDoc->setDocument($doc);
                 /** @var NodeTypeField $f */
-                $f = $this->em->merge($nsDoc->getField());
+                $f = $nsDoc->getField();
                 $nsDoc->setField($f);
                 $this->em->persist($nsDoc);
             }

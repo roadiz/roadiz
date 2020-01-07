@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -31,116 +32,14 @@
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Controllers\ImportController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * {@inheritdoc}
  */
 class ThemesImportController extends ImportController
 {
-    /**
-     * Import theme's Settings file.
-     *
-     * @param Request $request
-     * @param int     $themeId
-     *
-     * @return Response
-     */
-    public function importSettingsAction(Request $request, $themeId = null)
+    protected function validateAccess(): void
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
-
-        return parent::importSettingsAction($request, $themeId);
-    }
-
-    /**
-     * Import theme's Roles file.
-     *
-     * @param Request $request
-     * @param int     $themeId
-     *
-     * @return Response
-     */
-    public function importRolesAction(Request $request, $themeId = null)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
-
-        return parent::importRolesAction($request, $themeId);
-    }
-
-    /**
-     * Import theme's Groups file.
-     *
-     * @param Request $request
-     * @param int     $themeId
-     *
-     * @return Response
-     */
-    public function importGroupsAction(Request $request, $themeId = null)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
-
-        return parent::importGroupsAction($request, $themeId);
-    }
-
-    /**
-     * Import NodeTypes file.
-     *
-     * @param Request $request
-     * @param int     $themeId
-     *
-     * @return Response
-     */
-    public function importNodeTypesAction(Request $request, $themeId = null)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
-
-        return parent::importNodeTypesAction($request, $themeId);
-    }
-
-    /**
-     * Import Tags file.
-     *
-     * @param Request $request
-     * @param int     $themeId
-     *
-     * @return Response
-     */
-    public function importTagsAction(Request $request, $themeId = null)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
-
-        return parent::importTagsAction($request, $themeId);
-    }
-
-    /**
-     * Import Attributes file.
-     *
-     * @param Request $request
-     * @param int     $themeId
-     *
-     * @return Response
-     */
-    public function importAttributesAction(Request $request, $themeId = null)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
-
-        return parent::importAttributesAction($request, $themeId);
-    }
-
-    /**
-     * Import Nodes file.
-     *
-     * @param Request $request
-     * @param int     $themeId
-     *
-     * @return Response
-     */
-    public function importNodesAction(Request $request, $themeId = null)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
-
-        return parent::importNodesAction($request, $themeId);
     }
 }

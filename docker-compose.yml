@@ -36,17 +36,21 @@ services:
         environment:
             USE_APP_CACHE: ${USE_APP_CACHE}
             USER_UID: ${USER_UID}
+
     solr:
-        image: solr
+        image: solr:8
         ports:
             - "${SOLR_PORT}:8983/tcp"
         volumes:
-            - "./.data/solr:/opt/solr/server/solr/mycores:delegated"
-        entrypoint:
-            - docker-entrypoint.sh
+            - "./.data/solr:/var/solr:consistent"
+        command:
             - solr-precreate
             - roadiz
 
+    mailer:
+        image: mailhog/mailhog
+        ports:
+            - ${MAILER_PORT}:8025/tcp
 networks:
     default:
         ipam:

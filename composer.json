@@ -38,9 +38,9 @@
         "ext-json":                                "*",
         "ext-zip":                                 "*",
         "ext-pdo":                                 "*",
-        "roadiz/models":                           "dev-develop",
-        "roadiz/documents":                        "dev-develop",
-        "roadiz/markdown":                         "dev-master",
+        "roadiz/models":                           "~1.3.0 || dev-develop",
+        "roadiz/documents":                        "~1.3.0 || dev-develop",
+        "roadiz/markdown":                         "~1.3.0 || dev-develop",
         "ambroisemaupate/intervention-request":    "^2.4.0",
         "doctrine/orm":                            "^2.6.3",
         "symfony/yaml":                            "~4.4.1",
@@ -86,10 +86,12 @@
         "phpunit/phpunit": "^5.7.27",
         "php-coveralls/php-coveralls": "^2.1",
         "squizlabs/php_codesniffer": "@stable",
-        "sentry/sentry": "^1.9",
         "friendsofphp/php-cs-fixer": "^2.13",
         "phpstan/phpstan": "^0.11.19",
-        "phpstan/phpstan-doctrine": "^0.11.6"
+        "phpstan/phpstan-doctrine": "^0.11.6",
+        "sentry/sentry": "^2.2",
+        "php-http/curl-client": "^2.1",
+        "guzzlehttp/psr7": "^1.6"
     },
     "suggest": {
         "ext-apcu": "Allows APCU system cache",

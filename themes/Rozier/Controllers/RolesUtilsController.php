@@ -103,7 +103,7 @@ class RolesUtilsController extends RozierApp
 
         return new JsonResponse(
             $serializer->serialize(
-                $existingRole,
+                [$existingRole],
                 'json',
                 SerializationContext::create()->setGroups(['role'])
             ),

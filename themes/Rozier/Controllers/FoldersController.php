@@ -253,10 +253,11 @@ class FoldersController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int $folderId
-     * @param int $translationId
+     * @param int     $folderId
+     * @param int     $translationId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function editTranslationAction(Request $request, $folderId, $translationId)
     {
@@ -283,6 +284,7 @@ class FoldersController extends RozierApp
 
         if (null === $folderTranslation) {
             $folderTranslation = new FolderTranslation($folder, $translation);
+            $this->get('em')->persist($folderTranslation);
         }
 
         if (null !== $folder && null !== $translation) {
@@ -292,7 +294,6 @@ class FoldersController extends RozierApp
 
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->get('em')->merge($folderTranslation);
                     $this->get('em')->flush();
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.updated',

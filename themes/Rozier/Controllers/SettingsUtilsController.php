@@ -125,7 +125,6 @@ class SettingsUtilsController extends RozierApp
                     if ($this->get(SettingsImporter::class)->import($serializedData)) {
                         $msg = $this->getTranslator()->trans('setting.imported');
                         $this->publishConfirmMessage($request, $msg);
-
                         $this->get('em')->flush();
 
                         // redirect even if its null

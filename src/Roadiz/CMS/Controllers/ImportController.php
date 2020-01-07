@@ -51,6 +51,12 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ImportController extends AppController
 {
+    protected function validateAccess(): void
+    {
+        if (!$this->get('kernel')->isInstallMode()) {
+            throw $this->createAccessDeniedException('Import entry points are only available from install.');
+        }
+    }
     /**
      * @param  string  $classImporter
      * @param  Request $request
@@ -60,6 +66,8 @@ class ImportController extends AppController
      */
     protected function genericImportAction($classImporter, Request $request, $themeId = null)
     {
+        $this->validateAccess();
+
         if (null !== $filename = $this->getFilename($request)) {
             if (null === $themeId) {
                 $filename =  InstallApp::getThemeFolder() . '/' . $filename;
@@ -216,7 +224,7 @@ class ImportController extends AppController
      *
      * @return Response
      */
-    public function importContent($pathFile, $classImporter, $themeId)
+    protected function importContent($pathFile, $classImporter, $themeId)
     {
         $data = [];
         $data['status'] = false;
@@ -242,6 +250,7 @@ class ImportController extends AppController
                 /** @var EntityImporterInterface $importer */
                 $importer = $this->get($classImporter);
                 $importer->import($file);
+                $this->get('em')->flush();
             } else {
                 throw new \Exception('File: ' . $path . ' don’t exist');
             }

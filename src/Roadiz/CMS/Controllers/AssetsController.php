@@ -196,11 +196,14 @@ class AssetsController extends CmsController
             Response::HTTP_NOT_MODIFIED,
             ['content-type' => 'text/css']
         );
-        $response->setCache([
-            'last_modified' => new \DateTime($lastMod),
+        $cacheConfig = [
             'max_age' => 60 * 60 * 48, // expires for 2 days
             'public' => true,
-        ]);
+        ];
+        if (null !== $lastMod) {
+            $cacheConfig['last_modified'] = new \DateTime($lastMod);
+        }
+        $response->setCache($cacheConfig);
 
         if ($response->isNotModified($request)) {
             return $response;

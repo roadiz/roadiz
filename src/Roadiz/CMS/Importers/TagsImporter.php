@@ -29,7 +29,6 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
@@ -72,11 +71,9 @@ class TagsImporter implements EntityImporterInterface, ContainerAwareInterface
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $tag = $serializer->deserialize(
+        $serializer->deserialize(
             $serializedData,
             Tag::class,
             'json',
@@ -85,9 +82,6 @@ class TagsImporter implements EntityImporterInterface, ContainerAwareInterface
                 ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
                 ->setAttribute(TagObjectConstructor::EXCEPTION_ON_EXISTING_TAG, true)
         );
-
-        $em->merge($tag);
-        $em->flush();
 
         return true;
     }
