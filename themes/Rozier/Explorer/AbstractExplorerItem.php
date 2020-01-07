@@ -40,6 +40,8 @@ abstract class AbstractExplorerItem implements ExplorerItemInterface
             'id' => $this->getId(),
             'classname' => $this->getAlternativeDisplayable(),
             'displayable' => $this->getDisplayable(),
+            'editItem' => null,
+            'thumbnail' => null
         ];
     }
 }

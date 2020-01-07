@@ -38,16 +38,35 @@
                 </thead>
                 <tbody>
                     {% for redirection in redirections %}
+                        {% set url = path('redirectionsEditPage', { redirectionId: redirection.id }) %}
+                        {% if redirection.redirectNodeSource %}
+                            {% set url = path('nodesEditSEOPage', {
+                                'nodeId': redirection.redirectNodeSource.node.id,
+                                'translationId': redirection.redirectNodeSource.translation.id
+                            }) ~ '#manage-redirections' %}
+                        {% endif %}
                     <tr>
                         <td>
-                            <a href="{{ path('redirectionsEditPage', { redirectionId: redirection.id }) }}">{{ redirection.query }}</a>
+                            <a href="{{ url }}">{{ redirection.query }}</a>
                         </td>
-                        <td>{{ redirection.redirectUri }}</td>
+                        <td>
+                            {% if redirection.redirectNodeSource %}
+                                <i class="uk-icon uk-icon-magic"></i> {{ path(redirection.redirectNodeSource) }}
+                            {% else %}
+                                {{ redirection.redirectUri }}
+                            {% endif %}
+                        </td>
                         <td>{{ redirection.typeAsString|trans }}</td>
                         <td class="table-actions-row">
                         {% spaceless %}
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('redirectionsEditPage', { redirectionId: redirection.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('redirectionsDeletePage', { redirectionId: redirection.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small"
+                               href="{{ url }}"
+                               title="{% trans %}edit{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+                               href="{{ path('redirectionsDeletePage', { redirectionId: redirection.getId }) }}"
+                               title="{% trans %}delete{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                         {% endspaceless %}
                         </td>
                     </tr>

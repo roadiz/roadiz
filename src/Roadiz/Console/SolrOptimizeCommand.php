@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -31,6 +32,7 @@ namespace RZ\Roadiz\Console;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing nodes from terminal.
@@ -47,21 +49,20 @@ class SolrOptimizeCommand extends SolrCommand
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
-
-        $text = "";
+        $this->io = new SymfonyStyle($input, $output);
 
         if (null !== $this->solr) {
             if (true === $this->getHelper('solr')->ready()) {
-                $this->optimizeSolr($output);
-                $text = '<info>Solr core has been optimized.</info>' . PHP_EOL;
+                $this->optimizeSolr();
+                $this->io->success('<info>Solr core has been optimized.</info>');
             } else {
-                $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
-                $text .= 'See your config.yml file to correct your Solr connexion settings.' . PHP_EOL;
+                $this->io->error('Solr search engine server does not respond…');
+                $this->io->note('See your config.yml file to correct your Solr connexion settings.');
+                return 1;
             }
         } else {
-            $text .= $this->displayBasicConfig();
+            $this->io->note($this->displayBasicConfig());
         }
-
-        $output->writeln($text);
+        return 0;
     }
 }

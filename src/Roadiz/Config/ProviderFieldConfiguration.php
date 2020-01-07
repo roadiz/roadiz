@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -39,8 +40,8 @@ class ProviderFieldConfiguration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $builder = new TreeBuilder();
-        $root = $builder->root('provider');
+        $builder = new TreeBuilder('provider');
+        $root = $builder->getRootNode();
         $root->addDefaultsIfNotSet();
         $root->children()
             ->scalarNode('classname')

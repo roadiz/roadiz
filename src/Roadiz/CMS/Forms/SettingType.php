@@ -78,15 +78,17 @@ class SettingType extends AbstractType
                     'label' => 'visible',
                     'required' => false,
                 ])
+                ->add('encrypted', CheckboxType::class, [
+                    'label' => 'encrypted',
+                    'required' => false,
+                ])
                 ->add('type', ChoiceType::class, [
                     'label' => 'type',
                     'required' => true,
                     'choices' => array_flip(Setting::$typeToHuman),
-                    'choices_as_values' => true,
                 ])
                 ->add('settingGroup', ChoiceType::class, [
                     'label' => 'setting.group',
-                    'choices_as_values' => true,
                     'choices' => $choices,
                     'required' => false,
                     'placeholder' => '---------',
@@ -186,7 +188,6 @@ class SettingType extends AbstractType
                     'label' => $label,
                     'placeholder' => 'choose.value',
                     'required' => false,
-                    'choices_as_values' => true,
                     'choices' => array_combine($values, $values),
                     'multiple' => $setting->getType() === AbstractField::MULTIPLE_T ? true : false,
                 ];
@@ -210,7 +211,7 @@ class SettingType extends AbstractType
                         'class' => 'rz-datetime-field',
                     ],
                     'label' => $label,
-                    'years' => range(date('Y') - 10, date('Y') + 10),
+                    'years' => range((int) date('Y') - 10, (int) date('Y') + 10),
                     'required' => false,
                 ];
             case AbstractField::INTEGER_T:

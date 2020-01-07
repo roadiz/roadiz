@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -34,6 +35,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing node-types from terminal.
@@ -53,9 +55,8 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('name');
 
         /** @var NodeType $nodetype */
@@ -67,17 +68,19 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
             $latestPosition = $this->entityManager
                 ->getRepository(NodeTypeField::class)
                 ->findLatestPositionInNodeType($nodetype);
-            $this->addNodeTypeField($nodetype, $latestPosition + 1, $input, $output);
+            $this->addNodeTypeField($nodetype, $latestPosition + 1, $io);
             $this->entityManager->flush();
 
             $handler = $this->getHelper('handlerFactory')->getHandler($nodetype);
             $handler->regenerateEntityClass();
 
-            $output->writeln('Do not forget to update database schema! <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info>');
+            $io->success('Node type ' . $nodetype->getName() . ' has been updated.' . PHP_EOL .
+                'Do not forget to update database schema!' . PHP_EOL .
+                'bin/roadiz orm:schema-tool:update --dump-sql --force');
+            return 0;
         } else {
-            $text .= '<error>Node-type "' . $name . '" does not exist.</error>';
+            $io->error('Node-type "' . $name . '" does not exist.');
+            return 1;
         }
-
-        $output->writeln($text);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -30,6 +31,7 @@
 namespace RZ\Roadiz\Core\Authentification;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -74,7 +76,8 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
      */
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
-        if (null !== $user = $token->getUser()) {
+        $user = $token->getUser();
+        if (null !== $user && $user instanceof User) {
             $user->setLastLogin(new \DateTime('now'));
             $this->em->flush();
         }

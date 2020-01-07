@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -29,22 +30,19 @@
  */
 namespace Themes\Rozier\Controllers\Nodes;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Repositories\NodeTypeFieldRepository;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Utils\Node\NodeTranstyper;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Class TranstypeController
@@ -54,9 +52,10 @@ class TranstypeController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param $nodeId
+     * @param int $nodeId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @return RedirectResponse|Response
+     * @throws Twig_Error_Runtime
      */
     public function transtypeAction(Request $request, $nodeId)
     {
@@ -77,20 +76,25 @@ class TranstypeController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
             /** @var NodeType $newNodeType */
             $newNodeType = $this->get('em')->find(NodeType::class, (int) $data['nodeTypeId']);
 
-            $this->doTranstype($node, $newNodeType);
+            /** @var NodeTranstyper $transtyper */
+            $transtyper = $this->get(NodeTranstyper::class);
+            $transtyper->transtype($node, $newNodeType);
+            $this->get('em')->flush();
             $this->get('em')->refresh($node);
-
             /*
              * Dispatch event
              */
-            $event = new FilterNodeEvent($node);
-            $this->get('dispatcher')->dispatch(NodeEvents::NODE_UPDATED, $event);
+            $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
+
+            foreach ($node->getNodeSources() as $nodeSource) {
+                $this->get('dispatcher')->dispatch(new NodesSourcesUpdatedEvent($nodeSource));
+            }
 
             $msg = $this->getTranslator()->trans('%node%.transtyped_to.%type%', [
                 '%node%' => $node->getNodeName(),
@@ -113,132 +117,5 @@ class TranstypeController extends RozierApp
         $this->assignation['type'] = $node->getNodeType();
 
         return $this->render('nodes/transtype.html.twig', $this->assignation);
-    }
-
-    /**
-     * @param Node $node
-     * @param NodeType $nodeType
-     */
-    protected function doTranstype(Node $node, NodeType $nodeType)
-    {
-        /*
-         * Get an association between old fields and new fields
-         * to find data that can be transfered during transtyping.
-         */
-        $fieldAssociations = [];
-        $oldFields = $node->getNodeType()->getFields();
-        /** @var NodeTypeFieldRepository $er */
-        $er = $this->get('em')->getRepository(NodeTypeField::class);
-
-        foreach ($oldFields as $oldField) {
-            $matchingField = $er->findOneBy([
-                'nodeType' => $nodeType,
-                'name' => $oldField->getName(),
-                'type' => $oldField->getType(),
-            ]);
-
-            if (null !== $matchingField) {
-                $fieldAssociations[] = [
-                    $oldField, // old type field
-                    $matchingField, // new type field
-                ];
-            }
-        }
-
-        $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
-
-        /*
-         * Testing if new nodeSource class is available
-         * and cache have been cleared before actually performing
-         * transtype, not to get an orphan node.
-         */
-        $this->mockTranstype($nodeType);
-
-        /*
-         * Perform actual transtyping
-         */
-        foreach ($node->getNodeSources() as $existingSource) {
-            /** @var NodesSources $source */
-            $source = new $sourceClass($node, $existingSource->getTranslation());
-            $source->setTitle($existingSource->getTitle());
-            $nsDocuments = new ArrayCollection();
-
-            foreach ($fieldAssociations as $fields) {
-                $oldField = $fields[0];
-                $matchingField = $fields[1];
-
-                if (!$oldField->isVirtual()) {
-                    /*
-                     * Copy simple data from source to another
-                     */
-                    $setter = $oldField->getSetterName();
-                    $getter = $oldField->getGetterName();
-
-                    $source->$setter($existingSource->$getter());
-                } elseif ($oldField->getType() === NodeTypeField::DOCUMENTS_T) {
-                    /*
-                     * Copy documents.
-                     */
-                    $documents = $this->get('em')
-                        ->getRepository(Document::class)
-                        ->findByNodeSourceAndField($existingSource, $oldField);
-
-                    foreach ($documents as $document) {
-                        $nsDocuments->add(new NodesSourcesDocuments($source, $document, $matchingField));
-                    }
-                }
-            }
-            // First plan old source deletion.
-            $this->get('em')->remove($existingSource);
-            $node->removeNodeSources($existingSource);
-            $this->get('em')->flush($existingSource);
-
-            foreach ($nsDocuments as $nsDoc) {
-                $source->getDocumentsByFields()->add($nsDoc);
-                $this->get('em')->persist($nsDoc);
-            }
-
-            $node->addNodeSources($source);
-            $this->get('em')->persist($source);
-            $this->get('em')->flush($source);
-        }
-
-        $node->setNodeType($nodeType);
-        $this->get('em')->flush();
-    }
-
-    /**
-     * @param NodeType $nodeType
-     */
-    protected function mockTranstype(NodeType $nodeType)
-    {
-        $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
-        $uniqueId = uniqid();
-        /*
-         * Testing if new nodeSource class is available
-         * and cache have been cleared before actually performing
-         * transtype, not to get an orphan node.
-         */
-        $node = new Node();
-        $node->setNodeName('testing_before_transtype' . $uniqueId);
-        $this->get('em')->persist($node);
-
-        $translation = new Translation();
-        $translation->setAvailable(true);
-        $translation->setLocale(substr($uniqueId, 0, 10));
-        $translation->setName('test' . $uniqueId);
-        $this->get('em')->persist($translation);
-
-        /** @var NodesSources $testSource */
-        $testSource = new $sourceClass($node, $translation);
-        $testSource->setTitle('testing_before_transtype' . $uniqueId);
-        $this->get('em')->persist($testSource);
-        $this->get('em')->flush();
-
-        // then remove it if OK
-        $this->get('em')->remove($testSource);
-        $this->get('em')->remove($node);
-        $this->get('em')->remove($translation);
-        $this->get('em')->flush();
     }
 }

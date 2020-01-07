@@ -29,7 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Utils\TagApi;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;

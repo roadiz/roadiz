@@ -71,7 +71,7 @@ class AdminController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->assignation['data'] = $form->getData();
         }
 

@@ -29,7 +29,8 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
@@ -233,7 +234,7 @@ class NodeTypeHandler extends AbstractHandler
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true)
             ->findBy([
-                'nodeType' => $this->getNodeType()
+                'nodeType' => $this->getNodeType(),
             ]);
 
         /** @var Node $node */
@@ -245,15 +246,15 @@ class NodeTypeHandler extends AbstractHandler
         }
 
         /*
-         * Remove class and database table
-         */
-        $this->deleteSchema();
-
-        /*
          * Remove node type
          */
         $this->objectManager->remove($this->getNodeType());
         $this->objectManager->flush();
+
+        /*
+         * Remove class and database table
+         */
+        $this->deleteSchema();
 
         return $this;
     }
@@ -364,8 +365,11 @@ class NodeTypeHandler extends AbstractHandler
      */
     public function cleanPositions($setPosition = false)
     {
-        $fields = $this->nodeType->getFields();
+        $criteria = Criteria::create();
+        $criteria->orderBy(['position' => 'ASC']);
+        $fields = $this->nodeType->getFields()->matching($criteria);
         $i = 1;
+        /** @var NodeTypeField $field */
         foreach ($fields as $field) {
             $field->setPosition($i);
             $i++;

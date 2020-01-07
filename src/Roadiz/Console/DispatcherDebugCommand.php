@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -31,10 +32,10 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -72,13 +73,10 @@ EOF
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-
+        $io = new SymfonyStyle($input, $output);
+        $tableContent = [];
         /** @var EventDispatcher $dispatcher */
         $dispatcher = $kernel->get('dispatcher');
-
-        $table = new Table($output);
-        $table->setHeaders(['Event name', 'Listener', 'Method', 'Priority']);
-        $tableContent = [];
 
         foreach ($dispatcher->getListeners() as $eventName => $listeners) {
             /** @var EventSubscriberInterface $listener */
@@ -99,8 +97,7 @@ EOF
             }
         }
 
-        $table->setRows($tableContent);
-        $table->render();
+        $io->table(['Event name', 'Listener', 'Method', 'Priority'], $tableContent);
 
         return 0;
     }

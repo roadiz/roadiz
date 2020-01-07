@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -31,7 +32,12 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\EventDispatcher\Event;
 
-class FilterUserEvent extends Event
+/**
+ * Class FilterUserEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ */
+abstract class FilterUserEvent extends Event
 {
     /**
      * @var User

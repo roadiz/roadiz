@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -28,10 +29,9 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManager;
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
 
@@ -70,38 +70,33 @@ class SolariumDocument extends AbstractSolarium
     }
 
     /**
-     * Create a new SolariumDocument.
+     * SolariumDocument constructor.
      *
-     * @param Document $rzDocument
-     * @param EntityManager $entityManager
-     * @param Client $client
-     * @param Logger $logger
+     * @param Document                 $rzDocument
+     * @param SolariumFactoryInterface $solariumFactory
+     * @param Client|null              $client
+     * @param LoggerInterface|null     $logger
+     * @param MarkdownInterface|null   $markdown
      */
     public function __construct(
         Document $rzDocument,
-        EntityManager $entityManager,
+        SolariumFactoryInterface $solariumFactory,
         Client $client = null,
-        Logger $logger = null
+        LoggerInterface $logger = null,
+        MarkdownInterface $markdown = null
     ) {
-        if (null === $client) {
-            throw new SolrServerNotConfiguredException("No Solr server available", 1);
-        }
-
+        parent::__construct($client, $logger, $markdown);
         $this->documentTranslationItems = [];
 
         foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
-            $this->documentTranslationItems[] = new SolariumDocumentTranslation(
-                $documentTranslation,
-                $client,
-                $logger
-            );
+            $this->documentTranslationItems[] = $solariumFactory->createWithDocumentTranslation($documentTranslation);
         }
     }
 
     /**
-     * Get document fron Solr index.
+     * Get document from Solr index.
      *
-     * @return boolean *FALSE* if no document found linked to current roadiz document.
+     * @return boolean *FALSE* if no document found linked to current Roadiz document.
      */
     public function getDocumentFromIndex()
     {

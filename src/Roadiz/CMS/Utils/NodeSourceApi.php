@@ -133,14 +133,20 @@ class NodeSourceApi extends AbstractApi
      * Search Nodes-Sources using LIKE condition on title,
      * meta-title, meta-keywords and meta-description.
      *
-     * @param $textQuery
+     * @param string $textQuery
      * @param int $limit
      * @param array $nodeTypes
      * @param bool $onlyVisible
+     * @param array $additionalCriteria
      * @return array
      */
-    public function searchBy($textQuery, $limit = 0, $nodeTypes = [], $onlyVisible = false)
-    {
+    public function searchBy(
+        $textQuery,
+        int $limit = 0,
+        array $nodeTypes = [],
+        bool $onlyVisible = false,
+        array $additionalCriteria = []
+    ) {
         $repository = $this->getRepository();
 
         if ($repository instanceof NodesSourcesRepository) {
@@ -149,7 +155,8 @@ class NodeSourceApi extends AbstractApi
                     $textQuery,
                     $limit,
                     $nodeTypes,
-                    $onlyVisible
+                    $onlyVisible,
+                    $additionalCriteria
                 );
         }
 

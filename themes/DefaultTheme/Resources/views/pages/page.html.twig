@@ -2,7 +2,23 @@
 
 {% block inner_content %}
     <h1 class="page-title">{{ nodeSource.title }}</h1>
-    <div class="page-text">{{ nodeSource.content|markdown }}</div>
+    <div class="page-text">{{ nodeSource.content|markdownExtra }}</div>
+    <ul class="block-attributes">
+        {% for attributeValueTranslation in nodeSource|attributes %}
+            <li>
+                <strong>{{ attributeValueTranslation|attribute_label(translation) }}:</strong>
+                {% if attributeValueTranslation is datetime %}
+                    {{ attributeValueTranslation.value|localizeddate('medium', 'short') }}
+                {% elseif attributeValueTranslation is date %}
+                    {{ attributeValueTranslation.value|localizeddate('medium') }}
+                {% elseif attributeValueTranslation is country %}
+                    {{ attributeValueTranslation.value|country_iso(request.locale) }}
+                {% else %}
+                    {{ attributeValueTranslation.value }}
+                {% endif%}
+            </li>
+        {% endfor %}
+    </ul>
     <div class="page-blocks row">
         {#
          # Use a loop over children to display blocks
@@ -38,10 +54,16 @@
     <div class="images row">
         {% for image in nodeSource.pictures %}
             {% set imageMetas = image.documentTranslations.first %}
-            <figure class="image col-md-3">
+            <figure class="image col-sm-6 col-md-4">
                 {{ image|display(imageFormats.thumbnail) }}
-                <figcaption><h5>{{ imageMetas.name }}</h5>{{ imageMetas.description|markdown }}</figcaption>
+                {% if imageMetas.name or imageMetas.description %}
+                    <figcaption><h5>{{ imageMetas.name }}</h5>{{ imageMetas.description|markdown }}</figcaption>
+                {% endif %}
             </figure>
+            {#{% set embedFinder = (image|embedFinder) %}
+            {% if embedFinder %}
+                <pre>{{ embedFinder.source }}</pre>
+            {% endif %}#}
         {% endfor %}
     </div>
 

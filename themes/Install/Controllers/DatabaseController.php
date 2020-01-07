@@ -85,7 +85,7 @@ class DatabaseController extends InstallApp
         $yamlConfigHandler = $this->get('config.handler');
         $databaseForm->handleRequest($request);
 
-        if ($databaseForm->isValid()) {
+        if ($databaseForm->isSubmitted() && $databaseForm->isValid()) {
             try {
                 if (false !== $this->testDoctrineConnexion($databaseForm->getData())) {
                     $tempConf = $yamlConfigHandler->getConfiguration();

@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Themes\Rozier\Forms\AddUserType;
@@ -53,7 +54,7 @@ class UsersController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -87,14 +88,16 @@ class UsersController extends RozierApp
      * @param Request $request
      * @param int $userId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
-        if (!($this->isGranted('ROLE_ACCESS_USERS')
-            || $this->getUser()->getId() == $userId)) {
+        if (!(
+            $this->isGranted('ROLE_ACCESS_USERS') ||
+            ($this->getUser() instanceof User && $this->getUser()->getId() == $userId)
+        )) {
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
         /** @var User $user */
@@ -116,7 +119,7 @@ class UsersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans(
@@ -147,14 +150,16 @@ class UsersController extends RozierApp
      * @param Request $request
      * @param int $userId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editDetailsAction(Request $request, $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
-        if (!($this->isGranted('ROLE_ACCESS_USERS')
-            || $this->getUser()->getId() == $userId)) {
+        if (!(
+            $this->isGranted('ROLE_ACCESS_USERS') ||
+            ($this->getUser() instanceof User && $this->getUser()->getId() == $userId)
+        )) {
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
         /** @var User $user */
@@ -168,7 +173,7 @@ class UsersController extends RozierApp
             $form = $this->createForm(UserDetailsType::class, $user);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 /*
                  * If pictureUrl is empty, use default Gravatar image.
                  */
@@ -206,7 +211,7 @@ class UsersController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addAction(Request $request)
     {
@@ -225,7 +230,7 @@ class UsersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get('em')->persist($user);
                 $this->get('em')->flush();
 
@@ -249,7 +254,7 @@ class UsersController extends RozierApp
      * @param Request $request
      * @param int $userId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $userId)
     {
@@ -267,7 +272,8 @@ class UsersController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['userId'] == $user->getId()) {
                 $this->deleteUser($form->getData(), $user);
                 $msg = $this->getTranslator()->trans(

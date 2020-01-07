@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -35,6 +36,7 @@ use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing node-types from terminal.
@@ -56,6 +58,7 @@ class NodesSourcesCommand extends Command
     {
         /** @var EntityManager entityManager */
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $io = new SymfonyStyle($input, $output);
 
         $nodetypes = $this->entityManager
             ->getRepository(NodeType::class)
@@ -69,14 +72,16 @@ class NodesSourcesCommand extends Command
 
                 $handler->removeSourceEntityClass();
                 $handler->generateSourceEntityClass();
-                $output->writeln("* Source class <info>".$nt->getSourceEntityClassName()."</info> has been generated.");
+                $io->writeln("* Source class <info>".$nt->getSourceEntityClassName()."</info> has been generated.");
 
                 if ($output->isVeryVerbose()) {
-                    $output->writeln("\t<info>".$handler->getSourceClassPath()."</info>");
+                    $io->writeln("\t<info>".$handler->getSourceClassPath()."</info>");
                 }
             }
+            return 0;
         } else {
-            $output->writeln('<error>No available node-types…</error>');
+            $io->error('No available node-types…');
+            return 1;
         }
     }
 }

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\Console\Helper;
 
 use RZ\Roadiz\Core\Bags\Roles;
+use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Console\Helper\Helper;
 
 class RolesBagHelper extends Helper
@@ -49,10 +50,13 @@ class RolesBagHelper extends Helper
     }
 
     /**
-     * @param $roleName
-     * @return \RZ\Roadiz\Core\Entities\Role
+     * @param string $roleName
+     *
+     * @return Role|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function get($roleName)
+    public function get(string $roleName): ?Role
     {
         return $this->rolesBag->get($roleName);
     }

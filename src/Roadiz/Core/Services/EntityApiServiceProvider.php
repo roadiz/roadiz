@@ -43,19 +43,19 @@ class EntityApiServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['nodeApi'] = function ($c) {
+        $container['nodeApi'] = function (Container $c) {
             return new NodeApi($c);
         };
 
-        $container['nodeTypeApi'] = function ($c) {
+        $container['nodeTypeApi'] = function (Container $c) {
             return new NodeTypeApi($c);
         };
 
-        $container['nodeSourceApi'] = function ($c) {
+        $container['nodeSourceApi'] = function (Container $c) {
             return new NodeSourceApi($c);
         };
 
-        $container['tagApi'] = function ($c) {
+        $container['tagApi'] = function (Container $c) {
             return new TagApi($c);
         };
 

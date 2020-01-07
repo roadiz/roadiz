@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -89,7 +90,7 @@ class RoleRepository extends EntityRepository
               ->setParameter('name', Role::ROLE_SUPERADMIN);
 
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZRoleAllBasic');
+        $query->enableResultCache(3600, 'RZRoleAllBasic');
 
         return array_map('current', $query->getScalarResult());
     }
@@ -105,7 +106,7 @@ class RoleRepository extends EntityRepository
         $builder->select('r.name');
 
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZRoleAll');
+        $query->enableResultCache(3600, 'RZRoleAll');
 
         return array_map('current', $query->getScalarResult());
     }

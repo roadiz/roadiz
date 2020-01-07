@@ -31,7 +31,11 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
+use RZ\Roadiz\Core\Exceptions\InvalidEmbedId;
+use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Document\Renderer\RendererInterface;
+use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
+use RZ\Roadiz\Utils\MediaFinders\EmbedFinderInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 use Twig\Error\RuntimeError;
@@ -81,33 +85,48 @@ class DocumentExtension extends AbstractExtension
 
     /**
      * @param Document|null $document
-     * @return bool|\RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder
+     * @return null|EmbedFinderInterface
      * @throws RuntimeError
      */
-    public function getEmbedFinder(Document $document = null)
+    public function getEmbedFinder(Document $document = null): ?EmbedFinderInterface
     {
         if (null === $document) {
             if ($this->throwExceptions) {
                 throw new RuntimeError('Document can’t be null to get its EmbedFinder.');
             } else {
-                return false;
+                return null;
             }
         }
 
-        /** @var DocumentViewer $documentViewer */
-        $documentViewer = $this->container->offsetGet('document.viewer');
-        $documentViewer->setDocument($document);
-        return $documentViewer->getEmbedFinder();
+        try {
+            /** @var EmbedFinderFactory $embedFinderFactory */
+            $embedFinderFactory = $this->container[EmbedFinderFactory::class];
+            if (null !== $document->getEmbedPlatform() &&
+                $embedFinderFactory->supports($document->getEmbedPlatform())) {
+                return $embedFinderFactory->createForPlatform(
+                    $document->getEmbedPlatform(),
+                    $document->getEmbedId()
+                );
+            }
+        } catch (InvalidEmbedId $embedException) {
+            if ($this->throwExceptions) {
+                throw new RuntimeError($embedException->getMessage());
+            } else {
+                return null;
+            }
+        }
+
+        return null;
     }
 
     /**
-     * @param Document|null $document
-     * @param array $criteria
+     * @param DocumentInterface|null $document
+     * @param array $options
      *
      * @return string
      * @throws RuntimeError
      */
-    public function display(Document $document = null, array $criteria = [])
+    public function display(DocumentInterface $document = null, array $options = [])
     {
         if (null === $document) {
             if ($this->throwExceptions) {
@@ -117,10 +136,15 @@ class DocumentExtension extends AbstractExtension
             }
         }
         try {
-            /** @var DocumentViewer $documentViewer */
-            $documentViewer = $this->container->offsetGet('document.viewer');
-            $documentViewer->setDocument($document);
-            return $documentViewer->getDocumentByArray($criteria);
+            /** @var RendererInterface $renderer */
+            $renderer = $this->container[RendererInterface::class];
+            return $renderer->render($document, $options);
+        } catch (InvalidEmbedId $embedException) {
+            if ($this->throwExceptions) {
+                throw new RuntimeError($embedException->getMessage());
+            } else {
+                return '<p>'.$embedException->getMessage().'</p>';
+            }
         } catch (InvalidArgumentException $e) {
             throw new RuntimeError($e->getMessage(), -1, null, $e);
         }
@@ -199,11 +223,10 @@ class DocumentExtension extends AbstractExtension
             }
         }
 
-        if (null !== $document && $document->isImage()) {
-            $size = $this->getImageSize($document);
-            if ($size['height'] > 0) {
-                return $size['width']/$size['height'];
-            }
+        if (null !== $document &&
+            $document->isImage() &&
+            null !== $ratio = $document->getImageRatio()) {
+            return $ratio;
         }
 
         return 0.0;

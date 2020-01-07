@@ -33,6 +33,9 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 
 /**
@@ -47,11 +50,11 @@ class SolrServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         /**
-         * @param $c
+         * @param Container $c
          *
          * @return null|Client
          */
-        $container['solr'] = function ($c) {
+        $container['solr'] = function (Container $c) {
             if (isset($c['config']['solr']['endpoint'])) {
                 // Do not pass $c['dispatcher'] - it can cause dependency infinite loop
                 $solrService = new Client($c['config']['solr']);
@@ -63,11 +66,11 @@ class SolrServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param $c
+         * @param Container $c
          *
          * @return bool
          */
-        $container['solr.ready'] = function ($c) {
+        $container['solr.ready'] = function (Container $c) {
             if (null !== $c['solr']) {
                 $c['stopwatch']->start('Ping Solr');
                 // create a ping query
@@ -87,10 +90,10 @@ class SolrServiceProvider implements ServiceProviderInterface
         };
 
         /**
-         * @param $c
+         * @param Container $c
          * @return null|NodeSourceSearchHandler
          */
-        $container['solr.search.nodeSource'] = $container->factory(function ($c) {
+        $container['solr.search.nodeSource'] = $container->factory(function (Container $c) {
             if ($c['solr.ready']) {
                 return new NodeSourceSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
@@ -99,16 +102,30 @@ class SolrServiceProvider implements ServiceProviderInterface
         });
 
         /**
-         * @param $c
+         * @param Container $c
          * @return null|DocumentSearchHandler
          */
-        $container['solr.search.document'] = $container->factory(function ($c) {
+        $container['solr.search.document'] = $container->factory(function (Container $c) {
             if ($c['solr.ready']) {
                 return new DocumentSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
                 return null;
             }
         });
+
+        /**
+         * @param Container $c
+         * @return SolariumFactoryInterface
+         */
+        $container[SolariumFactoryInterface::class] = function (Container $c) {
+            return new SolariumFactory(
+                $c['solr'],
+                $c['logger'],
+                $c[MarkdownInterface::class],
+                $c['dispatcher'],
+                $c['factory.handler']
+            );
+        };
 
         return $container;
     }

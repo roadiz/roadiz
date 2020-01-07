@@ -39,10 +39,10 @@ use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
@@ -51,10 +51,10 @@ class NodesAttributesController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param         $nodeId
-     * @param         $translationId
+     * @param int $nodeId
+     * @param int $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $nodeId, $translationId)
     {
@@ -100,6 +100,7 @@ class NodesAttributesController extends RozierApp
                 $attributeValueTranslation = new AttributeValueTranslation();
                 $attributeValueTranslation->setAttributeValue($attributeValue);
                 $attributeValueTranslation->setTranslation($translation);
+                $this->get('em')->persist($attributeValueTranslation);
             }
             $attributeValueTranslationForm = $formFactory->createNamedBuilder(
                 $name,
@@ -109,15 +110,13 @@ class NodesAttributesController extends RozierApp
             $attributeValueTranslationForm->handleRequest($request);
 
             if ($attributeValueTranslationForm->isSubmitted()) {
-                if ($attributeValueTranslationForm->isValid()) {
-                    $this->get('em')->merge($attributeValueTranslation);
+                if ($attributeValueTranslationForm->isSubmitted() && $attributeValueTranslationForm->isValid()) {
                     $this->get('em')->flush();
 
                     /*
                      * Dispatch event
                      */
-                    $event = new FilterNodesSourcesEvent($nodeSource);
-                    $this->get('dispatcher')->dispatch(NodesSourcesEvents::NODE_SOURCE_UPDATED, $event);
+                    $this->get('dispatcher')->dispatch(new NodesSourcesUpdatedEvent($nodeSource));
 
                     $msg = $this->getTranslator()->trans(
                         'attribute_value_translation.%name%.updated_from_node.%nodeName%',
@@ -165,7 +164,7 @@ class NodesAttributesController extends RozierApp
      * @param Node        $node
      * @param Translation $translation
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|null
+     * @return RedirectResponse|null
      */
     protected function handleAddAttributeForm(Request $request, Node $node, Translation $translation)
     {
@@ -177,7 +176,7 @@ class NodesAttributesController extends RozierApp
         ]);
         $addAttributeForm->handleRequest($request);
 
-        if ($addAttributeForm->isValid()) {
+        if ($addAttributeForm->isSubmitted() && $addAttributeForm->isValid()) {
             $this->get('em')->persist($attributeValue);
             $this->get('em')->flush();
 
@@ -193,11 +192,11 @@ class NodesAttributesController extends RozierApp
 
     /**
      * @param Request $request
-     * @param         $nodeId
-     * @param         $translationId
-     * @param         $attributeValueId
+     * @param int $nodeId
+     * @param int $translationId
+     * @param int $attributeValueId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
     public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
     {
@@ -235,7 +234,7 @@ class NodesAttributesController extends RozierApp
         $form = $this->createForm();
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->get('em')->remove($item);
                 $this->get('em')->flush();

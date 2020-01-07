@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -37,30 +38,32 @@ class UniqueEmailValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        /*
-         * If value is already the node name
-         * do nothing.
-         */
-        if (null !== $constraint->currentValue && strtolower($value) == strtolower($constraint->currentValue)) {
-            return;
-        }
-
-        if (null !== $constraint->entityManager) {
-            if (true === $this->emailExists($value, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message);
+        if ($constraint instanceof UniqueEmail) {
+            /*
+             * If value is already the node name
+             * do nothing.
+             */
+            if (null !== $constraint->currentValue && strtolower($value) == strtolower($constraint->currentValue)) {
+                return;
             }
-        } else {
-            $this->context->addViolation('UniqueEmailValidator constraint requires a valid EntityManager');
+
+            if (null !== $constraint->entityManager) {
+                if (true === $this->emailExists($value, $constraint->entityManager)) {
+                    $this->context->addViolation($constraint->message);
+                }
+            } else {
+                $this->context->addViolation('UniqueEmailValidator constraint requires a valid EntityManager');
+            }
         }
     }
 
     /**
-     * @param $email
-     * @param \Doctrine\ORM\EntityManager $entityManager
+     * @param string $email
+     * @param EntityManager $entityManager
      *
      * @return bool
      */
-    protected function emailExists($email, $entityManager)
+    protected function emailExists(string $email, EntityManager $entityManager)
     {
         $user = $entityManager->getRepository(User::class)->findOneByEmail(strtolower($email));
         return (null !== $user);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
@@ -35,12 +36,19 @@ use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class DocumentSizeCommand extends Command
 {
+    /** @var SymfonyStyle */
+    protected $io;
+    /**
+     * @var ImageManager
+     */
+    private $manager;
+
     protected function configure()
     {
         $this->setName('documents:size')
@@ -54,6 +62,8 @@ class DocumentSizeCommand extends Command
         $em = $this->getHelper('entityManager')->getEntityManager();
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();
+        $this->io = new SymfonyStyle($input, $output);
+        $this->manager = new ImageManager();
 
         $batchSize = 20;
         $i = 0;
@@ -67,32 +77,29 @@ class DocumentSizeCommand extends Command
             ->getQuery();
         $iterableResult = $q->iterate();
 
-        $progress = new ProgressBar($output, $count);
-        $progress->setFormat('verbose');
-        $progress->start();
+        $this->io->progressStart($count);
         foreach ($iterableResult as $row) {
             /** @var Document $document */
             $document = $row[0];
-            $this->updateDocumentSize($document, $packages, $output);
+            $this->updateDocumentSize($document, $packages);
             if (($i % $batchSize) === 0) {
                 $em->flush(); // Executes all updates.
                 $em->clear(); // Detaches all objects from Doctrine!
             }
             ++$i;
-            $progress->advance();
+            $this->io->progressAdvance();
         }
         $em->flush();
-        $progress->finish();
+        $this->io->progressFinish();
+        return 0;
     }
 
-    private function updateDocumentSize(Document $document, Packages $packages, OutputInterface $output)
+    private function updateDocumentSize(Document $document, Packages $packages)
     {
         if ($document->isImage()) {
             $documentPath = $packages->getDocumentFilePath($document);
             try {
-                $manager = new ImageManager();
-                $imageProcess = $manager->make($documentPath);
-
+                $imageProcess = $this->manager->make($documentPath);
                 $document->setImageWidth($imageProcess->width());
                 $document->setImageHeight($imageProcess->height());
             } catch (NotReadableException $exception) {
@@ -100,7 +107,7 @@ class DocumentSizeCommand extends Command
                  * Do nothing
                  * just return 0 width and height
                  */
-                $output->writeln('<error>'. $documentPath . ' is not a readable image.</error>');
+                $this->io->error($documentPath . ' is not a readable image.');
             }
         }
     }

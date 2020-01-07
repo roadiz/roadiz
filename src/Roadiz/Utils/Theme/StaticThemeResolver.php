@@ -125,7 +125,7 @@ class StaticThemeResolver implements ThemeResolverInterface
     public function findThemeByClass(string $classname): ?Theme
     {
         foreach ($this->getFrontendThemes() as $theme) {
-            if ($theme->getClassName() === $classname) {
+            if (ltrim($theme->getClassName(), '\\') === ltrim($classname, '\\')) {
                 return $theme;
             }
         }

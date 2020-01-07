@@ -35,6 +35,7 @@ use Rollerworks\Component\PasswordStrength\Blacklist\ArrayProvider;
 use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
+use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
@@ -52,7 +53,7 @@ class FormServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container[BlacklistProviderInterface::class] = function ($c) {
+        $container[BlacklistProviderInterface::class] = function (Container $c) {
             return new LazyChainProvider(new \Pimple\Psr11\Container($c), [
                 ArrayProvider::class,
                 Top500Provider::class,
@@ -76,11 +77,11 @@ class FormServiceProvider implements ServiceProviderInterface
             return new Top500Provider();
         };
 
-        $container[BlacklistValidator::class] = function ($c) {
+        $container[BlacklistValidator::class] = function (Container $c) {
             return new BlacklistValidator($c[BlacklistProviderInterface::class]);
         };
 
-        $container['formValidator'] = function ($c) {
+        $container['formValidator'] = function (Container $c) {
             $constraintFactory = new ContainerConstraintValidatorFactory(new \Pimple\Psr11\Container($c));
 
             return Validation::createValidatorBuilder()
@@ -90,22 +91,23 @@ class FormServiceProvider implements ServiceProviderInterface
                         ->getValidator();
         };
 
-        $container['formFactory'] = function ($c) {
+        $container['formFactory'] = function (Container $c) {
             $formFactoryBuilder = Forms::createFormFactoryBuilder();
             $formFactoryBuilder->addExtensions($c['form.extensions']);
             $formFactoryBuilder->addTypeExtensions($c['form.type.extensions']);
             return $formFactoryBuilder->getFormFactory();
         };
 
-        $container['form.extensions'] = function ($c) {
+        $container['form.extensions'] = function (Container $c) {
             return [
                 new HttpFoundationExtension(),
                 new CsrfExtension($c['csrfTokenManager']),
                 new ValidatorExtension($c['formValidator']),
+                new ContainerFormExtension($c)
             ];
         };
 
-        $container['form.type.extensions'] = function ($c) {
+        $container['form.type.extensions'] = function () {
             return [
                 new HelpAndGroupExtension(),
                 new RepeatedTypeValidatorExtension(),

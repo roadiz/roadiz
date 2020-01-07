@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -46,6 +47,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -55,6 +57,8 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
 {
     use ContainerAwareTrait;
 
+    /** @var SymfonyStyle */
+    protected $io;
     /**
      * @var string
      */
@@ -99,6 +103,7 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
         if ($input->getOption('dry-run')) {
             $this->dryRun = true;
         }
+        $this->io = new SymfonyStyle($input, $output);
 
         /*
          * Replace slash by anti-slashes
@@ -110,25 +115,24 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
         }
         $this->themeRoot = call_user_func([$reflectionClass->getName(), 'getThemeFolder']);
         if ($output->isVeryVerbose()) {
-            $output->writeln('Theme name is: <info>'. $reflectionClass->getName() .'</info>.');
-            $output->writeln('Theme assets are located in <info>'. $this->themeRoot .'/static</info>.');
+            $this->io->writeln('Theme name is: <info>'. $reflectionClass->getName() .'</info>.');
+            $this->io->writeln('Theme assets are located in <info>'. $this->themeRoot .'/static</info>.');
         }
 
         if ($input->getOption('data')) {
-            $this->importThemeData($reflectionClass->getName(), $input, $output);
+            $this->importThemeData($reflectionClass->getName());
         } elseif ($input->getOption('nodes')) {
-            $this->importThemeNodes($reflectionClass->getName(), $input, $output);
+            $this->importThemeNodes($reflectionClass->getName());
         } else {
-            $output->writeln('Frontend themes are no more registered into database. <info>You should use --data or --nodes option.</info>');
+            $this->io->writeln('Frontend themes are no more registered into database. <info>You should use --data or --nodes option.</info>');
         }
+        return 0;
     }
 
     /**
-     * @param string          $classname
-     * @param InputInterface  $input
-     * @param OutputInterface $output
+     * @param string $classname
      */
-    protected function importThemeData($classname, InputInterface $input, OutputInterface $output)
+    protected function importThemeData($classname)
     {
         $data = $this->getThemeConfig();
 
@@ -139,7 +143,7 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                         $this->get(GroupsImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
                         $this->get('em')->flush();
                     }
-                    $output->writeln('* Groups file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                    $this->io->writeln('* Groups file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
             }
             if (isset($data["importFiles"]['roles'])) {
@@ -148,7 +152,7 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                         $this->get(RolesImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
                         $this->get('em')->flush();
                     }
-                    $output->writeln('* Roles file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                    $this->io->writeln('* Roles file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
             }
             if (isset($data["importFiles"]['settings'])) {
@@ -157,7 +161,7 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                         $this->get(SettingsImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
                         $this->get('em')->flush();
                     }
-                    $output->writeln('* Settings file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                    $this->io->writeln('* Settings file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
             }
             if (isset($data["importFiles"]['nodetypes'])) {
@@ -166,7 +170,7 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                         $this->get(NodeTypesImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
                         $this->get('em')->flush();
                     }
-                    $output->writeln('* Node-type file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                    $this->io->writeln('* Node-type file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                 }
             }
             if (isset($data["importFiles"]['tags'])) {
@@ -175,12 +179,12 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                         try {
                             $this->get(TagsImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
                             $this->get('em')->flush();
-                            $output->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                            $this->io->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                         } catch (EntityAlreadyExistsException $e) {
-                            $output->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> <error>has NOT been imported ('.$e->getMessage().')</error>.');
+                            $this->io->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> <error>has NOT been imported ('.$e->getMessage().')</error>.');
                         }
                     } else {
-                        $output->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                        $this->io->writeln('* Tags file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                     }
                 }
             }
@@ -190,30 +194,28 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                         try {
                             $this->get(AttributeImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
                             $this->get('em')->flush();
-                            $output->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                            $this->io->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                         } catch (EntityAlreadyExistsException $e) {
-                            $output->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> <error>has NOT been imported ('.$e->getMessage().')</error>.');
+                            $this->io->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> <error>has NOT been imported ('.$e->getMessage().')</error>.');
                         }
                     } else {
-                        $output->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                        $this->io->writeln('* Attributes file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                     }
                 }
             }
-            if ($output->isVeryVerbose()) {
-                $output->writeln('You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.');
-                $output->writeln('And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.');
+            if ($this->io->isVeryVerbose()) {
+                $this->io->writeln('You should do a <info>bin/roadiz generate:nsentities</info> to regenerate your node-types source classes.');
+                $this->io->writeln('And a <info>bin/roadiz orm:schema-tool:update --dump-sql --force</info> to apply your changes into database.');
             }
         } else {
-            $output->writeln('Theme class <info>' . $classname . '</info> has no data to import.');
+            $this->io->warning('Theme class ' . $classname . ' has no data to import.');
         }
     }
 
     /**
-     * @param                 $classname
-     * @param InputInterface  $input
-     * @param OutputInterface $output
+     * @param string $classname
      */
-    protected function importThemeNodes($classname, InputInterface $input, OutputInterface $output)
+    protected function importThemeNodes($classname)
     {
         $data = $this->getThemeConfig();
 
@@ -225,16 +227,16 @@ class ThemeInstallCommand extends ThemesCommand implements ContainerAwareInterfa
                             $this->get(NodesImporter::class)->import(file_get_contents($this->themeRoot . "/" . $filename));
                             $this->get('em')->flush();
                         }
-                        $output->writeln('— Theme file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
+                        $this->io->writeln('— Theme file <info>' . $this->themeRoot . "/" . $filename . '</info> has been imported.');
                     } catch (EntityAlreadyExistsException $e) {
-                        $output->writeln('* <error>' . $e->getMessage() . '</error>');
+                        $this->io->writeln('* <error>' . $e->getMessage() . '</error>');
                     } catch (EntityNotFoundException $e) {
-                        $output->writeln('* <error>' . $e->getMessage() . '</error>');
+                        $this->io->writeln('* <error>' . $e->getMessage() . '</error>');
                     }
                 }
             }
         } else {
-            $output->writeln('Theme class <info>' . $classname . '</info> has no nodes to import.');
+            $this->io->warning('Theme class ' . $classname . ' has no nodes to import.');
         }
     }
 

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -111,7 +112,7 @@ class Newsletter extends AbstractDateTimed
     private $node;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Node
+     * @return Node
      */
     public function getNode(): ?Node
     {
@@ -119,7 +120,7 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node $node
+     * @param Node $node
      *
      * @return $this
      */

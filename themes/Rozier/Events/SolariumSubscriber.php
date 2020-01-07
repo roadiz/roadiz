@@ -31,22 +31,33 @@ namespace Themes\Rozier\Events;
 
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Entities\DocumentTranslation;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Events\DocumentDeletedEvent;
+use RZ\Roadiz\Core\Events\DocumentFileUploadedEvent;
+use RZ\Roadiz\Core\Events\DocumentInFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentOutFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;
+use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\FilterTagEvent;
-use RZ\Roadiz\Core\Events\FolderEvents;
-use RZ\Roadiz\Core\Events\NodeEvents;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
-use RZ\Roadiz\Core\Events\TagEvents;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
+use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeTaggedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUndeletedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
+use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Client;
 use Solarium\Exception\HttpException;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -64,52 +75,47 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     protected $logger;
     /**
-     * @var EventDispatcherInterface
+     * @var SolariumFactoryInterface
      */
-    private $dispatcher;
-    /**
-     * @var HandlerFactory
-     */
-    private $handlerFactory;
+    protected $solariumFactory;
 
     /**
      * SolariumSubscriber constructor.
-     * @param Client|null $solr
-     * @param EventDispatcherInterface $dispatcher
-     * @param LoggerInterface $logger
-     * @param HandlerFactory $handlerFactory
+     *
+     * @param Client|null              $solr
+     * @param LoggerInterface          $logger
+     * @param SolariumFactoryInterface $solariumFactory
      */
     public function __construct(
         ?Client $solr,
-        EventDispatcherInterface $dispatcher,
         LoggerInterface $logger,
-        HandlerFactory $handlerFactory
+        SolariumFactoryInterface $solariumFactory
     ) {
         $this->solr = $solr;
         $this->logger = $logger;
-        $this->dispatcher = $dispatcher;
-        $this->handlerFactory = $handlerFactory;
+        $this->solariumFactory = $solariumFactory;
     }
 
     public static function getSubscribedEvents()
     {
         return [
-            NodeEvents::NODE_STATUS_CHANGED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_VISIBILITY_CHANGED => 'onSolariumNodeUpdate',
-            NodesSourcesEvents::NODE_SOURCE_UPDATED => 'onSolariumSingleUpdate',
-            NodesSourcesEvents::NODE_SOURCE_DELETED => 'onSolariumSingleDelete',
-            NodeEvents::NODE_DELETED => 'onSolariumNodeDelete',
-            NodeEvents::NODE_UNDELETED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_TAGGED => 'onSolariumNodeUpdate',
-            NodeEvents::NODE_CREATED => 'onSolariumNodeUpdate',
-            //TagEvents::TAG_UPDATED => 'onSolariumTagUpdate', // Possibly too greedy if lots of nodes tagged
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_TRANSLATION_UPDATED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_IN_FOLDER => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_OUT_FOLDER => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_UPDATED => 'onSolariumDocumentUpdate',
-            DocumentEvents::DOCUMENT_DELETED => 'onSolariumDocumentDelete',
-            //FolderEvents::FOLDER_UPDATED => 'onSolariumFolderUpdate', // Possibly too greedy if lots of docs tagged
+            NodeUpdatedEvent::class => 'onSolariumNodeUpdate',
+            NodeStatusChangedEvent::class => 'onSolariumNodeUpdate',
+            NodeVisibilityChangedEvent::class => 'onSolariumNodeUpdate',
+            NodesSourcesUpdatedEvent::class => 'onSolariumSingleUpdate',
+            NodesSourcesDeletedEvent::class => 'onSolariumSingleDelete',
+            NodeDeletedEvent::class => 'onSolariumNodeDelete',
+            NodeUndeletedEvent::class => 'onSolariumNodeUpdate',
+            NodeTaggedEvent::class => 'onSolariumNodeUpdate',
+            NodeCreatedEvent::class => 'onSolariumNodeUpdate',
+            //TagUpdatedEvent::class => 'onSolariumTagUpdate', // Possibly too greedy if lots of nodes tagged
+            DocumentFileUploadedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentTranslationUpdatedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentInFolderEvent::class => 'onSolariumDocumentUpdate',
+            DocumentOutFolderEvent::class => 'onSolariumDocumentUpdate',
+            DocumentUpdatedEvent::class => 'onSolariumDocumentUpdate',
+            DocumentDeletedEvent::class => 'onSolariumDocumentDelete',
+            //FolderUpdatedEvent::class => 'onSolariumFolderUpdate', // Possibly too greedy if lots of docs tagged
         ];
     }
 
@@ -123,12 +129,8 @@ class SolariumSubscriber implements EventSubscriberInterface
         // Update Solr Search engine if setup
         if (null !== $this->solr) {
             try {
-                $solrSource = new SolariumNodeSource(
-                    $event->getNodeSource(),
-                    $this->solr,
-                    $this->dispatcher,
-                    $this->handlerFactory,
-                    $this->logger
+                $solrSource = $this->getSolariumNodeSource(
+                    $event->getNodeSource()
                 );
                 $solrSource->getDocumentFromIndex();
                 $solrSource->updateAndCommit();
@@ -148,12 +150,8 @@ class SolariumSubscriber implements EventSubscriberInterface
         // Update Solr Search engine if setup
         if (null !== $this->solr) {
             try {
-                $solrSource = new SolariumNodeSource(
-                    $event->getNodeSource(),
-                    $this->solr,
-                    $this->dispatcher,
-                    $this->handlerFactory,
-                    $this->logger
+                $solrSource = $this->getSolariumNodeSource(
+                    $event->getNodeSource()
                 );
                 $solrSource->getDocumentFromIndex();
                 $solrSource->removeAndCommit();
@@ -173,12 +171,8 @@ class SolariumSubscriber implements EventSubscriberInterface
         if (null !== $this->solr) {
             try {
                 foreach ($event->getNode()->getNodeSources() as $nodeSource) {
-                    $solrSource = new SolariumNodeSource(
-                        $nodeSource,
-                        $this->solr,
-                        $this->dispatcher,
-                        $this->handlerFactory,
-                        $this->logger
+                    $solrSource = $this->getSolariumNodeSource(
+                        $nodeSource
                     );
                     $solrSource->getDocumentFromIndex();
                     $solrSource->removeAndCommit();
@@ -199,16 +193,13 @@ class SolariumSubscriber implements EventSubscriberInterface
         if (null !== $this->solr) {
             try {
                 foreach ($event->getNode()->getNodeSources() as $nodeSource) {
-                    $solrSource = new SolariumNodeSource(
-                        $nodeSource,
-                        $this->solr,
-                        $this->dispatcher,
-                        $this->handlerFactory,
-                        $this->logger
+                    $solrSource = $this->getSolariumNodeSource(
+                        $nodeSource
                     );
                     $solrSource->getDocumentFromIndex();
                     $solrSource->updateAndCommit();
                 }
+                $event->stopPropagation();
             } catch (HttpException $exception) {
                 $this->logger->error($exception->getMessage());
             }
@@ -227,10 +218,8 @@ class SolariumSubscriber implements EventSubscriberInterface
         if (null !== $this->solr && $document instanceof Document) {
             try {
                 foreach ($document->getDocumentTranslations() as $documentTranslation) {
-                    $solarium = new SolariumDocumentTranslation(
-                        $documentTranslation,
-                        $this->solr,
-                        $this->logger
+                    $solarium = $this->getSolariumDocumentTranslation(
+                        $documentTranslation
                     );
                     $solarium->getDocumentFromIndex();
                     $solarium->removeAndCommit();
@@ -252,10 +241,8 @@ class SolariumSubscriber implements EventSubscriberInterface
         if (null !== $this->solr && $document instanceof Document) {
             try {
                 foreach ($document->getDocumentTranslations() as $documentTranslation) {
-                    $solarium = new SolariumDocumentTranslation(
-                        $documentTranslation,
-                        $this->solr,
-                        $this->logger
+                    $solarium = $this->getSolariumDocumentTranslation(
+                        $documentTranslation
                     );
                     $solarium->getDocumentFromIndex();
                     $solarium->updateAndCommit();
@@ -281,12 +268,8 @@ class SolariumSubscriber implements EventSubscriberInterface
 
                 foreach ($nodes as $node) {
                     foreach ($node->getNodeSources() as $nodeSource) {
-                        $solrSource = new SolariumNodeSource(
-                            $nodeSource,
-                            $this->solr,
-                            $this->dispatcher,
-                            $this->handlerFactory,
-                            $this->logger
+                        $solrSource = $this->getSolariumNodeSource(
+                            $nodeSource
                         );
                         $solrSource->getDocumentFromIndex();
                         $solrSource->update($update);
@@ -324,10 +307,8 @@ class SolariumSubscriber implements EventSubscriberInterface
                 /** @var Document $document */
                 foreach ($documents as $document) {
                     foreach ($document->getDocumentTranslations() as $documentTranslation) {
-                        $solarium = new SolariumDocumentTranslation(
-                            $documentTranslation,
-                            $this->solr,
-                            $this->logger
+                        $solarium = $this->getSolariumDocumentTranslation(
+                            $documentTranslation
                         );
                         $solarium->getDocumentFromIndex();
                         $solarium->update($update);
@@ -347,5 +328,25 @@ class SolariumSubscriber implements EventSubscriberInterface
                 $this->logger->error($exception->getMessage());
             }
         }
+    }
+
+    /**
+     * @param NodesSources $nodeSource
+     *
+     * @return SolariumNodeSource
+     */
+    protected function getSolariumNodeSource(NodesSources $nodeSource): SolariumNodeSource
+    {
+        return $this->solariumFactory->createWithNodesSources($nodeSource);
+    }
+
+    /**
+     * @param DocumentTranslation $documentTranslation
+     *
+     * @return SolariumDocumentTranslation
+     */
+    protected function getSolariumDocumentTranslation(DocumentTranslation $documentTranslation): SolariumDocumentTranslation
+    {
+        return $this->solariumFactory->createWithDocumentTranslation($documentTranslation);
     }
 }

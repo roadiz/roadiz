@@ -20,6 +20,7 @@ class TagsImporterTest extends SchemaDependentCase
         $this->assertEquals(0, $this->countTagTranslations());
 
         $this->assertTrue($this->get(TagsImporter::class)->import($json));
+        $this->get('em')->flush();
         $this->assertEquals($count, $this->countTags());
         $this->assertEquals($count, $this->countTagTranslations());
     }

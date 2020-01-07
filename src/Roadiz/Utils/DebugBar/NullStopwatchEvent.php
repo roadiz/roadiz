@@ -33,18 +33,6 @@ use Symfony\Component\Stopwatch\StopwatchEvent;
 
 class NullStopwatchEvent extends StopwatchEvent
 {
-    /**
-     * Constructor.
-     *
-     * @param float       $origin   The origin time in milliseconds
-     * @param string|null $category The event category or null to use the default
-     *
-     * @throws \InvalidArgumentException When the raw time is not valid
-     */
-    public function __construct($origin, $category = null)
-    {
-    }
-
     public function start()
     {
         return $this;

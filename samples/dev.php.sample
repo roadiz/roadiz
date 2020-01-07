@@ -30,8 +30,8 @@
 
 use RZ\Roadiz\Core\Kernel;
 // use RZ\Roadiz\Core\DevKernel;
-use Symfony\Component\Debug\Debug;
 use RZ\Roadiz\Core\HttpFoundation\Request;
+use Symfony\Component\ErrorHandler\Debug;
 
 if (PHP_VERSION_ID < 70200) {
     echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
@@ -52,7 +52,7 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
     || !(in_array(@$_SERVER['REMOTE_ADDR'], $allowedIp) || php_sapi_name() === 'cli-server')
 ) {
     header('HTTP/1.0 403 Forbidden');
-    exit('You are not allowed to access this file. Check '.basename(__FILE__).' for more information.');
+    exit('You are not allowed to access this file ('.$_SERVER['REMOTE_ADDR'].'). Check '.basename(__FILE__).' for more information.');
 }
 /** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(__FILE__));

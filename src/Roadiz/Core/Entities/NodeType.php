@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -303,7 +304,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @var ArrayCollection<RZ\Roadiz\Core\Entities\NodeTypeField>
+     * @var ArrayCollection<NodeTypeField>
      * @ORM\OneToMany(targetEntity="NodeTypeField", mappedBy="nodeType", cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
      * @Serializer\Groups("node_type")
@@ -479,13 +480,8 @@ class NodeType extends AbstractEntity
      */
     public function getSearchableFields(): ArrayCollection
     {
-        $searchable = new ArrayCollection();
-        /** @var NodeTypeField $field */
-        foreach ($this->getFields() as $field) {
-            if ($field->isSearchable()) {
-                $searchable->add($field);
-            }
-        }
-        return $searchable;
+        return $this->getFields()->filter(function (NodeTypeField $field) {
+            return $field->isSearchable();
+        });
     }
 }

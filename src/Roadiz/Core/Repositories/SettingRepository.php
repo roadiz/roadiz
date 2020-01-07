@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -35,11 +36,10 @@ namespace RZ\Roadiz\Core\Repositories;
 class SettingRepository extends EntityRepository
 {
     /**
-     * Return Setting raw value.
-     *
      * @param string $name
      *
-     * @return string
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getValue($name)
     {
@@ -49,7 +49,7 @@ class SettingRepository extends EntityRepository
                 ->setParameter(':name', $name);
 
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZSettingValue_'.$name);
+        $query->enableResultCache(3600, 'RZSettingValue_'.$name);
 
         return $query->getSingleScalarResult();
     }
@@ -57,7 +57,8 @@ class SettingRepository extends EntityRepository
     /**
      * @param string $name
      *
-     * @return boolean
+     * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function exists($name)
     {
@@ -67,7 +68,7 @@ class SettingRepository extends EntityRepository
             ->setParameter(':name', $name);
 
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZSettingExists_'.$name);
+        $query->enableResultCache(3600, 'RZSettingExists_'.$name);
 
         return (boolean) $query->getSingleScalarResult();
     }
@@ -82,7 +83,7 @@ class SettingRepository extends EntityRepository
         $builder = $this->createQueryBuilder('s');
         $builder->select('s.name');
         $query = $builder->getQuery();
-        $query->useResultCache(true, 3600, 'RZSettingAll');
+        $query->enableResultCache(3600, 'RZSettingAll');
 
         return array_map('current', $query->getScalarResult());
     }

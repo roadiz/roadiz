@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -87,7 +88,7 @@ class NodeTypeFieldRepository extends EntityRepository
      *
      * Parent can be null for tag root
      *
-     * @param  NodeType|null $nodeType
+     * @param NodeType $nodeType
      *
      * @return int
      */

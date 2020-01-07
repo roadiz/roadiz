@@ -46,9 +46,7 @@ class TranslationsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults([
-            'choices_as_values' => true,
-        ]);
+        $resolver->setDefaults([]);
         $resolver->setRequired(['entityManager']);
         $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
 

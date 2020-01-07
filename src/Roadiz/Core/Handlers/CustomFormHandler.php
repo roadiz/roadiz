@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Handlers;
 
+use Doctrine\Common\Collections\Criteria;
 use RZ\Roadiz\Core\Entities\CustomForm;
 
 /**
@@ -67,7 +68,9 @@ class CustomFormHandler extends AbstractHandler
      */
     public function cleanFieldsPositions($setPositions = true)
     {
-        $fields = $this->customForm->getFields();
+        $criteria = Criteria::create();
+        $criteria->orderBy(['position' => 'ASC']);
+        $fields = $this->customForm->getFields()->matching($criteria);
         $i = 1;
         foreach ($fields as $field) {
             if ($setPositions) {

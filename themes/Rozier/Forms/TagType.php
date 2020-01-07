@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\Core\Entities\Tag;
@@ -51,6 +51,7 @@ class TagType extends AbstractType
     {
         $builder->add('tagName', TextType::class, [
                 'label' => 'tagName',
+                'help' => 'tag.tagName.help',
                 'constraints' => [
                     new NotBlank(),
                     new UniqueTagName([
@@ -62,6 +63,16 @@ class TagType extends AbstractType
                     ])
                 ],
             ])
+
+            ->add('locked', CheckboxType::class, [
+                'label' => 'locked',
+                'help' => 'tag.locked.help',
+                'required' => false,
+            ])
+            ->add('visible', CheckboxType::class, [
+                'label' => 'visible',
+                'required' => false,
+            ])
             ->add('color', TextType::class, [
                 'label' => 'tag.color',
                 'required' => false,
@@ -70,17 +81,8 @@ class TagType extends AbstractType
                     new HexadecimalColor(),
                 ],
             ])
-            ->add('visible', CheckboxType::class, [
-                'label' => 'visible',
-                'required' => false,
-            ])
-            ->add('locked', CheckboxType::class, [
-                'label' => 'locked',
-                'required' => false,
-            ])
             ->add('childrenOrder', ChoiceType::class, [
                 'label' => 'tag.childrenOrder',
-                'choices_as_values' => true,
                 'choices' => [
                     'position' => 'position',
                     'tagName' => 'tagName',
@@ -90,7 +92,6 @@ class TagType extends AbstractType
             ])
             ->add('childrenOrderDirection', ChoiceType::class, [
                 'label' => 'tag.childrenOrderDirection',
-                'choices_as_values' => true,
                 'choices' => [
                      'ascendant' => 'ASC',
                      'descendant' => 'DESC',

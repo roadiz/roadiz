@@ -107,7 +107,7 @@ class UserDetailsType extends AbstractType
                     'day' => 'day'
                 ],
                 'required' => false,
-                'years' => range(1920, date('Y') - 6),
+                'years' => range(1920, ((int) date('Y')) - 6),
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
@@ -135,7 +135,6 @@ class UserDetailsType extends AbstractType
                     'Italiano' => 'it',
                     'српска ћирилица' => 'sr_Cyrl',
                 ],
-                'choices_as_values' => true,
                 'placeholder' => 'use.website.default_language'
             ])
         ;

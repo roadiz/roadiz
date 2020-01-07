@@ -31,7 +31,6 @@ import Lazyload from './Lazyload'
 import EntriesPanel from './components/panels/EntriesPanel'
 import VueApp from './App'
 import {
-    isMobile,
     PointerEventsPolyfill
 } from './utils/plugins'
 import {
@@ -55,6 +54,7 @@ export default class Rozier {
         this.resizeFirst = true
         this.gMapLoading = false
         this.gMapLoaded = false
+        this.mobile = null
 
         this.searchNodesSourcesDelay = null
         this.nodeTrees = []
@@ -342,6 +342,50 @@ export default class Rozier {
                 })
         } else {
             console.error('No main node-tree available.')
+        }
+    }
+
+    /**
+     * Refresh only main tagTree.
+     *
+     */
+    refreshMainTagTree () {
+        let $currentTagTree = $('#tree-container').find('.tagtree-widget')
+
+        if ($currentTagTree.length) {
+            let postData = {
+                '_token': this.ajaxToken,
+                '_action': 'requestMainTagTree'
+            }
+
+            let url = this.routes.tagsTreeAjax
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                cache: false,
+                dataType: 'json',
+                data: postData
+            })
+            .done(data => {
+                if ($currentTagTree.length &&
+                    typeof data.tagTree !== 'undefined') {
+                    $currentTagTree.fadeOut('slow', () => {
+                        $currentTagTree.replaceWith(data.tagTree)
+                        $currentTagTree = $('#tree-container').find('.tagtree-widget')
+                        $currentTagTree.fadeIn()
+                        this.initNestables()
+                        this.bindMainTrees()
+                        this.resize()
+                        this.lazyload.bindAjaxLink()
+                    })
+                }
+            })
+            .always(() => {
+                this.lazyload.canvasLoader.hide()
+            })
+        } else {
+            console.error('No main tag-tree available.')
         }
     }
 
@@ -698,7 +742,9 @@ export default class Rozier {
         }
 
         // Check if mobile
-        if (this.windowWidth <= 768 && this.resizeFirst) this.mobile = new RozierMobile() // && isMobile.any() !== null
+        if (this.windowWidth <= 768 && this.resizeFirst) {
+            this.mobile = new RozierMobile()
+        }
 
         if (this.windowWidth >= 768) {
             this.$mainContentScrollable.height(this.windowHeight)
@@ -720,7 +766,9 @@ export default class Rozier {
         this.nodeTreeHeadHeight = this.$nodeTreeHead.actual('outerHeight')
         this.treeScrollHeight = this.windowHeight - (this.nodesSourcesSearchHeight + this.nodeTreeHeadHeight)
 
-        if (isMobile.any() !== null) this.treeScrollHeight = this.windowHeight - (50 + 50 + this.nodeTreeHeadHeight) // Menu + tree menu + tree head
+        if (this.mobile !== null) {
+            this.treeScrollHeight = this.windowHeight - (50 + 50 + this.nodeTreeHeadHeight)
+        } // Menu + tree menu + tree head
 
         for (let i = 0; i < this.$treeScrollCont.length; i++) {
             this.$treeScrollCont[i].style.height = this.treeScrollHeight + 'px'

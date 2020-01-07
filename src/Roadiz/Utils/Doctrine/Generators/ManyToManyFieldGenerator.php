@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -69,7 +70,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
         return '
     /**
      * ' . $this->field->getLabel() .'
-     * 
+     *
      * @var \Doctrine\Common\Collections\ArrayCollection
      * @ORM\ManyToMany(targetEntity="'. $configuration['classname'] .'")
      * @ORM\JoinTable(' . static::flattenORMParameters($ormParams) . ')
@@ -104,7 +105,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
     public function '.$this->field->getSetterName().'($'.$this->field->getName().' = null)
     {
         $this->'.$this->field->getName().' = $'.$this->field->getName().';
-        
+
         return $this;
     }'.PHP_EOL;
     }

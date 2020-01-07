@@ -33,11 +33,9 @@ use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\FilesystemCache;
-use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\MemcachedCache;
 use Doctrine\Common\Cache\PhpFileCache;
 use Doctrine\Common\Cache\RedisCache;
-use Doctrine\Common\Cache\XcacheCache;
 use RZ\Roadiz\Core\Kernel;
 
 class CacheFactory
@@ -75,25 +73,8 @@ class CacheFactory
                 $cacheConfig['type'] == 'file'
             ) {
                 $cache = new FilesystemCache($kernel->getCacheDir().'/doctrine');
-            } elseif (extension_loaded('xcache') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'xcache'
-            ) {
-                $cache = new XcacheCache();
-            } elseif (extension_loaded('memcache') &&
-                !empty($cacheConfig['type']) &&
-                $cacheConfig['type'] == 'memcache'
-            ) {
-                $memcache = new \Memcache();
-                $host = !empty($cacheConfig['host']) ? $cacheConfig['host'] : '127.0.0.1';
-                if (!empty($cacheConfig['port'])) {
-                    $memcache->connect($host, $cacheConfig['port']);
-                } else {
-                    $memcache->connect($host);
-                }
-                $cache = new MemcacheCache();
-                $cache->setMemcache($memcache);
             } elseif (extension_loaded('memcached') &&
+                class_exists('\Memcached') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'memcached'
             ) {
@@ -105,6 +86,7 @@ class CacheFactory
                 $cache = new MemcachedCache();
                 $cache->setMemcached($memcached);
             } elseif (extension_loaded('redis') &&
+                class_exists('\Redis') &&
                 !empty($cacheConfig['type']) &&
                 $cacheConfig['type'] == 'redis'
             ) {

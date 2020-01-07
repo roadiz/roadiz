@@ -34,8 +34,7 @@ use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Events\CacheEvents;
-use RZ\Roadiz\Core\Events\FilterCacheEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -105,7 +104,7 @@ class InstallApp extends AppController
         $form = $this->buildLanguageForm($request);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $locale = $form->getData()['language'];
             $request->setLocale($locale);
             $this->get('session')->set('_locale', $locale);
@@ -165,7 +164,7 @@ class InstallApp extends AppController
         if ($userForm !== null) {
             $userForm->handleRequest($request);
 
-            if ($userForm->isValid()) {
+            if ($userForm->isSubmitted() && $userForm->isValid()) {
                 /*
                  * Create user
                  */
@@ -235,7 +234,8 @@ class InstallApp extends AppController
         if ($doneForm !== null) {
             $doneForm->handleRequest($request);
 
-            if ($doneForm->isValid() &&
+            if ($doneForm->isSubmitted() &&
+                $doneForm->isValid() &&
                 $doneForm->getData()['action'] == 'quit_install') {
                 /*
                  * Save information
@@ -252,22 +252,19 @@ class InstallApp extends AppController
                     $kernelClass = get_class($this->get('kernel'));
 
                     // Clear cache for install
-                    $installEvent = new FilterCacheEvent($this->get('kernel'));
-                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $installEvent);
+                    $dispatcher->dispatch(new CachePurgeRequestEvent($this->get('kernel')));
 
                     // Clear cache for prod
                     /** @var Kernel $prodKernel */
                     $prodKernel = new $kernelClass('prod', false);
                     $prodKernel->boot();
-                    $prodEvent = new FilterCacheEvent($prodKernel);
-                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodEvent);
+                    $dispatcher->dispatch(new CachePurgeRequestEvent($prodKernel));
 
                     // Clear cache for prod preview
                     /** @var Kernel $prodPreviewKernel */
                     $prodPreviewKernel = new $kernelClass('prod', false, true);
                     $prodPreviewKernel->boot();
-                    $prodPreviewEvent = new FilterCacheEvent($prodPreviewKernel);
-                    $dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $prodPreviewEvent);
+                    $dispatcher->dispatch(new CachePurgeRequestEvent($prodPreviewKernel));
 
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -343,7 +340,6 @@ class InstallApp extends AppController
     {
         $builder = $this->createFormBuilder()
             ->add('language', ChoiceType::class, [
-                'choices_as_values' => true,
                 'choices' => [
                     'English' => 'en',
                     'Español' => 'es',

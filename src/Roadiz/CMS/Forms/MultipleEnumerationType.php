@@ -48,7 +48,6 @@ class MultipleEnumerationType extends AbstractType
         $resolver->setDefaults([
             'strict' => true,
             'multiple' => true,
-            'choices_as_values' => true,
         ]);
 
         $resolver->setRequired(['nodeTypeField']);

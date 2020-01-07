@@ -32,6 +32,7 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Forms\LoginRequestForm;
 use RZ\Roadiz\CMS\Traits\LoginRequestTrait;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 class LoginRequestController extends RozierApp
@@ -40,7 +41,11 @@ class LoginRequestController extends RozierApp
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -50,17 +55,22 @@ class LoginRequestController extends RozierApp
 
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
-            if (true === $this->sendConfirmationEmail(
-                $form,
-                $this->get('em'),
-                $this->get('logger'),
-                $this->get('urlGenerator')
-            )) {
-                return $this->redirect($this->generateUrl(
-                    'loginRequestConfirmPage'
-                ));
+        if ($form->isSubmitted()) {
+            if ($form->isValid()) {
+                $this->sendConfirmationEmail(
+                    $form,
+                    $this->get('em'),
+                    $this->get('logger'),
+                    $this->get('urlGenerator')
+                );
             }
+            /*
+             * Always go to confirm even if email is not valid
+             * for avoiding database sniffing.
+             */
+            return $this->redirect($this->generateUrl(
+                'loginRequestConfirmPage'
+            ));
         }
 
         $this->assignation['form'] = $form->createView();
@@ -69,7 +79,8 @@ class LoginRequestController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function confirmAction()
     {

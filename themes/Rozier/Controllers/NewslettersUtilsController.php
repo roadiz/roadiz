@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -33,6 +34,7 @@ namespace Themes\Rozier\Controllers;
 
 use InlineStyle\InlineStyle;
 use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\CMS\Controllers\NewsletterRendererInterface;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Utils\DomHandler;
@@ -46,7 +48,6 @@ use Themes\Rozier\RozierApp;
  */
 class NewslettersUtilsController extends RozierApp
 {
-
     /**
      * Duplicate node by ID.
      *
@@ -58,12 +59,14 @@ class NewslettersUtilsController extends RozierApp
     public function duplicateAction(Request $request, $newsletterId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NEWSLETTERS');
-
         $translation = $this->get('defaultTranslation');
+        /** @var Newsletter $existingNewsletter */
+        $existingNewsletter = $this->get('em')->find(Newsletter::class, (int) $newsletterId);
+        if (null === $existingNewsletter) {
+            throw $this->createNotFoundException();
+        }
 
         try {
-            /** @var Newsletter $existingNewsletter */
-            $existingNewsletter = $this->get('em')->find(Newsletter::class, (int) $newsletterId);
             /** @var NewsletterHandler $handler */
             $handler = $this->get('newsletter.handler');
             $handler->setNewsletter($existingNewsletter);
@@ -85,13 +88,7 @@ class NewslettersUtilsController extends RozierApp
                                                 ]
                                             ));
         } catch (\Exception $e) {
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                $this->getTranslator()->trans("impossible.duplicate.newsletter.%name%", [
-                    '%name%' => $existingNewsletter->getNode()->getNodeName(),
-                ])
-            );
-            $request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->publishErrorMessage($request, $e->getMessage());
 
             return $this->redirect($this->get('urlGenerator')
                                             ->generate(
@@ -128,9 +125,9 @@ class NewslettersUtilsController extends RozierApp
      * @param Request $request
      * @param Newsletter $newsletter
      *
-     * @return mixed
+     * @return string
      */
-    private function getNewsletterHTML(Request $request, Newsletter $newsletter)
+    private function getNewsletterHTML(Request $request, Newsletter $newsletter): string
     {
         $baseNamespace = $this->getBaseNamespace();
 
@@ -139,22 +136,22 @@ class NewslettersUtilsController extends RozierApp
         . "\\NewsletterControllers\\"
         . $newsletter->getNode()->getNodeType()->getName()
         . "Controller";
-        // force the twig path
-        $this->get('twig.loaderFileSystem')->prependPath($classname::getViewsFolder());
-
-        // get html from the controller
-        $front = new $classname();
-        if ($front instanceof AppController && method_exists($front, 'makeHtml')) {
-            $front->setContainer($this->getContainer());
-            $front->prepareBaseAssignation();
-            return $front->makeHtml($request, $newsletter);
+        if (class_exists($classname)) {
+            $front = new $classname();
+            if ($front instanceof AppController &&
+                $front instanceof NewsletterRendererInterface) {
+                $this->get('twig.loaderFileSystem')->prependPath($front::getViewsFolder());
+                $front->setContainer($this->getContainer());
+                $front->prepareBaseAssignation();
+                return $front->makeHtml($request, $newsletter);
+            }
         }
 
         throw new \RuntimeException(sprintf(
-            '""%s" class does not inherit "%s" or does not implements "%s" method.',
+            '""%s" class does not inherit "%s" or does not implements "%s" interface.',
             $classname,
             AppController::class,
-            'makeHtml'
+            NewsletterRendererInterface::class
         ));
     }
 

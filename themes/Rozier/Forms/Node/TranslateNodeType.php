@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TranslationTransformer;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -67,7 +67,6 @@ class TranslateNodeType extends AbstractType
         $builder->add('translation', ChoiceType::class, [
             'label' => 'translation',
             'choices' => $choices,
-            'choices_as_values' => true,
             'required' => true,
             'multiple' => false,
         ])

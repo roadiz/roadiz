@@ -29,16 +29,12 @@
  */
 namespace RZ\Roadiz\CMS\Importers;
 
-use Doctrine\ORM\EntityManager;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
-use RZ\Roadiz\Core\Serializers\GroupCollectionJsonSerializer;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 /**
@@ -71,11 +67,9 @@ class GroupsImporter implements EntityImporterInterface, ContainerAwareInterface
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $groups = $serializer->deserialize(
+        $serializer->deserialize(
             $serializedData,
             'array<' . Group::class . '>',
             'json',
@@ -83,13 +77,6 @@ class GroupsImporter implements EntityImporterInterface, ContainerAwareInterface
                 ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
                 ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
         );
-
-        /** @var Group $group */
-        foreach ($groups as $group) {
-            $em->merge($group);
-            $em->flush();
-        }
-
         return true;
     }
 }

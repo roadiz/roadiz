@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -33,6 +34,7 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -54,14 +56,14 @@ class HtaccessCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text = "";
+        $io = new SymfonyStyle($input, $output);
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         $fs = new Filesystem();
-        $text .= '<info>Generating .htaccess files…</info>' . PHP_EOL;
+        $io->note('Generating .htaccess files to protect folders.');
 
         // Simple deny access files
-        $this->protectFolders([
+        $outputs = $this->protectFolders([
             "/app/conf",
             "/conf",
             "/src",
@@ -76,7 +78,8 @@ class HtaccessCommand extends Command
             "/logs",
             "/app/cache",
             "/app/logs",
-        ], $text);
+        ]);
+
 
         /*
          * Protect root
@@ -84,9 +87,9 @@ class HtaccessCommand extends Command
         $filePath = $kernel->getPublicDir() . "/.htaccess";
         if ($fs->exists($kernel->getPublicDir()) && !$fs->exists($filePath)) {
             file_put_contents($filePath, $this->getMainHtaccessContent() . PHP_EOL);
-            $text .= '    — ' . $filePath . PHP_EOL;
+            $outputs[] = $filePath;
         } else {
-            $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
+            $outputs[] = '<error>Can’t write ' . $filePath . ', file already exists or folder is absent.</error>';
         }
 
         /*
@@ -95,16 +98,18 @@ class HtaccessCommand extends Command
         $filePath = $kernel->getPublicDir() . "/themes/.htaccess";
         if ($fs->exists($kernel->getPublicDir() . "/themes") && !$fs->exists($filePath)) {
             file_put_contents($filePath, $this->getThemesHtaccessContent() . PHP_EOL);
-            $text .= '    — ' . $filePath . PHP_EOL;
+            $outputs[] = $filePath . PHP_EOL;
         } else {
-            $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
+            $outputs[] = '<error>Can’t write ' . $filePath . ', file already exists or folder is absent.</error>';
         }
 
-        $output->writeln($text);
+        $io->listing($outputs);
+        return 0;
     }
 
-    protected function protectFolders(array $paths, &$text)
+    protected function protectFolders(array $paths): array
     {
+        $outputs = [];
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         $fs = new Filesystem();
@@ -112,11 +117,12 @@ class HtaccessCommand extends Command
             $filePath = $kernel->getProjectDir() . $path . "/.htaccess";
             if ($fs->exists($kernel->getProjectDir() . $path) &&  !$fs->exists($filePath)) {
                 file_put_contents($filePath, "deny from all" . PHP_EOL);
-                $text .= '    — ' . $filePath . PHP_EOL;
+                $outputs[] = $filePath;
             } else {
-                $text .= '    — Can’t write ' . $filePath . ", file already exists or folder is absent." . PHP_EOL;
+                $outputs[] = '<error>Can’t write ' . $filePath . ", file already exists or folder is absent.</error>";
             }
         }
+        return $outputs;
     }
 
     protected function getMainHtaccessContent()

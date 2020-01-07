@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -37,10 +38,10 @@ use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
 use RZ\Roadiz\Core\Events\DebugBarSubscriber;
 use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
+use RZ\Roadiz\Core\Events\LoggableUsernameSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\NodeNameSubscriber;
 use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
-use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
 use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
@@ -48,10 +49,12 @@ use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
 use RZ\Roadiz\Core\Services\ConsoleServiceProvider;
+use RZ\Roadiz\Core\Services\CryptoServiceProvider;
 use RZ\Roadiz\Core\Services\DebugServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineFiltersServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
@@ -62,6 +65,7 @@ use RZ\Roadiz\Core\Services\FormServiceProvider;
 use RZ\Roadiz\Core\Services\ImporterServiceProvider;
 use RZ\Roadiz\Core\Services\LoggerServiceProvider;
 use RZ\Roadiz\Core\Services\MailerServiceProvider;
+use RZ\Roadiz\Core\Services\NodeServiceProvider;
 use RZ\Roadiz\Core\Services\RoutingServiceProvider;
 use RZ\Roadiz\Core\Services\SecurityServiceProvider;
 use RZ\Roadiz\Core\Services\SerializationServiceProvider;
@@ -71,6 +75,7 @@ use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
@@ -82,26 +87,27 @@ use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
-use Symfony\Component\HttpKernel\EventListener\SaveSessionListener;
+use Symfony\Component\HttpKernel\EventListener\SessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
+use Themes\Rozier\Events\DocumentFilesizeSubscriber;
 use Themes\Rozier\Events\DocumentSizeSubscriber;
 use Themes\Rozier\Events\ExifDocumentSubscriber;
+use Themes\Rozier\Events\ImageColorDocumentSubscriber;
 use Themes\Rozier\Events\NodeDuplicationSubscriber;
+use Themes\Rozier\Events\NodeRedirectionSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
@@ -110,7 +116,9 @@ use Themes\Rozier\Events\SvgDocumentSubscriber;
 use Themes\Rozier\Events\TranslationSubscriber;
 
 /**
+ * Roadiz Kernel.
  *
+ * @package RZ\Roadiz\Core
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
 {
@@ -120,7 +128,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.2.16";
+    public static $cmsVersion = "1.3.0";
 
     protected $environment;
     protected $debug;
@@ -219,9 +227,18 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
          * not-required configuration elements.
          */
         @date_default_timezone_set($this->container['config']["timezone"]);
-        @ini_set('session.name', $this->container['config']["security"]["session_name"]);
-        @ini_set('session.cookie_secure', $this->container['config']["security"]["session_cookie_secure"]);
-        @ini_set('session.cookie_httponly', $this->container['config']["security"]["session_cookie_httponly"]);
+        @ini_set(
+            'session.name',
+            (string) $this->container['config']["security"]["session_name"]
+        );
+        @ini_set(
+            'session.cookie_secure',
+            (string) $this->container['config']["security"]["session_cookie_secure"]
+        );
+        @ini_set(
+            'session.cookie_httponly',
+            (string) $this->container['config']["security"]["session_cookie_httponly"]
+        );
     }
 
     /**
@@ -242,7 +259,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         /** @var Stopwatch $stopWatch */
         $stopWatch = $container['stopwatch'];
         $stopWatch->openSection();
-        $stopWatch->start('registerServices');
+        $stopWatch->start('kernel.registerServices');
 
         $container->register(new YamlConfigurationServiceProvider());
 
@@ -250,7 +267,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $dispatcher = new EventDispatcher();
-            $dispatcher->addSubscriber(new SaveSessionListener());
+            $dispatcher->addSubscriber(new SessionListener(new \Pimple\Psr11\Container($c)));
             $dispatcher->addSubscriber(new AppCacheEventSubscriber());
             $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
             $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());
@@ -263,8 +280,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
+            $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
-            $dispatcher->addSubscriber(new NodeNameSubscriber($c['logger'], $c['utils.nodeNameChecker']));
             $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
             if (!$kernel->isDebug()) {
                 /**
@@ -282,7 +299,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
 
             if (!$kernel->isInstallMode()) {
-                $dispatcher->addSubscriber(new LocaleSubscriber($kernel, $c['stopwatch']));
+                $dispatcher->addSubscriber(new LocaleSubscriber($kernel));
                 $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
 
                 /*
@@ -314,7 +331,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                     )
                 );
                 /*
-                 * Add custom event subscriber to manage image document size
+                 * Add custom event subscriber to manage image document size and color
                  */
                 $dispatcher->addSubscriber(
                     new DocumentSizeSubscriber(
@@ -322,7 +339,19 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                         $c['logger']
                     )
                 );
-
+                $dispatcher->addSubscriber(
+                    new DocumentFilesizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new ImageColorDocumentSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
                 /*
                  * Add custom event subscriber to manage document EXIF
                  */
@@ -358,7 +387,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
              */
             if (!$kernel->isInstallMode() && $kernel->isDebug()) {
                 $dispatcher->addSubscriber(new DebugBarSubscriber($c));
-                $dispatcher->addSubscriber(new PimpleDumperSubscriber($c));
             }
 
             return $dispatcher;
@@ -387,6 +415,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new SerializationServiceProvider());
         $container->register(new UtilsServiceProvider());
         $container->register(new AttributesServiceProvider());
+        $container->register(new CryptoServiceProvider());
+        $container->register(new NodeServiceProvider());
+        $container->register(new MarkdownServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
@@ -408,7 +439,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             // Do nothing if no configuration file is found.
         }
 
-        $stopWatch->stop('registerServices');
+        $stopWatch->stop('kernel.registerServices');
     }
 
     /**
@@ -417,9 +448,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      * Roadiz default handling is by-passed for assets serving.
      *
      * @param Request $request
-     * @param int $type
-     * @param bool $catch
+     * @param int     $type
+     * @param bool    $catch
+     *
      * @return Response
+     * @throws \Exception
      */
     public function handle(Request $request, $type = HttpKernelInterface::MASTER_REQUEST, $catch = true)
     {
@@ -462,7 +495,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     protected function initEvents()
     {
-        $this->get('dispatcher')->addSubscriber($this->get('firewall'));
+        $this->get('stopwatch')->start('kernel.initEvents');
+
+        if (!$this->isInstallMode()) {
+            $this->get('dispatcher')->addSubscriber($this->get('firewall'));
+        }
+
         $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
         /*
          * Add custom event subscribers to the general dispatcher.
@@ -473,17 +511,36 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $this->get('dispatcher')->addSubscriber(
             new SolariumSubscriber(
                 $this->get('solr'),
-                $this->get('dispatcher'),
                 $this->get('logger'),
-                $this->get('factory.handler')
+                $this->get(SolariumFactoryInterface::class)
             )
         );
         /*
          * Add custom event subscriber to manage node duplication
          */
         $this->get('dispatcher')->addSubscriber(
-            new NodeDuplicationSubscriber($this->get('em'), $this->get('node.handler'))
+            new NodeDuplicationSubscriber(
+                $this->get('em'),
+                $this->get('factory.handler')
+            )
         );
+
+        $this->get('dispatcher')->addSubscriber(
+            new NodeNameSubscriber(
+                $this->get('logger.doctrine'),
+                $this->get('utils.nodeNameChecker'),
+                $this->get(NodeMover::class)
+            )
+        );
+        /*
+         * Add event to create redirection after renaming a node.
+         */
+        if ($this->isProdMode() && !$this->isPreview()) {
+            $this->get('dispatcher')->addSubscriber(
+                new NodeRedirectionSubscriber($this->get(NodeMover::class), $this)
+            );
+        }
+        $this->get('stopwatch')->stop('kernel.initEvents');
     }
 
     /**
@@ -569,28 +626,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         return $this->container['httpKernel'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getBundles()
-    {
-        return [];
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getBundle($name, $first = true)
-    {
-        return [];
-    }
-    /**
-     * {@inheritdoc}
-     */
-    public function locateResource($name, $dir = null, $first = true)
-    {
-        return false;
-    }
     /**
      * {@inheritdoc}
      */
@@ -681,35 +716,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public function getCharset()
     {
         return 'UTF-8';
-    }
-
-    /**
-     * Returns an array of bundles to register.
-     *
-     * @return BundleInterface[] An array of bundle instances.
-     */
-    public function registerBundles()
-    {
-        return [];
-    }
-
-    /**
-     *
-     */
-    public function initializeBundles()
-    {
-        return;
-    }
-
-    /**
-     * Loads the container configuration.
-     *
-     * @param LoaderInterface $loader A LoaderInterface instance
-     * @return bool
-     */
-    public function registerContainerConfiguration(LoaderInterface $loader)
-    {
-        return false;
     }
 
     /**

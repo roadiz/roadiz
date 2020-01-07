@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -94,7 +95,7 @@ class Log extends AbstractEntity
     protected $clientIp = null;
 
     /**
-     * @param mixed  $level
+     * @param int $level
      * @param string $message
      */
     public function __construct(int $level, string $message)

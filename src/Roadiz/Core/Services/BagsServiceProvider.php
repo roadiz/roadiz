@@ -43,15 +43,15 @@ class BagsServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['settingsBag'] = function ($c) {
+        $container['settingsBag'] = function (Container $c) {
             return new Settings($c['em']);
         };
 
-        $container['rolesBag'] = function ($c) {
+        $container['rolesBag'] = function (Container $c) {
             return new Roles($c['em']);
         };
 
-        $container['nodeTypesBag'] = function ($c) {
+        $container['nodeTypesBag'] = function (Container $c) {
             return new NodeTypes($c['em']);
         };
 

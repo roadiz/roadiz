@@ -31,7 +31,7 @@ namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -67,7 +67,7 @@ class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_UPDATED => 'duplicateUniversalContents',
+            NodesSourcesUpdatedEvent::class => 'duplicateUniversalContents',
         ];
     }
 

@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
@@ -56,9 +56,9 @@ final class SignatureListener implements EventSubscriberInterface
     /**
      * Filters the Response.
      *
-     * @param FilterResponseEvent $event A FilterResponseEvent instance
+     * @param ResponseEvent $event A ResponseEvent instance
      */
-    public function onKernelResponse(FilterResponseEvent $event)
+    public function onKernelResponse(ResponseEvent $event)
     {
         if (!$event->isMasterRequest()) {
             return;

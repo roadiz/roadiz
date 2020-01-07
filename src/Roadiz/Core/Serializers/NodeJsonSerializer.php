@@ -77,6 +77,9 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             $data['locked'] = $node->isLocked();
             $data['priority'] = $node->getPriority();
             $data['hiding_children'] = $node->isHidingChildren();
+            $data['stack_types'] = $node->getStackTypes()->map(function (NodeType $nodeType) {
+                return $nodeType->getName();
+            })->toArray();
             $data['archived'] = $node->isArchived();
             $data['sterile'] = $node->isSterile();
             $data['ttl'] = $node->getTtl();
@@ -122,7 +125,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @return Node
      * @throws EntityAlreadyExistsException
      * @throws EntityNotFoundException
@@ -164,6 +167,15 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
         if (isset($data['ttl'])) {
             $node->setTtl((int) $data['ttl']);
+        }
+        if (key_exists('stack_types', $data) && is_array($data['stack_types'])) {
+            foreach ($data['stack_types'] as $nodeTypeName) {
+                $nodeType = $this->em->getRepository(NodeType::class)
+                    ->findOneByName($nodeTypeName);
+                if (null !== $nodeType) {
+                    $node->addStackType($nodeType);
+                }
+            }
         }
 
         foreach ($data["nodes_sources"] as $source) {

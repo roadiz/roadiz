@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -180,7 +181,7 @@ class Role extends BaseRole implements PersistableInterface
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Group $group
+     * @param Group $group
      * @return $this
      */
     public function removeGroup(Group $group): Role
@@ -230,5 +231,10 @@ class Role extends BaseRole implements PersistableInterface
         parent::__construct($this->name);
 
         $this->groups = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getRole();
     }
 }

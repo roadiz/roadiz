@@ -57,7 +57,7 @@ class Fixtures
      * @param EntityManager $entityManager
      * @param string $cacheDir
      * @param string $configPath
-     * @param $rootDir
+     * @param string $rootDir
      * @param boolean $debug
      * @param Request|null $request
      */

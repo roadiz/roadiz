@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -41,8 +42,8 @@ class TagTranslationDocumentsRepository extends EntityRepository
      */
     public function getLatestPosition($tagTranslation)
     {
-        $query = $this->_em->createQuery('SELECT MAX(ttd.position) 
-FROM RZ\Roadiz\Core\Entities\TagTranslationDocuments ttd 
+        $query = $this->_em->createQuery('SELECT MAX(ttd.position)
+FROM RZ\Roadiz\Core\Entities\TagTranslationDocuments ttd
 WHERE ttd.tagTranslation = :tagTranslation')
                     ->setParameter('tagTranslation', $tagTranslation);
 

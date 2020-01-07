@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\Common\EventSubscriber;
-use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
+use Doctrine\Persistence\Event\LifecycleEventArgs;
 use Doctrine\ORM\Events;
 use Monolog\Logger;
 use Pimple\Container;
@@ -134,7 +134,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
         /** @var Packages $packages */
         $packages = $this->container->offsetGet('assetPackages');
         /** @var Logger $logger */
-        $logger = $this->container->offsetGet('logger');
+        $logger = $this->container->offsetGet('logger.doctrine');
 
         $entity = $args->getObject();
         // perhaps you only want to act on some "Product" entity
@@ -143,27 +143,27 @@ class FontLifeCycleSubscriber implements EventSubscriber
             try {
                 if (null !== $entity->getSVGFilename()) {
                     $svgFilePath = $packages->getFontsPath($entity->getSVGRelativeUrl());
-                    $logger->debug('Font file deleted', ['file' => $svgFilePath]);
+                    $logger->info('Font file deleted', ['file' => $svgFilePath]);
                     $fileSystem->remove($svgFilePath);
                 }
                 if (null !== $entity->getOTFFilename()) {
                     $otfFilePath = $packages->getFontsPath($entity->getOTFRelativeUrl());
-                    $logger->debug('Font file deleted', ['file' => $otfFilePath]);
+                    $logger->info('Font file deleted', ['file' => $otfFilePath]);
                     $fileSystem->remove($otfFilePath);
                 }
                 if (null !== $entity->getEOTFilename()) {
                     $eotFilePath = $packages->getFontsPath($entity->getEOTRelativeUrl());
-                    $logger->debug('Font file deleted', ['file' => $eotFilePath]);
+                    $logger->info('Font file deleted', ['file' => $eotFilePath]);
                     $fileSystem->remove($eotFilePath);
                 }
                 if (null !== $entity->getWOFFFilename()) {
                     $woffFilePath = $packages->getFontsPath($entity->getWOFFRelativeUrl());
-                    $logger->debug('Font file deleted', ['file' => $woffFilePath]);
+                    $logger->info('Font file deleted', ['file' => $woffFilePath]);
                     $fileSystem->remove($woffFilePath);
                 }
                 if (null !== $entity->getWOFF2Filename()) {
                     $woff2FilePath = $packages->getFontsPath($entity->getWOFF2RelativeUrl());
-                    $logger->debug('Font file deleted', ['file' => $woff2FilePath]);
+                    $logger->info('Font file deleted', ['file' => $woff2FilePath]);
                     $fileSystem->remove($woff2FilePath);
                 }
 
@@ -174,7 +174,7 @@ class FontLifeCycleSubscriber implements EventSubscriber
                 if ($fileSystem->exists($fontFolderPath)) {
                     $isDirEmpty = !(new \FilesystemIterator($fontFolderPath))->valid();
                     if ($isDirEmpty) {
-                        $logger->debug('Font folder is empty, deleting…', ['folder' => $fontFolderPath]);
+                        $logger->info('Font folder is empty, deleting…', ['folder' => $fontFolderPath]);
                         $fileSystem->remove($fontFolderPath);
                     }
                 }

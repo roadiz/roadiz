@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField as NodeTypeFieldConstraint;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
@@ -78,7 +78,6 @@ class NodeTypeFieldType extends AbstractType
             'label' => 'type',
             'required' => true,
             'choices' => array_flip(NodeTypeField::$typeToHuman),
-            'choices_as_values' => true,
         ])
         ->add('description', TextType::class, [
             'label' => 'description',

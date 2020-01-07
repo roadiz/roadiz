@@ -35,7 +35,7 @@ namespace RZ\Roadiz\Attribute\Event;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
 use RZ\Roadiz\Core\SearchEngine\AbstractSolarium;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -47,7 +47,7 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesEvents::NODE_SOURCE_INDEXING => 'onNodeSourceIndexing',
+            NodesSourcesIndexingEvent::class => 'onNodeSourceIndexing',
         ];
     }
 
@@ -86,7 +86,10 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
                             * Use locale to create field name
                             * with right language
                             */
-                            if (in_array($event->getNodeSource()->getTranslation()->getLocale(), AbstractSolarium::$availableLocalizedTextFields)) {
+                            if (in_array(
+                                $event->getNodeSource()->getTranslation()->getLocale(),
+                                AbstractSolarium::$availableLocalizedTextFields
+                            )) {
                                 $fieldName .= '_txt_' . $event->getNodeSource()->getTranslation()->getLocale();
                             } else {
                                 $fieldName .= '_t';
@@ -94,7 +97,9 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
                             /*
                              * Strip markdown syntax
                              */
-                            $content = AbstractSolarium::cleanTextContent($data);
+                            $content = $event->getSolariumDocument() ?
+                                $event->getSolariumDocument()->cleanTextContent($data) :
+                                $data;
                             $associations[$fieldName] = $content;
                             $associations['collection_txt'][] = $content;
                             break;

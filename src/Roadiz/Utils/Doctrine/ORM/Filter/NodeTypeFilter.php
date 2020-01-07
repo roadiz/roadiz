@@ -32,9 +32,12 @@ namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 use RZ\Roadiz\Core\Events\FilterNodeQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Events\QueryBuilderEvents;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -49,13 +52,16 @@ class NodeTypeFilter implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER => [
-                // NodesSources should be first as properties are
-                // more detailed and precise.
-                ['onNodesSourcesQueryBuilderBuild', 40],
+            QueryBuilderNodesSourcesBuildEvent::class => [['onNodesSourcesQueryBuilderBuild', 40]],
+            QueryBuilderBuildEvent::class => [
                 ['onNodeQueryBuilderBuild', 30],
             ]
         ];
+    }
+
+    protected function supports(FilterQueryBuilderCriteriaEvent $event)
+    {
+        return $event->supports() && false !== strpos($event->getProperty(), 'nodeType.');
     }
 
     /**
@@ -63,8 +69,7 @@ class NodeTypeFilter implements EventSubscriberInterface
      */
     public function onNodeQueryBuilderBuild(FilterQueryBuilderCriteriaEvent $event)
     {
-        if ($event instanceof FilterNodeQueryBuilderCriteriaEvent &&
-            $event->supports()) {
+        if ($this->supports($event)) {
             $simpleQB = new SimpleQueryBuilder($event->getQueryBuilder());
             if (false !== strpos($event->getProperty(), 'nodeType.')) {
                 // Prevent other query builder filters to execute
@@ -96,8 +101,7 @@ class NodeTypeFilter implements EventSubscriberInterface
      */
     public function onNodesSourcesQueryBuilderBuild(FilterQueryBuilderCriteriaEvent $event)
     {
-        if ($event instanceof FilterNodesSourcesQueryBuilderCriteriaEvent &&
-            $event->supports()) {
+        if ($this->supports($event)) {
             $simpleQB = new SimpleQueryBuilder($event->getQueryBuilder());
             if (false !== strpos($event->getProperty(), 'node.nodeType.')) {
                 // Prevent other query builder filters to execute

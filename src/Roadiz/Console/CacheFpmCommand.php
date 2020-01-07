@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -37,6 +38,7 @@ use Symfony\Component\Console\Exception\InvalidOptionException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing PHP-FPM Cache from terminal.
@@ -60,7 +62,7 @@ class CacheFpmCommand extends Command
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-
+        $io = new SymfonyStyle($input, $output);
         $url = 'http://localhost/clear_cache.php';
         $scriptName = 'clear_cache.php';
 
@@ -85,14 +87,15 @@ class CacheFpmCommand extends Command
                 'allow_redirects' => true,
                 'timeout' => 2
             ]);
-            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
-                $output->writeln($url);
+            if ($io->getVerbosity() >= OutputInterface::VERBOSITY_VERY_VERBOSE) {
+                $io->note('Call web entry-point: ' . $url);
             }
-            $output->writeln('PHP-FPM caches were cleared for <info>'.$kernel->getEnvironment().'</info> environement.');
+            $io->success('PHP-FPM caches were cleared for '.$kernel->getEnvironment().' environement.');
         } catch (ConnectException $exception) {
-            $output->writeln('<error>Cannot reach ' . $url . ' [' . $exception->getCode() . ']</error>');
+            $io->warning('Cannot reach ' . $url . ' [' . $exception->getCode() . ']');
         } catch (ClientException $exception) {
-            $output->writeln('<error>Cannot GET ' . $url . ' [' . $exception->getCode() . ']</error>');
+            $io->warning('Cannot GET ' . $url . ' [' . $exception->getCode() . ']');
         }
+        return 0;
     }
 }

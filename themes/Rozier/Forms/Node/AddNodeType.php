@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\DataTransformer\NodeTypeTransformer;
 use RZ\Roadiz\Core\Entities\Node;
@@ -97,7 +97,6 @@ class AddNodeType extends AbstractType
         ->add('status', ChoiceType::class, [
             'label' => 'node.status',
             'required' => true,
-            'choices_as_values' => true,
             'choices' => [
                 Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
                 Node::getStatusLabel(Node::PENDING) => Node::PENDING,

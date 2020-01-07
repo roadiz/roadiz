@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -29,6 +30,7 @@
  */
 namespace Themes\DefaultTheme\NewsletterControllers;
 
+use RZ\Roadiz\CMS\Controllers\NewsletterRendererInterface;
 use RZ\Roadiz\Core\Entities\Newsletter;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\DefaultTheme\DefaultThemeApp;
@@ -40,7 +42,7 @@ use Themes\DefaultTheme\DefaultThemeApp;
  *
  * @package Themes\DefaultTheme\NewsletterControllers
  */
-class BasicNewsletterController extends DefaultThemeApp
+class BasicNewsletterController extends DefaultThemeApp implements NewsletterRendererInterface
 {
     /**
      * Generate HTML. The function name makeHtml is important because it will be used
@@ -51,7 +53,7 @@ class BasicNewsletterController extends DefaultThemeApp
      *
      * @return string
      */
-    public function makeHtml(Request $request, Newsletter $newsletter)
+    public function makeHtml(Request $request, Newsletter $newsletter): string
     {
         $this->prepareThemeAssignation($newsletter->getNode(), null);
         $this->assignation["nodeSource"] = $newsletter->getNode()->getNodeSources()->first();

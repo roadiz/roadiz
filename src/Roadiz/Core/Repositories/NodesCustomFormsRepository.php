@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -38,8 +39,8 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 class NodesCustomFormsRepository extends EntityRepository
 {
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node  $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return integer
      */

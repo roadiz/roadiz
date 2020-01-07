@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationLocale;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationOverrideLocale;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -61,7 +61,6 @@ class TranslationType extends AbstractType
         ->add('locale', ChoiceType::class, [
             'label' => 'locale',
             'required' => true,
-            'choices_as_values' => true,
             'choices' => array_flip(Translation::$availableLocales),
             'constraints' => [
                 new UniqueTranslationLocale([

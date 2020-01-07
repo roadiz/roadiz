@@ -18,9 +18,15 @@ export default class CssEditor {
             lineNumbers: true,
             mode: 'css',
             theme: 'mbo',
-            tabSize: 2,
+            tabSize: 4,
+            indentWithTabs: false,
             lineWrapping: true,
-            dragDrop: false
+            dragDrop: false,
+            readOnly: (this.textarea.hasAttribute('disabled') && this.textarea.getAttribute('disabled') === 'disabled'),
+            extraKeys: {
+                Tab: (cm) => cm.execCommand('indentMore'),
+                'Shift-Tab': (cm) => cm.execCommand('indentLess')
+            }
         }
 
         if (this.$settingRow.length) {
@@ -63,14 +69,6 @@ export default class CssEditor {
      */
     textareaChange () {
         this.editor.save()
-
-        // if (this.limit) {
-        //     setTimeout(function () {
-        //         let textareaVal = this.editor.getValue()
-        //         let textareaValStripped = stripTags(textareaVal)
-        //         let textareaValLength = textareaValStripped.length
-        //     }, 100)
-        // }
     }
 
     /**

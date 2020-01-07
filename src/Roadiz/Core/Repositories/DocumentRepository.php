@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -36,6 +37,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -50,7 +52,7 @@ class DocumentRepository extends EntityRepository
     /**
      * Get a document with its translation id.
      *
-     * @param $id
+     * @param int $id
      * @return mixed|null
      */
     public function findOneByDocumentTranslationId($id)
@@ -74,7 +76,7 @@ class DocumentRepository extends EntityRepository
      */
     protected function filterByFolder(array &$criteria, QueryBuilder $qb, $prefix = 'd')
     {
-        if (in_array('folders', array_keys($criteria))) {
+        if (key_exists('folders', $criteria)) {
             /*
              * Do not filter if folder is null
              */
@@ -252,7 +254,7 @@ class DocumentRepository extends EntityRepository
      */
     protected function applyFilterByFolder(array &$criteria, QueryBuilder $qb)
     {
-        if (in_array('folders', array_keys($criteria))) {
+        if (key_exists('folders', $criteria)) {
             if ($criteria['folders'] instanceof Folder) {
                 $qb->setParameter('folders', $criteria['folders']->getId());
             } elseif (is_array($criteria['folders']) || $criteria['folders'] instanceof Collection) {
@@ -394,7 +396,6 @@ class DocumentRepository extends EntityRepository
      * @param Translation|null $translation
      *
      * @return array|Paginator
-     *
      */
     public function findBy(
         array $criteria,
@@ -482,8 +483,8 @@ class DocumentRepository extends EntityRepository
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSources  $nodeSource
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param NodesSources  $nodeSource
+     * @param NodeTypeField $field
      *
      * @return array
      */
@@ -511,8 +512,8 @@ class DocumentRepository extends EntityRepository
 
     /**
      * @deprecated Use findByNodeSourceAndField because relying on field name **is not safe**.
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
-     * @param string                              $fieldName
+     * @param NodesSources $nodeSource
+     * @param string $fieldName
      *
      * @return array
      */
@@ -520,6 +521,10 @@ class DocumentRepository extends EntityRepository
         $nodeSource,
         $fieldName
     ) {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use findByNodeSourceAndField because relying on field name **is not safe**.',
+            E_USER_DEPRECATED
+        );
         $qb = $this->createQueryBuilder('d');
         $qb->addSelect('dt')
             ->addSelect('dd')

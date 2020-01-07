@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -34,7 +35,7 @@ use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
+use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -70,9 +71,9 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
      * After a controller has been matched. We need to inject current
      * Kernel instance and main DI container.
      *
-     * @param \Symfony\Component\HttpKernel\Event\FilterControllerEvent $event
+     * @param ControllerEvent $event
      */
-    public function onControllerMatched(FilterControllerEvent $event)
+    public function onControllerMatched(ControllerEvent $event)
     {
         if (null !== $this->stopwatch) {
             $this->stopwatch->start('onControllerMatched');

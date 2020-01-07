@@ -84,11 +84,13 @@ abstract class SchemaDependentCase extends KernelDependentCase
     }
 
     /**
-     * @param $title
+     * @param string      $title
      * @param Translation $translation
+     *
      * @return Node
+     * @throws \Doctrine\ORM\ORMException
      */
-    protected static function createNode($title, Translation $translation)
+    protected static function createNode(string $title, Translation $translation): Node
     {
         $node = new Node();
         $node->setNodeName($title);
@@ -114,7 +116,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
     }
 
     /**
-     * @param $command
+     * @param string $command
      * @throws \Exception
      */
     protected static function runCommand($command): void

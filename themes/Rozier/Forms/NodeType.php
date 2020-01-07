@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
@@ -52,6 +52,7 @@ class NodeType extends AbstractType
     {
         $builder->add('nodeName', TextType::class, [
                 'label' => 'nodeName',
+                'help' => 'node.nodeName.help',
                 'constraints' => [
                     new NotBlank(),
                     new UniqueNodeName([
@@ -80,12 +81,10 @@ class NodeType extends AbstractType
 
         $builder->add('childrenOrder', ChoiceType::class, [
                 'label' => 'node.childrenOrder',
-                'choices_as_values' => true,
                 'choices' => Node::$orderingFields,
             ])
             ->add('childrenOrderDirection', ChoiceType::class, [
                 'label' => 'node.childrenOrderDirection',
-                'choices_as_values' => true,
                 'choices' => [
                     'ascendant' => 'ASC',
                     'descendant' => 'DESC',

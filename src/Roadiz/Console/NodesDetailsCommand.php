@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016.
  *
@@ -30,14 +31,14 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class NodesDetailsCommand extends Command
 {
@@ -55,31 +56,26 @@ class NodesDetailsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
 
         $translation = $this->entityManager->getRepository(Translation::class)
                                            ->findOneBy(['locale' => $input->getArgument('locale')]);
 
-        /** @var Node $node */
-        $node = $this->entityManager->getRepository(Node::class)
+        /** @var NodesSources $source */
+        $source = $this->entityManager->getRepository(NodesSources::class)
                                     ->setDisplayingNotPublishedNodes(true)
                                     ->findOneBy([
-                                        'nodeName' => $input->getArgument('nodeName'),
+                                        'node.nodeName' => $input->getArgument('nodeName'),
                                         'translation' => $translation,
                                     ]);
-        if (null !== $translation && null !== $node) {
-            $source = $node->getNodeSources()->first();
-
-            $this->entityManager->refresh($source);
-            $table = new Table($output);
-            $table->setHeaders(['Field', 'Data']);
-            $tableContent = [
-                ['class', get_class($source)],
-                ['Title', $source->getTitle()],
-            ];
+        if (null !== $source) {
+            $io->title(get_class($source));
+            $io->title('Title');
+            $io->text($source->getTitle());
 
             /** @var NodeTypeField $field */
-            foreach ($node->getNodeType()->getFields() as $field) {
+            foreach ($source->getNode()->getNodeType()->getFields() as $field) {
                 if (!$field->isVirtual()) {
                     $getter = $field->getGetterName();
                     $data = $source->$getter();
@@ -88,20 +84,22 @@ class NodesDetailsCommand extends Command
                         $data = implode(', ', $data);
                     }
                     if ($data instanceof \DateTime) {
-                        $data = $data->format('Y/m/d H:i:s');
+                        $data = $data->format('c');
+                    }
+                    if ($data instanceof \stdClass) {
+                        $data = json_encode($data);
                     }
 
-                    $tableContent[] = [
-                        $field->getLabel(),
-                        $data,
-                    ];
+                    if (!empty($data)) {
+                        $io->title($field->getLabel());
+                        $io->text($data);
+                    }
                 }
             }
-
-            $table->setRows($tableContent);
-            $table->render();
         } else {
-            $output->writeln('<error>No node found…</error>');
+            $io->error('No node found.');
+            return 1;
         }
+        return 0;
     }
 }

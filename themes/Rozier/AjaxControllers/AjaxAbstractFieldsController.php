@@ -90,22 +90,36 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
     /**
      * @param array         $parameters
      * @param AbstractField $field
+     *
+     * @return array
      */
-    protected function updatePosition($parameters, AbstractField $field = null)
+    protected function updatePosition($parameters, AbstractField $field = null): array
     {
         /*
          * First, we set the new parent
          */
-        if (!empty($parameters['newPosition']) &&
-            null !== $field) {
+        if (!empty($parameters['newPosition']) && null !== $field) {
             $field->setPosition($parameters['newPosition']);
             // Apply position update before cleaning
             $this->get('em')->flush();
             /** @var AbstractHandler $handler */
             $handler = $this->get('factory.handler')->getHandler($field);
             $handler->cleanPositions();
-
             $this->get('em')->flush();
+            return [
+                'statusCode' => '200',
+                'status' => 'success',
+                'responseText' => $this->getTranslator()->trans('field.%name%.updated', [
+                    '%name%' => $field->getName(),
+                ]),
+            ];
         }
+        return [
+            'statusCode' => '400',
+            'status' => 'error',
+            'responseText' => $this->getTranslator()->trans('field.%name%.updated', [
+                '%name%' => $field->getName(),
+            ]),
+        ];
     }
 }

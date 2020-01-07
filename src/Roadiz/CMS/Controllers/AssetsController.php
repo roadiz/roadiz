@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -97,13 +98,14 @@ class AssetsController extends CmsController
      * Request a single protected font file from Roadiz.
      *
      * @param Request $request
-     * @param string $filename
-     * @param $variant
-     * @param string $extension
+     * @param string  $filename
+     * @param int  $variant
+     * @param string  $extension
      *
      * @return Response
+     * @throws \Exception
      */
-    public function fontFileAction(Request $request, $filename, $variant, $extension)
+    public function fontFileAction(Request $request, string $filename, int $variant, string $extension)
     {
         /** @var FontRepository $repository */
         $repository = $this->get('em')->getRepository(Font::class);
@@ -194,11 +196,14 @@ class AssetsController extends CmsController
             Response::HTTP_NOT_MODIFIED,
             ['content-type' => 'text/css']
         );
-        $response->setCache([
-            'last_modified' => new \DateTime($lastMod),
+        $cacheConfig = [
             'max_age' => 60 * 60 * 48, // expires for 2 days
             'public' => true,
-        ]);
+        ];
+        if (null !== $lastMod) {
+            $cacheConfig['last_modified'] = new \DateTime($lastMod);
+        }
+        $response->setCache($cacheConfig);
 
         if ($response->isNotModified($request)) {
             return $response;

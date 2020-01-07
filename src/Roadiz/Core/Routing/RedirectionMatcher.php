@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -36,11 +37,12 @@ use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
- * informations for a route.
+ * information for a route.
  */
 class RedirectionMatcher extends UrlMatcher
 {
@@ -56,7 +58,6 @@ class RedirectionMatcher extends UrlMatcher
      * @var LoggerInterface
      */
     private $logger;
-
     /**
      * @var EntityRepository
      */
@@ -75,7 +76,7 @@ class RedirectionMatcher extends UrlMatcher
         Stopwatch $stopwatch,
         LoggerInterface $logger
     ) {
-        $this->context = $context;
+        parent::__construct(new RouteCollection(), $context);
         $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
@@ -97,21 +98,27 @@ class RedirectionMatcher extends UrlMatcher
          */
         if (null !== $redirection = $this->matchRedirection($decodedUrl)) {
             $this->logger->debug('Matched redirection.', ['query' => $redirection->getQuery()]);
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->stop('findRedirection');
+            }
             return [
                 '_controller' => RedirectionController::class . '::redirectAction',
                 'redirection' => $redirection,
                 '_route' => null,
             ];
         }
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('findRedirection');
+        }
 
         throw new ResourceNotFoundException();
     }
 
     /**
-     * @param $decodedUrl
+     * @param string $decodedUrl
      * @return Redirection
      */
-    protected function matchRedirection($decodedUrl): ?Redirection
+    protected function matchRedirection(string $decodedUrl): ?Redirection
     {
         /** @var Redirection|null $redirection */
         return $this->repository->findOneByQuery($decodedUrl);

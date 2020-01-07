@@ -58,7 +58,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['logger.handlers'] = function ($c) {
+        $container['logger.handlers'] = function (Container $c) {
             $handlers = [];
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -73,10 +73,6 @@ class LoggerServiceProvider implements ServiceProviderInterface
                         switch ($config['type']) {
                             case 'default':
                                 $handlers[] = new StreamHandler($c['logger.path'], constant('\Monolog\Logger::'.$config['level']));
-                                if (null !== $c['em'] &&
-                                    true === $kernel->isDebug()) {
-                                    $handlers[] = new StreamHandler($c['logger.path'], constant('\Monolog\Logger::'.$config['level']));
-                                }
                                 break;
                             case 'stream':
                                 if (empty($config['path'])) {
@@ -109,22 +105,34 @@ class LoggerServiceProvider implements ServiceProviderInterface
                                 );
                                 break;
                             case 'sentry':
-                                if (!class_exists('Raven_Client')) {
+                                if (empty($config['url'])) {
+                                    throw new InvalidConfigurationException('A Sentry handler must declare a DSN "url".');
+                                }
+                                if (function_exists('\Sentry\init') &&
+                                    class_exists('\Sentry\Monolog\Handler')) {
+                                    $sentryConfig = ['dsn' => $config['url']];
+                                    \Sentry\init($sentryConfig);
+                                    $client = \Sentry\ClientBuilder::create($sentryConfig)->getClient();
+                                    $handler = new \Sentry\Monolog\Handler(
+                                        new \Sentry\State\Hub($client),
+                                        constant('\Monolog\Logger::'.$config['level'])
+                                    );
+                                    $handlers[] = $handler;
+                                } elseif (class_exists('Raven_Client')) {
+                                    $client = new \Raven_Client($config['url']);
+                                    $error_handler = new \Raven_ErrorHandler($client);
+                                    $error_handler->registerExceptionHandler();
+                                    $error_handler->registerErrorHandler();
+                                    $error_handler->registerShutdownFunction();
+                                    $handler = new RavenHandler(
+                                        $client,
+                                        constant('\Monolog\Logger::'.$config['level'])
+                                    );
+                                    $handlers[] = $handler;
+                                } else {
                                     throw new InvalidConfigurationException('Sentry handler requires sentry/sentry library.');
                                 }
-                                if (empty($config['url'])) {
-                                    throw new InvalidConfigurationException('A monolog RavenHandler must define a log "url".');
-                                }
-                                $client = new \Raven_Client($config['url']);
-                                $error_handler = new \Raven_ErrorHandler($client);
-                                $error_handler->registerExceptionHandler();
-                                $error_handler->registerErrorHandler();
-                                $error_handler->registerShutdownFunction();
-                                $handler = new RavenHandler(
-                                    $client,
-                                    constant('\Monolog\Logger::'.$config['level'])
-                                );
-                                $handlers[] = $handler;
+
                                 break;
                         }
                     } else {
@@ -135,31 +143,17 @@ class LoggerServiceProvider implements ServiceProviderInterface
                 /*
                  * Default handlers
                  */
-                $handlers[] = new StreamHandler($c['logger.path'], Logger::NOTICE);
-                if (null !== $c['em'] &&
-                    true === $kernel->isDebug()) {
+                if (null !== $c['em'] && true === $kernel->isDebug()) {
                     $handlers[] = new StreamHandler($c['logger.path'], Logger::DEBUG);
+                } else {
+                    $handlers[] = new StreamHandler($c['logger.path'], Logger::NOTICE);
                 }
-            }
-
-            /*
-             * Only activate doctrine logger for production.
-             */
-            if (null !== $c['em'] &&
-                false === $kernel->isInstallMode() &&
-                $kernel->getEnvironment() == 'prod') {
-                $handlers[] = new DoctrineHandler(
-                    $c['em'],
-                    $c['securityTokenStorage'],
-                    $c['requestStack'],
-                    Logger::INFO
-                );
             }
 
             return $handlers;
         };
 
-        $container['logger.path'] = function ($c) {
+        $container['logger.path'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return $kernel->getLogDir() . '/' .
@@ -167,11 +161,45 @@ class LoggerServiceProvider implements ServiceProviderInterface
             $kernel->getEnvironment().'.log';
         };
 
-        $container['logger'] = function ($c) {
+        $container['logger.doctrine'] = function (Container $c) {
+            $log = new Logger('doctrine');
+
+            foreach ($c['logger.handlers'] as $handler) {
+                $log->pushHandler($handler);
+            }
+
+            /*
+             * Add processors
+             */
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $log->pushProcessor(new RequestProcessor($requestStack));
+            $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+
+            return $log;
+        };
+
+        $container['logger'] = function (Container $c) {
             $log = new Logger('roadiz');
 
             foreach ($c['logger.handlers'] as $handler) {
                 $log->pushHandler($handler);
+            }
+
+            /*
+             * Only activate doctrine logger for production.
+             */
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            if (null !== $c['em'] &&
+                false === $kernel->isInstallMode() &&
+                $kernel->getEnvironment() == 'prod') {
+                $log->pushHandler(new DoctrineHandler(
+                    $c['em'],
+                    $c['securityTokenStorage'],
+                    $c['requestStack'],
+                    Logger::INFO
+                ));
             }
 
             /*

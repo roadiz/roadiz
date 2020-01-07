@@ -35,6 +35,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Themes\Install\Forms\SiteInformationType;
 use Themes\Install\InstallApp;
 
@@ -50,7 +51,7 @@ class ThemeController extends InstallApp
      * @param Request $request
      * @param int $id
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function importThemeAction(Request $request, $id)
     {
@@ -71,7 +72,7 @@ class ThemeController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function themeInstallAction(Request $request)
     {
@@ -100,7 +101,7 @@ class ThemeController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function themeSummaryAction(Request $request)
     {
@@ -114,7 +115,7 @@ class ThemeController extends InstallApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function themesAction(Request $request)
     {
@@ -136,7 +137,7 @@ class ThemeController extends InstallApp
         ]);
         $informationForm->handleRequest($request);
 
-        if ($informationForm->isValid()) {
+        if ($informationForm->isSubmitted() && $informationForm->isValid()) {
             $informationData = $informationForm->getData();
             /*
              * Save information

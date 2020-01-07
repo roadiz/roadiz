@@ -32,8 +32,11 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\DocumentEvents;
-use RZ\Roadiz\Core\Events\FilterDocumentEvent;
+use RZ\Roadiz\Core\Events\DocumentCreatedEvent;
+use RZ\Roadiz\Core\Events\DocumentDeletedEvent;
+use RZ\Roadiz\Core\Events\DocumentInFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentOutFolderEvent;
+use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Models\DocumentInterface;
@@ -112,7 +115,7 @@ class DocumentsController extends RozierApp
          */
         $joinFolderForm = $this->buildLinkFoldersForm();
         $joinFolderForm->handleRequest($request);
-        if ($joinFolderForm->isValid()) {
+        if ($joinFolderForm->isSubmitted() && $joinFolderForm->isValid()) {
             $data = $joinFolderForm->getData();
 
             if ($joinFolderForm->get('submitFolder')->isClicked()) {
@@ -161,7 +164,7 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param $documentId
+     * @param int $documentId
      * @return JsonResponse|Response
      */
     public function adjustAction(Request $request, $documentId)
@@ -181,7 +184,7 @@ class DocumentsController extends RozierApp
             $fileForm->handleRequest($request);
 
             // Check if form is valid
-            if ($fileForm->isValid()) {
+            if ($fileForm->isSubmitted() && $fileForm->isValid()) {
                 /** @var EntityManager $em */
                 $em = $this->get('em');
 
@@ -273,7 +276,7 @@ class DocumentsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('em')->flush();
                     /*
@@ -298,8 +301,7 @@ class DocumentsController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
 
                     $this->get("dispatcher")->dispatch(
-                        DocumentEvents::DOCUMENT_UPDATED,
-                        new FilterDocumentEvent($document)
+                        new DocumentUpdatedEvent($document)
                     );
 
                     $routeParams = ['documentId' => $document->getId()];
@@ -389,12 +391,11 @@ class DocumentsController extends RozierApp
 
             if (file_exists($documentPath)) {
                 $this->assignation['infos'] = [
-                    'filesize' => sprintf('%.3f MB', (filesize($documentPath))/pow(1024, 2)),
+                    'filesize' => sprintf('%.3f MB', ($document->getFilesize())/pow(1024, 2)),
                 ];
-                if ($document->isImage()) {
-                    list($width, $height) = getimagesize($documentPath);
-                    $this->assignation['infos']['width'] = $width . 'px';
-                    $this->assignation['infos']['height'] = $height . 'px';
+                if ($document->isProcessable()) {
+                    $this->assignation['infos']['width'] = $document->getImageWidth() . 'px';
+                    $this->assignation['infos']['height'] = $document->getImageHeight() . 'px';
                 }
             }
 
@@ -424,12 +425,12 @@ class DocumentsController extends RozierApp
             $form = $this->buildDeleteForm($document);
             $form->handleRequest($request);
 
-            if ($form->isValid() &&
+            if ($form->isSubmitted() &&
+                $form->isValid() &&
                 $form->getData()['documentId'] == $document->getId()) {
                 try {
                     $this->get("dispatcher")->dispatch(
-                        DocumentEvents::DOCUMENT_DELETED,
-                        new FilterDocumentEvent($document)
+                        new DocumentDeletedEvent($document)
                     );
                     $this->get('em')->remove($document);
                     $this->get('em')->flush();
@@ -483,7 +484,7 @@ class DocumentsController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 foreach ($documents as $document) {
                     $this->get('em')->remove($document);
                     $msg = $this->getTranslator()->trans(
@@ -533,7 +534,7 @@ class DocumentsController extends RozierApp
             $form = $this->buildBulkDownloadForm($documentsIds);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     return $this->downloadDocuments($documents);
                 } catch (\Exception $e) {
@@ -582,7 +583,7 @@ class DocumentsController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $document = $this->embedDocument($form->getData(), $folderId);
 
@@ -592,8 +593,7 @@ class DocumentsController extends RozierApp
                 $this->publishConfirmMessage($request, $msg);
 
                 $this->get("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_CREATED,
-                    new FilterDocumentEvent($document)
+                    new DocumentCreatedEvent($document)
                 );
                 /*
                  * Force redirect to avoid resending form when refreshing page
@@ -634,8 +634,7 @@ class DocumentsController extends RozierApp
             $this->publishConfirmMessage($request, $msg);
 
             $this->get("dispatcher")->dispatch(
-                DocumentEvents::DOCUMENT_CREATED,
-                new FilterDocumentEvent($document)
+                new DocumentCreatedEvent($document)
             );
         } catch (\Exception $e) {
             $this->publishErrorMessage(
@@ -701,7 +700,7 @@ class DocumentsController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $document = $this->uploadDocument($form, $folderId);
 
                 if (false !== $document) {
@@ -711,8 +710,7 @@ class DocumentsController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
 
                     $this->get("dispatcher")->dispatch(
-                        DocumentEvents::DOCUMENT_CREATED,
-                        new FilterDocumentEvent($document)
+                        new DocumentCreatedEvent($document)
                     );
 
                     if ($_format === 'json' || $request->isXmlHttpRequest()) {
@@ -983,8 +981,7 @@ class DocumentsController extends RozierApp
              */
             foreach ($documents as $document) {
                 $this->get("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_IN_FOLDER,
-                    new FilterDocumentEvent($document)
+                    new DocumentInFolderEvent($document)
                 );
             }
         }
@@ -1037,8 +1034,7 @@ class DocumentsController extends RozierApp
              */
             foreach ($documents as $document) {
                 $this->get("dispatcher")->dispatch(
-                    DocumentEvents::DOCUMENT_OUT_FOLDER,
-                    new FilterDocumentEvent($document)
+                    new DocumentOutFolderEvent($document)
                 );
             }
         }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -30,10 +31,12 @@
 namespace RZ\Roadiz\Core\Viewers;
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * Class DocumentViewer
  * @package RZ\Roadiz\Core\Viewers
+ * @deprecated Use ChainRenderer
  */
 class DocumentViewer extends AbstractDocumentViewer
 {
@@ -61,7 +64,7 @@ class DocumentViewer extends AbstractDocumentViewer
     /**
      * @inheritDoc
      */
-    protected function getDocumentsByFilenames($filenames)
+    protected function getDocumentsByFilenames($filenames): array
     {
         return $this->entityManager
             ->getRepository(Document::class)
@@ -70,8 +73,11 @@ class DocumentViewer extends AbstractDocumentViewer
 
     /**
      * @inheritDoc
+     *
+     * @param array|string $filenames
+     * @return Document|null
      */
-    protected function getOneDocumentByFilenames($filenames)
+    public function getOneDocumentByFilenames($filenames): ?DocumentInterface
     {
         return $this->entityManager
             ->getRepository(Document::class)

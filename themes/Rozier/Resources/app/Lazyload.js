@@ -52,9 +52,9 @@ import YamlEditor from './widgets/YamlEditor'
 import MarkdownEditor from './widgets/MarkdownEditor'
 import JsonEditor from './widgets/JsonEditor'
 import CssEditor from './widgets/CssEditor'
-import { isMobile } from './utils/plugins'
 import LeafletGeotagField from './widgets/LeafletGeotagField'
 import MultiLeafletGeotagField from './widgets/MultiLeafletGeotagField'
+import TagEdit from './components/tag/TagEdit'
 
 /**
  * Lazyload
@@ -82,11 +82,13 @@ export default class Lazyload {
         this.settingsSaveButtons = null
         this.nodeTypeFieldEdit = null
         this.nodeEditSource = null
+        this.tagEdit = null
         this.customFormFieldEdit = null
         this.markdownEditors = []
         this.jsonEditors = []
         this.cssEditors = []
         this.yamlEditors = []
+        this.$window = $(window)
 
         // Binded methods
         this.onPopState = this.onPopState.bind(this)
@@ -94,23 +96,17 @@ export default class Lazyload {
 
         this.parseLinks()
 
-        // this hack resolves safari triggering popstate
-        // at initial load.
-        window.addEventListener('load', () => {
-            window.setTimeout(() => {
-                $(window).off('popstate', this.onPopState)
-                $(window).on('popstate', this.onPopState)
-            }, 0)
-        })
+        window.removeEventListener('popstate', this.onPopState)
+        window.addEventListener('popstate', this.onPopState)
 
         this.$canvasLoaderContainer = $('#canvasloader-container')
-        this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#ffffff'
+        this.mainColor = window.Rozier.mainColor ? window.Rozier.mainColor : '#00deab'
         this.initLoader()
 
         /*
          * Start history with first hard loaded page
          */
-        history.pushState({}, null, window.location.href)
+        window.history.pushState({}, document.title, window.location.href)
     }
 
     /**
@@ -150,9 +146,9 @@ export default class Lazyload {
             }
 
             this.clickTimeout = window.setTimeout(() => {
-                history.pushState({}, null, $link.attr('href'))
+                window.history.pushState({}, null, $link.attr('href'))
                 this.onPopState(null)
-            }, 50)
+            }, 0)
 
             return false
         }
@@ -165,7 +161,7 @@ export default class Lazyload {
     onPopState (event) {
         let state = null
 
-        if (event !== null) {
+        if (event !== null && event.originalEvent) {
             state = event.originalEvent.state
         }
 
@@ -205,7 +201,10 @@ export default class Lazyload {
                 type: 'get',
                 dataType: 'html',
                 cache: false,
-                data: state.headerData
+                data: state.headerData,
+                beforeSend: (xhr) => {
+                    xhr.setRequestHeader('X-Partial', true)
+                }
             })
                 .done(data => {
                     this.applyContent(data)
@@ -267,6 +266,14 @@ export default class Lazyload {
         let $old = $container.find('.content-global')
 
         let $tempData = $(data)
+        /*
+         * If AJAX request data is an entire HTML page.
+         */
+        const $ajaxRoot = $tempData.find('[data-ajax-root]')
+        if ($ajaxRoot.length) {
+            $tempData = $($ajaxRoot.html())
+        }
+
         $tempData.addClass('new-content-global')
         $container.append($tempData)
         $tempData = $container.find('.new-content-global')
@@ -311,6 +318,7 @@ export default class Lazyload {
             this.settingsSaveButtons,
             this.nodeTypeFieldEdit,
             this.nodeEditSource,
+            this.tagEdit,
             this.nodeTree,
             this.customFormFieldEdit
         ])
@@ -331,13 +339,10 @@ export default class Lazyload {
 
         this.stackNodeTrees = new StackNodeTree()
 
-        if (isMobile.any() === null) {
-            if (this.saveButtons) {
-                this.saveButtons.unbind()
-            }
-
-            this.saveButtons = new SaveButtons()
+        if (this.saveButtons) {
+            this.saveButtons.unbind()
         }
+        this.saveButtons = new SaveButtons()
 
         this.tagAutocomplete = new TagAutocomplete()
         this.folderAutocomplete = new FolderAutocomplete()
@@ -347,6 +352,7 @@ export default class Lazyload {
         this.settingsSaveButtons = new SettingsSaveButtons()
         this.nodeTypeFieldEdit = new NodeTypeFieldEdit()
         this.nodeEditSource = new NodeEditSource()
+        this.tagEdit = new TagEdit()
         this.nodeTree = new NodeTree()
         this.customFormFieldEdit = new CustomFormFieldEdit()
 
@@ -360,7 +366,7 @@ export default class Lazyload {
         this.initCollectionsForms()
 
         // Animate actions menu
-        if ($('.actions-menu').length && isMobile.any() === null) {
+        if ($('.actions-menu').length) {
             TweenLite.to('.actions-menu', 0.5, {right: 0, delay: 0.4, ease: Expo.easeOut})
         }
 

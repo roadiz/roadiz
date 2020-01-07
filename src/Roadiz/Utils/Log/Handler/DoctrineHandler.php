@@ -174,7 +174,7 @@ class DoctrineHandler extends AbstractProcessingHandler
                 }
 
                 $this->em->persist($log);
-                $this->em->flush($log);
+                $this->em->flush();
             }
         } catch (\Exception $e) {
             /*

@@ -24,4 +24,5 @@
     <exclude-pattern>*/tests</exclude-pattern>
     <exclude-pattern>*/bin</exclude-pattern>
     <exclude-pattern>*/themes</exclude-pattern>
+    <exclude-pattern>.data/*</exclude-pattern>
 </ruleset>

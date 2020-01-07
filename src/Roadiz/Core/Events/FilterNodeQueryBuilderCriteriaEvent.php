@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -31,8 +32,15 @@ namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 
-class FilterNodeQueryBuilderCriteriaEvent extends FilterQueryBuilderCriteriaEvent
+/**
+ * Class FilterNodeQueryBuilderCriteriaEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
+class FilterNodeQueryBuilderCriteriaEvent extends QueryBuilderBuildEvent
 {
     /**
      * @inheritDoc
@@ -45,7 +53,7 @@ class FilterNodeQueryBuilderCriteriaEvent extends FilterQueryBuilderCriteriaEven
     /**
      * @inheritDoc
      */
-    public function supports()
+    public function supports(): bool
     {
         if ($this->actualEntityName === Node::class) {
             return true;

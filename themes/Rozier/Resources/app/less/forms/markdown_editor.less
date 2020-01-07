@@ -242,6 +242,20 @@
             font-size: 13px;
         }
     }
+
+    &.markdown-editor__disabled {
+
+        .CodeMirror {
+            background-color: #f8f8f8;
+        }
+
+        .markdown-editor-navbar {
+            li > a {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+        }
+    }
 }
 
 // Separate buttons

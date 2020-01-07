@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\FontVariantsType;
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Form\AbstractType;

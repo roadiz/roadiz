@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -32,19 +33,20 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Config\NullLoader;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Stopwatch\Stopwatch;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class NodeRouter extends Router implements VersatileGeneratorInterface
 {
@@ -56,18 +58,17 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var Stopwatch|null
      */
     protected $stopwatch;
-
     /**
      * @var bool
      */
     protected $preview;
-
     /**
      * @var ThemeResolverInterface
      */
     private $themeResolver;
-
-    /** @var CacheProvider */
+    /**
+     * @var CacheProvider
+     */
     private $nodeSourceUrlCacheProvider;
     /**
      * @var Settings
@@ -102,11 +103,15 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         Stopwatch $stopwatch = null,
         $preview = false
     ) {
+        parent::__construct(
+            new NullLoader(),
+            null,
+            $options,
+            $context,
+            $logger
+        );
         $this->em = $em;
         $this->stopwatch = $stopwatch;
-        $this->logger = $logger;
-        $this->context = $context ?: new RequestContext();
-        $this->setOptions($options);
         $this->preview = $preview;
         $this->themeResolver = $themeResolver;
         $this->settingsBag = $settingsBag;
@@ -140,9 +145,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * Gets the UrlMatcher instance associated with this Router.
      *
-     * @return NodeUrlMatcher
+     * @return UrlMatcherInterface
      */
-    public function getMatcher(): NodeUrlMatcher
+    public function getMatcher(): UrlMatcherInterface
     {
         if (null !== $this->matcher) {
             return $this->matcher;
@@ -220,7 +225,13 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $schemeAuthority = $this->getContext()->getScheme() . '://' . $this->getHttpHost();
         }
 
-        $nodePathInfo = $this->getResourcePath($name, $parameters);
+        $noCache = false;
+        if (!empty($parameters['noCache'])) {
+            $noCache = (bool)($parameters['noCache']);
+            unset($parameters['noCache']);
+        }
+
+        $nodePathInfo = $this->getResourcePath($name, $parameters, $noCache);
 
         /*
          * If node path is complete, do not alter path any more.
@@ -255,20 +266,23 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     /**
      * @param NodesSources $source
      * @param array        $parameters
+     * @param bool         $noCache
      *
      * @return NodePathInfo
      */
-    protected function getResourcePath(NodesSources $source, $parameters = []): NodePathInfo
+    protected function getResourcePath(NodesSources $source, $parameters = [], bool $noCache = false): NodePathInfo
     {
-        $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost() . '_' . serialize($parameters);
-        if (null !== $this->nodeSourceUrlCacheProvider) {
-            if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
-                $this->nodeSourceUrlCacheProvider->save(
-                    $cacheKey,
-                    $this->getNodesSourcesPath($source, $parameters)
-                );
+        if ($noCache) {
+            $cacheKey = $source->getId() . '_' .  $this->getContext()->getHost() . '_' . serialize($parameters);
+            if (null !== $this->nodeSourceUrlCacheProvider) {
+                if (!$this->nodeSourceUrlCacheProvider->contains($cacheKey)) {
+                    $this->nodeSourceUrlCacheProvider->save(
+                        $cacheKey,
+                        $this->getNodesSourcesPath($source, $parameters)
+                    );
+                }
+                return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
             }
-            return $this->nodeSourceUrlCacheProvider->fetch($cacheKey);
         }
 
         return $this->getNodesSourcesPath($source, $parameters);
@@ -283,7 +297,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     protected function getNodesSourcesPath(NodesSources $source, $parameters = []): NodePathInfo
     {
         $theme = $this->themeResolver->findTheme($this->getContext()->getHost());
-        $event = new FilterNodeSourcePathEvent(
+        $event = new NodesSourcesPathGeneratingEvent(
             $theme,
             $source,
             $this->getContext(),
@@ -293,7 +307,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         /*
          * Dispatch node-source URL generation to any listener
          */
-        $this->eventDispatcher->dispatch(NodesSourcesEvents::NODE_SOURCE_PATH_GENERATING, $event);
+        $this->eventDispatcher->dispatch($event);
         /*
          * Get path, parameters and isComplete back from event propagation.
          */

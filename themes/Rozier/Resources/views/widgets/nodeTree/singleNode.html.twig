@@ -52,7 +52,10 @@ type|lower,
         <span class="nodetree-list-item-color"></span>
     {% endif %}
     <div class="{{ innerClasses|join(' ') }}">
-        <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}">
+        <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}"
+             {%- if not mainNodeTree and not nodeTree.isStackTree -%}
+             title="{{ node.nodeType.displayName }}"
+             data-uk-tooltip="{animation:true}"{%- endif -%}>
             {% if not mainNodeTree and not nodeTree.isStackTree %}
                 {% set thumbnail = source.documentsByFields.first.document %}
                 {% if thumbnail and (thumbnail.image or thumbnail.svg) and not thumbnail.private %}

@@ -212,7 +212,7 @@ class NewslettersController extends RozierApp
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted()) {
-                    if ($form->isValid()) {
+                    if ($form->isSubmitted() && $form->isValid()) {
                         $this->get('em')->flush();
 
                         $msg = $this->getTranslator()->trans('newsletter.%newsletter%.updated.%translation%', [

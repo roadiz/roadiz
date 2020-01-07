@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -34,6 +35,7 @@ use Doctrine\ORM\EntityManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing Cache from terminal.
@@ -48,58 +50,66 @@ class CacheInfosCommand extends Command
 
     protected function configure()
     {
-        $this->setName('cache:infos')
-            ->setDescription('Get cache informations.')
+        $this->setName('cache:info')
+            ->setDescription('Get cache information.')
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $text = "";
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $this->nsCacheHelper = $this->getHelper('ns-cache');
 
-        $text .= $this->getInformations();
-
-        $output->writeln($text);
+        $io->listing($this->getInformation());
+        return 0;
     }
 
-    public function getInformations()
+    public function getInformation(): array
     {
-        $text = '';
-
+        $outputs = [];
         /** @var CacheProvider $cacheDriver */
         $cacheDriver = $this->entityManager->getConfiguration()->getResultCacheImpl();
         if (null !== $cacheDriver) {
-            $text .= "<info>Result cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
+            $outputs[] = implode(', ', [
+                '<info>Result cache driver:</info> ' . get_class($cacheDriver),
+                '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
+            ]);
         }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getHydrationCacheImpl();
         if (null !== $cacheDriver) {
-            $text .= "<info>Hydratation cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
+            $outputs[] = implode(', ', [
+                '<info>Hydratation cache driver:</info> ' . get_class($cacheDriver),
+                '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
+            ]);
         }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getQueryCacheImpl();
         if (null !== $cacheDriver) {
-            $text .= "<info>Query cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
+            $outputs[] = implode(', ', [
+                '<info>Query cache driver:</info> ' . get_class($cacheDriver),
+                 '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
+            ]);
         }
 
         $cacheDriver = $this->entityManager->getConfiguration()->getMetadataCacheImpl();
         if (null !== $cacheDriver) {
-            $text .= "<info>Metadata cache driver:</info> " . get_class($cacheDriver) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $cacheDriver->getNamespace() . PHP_EOL;
+            $outputs[] = implode(', ', [
+                '<info>Metadata cache driver:</info> ' . get_class($cacheDriver),
+                 '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
+            ]);
         }
 
         if (null !== $this->nsCacheHelper->getCacheProvider()) {
             /** @var CacheProvider $nsCache */
             $nsCache = $this->nsCacheHelper->getCacheProvider();
-            $text .= "<info>Node-sources URLs cache driver:</info> " . get_class($nsCache) . PHP_EOL;
-            $text .= "    <info>Namespace:</info> " . $nsCache->getNamespace() . PHP_EOL;
+            $outputs[] = implode(', ', [
+                '<info>Node-sources URLs cache driver:</info> ' . get_class($nsCache),
+                 '<info>Namespace:</info> ' . $nsCache->getNamespace()
+            ]);
         }
 
-        return $text;
+        return $outputs;
     }
 }

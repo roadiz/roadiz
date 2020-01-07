@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -30,9 +31,9 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class DispatcherDebugCommand
@@ -57,26 +58,21 @@ class ConfigurationDebugCommand extends Command implements ThemeAwareCommandInte
     {
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
-
+        $io = new SymfonyStyle($input, $output);
         $configuration = $kernel->get('config');
-
-        $table = new Table($output);
-        $table->setHeaders(['Configuration path', 'Value']);
         $tableContent = [];
 
         foreach ($configuration as $key => $value) {
             $tableContent = array_merge($tableContent, $this->dumpConfiguration($key, $value));
         }
-
-        $table->setRows($tableContent);
-        $table->render();
+        $io->table(['Configuration path', 'Value'], $tableContent);
 
         return 0;
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string $key
+     * @param mixed $value
      *
      * @return array
      */

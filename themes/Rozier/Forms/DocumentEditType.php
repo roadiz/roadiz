@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
+use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -78,6 +79,7 @@ class DocumentEditType extends AbstractType
             ])
             ->add('private', CheckboxType::class, [
                 'label' => 'private',
+                'help' => 'document.private.help',
                 'required' => false,
             ])
             ->add('newDocument', FileType::class, [
@@ -93,6 +95,15 @@ class DocumentEditType extends AbstractType
                 'required' => false,
                 'inherit_data' => true,
                 'document_platforms' => $options['document_platforms'],
+            ])
+            ->add('imageAverageColor', TextType::class, [
+                'label' => 'document.imageAverageColor',
+                'help' => 'document.imageAverageColor.help',
+                'required' => false,
+                'attr' => ['class' => 'colorpicker-input'],
+                'constraints' => [
+                    new HexadecimalColor(),
+                ],
             ])
         ;
     }

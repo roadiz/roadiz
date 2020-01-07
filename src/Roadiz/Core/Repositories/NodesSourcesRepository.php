@@ -37,6 +37,8 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
+use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Events\QueryBuilderEvents;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
@@ -58,10 +60,9 @@ class NodesSourcesRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
-        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_BUILD_FILTER, $event);
-
-        return $event;
+        return $eventDispatcher->dispatch(
+            new QueryBuilderNodesSourcesBuildEvent($qb, $property, $value, $this->getEntityName())
+        );
     }
 
     /**
@@ -75,10 +76,9 @@ class NodesSourcesRepository extends StatusAwareRepository
     {
         /** @var EventDispatcher $eventDispatcher */
         $eventDispatcher = $this->container['dispatcher'];
-        $event = new FilterNodesSourcesQueryBuilderCriteriaEvent($qb, $property, $value, $this->getEntityName());
-        $eventDispatcher->dispatch(QueryBuilderEvents::QUERY_BUILDER_APPLY_FILTER, $event);
-
-        return $event;
+        return $eventDispatcher->dispatch(
+            new QueryBuilderNodesSourcesApplyEvent($qb, $property, $value, $this->getEntityName())
+        );
     }
 
     /**
@@ -89,7 +89,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     protected function filterByTag(array &$criteria, QueryBuilder $qb)
     {
-        if (in_array('tags', array_keys($criteria))) {
+        if (key_exists('tags', $criteria)) {
             if (!$this->hasJoinedNode($qb, static::NODESSOURCES_ALIAS)) {
                 $qb->innerJoin(
                     static::NODESSOURCES_ALIAS . '.node',
@@ -165,6 +165,10 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use findBy or manual QueryBuilder methods',
+            E_USER_DEPRECATED
+        );
         if (false !== strpos($key, 'node.')) {
             if (!$this->hasJoinedNode($qb, $alias)) {
                 $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
@@ -204,7 +208,6 @@ class NodesSourcesRepository extends StatusAwareRepository
 
 
     /**
-     *
      * @param QueryBuilder $qb
      * @param string $prefix
      * @return QueryBuilder
@@ -403,7 +406,6 @@ class NodesSourcesRepository extends StatusAwareRepository
      * A secure findOneBy with which user must be a backend user
      * to see unpublished nodes.
      *
-     *
      * @param array $criteria
      * @param array $orderBy
      * @return null|NodesSources
@@ -494,17 +496,19 @@ class NodesSourcesRepository extends StatusAwareRepository
      * Search Nodes-Sources using LIKE condition on title
      * meta-title, meta-keywords, meta-description.
      *
-     * @param $textQuery
+     * @param string $textQuery
      * @param int $limit
      * @param array $nodeTypes
      * @param bool $onlyVisible
+     * @param array $additionalCriteria
      * @return array
      */
     public function findByTextQuery(
         $textQuery,
-        $limit = 0,
-        $nodeTypes = [],
-        $onlyVisible = false
+        int $limit = 0,
+        array $nodeTypes = [],
+        bool $onlyVisible = false,
+        array $additionalCriteria = []
     ) {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->addSelect(static::NODE_ALIAS)
@@ -529,16 +533,19 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODESSOURCES_ALIAS);
 
         if (count($nodeTypes) > 0) {
-            $qb->andWhere($qb->expr()->in(static::NODE_ALIAS . '.nodeType', ':types'))
-                ->setParameter(':types', $nodeTypes);
+            $additionalCriteria['node.nodeType'] = $nodeTypes;
         }
 
         if (true === $onlyVisible) {
-            $qb->andWhere($qb->expr()->eq(static::NODE_ALIAS . '.visible', ':visible'))
-                ->setParameter(':visible', true);
+            $additionalCriteria['node.visible'] = true;
         }
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+
+        if (count($additionalCriteria) > 0) {
+            $this->prepareComparisons($additionalCriteria, $qb, static::NODESSOURCES_ALIAS);
+            $this->applyFilterByCriteria($additionalCriteria, $qb);
+        }
 
         return $qb->getQuery()->getResult();
     }
@@ -722,6 +729,10 @@ class NodesSourcesRepository extends StatusAwareRepository
         NodesSources $nodesSources,
         string $fieldName
     ) {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use findByNodesSourcesAndFieldAndTranslation instead because filtering on field name is not safe.',
+            E_USER_DEPRECATED
+        );
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
         $qb->select('ns, n, ua')
             ->innerJoin('ns.node', static::NODE_ALIAS)

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -66,8 +67,12 @@ class UserViewer
      * @param EmailManager $emailManager
      * @internal param User $user
      */
-    public function __construct(EntityManager $entityManager, Settings $settingsBag, TranslatorInterface $translator, EmailManager $emailManager)
-    {
+    public function __construct(
+        EntityManager $entityManager,
+        Settings $settingsBag,
+        TranslatorInterface $translator,
+        EmailManager $emailManager
+    ) {
         $this->entityManager = $entityManager;
         $this->settingsBag = $settingsBag;
         $this->translator = $translator;

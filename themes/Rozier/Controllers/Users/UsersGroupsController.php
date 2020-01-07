@@ -63,7 +63,7 @@ class UsersGroupsController extends RozierApp
             $form = $this->buildEditGroupsForm($user);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $group = $this->addUserGroup($form->getData(), $user);
 
                 $msg = $this->getTranslator()->trans('user.%user%.group.%group%.linked', [
@@ -116,7 +116,7 @@ class UsersGroupsController extends RozierApp
             $form = $this->buildRemoveGroupForm($user, $group);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $group = $this->removeUserGroup($form->getData(), $user);
 
                 $msg = $this->getTranslator()->trans('user.%user%.group.%group%.removed', [

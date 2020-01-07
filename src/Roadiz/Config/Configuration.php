@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016.
  *
@@ -39,8 +40,8 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder()
     {
-        $builder = new TreeBuilder();
-        $root = $builder->root('roadiz');
+        $builder = new TreeBuilder('roadiz');
+        $root = $builder->getRootNode();
 
         $root->addDefaultsIfNotSet()
             ->children()
@@ -63,7 +64,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('application_name')->end()
                     ->scalarNode('dbname')->end()
                     ->scalarNode('unix_socket')->end()
-                    ->scalarNode('port')->end()
+                    ->scalarNode('port')->defaultValue(null)->end()
                     ->scalarNode('path')->end()
                     ->booleanNode('logging')->defaultValue(false)->end()
                     ->booleanNode('profiling')->defaultValue(false)->end()
@@ -106,6 +107,10 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('encode_as_base64')
                         ->defaultValue(true)
                         ->info('When using sha512 or pbkdf2 algorithm')
+                    ->end()
+                    ->scalarNode('private_key_path')
+                        ->defaultValue('conf/default.key')
+                        ->info('Asymmetric cryptographic key location.')
                     ->end()
                     ->scalarNode('iterations')
                         ->defaultValue(5000)
@@ -200,8 +205,8 @@ EOF
      */
     protected function addMailerNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('mailer');
+        $builder = new TreeBuilder('mailer');
+        $node = $builder->getRootNode();
         $node->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('url')->defaultNull()->end()
@@ -237,8 +242,8 @@ EOF
      */
     protected function addAssetsNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('assetsProcessing');
+        $builder = new TreeBuilder('assetsProcessing');
+        $node = $builder->getRootNode();
         $node->addDefaultsIfNotSet()
             ->children()
                 ->enumNode('driver')
@@ -277,8 +282,8 @@ EOF
      */
     protected function addSolrNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('solr');
+        $builder = new TreeBuilder('solr');
+        $node = $builder->getRootNode();
 
         $node->children()
                 ->arrayNode('endpoint')
@@ -309,8 +314,8 @@ EOF
      */
     protected function addReverseProxyCacheNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('reverseProxyCache');
+        $builder = new TreeBuilder('reverseProxyCache');
+        $node = $builder->getRootNode();
 
         $node->children()
                 ->arrayNode('frontend')
@@ -340,8 +345,8 @@ EOF
      */
     protected function addThemesNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('themes');
+        $builder = new TreeBuilder('themes');
+        $node = $builder->getRootNode();
 
         $node->isRequired()
             ->prototype('array')
@@ -373,8 +378,8 @@ EOF
      */
     protected function addMonologNode()
     {
-        $builder = new TreeBuilder();
-        $node = $builder->root('monolog');
+        $builder = new TreeBuilder('monolog');
+        $node = $builder->getRootNode();
 
         $node->children()
                 ->arrayNode('handlers')

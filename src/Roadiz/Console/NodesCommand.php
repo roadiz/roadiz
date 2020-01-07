@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -32,10 +33,10 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing nodes from terminal.
@@ -59,11 +60,9 @@ class NodesCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
-        $table = new Table($output);
-        $table->setHeaders(['Id', 'Name', 'Type', 'Hidden', 'Published']);
-        $tableContent = [];
+        $io = new SymfonyStyle($input, $output);
         $nodes = [];
+        $tableContent = [];
 
         if ($input->getOption('type')) {
             $nodeType = $this->entityManager
@@ -92,9 +91,8 @@ class NodesCommand extends Command
                 ($node->isPublished() ? 'X' : ''),
             ];
         }
-        $table->setRows($tableContent);
-        $table->render();
 
-        $output->writeln($text);
+        $io->table(['Id', 'Name', 'Type', 'Hidden', 'Published'], $tableContent);
+        return 0;
     }
 }

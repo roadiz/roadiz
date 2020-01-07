@@ -72,7 +72,7 @@ class RedirectionsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param $redirectionId
+     * @param int $redirectionId
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function editAction(Request $request, $redirectionId)
@@ -91,7 +91,7 @@ class RedirectionsController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->get('em')->flush();
 
             return $this->redirect($this->generateUrl('redirectionsEditPage', [
@@ -124,7 +124,7 @@ class RedirectionsController extends RozierApp
         $form = $this->createForm(FormType::class);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->get('em')->remove($redirection);
             $this->get('em')->flush();
 
@@ -150,7 +150,7 @@ class RedirectionsController extends RozierApp
         ]);
         $form->handleRequest($request);
 
-        if ($form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->get('em')->persist($redirection);
             $this->get('em')->flush();
 

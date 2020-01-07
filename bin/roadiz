@@ -1,5 +1,6 @@
 #!/usr/bin/env php
 <?php
+declare(strict_types=1);
 /*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -32,7 +33,7 @@
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\Debug;
 
 set_time_limit(0);
 
@@ -48,9 +49,9 @@ define('ROADIZ_ROOT', dirname(__DIR__));
 require dirname(__DIR__) . "/vendor/autoload.php";
 
 $input = new ArgvInput();
-$env = $input->getParameterOption(array('--env', '-e'), getenv('ROADIZ_ENV') ?: 'dev');
-$debug = getenv('ROADIZ_DEBUG') !== '0' && !$input->hasParameterOption(array('--no-debug', '')) && $env !== 'prod';
-$preview = $input->hasParameterOption(array('--preview', ''));
+$env = $input->getParameterOption(['--env', '-e'], getenv('ROADIZ_ENV') ?: 'dev');
+$debug = getenv('ROADIZ_DEBUG') !== '0' && !$input->hasParameterOption(['--no-debug', '']) && $env !== 'prod';
+$preview = $input->hasParameterOption(['--preview', '']);
 
 if ($debug) {
     Debug::enable();

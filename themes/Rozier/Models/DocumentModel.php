@@ -31,7 +31,7 @@ namespace Themes\Rozier\Models;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
+use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
 /**
@@ -74,9 +74,8 @@ class DocumentModel implements ModelInterface
             $this->document->getDocumentTranslations()->first()->getName()) {
             $name = $this->document->getDocumentTranslations()->first()->getName();
         }
-        /** @var DocumentViewer $documentViewer */
-        $documentViewer = $this->container->offsetGet('document.viewer');
-        $documentViewer->setDocument($this->document);
+        /** @var RendererInterface $renderer */
+        $renderer = $this->container->offsetGet(RendererInterface::class);
 
         /** @var DocumentUrlGenerator $documentUrlGenerator */
         $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
@@ -111,7 +110,7 @@ class DocumentModel implements ModelInterface
             'thumbnail' => $thumbnailUrl,
             'large' => $largeUrl,
             'preview' => $previewUrl,
-            'preview_html' => $documentViewer->getDocumentByArray(static::$previewArray),
+            'preview_html' => $renderer->render($this->document, static::$previewArray),
             'embedPlatform' => $this->document->getEmbedPlatform(),
             'shortMimeType' => $this->document->getShortMimeType(),
             'thumbnail_80' => $thumbnail80Url,

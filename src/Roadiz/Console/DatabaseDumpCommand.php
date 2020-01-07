@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017.
  *
@@ -86,6 +87,7 @@ EOF
             $processArray = [
                 'mysqldump',
                 '-h' . $configuration['doctrine']['host'],
+                (null !== $configuration['doctrine']['port']) ? ('-p' . $configuration['doctrine']['port']) : (''),
                 '-u' . $configuration['doctrine']['user'],
                 '-p' . $configuration['doctrine']['password'],
                 $configuration['doctrine']['dbname']
@@ -115,15 +117,13 @@ EOF
                         $fs->dumpFile($filePath, $process->getOutput());
                         $fs->chmod($filePath, 0640);
                     } else {
-                        $output->write($process->getOutput());
+                        $output->writeln($process->getOutput());
                     }
                     return 0;
                 }
             }
-
             throw new \RuntimeException('SQL dump binary is not installed on your system.');
         }
-
         throw new \RuntimeException('database:dump command only supports MySQL');
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -28,10 +29,12 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\Core\Query\Result\Result;
-use Solarium\QueryType\Update\Query\Document\DocumentInterface;
+use Solarium\QueryType\Update\Query\Document;
 use Solarium\QueryType\Update\Query\Query;
 
 /**
@@ -75,17 +78,37 @@ abstract class AbstractSolarium
         'tr',
     ];
 
-    /** @var Client null */
+    /** @var Client|null */
     protected $client = null;
 
     /** @var bool */
     protected $indexed = false;
 
-    /** @var DocumentInterface null */
+    /** @var Document|null */
     protected $document = null;
 
-    /** @var Logger null */
+    /** @var LoggerInterface|null */
     protected $logger = null;
+
+    /** @var MarkdownInterface|null  */
+    protected $markdown = null;
+
+    /**
+     * AbstractSolarium constructor.
+     *
+     * @param Client|null            $client
+     * @param LoggerInterface|null   $logger
+     * @param MarkdownInterface|null $markdown
+     */
+    public function __construct(?Client $client, ?LoggerInterface $logger = null, ?MarkdownInterface $markdown = null)
+    {
+        if (null === $client) {
+            throw new SolrServerNotConfiguredException("No Solr server available", 1);
+        }
+        $this->client = $client;
+        $this->logger = $logger;
+        $this->markdown = $markdown;
+    }
 
     /**
      * Index current nodeSource and commit after.
@@ -148,7 +171,7 @@ abstract class AbstractSolarium
     /**
      * Remove current document from SearchEngine index.
      *
-     * @param \Solarium\QueryType\Update\Query\Query $update
+     * @param Query $update
      * @return boolean
      * @throws \RuntimeException If no document is available.
      */
@@ -217,7 +240,7 @@ abstract class AbstractSolarium
     }
 
     /**
-     * @return DocumentInterface
+     * @return Document
      */
     public function getDocument()
     {
@@ -225,11 +248,11 @@ abstract class AbstractSolarium
     }
 
     /**
-     * @param DocumentInterface $document
-     * @return $this
+     * @param Document $document
+     * @return self
      * @deprecated Use createEmptyDocument instead of set an empty Solr document.
      */
-    public function setDocument(DocumentInterface $document)
+    public function setDocument(Document $document)
     {
         $this->document = $document;
         return $this;
@@ -266,12 +289,14 @@ abstract class AbstractSolarium
      *
      * @return string
      */
-    public static function cleanTextContent($content)
+    public function cleanTextContent($content)
     {
         /*
          * Strip markdown syntax
          */
-        $content = strip_tags(\Parsedown::instance()->text($content));
+        if (null !== $this->markdown) {
+            $content = strip_tags($this->markdown->textExtra($content));
+        }
         /*
          * Remove ctrl characters
          */

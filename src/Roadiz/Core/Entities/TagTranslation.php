@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use JMS\Serializer\Annotation as Serializer;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Translated representation of Tags.
@@ -44,6 +45,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="tags_translations", uniqueConstraints={
  *      @ORM\UniqueConstraint(columns={"tag_id", "translation_id"})
  * })
+ * @Gedmo\Loggable(logEntryClass="RZ\Roadiz\Core\Entities\UserLogEntry")
  */
 class TagTranslation extends AbstractEntity
 {
@@ -51,12 +53,14 @@ class TagTranslation extends AbstractEntity
      * @ORM\Column(type="string")
      * @Serializer\Groups({"tag", "node", "nodes_sources"})
      * @Serializer\Type("string")
+     * @Gedmo\Versioned
      */
     protected $name;
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"tag", "node", "nodes_sources"})
      * @Serializer\Type("string")
+     * @Gedmo\Versioned
      */
     protected $description;
     /**

@@ -57,19 +57,19 @@
                 <!-- Add your site or application content here -->
                 <section id="main-content" class="main-container-section" data-uk-observe>
                     <div id="main-content-overlay"></div>
-                    <div id="main-content-scrollable">
+                    <div id="main-content-scrollable" data-ajax-root>
                         {% block permanentComponents %}
                             <overlay data-vuejs></overlay>
                         {% endblock %}
                         {% block content %}
                             <h1>{% trans %}Welcome{% endtrans %}</h1>
                         {% endblock %}
-                        <div id="canvasloader-container"></div>
-                        <div id="back-top-button"
-                             title="{% trans %}back_to.top{% endtrans %}"
-                             data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
-                        {# This is a debug panel placeholder… do not remove it. #}
                     </div>
+                    <div id="canvasloader-container"></div>
+                    <div id="back-top-button"
+                         title="{% trans %}back_to.top{% endtrans %}"
+                         data-uk-tooltip="{animation:true,pos:'top'}"><i class="uk-icon-rz-backtop"></i></div>
+                    {# This is a debug panel placeholder… do not remove it. #}
                 </section>
             </div>
         </div>
@@ -204,6 +204,7 @@
                     'searchNodesSourcesAjax':     '{{ path('searchNodesSourcesAjax') }}',
                     'nodesStatusesAjax' :         '{{ path('nodesStatusesAjax') }}',
                     'nodesTreeAjax' :             '{{ path('nodesTreeAjax') }}',
+                    'tagsTreeAjax' :              '{{ path('tagsTreeAjax') }}',
                     'nodesQuickAddAjax' :         '{{ path('nodesQuickAddAjax')}}',
                     'tagAjaxSearch':              '{{ path('tagAjaxSearch') }}',
                     'foldersAjaxSearch':          '{{ path('foldersAjaxSearch') }}',

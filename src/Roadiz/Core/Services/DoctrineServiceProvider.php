@@ -29,13 +29,17 @@
  */
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\Setup;
+use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
@@ -43,11 +47,13 @@ use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\LeafEntityLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\NodesSourcesInheritanceSubscriber;
+use RZ\Roadiz\Core\Events\SettingLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\TablePrefixSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
+use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -132,6 +138,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                     $cache,
                     false
                 );
+                /*
+                 * Create a cached annotation driver with configured cache driver.
+                 */
+                $config->setMetadataDriverImpl($c[AnnotationDriver::class]);
                 $config->setProxyDir($proxyFolder);
                 $config->setProxyNamespace('Proxies');
                 /*
@@ -149,7 +159,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         /*
          * Alias with FQN interface
          */
-        $container[EntityManagerInterface::class] = function ($c) {
+        $container[EntityManagerInterface::class] = function (Container $c) {
             return $c['em'];
         };
 
@@ -199,8 +209,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 new FontLifeCycleSubscriber($c),
                 new DocumentLifeCycleSubscriber($c['kernel']),
                 new UserLifeCycleSubscriber($c),
+                new SettingLifeCycleSubscriber($c),
                 new CustomFormFieldLifeCycleSubscriber($c),
                 new LeafEntityLifeCycleSubscriber($c['factory.handler']),
+                $c[LoggableListener::class],
             ];
         };
 
@@ -208,7 +220,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return CacheProvider
          */
-        $container['nodesSourcesUrlCacheProvider'] = function ($c) {
+        $container['nodesSourcesUrlCacheProvider'] = function (Container $c) {
             $cache = $c[CacheProvider::class];
             $cache->setNamespace($cache->getNamespace() . "_nsurls_"); // to avoid collisions
             return $cache;
@@ -228,6 +240,25 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             }
             return $cache;
         });
+
+        $container[LoggableListener::class] = function (Container $c) {
+            $loggableListener = new UserLoggableListener();
+            $loggableListener->setAnnotationReader($c[CachedReader::class]);
+            $loggableListener->setUsername('anonymous');
+            $loggableListener->setUser(null);
+            return $loggableListener;
+        };
+
+        $container[AnnotationDriver::class] = function (Container $c) {
+            return new AnnotationDriver(
+                new CachedReader(new AnnotationReader(), new ArrayCache()),
+                $c['doctrine.entities_paths']
+            );
+        };
+
+        $container[CachedReader::class] = function (Container $c) {
+            return new CachedReader(new AnnotationReader(), $c[CacheProvider::class]);
+        };
 
         return $container;
     }

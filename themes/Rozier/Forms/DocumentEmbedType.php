@@ -58,7 +58,6 @@ class DocumentEmbedType extends AbstractType
             ->add('embedPlatform', ChoiceType::class, [
                 'label' => 'document.platform',
                 'required' => true,
-                'choices_as_values' => true,
                 'choices' => $services,
                 'placeholder' => 'document.no_embed_platform'
             ])

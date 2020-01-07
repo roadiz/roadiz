@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -23,7 +24,6 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  */
-
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\ContainerAwareInterface;
@@ -34,6 +34,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Process\Process;
 
 class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterface
@@ -59,9 +60,10 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $question = new ConfirmationQuestion('<question>Are you sure to migrate against this theme?</question> This can lead in data loss. [y|N] ', false);
-        if ($this->getHelper('question')->ask($input, $output, $question) === false) {
-            $output->writeln('Nothing was done…');
+        $io = new SymfonyStyle($input, $output);
+        $question = new ConfirmationQuestion('<question>Are you sure to migrate against this theme?</question> This can lead in data loss.', false);
+        if ($io->askQuestion($question) === false) {
+            $io->note('Nothing was done…');
             return 0;
         }
 
@@ -78,6 +80,7 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
             $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', false);
             $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', true);
         }
+        return 0;
     }
 
     /**

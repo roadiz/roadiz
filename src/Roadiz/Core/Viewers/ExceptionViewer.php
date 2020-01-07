@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -48,7 +49,8 @@ use Twig\Error\Error;
 use Twig\Error\SyntaxError;
 
 /**
- * Class ExceptionViewer
+ * ExceptionViewer for production exception handling only.
+ *
  * @package RZ\Roadiz\Core\Viewers
  */
 class ExceptionViewer
@@ -93,7 +95,7 @@ class ExceptionViewer
      * @param \Exception $exception
      * @return int
      */
-    public function getHttpStatusCode(\Exception $exception)
+    public function getHttpStatusCode(\Exception $exception): int
     {
         if ($exception instanceof HttpExceptionInterface) {
             return $exception->getStatusCode();
@@ -111,10 +113,10 @@ class ExceptionViewer
     }
 
     /**
- * @param \Exception $e
- * @return string
- */
-    public function getHumanExceptionTitle(\Exception $e)
+     * @param \Exception $e
+     * @return string
+     */
+    public function getHumanExceptionTitle(\Exception $e): string
     {
         if ($e instanceof InvalidConfigurationException) {
             return "Roadiz configuration is not valid.";
@@ -151,7 +153,7 @@ class ExceptionViewer
      * @param \Exception $e
      * @return string
      */
-    public function getJsonError(\Exception $e)
+    public function getJsonError(\Exception $e): string
     {
         if ($e instanceof InvalidConfigurationException) {
             return "invalid_configuration";
@@ -191,7 +193,7 @@ class ExceptionViewer
      * @param bool $debug
      * @return JsonResponse|Response
      */
-    public function getResponse(\Exception $e, Request $request, $debug = false)
+    public function getResponse(\Exception $e, Request $request, $debug = false): Response
     {
         /*
          * Log error before displaying a fallback page.
@@ -286,14 +288,15 @@ class ExceptionViewer
      * @param Request $request
      * @return bool
      */
-    public function isFormatJson(Request $request)
+    public function isFormatJson(Request $request): bool
     {
         if ($request->attributes->has('_format') &&
             $request->attributes->get('_format') == 'json') {
             return true;
         }
 
-        if (0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
+        if ($request->headers->get('Content-Type') &&
+            0 === strpos($request->headers->get('Content-Type'), 'application/json')) {
             return true;
         }
 
@@ -305,12 +308,12 @@ class ExceptionViewer
     }
 
     /**
-     * @param $string
-     * @param null $foreground_color
-     * @param null $background_color
+     * @param string $string
+     * @param string|null $foreground_color
+     * @param string|null $background_color
      * @return string
      */
-    public function getColoredString($string, $foreground_color = null, $background_color = null)
+    public function getColoredString(string $string, $foreground_color = null, $background_color = null): string
     {
         $colored_string = "";
 
@@ -332,7 +335,7 @@ class ExceptionViewer
     /**
      * @return array Returns all foreground color names
      */
-    public function getForegroundColors()
+    public function getForegroundColors(): array
     {
         return array_keys($this->foreground_colors);
     }
@@ -340,7 +343,7 @@ class ExceptionViewer
     /**
      * @return array Returns all background color names
      */
-    public function getBackgroundColors()
+    public function getBackgroundColors(): array
     {
         return array_keys($this->background_colors);
     }

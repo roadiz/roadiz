@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -37,7 +38,7 @@ use RZ\Roadiz\Core\Entities\DocumentTranslation;
 class DocumentTranslationRepository extends EntityRepository
 {
     /**
-     * @param $id
+     * @param int $id
      * @return DocumentTranslation|null
      */
     public function findOneWithDocument($id)

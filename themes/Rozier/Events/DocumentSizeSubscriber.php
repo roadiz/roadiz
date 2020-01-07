@@ -33,7 +33,7 @@ use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -66,7 +66,7 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onImageUploaded',
+            DocumentImageUploadedEvent::class => ['onImageUploaded', 0],
         ];
     }
 
@@ -91,9 +91,9 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         if ($this->supports($document) && $document instanceof Document) {
+            $documentPath = $this->packages->getDocumentFilePath($document);
             try {
                 $manager = new ImageManager();
-                $documentPath = $this->packages->getDocumentFilePath($document);
                 $imageProcess = $manager->make($documentPath);
 
                 $document->setImageWidth($imageProcess->width());

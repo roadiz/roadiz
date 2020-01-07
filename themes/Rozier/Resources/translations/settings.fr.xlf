@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="fr">
+    <body>
+      <trans-unit xml:space="preserve" id="force_locale.description">
+                <source>Force displaying translation locale in every node’ paths. This should be ON if you redirect users based on their language on homepage.</source>
+                <target state="translated">Forcer l'affichage de la locale de traduction dans les chemins de chaque noeud, même pour la langue par défaut. Cela devrait être activé si vous redirigez les utilisateurs en fonction de leur langue sur la page d'accueil.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender.description">
+                <source>Default sender email, used as origin for every system email sent. This email **must be allowed by your SMTP server.**</source>
+                <target state="translated">Email d'expéditeur par défaut, utilisé comme Origine pour chaque email système envoyé. Cet email **doit être autorisé par votre serveur SMTP.**</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="leaflet_map_tile_url.description">
+                <source>Default maps tiles layout when using *Leaflet*.</source>
+                <target state="translated">Habillage par défaut des cartes lorsque vous utilisez *Leaflet*.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="login_image.description">
+                <source>Replace random *Splashbase* login images with your own.</source>
+                <target state="translated">Remplace les images aléatoires *Splashbase* avec votre propre image d’arrière-plan.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.description">
+                <source>Switch maintenance mode. Only login page will be available for public requests.</source>
+                <target state="translated">Active/désactive le mode maintenance. Seulement les pages d'identification seront disponibles pour les requêtes publiques.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="maps_default_location.description">
+                <source>Default maps marker location.</source>
+                <target state="translated">Emplacement par défaut sur les cartes.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="maps_style.description">
+                <source>Default maps tiles layout when using *Google Maps*.</source>
+                <target state="translated">Habillage par défaut des cartes lorsque vous utilisez *Google Maps*.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="max_versions_showed.description">
+                <source>Maximum versions count showed in actions menu.</source>
+                <target state="translated">Nombre maximum de versions affichées dans le menu des actions.</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

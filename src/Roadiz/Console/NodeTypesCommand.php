@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -32,10 +33,10 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing node-types from terminal.
@@ -57,9 +58,8 @@ class NodeTypesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = new Table($output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
+        $io = new SymfonyStyle($input, $output);
         $name = $input->getArgument('name');
 
         if ($name) {
@@ -68,12 +68,12 @@ class NodeTypesCommand extends Command
                 ->findOneByName($name);
 
             if ($nodetype !== null) {
+                /** @var array<NodeTypeField> $fields */
                 $fields = $this->entityManager->getRepository(NodeTypeField::class)
                     ->findBy([
                         'nodeType' => $nodetype,
                     ], ['position' => 'ASC']);
 
-                $table->setHeaders(['Id', 'Label', 'Name', 'Type', 'Visible', 'Index']);
                 $tableContent = [];
                 foreach ($fields as $field) {
                     $tableContent[] = [
@@ -85,18 +85,18 @@ class NodeTypesCommand extends Command
                         ($field->isIndexed() ? 'X' : ''),
                     ];
                 }
-                $table->setRows($tableContent);
-                $table->render();
+                $io->table(['Id', 'Label', 'Name', 'Type', 'Visible', 'Index'], $tableContent);
             } else {
-                $text .= '<error>"' . $name . '" node type does not exist.</error>' . PHP_EOL;
+                $io->error($name . ' node type does not exist.');
+                return 1;
             }
         } else {
+            /** @var array<NodeType> $nodetypes */
             $nodetypes = $this->entityManager
                 ->getRepository(NodeType::class)
                 ->findBy([], ['name' => 'ASC']);
 
             if (count($nodetypes) > 0) {
-                $table->setHeaders(['Id', 'Title', 'Visible']);
                 $tableContent = [];
 
                 foreach ($nodetypes as $nt) {
@@ -107,13 +107,12 @@ class NodeTypesCommand extends Command
                     ];
                 }
 
-                $table->setRows($tableContent);
-                $table->render();
+                $io->table(['Id', 'Title', 'Visible'], $tableContent);
             } else {
-                $text .= '<info>No available node-types…</info>' . PHP_EOL;
+                $io->error('No available node-types…');
+                return 1;
             }
         }
-
-        $output->writeln($text);
+        return 0;
     }
 }

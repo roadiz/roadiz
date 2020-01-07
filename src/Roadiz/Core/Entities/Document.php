@@ -34,6 +34,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\Models\AbstractDocument;
+use RZ\Roadiz\Core\Models\AdvancedDocumentInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Utils\StringHandler;
@@ -49,7 +50,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
-class Document extends AbstractDocument
+class Document extends AbstractDocument implements AdvancedDocumentInterface
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
@@ -147,6 +148,20 @@ class Document extends AbstractDocument
      * @Serializer\Type("int")
      */
     private $imageHeight = 0;
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("string")
+     */
+    private $imageAverageColor;
+    /**
+     * @var int|null The filesize in bytes.
+     * @ORM\Column(type="integer", nullable=true, unique=false)
+     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Type("int")
+     */
+    private $filesize;
 
     /**
      * Document constructor.
@@ -214,7 +229,7 @@ class Document extends AbstractDocument
     /**
      * Set folder name.
      *
-     * @param $folder
+     * @param string $folder
      * @return $this
      */
     public function setFolder($folder)
@@ -444,7 +459,7 @@ class Document extends AbstractDocument
      *
      * @return Document
      */
-    public function setImageWidth(int $imageWidth): Document
+    public function setImageWidth(int $imageWidth)
     {
         $this->imageWidth = $imageWidth;
 
@@ -464,11 +479,67 @@ class Document extends AbstractDocument
      *
      * @return Document
      */
-    public function setImageHeight(int $imageHeight): Document
+    public function setImageHeight(int $imageHeight)
     {
         $this->imageHeight = $imageHeight;
 
         return $this;
+    }
+
+    /**
+     * @return float|null
+     */
+    public function getImageRatio(): ?float
+    {
+        if ($this->getImageWidth() > 0 && $this->getImageHeight() > 0) {
+            return $this->getImageWidth() / $this->getImageHeight();
+        }
+        return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImageAverageColor(): ?string
+    {
+        return $this->imageAverageColor;
+    }
+
+    /**
+     * @param string|null $imageAverageColor
+     *
+     * @return Document
+     */
+    public function setImageAverageColor(?string $imageAverageColor)
+    {
+        $this->imageAverageColor = $imageAverageColor;
+        return $this;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getFilesize(): ?int
+    {
+        return $this->filesize;
+    }
+
+    /**
+     * @param int|null $filesize
+     * @return Document
+     */
+    public function setFilesize(?int $filesize)
+    {
+        $this->filesize = $filesize;
+        return $this;
+    }
+
+    public function getAlternativeText(): string
+    {
+        $documentTranslation = $this->getDocumentTranslations()->first();
+        return $documentTranslation && !empty($documentTranslation->getName()) ?
+            $documentTranslation->getName() :
+            parent::getAlternativeText();
     }
 
     /**

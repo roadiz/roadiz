@@ -85,7 +85,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container['interventionRequestConfiguration'] = function ($c) {
+        $container['interventionRequestConfiguration'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $cacheDir = $kernel->getPublicCachePath();

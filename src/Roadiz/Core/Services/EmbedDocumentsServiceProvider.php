@@ -69,7 +69,7 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
             ];
         };
 
-        $container['embed_finder.youtube'] = $container->factory(function ($c) {
+        $container['embed_finder.youtube'] = $container->factory(function (Container $c) {
             $finder = new YoutubeEmbedFinder('', false);
             $finder->setKey($c['settingsBag']->get('google_server_id'));
             return $finder;
@@ -99,7 +99,7 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
             return new DailymotionEmbedFinder('', false);
         });
 
-        $container['embed_finder.soundcloud'] = $container->factory(function ($c) {
+        $container['embed_finder.soundcloud'] = $container->factory(function (Container $c) {
             $finder = new SoundcloudEmbedFinder('', false);
             $finder->setKey($c['settingsBag']->get('soundcloud_client_id'));
             return $finder;

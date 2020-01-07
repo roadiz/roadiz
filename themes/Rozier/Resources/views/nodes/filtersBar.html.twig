@@ -17,11 +17,8 @@
         {% if filters.itemCount > filters.itemPerPage %}
         <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-pagination">
             <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
-
                 {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
-
                 {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-rz-prev-page"></i></a>{% endif %}
-
                 <span class="filter-form-text pageTitle">{% trans %}page{% endtrans %}</span>
                 <input class="uk-form-width-mini" id="uk-form-filter-input-page" type="text" name="page"  value="{{ filters.currentPage }}" />
                 <span class="filter-form-text pageCount">/ {{ filters.pageCount }}</span>
@@ -84,6 +81,12 @@
                               action="{{ path('nodesBulkStatusPage') }}"
                               method="get">
                             {{ form_widget(statusNodesForm) }}
+                            <div class="uk-form-row form-col-submit">
+                                <button type="submit"
+                                        class="uk-button uk-button-primary uk-button-small"
+                                        title="{% trans %}change.nodes.status{% endtrans %}"
+                                        data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save"></i></button>
+                            </div>
                         </form>
                     </div>
                 {% endif %}

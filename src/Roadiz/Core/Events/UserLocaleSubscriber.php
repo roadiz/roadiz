@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -31,9 +32,10 @@ namespace RZ\Roadiz\Core\Events;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Core\Events\User\UserUpdatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
@@ -64,11 +66,11 @@ class UserLocaleSubscriber implements EventSubscriberInterface
         return [
             KernelEvents::REQUEST => [['onKernelRequest', 32]],
             SecurityEvents::INTERACTIVE_LOGIN => [['onInteractiveLogin', 15]],
-            UserEvents::USER_UPDATED => [['onUserUpdated']],
+            UserUpdatedEvent::class => [['onUserUpdated']],
         ];
     }
 
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
         if (!$request->hasPreviousSession()) {

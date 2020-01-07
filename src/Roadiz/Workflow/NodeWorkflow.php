@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
@@ -26,13 +27,12 @@
  * @file NodeWorkflow.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\Workflow;
 
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
-use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
+use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
 
@@ -42,7 +42,7 @@ class NodeWorkflow extends Workflow
     {
         $definitionBuilder = new DefinitionBuilder();
         $definition = $definitionBuilder
-            ->setInitialPlace(Node::DRAFT)
+            ->setInitialPlaces(Node::DRAFT)
             ->addPlaces([
                 Node::DRAFT,
                 Node::PENDING,
@@ -65,7 +65,7 @@ class NodeWorkflow extends Workflow
             ->addTransition(new Transition('undelete', Node::DELETED, Node::DRAFT))
             ->build()
         ;
-        $markingStore = new SingleStateMarkingStore('status');
+        $markingStore = new MethodMarkingStore(true, 'status');
 
         parent::__construct($definition, $markingStore, $dispatcher, 'node');
     }

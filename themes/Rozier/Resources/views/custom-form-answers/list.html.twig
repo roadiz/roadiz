@@ -10,6 +10,14 @@
             type: customForm,
             current: 'customFormAnswers'
             } only %}
+
+            <div class="content-header-action-menu">
+                <nav>
+                    <a class="uk-button rz-no-ajax-link"
+                       href="{{ path('customFormsExportPage', { customFormId: customForm.id }) }}">
+                        <i class="uk-icon-rz-download"></i> {% trans %}export{% endtrans %}</a>
+                </nav>
+            </div>
         </header>
         {% include '@Rozier/widgets/filtersBar.html.twig' %}
         <article class="content content-no-action-menu content-node-types-list">

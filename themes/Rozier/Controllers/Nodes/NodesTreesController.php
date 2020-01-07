@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /*
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -33,6 +34,7 @@ namespace Themes\Rozier\Controllers\Nodes;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -72,7 +74,7 @@ class NodesTreesController extends RozierApp
             }
 
             $this->get('em')->refresh($node);
-        } elseif (null !== $this->getUser()) {
+        } elseif (null !== $this->getUser() && $this->getUser() instanceof User) {
             $node = $this->getUser()->getChroot();
         } else {
             $node = null;
@@ -112,7 +114,7 @@ class NodesTreesController extends RozierApp
          */
         $tagNodesForm = $this->buildBulkTagForm();
         $tagNodesForm->handleRequest($request);
-        if ($tagNodesForm->isValid()) {
+        if ($tagNodesForm->isSubmitted() && $tagNodesForm->isValid()) {
             $data = $tagNodesForm->getData();
 
             if ($tagNodesForm->get('submitTag')->isClicked()) {
@@ -229,8 +231,7 @@ class NodesTreesController extends RozierApp
                 $form = $this->buildBulkStatusForm(
                     $request->get('statusForm')['referer'],
                     $nodesIds,
-                    (int) $request->get('statusForm')['status'],
-                    false
+                    (int) $request->get('statusForm')['status']
                 );
 
                 $form->handleRequest($request);
@@ -492,15 +493,13 @@ class NodesTreesController extends RozierApp
      * @param bool  $referer
      * @param array $nodesIds
      * @param int   $status
-     * @param bool  $submit
      *
      * @return \Symfony\Component\Form\Form
      */
     private function buildBulkStatusForm(
         $referer = false,
         $nodesIds = [],
-        $status = Node::DRAFT,
-        $submit = true
+        $status = Node::DRAFT
     ) {
         /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
@@ -515,7 +514,6 @@ class NodesTreesController extends RozierApp
                         ->add('status', ChoiceType::class, [
                             'label' => false,
                             'data' => $status,
-                            'choices_as_values' => true,
                             'choices' => [
                                 Node::getStatusLabel(Node::DRAFT) => 'reject',
                                 Node::getStatusLabel(Node::PENDING) => 'review',
@@ -530,16 +528,6 @@ class NodesTreesController extends RozierApp
         if (false !== $referer) {
             $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
-            ]);
-        }
-        if (true === $submit) {
-            $builder->add('submitStatus', SubmitType::class, [
-                'label' => 'change.nodes.status',
-                'attr' => [
-                    'class' => 'uk-button uk-button-primary',
-                    'title' => 'change.nodes.status',
-                    'data-uk-tooltip' => "{animation:true}",
-                ],
             ]);
         }
 

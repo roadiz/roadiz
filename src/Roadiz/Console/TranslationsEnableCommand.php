@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -35,13 +36,13 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing translations.
  */
 class TranslationsEnableCommand extends Command
 {
-    private $questionHelper;
     private $entityManager;
 
     protected function configure()
@@ -57,9 +58,8 @@ class TranslationsEnableCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $locale = $input->getArgument('locale');
 
         $translation = $this->entityManager
@@ -68,22 +68,20 @@ class TranslationsEnableCommand extends Command
 
         if ($translation !== null) {
             $confirmation = new ConfirmationQuestion(
-                '<question>Are you sure to enable ' . $translation->getName() . ' (' . $translation->getLocale() . ') translation?</question> [y/N]:',
+                '<question>Are you sure to enable ' . $translation->getName() . ' (' . $translation->getLocale() . ') translation?</question>',
                 false
             );
-            if ($this->questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $confirmation
             )) {
                 $translation->setAvailable(true);
                 $this->entityManager->flush();
-                $text .= '<info>Translation enabled.</info>' . PHP_EOL;
+                $io->success('Translation enabled.');
             }
         } else {
-            $text .= '<error>Translation for locale ' . $locale . ' does not exist.</error>' . PHP_EOL;
+            $io->error('Translation for locale ' . $locale . ' does not exist.');
+            return 1;
         }
-
-        $output->writeln($text);
+        return 0;
     }
 }

@@ -51,7 +51,7 @@
                         <td>
                             <p>
                                 <a href="{{ path('settingsEditPage', { settingId: setting.setting.getId }) }}">
-                                    {{- setting.setting.name|trans|inlineMarkdown -}}
+                                    {%- if setting.setting.Encrypted -%}<i class="uk-icon uk-icon-lock" title="{% trans %}encrypted{% endtrans %}" data-uk-tooltip="{animation:true}"></i> {% endif %}{{ setting.setting.name|trans|inlineMarkdown -}}
                                 </a>
                             </p>
                             {% if setting.setting.description %}

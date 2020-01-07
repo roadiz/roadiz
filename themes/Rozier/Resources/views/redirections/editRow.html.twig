@@ -1,0 +1,22 @@
+<tr class="{% if loop.index0 is odd %}odd{% endif %}">
+    <td>
+        {# Update URL alias #}
+        {% form_theme redirection.editForm 'horizontalForms.html.twig' %}
+        {{ form_start(redirection.editForm, {
+            attr: { class: "uk-form uk-form-horizontal redirection-form" }
+        }) }}
+            {{ form_widget(redirection.editForm) }}
+            <button class="uk-button uk-button-primary" type="submit" value="{% trans %}edit{% endtrans %}"><i class="uk-icon-pencil"></i> {% trans %}edit{% endtrans %}</button>
+        {{ form_end(redirection.editForm) }}
+    </td>
+    <td>{{ path(redirection.redirection.redirectNodeSource) }}</td>
+    <td>{{ redirection.redirection.redirectNodeSource.translation.name }}</td>
+    <td>
+        {# Delete URL Alias #}
+        {% form_theme redirection.deleteForm 'horizontalForms.html.twig' %}
+        {{ form_start(redirection.deleteForm) }}
+            {{ form_widget(redirection.deleteForm) }}
+            <button class="uk-button uk-button-danger" type="submit" value="{% trans %}delete{% endtrans %}"><i class="uk-icon-rz-trash-o"></i> {% trans %}delete{% endtrans %}</button>
+        {{ form_end(redirection.deleteForm) }}
+    </td>
+</tr>

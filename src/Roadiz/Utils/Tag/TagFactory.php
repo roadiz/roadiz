@@ -61,7 +61,6 @@ final class TagFactory implements ContainerAwareInterface
      * @param Translation|null $translation
      * @param Tag|null         $parent
      * @param int|float        $latestPosition
-     * @param Tag|null         $tag
      *
      * @return Tag
      */

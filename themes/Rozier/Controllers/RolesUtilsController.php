@@ -103,7 +103,7 @@ class RolesUtilsController extends RozierApp
 
         return new JsonResponse(
             $serializer->serialize(
-                $existingRole,
+                [$existingRole],
                 'json',
                 SerializationContext::create()->setGroups(['role'])
             ),
@@ -131,11 +131,12 @@ class RolesUtilsController extends RozierApp
 
         $form->handleRequest($request);
 
-        if ($form->isValid() &&
+        if ($form->isSubmitted() &&
+            $form->isValid() &&
             !empty($form['role_file'])) {
             $file = $form['role_file']->getData();
 
-            if ($file->isValid()) {
+            if ($form->isSubmitted() && $file->isValid()) {
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {

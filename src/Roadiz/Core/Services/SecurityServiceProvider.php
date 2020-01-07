@@ -41,7 +41,7 @@ use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
-use RZ\Roadiz\Utils\Security\TimedFirewall;
+use RZ\Roadiz\Utils\Security\Firewall;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -88,7 +88,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         /*
          * PDO instance only used with SessionStorage
          */
-        $container['session.pdo'] = function ($c) {
+        $container['session.pdo'] = function (Container $c) {
             if (isset($c['config']["sessionStorage"])) {
                 $pdo = new \PDO(
                     $c['config']["sessionStorage"]['dsn'],
@@ -102,7 +102,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return null;
         };
 
-        $container['session.storage'] = function ($c) {
+        $container['session_storage'] = function (Container $c) {
             try {
                 if ($c['config'] !== null &&
                     isset($c['config']["sessionStorage"])) {
@@ -124,38 +124,38 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return null;
         };
 
-        $container['session'] = function ($c) {
+        $container['session'] = function (Container $c) {
             /** @var RequestStack $requestStack */
             $requestStack = $c['requestStack'];
             $request = $requestStack->getCurrentRequest();
-            $session = new Session($c['session.storage']);
+            $session = new Session($c['session_storage']);
             if (null !== $request) {
                 $request->setSession($session);
             }
             return $session;
         };
 
-        $container['sessionTokenStorage'] = function ($c) {
+        $container['sessionTokenStorage'] = function (Container $c) {
             return new SessionTokenStorage(
                 $c['session'],
                 $c['config']["security"]['secret']
             );
         };
 
-        $container['csrfTokenManager'] = function ($c) {
+        $container['csrfTokenManager'] = function (Container $c) {
             return new CsrfTokenManager(
                 new UriSafeTokenGenerator(),
                 $c['sessionTokenStorage']
             );
         };
 
-        $container['securityAuthenticationUtils'] = function ($c) {
+        $container['securityAuthenticationUtils'] = function (Container $c) {
             return new AuthenticationUtils($c['requestStack']);
         };
 
 
 
-        $container['contextListener'] = function ($c) {
+        $container['contextListener'] = function (Container $c) {
             $c['session']; //Force session handler
             return new ContextListener(
                 $c['securityTokenStorage'],
@@ -172,14 +172,14 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AccessMap();
         };
 
-        $container['userProvider'] = function ($c) {
+        $container['userProvider'] = function (Container $c) {
             return new UserProvider($c['em']);
         };
         $container['userChecker'] = function () {
             return new UserChecker();
         };
 
-        $container['daoAuthenticationProvider'] = function ($c) {
+        $container['daoAuthenticationProvider'] = function (Container $c) {
             return new DaoAuthenticationProvider(
                 $c['userProvider'],
                 $c['userChecker'],
@@ -188,7 +188,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container['rememberMeAuthenticationProvider'] = function ($c) {
+        $container['rememberMeAuthenticationProvider'] = function (Container $c) {
             return new RememberMeAuthenticationProvider(
                 $c['userChecker'],
                 $c['config']["security"]['secret'],
@@ -197,7 +197,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['rememberMeCookieName'] = 'roadiz_remember_me';
-        $container['rememberMeCookieLifetime'] = function ($c) {
+        $container['rememberMeCookieLifetime'] = function (Container $c) {
             if (isset($c['config']['rememberMeLifetime'])) {
                 return (int) $c['config']['rememberMeLifetime'];
             } else {
@@ -206,7 +206,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             }
         };
 
-        $container['cookieClearingLogoutHandler'] = function ($c) {
+        $container['cookieClearingLogoutHandler'] = function (Container $c) {
             /** @var RequestStack $requestStack */
             $requestStack = $c['requestStack'];
             $request = $requestStack->getMasterRequest();
@@ -218,7 +218,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             ]);
         };
 
-        $container['tokenBasedRememberMeServices'] = function ($c) {
+        $container['tokenBasedRememberMeServices'] = function (Container $c) {
             /** @var RequestStack $requestStack */
             $requestStack = $c['requestStack'];
             $request = $requestStack->getMasterRequest();
@@ -240,7 +240,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container['rememberMeListener'] = function ($c) {
+        $container['rememberMeListener'] = function (Container $c) {
             return new RememberMeListener(
                 $c['securityTokenStorage'],
                 $c['tokenBasedRememberMeServices'],
@@ -250,14 +250,15 @@ class SecurityServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container['authenticationManager'] = function ($c) {
-            return new AuthenticationProviderManager([
+        $container['authenticationManager'] = function (Container $c) {
+            $authenticationManager = new AuthenticationProviderManager([
                 new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
             ]);
+            return $authenticationManager;
         };
-        $container['authentificationManager'] = function ($c) {
+        $container['authentificationManager'] = function (Container $c) {
             return $c['authenticationManager'];
         };
 
@@ -272,18 +273,18 @@ class SecurityServiceProvider implements ServiceProviderInterface
         /*
          * Main decision manager, set your voters here.
          */
-        $container['accessDecisionManager'] = function ($c) {
+        $container['accessDecisionManager'] = function (Container $c) {
             return new AccessDecisionManager($c['security.voters']);
         };
 
 
-        $container['securityAuthenticationTrustResolver'] = function ($c) {
+        $container['securityAuthenticationTrustResolver'] = function () {
             return new AuthenticationTrustResolver(
                 AnonymousToken::class,
                 RememberMeToken::class
             );
         };
-        $container['securityAuthentificationTrustResolver'] = function ($c) {
+        $container['securityAuthentificationTrustResolver'] = function (Container $c) {
             return $c['securityAuthenticationTrustResolver'];
         };
 
@@ -294,7 +295,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return $c['securityAuthorizationChecker'];
         };
 
-        $container['securityAuthorizationChecker'] = function ($c) {
+        $container['securityAuthorizationChecker'] = function (Container $c) {
             return new AuthorizationChecker(
                 $c['securityTokenStorage'],
                 $c['authenticationManager'],
@@ -306,7 +307,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new TokenStorage();
         };
 
-        $container['securityAccessListener'] = function ($c) {
+        $container['securityAccessListener'] = function (Container $c) {
             return new AccessListener(
                 $c['securityTokenStorage'],
                 $c['accessDecisionManager'],
@@ -315,7 +316,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container['roleHierarchy'] = function ($c) {
+        $container['roleHierarchy'] = function (Container $c) {
             try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
@@ -336,15 +337,15 @@ class SecurityServiceProvider implements ServiceProviderInterface
             }
         };
 
-        $container['roleHierarchyVoter'] = function ($c) {
+        $container['roleHierarchyVoter'] = function (Container $c) {
             return new RoleHierarchyVoter($c['roleHierarchy']);
         };
 
-        $container['groupVoter'] = function ($c) {
+        $container['groupVoter'] = function (Container $c) {
             return new GroupVoter($c['roleHierarchy']);
         };
 
-        $container["switchUser"] = function ($c) {
+        $container["switchUser"] = function (Container $c) {
             return new SwitchUserListener(
                 $c['securityTokenStorage'],
                 $c['userProvider'],
@@ -362,31 +363,31 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new FirewallMap();
         };
 
-        $container['passwordEncoder'] = function ($c) {
+        $container['passwordEncoder'] = function (Container $c) {
             return $c['config']['security'];
         };
 
-        $container['userImplementations'] = function ($c) {
+        $container['userImplementations'] = function (Container $c) {
             return [
                 User::class => $c['passwordEncoder'],
             ];
         };
 
-        $container['userEncoderFactory'] = function ($c) {
+        $container['userEncoderFactory'] = function (Container $c) {
             return new EncoderFactory($c['userImplementations']);
         };
 
-        $container['firewall'] = function ($c) {
-            $c['stopwatch']->start('firewall');
-            $firewall = new TimedFirewall($c['firewallMap'], $c['dispatcher'], $c['stopwatch']);
-            $c['stopwatch']->stop('firewall');
+        $container['firewall'] = function (Container $c) {
+            $c['stopwatch']->start('firewall.build');
+            $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
+            $c['stopwatch']->stop('firewall.build');
             return $firewall;
         };
 
         /*
          * Default denied handler
          */
-        $container['accessDeniedHandler'] = function ($c) {
+        $container['accessDeniedHandler'] = function (Container $c) {
             return new AccessDeniedHandler($c['urlGenerator'], $c['logger']);
         };
 

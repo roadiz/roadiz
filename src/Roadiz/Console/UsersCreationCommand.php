@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -37,6 +38,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing users from terminal.
@@ -61,12 +63,11 @@ class UsersCreationCommand extends UsersCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $name = $input->getArgument('username');
 
         if ($name) {
+            /** @var User|null $user */
             $user = $this->entityManager
                 ->getRepository(User::class)
                 ->findOneBy(['username' => $name]);
@@ -77,8 +78,7 @@ class UsersCreationCommand extends UsersCommand
                 throw new \InvalidArgumentException('User “' . $name . '” already exists.');
             }
         }
-
-        $output->writeln($text);
+        return 0;
     }
 
     /**
@@ -92,8 +92,9 @@ class UsersCreationCommand extends UsersCommand
         $username,
         InputInterface $input,
         OutputInterface $output
-    ) {
+    ): User {
         $user = new User();
+        $io = new SymfonyStyle($input, $output);
         if (!$input->hasOption('password')) {
             $user->sendCreationConfirmationEmail(true);
         }
@@ -105,12 +106,9 @@ class UsersCreationCommand extends UsersCommand
              */
             do {
                 $questionEmail = new Question(
-                    '<question>Email</question> : ',
-                    ''
+                    '<question>Email</question>'
                 );
-                $email = $this->questionHelper->ask(
-                    $input,
-                    $output,
+                $email = $io->askQuestion(
                     $questionEmail
                 );
             } while (!filter_var($email, FILTER_VALIDATE_EMAIL) ||
@@ -133,12 +131,10 @@ class UsersCreationCommand extends UsersCommand
 
         if ($input->isInteractive() && !$input->getOption('back-end')) {
             $questionBack = new ConfirmationQuestion(
-                '<question>Is user a backend user?</question> [y/N]: ',
+                '<question>Is user a backend user?</question>',
                 false
             );
-            if ($this->questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $questionBack
             )) {
                 $user->addRole($this->getRole(Role::ROLE_BACKEND_USER));
@@ -149,12 +145,10 @@ class UsersCreationCommand extends UsersCommand
 
         if ($input->isInteractive() && !$input->getOption('super-admin')) {
             $questionAdmin = new ConfirmationQuestion(
-                '<question>Is user a super-admin user?</question> [y/N]: ',
+                '<question>Is user a super-admin user?</question>',
                 false
             );
-            if ($this->questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $questionAdmin
             )) {
                 $user->addRole($this->getRole(Role::ROLE_SUPERADMIN));
@@ -174,9 +168,7 @@ class UsersCreationCommand extends UsersCommand
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
-        $text = '<info>User “' . $username . '”<' . $email . '> created…</info>' . PHP_EOL;
-        $text .= '<info>Password “' . $user->getPlainPassword() . '”.</info>' . PHP_EOL;
-        $output->writeln($text);
+        $io->success('User “' . $username . '”<' . $email . '> created with password: ' . $user->getPlainPassword());
 
         return $user;
     }

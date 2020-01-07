@@ -103,6 +103,7 @@ class NodeTypeJsonSerializer extends AbstractJsonSerializer
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
         $serializer = new Serializer([$normalizer], [$encoder]);
+        /** @var NodeType $nodeType */
         $nodeType = $serializer->deserialize($string, NodeType::class, 'json');
 
         /*

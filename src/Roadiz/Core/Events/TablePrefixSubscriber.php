@@ -63,7 +63,7 @@ class TablePrefixSubscriber implements EventSubscriber
     }
 
     /**
-     * @param \Doctrine\ORM\Event\LoadClassMetadataEventArgs  $eventArgs
+     * @param LoadClassMetadataEventArgs $eventArgs
      */
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {

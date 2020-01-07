@@ -34,7 +34,7 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\DocumentEvents;
+use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -73,7 +73,7 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentEvents::DOCUMENT_IMAGE_UPLOADED => 'onImageUploaded',
+            DocumentImageUploadedEvent::class => ['onImageUploaded', 101], // read EXIF before processing Raw documents
         ];
     }
 
@@ -103,13 +103,15 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
 
     /**
      * @param FilterDocumentEvent $event
+     *
+     * @throws \Doctrine\ORM\ORMException
      */
     public function onImageUploaded(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
-        if ($this->supports($document)) {
+        if ($this->supports($document) && function_exists('exif_read_data')) {
             $filePath = $this->packages->getDocumentFilePath($document);
-            $exif = exif_read_data($filePath, null, false);
+            $exif = @exif_read_data($filePath, null, false);
 
             if (false !== $exif) {
                 $copyright = $this->getCopyright($exif);

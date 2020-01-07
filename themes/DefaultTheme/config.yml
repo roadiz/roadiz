@@ -8,7 +8,7 @@ supportedLocale:
     - fr
     - ru
     - tr
-versionRequire: "1.2.0"
+versionRequire: "1.3.0"
 importFiles:
     roles: []
     groups: []
@@ -17,7 +17,7 @@ importFiles:
         - Resources/import/attributes.json
     nodetypes:
         - Resources/import/nodetype/BasicBlock.json
-        - Resources/import/nodetype/BasicNewsletter.json
+        #- Resources/import/nodetype/BasicNewsletter.json
         - Resources/import/nodetype/Link.json
         - Resources/import/nodetype/Neutral.json
         - Resources/import/nodetype/Page.json

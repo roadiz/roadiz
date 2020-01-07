@@ -44,7 +44,6 @@ use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HandlerExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HttpKernelExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
-use RZ\Roadiz\Utils\TwigExtensions\ParsedownExtension;
 use RZ\Roadiz\Utils\TwigExtensions\RoadizExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
@@ -76,12 +75,12 @@ use Twig\TwigFilter;
 class TwigServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param \Pimple\Container $container [description]
+     * @param Container $container
      * @return Container
      */
     public function register(Container $container)
     {
-        $container['twig.cacheFolder'] = function ($c) {
+        $container['twig.cacheFolder'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return $kernel->getCacheDir() . '/twig_cache';
@@ -90,7 +89,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         /*
          * Return every paths to search for twig templates.
          */
-        $container['twig.loaderFileSystem'] = function ($c) {
+        $container['twig.loaderFileSystem'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $vendorDir = realpath($kernel->getVendorDir());
@@ -106,7 +105,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             return $loader;
         };
 
-        $container['twig.environment_class'] = function ($c) {
+        $container['twig.environment_class'] = function (Container $c) {
             return new Environment($c['twig.loaderFileSystem'], [
                 'debug' => $c['kernel']->isDebug(),
                 'cache' => $c['twig.cacheFolder'],
@@ -116,10 +115,10 @@ class TwigServiceProvider implements ServiceProviderInterface
         /**
          * Twig form renderer extension.
          *
-         * @param $c
+         * @param Container $c
          * @return TwigRendererEngine
          */
-        $container['twig.formRenderer'] = function ($c) {
+        $container['twig.formRenderer'] = function (Container $c) {
             return new TwigRendererEngine(
                 ['form_div_layout.html.twig'],
                 $c['twig.environment_class']
@@ -129,10 +128,10 @@ class TwigServiceProvider implements ServiceProviderInterface
         /**
          * Main twig environment.
          *
-         * @param $c
+         * @param Container $c
          * @return Environment
          */
-        $container['twig.environment'] = function ($c) {
+        $container['twig.environment'] = function (Container $c) {
             $c['stopwatch']->start('initTwig');
             /** @var Environment $twig */
             $twig = $c['twig.environment_class'];
@@ -174,17 +173,17 @@ class TwigServiceProvider implements ServiceProviderInterface
          * We separate filters from environment to be able to
          * extend them without waking up Twig.
          *
-         * @param $c
+         * @param Container $c
          * @return ArrayCollection
          */
-        $container['twig.filters'] = function ($c) {
+        $container['twig.filters'] = function (Container $c) {
             $filters = new ArrayCollection();
             $filters->add($c['twig.centralTruncateExtension']);
 
             return $filters;
         };
 
-        $container['twig.fragmentHandler'] = function ($c) {
+        $container['twig.fragmentHandler'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return new FragmentHandler($c['requestStack'], [
@@ -198,16 +197,15 @@ class TwigServiceProvider implements ServiceProviderInterface
          * We separate extensions from environment to be able to
          * extend them without waking up Twig.
          *
-         * @param $c
+         * @param Container $c
          * @return ArrayCollection
          */
-        $container['twig.extensions'] = function ($c) {
+        $container['twig.extensions'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $extensions = new ArrayCollection();
 
             $extensions->add(new FormExtension());
-            $extensions->add(new ParsedownExtension());
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c['requestStack']));
@@ -241,7 +239,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $extensions->add(new FontExtension($c));
                 $extensions->add(new NodesSourcesExtension(
                     $c['securityAuthorizationChecker'],
-                    $c['nodes_sources.handler'],
+                    $c['factory.handler'],
                     $c['nodeSourceApi'],
                     $kernel->isPreview()
                 ));
@@ -262,7 +260,7 @@ class TwigServiceProvider implements ServiceProviderInterface
         /*
          * Twig routing extension
          */
-        $container['twig.routingExtension'] = function ($c) {
+        $container['twig.routingExtension'] = function (Container $c) {
             return new RoutingExtension($c['router']);
         };
 
@@ -288,7 +286,7 @@ class TwigServiceProvider implements ServiceProviderInterface
          * Twig cache extension
          * see https://github.com/asm89/twig-cache-extension
          */
-        $container['twig.cacheExtension'] = function ($c) {
+        $container['twig.cacheExtension'] = function (Container $c) {
             $resultCacheDriver = $c['em']->getConfiguration()->getResultCacheImpl();
             if ($resultCacheDriver !== null) {
                 $cacheProvider = new DoctrineCacheAdapter($resultCacheDriver);

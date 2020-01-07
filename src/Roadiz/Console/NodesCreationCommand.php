@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -31,6 +32,7 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
@@ -38,13 +40,15 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing nodes from terminal.
  */
 class NodesCreationCommand extends Command
 {
-    private $questionHelper;
+    /** @var SymfonyStyle */
+    protected $io;
     /**
      * @var EntityManagerInterface
      */
@@ -73,12 +77,11 @@ class NodesCreationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
-        $text = "";
         $nodeName = $input->getArgument('node-name');
         $typeName = $input->getArgument('node-type');
         $locale = $input->getArgument('locale');
+        $this->io = new SymfonyStyle($input, $output);
 
         $existingNode = $this->entityManager
             ->getRepository(Node::class)
@@ -105,32 +108,27 @@ class NodesCreationCommand extends Command
                         ->findDefault();
                 }
 
-                $text = $this->executeNodeCreation($input, $output, $type, $translation);
+                $this->executeNodeCreation($input->getArgument('node-name'), $type, $translation);
             } else {
-                $text .= '<error>"' . $typeName . '" node type does not exist.</error>' . PHP_EOL;
+                $this->io->error('"' . $typeName . '" node type does not exist.');
+                return 1;
             }
+            return 0;
         } else {
-            $text .= '<error>"' . $existingNode->getNodeName() . '" node already exists.</error>' . PHP_EOL;
+            $this->io->error($existingNode->getNodeName() . ' node already exists.');
+            return 1;
         }
-
-        $output->writeln($text);
     }
 
     /**
-     * @param InputInterface  $input
-     * @param OutputInterface $output
      * @param NodeType        $type
      * @param Translation     $translation
-     *
-     * @return string
      */
     private function executeNodeCreation(
-        InputInterface $input,
-        OutputInterface $output,
+        string $nodeName,
         NodeType $type,
         Translation $translation
     ) {
-        $nodeName = $input->getArgument('node-name');
         $node = new Node($type);
         $node->setTtl($node->getNodeType()->getDefaultTtl());
         $node->setNodeName($nodeName);
@@ -138,13 +136,15 @@ class NodesCreationCommand extends Command
 
         // Source
         $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $type->getSourceEntityClassName();
+        /** @var NodesSources $source */
         $source = new $sourceClass($node, $translation);
+        $source->setTitle($nodeName);
         $fields = $type->getFields();
 
         foreach ($fields as $field) {
             if (!$field->isVirtual()) {
                 $question = new Question('<question>[Field ' . $field->getLabel() . ']</question> : ', null);
-                $fValue = $this->questionHelper->ask($input, $output, $question);
+                $fValue = $this->io->askQuestion($question);
                 $setterName = $field->getSetterName();
                 $source->$setterName($fValue);
             }
@@ -152,8 +152,6 @@ class NodesCreationCommand extends Command
 
         $this->entityManager->persist($source);
         $this->entityManager->flush();
-        $text = '<info>Node “' . $nodeName . '” created…</info>' . PHP_EOL;
-
-        return $text;
+        $this->io->success('Node “' . $nodeName . '” created at root level.');
     }
 }

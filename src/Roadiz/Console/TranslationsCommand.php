@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -31,9 +32,9 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Command line utils for managing translations from terminal.
@@ -51,14 +52,14 @@ class TranslationsCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $io = new SymfonyStyle($input, $output);
         $translations = $this->entityManager
             ->getRepository(Translation::class)
             ->findAll();
 
         if (count($translations) > 0) {
-            $table = new Table($output);
-            $table->setHeaders(['Id', 'Name', 'Locale', 'Disabled', 'Default']);
             $tableContent = [];
+            /** @var Translation $trans */
             foreach ($translations as $trans) {
                 $tableContent[] = [
                     $trans->getId(),
@@ -68,10 +69,10 @@ class TranslationsCommand extends Command
                     ($trans->isDefaultTranslation() ? 'X' : ''),
                 ];
             }
-            $table->setRows($tableContent);
-            $table->render();
+            $io->table(['Id', 'Name', 'Locale', 'Disabled', 'Default'], $tableContent);
         } else {
-            $output->writeln('<info>No available translations.</info>' . PHP_EOL);
+            $io->error('No available translations.');
         }
+        return 0;
     }
 }

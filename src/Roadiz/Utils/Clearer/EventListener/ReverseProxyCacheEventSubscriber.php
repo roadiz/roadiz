@@ -32,10 +32,10 @@ namespace RZ\Roadiz\Utils\Clearer\EventListener;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Pimple\Container;
-use RZ\Roadiz\Core\Events\CacheEvents;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\NodesSourcesEvents;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -62,8 +62,8 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            CacheEvents::PURGE_REQUEST => ['onBanRequest', 3],
-            NodesSourcesEvents::NODE_SOURCE_UPDATED => ['onPurgeRequest', 3],
+            CachePurgeRequestEvent::class => ['onBanRequest', 3],
+            NodesSourcesUpdatedEvent::class => ['onPurgeRequest', 3],
         ];
     }
 

@@ -101,15 +101,25 @@ class Font extends AbstractDateTimed
      * @var int
      */
     protected $variant = Font::REGULAR;
-    /** @var UploadedFile|null */
+    /**
+     * @var UploadedFile|null
+     */
     protected $eotFile = null;
-    /** @var UploadedFile|null */
+    /**
+     * @var UploadedFile|null
+     */
     protected $woffFile = null;
-    /** @var UploadedFile|null */
+    /**
+     * @var UploadedFile|null
+     */
     protected $woff2File = null;
-    /** @var UploadedFile|null */
+    /**
+     * @var UploadedFile|null
+     */
     protected $otfFile = null;
-    /** @var UploadedFile|null */
+    /**
+     * @var UploadedFile|null
+     */
     protected $svgFile = null;
     /**
      * @ORM\Column(type="string", nullable=true, name="eot_filename")

@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Handlers\AbstractHandler;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
@@ -63,8 +64,8 @@ class HandlerExtension extends AbstractExtension
     }
 
     /**
-     * @param $mixed
-     * @return \RZ\Roadiz\Core\Handlers\AbstractHandler|null
+     * @param mixed $mixed
+     * @return AbstractHandler|null
      * @throws RuntimeError
      */
     public function getHandler($mixed)

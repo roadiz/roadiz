@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -31,8 +32,9 @@
 namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use RZ\Roadiz\Core\Bags\Settings;
-use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
@@ -49,8 +51,9 @@ class TranslationViewer
      * @var bool
      */
     private $preview;
-
-    /** @var Settings */
+    /**
+     * @var Settings
+     */
     private $settingsBag;
     /**
      * @var EntityManager
@@ -86,7 +89,7 @@ class TranslationViewer
     }
 
     /**
-     * @return \Doctrine\ORM\EntityRepository|TranslationRepository
+     * @return TranslationRepository<Translation>
      */
     public function getRepository()
     {
@@ -129,12 +132,13 @@ class TranslationViewer
      * @param boolean $absolute Generate absolute url or relative paths
      *
      * @return array
+     * @throws ORMException
      */
     public function getTranslationMenuAssignation(Request $request, $absolute = false)
     {
         $attr = $request->attributes->all();
         $query = $request->query->all();
-        $name = "";
+        $name = '';
         $forceLocale = (boolean) $this->settingsBag->get('force_locale');
 
         /*
@@ -142,16 +146,17 @@ class TranslationViewer
          */
         $absolute = $absolute ? Router::ABSOLUTE_URL : Router::ABSOLUTE_PATH;
 
-        /** @var \Rz\Roadiz\Core\Entities\Node $node */
-        if (in_array("node", array_keys($attr), true)) {
+        /** @var Node $node */
+        if (key_exists('node', $attr) && $attr['node'] instanceof Node) {
             $node = $attr["node"];
+            $this->entityManager->refresh($node);
         } else {
             $node = null;
         }
         /*
          * If using a static route (routes.yml)…
          */
-        if (!empty($attr["_route"]) && is_string($attr["_route"])) {
+        if (!empty($attr['_route']) && is_string($attr['_route'])) {
             $translations = $this->getRepository()->findAllAvailable();
             /*
              * Search for a route without Locale suffix
@@ -179,9 +184,8 @@ class TranslationViewer
         /** @var Translation $translation */
         foreach ($translations as $translation) {
             $url = null;
-
-            if (!empty($attr["_route"]) && is_string($attr["_route"])) {
-                $name = $attr["_route"];
+            if (!empty($attr['_route']) && is_string($attr['_route'])) {
+                $name = $attr['_route'];
                 /*
                  * Use suffixed route if locales are forced or
                  * if it’s not default translation.
@@ -190,37 +194,37 @@ class TranslationViewer
                     /*
                      * Search for a Locale suffixed route
                      */
-                    if (null !== $this->router->getRouteCollection()->get($attr["_route"] . "Locale")) {
-                        $name = $attr["_route"] . "Locale";
+                    if (null !== $this->router->getRouteCollection()->get($attr['_route'] . "Locale")) {
+                        $name = $attr['_route'] . 'Locale';
                     }
 
-                    $attr["_route_params"]["_locale"] = $translation->getPreferredLocale();
+                    $attr['_route_params']['_locale'] = $translation->getPreferredLocale();
                 } else {
-                    if (in_array("_locale", array_keys($attr["_route_params"]), true)) {
-                        unset($attr["_route_params"]["_locale"]);
+                    if (key_exists('_locale', $attr['_route_params'])) {
+                        unset($attr['_route_params']['_locale']);
                     }
                 }
                 /*
                  * Remove existing _locale in query string
                  */
-                if (isset($query["_locale"])) {
+                if (key_exists('_locale', $query)) {
                     unset($query["_locale"]);
                 }
 
                 $url = $this->router->generate(
                     $name,
-                    array_merge($attr["_route_params"], $query),
+                    array_merge($attr['_route_params'], $query),
                     $absolute
                 );
             } elseif ($node) {
-                $nodesSources = $this->entityManager
-                    ->getRepository(NodesSources::class)
-                    ->findOneBy(["node" => $node, "translation" => $translation]);
-                $url = $this->router->generate(
-                    $nodesSources,
-                    $query,
-                    $absolute
-                );
+                $nodesSources = $node->getNodeSourcesByTranslation($translation)->first();
+                if (null !== $nodesSources && false !== $nodesSources) {
+                    $url = $this->router->generate(
+                        $nodesSources,
+                        $query,
+                        $absolute
+                    );
+                }
             }
 
             if (null !== $url) {

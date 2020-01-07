@@ -235,7 +235,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     /**
      * Normalize response Node list result.
      *
-     * @param $nodes
+     * @param array|\Traversable $nodes
      * @return array
      */
     private function normalizeNodes($nodes)

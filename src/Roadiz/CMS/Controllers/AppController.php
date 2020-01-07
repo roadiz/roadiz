@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -37,7 +38,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
+use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
@@ -51,12 +52,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ConstraintViolation;
-use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 
 /**
  * Base class for Roadiz themes.
@@ -512,15 +513,16 @@ abstract class AppController extends Controller
      * Publish a message in Session flash bag and
      * logger interface.
      *
-     * @param Request $request
-     * @param string  $msg
-     * @param string  $level
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param Request      $request
+     * @param string       $msg
+     * @param string       $level
+     * @param NodesSources $source
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
-        if (null !== $request->getSession()) {
-            $request->getSession()->getFlashBag()->add($level, $msg);
+        $session = $request->getSession();
+        if (null !== $session && $session instanceof Session) {
+            $session->getFlashBag()->add($level, $msg);
         }
 
         switch ($level) {
@@ -536,9 +538,9 @@ abstract class AppController extends Controller
      * Publish a confirm message in Session flash bag and
      * logger interface.
      *
-     * @param Request $request
-     * @param string  $msg
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param Request      $request
+     * @param string       $msg
+     * @param NodesSources $source
      */
     public function publishConfirmMessage(Request $request, $msg, NodesSources $source = null)
     {
@@ -549,9 +551,9 @@ abstract class AppController extends Controller
      * Publish an error message in Session flash bag and
      * logger interface.
      *
-     * @param Request $request
-     * @param string  $msg
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $source
+     * @param Request      $request
+     * @param string       $msg
+     * @param NodesSources $source
      */
     public function publishErrorMessage(Request $request, $msg, NodesSources $source = null)
     {

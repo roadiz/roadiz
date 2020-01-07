@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -30,7 +31,9 @@ namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Config\NullLoader;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
@@ -38,7 +41,13 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class RedirectionRouter extends Router implements VersatileGeneratorInterface
 {
+    /**
+     * @var EntityManager
+     */
     protected $em;
+    /**
+     * @var Stopwatch|null
+     */
     protected $stopwatch;
     /**
      * @var bool
@@ -61,11 +70,15 @@ class RedirectionRouter extends Router implements VersatileGeneratorInterface
         LoggerInterface $logger = null,
         Stopwatch $stopwatch = null
     ) {
+        parent::__construct(
+            new NullLoader(),
+            null,
+            $options,
+            $context,
+            $logger
+        );
         $this->em = $em;
         $this->stopwatch = $stopwatch;
-        $this->logger = $logger;
-        $this->context = $context ?: new RequestContext();
-        $this->setOptions($options);
     }
 
     /**
@@ -87,9 +100,9 @@ class RedirectionRouter extends Router implements VersatileGeneratorInterface
     /**
      * Gets the UrlMatcher instance associated with this Router.
      *
-     * @return RedirectionMatcher A UrlMatcherInterface instance
+     * @return RedirectionMatcher|UrlMatcherInterface A UrlMatcherInterface instance
      */
-    public function getMatcher(): RedirectionMatcher
+    public function getMatcher(): UrlMatcherInterface
     {
         if (null !== $this->matcher) {
             return $this->matcher;

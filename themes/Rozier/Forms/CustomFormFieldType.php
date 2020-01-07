@@ -29,7 +29,7 @@
  */
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormFieldName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\CustomForm;
@@ -73,7 +73,6 @@ class CustomFormFieldType extends AbstractType
                 'label' => 'type',
                 'required' => true,
                 'choices' => array_flip(CustomFormField::$typeToHuman),
-                'choices_as_values' => true,
             ])
             ->add('required', CheckboxType::class, [
                 'label' => 'required',

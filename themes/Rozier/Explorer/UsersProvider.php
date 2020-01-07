@@ -30,11 +30,24 @@
 namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UsersProvider extends AbstractExplorerProvider
+final class UsersProvider extends AbstractDoctrineExplorerProvider
 {
+    protected function getProvidedClassname(): string
+    {
+        return User::class;
+    }
+
+    protected function getDefaultCriteria(): array
+    {
+        return [];
+    }
+
+    protected function getDefaultOrdering(): array
+    {
+        return ['username' =>'ASC'];
+    }
+
     /**
      * @inheritDoc
      */
@@ -47,7 +60,6 @@ class UsersProvider extends AbstractExplorerProvider
         return false;
     }
 
-
     /**
      * @inheritDoc
      */
@@ -58,79 +70,5 @@ class UsersProvider extends AbstractExplorerProvider
         }
 
         return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getItems($options = [])
-    {
-        $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
-        $this->options = $resolver->resolve($options);
-
-        $listManager = new EntityListManager(
-            $this->get('requestStack')->getCurrentRequest(),
-            $this->get('em'),
-            User::class,
-            [],
-            ['username' =>'ASC']
-        );
-        $listManager->setDisplayingNotPublishedNodes(true);
-        $listManager->setItemPerPage($this->options['itemPerPage']);
-        $listManager->handle();
-        $listManager->setPage($this->options['page']);
-
-        $items = [];
-        foreach ($listManager->getEntities() as $entity) {
-            $items[] = $this->toExplorerItem($entity);
-        }
-
-        return $items;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getFilters($options = [])
-    {
-        $resolver = new OptionsResolver();
-        $this->configureOptions($resolver);
-        $this->options = $resolver->resolve($options);
-
-        $listManager = new EntityListManager(
-            $this->get('requestStack')->getCurrentRequest(),
-            $this->get('em'),
-            User::class,
-            [],
-            ['username' =>'ASC']
-        );
-        $listManager->setDisplayingNotPublishedNodes(true);
-        $listManager->setItemPerPage($this->options['itemPerPage']);
-        $listManager->handle();
-        $listManager->setPage($this->options['page']);
-
-        return $listManager->getAssignation();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getItemsById($ids = [])
-    {
-        if (is_array($ids) && count($ids) > 0) {
-            $entities = $this->get('em')->getRepository(User::class)->findBy([
-                'id' => $ids
-            ]);
-
-            $items = [];
-            foreach ($entities as $entity) {
-                $items[] = $this->toExplorerItem($entity);
-            }
-
-            return $items;
-        }
-
-        return [];
     }
 }

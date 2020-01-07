@@ -94,7 +94,7 @@ class CustomFormsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('em')->flush();
                     $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%' => $customForm->getName()]);
@@ -137,7 +137,7 @@ class CustomFormsController extends RozierApp
                 'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->get('em')->persist($customForm);
                     $this->get('em')->flush();
@@ -181,7 +181,7 @@ class CustomFormsController extends RozierApp
             $this->assignation['customForm'] = $customForm;
             $form = $this->createForm(FormType::class, $customForm);
             $form->handleRequest($request);
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 $this->get("em")->remove($customForm);
                 $this->get("em")->flush();
 

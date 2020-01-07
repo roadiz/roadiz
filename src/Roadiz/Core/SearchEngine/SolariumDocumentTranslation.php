@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -28,17 +29,16 @@
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Monolog\Logger;
-use Parsedown;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
 
 /**
- * Wrap a Solarium and a DocumenTranslation together to ease indexing.
+ * Wrap a Solarium and a DocumentTranslation together to ease indexing.
  *
  * @package RZ\Roadiz\Core\SearchEngine
  */
@@ -53,27 +53,23 @@ class SolariumDocumentTranslation extends AbstractSolarium
     /** @var DocumentTranslation */
     protected $documentTranslation = null;
 
-
     /**
      * Create a new SolariumDocument.
      *
      * @param DocumentTranslation $documentTranslation
      * @param Client $client
-     * @param Logger $logger
+     * @param LoggerInterface $logger
      */
     public function __construct(
         DocumentTranslation $documentTranslation,
         Client $client = null,
-        Logger $logger = null
+        LoggerInterface $logger = null,
+        MarkdownInterface $markdown = null
     ) {
-        if (null === $client) {
-            throw new SolrServerNotConfiguredException("No Solr server available", 1);
-        }
+        parent::__construct($client, $logger, $markdown);
 
-        $this->client = $client;
         $this->documentTranslation = $documentTranslation;
         $this->rzDocument = $documentTranslation->getDocument();
-        $this->logger = $logger;
     }
 
     /**
@@ -106,7 +102,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
      * @return array
      * @throws \Exception
      */
-    protected function getFieldsAssoc()
+    public function getFieldsAssoc(): array
     {
         $assoc = [];
         $collection = [];
@@ -142,9 +138,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
         /*
          * Remove ctrl characters
          */
-        $description = strip_tags(Parsedown::instance()->text($this->documentTranslation->getDescription()));
-        $description = preg_replace("[:cntrl:]", "", $description);
-        $description = preg_replace('/[\x00-\x1F]/', '', $description);
+        $description = $this->cleanTextContent($this->documentTranslation->getDescription());
         $assoc['description' . $suffix] = $description;
 
         $assoc['copyright' . $suffix] = $this->documentTranslation->getCopyright();
@@ -186,7 +180,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
     /**
      * Remove any document linked to current node-source.
      *
-     * @param \Solarium\QueryType\Update\Query\Query $update
+     * @param Query $update
      * @return boolean
      */
     public function clean(Query $update)

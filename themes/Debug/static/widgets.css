@@ -94,7 +94,7 @@ dl.phpdebugbar-widgets-kvlist {
 }
   dl.phpdebugbar-widgets-kvlist dt {
     float: left;
-    width: 150px;
+    width: 33%;
     padding: 5px;
     border-bottom: 1px solid #eee;
     font-weight: bold;

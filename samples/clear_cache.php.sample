@@ -28,6 +28,8 @@
  * @author Ambroise Maupate
  */
 
+use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
+use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\CacheEvents;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
 use RZ\Roadiz\Core\HttpFoundation\Request;
@@ -78,9 +80,9 @@ $kernel->boot();
 $kernel->getContainer()->offsetSet('request', $request);
 /** @var EventDispatcher $dispatcher */
 $dispatcher = $kernel->get('dispatcher');
-$event = new FilterCacheEvent($kernel);
-$dispatcher->dispatch(CacheEvents::PURGE_REQUEST, $event);
-$dispatcher->dispatch(CacheEvents::PURGE_ASSETS_REQUEST, $event);
+$event = new CachePurgeRequestEvent($kernel);
+$dispatcher->dispatch($event);
+$dispatcher->dispatch(new CachePurgeAssetsRequestEvent($kernel));
 
 $text = [
     'status' => 'ok',

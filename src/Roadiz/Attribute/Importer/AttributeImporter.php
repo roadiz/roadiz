@@ -32,7 +32,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Importer;
 
-use Doctrine\ORM\EntityManager;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\Serializer;
 use Pimple\Container;
@@ -69,11 +68,9 @@ class AttributeImporter implements EntityImporterInterface, ContainerAwareInterf
      */
     public function import(string $serializedData): bool
     {
-        /** @var EntityManager $em */
-        $em = $this->get('em');
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
-        $attributes = $serializer->deserialize(
+        $serializer->deserialize(
             $serializedData,
             'array<' . Attribute::class . '>',
             'json',
@@ -81,12 +78,6 @@ class AttributeImporter implements EntityImporterInterface, ContainerAwareInterf
                 ->setAttribute(TypedObjectConstructorInterface::PERSIST_NEW_OBJECTS, true)
                 ->setAttribute(TypedObjectConstructorInterface::FLUSH_NEW_OBJECTS, true)
         );
-
-        /** @var Attribute $attribute */
-        foreach ($attributes as $attribute) {
-            $em->merge($attribute);
-            $em->flush();
-        }
 
         return true;
     }

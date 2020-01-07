@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
  *
@@ -31,7 +32,6 @@ namespace RZ\Roadiz\Core\SearchEngine;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Solarium\Core\Client\Client;
-use Solarium\QueryType\Select\Query\Component\BoostQuery;
 use Solarium\QueryType\Select\Query\Query;
 
 abstract class AbstractSearchHandler
@@ -70,13 +70,13 @@ abstract class AbstractSearchHandler
     abstract protected function getDocumentType();
 
     /**
-     * @param $response
+     * @param array|null $response
      * @return array
      */
     abstract protected function parseSolrResponse($response);
 
     /**
-     * @param $args
+     * @param array $args
      * @return mixed
      */
     abstract protected function argFqProcess(&$args);
@@ -221,7 +221,7 @@ abstract class AbstractSearchHandler
     }
 
     /**
-     * @param $q
+     * @param string $q
      * @param array $args
      * @param int $rows Useless var but keep it for retrocompatibility
      * @param bool $searchTags

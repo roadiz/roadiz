@@ -90,10 +90,10 @@ class DoctrineCacheClearer extends Clearer
     {
         if ($this->databaseAvailable()) {
             $conf = $this->entityManager->getConfiguration();
-            $this->clearCacheDriver($conf->getResultCacheImpl(), 'result');
-            $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
-            $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
-            $this->clearCacheDriver($conf->getMetadataCacheImpl(), 'metadata');
+            $this->output .= $this->clearCacheDriver($conf->getResultCacheImpl(), 'result');
+            $this->output .= $this->clearCacheDriver($conf->getHydrationCacheImpl(), 'hydratation');
+            $this->output .= $this->clearCacheDriver($conf->getQueryCacheImpl(), 'query');
+            $this->output .= $this->clearCacheDriver($conf->getMetadataCacheImpl(), 'metadata');
             if ($this->recreateProxies === true) {
                 $this->recreateProxies();
             }
@@ -102,21 +102,22 @@ class DoctrineCacheClearer extends Clearer
         return true;
     }
 
-    protected function clearCacheDriver(CacheProvider $cacheDriver = null, $description = "")
+    protected function clearCacheDriver(CacheProvider $cacheDriver = null, $description = ""): string
     {
+        $output = '';
         if ($cacheDriver !== null) {
-            $this->output .= 'Doctrine ' . $description . ' cache: ' . $cacheDriver->getNamespace() . ' — ';
+            $output = ucwords($description) . ' cache';
             if (!$cacheDriver->flushAll()) {
                 if (!$cacheDriver->deleteAll()) {
-                    $this->output .= '<error>FAIL</error>';
+                    $output .= ' <error>FAIL</error>';
                 } else {
-                    $this->output .= '<info>OK</info>: DELETED';
+                    $output .= ' <info>DELETED</info>';
                 }
             } else {
-                $this->output .= '<info>OK</info>: FLUSHED';
+                $output .= ' <info>FLUSHED</info>';
             }
-            $this->output .= PHP_EOL;
         }
+        return $output . ' ';
     }
 
     /**

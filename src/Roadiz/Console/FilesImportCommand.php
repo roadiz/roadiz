@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -35,6 +36,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Filesystem;
 use ZipArchive;
 
@@ -62,9 +64,10 @@ class FilesImportCommand extends Command
         /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         $configuration = $this->getHelper('configuration')->getConfiguration();
-        $questionHelper = $this->getHelper('question');
+        $io = new SymfonyStyle($input, $output);
+
         $confirmation = new ConfirmationQuestion(
-            '<question>Are you sure to import files from this archive? Your existing files will be lost!</question> [y/N]: ',
+            '<question>Are you sure to import files from this archive? Your existing files will be lost!</question>',
             false
         );
 
@@ -77,9 +80,7 @@ class FilesImportCommand extends Command
         $zipArchivePath = $input->getArgument('input');
         $zip = new ZipArchive();
         if (true === $zip->open($zipArchivePath)) {
-            if ($questionHelper->ask(
-                $input,
-                $output,
+            if ($io->askQuestion(
                 $confirmation
             )) {
                 $zip->extractTo($tempDir);
@@ -87,21 +88,23 @@ class FilesImportCommand extends Command
                 $fs = new Filesystem();
                 if ($fs->exists($tempDir . $this->getPublicFolderName())) {
                     $fs->mirror($tempDir . $this->getPublicFolderName(), $kernel->getPublicFilesPath());
-                    $output->writeln('<info>Public files have been imported.</info>');
+                    $io->success('Public files have been imported.');
                 }
                 if ($fs->exists($tempDir . $this->getPrivateFolderName())) {
                     $fs->mirror($tempDir . $this->getPrivateFolderName(), $kernel->getPrivateFilesPath());
-                    $output->writeln('<info>Private files have been imported.</info>');
+                    $io->success('Private files have been imported.');
                 }
                 if ($fs->exists($tempDir . $this->getFontsFolderName())) {
                     $fs->mirror($tempDir . $this->getFontsFolderName(), $kernel->getFontsFilesPath());
-                    $output->writeln('<info>Font files have been imported.</info>');
+                    $io->success('Font files have been imported.');
                 }
 
                 $fs->remove($tempDir);
             }
+            return 0;
         } else {
-            $output->writeln('<error>Zip archive does not exist or is invalid.</error>');
+            $io->error('Zip archive does not exist or is invalid.');
+            return 1;
         }
     }
 }

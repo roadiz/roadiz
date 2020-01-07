@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
  *
@@ -32,6 +33,12 @@ namespace RZ\Roadiz\Core\Events;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Class FilterQueryBuilderCriteriaEvent
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 class FilterQueryBuilderCriteriaEvent extends Event
 {
     /**
@@ -62,7 +69,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
      * @param string $entityClass
      * @param string $property
      * @param mixed $value
-     * @param $actualEntityName
+     * @param string $actualEntityName
      */
     public function __construct(QueryBuilder $queryBuilder, $entityClass, $property, $value, $actualEntityName)
     {
@@ -76,7 +83,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
     /**
      * @return QueryBuilder
      */
-    public function getQueryBuilder()
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->queryBuilder;
     }
@@ -85,7 +92,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
      * @param QueryBuilder $queryBuilder
      * @return FilterQueryBuilderCriteriaEvent
      */
-    public function setQueryBuilder(QueryBuilder $queryBuilder)
+    public function setQueryBuilder(QueryBuilder $queryBuilder): self
     {
         $this->queryBuilder = $queryBuilder;
         return $this;
@@ -110,7 +117,7 @@ class FilterQueryBuilderCriteriaEvent extends Event
     /**
      * @return bool
      */
-    public function supports()
+    public function supports(): bool
     {
         return $this->entityClass === $this->actualEntityName;
     }

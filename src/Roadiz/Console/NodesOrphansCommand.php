@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -33,10 +34,10 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
  * Class NodesOrphansCommand
@@ -62,13 +63,17 @@ class NodesOrphansCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
-     * @return int|null|void
+     *
+     * @return int|void|null
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $io = new SymfonyStyle($input, $output);
 
         $qb = $this->entityManager->createQueryBuilder();
         $qb->select('n')
@@ -84,10 +89,7 @@ class NodesOrphansCommand extends Command
         }
 
         if (count($orphans) > 0) {
-            $output->writeln(sprintf('<error>You have %s orphan node(s)!</error>', count($orphans)));
-
-            $table = new Table($output);
-            $table->setHeaders(['Id', 'Name', 'Type', 'Hidden', 'Published']);
+            $io->note(sprintf('You have %s orphan node(s)!', count($orphans)));
             $tableContent = [];
 
             /** @var Node $node */
@@ -100,8 +102,8 @@ class NodesOrphansCommand extends Command
                     ($node->isPublished() ? 'X' : ''),
                 ];
             }
-            $table->setRows($tableContent);
-            $table->render();
+
+            $io->table(['Id', 'Name', 'Type', 'Hidden', 'Published'], $tableContent);
 
             if ($input->getOption('delete')) {
                 /** @var Node $orphan */
@@ -110,12 +112,13 @@ class NodesOrphansCommand extends Command
                 }
                 $this->entityManager->flush();
 
-                $output->writeln('<info>Orphan nodes have been removed from your database.</info>');
+                $io->success('Orphan nodes have been removed from your database.');
             } else {
-                $output->writeln('Use <info>--delete</info> option to actually remove these nodes.');
+                $io->note('Use --delete option to actually remove these nodes.');
             }
         } else {
-            $output->writeln('<info>That’s OK, you don’t have any orphan node.</info>');
+            $io->success('That’s OK, you don’t have any orphan node.');
         }
+        return 0;
     }
 }

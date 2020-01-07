@@ -42,7 +42,9 @@ class NonSqlReservedWordValidator extends ConstraintValidator
         if (in_array($value, NonSqlReservedWord::$forbiddenNames) ||
             in_array($lowerName, NonSqlReservedWord::$forbiddenNames) ||
             in_array($fieldName, NonSqlReservedWord::$forbiddenNames)) {
-            $this->context->addViolation($constraint->message);
+            if ($constraint instanceof NonSqlReservedWord) {
+                $this->context->addViolation($constraint->message);
+            }
         }
     }
 }

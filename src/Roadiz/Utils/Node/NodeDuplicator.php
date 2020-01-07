@@ -30,7 +30,7 @@
 namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\AttributeValue;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
@@ -126,10 +126,10 @@ class NodeDuplicator
             foreach ($nodeSource->getDocumentsByFields() as $nsDoc) {
                 $nsDoc->setNodeSource($nodeSource);
                 /** @var Document $doc */
-                $doc = $this->em->merge($nsDoc->getDocument());
+                $doc = $nsDoc->getDocument();
                 $nsDoc->setDocument($doc);
                 /** @var NodeTypeField $f */
-                $f = $this->em->merge($nsDoc->getField());
+                $f = $nsDoc->getField();
                 $nsDoc->setField($f);
                 $this->em->persist($nsDoc);
             }

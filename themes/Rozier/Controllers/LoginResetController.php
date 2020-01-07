@@ -58,7 +58,7 @@ class LoginResetController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isValid()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 if ($this->updateUserPassword($form, $user, $this->get('em'))) {
                     return $this->redirect($this->generateUrl(
                         'loginResetConfirmPage'

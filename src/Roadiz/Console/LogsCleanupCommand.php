@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
  *
@@ -26,7 +27,6 @@
  * @file LogsCleanupCommand.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
@@ -37,6 +37,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class LogsCleanupCommand extends Command
 {
@@ -56,6 +57,7 @@ class LogsCleanupCommand extends Command
     {
         $now = new \DateTime('now');
         $now->add(\DateInterval::createFromDateString('-6 months'));
+        $io = new SymfonyStyle($input, $output);
 
         /** @var EntityManager $em */
         $em = $this->getHelper('em')->getEntityManager();
@@ -73,7 +75,7 @@ class LogsCleanupCommand extends Command
             $logs = 0;
         }
 
-        $output->writeln('<info>' . $logs . ' log entries</info> found before '. $now->format('Y-m-d') . '.');
+        $io->note($logs . ' log entries found before '. $now->format('Y-m-d') . '.');
 
         if ($input->getOption('erase') && $logs > 0) {
             $qb2 = $logRepository->createQueryBuilder('l');
@@ -83,10 +85,11 @@ class LogsCleanupCommand extends Command
             ;
             try {
                 $numDeleted = $qb2->getQuery()->execute();
-                $output->writeln('<info>'.$numDeleted.' log entries were deleted.</info>');
+                $io->success($numDeleted.' log entries were deleted.');
             } catch (NoResultException $e) {
-                $output->writeln('<info>No log entries were deleted.</info>');
+                $io->writeln('No log entries were deleted.');
             }
         }
+        return 0;
     }
 }

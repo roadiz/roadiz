@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\StringHandler;
 
@@ -113,6 +114,36 @@ final class NodeFactory implements ContainerAwareInterface
         $source->setTitle($title);
         $source->setPublishedAt(new \DateTime());
         $entityManager->persist($source);
+
+        return $node;
+    }
+
+    /**
+     * @param string           $urlAlias
+     * @param string           $title
+     * @param NodeType|null    $type
+     * @param Translation|null $translation
+     * @param Node|null        $node
+     * @param Node|null        $parent
+     *
+     * @return Node
+     * @throws \Doctrine\ORM\ORMException
+     */
+    public function createWithUrlAlias(
+        string $urlAlias,
+        string $title,
+        NodeType $type = null,
+        Translation $translation = null,
+        Node $node = null,
+        Node $parent = null
+    ): Node {
+        $node = $this->create($title, $type, $translation, $node, $parent);
+        $alias = new UrlAlias($node->getNodeSources()->first());
+        $alias->setAlias($urlAlias);
+        /** @var EntityManager $entityManager */
+        $entityManager = $this->get('em');
+
+        $entityManager->persist($alias);
 
         return $node;
     }

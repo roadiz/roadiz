@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -29,8 +30,15 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesCreatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
+use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+
 /**
- *
+ * @deprecated
  */
 final class NodesSourcesEvents
 {
@@ -42,8 +50,9 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const NODE_SOURCE_CREATED = 'nodeSource.created';
+    const NODE_SOURCE_CREATED = NodesSourcesCreatedEvent::class;
 
     /**
      * Event nodeSource.updated is triggered each time a node-source
@@ -54,8 +63,9 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const NODE_SOURCE_PRE_UPDATE = 'nodeSource.pre_update';
+    const NODE_SOURCE_PRE_UPDATE = NodesSourcesPreUpdatedEvent::class;
 
     /**
      * Event nodeSource.updated is triggered each time a node-source
@@ -66,8 +76,9 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const NODE_SOURCE_UPDATED = 'nodeSource.updated';
+    const NODE_SOURCE_UPDATED = NodesSourcesUpdatedEvent::class;
 
     /**
      * Event nodeSource.deleted is triggered each time a node-source
@@ -79,8 +90,9 @@ final class NodesSourcesEvents
      * RZ\Roadiz\Core\Events\FilterNodesSourcesEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const NODE_SOURCE_DELETED = 'nodeSource.deleted';
+    const NODE_SOURCE_DELETED = NodesSourcesDeletedEvent::class;
 
     /**
      * Event nodeSource.indexing is triggered each time a node-source
@@ -90,8 +102,9 @@ final class NodesSourcesEvents
      * \RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const NODE_SOURCE_INDEXING = 'nodeSource.indexing';
+    const NODE_SOURCE_INDEXING = NodesSourcesIndexingEvent::class;
 
     /**
      * Event triggered when a node-source path is being generating by the NodeRouter.
@@ -101,6 +114,7 @@ final class NodesSourcesEvents
      * \RZ\Roadiz\Core\Events\FilterNodeSourcePathEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const NODE_SOURCE_PATH_GENERATING = 'nodeSource.pathGenerating';
+    const NODE_SOURCE_PATH_GENERATING = NodesSourcesPathGeneratingEvent::class;
 }

@@ -48,9 +48,22 @@ use RZ\Roadiz\Core\Handlers\TranslationHandler;
 use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use RZ\Roadiz\Core\Viewers\UserViewer;
+use RZ\Roadiz\Document\DocumentFinder;
+use RZ\Roadiz\Document\DocumentFinderInterface;
+use RZ\Roadiz\Document\Renderer\AudioRenderer;
+use RZ\Roadiz\Document\Renderer\ChainRenderer;
+use RZ\Roadiz\Document\Renderer\EmbedRenderer;
+use RZ\Roadiz\Document\Renderer\ImageRenderer;
+use RZ\Roadiz\Document\Renderer\InlineSvgRenderer;
+use RZ\Roadiz\Document\Renderer\PdfRenderer;
+use RZ\Roadiz\Document\Renderer\PictureRenderer;
+use RZ\Roadiz\Document\Renderer\RendererInterface;
+use RZ\Roadiz\Document\Renderer\SvgRenderer;
+use RZ\Roadiz\Document\Renderer\VideoRenderer;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
+use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\Node\NodeFactory;
 use RZ\Roadiz\Utils\Tag\TagFactory;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
@@ -62,7 +75,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['emailManager'] = $container->factory(function ($c) {
+        $container['emailManager'] = $container->factory(function (Container $c) {
             return new EmailManager(
                 $c['requestStack']->getMasterRequest(),
                 $c['translator'],
@@ -73,7 +86,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
 
-        $container['contactFormManager'] = $container->factory(function ($c) {
+        $container['contactFormManager'] = $container->factory(function (Container $c) {
             return new ContactFormManager(
                 $c['requestStack']->getMasterRequest(),
                 $c['formFactory'],
@@ -85,62 +98,107 @@ class FactoryServiceProvider implements ServiceProviderInterface
             );
         });
 
-        $container[NodeFactory::class] = function ($c) {
+        $container[NodeFactory::class] = function (Container $c) {
             return new NodeFactory($c);
         };
-        $container[TagFactory::class] = function ($c) {
+        $container[TagFactory::class] = function (Container $c) {
             return new TagFactory($c);
         };
 
-        $container['factory.handler'] = function ($c) {
+        $container['factory.handler'] = function (Container $c) {
             return new HandlerFactory($c);
         };
 
-        $container['node.handler'] = $container->factory(function ($c) {
+        $container['node.handler'] = $container->factory(function (Container $c) {
             return new NodeHandler($c['em'], $c['workflow.registry']);
         });
-        $container['nodes_sources.handler'] = $container->factory(function ($c) {
+        $container['nodes_sources.handler'] = $container->factory(function (Container $c) {
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);
         });
-        $container['node_type.handler'] = $container->factory(function ($c) {
+        $container['node_type.handler'] = $container->factory(function (Container $c) {
             return new NodeTypeHandler($c['em'], $c, $c['kernel']);
         });
-        $container['node_type_field.handler'] = $container->factory(function ($c) {
+        $container['node_type_field.handler'] = $container->factory(function (Container $c) {
             return new NodeTypeFieldHandler($c['em'], $c);
         });
-        $container['document.handler'] = $container->factory(function ($c) {
+        $container['document.handler'] = $container->factory(function (Container $c) {
             return new DocumentHandler($c['em'], $c['assetPackages']);
         });
-        $container['custom_form.handler'] = $container->factory(function ($c) {
+        $container['custom_form.handler'] = $container->factory(function (Container $c) {
             return new CustomFormHandler($c['em']);
         });
-        $container['custom_form_field.handler'] = $container->factory(function ($c) {
+        $container['custom_form_field.handler'] = $container->factory(function (Container $c) {
             return new CustomFormFieldHandler($c['em'], $c);
         });
-        $container['folder.handler'] = $container->factory(function ($c) {
+        $container['folder.handler'] = $container->factory(function (Container $c) {
             return new FolderHandler($c['em']);
         });
-        $container['font.handler'] = $container->factory(function ($c) {
+        $container['font.handler'] = $container->factory(function (Container $c) {
             return new FontHandler($c['em']);
         });
-        $container['group.handler'] = $container->factory(function ($c) {
+        $container['group.handler'] = $container->factory(function (Container $c) {
             return new GroupHandler($c['em']);
         });
-        $container['newsletter.handler'] = $container->factory(function ($c) {
+        $container['newsletter.handler'] = $container->factory(function (Container $c) {
             return new NewsletterHandler($c['em']);
         });
-        $container['tag.handler'] = $container->factory(function ($c) {
+        $container['tag.handler'] = $container->factory(function (Container $c) {
             return new TagHandler($c['em']);
         });
-        $container['translation.handler'] = $container->factory(function ($c) {
+        $container['translation.handler'] = $container->factory(function (Container $c) {
             return new TranslationHandler($c['em']);
         });
 
         /*
          * Viewers
          */
+        $container['document.renderers'] = function (Container $c) {
+            return [
+                new ImageRenderer(
+                    $c[EmbedFinderFactory::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new PictureRenderer(
+                    $c[EmbedFinderFactory::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new VideoRenderer(
+                    $c['assetPackages'],
+                    $c[DocumentFinderInterface::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new AudioRenderer(
+                    $c['assetPackages'],
+                    $c[DocumentFinderInterface::class],
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new PdfRenderer(
+                    $c['twig.environment'],
+                    $c['document.url_generator']
+                ),
+                new SvgRenderer($c['assetPackages']),
+                new InlineSvgRenderer($c['assetPackages']),
+                new EmbedRenderer($c[EmbedFinderFactory::class]),
+            ];
+        };
+        $container[RendererInterface::class] = function (Container $c) {
+            return new ChainRenderer($c['document.renderers']);
+        };
 
-        $container['document.viewer'] = $container->factory(function ($c) {
+        $container[EmbedFinderFactory::class] = function (Container $c) {
+            return new EmbedFinderFactory($c['document.platforms']);
+        };
+
+        $container[DocumentFinderInterface::class] = function (Container $c) {
+            return new DocumentFinder($c['em']);
+        };
+
+        /** @deprecated */
+        $container['document.viewer'] = $container->factory(function (Container $c) {
             return new DocumentViewer(
                 $c['requestStack'],
                 $c['twig.environment'],
@@ -151,24 +209,24 @@ class FactoryServiceProvider implements ServiceProviderInterface
                 $c['document.platforms']
             );
         });
-        $container['translation.viewer'] = $container->factory(function ($c) {
+        $container['translation.viewer'] = $container->factory(function (Container $c) {
             return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
         });
-        $container['user.viewer'] = $container->factory(function ($c) {
+        $container['user.viewer'] = $container->factory(function (Container $c) {
             return new UserViewer($c['em'], $c['settingsBag'], $c['translator'], $c['emailManager']);
         });
 
         /*
          * UrlGenerators
          */
-        $container['document.url_generator'] = $container->factory(function ($c) {
+        $container['document.url_generator'] = $container->factory(function (Container $c) {
             return new DocumentUrlGenerator($c['requestStack'], $c['assetPackages'], $c['urlGenerator']);
         });
 
         /*
          * DocumentFactory
          */
-        $container['document.factory'] = $container->factory(function ($c) {
+        $container['document.factory'] = $container->factory(function (Container $c) {
             return new DocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
         });
 

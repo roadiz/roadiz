@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -33,7 +34,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\EventDispatcher\Event;
 
 /**
- *
+ * @deprecated
  */
 class FilterTranslationEvent extends Event
 {

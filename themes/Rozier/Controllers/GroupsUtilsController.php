@@ -134,12 +134,13 @@ class GroupsUtilsController extends RozierApp
 
         $form->handleRequest($request);
 
-        if ($form->isValid() &&
+        if ($form->isSubmitted() &&
+            $form->isValid() &&
             !empty($form['group_file'])) {
             /** @var UploadedFile $file */
             $file = $form['group_file']->getData();
 
-            if ($file->isValid()) {
+            if ($form->isSubmitted() && $file->isValid()) {
                 $serializedData = file_get_contents($file->getPathname());
 
                 if (null !== json_decode($serializedData)) {

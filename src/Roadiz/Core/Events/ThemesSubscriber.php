@@ -39,7 +39,7 @@ use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -114,9 +114,9 @@ class ThemesSubscriber implements EventSubscriberInterface
      * After a controller has been matched. We need to inject current
      * Kernel instance and main DI container.
      *
-     * @param GetResponseEvent $event
+     * @param RequestEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function onKernelRequest(RequestEvent $event)
     {
         if ($event->isMasterRequest()) {
             /** @var ThemeResolverInterface $themeResolver */

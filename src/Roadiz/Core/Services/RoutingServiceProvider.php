@@ -31,7 +31,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Events\TimedRouteListener;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
@@ -42,6 +41,7 @@ use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -57,7 +57,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['httpKernel'] = function ($c) {
+        $container['httpKernel'] = function (Container $c) {
             return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack'], $c['argumentResolver']);
         };
 
@@ -77,7 +77,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new ArgumentResolver();
         };
 
-        $container['router'] = function ($c) {
+        $container['router'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $router = new ChainRouter($c['logger']);
@@ -92,7 +92,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
             return $router;
         };
-        $container['staticRouter'] = function ($c) {
+        $container['staticRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $config = [
@@ -112,7 +112,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['logger']
             );
         };
-        $container['nodeRouter'] = function ($c) {
+        $container['nodeRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $router = new NodeRouter(
@@ -133,7 +133,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return $router;
         };
 
-        $container['redirectionRouter'] = function ($c) {
+        $container['redirectionRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return new RedirectionRouter(
@@ -152,25 +152,24 @@ class RoutingServiceProvider implements ServiceProviderInterface
          * As we are using CMF ChainRouter, it take responsability for
          * URL generation.
          */
-        $container['urlGenerator'] = function ($c) {
+        $container['urlGenerator'] = function (Container $c) {
             return $c['router'];
         };
 
-        $container['httpUtils'] = function ($c) {
+        $container['httpUtils'] = function (Container $c) {
             return new HttpUtils($c['router'], $c['router']);
         };
 
-        $container['routeListener'] = function ($c) {
-            return new TimedRouteListener(
+        $container['routeListener'] = function (Container $c) {
+            return new RouterListener(
                 $c['router'],
-                $c['requestContext'],
-                null,
                 $c['requestStack'],
-                $c['stopwatch']
+                $c['requestContext'],
+                null
             );
         };
 
-        $container['routeCollection'] = function ($c) {
+        $container['routeCollection'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             if (true === $kernel->isInstallMode()) {

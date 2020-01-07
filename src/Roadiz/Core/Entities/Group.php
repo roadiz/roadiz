@@ -117,7 +117,7 @@ class Group extends AbstractEntity
     /**
      * Get roles names as a simple array.
      *
-     * @return array
+     * @return string[]
      */
     public function getRoles(): array
     {

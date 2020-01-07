@@ -145,7 +145,7 @@ class AttributesExtension extends AbstractExtension
     }
 
     /**
-     * @param                  $mixed
+     * @param mixed $mixed
      * @param Translation|null $translation
      *
      * @return string|null

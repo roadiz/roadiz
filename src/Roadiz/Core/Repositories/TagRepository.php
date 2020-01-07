@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -52,7 +53,7 @@ class TagRepository extends EntityRepository
      */
     protected function filterByNodes($criteria, QueryBuilder $qb)
     {
-        if (in_array('nodes', array_keys($criteria))) {
+        if (key_exists('nodes', $criteria)) {
             if (is_array($criteria['nodes']) || $criteria['nodes'] instanceof Collection) {
                 $qb->innerJoin(
                     'tg.nodes',
@@ -79,7 +80,7 @@ class TagRepository extends EntityRepository
      */
     protected function applyFilterByNodes(array &$criteria, QueryBuilder $qb)
     {
-        if (in_array('nodes', array_keys($criteria))) {
+        if (key_exists('nodes', $criteria)) {
             if ($criteria['nodes'] instanceof Node) {
                 $qb->setParameter('nodes', $criteria['nodes']->getId());
             } elseif (is_array($criteria['nodes']) ||
@@ -274,8 +275,8 @@ class TagRepository extends EntityRepository
     /**
      * Just like the findOneBy method but with relational criteria.
      *
-     * @param array                                   $criteria
-     * @param array|null                              $orderBy
+     * @param array $criteria
+     * @param array|null $orderBy
      * @param Translation|null $translation
      *
      * @return Tag|null
@@ -591,7 +592,7 @@ class TagRepository extends EntityRepository
      *
      * @param string $tagPath
      *
-     * @return \RZ\Roadiz\Core\Entities\Tag
+     * @return Tag
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -656,7 +657,7 @@ class TagRepository extends EntityRepository
      *
      * @param string $tagPath
      *
-     * @return \RZ\Roadiz\Core\Entities\Tag|null
+     * @return Tag|null
      */
     public function findByPath($tagPath)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -30,7 +31,6 @@
 namespace RZ\Roadiz\Console;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Importers\GroupsImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
@@ -41,6 +41,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
 use Themes\Install\InstallApp;
 
@@ -60,18 +61,17 @@ class InstallCommand extends Command implements ContainerAwareInterface
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-        $text = "";
+        $io = new SymfonyStyle($input, $output);
 
+        $io->note('Before installing Roadiz, did you create database schema? ' . PHP_EOL .
+            'If not execute: bin/roadiz orm:schema-tool:create');
         $question = new ConfirmationQuestion(
-            'Before installing Roadiz, did you create database schema? ' . PHP_EOL .
-            'If not execute: <info>bin/roadiz orm:schema-tool:create</info>' . PHP_EOL .
-            '<question>Are you sure to perform installation?</question> [y/N]: ',
+            '<question>Are you sure to perform installation?</question>',
             false
         );
 
         if ($input->getOption('no-interaction') ||
-            $helper->ask($input, $output, $question)
+            $io->askQuestion($question)
         ) {
             /**
              * Import default data
@@ -82,19 +82,19 @@ class InstallCommand extends Command implements ContainerAwareInterface
             if (isset($data["importFiles"]['roles'])) {
                 foreach ($data["importFiles"]['roles'] as $filename) {
                     $this->get(RolesImporter::class)->import(file_get_contents($installRoot . "/" . $filename));
-                    $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $io->success('Theme file “' . $installRoot . "/" . $filename . '” has been imported.');
                 }
             }
             if (isset($data["importFiles"]['groups'])) {
                 foreach ($data["importFiles"]['groups'] as $filename) {
                     $this->get(GroupsImporter::class)->import(file_get_contents($installRoot . "/" . $filename));
-                    $text .= '     — <info>Theme file “' . $installRoot . "/" . $filename . '” has been imported..</info>' . PHP_EOL;
+                    $io->success('Theme file “' . $installRoot . "/" . $filename . '” has been imported.');
                 }
             }
             if (isset($data["importFiles"]['settings'])) {
                 foreach ($data["importFiles"]['settings'] as $filename) {
                     $this->get(SettingsImporter::class)->import(file_get_contents($installRoot . "/" . $filename));
-                    $text .= '     — <info>Theme files “' . $installRoot . "/" . $filename . '” has been imported.</info>' . PHP_EOL;
+                    $io->success('Theme files “' . $installRoot . "/" . $filename . '” has been imported.');
                 }
             }
 
@@ -110,9 +110,9 @@ class InstallCommand extends Command implements ContainerAwareInterface
 
                 $this->get('em')->persist($defaultTrans);
 
-                $text .= '<info>Default translation installed…</info>' . PHP_EOL;
+                $io->success('Default translation installed.');
             } else {
-                $text .= '<error>A default translation is already installed.</error>' . PHP_EOL;
+                $io->warning('A default translation is already installed.');
             }
             $this->get('em')->flush();
 
@@ -123,8 +123,7 @@ class InstallCommand extends Command implements ContainerAwareInterface
                 $cacheDriver->deleteAll();
             }
         }
-
-        $output->writeln($text);
+        return 0;
     }
 
     /**

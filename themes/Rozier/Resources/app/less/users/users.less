@@ -6,6 +6,7 @@ table.users {
 
 
 img.user-image {
+    position: relative;
     object-fit: cover;
     width: 35px;
     height: 35px;
@@ -20,6 +21,16 @@ img.user-image {
 
         .uk-table td & {
             margin: -5px 0;
+        }
+    }
+
+    &.user-image-mini {
+        width: 30px;
+        height: 30px;
+
+        @media screen and (min-width: 1380px) {
+            width: 30px;
+            height: 30px;
         }
     }
 }

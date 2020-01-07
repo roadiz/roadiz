@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -29,8 +30,12 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasCreatedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasDeletedEvent;
+use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasUpdatedEvent;
+
 /**
- *
+ * @deprecated
  */
 final class UrlAliasEvents
 {
@@ -38,32 +43,35 @@ final class UrlAliasEvents
      * Event urlAlias.created is triggered each time an url-alias
      * is created.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const URL_ALIAS_CREATED = 'urlAlias.created';
+    const URL_ALIAS_CREATED = UrlAliasCreatedEvent::class;
 
     /**
      * Event urlAlias.updated is triggered each time an url-alias
      * is updated.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const URL_ALIAS_UPDATED = 'urlAlias.updated';
+    const URL_ALIAS_UPDATED = UrlAliasUpdatedEvent::class;
 
     /**
      * Event urlAlias.deleted is triggered each time an url-alias
      * is deleted.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterUrlAliasEvent instance
      *
      * @var string
+     * @deprecated
      */
-    const URL_ALIAS_DELETED = 'urlAlias.deleted';
+    const URL_ALIAS_DELETED = UrlAliasDeletedEvent::class;
 }

@@ -50,9 +50,9 @@ class BackofficeServiceProvider implements ServiceProviderInterface
      *     'subentries' => null
      *
      *
-     * @param \Pimple\Container $container
+     * @param Container $container
      *
-     * @return \Pimple\Container
+     * @return Container
      */
     public function register(Container $container)
     {

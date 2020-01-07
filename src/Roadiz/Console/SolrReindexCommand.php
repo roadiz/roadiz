@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -32,13 +33,15 @@ namespace RZ\Roadiz\Console;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocument;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
+use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
@@ -61,60 +64,52 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $this->questionHelper = $this->getHelper('question');
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $this->solr = $this->getHelper('solr')->getSolr();
-
-        $text = "";
+        $this->io = new SymfonyStyle($input, $output);
 
         if (null !== $this->solr) {
             if (true === $this->getHelper('solr')->ready()) {
                 $confirmation = new ConfirmationQuestion(
-                    '<question>Are you sure to reindex your Node and Document database?</question> [y/N]: ',
+                    '<question>Are you sure to reindex your Node and Document database?</question>',
                     false
                 );
                 if (!$input->isInteractive() ||
-                    $this->questionHelper->ask(
-                        $input,
-                        $output,
-                        $confirmation
-                    )) {
+                    $this->io->askQuestion($confirmation)
+                ) {
                     $stopwatch = new Stopwatch();
                     $stopwatch->start('global');
                     // Empty first
-                    $this->emptySolr($output);
+                    $this->emptySolr();
 
                     if ($input->getOption('documents')) {
-                        $this->reindexDocuments($output);
+                        $this->reindexDocuments();
                     } elseif ($input->getOption('nodes')) {
-                        $this->reindexNodeSources($output);
+                        $this->reindexNodeSources();
                     } else {
-                        $this->reindexDocuments($output);
-                        $this->reindexNodeSources($output);
+                        $this->reindexDocuments();
+                        $this->reindexNodeSources();
                     }
 
                     $stopwatch->stop('global');
-
                     $duration = $stopwatch->getEvent('global')->getDuration();
-
-                    $text = PHP_EOL . sprintf('<info>Node and document database has been re-indexed in %.2d ms.</info>', $duration) . PHP_EOL;
+                    $this->io->success(sprintf('Node and document database has been re-indexed in %.2d ms.', $duration));
                 }
             } else {
-                $text .= '<error>Solr search engine server does not respond…</error>' . PHP_EOL;
-                $text .= 'See your config.yml file to correct your Solr connexion settings.' . PHP_EOL;
+                $this->io->error('Solr search engine server does not respond…');
+                $this->io->note('See your config.yml file to correct your Solr connexion settings.');
+                return 1;
             }
         } else {
-            $text .= $this->displayBasicConfig();
+            $this->io->note($this->displayBasicConfig());
         }
-
-        $output->writeln($text);
+        return 0;
     }
 
     /**
      * Delete Solr index and loop over every NodesSources to index them again.
      *
-     * @param OutputInterface $output
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    protected function reindexNodeSources(OutputInterface $output)
+    protected function reindexNodeSources()
     {
         $update = $this->solr->createUpdate();
         /*
@@ -138,22 +133,16 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
             ->getQuery();
         $iterableResult = $q->iterate();
 
-        $progress = new ProgressBar($output, $countQuery->getSingleScalarResult());
-        $progress->setFormat('verbose');
-        $progress->start();
+        $this->io->progressStart($countQuery->getSingleScalarResult());
+        /** @var SolariumFactoryInterface $solariumFactory */
+        $solariumFactory = $this->getHelper('kernel')->getKernel()->get(SolariumFactoryInterface::class);
 
         while (($row = $iterableResult->next()) !== false) {
-            $solarium = new SolariumNodeSource(
-                $row[0],
-                $this->solr,
-                $this->getHelper('kernel')->getKernel()->get('dispatcher'),
-                $this->getHelper('handlerFactory')->getHandlerFactory(),
-                $this->getHelper('logger')->getLogger()
-            );
+            $solarium = $solariumFactory->createWithNodesSources($row[0]);
             $solarium->createEmptyDocument($update);
             $solarium->index();
             $buffer->addDocument($solarium->getDocument());
-            $progress->advance();
+            $this->io->progressAdvance();
 
             $this->entityManager->detach($row[0]);
         }
@@ -161,18 +150,16 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
         $buffer->flush();
 
         // optimize the index
-        $this->optimizeSolr($output);
-        $progress->finish();
+        $this->optimizeSolr();
+        $this->io->progressFinish();
     }
 
     /**
      * Delete Solr index and loop over every Documents to index them again.
      *
-     * @param OutputInterface $output
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    protected function reindexDocuments(OutputInterface $output)
+    protected function reindexDocuments()
     {
         $update = $this->solr->createUpdate();
         /*
@@ -192,31 +179,25 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
             ->getQuery();
         $iterableResult = $q->iterate();
 
-        $progress = new ProgressBar($output, $countQuery->getSingleScalarResult());
-        $progress->setFormat('verbose');
-        $progress->start();
+        $this->io->progressStart($countQuery->getSingleScalarResult());
+        /** @var SolariumFactoryInterface $solariumFactory */
+        $solariumFactory = $this->getHelper('kernel')->getKernel()->get(SolariumFactoryInterface::class);
 
         while (($row = $iterableResult->next()) !== false) {
-            $solarium = new SolariumDocument(
-                $row[0],
-                $this->entityManager,
-                $this->solr,
-                $this->getHelper('logger')->getLogger()
-            );
+            $solarium = $solariumFactory->createWithDocument($row[0]);
             $solarium->createEmptyDocument($update);
             $solarium->index();
             foreach ($solarium->getDocuments() as $document) {
                 $buffer->addDocument($document);
             }
-            $progress->advance();
-
+            $this->io->progressAdvance();
             $this->entityManager->detach($row[0]);
         }
 
         $buffer->flush();
 
         // optimize the index
-        $this->optimizeSolr($output);
-        $progress->finish();
+        $this->optimizeSolr();
+        $this->io->progressFinish();
     }
 }

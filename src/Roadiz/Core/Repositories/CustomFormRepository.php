@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -29,6 +30,7 @@
  */
 namespace RZ\Roadiz\Core\Repositories;
 
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
@@ -37,8 +39,8 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 class CustomFormRepository extends EntityRepository
 {
     /**
-     * @param \RZ\Roadiz\Core\Entities\Node          $node
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param Node          $node
+     * @param NodeTypeField $field
      *
      * @return array
      */
@@ -57,13 +59,17 @@ class CustomFormRepository extends EntityRepository
 
     /**
      * @deprecated Use findByNodeAndField instead because **filtering on field name is not safe**.
-     * @param \RZ\Roadiz\Core\Entities\Node $node
-     * @param string                      $fieldName
+     * @param Node $node
+     * @param string $fieldName
      *
      * @return array
      */
     public function findByNodeAndFieldName($node, $fieldName)
     {
+        trigger_error(
+            'Method ' . __METHOD__ . ' is deprecated. Use findByNodeAndField instead because **filtering on field name is not safe**.',
+            E_USER_DEPRECATED
+        );
         $query = $this->_em->createQuery('
             SELECT cf FROM RZ\Roadiz\Core\Entities\CustomForm cf
             INNER JOIN cf.nodes ncf

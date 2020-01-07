@@ -48,7 +48,6 @@ class ExtendedBooleanType extends AbstractType
                 'true' => true,
                 'false' => false,
             ],
-            'choices_as_values' => true,
             'placeholder' => 'ignore',
             'required' => false,
             'expanded' => true,
