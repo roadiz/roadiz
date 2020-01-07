@@ -4,20 +4,21 @@
 {% block content %}
 {% if not head.ajax %}
 <section id="purge-caches" {% if error %}class="uk-animation-shake"{% endif %}>
-    <div id="login-infos">
-        <div id="login-logo">
-            {% if themeServices.adminImage %}
-                {{ themeServices.adminImage|display({width:150}) }}
-            {% else %}
-                <i class="uk-icon-rz-roadiz-icon"></i>
-            {% endif %}
+    <div class="purge-inner">
+        <div id="login-infos">
+            <div id="login-logo">
+                {% if themeServices.adminImage %}
+                    {{ themeServices.adminImage|display({width:150}) }}
+                {% else %}
+                    <i class="uk-icon-rz-roadiz-icon"></i>
+                {% endif %}
+            </div>
+            <div id="login-credit">
+                <i class="uk-icon-rz-rezozero"></i>
+                <span id="login-version">{{ cms_prefix }} {{ cms_version }}</span>
+            </div>
         </div>
-        <div id="login-credit">
-            <i class="uk-icon-rz-rezozero"></i>
-            <span id="login-version">{{ cms_prefix }} {{ cms_version }}</span>
-        </div>
-    </div>
-    <div id="login-formGlobal">
+        <div id="login-formGlobal">
 
 {% else %}
 <section class="content-global purge-cache">
@@ -38,7 +39,6 @@
                 {% endfor %}
             </table>
         </div>
-        <hr />
 
         {% form_theme form '@Rozier/forms.html.twig' %}
         {{ form_start(form) }}
@@ -52,6 +52,7 @@
     </article>
 
 {% if not head.ajax %}
+        </div>
     </div>
 </section>
 {% else %}
