@@ -50,7 +50,8 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"locked"}),
  *     @ORM\Index(columns={"position"}),
  *     @ORM\Index(columns={"created_at"}),
- *     @ORM\Index(columns={"updated_at"})
+ *     @ORM\Index(columns={"updated_at"}),
+ *     @ORM\Index(columns={"parent_tag_id", "visible"})
  * })
  */
 class Tag extends AbstractDateTimedPositioned implements LeafInterface

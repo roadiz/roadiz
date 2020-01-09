@@ -46,14 +46,41 @@ class NodeTreeWidget extends AbstractWidget
 {
     const SESSION_ITEM_PER_PAGE = 'nodetree_item_per_page';
 
+    /**
+     * @var Node|null
+     */
     protected $parentNode = null;
+    /**
+     * @var array|null
+     */
     protected $nodes = null;
+    /**
+     * @var Tag|null
+     */
     protected $tag = null;
+    /**
+     * @var Translation|null
+     */
     protected $translation = null;
+    /**
+     * @var array|null
+     */
     protected $availableTranslations = null;
+    /**
+     * @var bool
+     */
     protected $stackTree = false;
+    /**
+     * @var array|null
+     */
     protected $filters = null;
+    /**
+     * @var bool
+     */
     protected $canReorder = true;
+    /**
+     * @var array
+     */
     protected $additionalCriteria = [];
 
     /**
@@ -244,6 +271,19 @@ class NodeTreeWidget extends AbstractWidget
     {
         return $this->getListManager($parent, $subRequest)->getEntities();
     }
+
+    /**
+     * @param Node $parent
+     * @param bool $subRequest Default: false
+     * @return array
+     */
+    public function getReachableChildrenNodes(Node $parent = null, $subRequest = false)
+    {
+        return $this->getListManager($parent, $subRequest, [
+            'nodeType.reachable' => true,
+        ])->getEntities();
+    }
+
     /**
      * @return Node
      */

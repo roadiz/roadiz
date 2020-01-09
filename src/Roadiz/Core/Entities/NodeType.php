@@ -47,6 +47,7 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"publishable"}),
  *     @ORM\Index(columns={"newsletter_type"}),
  *     @ORM\Index(columns={"hiding_nodes"}),
+ *     @ORM\Index(columns={"hiding_non_reachable_nodes"}),
  *     @ORM\Index(columns={"reachable"})
  * })
  */
@@ -271,6 +272,34 @@ class NodeType extends AbstractEntity
         $this->hidingNodes = $hidingNodes;
         return $this;
     }
+
+    /**
+     * @var bool
+     * @ORM\Column(name="hiding_non_reachable_nodes",type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups("node_type")
+     * @Serializer\Type("boolean")
+     */
+    private $hidingNonReachableNodes = false;
+
+    /**
+     * @return bool
+     */
+    public function isHidingNonReachableNodes(): bool
+    {
+        return $this->hidingNonReachableNodes;
+    }
+
+    /**
+     * @param bool $hidingNonReachableNodes
+     *
+     * @return NodeType
+     */
+    public function setHidingNonReachableNodes(bool $hidingNonReachableNodes): NodeType
+    {
+        $this->hidingNonReachableNodes = $hidingNonReachableNodes;
+        return $this;
+    }
+
     /**
      * @var string
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)

@@ -1194,6 +1194,11 @@
           <context context-type="linenumber">386</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes">
+        <source>nodeType.hidingNonReachableNodes</source>
+        <target></target>
+      </trans-unit>
+
       <trans-unit xml:space="preserve" id="125">
         <source>role.imported</source>
         <target></target>
