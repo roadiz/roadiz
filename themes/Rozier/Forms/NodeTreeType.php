@@ -72,19 +72,6 @@ class NodeTreeType extends AbstractType
          * Inject data as plain documents entities
          */
         $view->vars['request'] = $options['controller']->getRequest();
-        $view->vars['nodeTree'] = new NodeTreeWidget(
-            $options['controller']->getRequest(),
-            $options['controller'],
-            $options['nodeSource']->getNode(),
-            $options['nodeSource']->getTranslation()
-        );
-        $view->vars['nodeStatuses'] = [
-            Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
-            Node::getStatusLabel(Node::PENDING) => Node::PENDING,
-            Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
-            Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
-            Node::getStatusLabel(Node::DELETED) => Node::DELETED,
-        ];
 
         /*
          * Linked types to create quick add buttons
@@ -102,6 +89,31 @@ class NodeTreeType extends AbstractType
             );
 
         $view->vars['linkedTypes'] = $nodeTypes;
+
+        $nodeTree = new NodeTreeWidget(
+            $options['controller']->getRequest(),
+            $options['controller'],
+            $options['nodeSource']->getNode(),
+            $options['nodeSource']->getTranslation()
+        );
+        /*
+         * If node-type has been used as default values,
+         * we need to restrict node-tree display too.
+         */
+        if (is_array($nodeTypes) && count($nodeTypes) > 0) {
+            $nodeTree->setAdditionalCriteria([
+                'nodeType' => $nodeTypes
+            ]);
+        }
+
+        $view->vars['nodeTree'] = $nodeTree;
+        $view->vars['nodeStatuses'] = [
+            Node::getStatusLabel(Node::DRAFT) => Node::DRAFT,
+            Node::getStatusLabel(Node::PENDING) => Node::PENDING,
+            Node::getStatusLabel(Node::PUBLISHED) => Node::PUBLISHED,
+            Node::getStatusLabel(Node::ARCHIVED) => Node::ARCHIVED,
+            Node::getStatusLabel(Node::DELETED) => Node::DELETED,
+        ];
     }
     /**
      * {@inheritdoc}

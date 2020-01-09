@@ -54,6 +54,7 @@ class NodeTreeWidget extends AbstractWidget
     protected $stackTree = false;
     protected $filters = null;
     protected $canReorder = true;
+    protected $additionalCriteria = [];
 
     /**
      * @param Request     $request           Current kernel request
@@ -129,7 +130,29 @@ class NodeTreeWidget extends AbstractWidget
      */
     protected function getRootListManager()
     {
-        return $this->getListManager($this->parentNode);
+        /*
+         * Only use additional criteria for ROOT list-manager
+         */
+        return $this->getListManager($this->parentNode, false, $this->additionalCriteria);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdditionalCriteria(): array
+    {
+        return $this->additionalCriteria;
+    }
+
+    /**
+     * @param array $additionalCriteria
+     *
+     * @return NodeTreeWidget
+     */
+    public function setAdditionalCriteria(array $additionalCriteria): NodeTreeWidget
+    {
+        $this->additionalCriteria = $additionalCriteria;
+        return $this;
     }
 
     /**
@@ -156,14 +179,15 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Node|null $parent
      * @param bool $subRequest Default: false
+     * @param array $additionalCriteria Default: []
      * @return \RZ\Roadiz\Core\ListManagers\EntityListManager
      */
-    protected function getListManager(Node $parent = null, $subRequest = false)
+    protected function getListManager(Node $parent = null, $subRequest = false, array $additionalCriteria = [])
     {
-        $criteria = [
+        $criteria = array_merge($additionalCriteria, [
             'parent' => $parent,
             'translation' => $this->translation,
-        ];
+        ]);
 
         if (null !== $this->tag) {
             $criteria['tags'] = $this->tag;

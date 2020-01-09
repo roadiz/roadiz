@@ -307,11 +307,12 @@
             </nav>
             <div class="children-nodes-tree">
                 {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
-                "nodeTree":nodeTree,
-                "node":nodeTree.getRootNode,
-                'mainNodeTree':false,
-                "nodeStatuses":nodeStatuses,
-                "request":request,
+                "nodeTree": nodeTree,
+                "node": nodeTree.getRootNode,
+                'mainNodeTree': false,
+                "nodeStatuses": nodeStatuses,
+                "request": request,
+                "linkedTypes": linkedTypes
                 } only %}
             </div>
         </div>

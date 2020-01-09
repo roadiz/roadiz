@@ -51,6 +51,7 @@
                     {% if nodeTree.canReorder %}data-uk-nestable="{'group':'nodeTree', handleClass:'uk-nestable-handle'}"{% endif %}
                     data-parent-node-id="{{ nodeTree.rootNode.id }}"
                     data-translation-id="{{ nodeTree.translation.id }}"
+                    {% if linkedTypes %}data-linked-types="{{ linkedTypes|map(t => t.name)|json_encode }}"{% endif %}
                     data-page="{{ nodeTree.filters.currentPage }}"
                     {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}
                     {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>

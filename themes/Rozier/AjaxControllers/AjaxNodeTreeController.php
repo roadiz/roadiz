@@ -101,6 +101,20 @@ class AjaxNodeTreeController extends AbstractAjaxController
                     $nodeTree->setTag($filterTag);
                 }
 
+                /*
+                 * Filter view with only listed node-types
+                 */
+                $linkedTypes = $request->get('linkedTypes', null);
+                if (is_array($linkedTypes) && count($linkedTypes) > 0) {
+                    $linkedTypes = array_filter(array_map(function (string $typeName) {
+                        return $this->get('nodeTypesBag')->get($typeName);
+                    }, $linkedTypes));
+
+                    $nodeTree->setAdditionalCriteria([
+                        'nodeType' => $linkedTypes
+                    ]);
+                }
+
                 $this->assignation['mainNodeTree'] = false;
 
                 if (true === (boolean) $request->get('stackTree')) {
