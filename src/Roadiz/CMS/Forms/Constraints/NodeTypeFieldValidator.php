@@ -123,38 +123,44 @@ class NodeTypeFieldValidator extends ConstraintValidator
 
     /**
      * @param \RZ\Roadiz\Core\Entities\NodeTypeField $value
-     * @param Constraint $constraint
+     * @param Constraint                             $constraint
+     *
+     * @throws \ReflectionException
      */
     protected function validateProviderTypes(\RZ\Roadiz\Core\Entities\NodeTypeField $value, Constraint $constraint)
     {
         try {
-            $defaultValuesParsed = Yaml::parse($value->getDefaultValues());
-            if (null === $defaultValuesParsed) {
+            if (null === $value->getDefaultValues()) {
                 $this->context->buildViolation('default_values_should_not_be_empty_for_this_type')->atPath('defaultValues')->addViolation();
-            } elseif (!is_array($defaultValuesParsed)) {
-                $this->context->buildViolation('default_values_should_be_a_yaml_configuration_for_this_type')->atPath('defaultValues')->addViolation();
             } else {
-                $configs = [
-                    $defaultValuesParsed,
-                ];
-                $processor = new Processor();
-                $providerConfig = new ProviderFieldConfiguration();
-                $configuration = $processor->processConfiguration($providerConfig, $configs);
+                $defaultValuesParsed = Yaml::parse($value->getDefaultValues());
+                if (null === $defaultValuesParsed) {
+                    $this->context->buildViolation('default_values_should_not_be_empty_for_this_type')->atPath('defaultValues')->addViolation();
+                } elseif (!is_array($defaultValuesParsed)) {
+                    $this->context->buildViolation('default_values_should_be_a_yaml_configuration_for_this_type')->atPath('defaultValues')->addViolation();
+                } else {
+                    $configs = [
+                        $defaultValuesParsed,
+                    ];
+                    $processor = new Processor();
+                    $providerConfig = new ProviderFieldConfiguration();
+                    $configuration = $processor->processConfiguration($providerConfig, $configs);
 
-                if (!class_exists($configuration['classname'])) {
-                    $this->context->buildViolation('classname_%classname%_does_not_exist')
-                        ->setParameter('%classname%', $configuration['classname'])
-                        ->atPath('defaultValues')
-                        ->addViolation();
-                    return;
-                }
+                    if (!class_exists($configuration['classname'])) {
+                        $this->context->buildViolation('classname_%classname%_does_not_exist')
+                            ->setParameter('%classname%', $configuration['classname'])
+                            ->atPath('defaultValues')
+                            ->addViolation();
+                        return;
+                    }
 
-                $reflection = new \ReflectionClass($configuration['classname']);
-                if (!$reflection->isSubclassOf(AbstractExplorerProvider::class)) {
-                    $this->context->buildViolation('classname_%classname%_must_extend_abstract_explorer_provider_class')
-                        ->setParameter('%classname%', $configuration['classname'])
-                        ->atPath('defaultValues')
-                        ->addViolation();
+                    $reflection = new \ReflectionClass($configuration['classname']);
+                    if (!$reflection->isSubclassOf(AbstractExplorerProvider::class)) {
+                        $this->context->buildViolation('classname_%classname%_must_extend_abstract_explorer_provider_class')
+                            ->setParameter('%classname%', $configuration['classname'])
+                            ->atPath('defaultValues')
+                            ->addViolation();
+                    }
                 }
             }
         } catch (ParseException $e) {
