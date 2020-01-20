@@ -39,6 +39,7 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Themes\Rozier\Explorer\AbstractExplorerItem;
 use Themes\Rozier\Explorer\AbstractExplorerProvider;
+use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
 {
@@ -70,11 +71,27 @@ class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $configuration = $this->getFieldConfiguration($options);
-        /** @var AbstractExplorerProvider $provider */
-        $provider = new $configuration['classname'];
-        $provider->setContainer($options['container']);
 
-        $builder->addModelTransformer(new ProviderDataTransformer($options['nodeTypeField'], $provider));
+        $builder->addModelTransformer(
+            new ProviderDataTransformer(
+                $options['nodeTypeField'],
+                $this->getProvider($configuration, $options)
+            )
+        );
+    }
+
+    protected function getProvider(array $configuration, array $options): ExplorerProviderInterface
+    {
+        /** @var Container $container */
+        $container = $options['container'];
+        if ($container->offsetExists($configuration['classname'])) {
+            return $container->offsetGet($configuration['classname']);
+        } else {
+            /** @var AbstractExplorerProvider $provider */
+            $provider = new $configuration['classname'];
+            $provider->setContainer($options['container']);
+            return $provider;
+        }
     }
 
     /**
@@ -94,9 +111,8 @@ class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
         } else {
             $providerOptions = [];
         }
-        /** @var AbstractExplorerProvider $provider */
-        $provider = new $configuration['classname'];
-        $provider->setContainer($options['container']);
+
+        $provider = $this->getProvider($configuration, $options);
 
         $displayableData = [];
         $ids = call_user_func([$options['nodeSource'], $options['nodeTypeField']->getGetterName()]);
