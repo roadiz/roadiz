@@ -1,5 +1,7 @@
 #purge-caches {
-    width: @login-W + 100;
+    @media (min-width: @screen-sm-min) {
+        width: @login-W + 100;
+    }
 
     #login-formGlobal {
         padding: 0px;
@@ -16,7 +18,6 @@
         text-align: center;
 
     }
-
     .content,
     .content-table-cont {
         padding: 0px;

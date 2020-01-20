@@ -38,28 +38,41 @@
 
 #main_content {
     position: absolute;
-    top: 0px; bottom: 0px; left: 0px; right: 0px;
+    top: 0px;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
     background: none transparent;
     z-index: 100;
 }
 
 #purge-caches,
 #login {
-    position: absolute;
-    width: @login-W;
+    width:100vw;
     height: auto;
-    background-color: white;
     margin: 0;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
+    top: 0;
+    left: 0;
+    position: relative;
+    .box-sizing();
+    background-color: white;
     padding: 0;
     text-align: center;
-    .box-sizing();
+
+    @media (min-width: @screen-sm-min) {
+        position: absolute;
+        width: @login-W;
+        height: auto;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+    }
 
     .purge-inner,
     .login-inner {
-        display: flex;
+        @media (min-width: @screen-sm-min) {
+            display: flex;
+        }
 
         .uk-form {
             padding-bottom: 1.5em;
@@ -74,16 +87,26 @@
 
     #login-infos {
         position: relative;
-        width: @login-BarW;
+        display: flex;
+        align-items: center;
         background-color: @grey-interface;
+
+        @media (min-width: @screen-sm-min) {
+            display: block;
+            width: @login-BarW;
+        }
     }
 
     #login-logo {
         width: @login-BarW;
-        height: 116px;
+        height: 70px;
         background-color: @contrast-color;
         top: 0px; left: 0;
         text-align: center;
+
+        @media (min-width: @screen-sm-min) {
+            height: 116px;
+        }
 
         &:before {
             content: "";
@@ -114,9 +137,18 @@
     }
 
     #login-credit {
+        text-align: right;
+        justify-self: right;
         width: 100%;
-        bottom: 1em;
-        position: absolute;
+        padding-right: 2em;
+
+        @media (min-width: @screen-sm-min) {
+            width: 100%;
+            bottom: 1em;
+            position: absolute;
+            padding: 0;
+            text-align: center;
+        }
 
         .uk-icon-rz-rezozero {
             font-size: 18px;
@@ -141,8 +173,12 @@
     #login-formGlobal {
         width: 100%;
         position: relative;
-        padding: 50px 40px 30px;
+        padding: 40px 15px 30px;
         .box-sizing();
+
+        @media (min-width: @screen-sm-min) {
+            padding: 50px 40px 30px;
+        }
 
         h1 {
             margin: 0px 6px 25px 0px;
