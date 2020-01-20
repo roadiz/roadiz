@@ -65,10 +65,6 @@ class AjaxExplorerProviderController extends AbstractAjaxController
             throw new InvalidParameterException('providerClass parameter is missing.');
         }
 
-        if ($request->query->has('options') &&
-            is_array($request->query->get('options'))) {
-        }
-
         $providerClass = $request->query->get('providerClass');
         if (!class_exists($providerClass)) {
             throw new InvalidParameterException('providerClass is not a valid class.');
