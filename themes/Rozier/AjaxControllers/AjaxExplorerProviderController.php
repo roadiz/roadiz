@@ -42,6 +42,18 @@ use Themes\Rozier\Explorer\ExplorerProviderInterface;
 class AjaxExplorerProviderController extends AbstractAjaxController
 {
     /**
+     * @param string $providerClass
+     *
+     * @return ExplorerProviderInterface
+     */
+    protected function getProvider(string $providerClass): ExplorerProviderInterface
+    {
+        if ($this->container->offsetExists($providerClass)) {
+            return $this->get($providerClass);
+        }
+        return new $providerClass();
+    }
+    /**
      * @param Request $request
      * @return Response JSON response
      */
@@ -53,7 +65,8 @@ class AjaxExplorerProviderController extends AbstractAjaxController
             throw new InvalidParameterException('providerClass parameter is missing.');
         }
 
-        if ($request->query->has('options') && is_array($request->query->get('options'))) {
+        if ($request->query->has('options') &&
+            is_array($request->query->get('options'))) {
         }
 
         $providerClass = $request->query->get('providerClass');
@@ -61,7 +74,7 @@ class AjaxExplorerProviderController extends AbstractAjaxController
             throw new InvalidParameterException('providerClass is not a valid class.');
         }
 
-        $provider = new $providerClass();
+        $provider = $this->getProvider($providerClass);
         if ($provider instanceof ExplorerProviderInterface) {
             $provider->setContainer($this->getContainer());
             $options = [
@@ -121,7 +134,7 @@ class AjaxExplorerProviderController extends AbstractAjaxController
 
         $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
-        $provider = new $providerClass();
+        $provider = $this->getProvider($providerClass);
         if ($provider instanceof ExplorerProviderInterface) {
             $provider->setContainer($this->getContainer());
             $entitiesArray = [];
