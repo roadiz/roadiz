@@ -52,14 +52,17 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
         $assignation = '$this->'.$this->field->getName();
         return '
     /**
-     * @return mixed
+     * @return object|null
      * @Serializer\VirtualProperty
      * @Serializer\Groups({"nodes_sources"})
      * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'AsObject()
     {
-        return Yaml::parse('.$assignation.');
+        if (null !== '.$assignation.') {
+            return Yaml::parse('.$assignation.');
+        }
+        return null;
     }'.PHP_EOL;
     }
 }
