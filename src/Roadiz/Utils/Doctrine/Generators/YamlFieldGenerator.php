@@ -54,7 +54,7 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
     /**
      * @return object|null
      * @Serializer\VirtualProperty
-     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
      * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'AsObject()

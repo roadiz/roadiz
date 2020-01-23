@@ -242,7 +242,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
 
     /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
-     * @Serializer\Groups({"nodes_sources", "log_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "log_sources"})
      * @Gedmo\Versioned
      */
     protected $title = '';
@@ -270,7 +270,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
-     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base"})
      * @Gedmo\Versioned
      */
     protected $publishedAt;

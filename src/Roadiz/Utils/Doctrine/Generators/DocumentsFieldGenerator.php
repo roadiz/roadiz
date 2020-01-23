@@ -45,7 +45,7 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
     /**
      * @return array Documents array
      * @Serializer\VirtualProperty
-     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_documents", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
      * @Serializer\SerializedName("'.$this->field->getName().'")
      */
     public function '.$this->field->getGetterName().'()

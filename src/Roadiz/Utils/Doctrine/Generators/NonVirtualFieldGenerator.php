@@ -62,7 +62,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
         $serializationType = '';
         $exclusion = $this->excludeFromSerialization() ?
             '@Serializer\Exclude()' :
-            '@Serializer\Groups({"nodes_sources"})';
+            '@Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})';
         $ormParams = [
             'type' => '"' . NodeTypeField::$typeToDoctrine[$this->field->getType()] . '"',
             'nullable' => 'true',
