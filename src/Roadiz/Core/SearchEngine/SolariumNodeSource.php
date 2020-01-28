@@ -152,7 +152,9 @@ class SolariumNodeSource extends AbstractSolarium
         $handler = $this->handlerFactory->getHandler($this->nodeSource);
         $out = array_map(
             function (Tag $x) {
-                return $x->getTranslatedTags()->first()->getName();
+                return $x->getTranslatedTags()->first() ?
+                    $x->getTranslatedTags()->first()->getName() :
+                    $x->getTagName();
             },
             $handler->getTags()
         );
