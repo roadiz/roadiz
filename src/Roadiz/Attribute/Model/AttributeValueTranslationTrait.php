@@ -38,6 +38,7 @@ trait AttributeValueTranslationTrait
 {
     /**
      * @return mixed
+     * @throws \Exception
      */
     public function getValue()
     {

@@ -76,6 +76,44 @@ trait AttributeTrait
     }
 
     /**
+     * @return string|null
+     */
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    /**
+     * @param string|null $color
+     *
+     * @return AttributeTrait
+     */
+    public function setColor(?string $color)
+    {
+        $this->color = $color;
+        return $this;
+    }
+
+    /**
+     * @return AttributeGroupInterface|null
+     */
+    public function getGroup(): ?AttributeGroupInterface
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param AttributeGroupInterface|null $group
+     *
+     * @return AttributeTrait
+     */
+    public function setGroup(?AttributeGroupInterface $group)
+    {
+        $this->group = $group;
+        return $this;
+    }
+
+    /**
      * @return bool
      */
     public function isSearchable(): bool

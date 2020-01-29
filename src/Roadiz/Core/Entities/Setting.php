@@ -30,6 +30,7 @@
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\JsonType;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
@@ -102,7 +103,7 @@ class Setting extends AbstractEntity
         AbstractField::DECIMAL_T => NumberType::class,
         AbstractField::EMAIL_T => EmailType::class,
         AbstractField::DOCUMENTS_T => FileType::class,
-        AbstractField::COLOUR_T => TextType::class,
+        AbstractField::COLOUR_T => ColorType::class,
         AbstractField::JSON_T => JsonType::class,
         AbstractField::CSS_T => CssType::class,
         AbstractField::YAML_T => YamlType::class,

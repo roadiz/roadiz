@@ -30,6 +30,7 @@
 namespace Themes\Rozier\Forms;
 
 use Doctrine\Persistence\ObjectManager;
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
@@ -105,13 +106,9 @@ class NodeTypeType extends AbstractType
                 'label' => 'nodeType.newsletterType',
                 'required' => false,
             ])
-            ->add('color', TextType::class, [
+            ->add('color', ColorType::class, [
                 'label' => 'nodeType.color',
                 'required' => false,
-                'attr' => ['class' => 'colorpicker-input'],
-                'constraints' => [
-                    new HexadecimalColor(),
-                ],
             ])
             ->add('defaultTtl', IntegerType::class, [
                 'label' => 'nodeType.defaultTtl',

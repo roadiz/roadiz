@@ -119,6 +119,10 @@
                 <source>attributes.value</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.group">
+                <source>attributes.group</source>
+                <target></target>
+            </trans-unit>
             <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
                 <source>are_you_sure.delete.attribute</source>
                 <target></target>
@@ -166,6 +170,43 @@
                 <target></target>
                 <note></note>
             </trans-unit>
+
+            <trans-unit xml:space="preserve" id="attributes.form.group">
+                <source>attributes.form.group</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form_help.group">
+                <source>attributes.form_help.group</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form.color">
+                <source>attributes.form.color</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form_help.color">
+                <source>attributes.form_help.color</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form.documents">
+                <source>attributes.form.documents</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form_help.documents">
+                <source>attributes.form_help.documents</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form.group.placeholder">
+                <source>attributes.form.group.placeholder</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

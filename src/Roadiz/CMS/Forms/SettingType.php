@@ -230,14 +230,6 @@ class SettingType extends AbstractType
                         new Type('double'),
                     ],
                 ];
-            case AbstractField::COLOUR_T:
-                return [
-                    'label' => $label,
-                    'required' => false,
-                    'attr' => [
-                        'class' => 'colorpicker-input',
-                    ],
-                ];
             default:
                 return [
                     'label' => $label,

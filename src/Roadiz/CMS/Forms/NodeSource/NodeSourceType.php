@@ -31,6 +31,7 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 use Doctrine\ORM\EntityManager;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\Controller;
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
 use RZ\Roadiz\CMS\Forms\JsonType;
@@ -197,8 +198,10 @@ class NodeSourceType extends AbstractType
     public static function getFormTypeFromString($type)
     {
         switch ($type) {
-            case AbstractField::STRING_T:
             case AbstractField::COLOUR_T:
+                return ColorType::class;
+
+            case AbstractField::STRING_T:
             case AbstractField::GEOTAG_T:
             case AbstractField::MULTI_GEOTAG_T:
                 return TextType::class;
@@ -369,13 +372,6 @@ class NodeSourceType extends AbstractType
                 $options = array_merge_recursive($options, [
                     'constraints' => [
                         new Type('numeric'),
-                    ],
-                ]);
-                break;
-            case NodeTypeField::COLOUR_T:
-                $options = array_merge_recursive($options, [
-                    'attr' => [
-                        'class' => 'colorpicker-input',
                     ],
                 ]);
                 break;

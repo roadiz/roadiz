@@ -38,7 +38,10 @@ class TagTranslationDocumentsRepository extends EntityRepository
 {
     /**
      * @param TagTranslation $tagTranslation
+     *
      * @return integer
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getLatestPosition($tagTranslation)
     {

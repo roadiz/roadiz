@@ -47,6 +47,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="documents", indexes={
  *     @ORM\Index(columns={"raw"}),
  *     @ORM\Index(columns={"private"}),
+ *     @ORM\Index(columns={"raw", "private"}),
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
@@ -90,6 +91,12 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
      * @Serializer\Exclude
      */
     protected $tagTranslations = null;
+    /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeDocuments", mappedBy="document")
+     * @var ArrayCollection
+     * @Serializer\Exclude
+     */
+    protected $attributeDocuments = null;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
@@ -174,6 +181,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
+        $this->attributeDocuments = new ArrayCollection();
         $this->imageWidth = 0;
         $this->imageHeight = 0;
     }
@@ -311,6 +319,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     public function getTagTranslations()
     {
         return $this->tagTranslations;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAttributeDocuments(): Collection
+    {
+        return $this->attributeDocuments;
     }
 
     /**
