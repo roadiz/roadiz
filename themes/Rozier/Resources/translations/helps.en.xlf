@@ -42,6 +42,10 @@
                 <source>nodeSource.redirections.help</source>
                 <target state="translated">Automatic redirections always redirect visitors from a given request path to the up-to-date current node URL, for this translation. Created redirections will be "permanent" type.</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes.help">
+                <source>nodeType.hidingNonReachableNodes.help</source>
+                <target state="translated">This node-type will only hide its non-reachable children nodes</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>
