@@ -6,6 +6,7 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Attribute\Form\DataTransformer\AttributeDocumentsTransformer;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Entities\AttributeDocuments;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -80,13 +81,17 @@ class AttributeDocumentType extends AbstractType
         if ($event->getForm()->getConfig()->getOption('attribute') instanceof AttributeInterface) {
             /** @var EntityManager $entityManager */
             $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
+            /** @var AttributeInterface $attribute */
+            $attribute = $event->getForm()->getConfig()->getOption('attribute');
 
-            /** @var QueryBuilder $qb */
-            $qb = $entityManager->getRepository(AttributeDocuments::class)->createQueryBuilder('ad');
-            $qb->delete()
-                ->andWhere($qb->expr()->eq('ad.attribute', ':attribute'))
-                ->setParameter(':attribute', $event->getForm()->getConfig()->getOption('attribute'));
-            $qb->getQuery()->execute();
+            if ($attribute instanceof Attribute && $attribute->getId()) {
+                /** @var QueryBuilder $qb */
+                $qb = $entityManager->getRepository(AttributeDocuments::class)->createQueryBuilder('ad');
+                $qb->delete()
+                    ->andWhere($qb->expr()->eq('ad.attribute', ':attribute'))
+                    ->setParameter(':attribute', $attribute);
+                $qb->getQuery()->execute();
+            }
         }
     }
 }
