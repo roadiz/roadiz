@@ -21,3 +21,23 @@ attributesDeletePage:
     defaults:
         _controller: Themes\Rozier\Controllers\Attributes\AttributeController::deleteAction
     requirements: { id : "[0-9]+" }
+
+
+attributeGroupsHomePage:
+    path:     /groups
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeGroupController::listAction
+attributeGroupsAddPage:
+    path:     /groups/add
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeGroupController::addAction
+attributeGroupsEditPage:
+    path:     /groups/edit/{id}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeGroupController::editAction
+    requirements: { id : "[0-9]+" }
+attributeGroupsDeletePage:
+    path:     /groups/delete/{id}
+    defaults:
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeGroupController::deleteAction
+    requirements: { id : "[0-9]+" }

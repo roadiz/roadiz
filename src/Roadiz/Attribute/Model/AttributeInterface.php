@@ -148,6 +148,31 @@ interface AttributeInterface
     public function getType(): int;
 
     /**
+     * @return string|null
+     */
+    public function getColor(): ?string;
+
+    /**
+     * @param string|null $color
+     */
+    public function setColor(?string $color);
+
+    /**
+     * @return AttributeGroupInterface|null
+     */
+    public function getGroup(): ?AttributeGroupInterface;
+
+    /**
+     * @param AttributeGroupInterface|null $group
+     */
+    public function setGroup(?AttributeGroupInterface $group);
+
+    /**
+     * @return Collection
+     */
+    public function getDocuments(): Collection;
+
+    /**
      * @param int $type
      *
      * @return mixed

@@ -47,6 +47,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="documents", indexes={
  *     @ORM\Index(columns={"raw"}),
  *     @ORM\Index(columns={"private"}),
+ *     @ORM\Index(columns={"raw", "private"}),
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
@@ -68,13 +69,13 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     protected $raw = false;
     /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedId = null;
     /**
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedPlatform = null;
@@ -91,6 +92,12 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
      */
     protected $tagTranslations = null;
     /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeDocuments", mappedBy="document")
+     * @var ArrayCollection
+     * @Serializer\Exclude
+     */
+    protected $attributeDocuments = null;
+    /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
      * @Serializer\Groups({"document"})
@@ -100,19 +107,19 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\DocumentTranslation>")
      */
     protected $documentTranslations;
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $filename;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $mimeType;
@@ -124,41 +131,41 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     private $downscaledDocument = null;
     /**
      * @ORM\Column(type="string")
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $folder;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("bool")
      */
     private $private = false;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $imageWidth = 0;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $imageHeight = 0;
     /**
      * @var string|null
      * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $imageAverageColor;
     /**
      * @var int|null The filesize in bytes.
      * @ORM\Column(type="integer", nullable=true, unique=false)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $filesize;
@@ -174,6 +181,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
+        $this->attributeDocuments = new ArrayCollection();
         $this->imageWidth = 0;
         $this->imageHeight = 0;
     }
@@ -311,6 +319,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     public function getTagTranslations()
     {
         return $this->tagTranslations;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAttributeDocuments(): Collection
+    {
+        return $this->attributeDocuments;
     }
 
     /**

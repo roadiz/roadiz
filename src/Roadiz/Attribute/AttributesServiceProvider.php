@@ -38,6 +38,8 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Event\AttributeValueIndexingSubscriber;
 use RZ\Roadiz\Attribute\Event\AttributeValueLifeCycleSubscriber;
 use RZ\Roadiz\Attribute\Importer\AttributeImporter;
+use RZ\Roadiz\Attribute\Serializer\AttributeGroupObjectConstructor;
+use RZ\Roadiz\Attribute\Serializer\AttributeGroupTranslationObjectConstructor;
 use RZ\Roadiz\Attribute\Serializer\AttributeObjectConstructor;
 use RZ\Roadiz\Attribute\Twig\AttributesExtension;
 use RZ\Roadiz\CMS\Importers\ChainImporter;
@@ -93,6 +95,8 @@ class AttributesServiceProvider implements ServiceProviderInterface
             ChainDoctrineObjectConstructor::class,
             function (ChainDoctrineObjectConstructor $constructor, Container $c) {
                 $constructor->add(new AttributeObjectConstructor($c['em'], $c['serializer.fallback_constructor']));
+                $constructor->add(new AttributeGroupObjectConstructor($c['em'], $c['serializer.fallback_constructor']));
+                $constructor->add(new AttributeGroupTranslationObjectConstructor($c['em'], $c['serializer.fallback_constructor']));
                 return $constructor;
             }
         );

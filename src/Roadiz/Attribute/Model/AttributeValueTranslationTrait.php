@@ -38,6 +38,7 @@ trait AttributeValueTranslationTrait
 {
     /**
      * @return mixed
+     * @throws \Exception
      */
     public function getValue()
     {
@@ -129,5 +130,13 @@ trait AttributeValueTranslationTrait
     {
         $this->attributeValue = $attributeValue;
         return $this;
+    }
+
+    /**
+     * @return AttributeInterface
+     */
+    public function getAttribute(): ?AttributeInterface
+    {
+        return $this->getAttributeValue()->getAttribute();
     }
 }

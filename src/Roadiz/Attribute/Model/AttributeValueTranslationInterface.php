@@ -61,6 +61,11 @@ interface AttributeValueTranslationInterface
     public function getTranslation(): ?Translation;
 
     /**
+     * @return AttributeInterface|null
+     */
+    public function getAttribute(): ?AttributeInterface;
+
+    /**
      * @return AttributeValueInterface
      */
     public function getAttributeValue(): AttributeValueInterface;

@@ -1,7 +1,6 @@
 <?php
-declare(strict_types=1);
 /**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
+ * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,32 +23,46 @@ declare(strict_types=1);
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file TagTranslationDocumentsRepository.php
+ * @file AttributeConstructor.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-namespace RZ\Roadiz\Core\Repositories;
 
-use RZ\Roadiz\Core\Entities\TagTranslation;
+namespace RZ\Roadiz\Attribute\Serializer;
 
-/**
- * {@inheritdoc}
- */
-class TagTranslationDocumentsRepository extends EntityRepository
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\Exception\ObjectConstructionException;
+use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
+use RZ\Roadiz\Core\Entities\AttributeGroup;
+use RZ\Roadiz\Core\Serializers\ObjectConstructor\AbstractTypedObjectConstructor;
+
+class AttributeGroupObjectConstructor extends AbstractTypedObjectConstructor
 {
     /**
-     * @param TagTranslation $tagTranslation
-     *
-     * @return integer
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @inheritDoc
      */
-    public function getLatestPosition($tagTranslation)
+    public function supports(string $className, array $data): bool
     {
-        $query = $this->_em->createQuery('SELECT MAX(ttd.position)
-FROM RZ\Roadiz\Core\Entities\TagTranslationDocuments ttd
-WHERE ttd.tagTranslation = :tagTranslation')
-                    ->setParameter('tagTranslation', $tagTranslation);
+        return ($className === AttributeGroup::class || $className === AttributeGroupInterface::class) &&
+            array_key_exists('canonicalName', $data);
+    }
 
-        return (int) $query->getSingleScalarResult();
+    /**
+     * @inheritDoc
+     */
+    protected function findObject($data, DeserializationContext $context): ?object
+    {
+        if (null === $data['canonicalName'] || $data['canonicalName'] === '') {
+            throw new ObjectConstructionException('AttributeGroup canonical name can not be empty');
+        }
+        return $this->entityManager
+            ->getRepository(AttributeGroup::class)
+            ->findOneByCanonicalName($data['canonicalName']);
+    }
+
+    protected function fillIdentifier(object $object, array $data): void
+    {
+        if ($object instanceof AttributeGroup) {
+            $object->setCanonicalName($data['canonicalName']);
+        }
     }
 }

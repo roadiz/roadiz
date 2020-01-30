@@ -34,6 +34,7 @@ namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Attribute;
 use Symfony\Component\Form\AbstractType;
@@ -66,6 +67,17 @@ class AttributeType extends AbstractType
                         'message' => 'attribute_code.must_contain_alpha_underscore'
                     ])
                 ]
+            ])
+            ->add('group', AttributeGroupsType::class, [
+                'label' => 'attributes.form.group',
+                'required' => false,
+                'help' => 'attributes.form_help.group',
+                'placeholder' => 'attributes.form.group.placeholder',
+                'entityManager' => $options['entityManager']
+            ])
+            ->add('color', ColorType::class, [
+                'label' => 'attributes.form.color',
+                'help' => 'attributes.form_help.color'
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'attributes.form.type',
@@ -105,6 +117,13 @@ class AttributeType extends AbstractType
                 'attr' => [
                     'class' => 'rz-collection-form-type'
                 ]
+            ])
+            ->add('attributeDocuments', AttributeDocumentType::class, [
+                'label' => 'attributes.form.documents',
+                'help' => 'attributes.form_help.documents',
+                'required' => false,
+                'attribute' => $builder->getForm()->getData(),
+                'entityManager' => $options['entityManager'],
             ])
         ;
     }

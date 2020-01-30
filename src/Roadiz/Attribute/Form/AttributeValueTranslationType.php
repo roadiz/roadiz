@@ -34,6 +34,7 @@ namespace RZ\Roadiz\Attribute\Form;
 
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
+use RZ\Roadiz\CMS\Forms\ColorType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -91,12 +92,7 @@ class AttributeValueTranslationType extends AbstractType
                     ]));
                     break;
                 case AttributeInterface::COLOUR_T:
-                    $builder->add('value', TextType::class, array_merge($defaultOptions, [
-                        'attr' => [
-                            'class' => 'colorpicker-input',
-                        ],
-                    ]));
-
+                    $builder->add('value', ColorType::class, $defaultOptions);
                     break;
                 case AttributeInterface::COUNTRY_T:
                     $builder->add('value', CountryType::class, $defaultOptions);

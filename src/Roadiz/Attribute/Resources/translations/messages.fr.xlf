@@ -118,6 +118,10 @@
                 <source>attributes.value</source>
                 <target state="translated">Valeur</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.group">
+                <source>attributes.group</source>
+                <target state="translated">Groupe</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
                 <source>are_you_sure.delete.attribute</source>
                 <target state="translated">Êtes-vous sûr·e de vouloir supprimer cet attribut ?</target>
@@ -162,6 +166,101 @@
       <trans-unit xml:space="preserve" id="attributes.import_form.file.help">
                 <source>attributes.import_form.file.help</source>
                 <target state="translated">Le fichier d’attributs doit être un fichier au format JSON valide respectant la structure des attributs Roadiz.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.group">
+                <source>attributes.form.group</source>
+                <target state="translated">Groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.group">
+                <source>attributes.form_help.group</source>
+                <target state="translated">Permet de rassembler les attributs au sein de groupes pour l’affichage publique.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.color">
+                <source>attributes.form.color</source>
+                <target state="translated">Couleur</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.color">
+                <source>attributes.form_help.color</source>
+                <target state="translated">Couleur de l’attribut pouvant être affichée publiquement.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.documents">
+                <source>attributes.form.documents</source>
+                <target state="translated">Documents</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.documents">
+                <source>attributes.form_help.documents</source>
+                <target state="translated">Documents illustrant l’attribut pour son affichage public.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.group.placeholder">
+                <source>attributes.form.group.placeholder</source>
+                <target state="translated">-- Aucun groupe --</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.attribute_groups">
+                <source>back_to.attribute_groups</source>
+                <target state="translated">Retour aux groupes d’attributs</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute_group">
+                <source>add.a.attribute_group</source>
+                <target state="translated">Créer un groupe d’attributs</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_groups">
+                <source>attribute_groups</source>
+                <target state="translated">Groupes d’attributs</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_groups.name">
+                <source>attribute_groups.name</source>
+                <target state="translated">Nom du groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.name">
+                <source>attribute_group.form.name</source>
+                <target state="translated">Nom du groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.created">
+                <source>attribute_group.%name%.created</source>
+                <target state="translated">Le groupe %name% a bien été créé</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.updated">
+                <source>attribute_group.%name%.updated</source>
+                <target state="translated">Le groupe %name% a bien été mis à jour</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.deleted">
+                <source>attribute_group.%name%.deleted</source>
+                <target state="translated">Le groupe %name% a bien été supprimé</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute_group.%name%">
+                <source>delete.attribute_group.%name%</source>
+                <target state="translated">Supprimer le groupe d’attribut %name%</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute_group">
+                <source>are_you_sure.delete.attribute_group</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir supprimer le groupe d'attributs ?</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.canonicalName">
+                <source>attribute_group.form.canonicalName</source>
+                <target state="translated">Nom canonique</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.attributeGroupTranslations">
+                <source>attribute_group.form.attributeGroupTranslations</source>
+                <target state="translated">Traductions du groupe</target>
                 <note/>
             </trans-unit>
     </body>

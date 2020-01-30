@@ -32,6 +32,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\Core\Entities\Document;
@@ -96,14 +97,10 @@ class DocumentEditType extends AbstractType
                 'inherit_data' => true,
                 'document_platforms' => $options['document_platforms'],
             ])
-            ->add('imageAverageColor', TextType::class, [
+            ->add('imageAverageColor', ColorType::class, [
                 'label' => 'document.imageAverageColor',
                 'help' => 'document.imageAverageColor.help',
                 'required' => false,
-                'attr' => ['class' => 'colorpicker-input'],
-                'constraints' => [
-                    new HexadecimalColor(),
-                ],
             ])
         ;
     }

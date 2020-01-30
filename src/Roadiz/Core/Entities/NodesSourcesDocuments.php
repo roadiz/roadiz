@@ -38,7 +38,9 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesDocumentsRepository")
  * @ORM\Table(name="nodes_sources_documents", indexes={
- *     @ORM\Index(columns={"position"})
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"ns_id", "node_type_field_id"}),
+ *     @ORM\Index(columns={"ns_id", "node_type_field_id", "position"})
  * })
  */
 class NodesSourcesDocuments extends AbstractPositioned

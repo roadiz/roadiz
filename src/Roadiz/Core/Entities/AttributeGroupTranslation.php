@@ -24,7 +24,7 @@
  * be used in advertising or otherwise to promote the sale, use or other dealings
  * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
  *
- * @file AttributeValueTranslation.php
+ * @file AttributeTranslation.php
  * @author Ambroise Maupate
  *
  */
@@ -33,48 +33,50 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
-use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
-use RZ\Roadiz\Attribute\Model\AttributeValueTranslationTrait;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use JMS\Serializer\Annotation as Serializer;
+use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationTrait;
+use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
  * @package RZ\Roadiz\Core\Entities
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="attribute_value_translations", indexes={
- *     @ORM\Index(columns={"value"}),
- *     @ORM\Index(columns={"translation_id", "attribute_value"})
- * })
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Attribute\Repository\AttributeGroupTranslationRepository")
+ * @ORM\Table(name="attribute_group_translations", indexes={
+ *     @ORM\Index(columns={"name"})
+ * }, uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"attribute_group_id", "translation_id"}),
+ *     @ORM\UniqueConstraint(columns={"name", "translation_id"})
+ * }))
  * @ORM\HasLifecycleCallbacks
  */
-class AttributeValueTranslation extends AbstractEntity implements AttributeValueTranslationInterface
+class AttributeGroupTranslation extends AbstractEntity implements AttributeGroupTranslationInterface
 {
-    use AttributeValueTranslationTrait;
+    use AttributeGroupTranslationTrait;
 
     /**
-     * @var string|null
-     * @ORM\Column(type="string", nullable=true, unique=false, length=255)
-     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @var string
+     * @ORM\Column(type="string", nullable=false, unique=false)
+     * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    protected $value;
+    protected $name;
 
     /**
-     * @var Translation
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation")
-     * @ORM\JoinColumn(name="translation_id", onDelete="CASCADE", referencedColumnName="id")
-     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @var AttributeGroupInterface
+     * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\AttributeGroup", inversedBy="attributeGroupTranslations", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id", name="attribute_group_id")
+     * @Serializer\Exclude
+     */
+    protected $attributeGroup;
+
+    /**
+     * @var Translation|null
+     * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Translation")
+     * @ORM\JoinColumn(onDelete="CASCADE", name="translation_id")
+     * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
      * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
      */
     protected $translation;
-
-    /**
-     * @var AttributeValueInterface
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", inversedBy="attributeValueTranslations", cascade={"persist"})
-     * @ORM\JoinColumn(name="attribute_value", onDelete="CASCADE", referencedColumnName="id")
-     * @Serializer\Exclude
-     */
-    protected $attributeValue;
 }

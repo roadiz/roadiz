@@ -33,6 +33,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Twig;
 
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
@@ -51,6 +52,7 @@ class AttributesExtension extends AbstractExtension
         return [
             new TwigFunction('get_attributes', [$this, 'getAttributeValues']),
             new TwigFunction('node_source_attributes', [$this, 'getNodeSourceAttributeValues']),
+            new TwigFunction('node_source_grouped_attributes', [$this, 'getNodeSourceGroupedAttributeValues']),
         ];
     }
 
@@ -58,7 +60,9 @@ class AttributesExtension extends AbstractExtension
     {
         return [
             new TwigFilter('attributes', [$this, 'getNodeSourceAttributeValues']),
+            new TwigFilter('grouped_attributes', [$this, 'getNodeSourceGroupedAttributeValues']),
             new TwigFilter('attribute_label', [$this, 'getAttributeLabelOrCode']),
+            new TwigFilter('attribute_group_label', [$this, 'getAttributeGroupLabelOrCode']),
         ];
     }
 
@@ -145,6 +149,42 @@ class AttributesExtension extends AbstractExtension
     }
 
     /**
+     * @param NodesSources|null $nodesSources
+     *
+     * @return array
+     * @throws SyntaxError
+     */
+    public function getNodeSourceGroupedAttributeValues(?NodesSources $nodesSources): array
+    {
+        $groups = [
+            INF => [
+                'group' => null,
+                'attributeValues' => []
+            ]
+        ];
+        $attributeValueTranslations  = $this->getNodeSourceAttributeValues($nodesSources);
+        /** @var AttributeValueTranslationInterface $attributeValueTranslation */
+        foreach ($attributeValueTranslations as $attributeValueTranslation) {
+            $group = $attributeValueTranslation->getAttributeValue()->getAttribute()->getGroup();
+            if (null !== $group) {
+                if (!isset($groups[$group->getCanonicalName()])) {
+                    $groups[$group->getCanonicalName()] = [
+                        'group' => $group,
+                        'attributeValues' => []
+                    ];
+                }
+                $groups[$group->getCanonicalName()]['attributeValues'][] = $attributeValueTranslation;
+            } else {
+                $groups[INF]['attributeValues'][] = $attributeValueTranslation;
+            }
+        }
+
+        return array_filter($groups, function (array $group) {
+            return count($group['attributeValues']) > 0;
+        });
+    }
+
+    /**
      * @param mixed $mixed
      * @param Translation|null $translation
      *
@@ -167,6 +207,31 @@ class AttributesExtension extends AbstractExtension
                 $translation = $mixed->getTranslation();
             }
             return $mixed->getAttributeValue()->getAttribute()->getLabelOrCode($translation);
+        }
+
+        return null;
+    }
+
+    public function getAttributeGroupLabelOrCode($mixed, Translation $translation = null): ?string
+    {
+        if (null === $mixed) {
+            return null;
+        }
+
+        if ($mixed instanceof AttributeInterface && null !== $mixed->getGroup()) {
+            return $mixed->getGroup()->getTranslatedName($translation);
+        }
+        if ($mixed instanceof AttributeValueInterface && null !== $mixed->getAttribute()->getGroup()) {
+            return $mixed->getAttribute()->getGroup()->getTranslatedName($translation);
+        }
+        if ($mixed instanceof AttributeValueTranslationInterface && null !== $mixed->getAttribute()->getGroup()) {
+            if (null === $translation) {
+                $translation = $mixed->getTranslation();
+            }
+            return $mixed->getAttribute()->getGroup()->getTranslatedName($translation);
+        }
+        if ($mixed instanceof AttributeGroupInterface) {
+            return $mixed->getTranslatedName($translation);
         }
 
         return null;

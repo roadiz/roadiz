@@ -144,6 +144,10 @@ class ImageFormatsExtension extends AbstractExtension implements GlobalsInterfac
                         ]
                     ]
                 ],
+                'mini' => [
+                    'fit' => '200x200',
+                    'progressive' => true,
+                ],
                 'shareImage' => [
                     'fit' => '1200x630',
                     'absolute' => true,
