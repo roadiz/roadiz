@@ -33,6 +33,7 @@ import NodesBulk from './components/bulk-edits/NodesBulk'
 import TagsBulk from './components/bulk-edits/TagsBulk'
 import DocumentUploader from './components/documents/DocumentUploader'
 import NodeTypeFieldsPosition from './components/node-type-fields/NodeTypeFieldsPosition'
+import AttributeValuePosition from './components/attribute-values/AttributeValuePosition'
 import NodeTypeFieldEdit from './components/node-type-fields/NodeTypeFieldEdit'
 import CustomFormFieldsPosition from './components/custom-form-fields/CustomFormFieldsPosition'
 import CustomFormFieldEdit from './components/custom-form-fields/CustomFormFieldEdit'
@@ -78,6 +79,7 @@ export default class Lazyload {
         this.tagAutocomplete = null
         this.folderAutocomplete = null
         this.nodeTypeFieldsPosition = null
+        this.attributeValuesPosition = null
         this.customFormFieldsPosition = null
         this.settingsSaveButtons = null
         this.nodeTypeFieldEdit = null
@@ -314,6 +316,7 @@ export default class Lazyload {
             this.tagAutocomplete,
             this.folderAutocomplete,
             this.nodeTypeFieldsPosition,
+            this.attributeValuesPosition,
             this.customFormFieldsPosition,
             this.settingsSaveButtons,
             this.nodeTypeFieldEdit,
@@ -347,6 +350,7 @@ export default class Lazyload {
         this.tagAutocomplete = new TagAutocomplete()
         this.folderAutocomplete = new FolderAutocomplete()
         this.nodeTypeFieldsPosition = new NodeTypeFieldsPosition()
+        this.attributeValuesPosition = new AttributeValuePosition()
         this.customFormFieldsPosition = new CustomFormFieldsPosition()
         this.nodeTreeContextActions = new NodeTreeContextActions()
         this.settingsSaveButtons = new SettingsSaveButtons()

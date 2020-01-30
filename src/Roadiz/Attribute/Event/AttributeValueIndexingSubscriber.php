@@ -51,7 +51,7 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onNodeSourceIndexing(FilterSolariumNodeSourceEvent $event)
+    public function onNodeSourceIndexing(NodesSourcesIndexingEvent $event)
     {
         if ($event->getNodeSource()->getNode()->getAttributeValues()->count() === 0) {
             return;
