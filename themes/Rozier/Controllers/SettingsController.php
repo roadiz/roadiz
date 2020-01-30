@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -100,7 +101,8 @@ class SettingsController extends RozierApp
     /**
      * @param Request $request
      * @param SettingGroup|null $settingGroup
-     * @return null|RedirectResponse
+     *
+     * @return Response|null
      */
     protected function commonSettingList(Request $request, SettingGroup $settingGroup = null)
     {
@@ -143,6 +145,14 @@ class SettingsController extends RozierApp
                             ['%name%' => $setting->getName()]
                         );
                         $this->publishConfirmMessage($request, $msg);
+
+                        if ($request->isXmlHttpRequest() || $request->getRequestFormat('html') === 'json') {
+                            return new JsonResponse([
+                                'status' => 'success',
+                                'message' => $msg,
+                            ], JsonResponse::HTTP_ACCEPTED);
+                        }
+
                         if (null !== $settingGroup) {
                             return $this->redirect($this->generateUrl(
                                 'settingGroupsSettingsPage',
@@ -159,6 +169,13 @@ class SettingsController extends RozierApp
                 } else {
                     foreach ($this->getErrorsAsArray($form) as $error) {
                         $this->publishErrorMessage($request, $error);
+                    }
+
+                    if ($request->isXmlHttpRequest() || $request->getRequestFormat('html') === 'json') {
+                        return new JsonResponse([
+                            'status' => 'failed',
+                            'errors' => $this->getErrorsAsArray($form),
+                        ], JsonResponse::HTTP_BAD_REQUEST);
                     }
                 }
             }

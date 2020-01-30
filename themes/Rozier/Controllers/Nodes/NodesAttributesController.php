@@ -51,10 +51,11 @@ class NodesAttributesController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param int $nodeId
-     * @param int $translationId
+     * @param int     $nodeId
+     * @param int     $translationId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $nodeId, $translationId)
     {
@@ -110,7 +111,7 @@ class NodesAttributesController extends RozierApp
             $attributeValueTranslationForm->handleRequest($request);
 
             if ($attributeValueTranslationForm->isSubmitted()) {
-                if ($attributeValueTranslationForm->isSubmitted() && $attributeValueTranslationForm->isValid()) {
+                if ($attributeValueTranslationForm->isValid()) {
                     $this->get('em')->flush();
 
                     /*
@@ -126,6 +127,13 @@ class NodesAttributesController extends RozierApp
                         ]
                     );
                     $this->publishConfirmMessage($request, $msg, $nodeSource);
+
+                    if ($request->isXmlHttpRequest() || $request->getRequestFormat('html') === 'json') {
+                        return new JsonResponse([
+                            'status' => 'success',
+                            'message' => $msg,
+                        ], JsonResponse::HTTP_ACCEPTED);
+                    }
                     return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
                         'nodeId' => $node->getId(),
                         'translationId' => $translation->getId(),
@@ -135,7 +143,7 @@ class NodesAttributesController extends RozierApp
                     /*
                      * Handle errors when Ajax POST requests
                      */
-                    if ($request->isXmlHttpRequest()) {
+                    if ($request->isXmlHttpRequest() || $request->getRequestFormat('html') === 'json') {
                         return new JsonResponse([
                             'status' => 'fail',
                             'errors' => $errors,
@@ -192,11 +200,12 @@ class NodesAttributesController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int $nodeId
-     * @param int $translationId
-     * @param int $attributeValueId
+     * @param int     $nodeId
+     * @param int     $translationId
+     * @param int     $attributeValueId
      *
      * @return RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
     {

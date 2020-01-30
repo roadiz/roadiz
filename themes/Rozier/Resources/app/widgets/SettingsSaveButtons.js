@@ -58,7 +58,8 @@ export default class SettingsSaveButtons {
             data: formData,
             processData: false,
             cache: false,
-            contentType: false
+            contentType: false,
+            headers: {'Accept': 'application/json'}
         }
 
         this.currentRequest = $.ajax(sendData)
@@ -67,6 +68,12 @@ export default class SettingsSaveButtons {
                     for (let key in data.responseJSON.errors.value) {
                         $form.addClass('uk-has-errors')
                         $form.append('<span class="uk-alert uk-alert-danger">' + data.responseJSON.errors.value[key] + '</span>')
+                    }
+                } else if (data.responseJSON && data.responseJSON.errors) {
+                    for (let key in data.responseJSON.errors) {
+                        $form.addClass('uk-has-errors')
+                        $form.append('<span class="uk-alert uk-alert-danger">' + data.responseJSON.errors[key] + '</span>')
+                        break
                     }
                 }
             })

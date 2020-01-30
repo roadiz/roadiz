@@ -39,6 +39,9 @@ export default class AttributeValuePosition {
             this.currentRequest.abort()
         }
 
+        if (event.target instanceof HTMLInputElement) {
+            return
+        }
         let $element = $(element)
         let attributeValueId = parseInt($element.data('id'))
         let $sibling = $element.prev()
