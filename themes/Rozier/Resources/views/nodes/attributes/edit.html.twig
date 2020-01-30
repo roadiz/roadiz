@@ -17,9 +17,9 @@
             {% include '@Rozier/nodes/attributes/translationBar.html.twig' with {"current": translation.id} %}
         </header>
 
-        <article class="content  content-settings-list">
+        <article class="content content-settings-list">
             <div class="content-table-cont">
-                <table class="attribute-value-forms content-table settings uk-table">
+                <table class="attribute-value-forms content-table settings uk-table attributes">
                     <thead>
                         <tr>
                             <th>{% trans %}attributes.code{% endtrans %}</th>
@@ -27,11 +27,12 @@
                             <th>{% trans %}actions{% endtrans %}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="uk-sortable" data-uk-sortable="{animation:0, dragCustomClass:'setting-row rz-node-type-field-dragged', handleClass:'attribute-value-col'}">
                         {% for attribute_value_translation_form in attribute_value_translation_forms %}
                             {% set attributeValue = attribute_value_translation_form.vars.data.attributeValue %}
-                            <tr class="setting-row">
-                                <td>
+                            <tr class="setting-row" data-position="{{ attributeValue.position }}" data-id="{{ attributeValue.getId }}">
+                                <td class="name attribute-value-col">
+                                    <span class="color" style="background-color:{{ attributeValue.attribute.color|default('transparent') }};"></span>
                                     {{- attribute_value_translation_form.vars.data|attribute_label -}}
                                 </td>
                                 <td>

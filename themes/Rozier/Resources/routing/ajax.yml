@@ -190,3 +190,12 @@ customFormFieldAjaxEdit:
         _controller: Themes\Rozier\AjaxControllers\AjaxCustomFormFieldsController::editAction
         _format: json
     requirements: { customFormFieldId : "[0-9]+" }
+
+
+## Attribute values
+attributeValueAjaxEdit:
+    path:     /attribute-values/edit/{attributeValueId}
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxAttributeValuesController::editAction
+        _format: json
+    requirements: { attributeValueId : "[0-9]+" }
