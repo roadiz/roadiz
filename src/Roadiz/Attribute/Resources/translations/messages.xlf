@@ -206,6 +206,66 @@
                 <target></target>
                 <note></note>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="back_to.attribute_groups">
+                <source>back_to.attribute_groups</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="add.a.attribute_group">
+                <source>add.a.attribute_group</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_groups">
+                <source>attribute_groups</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_groups.name">
+                <source>attribute_groups.name</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_group.form.name">
+                <source>attribute_group.form.name</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_group.%name%.created">
+                <source>attribute_group.%name%.created</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_group.%name%.updated">
+                <source>attribute_group.%name%.updated</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_group.%name%.deleted">
+                <source>attribute_group.%name%.deleted</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="delete.attribute_group.%name%">
+                <source>delete.attribute_group.%name%</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute_group">
+                <source>are_you_sure.delete.attribute_group</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_group.form.canonicalName">
+                <source>attribute_group.form.canonicalName</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_group.form.attributeGroupTranslations">
+                <source>attribute_group.form.attributeGroupTranslations</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
 
         </body>
     </file>

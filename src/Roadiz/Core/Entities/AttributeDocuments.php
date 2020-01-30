@@ -11,7 +11,8 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Attribute\Repository\AttributeDocumentsRepository")
  * @ORM\Table(name="attributes_documents", indexes={
- *     @ORM\Index(columns={"position"})
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"attribute_id", "position"})
  * })
  */
 class AttributeDocuments extends AbstractPositioned
@@ -28,7 +29,7 @@ class AttributeDocuments extends AbstractPositioned
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="attributeDocuments", fetch="EAGER", cascade={"persist", "merge"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
      * @var Document|null
-     * @Serializer\Groups({"tag"})
+     * @Serializer\Groups({"attribute"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      */
     protected $document;
@@ -70,6 +71,8 @@ class AttributeDocuments extends AbstractPositioned
      * Sets the value of document.
      *
      * @param Document $document the document
+     *
+     * @return AttributeDocuments
      */
     public function setDocument(?Document $document): AttributeDocuments
     {

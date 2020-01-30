@@ -33,12 +33,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
-use RZ\Roadiz\Attribute\Form\AttributeDocumentType;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Attribute;
-use RZ\Roadiz\Core\Entities\AttributeGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -70,12 +68,12 @@ class AttributeType extends AbstractType
                     ])
                 ]
             ])
-            ->add('group', ChoiceType::class, [
+            ->add('group', AttributeGroupsType::class, [
                 'label' => 'attributes.form.group',
                 'required' => false,
                 'help' => 'attributes.form_help.group',
-                'data_class' => AttributeGroup::class,
-                'placeholder' => 'attributes.form.group.placeholder'
+                'placeholder' => 'attributes.form.group.placeholder',
+                'entityManager' => $options['entityManager']
             ])
             ->add('color', ColorType::class, [
                 'label' => 'attributes.form.color',

@@ -9,7 +9,7 @@ use RZ\Roadiz\Core\Repositories\EntityRepository;
 /**
  * {@inheritdoc}
  */
-class AttributeDocumentsRepository extends EntityRepository
+final class AttributeDocumentsRepository extends EntityRepository
 {
     /**
      * @param Attribute $attribute

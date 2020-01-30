@@ -48,7 +48,9 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="attributes", indexes={
  *     @ORM\Index(columns={"code"}),
- *     @ORM\Index(columns={"type"})
+ *     @ORM\Index(columns={"type"}),
+ *     @ORM\Index(columns={"searchable"}),
+ *     @ORM\Index(columns={"group_id"})
  * })
  * @ORM\HasLifecycleCallbacks
  */
@@ -90,8 +92,8 @@ class Attribute extends AbstractEntity implements AttributeInterface
 
     /**
      * @var AttributeGroupInterface|null
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeGroup", inversedBy="attributes")
-     * @ORM\JoinColumn(onDelete="SET NULL")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeGroup", inversedBy="attributes", fetch="EAGER", cascade={"all"})
+     * @ORM\JoinColumn(name="group_id", onDelete="SET NULL")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\AttributeGroup")
      */

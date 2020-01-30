@@ -46,7 +46,9 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * @package RZ\Roadiz\Core\Entities
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="attribute_values")
+ * @ORM\Table(name="attribute_values", indexes={
+ *     @ORM\Index(columns={"attribute_id", "node_id"})
+ * })
  * @ORM\HasLifecycleCallbacks
  */
 class AttributeValue extends AbstractPositioned implements AttributeValueInterface
@@ -55,8 +57,8 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
 
     /**
      * @var AttributeInterface
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues")
-     * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues", fetch="EAGER")
+     * @ORM\JoinColumn(name="attribute_id", onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Attribute")
      */
@@ -80,7 +82,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     /**
      * @var Node|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="attributeValues")
-     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @ORM\JoinColumn(name="node_id", onDelete="CASCADE")
      * @Serializer\Exclude
      */
     protected $node;

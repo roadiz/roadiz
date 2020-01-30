@@ -4,18 +4,33 @@
     <h1 class="page-title">{{ nodeSource.title }}</h1>
     <div class="page-text">{{ nodeSource.content|markdownExtra }}</div>
     <ul class="block-attributes">
-        {% for attributeValueTranslation in nodeSource|attributes %}
+        {% for groupedAttributeValueTranslation in nodeSource|grouped_attributes %}
             <li>
-                <strong>{{ attributeValueTranslation|attribute_label(translation) }}:</strong>
-                {% if attributeValueTranslation is datetime %}
-                    {{ attributeValueTranslation.value|localizeddate('medium', 'short') }}
-                {% elseif attributeValueTranslation is date %}
-                    {{ attributeValueTranslation.value|localizeddate('medium') }}
-                {% elseif attributeValueTranslation is country %}
-                    {{ attributeValueTranslation.value|country_iso(request.locale) }}
-                {% else %}
-                    {{ attributeValueTranslation.value }}
-                {% endif%}
+                {% if groupedAttributeValueTranslation.group %}
+                    <strong>{{ groupedAttributeValueTranslation.group|attribute_group_label(translation) }}</strong>
+                {% endif %}
+                <ul>
+                    {% for attributeValueTranslation in groupedAttributeValueTranslation.attributeValues %}
+                        <li>
+                            {% if attributeValueTranslation.attribute.documents|length %}
+                                {% for document in attributeValueTranslation.attribute.documents %}
+                                    <figure>{{ document|display(imageFormats.mini) }}</figure>
+                                {% endfor %}
+                            {% endif %}
+                            <strong>{{ attributeValueTranslation|attribute_label(translation) }}:</strong>
+                            {% if attributeValueTranslation is datetime %}
+                                {{ attributeValueTranslation.value|localizeddate('medium', 'short') }}
+                            {% elseif attributeValueTranslation is date %}
+                                {{ attributeValueTranslation.value|localizeddate('medium') }}
+                            {% elseif attributeValueTranslation is country %}
+                                {{ attributeValueTranslation.value|country_iso(request.locale) }}
+                            {% else %}
+                                {{ attributeValueTranslation.value }}
+                            {% endif%}
+                        </li>
+                    {% endfor %}
+                </ul>
+
             </li>
         {% endfor %}
     </ul>

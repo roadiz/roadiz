@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\AttributeGroup;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
@@ -16,9 +17,28 @@ class AttributeGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', TextType::class, [
-            'label' => 'attribute_group.form.name'
-        ]);
+        $builder->add('canonicalName', TextType::class, [
+                'label' => 'attribute_group.form.canonicalName'
+            ])
+            ->add('attributeGroupTranslations', CollectionType::class, [
+                'label' => 'attribute_group.form.attributeGroupTranslations',
+                'allow_add' => true,
+                'required' => false,
+                'allow_delete' => true,
+                'entry_type' => AttributeGroupTranslationType::class,
+                'by_reference' => false,
+                'entry_options' => [
+                    'label' => false,
+                    'entityManager' => $options['entityManager'],
+                    'attr' => [
+                        'class' => 'uk-form uk-form-horizontal'
+                    ]
+                ],
+                'attr' => [
+                    'class' => 'rz-collection-form-type'
+                ]
+            ])
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -30,7 +50,7 @@ class AttributeGroupType extends AbstractType
         $resolver->addNormalizer('constraints', function (Options $options) {
             return [
                 new UniqueEntity([
-                    'fields' => ['name'],
+                    'fields' => ['canonicalName'],
                     'entityManager' => $options['entityManager']
                 ])
             ];

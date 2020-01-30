@@ -14,6 +14,29 @@ class AttributeGroupController extends RozierApp
     /**
      * @param Request $request
      *
+     * @return Response
+     * @throws \Twig_Error_Runtime
+     */
+    public function listAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
+
+        $listManager = $this->createEntityListManager(
+            AttributeGroup::class,
+            [],
+            ['canonicalName' => 'ASC']
+        );
+        $listManager->handle();
+
+        $this->assignation['filters'] = $listManager->getAssignation();
+        $this->assignation['items'] = $listManager->getEntities();
+
+        return $this->render('attributes/groups/list.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      * @throws \Twig_Error_Runtime
      */
@@ -33,7 +56,10 @@ class AttributeGroupController extends RozierApp
                 $this->get('em')->persist($item);
                 $this->get('em')->flush();
 
-                $msg = $this->getTranslator()->trans('attribute_group.%name%.created', ['%name%' => $item->getName()]);
+                $msg = $this->getTranslator()->trans(
+                    'attribute_group.%name%.created',
+                    ['%name%' => $item->getName()]
+                );
                 $this->publishConfirmMessage($request, $msg);
             } catch (\RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
@@ -80,7 +106,7 @@ class AttributeGroupController extends RozierApp
                 $this->get('em')->flush();
                 $msg = $this->getTranslator()->trans(
                     'attribute_group.%name%.updated',
-                    ['%name%' => $item->getCode()]
+                    ['%name%' => $item->getName()]
                 );
                 $this->publishConfirmMessage($request, $msg);
             } catch (\RuntimeException $e) {
@@ -93,5 +119,49 @@ class AttributeGroupController extends RozierApp
         $this->assignation['form'] = $form->createView();
 
         return $this->render('attributes/groups/edit.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $id
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
+     */
+    public function deleteAction(Request $request, $id)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
+
+        /** @var AttributeGroup $item */
+        $item = $this->get('em')->find(AttributeGroup::class, (int) $id);
+
+        if ($item === null) {
+            throw $this->createNotFoundException('AttributeGroup does not exist.');
+        }
+
+        $form = $this->createForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->get('em')->remove($item);
+                $this->get('em')->flush();
+
+                $msg = $this->getTranslator()->trans(
+                    'attribute_group.%name%.deleted',
+                    ['%name%' => $item->getName()]
+                );
+                $this->publishConfirmMessage($request, $msg);
+            } catch (\RuntimeException $e) {
+                $this->publishErrorMessage($request, $e->getMessage());
+            }
+
+            return $this->redirect($this->generateUrl('attributeGroupsHomePage'));
+        }
+
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['item'] = $item;
+
+        return $this->render('attributes/groups/delete.html.twig', $this->assignation);
     }
 }

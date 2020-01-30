@@ -4,8 +4,8 @@
 <section class="content-global edit-item">
 
     <header class="content-header header-item header-item-add">
-        <h1 class="content-title item-add-title">{{ "edit.attribute.%name%"|trans({'%name%': item.code}) }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('attributesHomePage') }}" title="{% trans %}back_to.attributes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+        <h1 class="content-title item-add-title">{{ "edit.attribute.%name%"|trans({'%name%': item.name}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content" href="{{ path('attributeGroupsHomePage') }}" title="{% trans %}back_to.attribute_groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-edit">
@@ -21,6 +21,6 @@
         {{ form_end(form) }}
     </article>
 
-    {% include '@Rozier/attributes/actionsMenu.html.twig' with {"item": item} only %}
+    {% include '@Rozier/attributes/groups/actionsMenu.html.twig' with {"item": item} only %}
 </section>
 {% endblock %}

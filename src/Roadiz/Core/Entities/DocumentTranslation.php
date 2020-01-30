@@ -48,7 +48,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
     /**
      * @ORM\Column(type="string", nullable=true)
      * @var string|null
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Gedmo\Versioned
      */
     protected $name = null;
@@ -73,7 +73,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Gedmo\Versioned
      */
     protected $description;
@@ -98,7 +98,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Gedmo\Versioned
      */
     private $copyright;
@@ -124,7 +124,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Groups({"document", "nodes_sources"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @var  Translation
      */
     protected $translation;

@@ -2,9 +2,11 @@
 namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Attribute\Form\DataTransformer\AttributeGroupTransformer;
 use RZ\Roadiz\Core\Entities\AttributeGroup;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -13,6 +15,13 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class AttributeGroupsType extends AbstractType
 {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        parent::buildForm($builder, $options);
+
+        $builder->addModelTransformer(new AttributeGroupTransformer($options['entityManager']));
+    }
+
     /**
      * {@inheritdoc}
      */

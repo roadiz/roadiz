@@ -86,7 +86,7 @@ trait AttributeTrait
     /**
      * @param string|null $color
      *
-     * @return AttributeTrait
+     * @return mixed
      */
     public function setColor(?string $color)
     {
@@ -105,7 +105,7 @@ trait AttributeTrait
     /**
      * @param AttributeGroupInterface|null $group
      *
-     * @return AttributeTrait
+     * @return mixed
      */
     public function setGroup(?AttributeGroupInterface $group)
     {
