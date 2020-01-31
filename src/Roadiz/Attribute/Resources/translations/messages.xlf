@@ -271,6 +271,47 @@
                 <note></note>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="attributes.reset_value">
+                <source>attributes.reset_value</source>
+                <target></target>
+                <note>Action label to reset value to the default language one. This does not delete attribute, only its translation.</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute.%name%.reset_for_node.%nodeName%">
+                <source>attribute.%name%.reset_for_node.%nodeName%</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="attributes.delete_value">
+                <source>attributes.delete_value</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.delete_value.attribute">
+                <source>are_you_sure.delete_value.attribute</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="delete.attribute.%name%.for_node.%nodeName%">
+                <source>delete.attribute.%name%.for_node.%nodeName%</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="reset.attribute.%name%">
+                <source>reset.attribute.%name%</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="reset.attribute.%name%.for_node.%nodeName%">
+                <source>reset.attribute.%name%.for_node.%nodeName%</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.reset.attribute_value">
+                <source>are_you_sure.reset.attribute_value</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -23,6 +23,7 @@
                     <thead>
                         <tr>
                             <th>{% trans %}attributes.code{% endtrans %}</th>
+                            <th class="uk-visible-large">{% trans %}attributes.group{% endtrans %}</th>
                             <th>{% trans %}attributes.value{% endtrans %}</th>
                             <th>{% trans %}actions{% endtrans %}</th>
                         </tr>
@@ -35,6 +36,9 @@
                                     <span class="color" style="background-color:{{ attributeValue.attribute.color|default('transparent') }};"></span>
                                     {{- attribute_value_translation_form.vars.data|attribute_label -}}
                                 </td>
+                                <td class="uk-visible-large">{%- if attributeValue.attribute.group %}
+                                        {{- attributeValue.attribute.group|attribute_group_label -}}
+                                    {% endif -%}</td>
                                 <td>
                                     {% form_theme attribute_value_translation_form '@Rozier/horizontalForms.html.twig' %}
                                     {{ form_start(attribute_value_translation_form, {
@@ -44,21 +48,41 @@
                                     }) }}
                                     {{ form_widget(attribute_value_translation_form) }}
                                     {% spaceless %}
-                                        <button data-uk-tooltip="{animation:true}" title="{% trans %}edit{% endtrans %}" class="uk-button uk-button-settings-submit uk-button-small" type="submit"><i class="uk-icon-rz-save-mini"></i></button>
+                                        <button data-uk-tooltip="{animation:true}"
+                                                title="{% trans %}edit{% endtrans %}"
+                                                class="uk-button uk-button-settings-submit uk-button-small"
+                                                type="submit"><i class="uk-icon-rz-save-mini"></i></button>
                                     {% endspaceless %}
                                     {{ form_end(attribute_value_translation_form) }}
                                 </td>
                                 <td class="table-actions-row">
                                     {% spaceless %}
-                                        <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link uk-button-table-save mobile-hidden" href="#{{ attribute_value_translation_form.vars.id }}" title="{% trans %}save{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save-mini"></i></a>
-                                        <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
-                                           href="{{ path('nodesDeleteAttributesPage', {
-                                               nodeId : node.id,
-                                               translationId : translation.id,
-                                               attributeValueId : attributeValue.id
-                                           }) }}"
-                                           title="{% trans %}delete{% endtrans %}"
-                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link uk-button-table-save"
+                                           href="#{{ attribute_value_translation_form.vars.id }}"
+                                           title="{% trans %}save{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-save-mini"></i></a>
+
+                                        {% if translation and attributeValue.attributeValueTranslations.count > 1 %}
+                                            <a class="uk-button uk-button-content uk-button-small uk-button-table-warning"
+                                               href="{{ path('nodesResetAttributesPage', {
+                                                   nodeId : node.id,
+                                                   translationId : translation.id,
+                                                   attributeValueId : attributeValue.id
+                                               }) }}"
+                                               title="{% trans %}attributes.reset_value{% endtrans %}"
+                                               data-uk-tooltip="{animation:true}"><i class="uk-icon-undo"></i></a>
+                                        {% endif %}
+
+                                        {% if translation and (translation.defaultTranslation or attributeValue.attributeValueTranslations.count == 1) %}
+                                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+                                               href="{{ path('nodesDeleteAttributesPage', {
+                                                   nodeId : node.id,
+                                                   translationId : translation.id,
+                                                   attributeValueId : attributeValue.id
+                                               }) }}"
+                                               title="{% trans %}attributes.delete_value{% endtrans %}"
+                                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                        {% endif %}
                                     {% endspaceless %}
                                 </td>
                             </tr>

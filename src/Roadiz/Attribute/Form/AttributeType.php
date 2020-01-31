@@ -60,12 +60,7 @@ class AttributeType extends AbstractType
                 'required' => true,
                 'help' => 'attributes.form_help.code',
                 'constraints' => [
-                    new NotBlank(),
-                    new Regex([
-                        'pattern' => "/^[a-z_]+$/i",
-                        'htmlPattern' => "^[a-z_]+$",
-                        'message' => 'attribute_code.must_contain_alpha_underscore'
-                    ])
+                    new NotBlank()
                 ]
             ])
             ->add('group', AttributeGroupsType::class, [

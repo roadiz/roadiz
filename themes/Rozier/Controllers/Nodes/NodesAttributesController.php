@@ -235,10 +235,6 @@ class NodesAttributesController extends RozierApp
         if (null === $nodeSource) {
             throw $this->createNotFoundException('Node-source does not exist');
         }
-        $availableTranslations = $this->get('em')
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsForNode($node);
-
 
         $form = $this->createForm();
         $form->handleRequest($request);
@@ -270,9 +266,83 @@ class NodesAttributesController extends RozierApp
         $this->assignation['item'] = $item;
         $this->assignation['source'] = $nodeSource;
         $this->assignation['translation'] = $translation;
-        $this->assignation['available_translations'] = $availableTranslations;
         $this->assignation['node'] = $node;
 
         return $this->render('nodes/attributes/delete.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $translationId
+     * @param int     $attributeValueId
+     */
+    public function resetAction(Request $request, $nodeId, $translationId, $attributeValueId)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
+
+        /** @var AttributeValueTranslation $item */
+        $item = $this->get('em')
+            ->getRepository(AttributeValueTranslation::class)
+            ->findOneBy([
+                'attributeValue' => $attributeValueId,
+                'translation' => $translationId
+            ]);
+        if ($item === null) {
+            throw $this->createNotFoundException('AttributeValueTranslation does not exist.');
+        }
+        /** @var Translation $translation */
+        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        /** @var Node $node */
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+
+        if (null === $translation || null === $node) {
+            throw $this->createNotFoundException('Node-source does not exist');
+        }
+
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $this->get('em')
+            ->getRepository(NodesSources::class)
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
+            ->findOneBy(['translation' => $translation, 'node' => $node]);
+
+        if (null === $nodeSource) {
+            throw $this->createNotFoundException('Node-source does not exist');
+        }
+
+        $form = $this->createForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->get('em')->remove($item);
+                $this->get('em')->flush();
+
+                $msg = $this->getTranslator()->trans(
+                    'attribute.%name%.reset_for_node.%nodeName%',
+                    [
+                        '%name%' => $item->getAttribute()->getLabelOrCode($translation),
+                        '%nodeName%' => $nodeSource->getTitle(),
+                    ]
+                );
+                $this->publishConfirmMessage($request, $msg);
+            } catch (\RuntimeException $e) {
+                $this->publishErrorMessage($request, $e->getMessage());
+            }
+
+            return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
+                'nodeId' => $node->getId(),
+                'translationId' => $translation->getId(),
+            ]));
+        }
+
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['item'] = $item;
+        $this->assignation['source'] = $nodeSource;
+        $this->assignation['translation'] = $translation;
+        $this->assignation['node'] = $node;
+
+        return $this->render('nodes/attributes/reset.html.twig', $this->assignation);
     }
 }

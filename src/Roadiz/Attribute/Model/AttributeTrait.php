@@ -34,6 +34,7 @@ namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\StringHandler;
 
 trait AttributeTrait
 {
@@ -52,7 +53,7 @@ trait AttributeTrait
      */
     public function setCode(string $code)
     {
-        $this->code = $code;
+        $this->code = StringHandler::slugify($code);
         return $this;
     }
 

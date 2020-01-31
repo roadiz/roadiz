@@ -62,6 +62,10 @@
                 <source>attributes.form.type.decimal</source>
                 <target state="translated">Nombre décimal</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.percent">
+                <source>attributes.form.type.percent</source>
+                <target state="translated">Pourcentage</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="attributes.form.type.email">
                 <source>attributes.form.type.email</source>
                 <target state="translated">Adresse email unique</target>
@@ -261,6 +265,46 @@
       <trans-unit xml:space="preserve" id="attribute_group.form.attributeGroupTranslations">
                 <source>attribute_group.form.attributeGroupTranslations</source>
                 <target state="translated">Traductions du groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.reset_value">
+                <source>attributes.reset_value</source>
+                <target state="translated">Réinitialiser la valeur à celle de la langue principale</target>
+                <note>Action label to reset value to the default language one. This does not delete attribute, only its translation.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.reset_for_node.%nodeName%">
+                <source>attribute.%name%.reset_for_node.%nodeName%</source>
+                <target state="translated">L'attribut %name% a été réinitialisé pour le nœud %nodeName%.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.delete_value">
+                <source>attributes.delete_value</source>
+                <target state="translated">Supprimer la valeur pour ce nœud</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete_value.attribute">
+                <source>are_you_sure.delete_value.attribute</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir supprimer la valeur de cet attribut pour ce nœud ?</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute.%name%.for_node.%nodeName%">
+                <source>delete.attribute.%name%.for_node.%nodeName%</source>
+                <target state="translated">Supprimer l’attribut «%name%» pour le nœud «%nodeName%»</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.attribute.%name%">
+                <source>reset.attribute.%name%</source>
+                <target state="translated">Réinitialiser la valeur de l’attribut %name%</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.attribute.%name%.for_node.%nodeName%">
+                <source>reset.attribute.%name%.for_node.%nodeName%</source>
+                <target state="translated">Réinitialiser la valeur de l’attribut «%name%» pour le nœud «%nodeName%»</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.reset.attribute_value">
+                <source>are_you_sure.reset.attribute_value</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir réinitialiser la valeur de l'attribut pour cette langue ?</target>
                 <note/>
             </trans-unit>
     </body>

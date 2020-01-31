@@ -77,9 +77,19 @@ class AttributeChoiceType extends AbstractType
         $resolver->setNormalizer('choices', function (Options $options) {
             $choices = [];
             /** @var Attribute[] $attributes */
-            $attributes = $options['entityManager']->getRepository(Attribute::class)->findAll();
+            $attributes = $options['entityManager']->getRepository(Attribute::class)->findBy(
+                [],
+                ['code' => 'ASC']
+            );
             foreach ($attributes as $attribute) {
-                $choices[$attribute->getLabelOrCode($options['translation'])] = $attribute->getId();
+                if (null !== $attribute->getGroup()) {
+                    if (!isset($choices[$attribute->getGroup()->getName()])) {
+                        $choices[$attribute->getGroup()->getName()] = [];
+                    }
+                    $choices[$attribute->getGroup()->getName()][$attribute->getLabelOrCode($options['translation'])] = $attribute->getId();
+                } else {
+                    $choices[$attribute->getLabelOrCode($options['translation'])] = $attribute->getId();
+                }
             }
             return $choices;
         });
