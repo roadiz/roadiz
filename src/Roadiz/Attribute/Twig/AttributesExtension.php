@@ -247,7 +247,9 @@ class AttributesExtension extends AbstractExtension
         if (null === $mixed) {
             return null;
         }
-
+        if ($mixed instanceof AttributeGroupInterface) {
+            return $mixed->getTranslatedName($translation);
+        }
         if ($mixed instanceof AttributeInterface && null !== $mixed->getGroup()) {
             return $mixed->getGroup()->getTranslatedName($translation);
         }
@@ -259,9 +261,6 @@ class AttributesExtension extends AbstractExtension
                 $translation = $mixed->getTranslation();
             }
             return $mixed->getAttribute()->getGroup()->getTranslatedName($translation);
-        }
-        if ($mixed instanceof AttributeGroupInterface) {
-            return $mixed->getTranslatedName($translation);
         }
 
         return null;

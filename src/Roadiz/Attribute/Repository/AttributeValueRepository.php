@@ -21,23 +21,25 @@ final class AttributeValueRepository extends EntityRepository
         Translation $translation
     ): array {
         $qb = $this->createQueryBuilder('av');
-        return $qb->addSelect('a')
+        return $qb->addSelect('avt')
+            ->addSelect('a')
             ->addSelect('at')
-            ->addSelect('avt')
+            ->addSelect('ad')
             ->addSelect('ag')
             ->addSelect('agt')
-            ->leftJoin('av.attributeValueTranslations', 'avt')
+            ->innerJoin('av.attributeValueTranslations', 'avt')
             ->innerJoin('av.attribute', 'a')
             ->leftJoin('a.attributeTranslations', 'at')
+            ->leftJoin('a.attributeDocuments', 'ad')
             ->leftJoin('a.group', 'ag')
             ->leftJoin('ag.attributeGroupTranslations', 'agt')
             ->andWhere($qb->expr()->eq('av.node', ':attributable'))
-            ->andWhere($qb->expr()->eq('avt.translation', ':translation'))
-            ->andWhere($qb->expr()->eq('agt.translation', ':translation'))
             ->andWhere($qb->expr()->eq('at.translation', ':translation'))
+            ->andWhere($qb->expr()->eq('agt.translation', ':translation'))
+            ->addOrderBy('av.position', 'ASC')
             ->setParameters([
-                'translation' => $translation,
-                'attributable' => $attributable
+                'attributable' => $attributable,
+                'translation' => $translation
             ])
             ->setCacheable(true)
             ->getQuery()
