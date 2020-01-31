@@ -387,6 +387,17 @@ class EntityListManager
             'previousPageQuery' => null,
         ];
 
+        if ($this->getPageCount() > 1) {
+            $assign['firstPageQuery'] = http_build_query(array_merge(
+                $this->queryArray,
+                ['page' => 1]
+            ));
+            $assign['lastPageQuery'] = http_build_query(array_merge(
+                $this->queryArray,
+                ['page' => $this->getPageCount()]
+            ));
+        }
+
         // compute next and prev page URL
         if ($this->currentPage > 1) {
             $this->queryArray['page'] = $this->currentPage - 1;
