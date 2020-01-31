@@ -142,13 +142,12 @@ trait AttributeTrait
         if (null !== $translation) {
             $attributeTranslation = $this->getAttributeTranslations()->filter(
                 function (AttributeTranslationInterface $attributeTranslation) use ($translation) {
-                    if ($attributeTranslation->getTranslation() === $translation) {
-                        return true;
-                    }
-                    return false;
+                    return $attributeTranslation->getTranslation() === $translation;
                 }
             );
-            if ($attributeTranslation->count() > 0 && $attributeTranslation->first()->getLabel() !== '') {
+
+            if ($attributeTranslation->first() &&
+                $attributeTranslation->first()->getLabel() !== '') {
                 return $attributeTranslation->first()->getLabel();
             }
         }
@@ -165,10 +164,7 @@ trait AttributeTrait
     {
         $attributeTranslation = $this->getAttributeTranslations()->filter(
             function (AttributeTranslationInterface $attributeTranslation) use ($translation) {
-                if ($attributeTranslation->getTranslation() === $translation) {
-                    return true;
-                }
-                return false;
+                return $attributeTranslation->getTranslation() === $translation;
             }
         );
         if ($attributeTranslation->count() > 0) {
