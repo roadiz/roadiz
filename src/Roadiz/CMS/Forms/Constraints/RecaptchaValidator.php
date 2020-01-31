@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2020, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -54,33 +54,55 @@ class RecaptchaValidator extends ConstraintValidator
                 $this->context->buildViolation($constraint->emptyMessage)
                     ->atPath($propertyPath)
                     ->addViolation();
-            } elseif (false === $this->check($constraint, $responseField)) {
+            } elseif (true !== $response = $this->check($constraint, $responseField)) {
                 $this->context->buildViolation($constraint->invalidMessage)
                     ->atPath($propertyPath)
                     ->addViolation();
+
+                if (is_array($response)) {
+                    foreach ($response as $errorCode) {
+                        $this->context->buildViolation($errorCode)
+                            ->atPath($propertyPath)
+                            ->addViolation();
+                    }
+                } elseif (is_string($response)) {
+                    $this->context->buildViolation($response)
+                        ->atPath($propertyPath)
+                        ->addViolation();
+                }
             }
         }
     }
 
     /**
      * Makes a request to recaptcha service and checks if recaptcha field is valid.
+     * Returns Google error-codes if recaptcha fails.
      *
      * @param Recaptcha $constraint
      * @param string $responseField
      *
-     * @return bool
+     * @return bool|string|array
      */
     protected function check(Recaptcha $constraint, $responseField)
     {
+        $data = [
+            'secret' => $constraint->privateKey,
+            'response' => $responseField,
+        ];
+
         $client = new Client();
         $response = $client->post($constraint->verifyUrl, [
-            'form_params' => [
-                'secret' => $constraint->privateKey,
-                'response' => $responseField,
+            'form_params' => $data,
+            'connect_timeout' => 10,
+            'timeout' => 10,
+            'headers' => [
+                'Accept'     => 'application/json',
             ]
         ]);
-        $response = json_decode($response->getBody()->getContents(), true);
+        $jsonResponse = json_decode($response->getBody()->getContents(), true);
 
-        return (key_exists('success', $response) && $response['success'] === true);
+        return (isset($jsonResponse['success']) && $jsonResponse['success'] === true) ?
+            ($jsonResponse['success']) :
+            ($jsonResponse['error-codes']);
     }
 }
