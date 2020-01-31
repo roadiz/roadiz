@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
+ * Copyright © 2020, Ambroise Maupate and Julien Blanchet
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use GuzzleHttp\Client;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
@@ -52,20 +53,33 @@ class RecaptchaValidator extends ConstraintValidator
             $this->context->buildViolation($constraint->emptyMessage)
                 ->atPath($propertyPath)
                 ->addViolation();
-        } elseif (false === $this->check($constraint, $responseField)) {
+        } elseif (true !== $response = $this->check($constraint, $responseField)) {
             $this->context->buildViolation($constraint->invalidMessage)
                 ->atPath($propertyPath)
                 ->addViolation();
+
+            if (is_array($response)) {
+                foreach ($response as $errorCode) {
+                    $this->context->buildViolation($errorCode)
+                        ->atPath($propertyPath)
+                        ->addViolation();
+                }
+            } elseif (is_string($response)) {
+                $this->context->buildViolation($response)
+                    ->atPath($propertyPath)
+                    ->addViolation();
+            }
         }
     }
 
     /**
      * Makes a request to recaptcha service and checks if recaptcha field is valid.
+     * Returns Google error-codes if recaptcha fails.
      *
      * @param Constraint $constraint
      * @param string $responseField
      *
-     * @return bool
+     * @return bool|string|array
      */
     protected function check(Constraint $constraint, $responseField)
     {
@@ -77,17 +91,19 @@ class RecaptchaValidator extends ConstraintValidator
             'response' => $responseField,
         ];
 
-        $curl = curl_init($constraint->verifyUrl);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_CONNECTTIMEOUT, 10);
-        curl_setopt($curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0);
-        curl_setopt($curl, CURLOPT_USERAGENT, 'reCAPTCHA/PHP');
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-        curl_setopt($curl, CURLOPT_HEADER, true);
-        $response = curl_exec($curl);
-        $response = explode("\r\n\r\n", $response, 2);
+        $client = new Client();
+        $response = $client->post($constraint->verifyUrl, [
+            'form_params' => $data,
+            'connect_timeout' => 10,
+            'timeout' => 10,
+            'headers' => [
+                'Accept'     => 'application/json',
+            ]
+        ]);
+        $jsonResponse = json_decode($response->getBody()->getContents(), true);
 
-        return (isset($response[1]) && preg_match('/true/', $response[1]));
+        return (isset($jsonResponse['success']) && $jsonResponse['success'] === true) ?
+            ($jsonResponse['success']) :
+            ($jsonResponse['error-codes']);
     }
 }
