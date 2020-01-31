@@ -92,6 +92,7 @@ class AttributesExtension extends AbstractExtension
             new TwigTest('boolean', [$this, 'isBoolean']),
             new TwigTest('choice', [$this, 'isEnum']),
             new TwigTest('enum', [$this, 'isEnum']),
+            new TwigTest('number', [$this, 'isNumber']),
             new TwigTest('percent', [$this, 'isPercent']),
         ];
     }
@@ -124,6 +125,12 @@ class AttributesExtension extends AbstractExtension
     public function isPercent(AttributeValueTranslationInterface $attributeValueTranslation)
     {
         return $attributeValueTranslation->getAttributeValue()->getAttribute()->isPercent();
+    }
+
+    public function isNumber(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isInteger() ||
+            $attributeValueTranslation->getAttributeValue()->getAttribute()->isDecimal();
     }
 
 
