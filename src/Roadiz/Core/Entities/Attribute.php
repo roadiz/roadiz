@@ -92,7 +92,12 @@ class Attribute extends AbstractEntity implements AttributeInterface
 
     /**
      * @var AttributeGroupInterface|null
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeGroup", inversedBy="attributes", fetch="EAGER", cascade={"all"})
+     * @ORM\ManyToOne(
+     *     targetEntity="RZ\Roadiz\Core\Entities\AttributeGroup",
+     *     inversedBy="attributes",
+     *     fetch="EAGER",
+     *     cascade={"all"}
+     * )
      * @ORM\JoinColumn(name="group_id", onDelete="SET NULL")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\AttributeGroup")
@@ -101,7 +106,13 @@ class Attribute extends AbstractEntity implements AttributeInterface
 
     /**
      * @var Collection<AttributeTranslationInterface>
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation", mappedBy="attribute", fetch="EAGER", cascade={"all"}, orphanRemoval=true)
+     * @ORM\OneToMany(
+     *     targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation",
+     *     mappedBy="attribute",
+     *     fetch="EAGER",
+     *     cascade={"all"},
+     *     orphanRemoval=true
+     * )
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\AttributeTranslation>")
      * @Serializer\Accessor(getter="getAttributeTranslations",setter="setAttributeTranslations")

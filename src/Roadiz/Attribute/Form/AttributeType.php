@@ -88,6 +88,7 @@ class AttributeType extends AbstractType
                     'attributes.form.type.boolean' => AttributeInterface::BOOLEAN_T,
                     'attributes.form.type.integer' => AttributeInterface::INTEGER_T,
                     'attributes.form.type.decimal' => AttributeInterface::DECIMAL_T,
+                    'attributes.form.type.percent' => AttributeInterface::PERCENT_T,
                     'attributes.form.type.email' => AttributeInterface::EMAIL_T,
                     'attributes.form.type.colour' => AttributeInterface::COLOUR_T,
                     'attributes.form.type.enum' => AttributeInterface::ENUM_T,

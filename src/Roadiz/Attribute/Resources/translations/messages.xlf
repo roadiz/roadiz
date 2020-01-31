@@ -62,6 +62,10 @@
                 <source>attributes.form.type.decimal</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="attributes.form.type.percent">
+                <source>attributes.form.type.percent</source>
+                <target></target>
+            </trans-unit>
             <trans-unit xml:space="preserve" id="attributes.form.type.email">
                 <source>attributes.form.type.email</source>
                 <target></target>

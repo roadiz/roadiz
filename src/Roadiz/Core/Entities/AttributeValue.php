@@ -45,7 +45,7 @@ use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Entities
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
+ * @ORM\Entity(repositoryClass="RZ\Roadiz\Attribute\Repository\AttributeValueRepository")
  * @ORM\Table(name="attribute_values", indexes={
  *     @ORM\Index(columns={"attribute_id", "node_id"})
  * })

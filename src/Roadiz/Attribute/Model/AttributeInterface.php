@@ -58,6 +58,10 @@ interface AttributeInterface
      */
     const DECIMAL_T = 7;
     /**
+     * Decimal field has a percent for rendering.
+     */
+    const PERCENT_T = 26;
+    /**
      * Email field is a short text which must
      * comply with email rules.
      */
@@ -208,6 +212,11 @@ interface AttributeInterface
      * @return bool
      */
     public function isDecimal(): bool;
+    
+    /**
+     * @return bool
+     */
+    public function isPercent(): bool;
 
     /**
      * @return bool

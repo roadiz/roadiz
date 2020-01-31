@@ -32,11 +32,13 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Twig;
 
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
+use RZ\Roadiz\Core\Entities\AttributeValue;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use Twig\Error\SyntaxError;
@@ -47,6 +49,21 @@ use Twig\TwigTest;
 
 class AttributesExtension extends AbstractExtension
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * AttributesExtension constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function getFunctions()
     {
         return [
@@ -75,6 +92,7 @@ class AttributesExtension extends AbstractExtension
             new TwigTest('boolean', [$this, 'isBoolean']),
             new TwigTest('choice', [$this, 'isEnum']),
             new TwigTest('enum', [$this, 'isEnum']),
+            new TwigTest('percent', [$this, 'isPercent']),
         ];
     }
 
@@ -103,6 +121,11 @@ class AttributesExtension extends AbstractExtension
         return $attributeValueTranslation->getAttributeValue()->getAttribute()->isEnum();
     }
 
+    public function isPercent(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isPercent();
+    }
+
 
     /**
      * @param AttributableInterface $attributable
@@ -120,7 +143,14 @@ class AttributesExtension extends AbstractExtension
             throw new SyntaxError('get_attributes only accepts entities that implement AttributableInterface');
         }
         $attributeValueTranslations = [];
-        $attributeValues = $attributable->getAttributeValues();
+
+        $attributeValues = $this->entityManager
+            ->getRepository(AttributeValue::class)
+            ->findByAttributableAndTranslation(
+            $attributable,
+            $translation
+        );
+
         /** @var AttributeValueInterface $attributeValue */
         foreach ($attributeValues as $attributeValue) {
             $attributeValueTranslation = $attributeValue->getAttributeValueTranslation($translation);

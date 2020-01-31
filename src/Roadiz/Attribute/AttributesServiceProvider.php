@@ -68,7 +68,7 @@ class AttributesServiceProvider implements ServiceProviderInterface
         });
 
         $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
-            $extensions->add(new AttributesExtension());
+            $extensions->add(new AttributesExtension($c['em']));
             return $extensions;
         });
 

@@ -258,6 +258,11 @@ trait AttributeTrait
         return $this->getType() === AttributeInterface::DECIMAL_T;
     }
 
+    public function isPercent(): bool
+    {
+        return $this->getType() === AttributeInterface::PERCENT_T;
+    }
+
     public function isEmail(): bool
     {
         return $this->getType() === AttributeInterface::EMAIL_T;
