@@ -690,6 +690,7 @@ abstract class AppController extends Controller
      * - we are in debug mode
      * - Request forbids cache
      * - we are in maintenance mode
+     * - this is a sub-request
      *
      * @param Request $request
      * @param Response $response
@@ -701,11 +702,15 @@ abstract class AppController extends Controller
     {
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
+        /** @var RequestStack $requestStack */
+        $requestStack = $kernel->get('requestStack');
         /** @var Settings $settings */
         $settings = $this->get('settingsBag');
         if (!$kernel->isPreview() &&
             !$kernel->isDebug() &&
+            $requestStack->getMasterRequest() === $request &&
             $request->isMethodCacheable() &&
+            $minutes > 0 &&
             !$settings->get('maintenance_mode', false)) {
             /** @var EventDispatcherInterface $dispatcher */
             $dispatcher = $this->get('dispatcher');
