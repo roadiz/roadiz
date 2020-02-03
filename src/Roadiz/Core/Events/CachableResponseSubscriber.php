@@ -9,7 +9,9 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class CachableResponseSubscriber implements EventSubscriberInterface
 {
+    /** @var bool  */
     private $cachable = false;
+    /** @var int  */
     private $minutes = 0;
 
     /**
