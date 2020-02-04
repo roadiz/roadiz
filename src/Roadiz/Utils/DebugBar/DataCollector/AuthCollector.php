@@ -62,7 +62,7 @@ class AuthCollector extends DataCollector implements Renderable
                     'name' => $user->getUsername(),
                     'user' => [
                         'Token' => get_class($this->tokenStorage->getToken()),
-                        'Roles' => $user->getRoleNames(),
+                        'Roles' => $user->getRoles(),
                         'Email' => $user->getEmail(),
                         'Last login' => $user->getLastLogin() ? $user->getLastLogin()->format("Y-m-d H:i:s") : null,
                     ]
