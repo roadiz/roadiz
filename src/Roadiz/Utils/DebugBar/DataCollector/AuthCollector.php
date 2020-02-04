@@ -56,16 +56,23 @@ class AuthCollector extends DataCollector implements Renderable
     public function collect()
     {
         if (null !== $this->tokenStorage->getToken()) {
-            if ($this->tokenStorage->getToken()->getUser() instanceof UserInterface) {
-                /** @var User $user */
-                $user = $this->tokenStorage->getToken()->getUser();
+            $user = $this->tokenStorage->getToken()->getUser();
+            if (null !== $user && $user instanceof User) {
                 return [
-                    'name' => $this->tokenStorage->getToken()->getUsername(),
+                    'name' => $user->getUsername(),
                     'user' => [
                         'Token' => get_class($this->tokenStorage->getToken()),
-                        'Roles' => $this->tokenStorage->getToken()->getRoleNames(),
+                        'Roles' => $user->getRoleNames(),
                         'Email' => $user->getEmail(),
                         'Last login' => $user->getLastLogin() ? $user->getLastLogin()->format("Y-m-d H:i:s") : null,
+                    ]
+                ];
+            } elseif (null !== $user && $user instanceof UserInterface) {
+                return [
+                    'name' => $user->getUsername(),
+                    'user' => [
+                        'Token' => get_class($this->tokenStorage->getToken()),
+                        'Roles' => $user->getRoles()
                     ]
                 ];
             } else {
