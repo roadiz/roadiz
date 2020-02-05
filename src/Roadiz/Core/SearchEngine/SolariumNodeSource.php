@@ -122,10 +122,13 @@ class SolariumNodeSource extends AbstractSolarium
 
     /**
      * Get a key/value array representation of current node-source document.
+     *
+     * @param bool $subResource Tell when this field gathering is for a main resource indexation or a sub-resource
+     *
      * @return array
      * @throws \Exception
      */
-    public function getFieldsAssoc(): array
+    public function getFieldsAssoc(bool $subResource = false): array
     {
         $assoc = [];
         $collection = [];
@@ -144,40 +147,50 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['node_status_i'] = $node->getStatus();
         $assoc['node_visible_b'] = $node->isVisible();
 
-        /*
-         * Index parent node ID and name to filter on it
-         */
-        $parent = $node->getParent();
-        if (null !== $parent) {
-            $assoc['node_parent_i'] = $parent->getId();
-            $assoc['node_parent_s'] = $parent->getNodeName();
-        }
-
         // Need a locale field
         $locale = $this->nodeSource->getTranslation()->getLocale();
         $lang = \Locale::getPrimaryLanguage($locale);
         $assoc['locale_s'] = $locale;
-        /** @var NodesSourcesHandler $handler */
-        $handler = $this->handlerFactory->getHandler($this->nodeSource);
-        $out = array_map(
-            function (Tag $x) {
-                return $x->getTranslatedTags()->first() ?
-                    $x->getTranslatedTags()->first()->getName() :
-                    $x->getTagName();
-            },
-            $handler->getTags()
-        );
-        // Use tags_txt to be compatible with other data types
-        $assoc['tags_txt'] = $out;
 
+        /*
+         * Index resource title
+         */
         $assoc['title'] = $this->nodeSource->getTitle();
+        $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
+
         $assoc['created_at_dt'] = $node->getCreatedAt()->format('Y-m-d\TH:i:s');
         $assoc['updated_at_dt'] = $node->getUpdatedAt()->format('Y-m-d\TH:i:s');
         if (null !== $this->nodeSource->getPublishedAt()) {
             $assoc['published_at_dt'] = $this->nodeSource->getPublishedAt()->format('Y-m-d\TH:i:s');
         }
-        $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
-        $collection[] = $this->nodeSource->getTitle();
+
+        /*
+         * Do not index locale and tags if this is a sub-resource
+         */
+        if (!$subResource) {
+            $collection[] = $this->nodeSource->getTitle();
+            /*
+             * Index parent node ID and name to filter on it
+             */
+            $parent = $node->getParent();
+            if (null !== $parent) {
+                $assoc['node_parent_i'] = $parent->getId();
+                $assoc['node_parent_s'] = $parent->getNodeName();
+            }
+
+            /** @var NodesSourcesHandler $handler */
+            $handler = $this->handlerFactory->getHandler($this->nodeSource);
+            $out = array_map(
+                function (Tag $x) {
+                    return $x->getTranslatedTags()->first() ?
+                        $x->getTranslatedTags()->first()->getName() :
+                        $x->getTagName();
+                },
+                $handler->getTags()
+            );
+            // Use tags_txt to be compatible with other data types
+            $assoc['tags_txt'] = $out;
+        }
 
         $criteria = new Criteria();
         $criteria->andWhere(Criteria::expr()->eq("type", AbstractField::BOOLEAN_T));
