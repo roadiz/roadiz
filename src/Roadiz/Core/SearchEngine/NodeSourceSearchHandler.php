@@ -195,6 +195,9 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             unset($args['tags']);
         }
 
+        /*
+         * Filter by Node type
+         */
         if (!empty($args['nodeType'])) {
             if (is_array($args['nodeType']) || $args['nodeType'] instanceof Collection) {
                 $orQuery = [];
@@ -212,6 +215,20 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                 $args["fq"][] = "node_type_s:" . $args['nodeType'];
             }
             unset($args['nodeType']);
+        }
+
+        /*
+         * Filter by parent node
+         */
+        if (!empty($args['parent'])) {
+            if ($args['parent'] instanceof Node) {
+                $args["fq"][] = "node_parent_i:" . $args['parent']->getId();
+            } elseif (is_string($args['parent'])) {
+                $args["fq"][] = "node_parent_s:" . trim($args['parent']);
+            } elseif (is_numeric($args['parent'])) {
+                $args["fq"][] = "node_parent_i:" . (int) $args['parent'];
+            }
+            unset($args['parent']);
         }
 
         /*

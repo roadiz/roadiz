@@ -144,6 +144,15 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['node_status_i'] = $node->getStatus();
         $assoc['node_visible_b'] = $node->isVisible();
 
+        /*
+         * Index parent node ID and name to filter on it
+         */
+        $parent = $node->getParent();
+        if (null !== $parent) {
+            $assoc['node_parent_i'] = $parent->getId();
+            $assoc['node_parent_s'] = $parent->getNodeName();
+        }
+
         // Need a locale field
         $locale = $this->nodeSource->getTranslation()->getLocale();
         $lang = \Locale::getPrimaryLanguage($locale);
