@@ -64,6 +64,16 @@ class NodeTypeField extends AbstractField
     private $universal = false;
 
     /**
+     * Exclude current field from full-text search engines.
+     *
+     * @var bool
+     * @ORM\Column(name="exclude_from_search", type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("bool")
+     */
+    private $excludeFromSearch = false;
+
+    /**
      * @var NodeType
      * @ORM\ManyToOne(targetEntity="NodeType", inversedBy="fields")
      * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
@@ -222,7 +232,7 @@ class NodeTypeField extends AbstractField
      */
     public function isSearchable()
     {
-        return (boolean) in_array($this->getType(), static::$searchableTypes);
+        return !$this->excludeFromSearch && (boolean) in_array($this->getType(), static::$searchableTypes);
     }
 
     /**
@@ -260,6 +270,26 @@ class NodeTypeField extends AbstractField
     public function setUniversal($universal)
     {
         $this->universal = (bool) $universal;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExcludeFromSearch()
+    {
+        return $this->excludeFromSearch;
+    }
+
+    /**
+     * @param bool $excludeFromSearch
+     *
+     * @return NodeTypeField
+     */
+    public function setExcludeFromSearch(bool $excludeFromSearch)
+    {
+        $this->excludeFromSearch = $excludeFromSearch;
+
         return $this;
     }
 }

@@ -113,6 +113,11 @@ class NodeTypeFieldType extends AbstractType
             'help' => 'use_checkboxes_or_radio_buttons_instead_of_select_box',
             'required' => false,
         ])
+        ->add('excludeFromSearch', CheckboxType::class, [
+            'label' => 'excludeFromSearch',
+            'help' => 'exclude_this_field_from_fulltext_search_engine',
+            'required' => false,
+        ])
         ->add('defaultValues', DynamicType::class, [
             'label' => 'defaultValues',
             'required' => false,
