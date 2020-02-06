@@ -58,6 +58,26 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
     protected $boostByCreationDate = false;
 
     /**
+     * @param array $args
+     *
+     * @return string
+     */
+    protected function getTitleField(array &$args): string
+    {
+        /*
+         * Use title_txt_LOCALE when search
+         * is filtered by translation.
+         */
+        if (isset($args['locale']) && is_string($args['locale'])) {
+            return 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
+        }
+        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
+            return 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        }
+        return 'title';
+    }
+
+    /**
      * Default Solr query builder.
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
@@ -74,19 +94,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
         $qHelper = new Helper();
         $q = $qHelper->escapeTerm($q);
         $singleWord = strpos($q, ' ') === false ? true : false;
-        $titleField = 'title';
-
-        /*
-         * Use title_txt_LOCALE when search
-         * is filtered by translation.
-         */
-        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
-            $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
-        }
-        if (isset($args['locale']) && is_string($args['locale'])) {
-            $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
-        }
-
+        $titleField = $this->getTitleField($args);
         /*
          * Search in node-sources tags name…
          */
@@ -95,13 +103,15 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
              * @see http://www.solrtutorial.com/solr-query-syntax.html
              */
             if ($singleWord) {
-                return sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
+                // Need to use wildcard BEFORE and AFTER
+                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*) (tags_txt:*%s*)', $q, $q, $q);
             } else {
                 return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
             }
         } else {
             if ($singleWord) {
-                return sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*)', $q, $q);
+                // Need to use wildcard BEFORE and AFTER
+                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*)', $q, $q);
             } else {
                 return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
             }
@@ -136,6 +146,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                 $boost = '{!boost b=recip(ms(NOW,created_at_dt),3.16e-11,1,1)}';
                 $queryTxt = $boost . $queryTxt;
             }
+
             $query->setQuery($queryTxt);
 
             /*
