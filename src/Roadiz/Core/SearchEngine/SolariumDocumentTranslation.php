@@ -132,8 +132,12 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
         $assoc['title'] = $this->documentTranslation->getName();
         $assoc['title'.$suffix] = $this->documentTranslation->getName();
-        $assoc['created_at_dt'] = $this->rzDocument->getCreatedAt()->format('Y-m-d\TH:i:s');
-        $assoc['updated_at_dt'] = $this->rzDocument->getUpdatedAt()->format('Y-m-d\TH:i:s');
+        $assoc['created_at_dt'] = $this->rzDocument->getCreatedAt()
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format('Y-m-d\TH:i:s\Z');;
+        $assoc['updated_at_dt'] = $this->rzDocument->getUpdatedAt()
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format('Y-m-d\TH:i:s\Z');;
 
         /*
          * Remove ctrl characters
