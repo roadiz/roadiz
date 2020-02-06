@@ -114,7 +114,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
-     * @Serializer\Groups({"nodes_sources", "node", "log_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node", "log_sources"})
      * @Serializer\Accessor(getter="getNodeName", setter="setNodeName")
      */
     private $nodeName;
@@ -579,7 +579,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
      * @var ArrayCollection<Tag>
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node"})
      */
     private $tags = null;
 

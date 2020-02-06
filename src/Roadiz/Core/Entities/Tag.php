@@ -61,7 +61,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @var string
      * @ORM\Column(type="string", name="color", length=7, unique=false, nullable=false, options={"default" = "#000000"})
-     * @Serializer\Groups({"tag", "color"})
+     * @Serializer\Groups({"tag", "tag_base", "color"})
      * @Serializer\Type("string")
      */
     protected $color = '#000000';
@@ -98,7 +98,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @var string
      * @ORM\Column(type="string", name="tag_name", unique=true)
-     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\Groups({"tag", "tag_base", "node", "nodes_sources"})
      * @Serializer\Type("string")
      * @Serializer\Accessor(getter="getTagName", setter="setTagName")
      */
@@ -110,7 +110,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     private $dirtyTagName;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
-     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\Groups({"tag", "tag_base", "node", "nodes_sources"})
      * @Serializer\Type("bool")
      */
     private $visible = true;

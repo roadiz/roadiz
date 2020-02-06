@@ -80,7 +80,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @var Node
      * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Groups({"nodes_sources", "log_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "log_sources"})
      */
     private $node;
 
