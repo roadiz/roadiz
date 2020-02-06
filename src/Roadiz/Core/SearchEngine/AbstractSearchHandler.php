@@ -72,6 +72,7 @@ abstract class AbstractSearchHandler
     /**
      * @param array|null $response
      * @return array
+     * @deprecated Use SolrSearchResults DTO
      */
     abstract protected function parseSolrResponse($response);
 
@@ -132,6 +133,7 @@ abstract class AbstractSearchHandler
     /**
      * @param array $response
      * @return int
+     * @deprecated Use SolrSearchResults DTO
      */
     protected function parseResultCount($response)
     {
@@ -157,11 +159,17 @@ abstract class AbstractSearchHandler
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      * @param int $page
      *
-     * @return array Return a array of **tuple** for each result.
+     * @return SolrSearchResults Return a array of **tuple** for each result.
      * [document, highlighting] for Documents and [nodeSource, highlighting]
      */
-    public function searchWithHighlight($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
-    {
+    public function searchWithHighlight(
+        $q,
+        $args = [],
+        $rows = 20,
+        $searchTags = false,
+        $proximity = 10000000,
+        $page = 1
+    ): SolrSearchResults {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
         $tmp = [];
@@ -172,7 +180,7 @@ abstract class AbstractSearchHandler
         $args = array_merge($tmp, $args);
 
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
-        return $this->parseSolrResponse($response);
+        return new SolrSearchResults($response, $this->em);
     }
 
     /**
@@ -207,17 +215,23 @@ abstract class AbstractSearchHandler
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
      * @param int $page Retrieve a specific page
      *
-     * @return array Return an array of doctrine Entities (Document, NodesSources)
+     * @return SolrSearchResults Return an array of doctrine Entities (Document, NodesSources)
      */
-    public function search($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
-    {
+    public function search(
+        $q,
+        $args = [],
+        $rows = 20,
+        $searchTags = false,
+        $proximity = 10000000,
+        $page = 1
+    ): SolrSearchResults {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
         $tmp = [];
         $args = array_merge($tmp, $args);
 
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
-        return $this->parseSolrResponse($response);
+        return new SolrSearchResults($response, $this->em);
     }
 
     /**
@@ -227,6 +241,7 @@ abstract class AbstractSearchHandler
      * @param bool $searchTags
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
      * @return int
+     * @deprecated Use SolrSearchResults DTO
      */
     public function count($q, $args = [], $rows = 0, $searchTags = false, $proximity = 10000000)
     {

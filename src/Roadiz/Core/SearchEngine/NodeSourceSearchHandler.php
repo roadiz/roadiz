@@ -303,6 +303,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
     /**
      * @param array|null $response
      * @return array
+     * @deprecated Use SolrSearchResults DTO
      */
     protected function parseSolrResponse($response)
     {
