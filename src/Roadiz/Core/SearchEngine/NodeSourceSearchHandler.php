@@ -236,18 +236,18 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
          */
         if (isset($args['publishedAt'])) {
             $tmp = "published_at_dt:";
-            if (!is_array($args['status']) && $args['publishedAt'] instanceof \DateTime) {
-                $tmp .= $args['publishedAt']->format('Y-m-d\TH:i:s');
+            if (!is_array($args['publishedAt']) && $args['publishedAt'] instanceof \DateTime) {
+                $tmp .= $args['publishedAt']->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
             } elseif (isset($args['publishedAt'][0]) &&
                 $args['publishedAt'][0] === "<=" &&
                 isset($args['publishedAt'][1]) &&
                 $args['publishedAt'][1] instanceof \DateTime) {
-                $tmp .= "[* TO " . $args['publishedAt'][1]->format('Y-m-d\TH:i:s') . "]";
+                $tmp .= "[* TO " . $args['publishedAt'][1]->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z') . "]";
             } elseif (isset($args['publishedAt'][0]) &&
                 $args['publishedAt'][0] === ">=" &&
                 isset($args['publishedAt'][1]) &&
                 $args['publishedAt'][1] instanceof \DateTime) {
-                $tmp .= "[" . $args['publishedAt'][1]->format('Y-m-d\TH:i:s') . " TO *]";
+                $tmp .= "[" . $args['publishedAt'][1]->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z') . " TO *]";
             }
             unset($args['publishedAt']);
             $args["fq"][] = $tmp;

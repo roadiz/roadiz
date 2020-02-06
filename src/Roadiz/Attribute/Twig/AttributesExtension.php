@@ -154,9 +154,9 @@ class AttributesExtension extends AbstractExtension
         $attributeValues = $this->entityManager
             ->getRepository(AttributeValue::class)
             ->findByAttributableAndTranslation(
-            $attributable,
-            $translation
-        );
+                $attributable,
+                $translation
+            );
 
         /** @var AttributeValueInterface $attributeValue */
         foreach ($attributeValues as $attributeValue) {

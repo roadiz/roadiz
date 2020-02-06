@@ -158,10 +158,17 @@ class SolariumNodeSource extends AbstractSolarium
         $assoc['title'] = $this->nodeSource->getTitle();
         $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
 
-        $assoc['created_at_dt'] = $node->getCreatedAt()->format('Y-m-d\TH:i:s');
-        $assoc['updated_at_dt'] = $node->getUpdatedAt()->format('Y-m-d\TH:i:s');
+        $assoc['created_at_dt'] = $node->getCreatedAt()
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format('Y-m-d\TH:i:s\Z');
+        $assoc['updated_at_dt'] = $node->getUpdatedAt()
+            ->setTimezone(new \DateTimeZone('UTC'))
+            ->format('Y-m-d\TH:i:s\Z');
+
         if (null !== $this->nodeSource->getPublishedAt()) {
-            $assoc['published_at_dt'] = $this->nodeSource->getPublishedAt()->format('Y-m-d\TH:i:s');
+            $assoc['published_at_dt'] = $this->nodeSource->getPublishedAt()
+                ->setTimezone(new \DateTimeZone('UTC'))
+                ->format('Y-m-d\TH:i:s\Z');
         }
 
         /*
