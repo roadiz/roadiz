@@ -30,15 +30,9 @@ declare(strict_types=1);
  */
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\Common\Collections\Criteria;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
-use RZ\Roadiz\Core\Handlers\HandlerFactory;
-use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
@@ -59,10 +53,6 @@ class SolariumNodeSource extends AbstractSolarium
      */
     private $dispatcher;
     /**
-     * @var HandlerFactory
-     */
-    private $handlerFactory;
-    /**
      * @var Client
      */
     protected $client;
@@ -77,7 +67,6 @@ class SolariumNodeSource extends AbstractSolarium
      * @param NodesSources             $nodeSource
      * @param Client                   $client
      * @param EventDispatcherInterface $dispatcher
-     * @param HandlerFactory           $handlerFactory
      * @param LoggerInterface|null     $logger
      * @param MarkdownInterface|null   $markdown
      */
@@ -85,14 +74,12 @@ class SolariumNodeSource extends AbstractSolarium
         NodesSources $nodeSource,
         Client $client,
         EventDispatcherInterface $dispatcher,
-        HandlerFactory $handlerFactory,
         LoggerInterface $logger = null,
         MarkdownInterface $markdown = null
     ) {
         parent::__construct($client, $logger, $markdown);
         $this->nodeSource = $nodeSource;
         $this->dispatcher = $dispatcher;
-        $this->handlerFactory = $handlerFactory;
     }
 
     public function getDocumentId()
@@ -110,125 +97,9 @@ class SolariumNodeSource extends AbstractSolarium
      */
     public function getFieldsAssoc(bool $subResource = false): array
     {
-        $assoc = [];
-        $collection = [];
-        $node = $this->nodeSource->getNode();
+        $event = new NodesSourcesIndexingEvent($this->nodeSource, [], $this);
 
-        if (null === $node) {
-            throw new \RuntimeException("No node relation found for source: " . $this->nodeSource->getTitle(), 1);
-        }
-
-        // Need a documentType field
-        $assoc[static::TYPE_DISCRIMINATOR] = static::DOCUMENT_TYPE;
-        // Need a nodeSourceId field
-        $assoc[static::IDENTIFIER_KEY] = $this->nodeSource->getId();
-        $assoc['node_type_s'] = $node->getNodeType()->getName();
-        $assoc['node_name_s'] = $node->getNodeName();
-        $assoc['node_status_i'] = $node->getStatus();
-        $assoc['node_visible_b'] = $node->isVisible();
-
-        // Need a locale field
-        $locale = $this->nodeSource->getTranslation()->getLocale();
-        $lang = \Locale::getPrimaryLanguage($locale);
-        $assoc['locale_s'] = $locale;
-
-        /*
-         * Index resource title
-         */
-        $assoc['title'] = $this->nodeSource->getTitle();
-        $assoc['title_txt_' . $lang] = $this->nodeSource->getTitle();
-
-        $assoc['created_at_dt'] = $node->getCreatedAt()
-            ->setTimezone(new \DateTimeZone('UTC'))
-            ->format('Y-m-d\TH:i:s\Z');
-        $assoc['updated_at_dt'] = $node->getUpdatedAt()
-            ->setTimezone(new \DateTimeZone('UTC'))
-            ->format('Y-m-d\TH:i:s\Z');
-
-        if (null !== $this->nodeSource->getPublishedAt()) {
-            $assoc['published_at_dt'] = $this->nodeSource->getPublishedAt()
-                ->setTimezone(new \DateTimeZone('UTC'))
-                ->format('Y-m-d\TH:i:s\Z');
-        }
-
-        /*
-         * Do not index locale and tags if this is a sub-resource
-         */
-        if (!$subResource) {
-            $collection[] = $this->nodeSource->getTitle();
-            /*
-             * Index parent node ID and name to filter on it
-             */
-            $parent = $node->getParent();
-            if (null !== $parent) {
-                $assoc['node_parent_i'] = $parent->getId();
-                $assoc['node_parent_s'] = $parent->getNodeName();
-            }
-
-            /** @var NodesSourcesHandler $handler */
-            $handler = $this->handlerFactory->getHandler($this->nodeSource);
-            $out = array_map(
-                function (Tag $x) {
-                    return $x->getTranslatedTags()->first() ?
-                        $x->getTranslatedTags()->first()->getName() :
-                        $x->getTagName();
-                },
-                $handler->getTags()
-            );
-            // Use tags_txt to be compatible with other data types
-            $assoc['tags_txt'] = $out;
-        }
-
-        $criteria = new Criteria();
-        $criteria->andWhere(Criteria::expr()->eq("type", AbstractField::BOOLEAN_T));
-        $booleanFields = $node->getNodeType()->getFields()->matching($criteria);
-
-        /** @var NodeTypeField $booleanField */
-        foreach ($booleanFields as $booleanField) {
-            $name = $booleanField->getName();
-            $name .= '_b';
-            $getter = $booleanField->getGetterName();
-            $assoc[$name] = $this->nodeSource->$getter();
-        }
-
-        $searchableFields = $node->getNodeType()->getSearchableFields();
-        /** @var NodeTypeField $field */
-        foreach ($searchableFields as $field) {
-            $name = $field->getName();
-            $getter = $field->getGetterName();
-            $content = $this->nodeSource->$getter();
-            /*
-             * Strip markdown syntax
-             */
-            $content = $this->cleanTextContent($content);
-
-            /*
-             * Use locale to create field name
-             * with right language
-             */
-            if (in_array($lang, static::$availableLocalizedTextFields)) {
-                $name .= '_txt_' . $lang;
-            } else {
-                $name .= '_t';
-            }
-
-            $assoc[$name] = $content;
-            $collection[] = $content;
-        }
-
-        /*
-         * Collect data in a single field
-         * for global search
-         */
-        $assoc['collection_txt'] = $collection;
-
-        $event = new NodesSourcesIndexingEvent($this->nodeSource, $assoc, $this);
-        /*
-         * Override associations
-         */
-        $assoc = $this->dispatcher->dispatch($event)->getAssociations();
-
-        return $assoc;
+        return $this->dispatcher->dispatch($event)->getAssociations();
     }
 
     /**

@@ -32,7 +32,6 @@ namespace Themes\Rozier\Events;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentFileUploadedEvent;
-use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -84,9 +83,9 @@ class DocumentFilesizeSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterDocumentEvent $event
+     * @param DocumentFileUploadedEvent $event
      */
-    public function onFileUploaded(FilterDocumentEvent $event)
+    public function onFileUploaded(DocumentFileUploadedEvent $event)
     {
         $document = $event->getDocument();
         if ($this->supports($document) && $document instanceof Document) {

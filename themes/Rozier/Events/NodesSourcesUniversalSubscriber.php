@@ -30,7 +30,6 @@
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -72,9 +71,12 @@ class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterNodesSourcesEvent $event
+     * @param NodesSourcesUpdatedEvent $event
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function duplicateUniversalContents(FilterNodesSourcesEvent $event)
+    public function duplicateUniversalContents(NodesSourcesUpdatedEvent $event)
     {
         $source = $event->getNodeSource();
 

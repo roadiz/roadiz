@@ -30,7 +30,6 @@ declare(strict_types=1);
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Core\Events\FilterNodeEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
@@ -71,9 +70,12 @@ class NodeDuplicationSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterNodeEvent $event
+     * @param NodeDuplicatedEvent $event
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function cleanPosition(FilterNodeEvent $event)
+    public function cleanPosition(NodeDuplicatedEvent $event)
     {
         /** @var NodeHandler $nodeHandler */
         $nodeHandler = $this->handlerFactory->getHandler($event->getNode());

@@ -50,6 +50,8 @@ use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
+use RZ\Roadiz\Core\SearchEngine\Subscriber\DefaultNodesSourcesIndexingSubscriber;
+use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
@@ -111,7 +113,6 @@ use Themes\Rozier\Events\NodeRedirectionSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
-use Themes\Rozier\Events\SolariumSubscriber;
 use Themes\Rozier\Events\SvgDocumentSubscriber;
 use Themes\Rozier\Events\TranslationSubscriber;
 
@@ -513,6 +514,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $this->get('solr'),
                 $this->get('logger'),
                 $this->get(SolariumFactoryInterface::class)
+            )
+        );
+        $this->get('dispatcher')->addSubscriber(
+            new DefaultNodesSourcesIndexingSubscriber(
+                $this->get('factory.handler')
             )
         );
         /*

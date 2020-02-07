@@ -53,6 +53,10 @@ class FilterSolariumNodeSourceEvent extends Event
      * @var AbstractSolarium|null
      */
     protected $solariumDocument;
+    /**
+     * @var bool
+     */
+    protected $subResource;
 
     /**
      * FilterSolariumNodeSourceEvent constructor.
@@ -60,12 +64,18 @@ class FilterSolariumNodeSourceEvent extends Event
      * @param NodesSources     $nodeSource
      * @param array            $associations
      * @param AbstractSolarium $solariumDocument
+     * @param bool             $subResource
      */
-    public function __construct(NodesSources $nodeSource, array $associations, AbstractSolarium $solariumDocument)
-    {
+    public function __construct(
+        NodesSources $nodeSource,
+        array $associations,
+        AbstractSolarium $solariumDocument,
+        bool $subResource = false
+    ) {
         $this->nodeSource = $nodeSource;
         $this->associations = $associations;
         $this->solariumDocument = $solariumDocument;
+        $this->subResource = $subResource;
     }
 
     public function getNodeSource(): NodesSources
@@ -113,5 +123,13 @@ class FilterSolariumNodeSourceEvent extends Event
         $this->solariumDocument = $solariumDocument;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubResource(): bool
+    {
+        return $this->subResource;
     }
 }

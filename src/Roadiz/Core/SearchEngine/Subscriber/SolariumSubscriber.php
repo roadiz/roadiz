@@ -1,33 +1,5 @@
 <?php
-/**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file SolariumSubscriber.php
- * @author Ambroise Maupate
- */
-namespace Themes\Rozier\Events;
+namespace RZ\Roadiz\Core\SearchEngine\Subscriber;
 
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
@@ -40,10 +12,8 @@ use RZ\Roadiz\Core\Events\DocumentOutFolderEvent;
 use RZ\Roadiz\Core\Events\DocumentTranslationUpdatedEvent;
 use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
-use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\FilterNodeEvent;
-use RZ\Roadiz\Core\Events\FilterNodesSourcesEvent;
-use RZ\Roadiz\Core\Events\FilterTagEvent;
+use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDeletedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
@@ -53,6 +23,7 @@ use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
 use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
@@ -122,9 +93,11 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Update or create Solr document for current Node-source.
      *
-     * @param FilterNodesSourcesEvent $event
+     * @param NodesSourcesUpdatedEvent $event
+     *
+     * @throws \Exception
      */
-    public function onSolariumSingleUpdate(FilterNodesSourcesEvent $event)
+    public function onSolariumSingleUpdate(NodesSourcesUpdatedEvent $event)
     {
         // Update Solr Search engine if setup
         if (null !== $this->solr) {
@@ -143,9 +116,9 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Delete solr document for current Node-source.
      *
-     * @param  FilterNodesSourcesEvent $event
+     * @param NodesSourcesDeletedEvent $event
      */
-    public function onSolariumSingleDelete(FilterNodesSourcesEvent $event)
+    public function onSolariumSingleDelete(NodesSourcesDeletedEvent $event)
     {
         // Update Solr Search engine if setup
         if (null !== $this->solr) {
@@ -164,9 +137,9 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Delete solr documents for each Node sources.
      *
-     * @param  FilterNodeEvent $event
+     * @param NodeDeletedEvent $event
      */
-    public function onSolariumNodeDelete(FilterNodeEvent $event)
+    public function onSolariumNodeDelete(NodeDeletedEvent $event)
     {
         if (null !== $this->solr) {
             try {
@@ -187,6 +160,8 @@ class SolariumSubscriber implements EventSubscriberInterface
      * Update or create solr documents for each Node sources.
      *
      * @param FilterNodeEvent $event
+     *
+     * @throws \Exception
      */
     public function onSolariumNodeUpdate(FilterNodeEvent $event)
     {
@@ -234,6 +209,8 @@ class SolariumSubscriber implements EventSubscriberInterface
      * Update or create solr documents for each Document translation.
      *
      * @param FilterDocumentEvent $event
+     *
+     * @throws \Exception
      */
     public function onSolariumDocumentUpdate(FilterDocumentEvent $event)
     {
@@ -256,10 +233,12 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Update solr documents linked to current event Tag.
      *
-     * @param FilterTagEvent $event
+     * @param TagUpdatedEvent $event
+     *
+     * @throws \Exception
      * @deprecated This can lead to a timeout if more than 500 nodes use that tag!
      */
-    public function onSolariumTagUpdate(FilterTagEvent $event)
+    public function onSolariumTagUpdate(TagUpdatedEvent $event)
     {
         if (null !== $this->solr) {
             try {
@@ -294,10 +273,12 @@ class SolariumSubscriber implements EventSubscriberInterface
     /**
      * Update solr documents linked to current event Folder.
      *
-     * @param FilterFolderEvent $event
+     * @param FolderUpdatedEvent $event
+     *
+     * @throws \Exception
      * @deprecated This can lead to a timeout if more than 500 documents use that folder!
      */
-    public function onSolariumFolderUpdate(FilterFolderEvent $event)
+    public function onSolariumFolderUpdate(FolderUpdatedEvent $event)
     {
         if (null !== $this->solr) {
             try {

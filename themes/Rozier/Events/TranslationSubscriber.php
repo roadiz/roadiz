@@ -30,7 +30,9 @@
 namespace Themes\Rozier\Events;
 
 use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\Core\Events\TranslationEvents;
+use RZ\Roadiz\Core\Events\Translation\TranslationCreatedEvent;
+use RZ\Roadiz\Core\Events\Translation\TranslationDeletedEvent;
+use RZ\Roadiz\Core\Events\Translation\TranslationUpdatedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -48,9 +50,9 @@ class TranslationSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            TranslationEvents::TRANSLATION_CREATED => 'purgeCache',
-            TranslationEvents::TRANSLATION_UPDATED => 'purgeCache',
-            TranslationEvents::TRANSLATION_DELETED => 'purgeCache',
+            TranslationCreatedEvent::class => 'purgeCache',
+            TranslationUpdatedEvent::class => 'purgeCache',
+            TranslationDeletedEvent::class => 'purgeCache',
         ];
     }
 

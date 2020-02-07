@@ -73,7 +73,9 @@ class NodeRedirectionSubscriber implements EventSubscriberInterface
     /**
      * Empty nodeSources Url cache
      *
-     * @param FilterNodePathEvent $event
+     * @param FilterNodePathEvent      $event
+     * @param string                   $eventName
+     * @param EventDispatcherInterface $dispatcher
      */
     public function redirectOldPaths(FilterNodePathEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {

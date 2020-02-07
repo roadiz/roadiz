@@ -35,7 +35,8 @@ use RZ\Roadiz\Core\Events\Node\NodeUndeletedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesCreatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
-use RZ\Roadiz\Core\Events\TranslationEvents;
+use RZ\Roadiz\Core\Events\Translation\TranslationDeletedEvent;
+use RZ\Roadiz\Core\Events\Translation\TranslationUpdatedEvent;
 use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasCreatedEvent;
 use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasDeletedEvent;
 use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasUpdatedEvent;
@@ -58,8 +59,8 @@ class NodesSourcesUrlSubscriber implements EventSubscriberInterface
         return [
             NodesSourcesCreatedEvent::class => 'purgeNSUrlCache',
             NodesSourcesDeletedEvent::class => 'purgeNSUrlCache',
-            TranslationEvents::TRANSLATION_UPDATED => 'purgeNSUrlCache',
-            TranslationEvents::TRANSLATION_DELETED => 'purgeNSUrlCache',
+            TranslationUpdatedEvent::class => 'purgeNSUrlCache',
+            TranslationDeletedEvent::class => 'purgeNSUrlCache',
             NodeDeletedEvent::class => 'purgeNSUrlCache',
             NodeUndeletedEvent::class => 'purgeNSUrlCache',
             NodeUpdatedEvent::class => 'purgeNSUrlCache',
