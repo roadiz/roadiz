@@ -5,19 +5,29 @@ namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 
-class SolrSearchResults
+class SolrSearchResults implements \Iterator
 {
     /**
      * @var array
      */
     protected $response;
+
     /**
      * @var EntityManagerInterface
      */
     protected $entityManager;
+
+    /**
+     * @var int
+     */
+    protected $position;
+
+    /**
+     * @var array|null
+     */
+    protected $resultItems;
 
     /**
      * SolrSearchResults constructor.
@@ -29,6 +39,8 @@ class SolrSearchResults
     {
         $this->response = $response;
         $this->entityManager = $entityManager;
+        $this->position = 0;
+        $this->resultItems = null;
     }
 
     /**
@@ -48,28 +60,31 @@ class SolrSearchResults
      */
     public function getResultItems(): array
     {
-        if (null !== $this->response &&
-            isset($this->response['response']['docs'])) {
-            $doc = array_map(
-                function ($item) {
-                    $object = $this->getHydratedItem($item);
-                    if (isset($this->response["highlighting"])) {
-                        $key = 'object';
-                        if ($object instanceof NodesSources) {
-                            $key = 'nodeSource';
+        if (null === $this->resultItems) {
+            $this->resultItems = [];
+            if (null !== $this->response &&
+                isset($this->response['response']['docs'])) {
+                $this->resultItems = array_map(
+                    function ($item) {
+                        $object = $this->getHydratedItem($item);
+                        if (isset($this->response["highlighting"])) {
+                            $key = 'object';
+                            if ($object instanceof NodesSources) {
+                                $key = 'nodeSource';
+                            }
+                            return [
+                                $key => $object,
+                                'highlighting' => $this->response['highlighting'][$item['id']],
+                            ];
                         }
-                        return [
-                            $key => $object,
-                            'highlighting' => $this->response['highlighting'][$item['id']],
-                        ];
-                    }
-                    return $object;
-                },
-                $this->response['response']['docs']
-            );
-            return $doc;
+                        return $object;
+                    },
+                    $this->response['response']['docs']
+                );
+            }
         }
-        return [];
+
+        return $this->resultItems;
     }
 
     /**
@@ -105,5 +120,66 @@ class SolrSearchResults
         }
 
         return $item;
+    }
+
+    /**
+     * Return the current element
+     *
+     * @link https://php.net/manual/en/iterator.current.php
+     * @return mixed Can return any type.
+     * @since 5.0
+     */
+    public function current()
+    {
+        return $this->getResultItems()[$this->position];
+    }
+
+    /**
+     * Move forward to next element
+     *
+     * @link https://php.net/manual/en/iterator.next.php
+     * @return void Any returned value is ignored.
+     * @since 5.0
+     */
+    public function next()
+    {
+        ++$this->position;
+    }
+
+    /**
+     * Return the key of the current element
+     *
+     * @link https://php.net/manual/en/iterator.key.php
+     * @return string|float|int|bool|null scalar on success, or null on failure.
+     * @since 5.0
+     */
+    public function key()
+    {
+        return $this->position;
+    }
+
+    /**
+     * Checks if current position is valid
+     *
+     * @link https://php.net/manual/en/iterator.valid.php
+     * @return bool The return value will be casted to boolean and then evaluated.
+     * Returns true on success or false on failure.
+     * @since 5.0
+     */
+    public function valid()
+    {
+        return isset($this->getResultItems()[$this->position]);
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     *
+     * @link https://php.net/manual/en/iterator.rewind.php
+     * @return void Any returned value is ignored.
+     * @since 5.0
+     */
+    public function rewind()
+    {
+        $this->position = 0;
     }
 }

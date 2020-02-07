@@ -56,9 +56,10 @@ class SolariumDocumentTranslation extends AbstractSolarium
     /**
      * Create a new SolariumDocument.
      *
-     * @param DocumentTranslation $documentTranslation
-     * @param Client $client
-     * @param LoggerInterface $logger
+     * @param DocumentTranslation    $documentTranslation
+     * @param Client                 $client
+     * @param LoggerInterface        $logger
+     * @param MarkdownInterface|null $markdown
      */
     public function __construct(
         DocumentTranslation $documentTranslation,
@@ -72,29 +73,9 @@ class SolariumDocumentTranslation extends AbstractSolarium
         $this->rzDocument = $documentTranslation->getDocument();
     }
 
-    /**
-     * Get document fron Solr index.
-     *
-     * @return boolean *FALSE* if no document found linked to current roadiz document.
-     */
-    public function getDocumentFromIndex()
+    public function getDocumentId()
     {
-        $query = $this->client->createSelect();
-        $query->setQuery(static::IDENTIFIER_KEY . ':' . $this->documentTranslation->getId());
-        $query->createFilterQuery('type')->setQuery(static::TYPE_DISCRIMINATOR . ':' . static::DOCUMENT_TYPE);
-
-        // this executes the query and returns the result
-        $resultset = $this->client->select($query);
-
-        if (0 === $resultset->getNumFound()) {
-            return false;
-        } else {
-            foreach ($resultset as $document) {
-                $this->document = $document;
-                return true;
-            }
-        }
-        return false;
+        return $this->documentTranslation->getId();
     }
 
     /**
@@ -112,7 +93,6 @@ class SolariumDocumentTranslation extends AbstractSolarium
         // Need a nodeSourceId field
         $assoc[static::IDENTIFIER_KEY] = $this->documentTranslation->getId();
         $assoc['document_id_i'] = $this->rzDocument->getId();
-
         $assoc['filename_s'] = $this->rzDocument->getFilename();
         $assoc['mime_type_s'] = $this->rzDocument->getMimeType();
 

@@ -36,7 +36,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use Solarium\Core\Query\Helper;
 
 /**
  * Class NodeSourceSearchHandler
@@ -56,67 +55,6 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
      * @var bool
      */
     protected $boostByCreationDate = false;
-
-    /**
-     * @param array $args
-     *
-     * @return string
-     */
-    protected function getTitleField(array &$args): string
-    {
-        /*
-         * Use title_txt_LOCALE when search
-         * is filtered by translation.
-         */
-        if (isset($args['locale']) && is_string($args['locale'])) {
-            return 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
-        }
-        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
-            return 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
-        }
-        return 'title';
-    }
-
-    /**
-     * Default Solr query builder.
-     *
-     * Extends this method to customize your Solr queries. Eg. to boost custom fields.
-     *
-     * @param string $q
-     * @param array $args
-     * @param bool $searchTags
-     * @param int $proximity
-     * @return string
-     */
-    protected function buildQuery($q, array &$args, $searchTags, $proximity)
-    {
-        $q = trim($q);
-        $qHelper = new Helper();
-        $q = $qHelper->escapeTerm($q);
-        $singleWord = strpos($q, ' ') === false ? true : false;
-        $titleField = $this->getTitleField($args);
-        /*
-         * Search in node-sources tags name…
-         */
-        if ($searchTags) {
-            /*
-             * @see http://www.solrtutorial.com/solr-query-syntax.html
-             */
-            if ($singleWord) {
-                // Need to use wildcard BEFORE and AFTER
-                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*) (tags_txt:*%s*)', $q, $q, $q);
-            } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
-            }
-        } else {
-            if ($singleWord) {
-                // Need to use wildcard BEFORE and AFTER
-                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*)', $q, $q);
-            } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
-            }
-        }
-    }
 
     /**
      * @param string  $q

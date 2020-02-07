@@ -6,7 +6,6 @@ namespace RZ\Roadiz\Attribute\Repository;
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
-use function Doctrine\ORM\QueryBuilder;
 
 final class AttributeValueRepository extends EntityRepository
 {

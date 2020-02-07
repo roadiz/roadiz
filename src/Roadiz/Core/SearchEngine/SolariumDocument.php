@@ -93,6 +93,11 @@ class SolariumDocument extends AbstractSolarium
         }
     }
 
+    public function getDocumentId()
+    {
+        return null;
+    }
+
     /**
      * Get document from Solr index.
      *

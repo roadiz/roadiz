@@ -272,9 +272,34 @@ abstract class AbstractSolarium
 
 
     /**
-     * @return boolean
+     * @return int|string
      */
-    abstract public function getDocumentFromIndex();
+    abstract public function getDocumentId();
+
+    /**
+     * Get document from Solr index.
+     *
+     * @return boolean *FALSE* if no document found linked to current node-source.
+     */
+    public function getDocumentFromIndex()
+    {
+        $query = $this->client->createSelect();
+        $query->setQuery(static::IDENTIFIER_KEY . ':' . $this->getDocumentId());
+        $query->createFilterQuery('type')->setQuery(static::TYPE_DISCRIMINATOR . ':' . static::DOCUMENT_TYPE);
+
+        // this executes the query and returns the result
+        $resultset = $this->client->select($query);
+
+        if (0 === $resultset->getNumFound()) {
+            return false;
+        } else {
+            foreach ($resultset as $document) {
+                $this->document = $document;
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Get a key/value array representation of current indexed object.

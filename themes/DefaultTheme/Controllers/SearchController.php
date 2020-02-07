@@ -46,9 +46,10 @@ class SearchController extends DefaultThemeApp
      * Default action for searching a Page source.
      *
      * @param Request $request
-     * @param string $_locale
+     * @param string  $_locale
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function defaultAction(
         Request $request,
@@ -61,7 +62,7 @@ class SearchController extends DefaultThemeApp
             throw new ResourceNotFoundException();
         }
 
-        $callable = function (FilterQueryBuilderEvent $event) {
+        $callable = function (QueryBuilderSelectEvent $event) {
             if ($event->supports(NodesSources::class) || $event->supports(NSPage::class)) {
                 $qb = $event->getQueryBuilder();
                 $qb->andWhere($qb->expr()->neq($qb->expr()->lower('ns.title'), ':neq'));
@@ -114,7 +115,7 @@ class SearchController extends DefaultThemeApp
         $this->assignation['query'] = $request->query->get('query');
 
         $eventDispatcher->removeListener(
-            FilterQueryBuilderEvent::class,
+            QueryBuilderSelectEvent::class,
             $callable
         );
 
