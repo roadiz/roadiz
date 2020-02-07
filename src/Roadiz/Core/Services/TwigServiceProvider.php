@@ -241,6 +241,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                     $c['securityAuthorizationChecker'],
                     $c['factory.handler'],
                     $c['nodeSourceApi'],
+                    $c['nodeTypesBag'],
                     $kernel->isPreview()
                 ));
 

@@ -30,13 +30,16 @@
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\CMS\Utils\NodeSourceApi;
+use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigTest;
 
 /**
  * Extension that allow to gather nodes-source from hierarchy
@@ -57,6 +60,10 @@ class NodesSourcesExtension extends AbstractExtension
      * @var NodeSourceApi
      */
     private $nodeSourceApi;
+    /**
+     * @var NodeTypes
+     */
+    private $nodeTypesBag;
 
     /**
      * NodesSourcesExtension constructor.
@@ -71,6 +78,7 @@ class NodesSourcesExtension extends AbstractExtension
         AuthorizationChecker $securityAuthorizationChecker,
         HandlerFactory $handlerFactory,
         NodeSourceApi $nodeSourceApi,
+        NodeTypes $nodeTypesBag,
         $preview = false,
         $throwExceptions = false
     ) {
@@ -79,6 +87,7 @@ class NodesSourcesExtension extends AbstractExtension
         $this->throwExceptions = $throwExceptions;
         $this->nodeSourceApi = $nodeSourceApi;
         $this->handlerFactory = $handlerFactory;
+        $this->nodeTypesBag = $nodeTypesBag;
     }
 
     public function getFilters()
@@ -93,6 +102,23 @@ class NodesSourcesExtension extends AbstractExtension
             new TwigFilter('parents', [$this, 'getParents']),
             new TwigFilter('tags', [$this, 'getTags']),
         ];
+    }
+
+    public function getTests()
+    {
+        $tests = [];
+
+        /** @var NodeType $nodeType */
+        foreach ($this->nodeTypesBag->all() as $nodeType) {
+            $tests[] = new TwigTest($nodeType->getName(), function ($mixed) use ($nodeType) {
+                return null !== $mixed && get_class($mixed) === $nodeType->getSourceEntityFullQualifiedClassName();
+            });
+            $tests[] = new TwigTest($nodeType->getSourceEntityClassName(), function ($mixed) use ($nodeType) {
+                return null !== $mixed && get_class($mixed) === $nodeType->getSourceEntityFullQualifiedClassName();
+            });
+        }
+
+        return $tests;
     }
 
     /**
