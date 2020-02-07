@@ -491,7 +491,7 @@ abstract class AppController extends Controller
      * @param Translation|null $translation
      * @return null|Node
      */
-    protected function getHome(Translation $translation = null)
+    protected function getHome(Translation $translation = null): ?Node
     {
         $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {
