@@ -36,7 +36,7 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
     public static function getSubscribedEvents()
     {
         return [
-            NodesSourcesIndexingEvent::class => ['onIndexing', -1000],
+            NodesSourcesIndexingEvent::class => ['onIndexing', 1000],
         ];
     }
 
@@ -148,7 +148,6 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
             $assoc[$name] = $content;
             $collection[] = $content;
         }
-
         /*
          * Collect data in a single field
          * for global search
