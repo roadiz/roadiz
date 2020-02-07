@@ -45,7 +45,9 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"available"}),
  *     @ORM\Index(columns={"default_translation"}),
  *     @ORM\Index(columns={"created_at"}),
- *     @ORM\Index(columns={"updated_at"})
+ *     @ORM\Index(columns={"updated_at"}),
+ *     @ORM\Index(columns={"available", "default_translation"}),
+ *     @ORM\Index(columns={"available", "locale"})
  * })
  */
 class Translation extends AbstractDateTimed

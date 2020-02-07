@@ -282,6 +282,22 @@ class NodeTypeField extends AbstractField
     }
 
     /**
+     * @return bool
+     */
+    public function isExcludeFromSearch()
+    {
+        return $this->getExcludeFromSearch();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExcludedFromSearch()
+    {
+        return $this->getExcludeFromSearch();
+    }
+
+    /**
      * @param bool $excludeFromSearch
      *
      * @return NodeTypeField
