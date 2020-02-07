@@ -300,7 +300,7 @@ abstract class AbstractSearchHandler
     /**
      * @param string $q
      * @param array $args
-     * @param int $rows Useless var but keep it for retrocompatibility
+     * @param int $rows Useless var but keep it for retro-compatibility
      * @param bool $searchTags
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
      * @return int

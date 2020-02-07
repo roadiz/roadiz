@@ -7,6 +7,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
 
+/**
+ * Wrapper over Solr search results and metas.
+ *
+ * @package RZ\Roadiz\Core\SearchEngine
+ */
 class SolrSearchResults implements \Iterator
 {
     /**

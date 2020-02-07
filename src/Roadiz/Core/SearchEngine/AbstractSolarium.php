@@ -43,6 +43,8 @@ use Solarium\QueryType\Update\Query\Query;
  */
 abstract class AbstractSolarium
 {
+    const DOCUMENT_TYPE = 'AbstractDocument';
+    const IDENTIFIER_KEY = 'abstract_id_i';
     const TYPE_DISCRIMINATOR = 'document_type_s';
 
     public static $availableLocalizedTextFields = [
@@ -116,6 +118,7 @@ abstract class AbstractSolarium
      * Use this method only when you need to index single NodeSources.
      *
      * @return boolean|Result
+     * @throws \Exception
      */
     public function indexAndCommit()
     {
@@ -139,6 +142,7 @@ abstract class AbstractSolarium
      * Use this method **only** when you need to re-index a single NodeSources.
      *
      * @return Result
+     * @throws \Exception
      */
     public function updateAndCommit()
     {
@@ -157,7 +161,9 @@ abstract class AbstractSolarium
      *
      * Use this method only when you need to re-index bulk NodeSources.
      *
-     * @param  Query  $update
+     * @param Query $update
+     *
+     * @throws \Exception
      */
     public function update(Query $update)
     {
@@ -219,7 +225,7 @@ abstract class AbstractSolarium
      * Index current document with entity data.
      *
      * @return boolean
-     * @throws \RuntimeException If no document is available.
+     * @throws \Exception
      */
     public function index()
     {
