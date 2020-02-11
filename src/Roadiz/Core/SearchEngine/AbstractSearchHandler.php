@@ -52,6 +52,11 @@ abstract class AbstractSearchHandler
     protected $logger = null;
 
     /**
+     * @var int
+     */
+    protected $highlightingFragmentSize = 150;
+
+    /**
      * @param Client $client
      * @param EntityManagerInterface $em
      * @param LoggerInterface $logger
@@ -235,15 +240,24 @@ abstract class AbstractSearchHandler
     ): SolrSearchResults {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
+        $args = array_merge($this->getHighlightingOptions(), $args);
+        $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
+        return new SolrSearchResults(null !== $response ? $response : [], $this->em);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getHighlightingOptions(): array
+    {
         $tmp = [];
         $tmp["hl"] = true;
         $tmp["hl.fl"] = "collection_txt";
+        $tmp["hl.fragsize"] = $this->getHighlightingFragmentSize();
         $tmp["hl.simple.pre"] = '<span class="solr-highlight">';
         $tmp["hl.simple.post"] = '</span>';
-        $args = array_merge($tmp, $args);
 
-        $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
-        return new SolrSearchResults($response, $this->em);
+        return $tmp;
     }
 
     /**
@@ -294,7 +308,7 @@ abstract class AbstractSearchHandler
         $args = array_merge($tmp, $args);
 
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
-        return new SolrSearchResults($response, $this->em);
+        return new SolrSearchResults(null !== $response ? $response : [], $this->em);
     }
 
     /**
@@ -312,8 +326,27 @@ abstract class AbstractSearchHandler
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
         $tmp = [];
         $args = array_merge($tmp, $args);
-
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity);
-        return $this->parseResultCount($response);
+        return null !== $response ? $this->parseResultCount($response) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHighlightingFragmentSize(): int
+    {
+        return $this->highlightingFragmentSize;
+    }
+
+    /**
+     * @param int $highlightingFragmentSize
+     *
+     * @return AbstractSearchHandler
+     */
+    public function setHighlightingFragmentSize(int $highlightingFragmentSize): AbstractSearchHandler
+    {
+        $this->highlightingFragmentSize = $highlightingFragmentSize;
+
+        return $this;
     }
 }
