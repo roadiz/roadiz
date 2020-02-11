@@ -82,7 +82,7 @@ class NodeSourceType extends AbstractType
         foreach ($fields as $field) {
             if ($options['withVirtual'] === true || !$field->isVirtual()) {
                 $builder->add(
-                    $field->getName(),
+                    $field->getVarName(),
                     static::getFormTypeFromFieldType($field),
                     $this->getFormOptionsFromFieldType($builder->getData(), $field, $options)
                 );
@@ -460,7 +460,7 @@ class NodeSourceType extends AbstractType
     public function getDefaultOptions(NodesSources $nodeSource, NodeTypeField $field, array &$formOptions)
     {
         $label = $field->getLabel();
-        $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
+        $devName = '{{ nodeSource.' . $field->getVarName() . ' }}';
         $options = [
             'label' => $label,
             'required' => false,
