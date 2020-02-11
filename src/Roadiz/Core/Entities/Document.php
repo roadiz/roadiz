@@ -648,7 +648,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return bool
      * @Serializer\Groups({"document"})
-     * @Serializer\SerializedName({"isThumbnail"})
+     * @Serializer\SerializedName("isThumbnail")
      * @Serializer\VirtualProperty()
      */
     public function isThumbnail(): bool
@@ -659,7 +659,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return bool
      * @Serializer\Groups({"document"})
-     * @Serializer\SerializedName({"hasThumbnail"})
+     * @Serializer\SerializedName("hasThumbnail")
      * @Serializer\VirtualProperty()
      */
     public function hasThumbnails(): bool
