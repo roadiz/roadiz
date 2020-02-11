@@ -46,6 +46,10 @@
                 <source>nodeType.hidingNonReachableNodes.help</source>
                 <target state="translated">This node-type will only hide its non-reachable children nodes</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_fulltext_search_engine">
+                <source>exclude_this_field_from_fulltext_search_engine</source>
+                <target state="translated">Exclude this field value from full-text search engine.</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>

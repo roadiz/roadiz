@@ -37,8 +37,10 @@ use RZ\Roadiz\Core\Models\AbstractDocument;
 use RZ\Roadiz\Core\Models\AdvancedDocumentInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
+use RZ\Roadiz\Core\Models\HasThumbnailInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
+use function Clue\StreamFilter\fun;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
@@ -51,7 +53,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
-class Document extends AbstractDocument implements AdvancedDocumentInterface
+class Document extends AbstractDocument implements AdvancedDocumentInterface, HasThumbnailInterface
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
@@ -171,6 +173,25 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     private $filesize;
 
     /**
+     * @var ArrayCollection<Document>
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", mappedBy="original")
+     * @Serializer\Groups({"document_thumbnails"})
+     * @Serializer\MaxDepth(2)
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Document>")
+     */
+    private $thumbnails;
+
+    /**
+     * @var Document|null
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="thumbnails")
+     * @ORM\JoinColumn(name="original", nullable=true, onDelete="SET NULL")
+     * @Serializer\Groups({"document_original"})
+     * @Serializer\MaxDepth(2)
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
+     */
+    private $original = null;
+
+    /**
      * Document constructor.
      */
     public function __construct()
@@ -182,6 +203,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
         $this->attributeDocuments = new ArrayCollection();
+        $this->thumbnails = new ArrayCollection();
         $this->imageWidth = 0;
         $this->imageHeight = 0;
     }
@@ -567,5 +589,89 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
             $this->id = null;
             $this->rawDocument = null;
         }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getThumbnails(): Collection
+    {
+        return $this->thumbnails;
+    }
+
+    /**
+     * @param Collection $thumbnails
+     *
+     * @return Document
+     */
+    public function setThumbnails(Collection $thumbnails): Document
+    {
+        if ($this->thumbnails->count()) {
+            /** @var HasThumbnailInterface $thumbnail */
+            foreach ($this->thumbnails as $thumbnail) {
+                $thumbnail->setOriginal(null);
+            }
+        }
+        $this->thumbnails = $thumbnails->filter(function (HasThumbnailInterface $thumbnail) {
+            return $thumbnail !== $this;
+        });
+        /** @var HasThumbnailInterface $thumbnail */
+        foreach ($this->thumbnails as $thumbnail) {
+            $thumbnail->setOriginal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return HasThumbnailInterface|null
+     */
+    public function getOriginal(): ?HasThumbnailInterface
+    {
+        return $this->original;
+    }
+
+    /**
+     * @param HasThumbnailInterface|null $original
+     *
+     * @return Document
+     */
+    public function setOriginal(?HasThumbnailInterface $original): Document
+    {
+        if ($original !== $this) {
+            $this->original = $original;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     * @Serializer\Groups({"document"})
+     * @Serializer\SerializedName({"isThumbnail"})
+     * @Serializer\VirtualProperty()
+     */
+    public function isThumbnail(): bool
+    {
+        return $this->getOriginal() !== null;
+    }
+
+    /**
+     * @return bool
+     * @Serializer\Groups({"document"})
+     * @Serializer\SerializedName({"hasThumbnail"})
+     * @Serializer\VirtualProperty()
+     */
+    public function hasThumbnails(): bool
+    {
+        return $this->getThumbnails()->count() > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function needsThumbnail(): bool
+    {
+        return !$this->isProcessable();
     }
 }

@@ -29,6 +29,11 @@
                         <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
                     </template>
                     <template v-else>
+                        <img v-if="document.hasThumbnail"
+                             class="document-image"
+                             width="80" height="80"
+                             src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                             v-dynamic-img="document.thumbnail_80" />
                         <div class="document-platform-icon"><i :class="'uk-icon-file-' + document.shortType +'-o'"></i></div>
                     </template>
                     <template v-if="drawerName">

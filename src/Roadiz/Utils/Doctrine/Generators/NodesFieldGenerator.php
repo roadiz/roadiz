@@ -64,7 +64,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      */
     protected function getFieldSourcesName(): string
     {
-        return $this->field->getName().'_sources';
+        return $this->field->getVarName().'Sources';
     }
     /**
      * @return bool
@@ -101,7 +101,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @return Node[] '.$this->field->getName().' array
+     * @return Node[] '.$this->field->getVarName().' array
      * @deprecated Use '.$this->field->getGetterName().'Sources() instead to directly handle node-sources
      * @Serializer\Exclude
      */
@@ -112,20 +112,20 @@ class NodesFieldGenerator extends AbstractFieldGenerator
             E_USER_DEPRECATED
         );
 
-        if (null === $this->' . $this->field->getName() . ') {
+        if (null === $this->' . $this->field->getVarName() . ') {
             if (null !== $this->objectManager) {
-                 $this->' . $this->field->getName() . ' = $this->objectManager
+                 $this->' . $this->field->getVarName() . ' = $this->objectManager
                       ->getRepository(Node::class)
                       ->findByNodeAndFieldAndTranslation(
                           $this->getNode(),
-                          $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getName().'"),
+                          $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getVarName().'"),
                           $this->getTranslation()
                       );
             } else {
-                $this->' . $this->field->getName() . ' = [];
+                $this->' . $this->field->getVarName() . ' = [];
             }
         }
-        return $this->' . $this->field->getName() . ';
+        return $this->' . $this->field->getVarName() . ';
     }
     /**
      * ' . $this->getFieldSourcesName() .' NodesSources direct field buffer.
@@ -136,10 +136,10 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     private $'.$this->getFieldSourcesName().';
 
     /**
-     * @return NodesSources[] '.$this->field->getName().' nodes-sources array
+     * @return NodesSources[] '.$this->field->getVarName().' nodes-sources array
      * @Serializer\VirtualProperty
      * @Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
-     * @Serializer\SerializedName("'.$this->field->getName().'")
+     * @Serializer\SerializedName("'.$this->field->getVarName().'")
      */
     public function '.$this->field->getGetterName().'Sources()
     {

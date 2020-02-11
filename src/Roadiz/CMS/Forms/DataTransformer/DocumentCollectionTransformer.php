@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\CMS\Forms\DataTransformer;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\Document;
 use Symfony\Component\Form\DataTransformerInterface;
@@ -40,20 +41,27 @@ use Symfony\Component\Form\Exception\TransformationFailedException;
  */
 class DocumentCollectionTransformer implements DataTransformerInterface
 {
+    /**
+     * @var bool
+     */
+    protected $asCollection;
     private $manager;
 
     /**
      * NodeTypeTransformer constructor.
+     *
      * @param ObjectManager $manager
+     * @param bool          $asCollection
      */
-    public function __construct(ObjectManager $manager)
+    public function __construct(ObjectManager $manager, bool $asCollection = false)
     {
         $this->manager = $manager;
+        $this->asCollection = $asCollection;
     }
 
     /**
-     * @param Document[] $documents
-     * @return string
+     * @param ArrayCollection<Document>|Document[] $documents
+     * @return string|array
      */
     public function transform($documents)
     {
@@ -65,16 +73,22 @@ class DocumentCollectionTransformer implements DataTransformerInterface
         foreach ($documents as $document) {
             $ids[] = $document->getId();
         }
+        if ($this->asCollection) {
+            return $ids;
+        }
         return implode(',', $ids);
     }
 
     /**
      * @param string $documentIds
-     * @return array
+     * @return array|ArrayCollection
      */
     public function reverseTransform($documentIds)
     {
         if (!$documentIds) {
+            if ($this->asCollection) {
+                return new ArrayCollection();
+            }
             return [];
         }
 
@@ -99,7 +113,9 @@ class DocumentCollectionTransformer implements DataTransformerInterface
 
             $documents[] = $document;
         }
-
+        if ($this->asCollection) {
+            return new ArrayCollection($documents);
+        }
         return $documents;
     }
 }

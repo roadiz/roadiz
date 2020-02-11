@@ -577,7 +577,7 @@ class DocumentRepository extends EntityRepository
          */
         $qb2->select('s.value')
             ->from(Setting::class, 's')
-            ->where($qb2->expr()->eq('s.type', ':type'))
+            ->andWhere($qb2->expr()->eq('s.type', ':type'))
             ->andWhere($qb2->expr()->isNotNull('s.value'))
             ->setParameter('type', AbstractField::DOCUMENTS_T);
 
@@ -598,7 +598,8 @@ class DocumentRepository extends EntityRepository
             ->andHaving('COUNT(ns.id) = 0')
             ->andHaving('COUNT(ttd.id) = 0')
             ->groupBy('d')
-            ->where($qb->expr()->eq('d.raw', ':raw'))
+            ->andWhere($qb->expr()->eq('d.raw', ':raw'))
+            ->andWhere($qb->expr()->isNull('d.original'))
             ->setParameter('raw', false);
 
         if (count($idArray) > 0) {

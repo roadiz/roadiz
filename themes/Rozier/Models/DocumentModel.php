@@ -31,6 +31,7 @@ namespace Themes\Rozier\Models;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Models\HasThumbnailInterface;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
@@ -80,6 +81,14 @@ class DocumentModel implements ModelInterface
         /** @var DocumentUrlGenerator $documentUrlGenerator */
         $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
         $documentUrlGenerator->setDocument($this->document);
+        $hasThumbnail = false;
+
+        if ($this->document instanceof HasThumbnailInterface &&
+            $this->document->needsThumbnail() &&
+            $this->document->hasThumbnails()) {
+            $documentUrlGenerator->setDocument($this->document->getThumbnails()->first());
+            $hasThumbnail = true;
+        }
 
         $documentUrlGenerator->setOptions(static::$thumbnailArray);
         $thumbnailUrl = $documentUrlGenerator->getUrl();
@@ -97,6 +106,7 @@ class DocumentModel implements ModelInterface
             'id' => $this->document->getId(),
             'filename' => $this->document->getFilename(),
             'name' => $name,
+            'hasThumbnail' => $hasThumbnail,
             'isImage' => $this->document->isImage(),
             'isVideo' => $this->document->isVideo(),
             'isSvg' => $this->document->isSvg(),

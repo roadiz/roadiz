@@ -76,7 +76,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
      */
     public function '.$this->field->getGetterName().'()
     {
-        return $this->' . $this->field->getName() . ';
+        return $this->' . $this->field->getVarName() . ';
     }'.PHP_EOL;
     }
 
@@ -87,12 +87,12 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @var $'.$this->field->getName().'
+     * @var $'.$this->field->getVarName().'
      * @return $this
      */
-    public function '.$this->field->getSetterName().'($'.$this->field->getName().' = null)
+    public function '.$this->field->getSetterName().'($'.$this->field->getVarName().' = null)
     {
-        $this->'.$this->field->getName().' = $'.$this->field->getName().';
+        $this->'.$this->field->getVarName().' = $'.$this->field->getVarName().';
 
         return $this;
     }'.PHP_EOL;

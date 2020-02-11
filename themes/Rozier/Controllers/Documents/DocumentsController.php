@@ -255,6 +255,7 @@ class DocumentsController extends RozierApp
      * @param int     $documentId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $documentId)
     {
@@ -273,6 +274,7 @@ class DocumentsController extends RozierApp
                 'referer' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
                 'assetPackages' => $this->get('assetPackages'),
                 'document_platforms' => $this->get('document.platforms'),
+                'entityManager' => $this->get('em'),
             ]);
             $form->handleRequest($request);
 

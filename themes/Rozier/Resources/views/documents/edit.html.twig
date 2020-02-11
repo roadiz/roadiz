@@ -29,6 +29,19 @@
             <dd>{{ document.updatedAt|localizeddate('medium', 'short') }}</dd>
             <dt>{% trans %}createdAt{% endtrans %}</dt>
             <dd>{{ document.createdAt|localizeddate('medium', 'short') }}</dd>
+            {% if document.original %}
+                <dt>{% trans %}original.document{% endtrans %}</dt>
+                <dd>
+                    <p>{{ document.original.filename }}</p>
+                    <p><a
+                        href="{{ path('documentsEditPage', { documentId: document.original.id}) }}"
+                        class="uk-button uk-button-small rz-no-ajax-link">
+                            <i class="uk-icon-rz-link"></i>
+                            {% trans %}see.original.document{%- endtrans -%}
+                        </a>
+                    </p>
+                </dd>
+            {% endif %}
             {% if not document.private %}
             <dt>{% trans %}document.public_url{% endtrans %}</dt>
             <dd>{{ document|url({noProcess: true}) }}</dd>

@@ -18,7 +18,7 @@
                 {% if not document.private %}
                     {% if document.image or document.svg or document.video or document.pdf %}
                         {% if document.pdf %}
-                            {% set thumbnailFormat = thumbnailFormat|merge({'height': 700}) %}
+                            {% set thumbnailFormat = thumbnailFormat|merge({'height': 700, 'embed': true}) %}
                         {% endif %}
                         <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
                         {% if document.mimeType == 'image/gif' %}

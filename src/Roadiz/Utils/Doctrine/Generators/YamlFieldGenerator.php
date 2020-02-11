@@ -49,13 +49,13 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
      */
     public function getFieldAlternativeGetter(): string
     {
-        $assignation = '$this->'.$this->field->getName();
+        $assignation = '$this->'.$this->field->getVarName();
         return '
     /**
      * @return object|null
      * @Serializer\VirtualProperty
      * @Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
-     * @Serializer\SerializedName("'.$this->field->getName().'")
+     * @Serializer\SerializedName("'.$this->field->getVarName().'")
      */
     public function '.$this->field->getGetterName().'AsObject()
     {

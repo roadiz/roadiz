@@ -58,7 +58,9 @@ class EntityGenerator
 
     /**
      * EntityGenerator constructor.
-     * @param NodeType $nodeType
+     *
+     * @param NodeType  $nodeType
+     * @param NodeTypes $nodeTypesBag
      */
     public function __construct(NodeType $nodeType, NodeTypes $nodeTypesBag)
     {

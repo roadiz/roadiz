@@ -32,9 +32,10 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\ColorType;
-use RZ\Roadiz\CMS\Forms\Constraints\HexadecimalColor;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
+use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
@@ -103,6 +104,17 @@ class DocumentEditType extends AbstractType
                 'required' => false,
             ])
         ;
+        /*
+         * Display thumbnails only if current Document is original.
+         */
+        if (null === $builder->getData()->getOriginal()) {
+            $builder->add('thumbnails', DocumentCollectionType::class, [
+                'label' => 'document.thumbnails',
+                'multiple' => true,
+                'required' => false,
+                'entityManager' => $options['entityManager'],
+            ]);
+        }
     }
 
     /**
@@ -122,6 +134,9 @@ class DocumentEditType extends AbstractType
 
         $resolver->setRequired('document_platforms');
         $resolver->setAllowedTypes('document_platforms', ['array']);
+
+        $resolver->setRequired('entityManager');
+        $resolver->setAllowedTypes('entityManager', EntityManagerInterface::class);
     }
 
 

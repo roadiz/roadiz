@@ -98,11 +98,11 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     public function getFieldDeclaration(): string
     {
         if ($this->field->getType() === NodeTypeField::BOOLEAN_T) {
-            return '    private $'.$this->field->getName().' = false;'.PHP_EOL;
+            return '    private $'.$this->field->getVarName().' = false;'.PHP_EOL;
         } elseif ($this->field->getType() === NodeTypeField::INTEGER_T) {
-            return '    private $'.$this->field->getName().' = 0;'.PHP_EOL;
+            return '    private $'.$this->field->getVarName().' = 0;'.PHP_EOL;
         } else {
-            return '    private $'.$this->field->getName().';'.PHP_EOL;
+            return '    private $'.$this->field->getVarName().';'.PHP_EOL;
         }
     }
 
@@ -111,7 +111,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldGetter(): string
     {
-        $assignation = '$this->'.$this->field->getName();
+        $assignation = '$this->'.$this->field->getVarName();
 
         return '
     /**
@@ -128,27 +128,27 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldSetter(): string
     {
-        $assignation = '$'.$this->field->getName();
+        $assignation = '$'.$this->field->getVarName();
 
         if ($this->field->getType() === NodeTypeField::BOOLEAN_T) {
-            $assignation = '(boolean) $'.$this->field->getName();
+            $assignation = '(boolean) $'.$this->field->getVarName();
         }
         if ($this->field->getType() === NodeTypeField::INTEGER_T) {
-            $assignation = '(int) $'.$this->field->getName();
+            $assignation = '(int) $'.$this->field->getVarName();
         }
         if ($this->field->getType() === NodeTypeField::DECIMAL_T) {
-            $assignation = '(double) $'.$this->field->getName();
+            $assignation = '(double) $'.$this->field->getVarName();
         }
 
         return '
     /**
-     * @param mixed $'.$this->field->getName().'
+     * @param mixed $'.$this->field->getVarName().'
      *
      * @return $this
      */
-    public function '.$this->field->getSetterName().'($'.$this->field->getName().')
+    public function '.$this->field->getSetterName().'($'.$this->field->getVarName().')
     {
-        $this->'.$this->field->getName().' = '.$assignation.';
+        $this->'.$this->field->getVarName().' = '.$assignation.';
 
         return $this;
     }'.PHP_EOL;

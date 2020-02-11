@@ -98,7 +98,7 @@ abstract class AbstractFieldGenerator
         /*
          * Buffer var to get referenced entities (documents, nodes, cforms, doctrine entities)
          */
-        return '    private $'.$this->field->getName().';'.PHP_EOL;
+        return '    private $'.$this->field->getVarName().';'.PHP_EOL;
     }
 
     /**

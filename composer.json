@@ -39,7 +39,7 @@
         "ext-zip":                                 "*",
         "ext-pdo":                                 "*",
         "roadiz/models":                           "~1.3.0 || dev-develop",
-        "roadiz/documents":                        "~1.3.0 || dev-develop",
+        "roadiz/documents":                        "~1.4.0 || dev-develop",
         "roadiz/markdown":                         "~1.3.0 || dev-develop",
         "ambroisemaupate/intervention-request":    "^2.4.0",
         "doctrine/orm":                            "^2.6.3",

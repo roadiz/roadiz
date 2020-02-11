@@ -6936,7 +6936,27 @@
       <trans-unit xml:space="preserve" id="encrypted">
             <source>encrypted</source>
             <target state="translated">Chiffré</target>
-            <note>Settings : defaines if setting value will be encrypted in database.</note>
+            <note>Settings : defines if setting value will be encrypted in database.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="original.document">
+            <source>original.document</source>
+            <target state="translated">Document original</target>
+            <note>Document : Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="see.original.document">
+            <source>see.original.document</source>
+            <target state="translated">Voir le document original</target>
+            <note>Document : Button Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.thumbnails">
+            <source>document.thumbnails</source>
+            <target state="translated">Vignettes</target>
+            <note>Document : Input Label to display thumbnail documents when dealing with original.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="excludeFromSearch">
+            <source>excludeFromSearch</source>
+            <target state="translated">Exclure de la recherche</target>
+            <note>Node type field : Input Label.</note>
         </trans-unit>
     </body>
   </file>

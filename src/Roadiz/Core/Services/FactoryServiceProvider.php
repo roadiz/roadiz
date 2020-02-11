@@ -59,6 +59,7 @@ use RZ\Roadiz\Document\Renderer\PdfRenderer;
 use RZ\Roadiz\Document\Renderer\PictureRenderer;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Document\Renderer\SvgRenderer;
+use RZ\Roadiz\Document\Renderer\ThumbnailRenderer;
 use RZ\Roadiz\Document\Renderer\VideoRenderer;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
@@ -186,7 +187,9 @@ class FactoryServiceProvider implements ServiceProviderInterface
             ];
         };
         $container[RendererInterface::class] = function (Container $c) {
-            return new ChainRenderer($c['document.renderers']);
+            $chainRenderer = new ChainRenderer($c['document.renderers']);
+            $chainRenderer->addRenderer(new ThumbnailRenderer($chainRenderer));
+            return $chainRenderer;
         };
 
         $container[EmbedFinderFactory::class] = function (Container $c) {

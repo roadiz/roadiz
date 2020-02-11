@@ -88,7 +88,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
      */
     public function '.$this->field->getGetterName().'()
     {
-        return $this->' . $this->field->getName() . ';
+        return $this->' . $this->field->getVarName() . ';
     }'.PHP_EOL;
     }
 
@@ -99,12 +99,12 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection $'.$this->field->getName().'
+     * @var \Doctrine\Common\Collections\ArrayCollection $'.$this->field->getVarName().'
      * @return $this
      */
-    public function '.$this->field->getSetterName().'($'.$this->field->getName().' = null)
+    public function '.$this->field->getSetterName().'($'.$this->field->getVarName().' = null)
     {
-        $this->'.$this->field->getName().' = $'.$this->field->getName().';
+        $this->'.$this->field->getVarName().' = $'.$this->field->getVarName().';
 
         return $this;
     }'.PHP_EOL;
@@ -115,6 +115,6 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldConstructorInitialization(): string
     {
-        return '$this->' . $this->field->getName() . ' = new \Doctrine\Common\Collections\ArrayCollection();';
+        return '$this->' . $this->field->getVarName() . ' = new \Doctrine\Common\Collections\ArrayCollection();';
     }
 }
