@@ -40,7 +40,6 @@ use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Core\Models\HasThumbnailInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
-use function Clue\StreamFilter\fun;
 
 /**
  * Documents entity represent a file on server with datetime and naming.
