@@ -173,18 +173,74 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, cascade={"persist"}, fetch="LAZY")
+     * @ORM\OneToMany(
+     *     targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments",
+     *     mappedBy="nodeSource",
+     *     orphanRemoval=true,
+     *     cascade={"persist"},
+     *     fetch="LAZY"
+     * )
      * @var ArrayCollection
      * @Serializer\Exclude
      */
     private $documentsByFields;
 
     /**
-     * @return Collection
+     * @return Collection|ArrayCollection
      */
     public function getDocumentsByFields(): Collection
     {
         return $this->documentsByFields;
+    }
+
+    /**
+     * @param ArrayCollection $documentsByFields
+     *
+     * @return NodesSources
+     */
+    public function setDocumentsByFields(ArrayCollection $documentsByFields): NodesSources
+    {
+        $this->documentsByFields = $documentsByFields;
+        return $this;
+    }
+
+    /**
+     * Used by any NSClass to add directly new documents to source.
+     *
+     * @param NodesSourcesDocuments $nodesSourcesDocuments
+     *
+     * @return $this
+     */
+    public function addDocumentsByFields(NodesSourcesDocuments $nodesSourcesDocuments): NodesSources
+    {
+        if (!$this->getDocumentsByFields()->contains($nodesSourcesDocuments)) {
+            $this->getDocumentsByFields()->add($nodesSourcesDocuments);
+        }
+        return $this;
+    }
+
+    /**
+     * @param NodeTypeField $field
+     *
+     * @return Document[]
+     */
+    public function getDocumentsByFieldsWithField(NodeTypeField $field): array
+    {
+        $criteria = Criteria::create();
+        $criteria->orderBy(['position' => 'ASC']);
+        return $this->getDocumentsByFields()
+            ->matching($criteria)
+            ->filter(function ($element) use ($field) {
+                if ($element instanceof NodesSourcesDocuments) {
+                    return $element->getField() === $field;
+                }
+                return false;
+            })
+            ->map(function (NodesSourcesDocuments $nodesSourcesDocuments) {
+                return $nodesSourcesDocuments->getDocument();
+            })
+            ->toArray()
+        ;
     }
 
     /**
@@ -195,22 +251,19 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     {
         $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);
-        $relations = $this->getDocumentsByFields()
+        return $this->getDocumentsByFields()
             ->matching($criteria)
             ->filter(function ($element) use ($fieldName) {
                 if ($element instanceof NodesSourcesDocuments) {
                     return $element->getField()->getName() === $fieldName;
                 }
                 return false;
-            });
-
-        $documents = [];
-        /** @var NodesSourcesDocuments $relation */
-        foreach ($relations as $relation) {
-            $documents[] = $relation->getDocument();
-        }
-
-        return $documents;
+            })
+            ->map(function (NodesSourcesDocuments $nodesSourcesDocuments) {
+                return $nodesSourcesDocuments->getDocument();
+            })
+            ->toArray()
+        ;
     }
 
     /**

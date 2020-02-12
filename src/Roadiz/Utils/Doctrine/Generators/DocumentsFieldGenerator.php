@@ -30,8 +30,11 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
+use RZ\Roadiz\Core\Entities\Document;
+
 /**
  * Class DocumentsFieldGenerator
+ *
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class DocumentsFieldGenerator extends AbstractFieldGenerator
@@ -63,6 +66,36 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
             }
         }
         return $this->' . $this->field->getVarName() . ';
+    }'.PHP_EOL;
+    }
+
+    /**
+     * Generate PHP setter method block.
+     *
+     * @return string
+     */
+    protected function getFieldSetter(): string
+    {
+        return '
+    /**
+     * @param Document $document
+     *
+     * @return $this
+     */
+    public function add'.ucfirst($this->field->getVarName()).'(Document $document)
+    {
+        $field = $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getName().'");
+        if (null !== $field) {
+            $nodeSourceDocument = new \RZ\Roadiz\Core\Entities\NodesSourcesDocuments(
+                $this,
+                $document,
+                $field
+            );
+            $this->objectManager->persist($nodeSourceDocument);
+            $this->addDocumentsByFields($nodeSourceDocument);
+            $this->' . $this->field->getVarName() . ' = null;
+        }
+        return $this;
     }'.PHP_EOL;
     }
 }
