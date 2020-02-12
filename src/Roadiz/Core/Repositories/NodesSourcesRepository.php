@@ -457,9 +457,9 @@ class NodesSourcesRepository extends StatusAwareRepository
             }
 
             if ($limit > 0) {
-                return $service->search($query, $arguments, $limit);
+                return $service->search($query, $arguments, $limit)->getResultItems();
             } else {
-                return $service->search($query, $arguments, 999999);
+                return $service->search($query, $arguments, 999999)->getResultItems();
             }
         }
         return [];

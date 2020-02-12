@@ -90,7 +90,7 @@ class SearchController extends DefaultThemeApp
                 ], # a simple criteria array to filter search results
                 10, # result count
                 true # Search in tags too
-            );
+            )->getResultItems();
         } else {
             /*
              * Use simple search over title and meta fields.
