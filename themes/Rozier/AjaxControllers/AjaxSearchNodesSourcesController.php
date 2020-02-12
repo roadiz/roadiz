@@ -66,16 +66,10 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         $searchHandler = $this->get('solr.search.nodeSource');
         if (null !== $searchHandler) {
             $searchHandler->boostByUpdateDate();
-            $results = $searchHandler->searchWithHighlight(
-                $request->get('searchTerms'),
-                [],
-                static::RESULT_COUNT,
-                false,
-                10000
+            $results = $searchHandler->search(
+                $request->get('searchTerms')
             );
-            $nodesSources = array_map(function ($result) {
-                return $result['nodeSource'];
-            }, $results);
+            $nodesSources = $results->getResultItems();
         } else {
             $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
             $searchHandler->setDisplayNonPublishedNodes(true);
