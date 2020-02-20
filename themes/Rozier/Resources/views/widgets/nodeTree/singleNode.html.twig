@@ -108,7 +108,6 @@ type|lower,
                 {% for tag in node.tags %}
                     {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
                     {% set tagName = ttag[0].name|default(tag.tagName) %}
-
                     <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName -}}</a>
                 {% endfor %}
             </div>
@@ -133,7 +132,7 @@ type|lower,
     {% if not mainNodeTree and not nodeTree.isStackTree %}
         {% set subListClasses = subListClasses|merge(['children-node-widget-list']) %}
     {% endif %}
-    {% if node.isHidingChildren or 
+    {% if node.isHidingChildren or
         node.nodeType.isHidingNodes or
         node.getChildren.count == 0 %}
         {% set subListClasses = subListClasses|merge(['empty']) %}

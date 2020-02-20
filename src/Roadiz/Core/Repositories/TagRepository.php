@@ -401,6 +401,31 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * @param Node             $parentNode
+     * @param Translation|null $translation
+     *
+     * @return mixed
+     */
+    public function findAllLinkedToNodeChildren(Node $parentNode, ?Translation $translation = null)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('t')
+            ->innerJoin('t.nodes', 'n')
+            ->innerJoin('n.parent', 'pn')
+            ->andWhere($qb->expr()->eq('pn', ':parentNode'))
+            ->setParameter('parentNode', $parentNode)
+        ;
+        if (null !== $translation) {
+            $qb->innerJoin('n.nodeSources', 'ns')
+                ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+                ->setParameter('translation', $translation);
+        }
+        return $qb->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * @param Translation $translation
      * @param Tag $parent
      *

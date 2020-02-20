@@ -104,7 +104,18 @@ class NodesTreesController extends RozierApp
 
         if (null !== $node) {
             $this->assignation['node'] = $node;
+
+            if ($node->isHidingChildren()) {
+                $this->assignation['availableTags'] = $this->get('em')->getRepository(Tag::class)->findAllLinkedToNodeChildren(
+                    $node,
+                    $translation
+                );
+            }
             $this->assignation['source'] = $node->getNodeSourcesByTranslation($translation)->first();
+            $availableTranslations = $this->get('em')
+                ->getRepository(Translation::class)
+                ->findAvailableTranslationsForNode($node);
+            $this->assignation['available_translations'] = $availableTranslations;
         }
         $this->assignation['translation'] = $translation;
         $this->assignation['specificNodeTree'] = $widget;
