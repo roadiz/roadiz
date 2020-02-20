@@ -113,7 +113,6 @@ class AjaxNodesExplorerController extends AbstractAjaxController
                 $arrayFilter['nodeType'] = $nodeTypes;
             }
         }
-
         return $arrayFilter;
     }
 
@@ -158,34 +157,24 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
         $arrayFilter['translation'] = $this->get('defaultTranslation');
-        $results = $searchHandler->searchWithHighlight(
-                $request->get('search'),
-                $arrayFilter,
-                $this->getItemPerPage(),
-                true,
-                10000,
-                $currentPage
-            )
-        ;
-        $resultsCount = $searchHandler->count(
-                $request->get('search'),
-                $arrayFilter,
-                0,
-                true
-            );
-        $pageCount = ceil($resultsCount/$this->getItemPerPage());
-        $nodeSources = array_map(function ($result) {
-            return $result['nodeSource'];
-        }, $results);
-        $nodesArray = $this->normalizeNodes($nodeSources);
+        $results = $searchHandler->search(
+            $request->get('search'),
+            $arrayFilter,
+            $this->getItemPerPage(),
+            true,
+            10000000,
+            $currentPage
+        );
+        $pageCount = ceil($results->getResultCount()/$this->getItemPerPage());
+        $nodesArray = $this->normalizeNodes($results);
         return [
             'status' => 'confirm',
             'statusCode' => 200,
             'nodes' => $nodesArray,
-            'nodesCount' => $resultsCount,
+            'nodesCount' => $results->getResultCount(),
             'filters' => [
                 'currentPage' => $currentPage,
-                'itemCount' => $resultsCount,
+                'itemCount' => $results->getResultCount(),
                 'itemPerPage' => $this->getItemPerPage(),
                 'pageCount' => $pageCount,
                 'nextPage' => $currentPage < $pageCount ? $currentPage + 1 : null,

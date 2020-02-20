@@ -227,7 +227,7 @@ abstract class AbstractSearchHandler
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      * @param int $page
      *
-     * @return SolrSearchResults Return a array of **tuple** for each result.
+     * @return SolrSearchResults Return a SolrSearchResults iterable object.
      * [document, highlighting] for Documents and [nodeSource, highlighting]
      */
     public function searchWithHighlight(
