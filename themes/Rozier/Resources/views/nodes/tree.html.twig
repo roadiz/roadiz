@@ -48,7 +48,7 @@
     <article class="content content-node-tree">
         {% if availableTags %}
             <div class="available-nodetree-tags uk-visible-large">
-                <a href="?" class="uk-badge"><i class="uk-icon-tag"></i> {{ 'all'|trans -}}</a>
+                <a href="?" class="uk-badge">{{- 'see_all'|trans -}}</a>
                 {% for tag in availableTags %}
                     {% set ttag = tag.translatedTagsByTranslation(translation) %}
                     {% set tagName = ttag[0].name|default(tag.tagName) %}
