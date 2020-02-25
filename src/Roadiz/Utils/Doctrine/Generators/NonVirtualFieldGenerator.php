@@ -83,7 +83,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
 
         return '
     /**
-     * ' . $this->field->getLabel() .'
+     * ' . implode("\n     * ", $this->getFieldAutodoc()) .'
      *
      * @Gedmo\Versioned
      * @ORM\Column(' . static::flattenORMParameters($ormParams) . ')

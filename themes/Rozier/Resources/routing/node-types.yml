@@ -29,6 +29,10 @@ nodesTypesExportAllPage:
     path:     /export/all
     defaults:
         _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportAllAction
+nodesTypesExportDocumentationPage:
+    path:     /export/documentation
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportDocumentationAction
 
 nodeTypesSchemaUpdate:
     path:     /update-schema

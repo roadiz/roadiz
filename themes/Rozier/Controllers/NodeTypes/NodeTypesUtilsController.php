@@ -35,6 +35,8 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Utils\Markdown\Generators\DocumentationGenerator;
+use RZ\Roadiz\Utils\Markdown\Generators\NodeTypeGenerator;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -86,6 +88,53 @@ class NodeTypesUtilsController extends RozierApp
             ],
             true
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return BinaryFileResponse
+     */
+    public function exportDocumentationAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
+
+        $documentationGenerator = new DocumentationGenerator($this->get('nodeTypesBag'), $this->get('translator'));
+
+        $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
+        $zipArchive = new ZipArchive();
+        $zipArchive->open($tmpfname, ZipArchive::CREATE);
+
+        $zipArchive->addFromString(
+            '_sidebar.md',
+            $documentationGenerator->getNavBar()
+        );
+
+        /** @var NodeTypeGenerator $reachableTypeGenerator */
+        foreach ($documentationGenerator->getReachableTypeGenerators() as $reachableTypeGenerator) {
+            $zipArchive->addFromString(
+                $reachableTypeGenerator->getPath(),
+                $reachableTypeGenerator->getContents()
+            );
+        }
+
+        /** @var NodeTypeGenerator $nonReachableTypeGenerator */
+        foreach ($documentationGenerator->getNonReachableTypeGenerators() as $nonReachableTypeGenerator) {
+            $zipArchive->addFromString(
+                $nonReachableTypeGenerator->getPath(),
+                $nonReachableTypeGenerator->getContents()
+            );
+        }
+
+        $zipArchive->close();
+        $response = new BinaryFileResponse($tmpfname);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'documentation-' . date('Y-m-d-H-i-s') . '.zip'
+        );
+        $response->prepare($request);
+
+        return $response;
     }
 
     /**

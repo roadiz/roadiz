@@ -28,9 +28,11 @@ declare(strict_types=1);
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\Utils\Markdown\Generators;
 
+use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Symfony\Component\Translation\Translator;
 
 abstract class AbstractFieldGenerator
 {
@@ -38,43 +40,42 @@ abstract class AbstractFieldGenerator
      * @var NodeTypeField
      */
     protected $field;
+    /**
+     * @var Translator
+     */
+    protected $translator;
+    /**
+     * @var NodeTypes
+     */
+    protected $nodeTypesBag;
 
     /**
      * AbstractFieldGenerator constructor.
+     *
      * @param NodeTypeField $field
+     * @param NodeTypes     $nodeTypesBag
+     * @param Translator    $translator
      */
-    public function __construct(NodeTypeField $field)
+    public function __construct(NodeTypeField $field, NodeTypes $nodeTypesBag, Translator $translator)
     {
         $this->field = $field;
+        $this->nodeTypesBag = $nodeTypesBag;
+        $this->translator = $translator;
     }
 
-    /**
-     * @param array $ormParams
-     *
-     * @return string
-     */
-    public static function flattenORMParameters(array $ormParams): string
-    {
-        $flatParams = [];
-        foreach ($ormParams as $key => $value) {
-            $flatParams[] = $key . '=' . $value;
-        }
-
-        return implode(', ', $flatParams);
-    }
+    abstract public function getContents(): string;
 
     /**
-     * Generate PHP code for current doctrine field.
-     *
      * @return string
      */
-    public function getField(): string
+    public function getIntroduction(): string
     {
-        return $this->getFieldAnnotation().
-            $this->getFieldDeclaration().
-            $this->getFieldGetter().
-            $this->getFieldAlternativeGetter().
-            $this->getFieldSetter().PHP_EOL;
+        return implode("\n", [
+            '### ' . $this->field->getLabel(),
+            '',
+            '' . $this->translator->trans(NodeTypeField::$typeToHuman[$this->field->getType()]) . '   ',
+            '`' . $this->field->getName() . '` ' . $this->field->getDescription(),
+        ]);
     }
 
     /**
@@ -96,85 +97,5 @@ abstract class AbstractFieldGenerator
             $docs[] = 'Group: ' . $this->field->getGroupName().'.';
         }
         return $docs;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getFieldAnnotation(): string
-    {
-        return '
-    /**
-     * ' . implode("\n     * ", $this->getFieldAutodoc()) .'
-     *
-     * (Virtual field, this var is a buffer)
-     * @Serializer\Exclude
-     */'.PHP_EOL;
-    }
-
-    /**
-     * Generate PHP property declaration block.
-     */
-    protected function getFieldDeclaration(): string
-    {
-        /*
-         * Buffer var to get referenced entities (documents, nodes, cforms, doctrine entities)
-         */
-        return '    private $'.$this->field->getVarName().';'.PHP_EOL;
-    }
-
-    /**
-     * Generate PHP alternative getter method block.
-     *
-     * @return string
-     */
-    abstract protected function getFieldGetter(): string;
-
-    /**
-     * Generate PHP alternative getter method block.
-     *
-     * @return string
-     */
-    protected function getFieldAlternativeGetter(): string
-    {
-        return '';
-    }
-
-    /**
-     * Generate PHP setter method block.
-     *
-     * @return string
-     */
-    protected function getFieldSetter(): string
-    {
-        return '';
-    }
-
-    /**
-     * Generate PHP annotation block for Doctrine table indexes.
-     *
-     * @return string
-     */
-    public function getFieldIndex(): string
-    {
-        return '';
-    }
-
-    /**
-     * Generate PHP property initialization for class constructor.
-     *
-     * @return string
-     */
-    public function getFieldConstructorInitialization(): string
-    {
-        return '';
-    }
-
-    /**
-     * @return bool
-     */
-    protected function excludeFromSerialization()
-    {
-        return false;
     }
 }

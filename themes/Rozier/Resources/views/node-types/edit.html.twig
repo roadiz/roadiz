@@ -4,8 +4,11 @@
 <section class="content-global manage-node-types">
 
     <header class="content-header header-node-types header-node-types-edit">
-        <h1 class="content-title node-types-edit-title">{{ "edit.nodeType.%name%"|trans({'%name%': nodeType.getDisplayName})|truncate(25, true, '[…]') }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('nodeTypesHomePage') }}" title="{% trans %}back_to.nodeTypes{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+        <h1 class="content-title node-types-edit-title">{{ "edit.nodeType.%name%"|trans({'%name%': nodeType.displayName})|truncate(25, true, '[…]') }}</h1>
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('nodeTypesHomePage') }}"
+           title="{% trans %}back_to.nodeTypes{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
 
         {% include '@Rozier/node-types/navBar.html.twig' with {
             nodeType: nodeType,
