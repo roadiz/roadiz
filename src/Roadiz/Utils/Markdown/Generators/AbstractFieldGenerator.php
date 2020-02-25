@@ -107,5 +107,4 @@ abstract class AbstractFieldGenerator
 
         return implode("\n", $lines) . "\n";
     }
-
 }
