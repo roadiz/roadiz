@@ -21,6 +21,6 @@ final class DefaultValuedFieldGenerator extends AbstractFieldGenerator
                 '`' . $value . '`',
                 ''
             ]);
-        }, explode(',', $this->field->getDefaultValues())));
+        }, explode(',', $this->field->getDefaultValues()))) . "\n";
     }
 }

@@ -22,9 +22,9 @@ final class ChildrenNodeFieldGenerator extends AbstractFieldGenerator
     private function getChildrenNodeTypes(): array
     {
         if (null !== $this->field->getDefaultValues()) {
-            return array_map(function (string $nodeTypeName) {
+            return array_filter(array_map(function (string $nodeTypeName) {
                 return $this->nodeTypesBag->get($nodeTypeName);
-            }, explode(',', $this->field->getDefaultValues()));
+            }, explode(',', $this->field->getDefaultValues())));
         }
         return [];
     }
@@ -32,8 +32,11 @@ final class ChildrenNodeFieldGenerator extends AbstractFieldGenerator
     private function getAvailableChildren(): string
     {
         return implode("\n", array_map(function (NodeType $nodeType) {
-            return implode("\n\n", [
-                '* ' . trim($nodeType->getDisplayName()),
+            $nodeTypeGenerator = $this->markdownGeneratorFactory->createForNodeType($nodeType);
+            return implode("\n", [
+                '##### ' . $nodeTypeGenerator->getMenuEntry(),
+                $nodeType->getDescription(),
+                ''
             ]);
         }, $this->getChildrenNodeTypes())) . "\n";
     }

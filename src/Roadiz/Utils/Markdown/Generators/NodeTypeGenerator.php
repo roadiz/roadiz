@@ -48,15 +48,17 @@ class NodeTypeGenerator
      */
     protected $translator;
     /**
+     * @var MarkdownGeneratorFactory
+     */
+    protected $markdownGeneratorFactory;
+    /**
      * @var NodeType
      */
     private $nodeType;
-
     /**
      * @var array
      */
     private $fieldGenerators;
-
     /**
      * @var NodeTypes
      */
@@ -69,33 +71,21 @@ class NodeTypeGenerator
      * @param NodeTypes  $nodeTypesBag
      * @param Translator $translator
      */
-    public function __construct(NodeType $nodeType, NodeTypes $nodeTypesBag, Translator $translator)
-    {
+    public function __construct(
+        NodeType $nodeType,
+        NodeTypes $nodeTypesBag,
+        Translator $translator,
+        MarkdownGeneratorFactory $markdownGeneratorFactory
+    ) {
         $this->nodeType = $nodeType;
         $this->nodeTypesBag = $nodeTypesBag;
         $this->fieldGenerators = [];
         $this->translator = $translator;
+        $this->markdownGeneratorFactory = $markdownGeneratorFactory;
 
         /** @var NodeTypeField $field */
         foreach ($this->nodeType->getFields() as $field) {
-            $this->fieldGenerators[] = $this->getFieldGenerator($field);
-        }
-    }
-
-    /**
-     * @param NodeTypeField $field
-     * @return AbstractFieldGenerator
-     */
-    protected function getFieldGenerator(NodeTypeField $field): AbstractFieldGenerator
-    {
-        switch ($field->getType()) {
-            case NodeTypeField::CHILDREN_T:
-                return new ChildrenNodeFieldGenerator($field, $this->nodeTypesBag, $this->translator);
-            case NodeTypeField::MULTIPLE_T:
-            case NodeTypeField::ENUM_T:
-                return new DefaultValuedFieldGenerator($field, $this->nodeTypesBag, $this->translator);
-            default:
-                return new CommonFieldGenerator($field, $this->nodeTypesBag, $this->translator);
+            $this->fieldGenerators[] = $this->markdownGeneratorFactory->createForNodeTypeField($field);
         }
     }
 
@@ -125,11 +115,27 @@ class NodeTypeGenerator
 
     protected function getIntroduction(): string
     {
-        return implode("\n", [
+        $lines = [
             '# ' . $this->nodeType->getDisplayName(),
+        ];
+        if (!empty($this->nodeType->getDescription())) {
+            $lines[] = $this->nodeType->getDescription();
+        }
+        $lines = array_merge($lines, [
             '',
-            '`' . $this->nodeType->getName() . '` ' . $this->nodeType->getDescription(),
+            '|     |     |',
+            '| --- | --- |',
+            '| **' . $this->translator->trans('technical_name') . '** | `' . $this->nodeType->getName() . '` |',
         ]);
+
+        if ($this->nodeType->isPublishable()) {
+            $lines[] = '| **' . $this->translator->trans('publishable') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isPublishable()) . '* |';
+        }
+        if (!$this->nodeType->isVisible()) {
+            $lines[] = '| **' . $this->translator->trans('visible') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isVisible()) . '* |';
+        }
+
+        return implode("\n", $lines);
     }
 
     protected function getFieldsContents(): string
