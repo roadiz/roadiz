@@ -94,13 +94,13 @@ class TwigServiceProvider implements ServiceProviderInterface
             $kernel = $c['kernel'];
             $vendorDir = realpath($kernel->getVendorDir());
 
-            $loader = new FilesystemLoader([
-                // Default Form extension templates
-                $vendorDir . '/symfony/twig-bridge/Resources/views/Form',
-                // Documents rendering templates
-                $vendorDir . '/roadiz/documents/src/Roadiz/Resources/views',
-                CmsController::getViewsFolder(),
-            ]);
+            $loader = new FilesystemLoader([]);
+            $loader->addPath($vendorDir . '/symfony/twig-bridge/Resources/views/Form');
+            $loader->addPath($vendorDir . '/symfony/twig-bridge/Resources/views/Form', 'Twig');
+            $loader->addPath($vendorDir . '/roadiz/documents/src/Roadiz/Resources/views');
+            $loader->addPath($vendorDir . '/roadiz/documents/src/Roadiz/Resources/views', 'Documents');
+            $loader->addPath(CmsController::getViewsFolder());
+            $loader->addPath(CmsController::getViewsFolder(), 'Cms');
 
             return $loader;
         };
