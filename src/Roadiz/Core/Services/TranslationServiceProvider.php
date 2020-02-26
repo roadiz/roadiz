@@ -181,7 +181,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
 
         $this->addTranslatorResource(
             $translator,
-            dirname(__FILE__) . '/../../Utils/Markdown/Resources/translations',
+            dirname(__FILE__) . '/../../Documentation/Resources/translations',
             'xlf',
             $locale
         );
