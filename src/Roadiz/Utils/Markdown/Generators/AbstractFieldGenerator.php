@@ -48,19 +48,29 @@ abstract class AbstractFieldGenerator
      * @var NodeTypes
      */
     protected $nodeTypesBag;
+    /**
+     * @var MarkdownGeneratorFactory
+     */
+    protected $markdownGeneratorFactory;
 
     /**
      * AbstractFieldGenerator constructor.
      *
-     * @param NodeTypeField $field
-     * @param NodeTypes     $nodeTypesBag
-     * @param Translator    $translator
+     * @param MarkdownGeneratorFactory $fieldGeneratorFactory
+     * @param NodeTypeField            $field
+     * @param NodeTypes                $nodeTypesBag
+     * @param Translator               $translator
      */
-    public function __construct(NodeTypeField $field, NodeTypes $nodeTypesBag, Translator $translator)
-    {
+    public function __construct(
+        MarkdownGeneratorFactory $fieldGeneratorFactory,
+        NodeTypeField $field,
+        NodeTypes $nodeTypesBag,
+        Translator $translator
+    ) {
         $this->field = $field;
         $this->nodeTypesBag = $nodeTypesBag;
         $this->translator = $translator;
+        $this->markdownGeneratorFactory = $fieldGeneratorFactory;
     }
 
     abstract public function getContents(): string;
@@ -70,32 +80,31 @@ abstract class AbstractFieldGenerator
      */
     public function getIntroduction(): string
     {
-        return implode("\n", [
+        $lines = [
             '### ' . $this->field->getLabel(),
-            '',
-            '' . $this->translator->trans(NodeTypeField::$typeToHuman[$this->field->getType()]) . '   ',
-            '`' . $this->field->getName() . '` ' . $this->field->getDescription(),
-        ]);
-    }
-
-    /**
-     * @return array<string>
-     */
-    protected function getFieldAutodoc(): array
-    {
-        $docs = [
-            $this->field->getLabel().'.',
-            ''
         ];
         if (!empty($this->field->getDescription())) {
-            $docs[] = $this->field->getDescription().'.';
+            $lines[] = $this->field->getDescription();
         }
-        if (!empty($this->field->getDefaultValues())) {
-            $docs[] = 'Default values: ' . str_replace("\n", "\n     *     ", $this->field->getDefaultValues());
-        }
+        $lines = array_merge($lines, [
+            '',
+            '|     |     |',
+            '| --- | --- |',
+            '| **' . $this->translator->trans('type') . '** | ' . $this->translator->trans(NodeTypeField::$typeToHuman[$this->field->getType()]) .' |',
+            '| **' . $this->translator->trans('technical_name') . '** | `' . $this->field->getVarName() . '` |',
+            '| **' . $this->translator->trans('universal') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->isUniversal()) . '* |',
+        ]);
+
         if (!empty($this->field->getGroupName())) {
-            $docs[] = 'Group: ' . $this->field->getGroupName().'.';
+            $lines[] = '| **' . $this->translator->trans('group') . '** | ' . $this->field->getGroupName() . ' |';
         }
-        return $docs;
+        if ($this->field->getExcludeFromSearch()) {
+            $lines[] = '| **' . $this->translator->trans('excluded_from_search') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->getExcludeFromSearch()) . '* |';
+        }
+        if (!$this->field->isVisible()) {
+            $lines[] = '| **' . $this->translator->trans('visible') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->isVisible()) . '* |';
+        }
+
+        return implode("\n", $lines) . "\n";
     }
 }

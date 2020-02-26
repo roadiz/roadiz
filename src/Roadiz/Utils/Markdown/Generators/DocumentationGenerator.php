@@ -28,6 +28,10 @@ class DocumentationGenerator
      * @var Translator
      */
     private $translator;
+    /**
+     * @var MarkdownGeneratorFactory
+     */
+    private $markdownGeneratorFactory;
 
     /**
      * DocumentationGenerator constructor.
@@ -39,6 +43,7 @@ class DocumentationGenerator
     {
         $this->nodeTypesBag = $nodeTypesBag;
         $this->translator = $translator;
+        $this->markdownGeneratorFactory = new MarkdownGeneratorFactory($nodeTypesBag, $translator);
     }
 
     protected function getReachableTypes(): array
@@ -62,7 +67,7 @@ class DocumentationGenerator
     {
         if (null === $this->reachableTypeGenerators) {
             $this->reachableTypeGenerators = array_map(function (NodeType $nodeType) {
-                return new NodeTypeGenerator($nodeType, $this->nodeTypesBag, $this->translator);
+                return $this->markdownGeneratorFactory->createForNodeType($nodeType);
             }, $this->getReachableTypes());
         }
         return $this->reachableTypeGenerators;
@@ -75,7 +80,7 @@ class DocumentationGenerator
     {
         if (null === $this->nonReachableTypeGenerators) {
             $this->nonReachableTypeGenerators = array_map(function (NodeType $nodeType) {
-                return new NodeTypeGenerator($nodeType, $this->nodeTypesBag, $this->translator);
+                return $this->markdownGeneratorFactory->createForNodeType($nodeType);
             }, $this->getNonReachableTypes());
         }
         return $this->nonReachableTypeGenerators;

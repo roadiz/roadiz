@@ -90,8 +90,8 @@
         "phpstan/phpstan": "^0.11.19",
         "phpstan/phpstan-doctrine": "^0.11.6",
         "sentry/sentry": "^2.2",
-        "php-http/curl-client": "^2.1",
-        "guzzlehttp/psr7": "^1.6"
+        "guzzlehttp/psr7": "^1.6",
+        "php-http/guzzle6-adapter": "^2.0"
     },
     "suggest": {
         "ext-apcu": "Allows APCU system cache",
