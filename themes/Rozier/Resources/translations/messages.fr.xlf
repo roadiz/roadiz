@@ -6958,6 +6958,11 @@
             <target state="translated">Exclure de la recherche</target>
             <note>Node type field : Input Label.</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="export.documentation">
+            <source>export.documentation</source>
+            <target state="translated">Exporter la documentation</target>
+            <note>Button label, for exporting node-type Markdown documentation</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

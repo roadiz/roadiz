@@ -5,13 +5,13 @@ namespace RZ\Roadiz\Utils\Markdown\Generators;
 
 use RZ\Roadiz\Core\Entities\NodeType;
 
-final class ChildrenNodeFieldGenerator extends AbstractFieldGenerator
+class ChildrenNodeFieldGenerator extends AbstractFieldGenerator
 {
     public function getContents(): string
     {
         return implode("\n\n", [
             $this->getIntroduction(),
-            '#### ' . $this->translator->trans('available_children_blocks'),
+            '#### ' . $this->translator->trans('docs.available_children_blocks'),
             $this->getAvailableChildren()
         ]);
     }
@@ -19,17 +19,17 @@ final class ChildrenNodeFieldGenerator extends AbstractFieldGenerator
     /**
      * @return NodeType[]
      */
-    private function getChildrenNodeTypes(): array
+    protected function getChildrenNodeTypes(): array
     {
         if (null !== $this->field->getDefaultValues()) {
             return array_filter(array_map(function (string $nodeTypeName) {
-                return $this->nodeTypesBag->get($nodeTypeName);
+                return $this->nodeTypesBag->get(trim($nodeTypeName));
             }, explode(',', $this->field->getDefaultValues())));
         }
         return [];
     }
 
-    private function getAvailableChildren(): string
+    protected function getAvailableChildren(): string
     {
         return implode("\n", array_map(function (NodeType $nodeType) {
             $nodeTypeGenerator = $this->markdownGeneratorFactory->createForNodeType($nodeType);

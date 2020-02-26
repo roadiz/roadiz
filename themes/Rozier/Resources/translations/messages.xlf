@@ -7122,7 +7122,11 @@
             <target></target>
             <note>Node type field : Input Label.</note>
         </trans-unit>
-
+        <trans-unit xml:space="preserve" id="export.documentation">
+            <source>export.documentation</source>
+            <target></target>
+            <note>Button label, for exporting node-type Markdown documentation</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

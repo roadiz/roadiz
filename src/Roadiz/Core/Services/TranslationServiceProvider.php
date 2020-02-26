@@ -178,6 +178,13 @@ class TranslationServiceProvider implements ServiceProviderInterface
             'xlf',
             $locale
         );
+
+        $this->addTranslatorResource(
+            $translator,
+            dirname(__FILE__) . '/../../Utils/Markdown/Resources/translations',
+            'xlf',
+            $locale
+        );
         $this->addTranslatorResource(
             $translator,
             CmsController::getTranslationsFolder(),

@@ -108,9 +108,9 @@ class DocumentationGenerator
         }
 
         return implode("\n", [
-            '* ' . $this->translator->trans('pages'),
+            '* ' . $this->translator->trans('docs.pages'),
             "    * " . implode("\n    * ", $pages),
-            '* ' . $this->translator->trans('blocks'),
+            '* ' . $this->translator->trans('docs.blocks'),
             "    * " . implode("\n    * ", $blocks)
         ]);
     }

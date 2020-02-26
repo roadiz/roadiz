@@ -17,7 +17,7 @@ final class DefaultValuedFieldGenerator extends AbstractFieldGenerator
     {
         return implode("\n", array_map(function (string $value) {
             return implode("\n", [
-                '#### ' . trim($this->translator->trans($value)),
+                '#### ' . $this->translator->trans(trim($value)),
                 '`' . $value . '`',
                 ''
             ]);

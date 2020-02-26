@@ -30,7 +30,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Markdown\Generators;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -67,9 +66,10 @@ class NodeTypeGenerator
     /**
      * EntityGenerator constructor.
      *
-     * @param NodeType   $nodeType
-     * @param NodeTypes  $nodeTypesBag
-     * @param Translator $translator
+     * @param NodeType                 $nodeType
+     * @param NodeTypes                $nodeTypesBag
+     * @param Translator               $translator
+     * @param MarkdownGeneratorFactory $markdownGeneratorFactory
      */
     public function __construct(
         NodeType $nodeType,
@@ -108,7 +108,7 @@ class NodeTypeGenerator
     {
         return implode("\n\n", [
             $this->getIntroduction(),
-            '## ' . $this->translator->trans('fields'),
+            '## ' . $this->translator->trans('docs.fields'),
             $this->getFieldsContents()
         ]);
     }
@@ -125,14 +125,14 @@ class NodeTypeGenerator
             '',
             '|     |     |',
             '| --- | --- |',
-            '| **' . $this->translator->trans('technical_name') . '** | `' . $this->nodeType->getName() . '` |',
+            '| **' . $this->translator->trans('docs.technical_name') . '** | `' . $this->nodeType->getName() . '` |',
         ]);
 
         if ($this->nodeType->isPublishable()) {
-            $lines[] = '| **' . $this->translator->trans('publishable') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isPublishable()) . '* |';
+            $lines[] = '| **' . $this->translator->trans('docs.publishable') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isPublishable()) . '* |';
         }
         if (!$this->nodeType->isVisible()) {
-            $lines[] = '| **' . $this->translator->trans('visible') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isVisible()) . '* |';
+            $lines[] = '| **' . $this->translator->trans('docs.visible') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isVisible()) . '* |';
         }
 
         return implode("\n", $lines);

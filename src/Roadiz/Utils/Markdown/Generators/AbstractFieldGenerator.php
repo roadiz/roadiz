@@ -90,19 +90,19 @@ abstract class AbstractFieldGenerator
             '',
             '|     |     |',
             '| --- | --- |',
-            '| **' . $this->translator->trans('type') . '** | ' . $this->translator->trans(NodeTypeField::$typeToHuman[$this->field->getType()]) .' |',
-            '| **' . $this->translator->trans('technical_name') . '** | `' . $this->field->getVarName() . '` |',
-            '| **' . $this->translator->trans('universal') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->isUniversal()) . '* |',
+            '| **' . $this->translator->trans('docs.type') . '** | ' . $this->translator->trans(NodeTypeField::$typeToHuman[$this->field->getType()]) .' |',
+            '| **' . $this->translator->trans('docs.technical_name') . '** | `' . $this->field->getVarName() . '` |',
+            '| **' . $this->translator->trans('docs.universal') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->isUniversal()) . '* |',
         ]);
 
         if (!empty($this->field->getGroupName())) {
-            $lines[] = '| **' . $this->translator->trans('group') . '** | ' . $this->field->getGroupName() . ' |';
+            $lines[] = '| **' . $this->translator->trans('docs.group') . '** | ' . $this->field->getGroupName() . ' |';
         }
         if ($this->field->getExcludeFromSearch()) {
-            $lines[] = '| **' . $this->translator->trans('excluded_from_search') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->getExcludeFromSearch()) . '* |';
+            $lines[] = '| **' . $this->translator->trans('docs.excluded_from_search') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->getExcludeFromSearch()) . '* |';
         }
         if (!$this->field->isVisible()) {
-            $lines[] = '| **' . $this->translator->trans('visible') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->isVisible()) . '* |';
+            $lines[] = '| **' . $this->translator->trans('docs.visible') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->field->isVisible()) . '* |';
         }
 
         return implode("\n", $lines) . "\n";

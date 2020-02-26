@@ -60,7 +60,7 @@ final class MarkdownGeneratorFactory
 
     public function getHumanBool(bool $bool): string
     {
-        return $bool ? $this->translator->trans('yes') : $this->translator->trans('no');
+        return $bool ? $this->translator->trans('docs.yes') : $this->translator->trans('docs.no');
     }
 
     /**
@@ -86,6 +86,8 @@ final class MarkdownGeneratorFactory
     public function createForNodeTypeField(NodeTypeField $field): AbstractFieldGenerator
     {
         switch ($field->getType()) {
+            case NodeTypeField::NODES_T:
+                return new NodeReferencesFieldGenerator($this, $field, $this->nodeTypesBag, $this->translator);
             case NodeTypeField::CHILDREN_T:
                 return new ChildrenNodeFieldGenerator($this, $field, $this->nodeTypesBag, $this->translator);
             case NodeTypeField::MULTIPLE_T:
