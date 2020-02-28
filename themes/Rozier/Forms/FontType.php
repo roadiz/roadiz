@@ -113,6 +113,7 @@ class FontType extends AbstractType
                             'application/x-font-ttf',
                             'application/vnd.ms-opentype',
                             'application/font-sfnt',
+                            'font/sfnt',
                             Font::MIME_DEFAULT,
                         ],
                         'mimeTypesMessage' => 'file.is_not_a.valid.font.file',
