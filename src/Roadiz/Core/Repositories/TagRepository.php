@@ -414,6 +414,7 @@ class TagRepository extends EntityRepository
             ->innerJoin('n.parent', 'pn')
             ->andWhere($qb->expr()->eq('pn', ':parentNode'))
             ->setParameter('parentNode', $parentNode)
+            ->addOrderBy('t.tagName', 'ASC')
         ;
         if (null !== $translation) {
             $qb->innerJoin('n.nodeSources', 'ns')
