@@ -54,7 +54,7 @@
         {% if headerImage %}
             {% set previewImageUrl = headerImage|url(imageFormats.shareImage) %}
         {% else %}
-            {% set previewImageUrl = head.absoluteResourcesUrl ~ 'img/share.png' %}
+            {% set previewImageUrl = absolute_url(asset('img/share.png', 'DefaultTheme')) %}
         {% endif %}
 
         {# Facebook #}
