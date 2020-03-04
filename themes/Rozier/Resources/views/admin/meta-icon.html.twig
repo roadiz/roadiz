@@ -7,9 +7,9 @@
           sizes="16x16"
           href="{{ themeServices.adminImage|url({absolute: true, fit:'16x16'}) }}">
 {% else %}
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ head.resourcesUrl }}assets/img/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ head.resourcesUrl }}assets/img/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ head.resourcesUrl }}assets/img/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/apple-touch-icon.png', 'Rozier') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('assets/img/favicon-32x32.png', 'Rozier') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/img/favicon-16x16.png', 'Rozier') }}">
 {% endif %}
 {% if themeServices.adminImage and themeServices.adminImage.mimeType == 'image/svg+xml' and head.mainColor %}
     <link rel="mask-icon" href="{{ themeServices.adminImage|url({absolute: true}) }}" color="{{ head.mainColor }}">

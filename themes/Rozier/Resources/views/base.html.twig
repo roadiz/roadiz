@@ -19,7 +19,7 @@
                 <link rel="stylesheet" href="{{ additionalStylesheet.path }}" />
             {% endfor %}
         {% endif %}
-        <script src="{{ head.resourcesUrl }}/vendor/modernizr.custom.50380.js"></script>
+        <script src="{{ asset('vendor/modernizr.custom.50380.js', 'Rozier') }}"></script>
     </head>
     <body>
         <div id="app"></div>
@@ -84,7 +84,7 @@
         <script>
             var temp = {
                 'baseUrl':           '{{ head.baseUrl }}',
-                'resourcesUrl':      '{{ head.resourcesUrl }}',
+                'resourcesUrl':      '{{ asset('', 'Rozier') }}',
                 'ajaxToken':         '{{ head.ajaxToken }}',
                 'mainColor':         '{{ head.mainColor }}',
                 'mapsStyle':         {% if head.mapsStyle %}{{ head.mapsStyle|raw }}{% else %}[]{% endif %},
@@ -216,13 +216,13 @@
             var RozierRoot = temp;
         </script>
         {% if head.devMode %}
-            <script src="{{ head.resourcesUrl }}vendor/vue.js"></script>
-            <script src="{{ head.resourcesUrl }}vendor/vuex.js"></script>
-            <script src="{{ head.resourcesUrl }}vendor/jquery.js"></script>
+            <script src="{{ asset('vendor/vue.js', 'Rozier') }}"></script>
+            <script src="{{ asset('vendor/vuex.js', 'Rozier') }}"></script>
+            <script src="{{ asset('vendor/jquery.js', 'Rozier') }}"></script>
         {% else %}
-            <script src="{{ head.resourcesUrl }}vendor/vue.min.js"></script>
-            <script src="{{ head.resourcesUrl }}vendor/vuex.min.js"></script>
-            <script src="{{ head.resourcesUrl }}vendor/jquery.min.js"></script>
+            <script src="{{ asset('vendor/vue.min.js', 'Rozier') }}"></script>
+            <script src="{{ asset('vendor/vuex.min.js', 'Rozier') }}"></script>
+            <script src="{{ asset('vendor/jquery.min.js', 'Rozier') }}"></script>
         {% endif %}
 
         {# JS scripts inclusions / Using webpack #}

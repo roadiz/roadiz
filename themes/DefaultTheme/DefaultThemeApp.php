@@ -36,6 +36,9 @@ use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
 use RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
+use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -171,6 +174,14 @@ class DefaultThemeApp extends FrontendController
     public static function setupDependencyInjection(Container $container)
     {
         parent::setupDependencyInjection($container);
+
+        /** @var Packages $packages */
+        $packages = $container['assetPackages'];
+        $packages->addPackage('DefaultTheme', new PathPackage(
+            'themes/DefaultTheme/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
 
         $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
             $extensions->add(new ImageFormatsExtension());

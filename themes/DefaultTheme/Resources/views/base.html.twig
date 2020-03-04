@@ -82,8 +82,7 @@
     {% endblock %}
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    <link rel="stylesheet" href="{{ head.resourcesUrl }}css/style.min.css">
+    <link rel="stylesheet" href="{{ asset('css/style.min.css', 'DefaultTheme') }}">
 
     {#
      # Roadiz font-face CSS (comment it if no fonts available) -----------------
@@ -144,7 +143,7 @@
     window.temp = {
         devMode: {% if head.devMode %}true{% else %}false{% endif %},
         locale: '{{ request.locale }}',
-        resourcesUrl: '{{ head.resourcesUrl }}',
+        resourcesUrl: '{{ asset('', 'DefaultTheme') }}',
         mapsStyle: {% if head.mapsStyle %}JSON.parse('{{ head.mapsStyle|raw }}'){% else %}null{% endif %}
     };
 

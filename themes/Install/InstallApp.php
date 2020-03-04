@@ -29,6 +29,7 @@
  */
 namespace Themes\Install;
 
+use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
@@ -36,6 +37,9 @@ use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -90,6 +94,22 @@ class InstallApp extends AppController
         $this->assignation['head']['grunt'] = include dirname(__FILE__) . '/static/public/config/assets.config.php';
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public static function setupDependencyInjection(Container $container)
+    {
+        parent::setupDependencyInjection($container);
+
+        /** @var Packages $packages */
+        $packages = $container['assetPackages'];
+        $packages->addPackage('Install', new PathPackage(
+            'themes/Install/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
     }
 
     /**
