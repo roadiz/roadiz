@@ -11,14 +11,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
 
         <!-- Styles -->
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/uikit/uikit.gradient.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor//uikit/addons/uikit.addons.min.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}css/vendor/bootstrap3/bootstrap-switch.css" />
-        <link rel="stylesheet" href="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.css[0] }}" />
+        <link rel="stylesheet" href="{{ asset('css/vendor/uikit/uikit.min.css', 'Install') }}" />
+        <link rel="stylesheet" href="{{ asset('css/vendor/uikit/uikit.gradient.min.css', 'Install') }}" />
+        <link rel="stylesheet" href="{{ asset('css/vendor//uikit/addons/uikit.addons.min.css', 'Install') }}" />
+        <link rel="stylesheet" href="{{ asset('css/vendor/bootstrap3/bootstrap-switch.css', 'Install') }}" />
+        <link rel="stylesheet" href="{{ asset('public' ~ head.grunt.staticAssets.global.css[0], 'Install') }}" />
 
         <!-- Modernizr -->
-        <script src="{{ head.resourcesUrl }}js/vendor/modernizr-2.6.2.min.js"></script>
+        <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js', 'Install') }}"></script>
     </head>
     <body class="install {{ request.locale }}" data-locale="{{ request.locale }}" data-session-locale="{{ session.locale }}">
 
@@ -48,26 +48,28 @@
         </div>
 
         <!-- Scripts -->
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="{{ head.resourcesUrl }}js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
+                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+                crossorigin="anonymous"></script>
+        <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-1.10.2.min.js', 'Install') }}"><\/script>')</script>
 
         {% if head.devMode %}
-        <script src="{{ head.resourcesUrl }}js/vendor/bootstrap-switch.js"></script>
-        <script src="{{ head.resourcesUrl }}js/vendor/uikit.min.js"></script>
-        <script src="{{ head.resourcesUrl }}js/plugins.js"></script>
-        <script src="{{ head.resourcesUrl }}js/importFixtures.js"></script>
-        <script src="{{ head.resourcesUrl }}js/selectDatabaseField.js"></script>
-        <script src="{{ head.resourcesUrl }}js/import.js"></script>
-        <script src="{{ head.resourcesUrl }}js/resizeContainer.js"></script>
-        <script src="{{ head.resourcesUrl }}js/main.js"></script>
+        <script src="{{ asset('js/vendor/bootstrap-switch.js', 'Install') }}"></script>
+        <script src="{{ asset('js/vendor/uikit.min.js', 'Install') }}"></script>
+        <script src="{{ asset('js/plugins.js', 'Install') }}"></script>
+        <script src="{{ asset('js/importFixtures.js', 'Install') }}"></script>
+        <script src="{{ asset('js/selectDatabaseField.js', 'Install') }}"></script>
+        <script src="{{ asset('js/import.js', 'Install') }}"></script>
+        <script src="{{ asset('js/resizeContainer.js', 'Install') }}"></script>
+        <script src="{{ asset('js/main.js', 'Install') }}"></script>
         {% else %}
-        <script src="{{ head.resourcesUrl }}public{{ head.grunt.staticAssets.global.js[0] }}"></script>
+        <script src="{{ asset('public' ~ head.grunt.staticAssets.global.js[0], 'Install') }}"></script>
         {% endif %}
 
         <script type="text/javascript">
             var temp = {
                 'baseUrl':      '{{ head.baseUrl }}',
-                'resourcesUrl': '{{ head.resourcesUrl }}'
+                'resourcesUrl': '{{ asset('', 'Install') }}'
             };
         </script>
 

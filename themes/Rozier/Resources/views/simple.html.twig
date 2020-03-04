@@ -17,7 +17,7 @@
                 background-color:{{ head.mainColor }};
             }
         </style>
-        <script src="{{ head.resourcesUrl }}vendor/modernizr.custom.50380.js"></script>
+        <script src="{{ asset('vendor/modernizr.custom.50380.js', 'Rozier') }}"></script>
     </head>
     <body id="simple-body">
         {% include '@Rozier/includes/messages.html.twig' %}
@@ -41,9 +41,9 @@
         </script>
 
         {% if head.devMode %}
-            <script src="{{ head.resourcesUrl }}vendor/jquery.js"></script>
+            <script src="{{ asset('vendor/jquery.js', 'Rozier') }}"></script>
         {% else %}
-            <script src="{{ head.resourcesUrl }}vendor/jquery.min.js"></script>
+            <script src="{{ asset('vendor/jquery.min.js', 'Rozier') }}"></script>
         {% endif %}
 
         {# JS scripts inclusions / Using webpack #}

@@ -1,4 +1,3 @@
-<% var prefix = (htmlWebpackPlugin.options.refreshOnChange) ? '' : '{{ head.resourcesUrl }}' %>
 <% for (var index in htmlWebpackPlugin.files.chunks) { %>
-<script src="<%= prefix %><%= htmlWebpackPlugin.files.chunks[index].entry %>" defer type="text/javascript"></script>
+<script src="{{ asset('<%= htmlWebpackPlugin.files.chunks[index].entry %>', 'Rozier') }}" defer type="text/javascript"></script>
 <% } %>

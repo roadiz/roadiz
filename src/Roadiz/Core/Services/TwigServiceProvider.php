@@ -47,6 +47,7 @@ use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\RoadizExtension;
 use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
+use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
@@ -211,6 +212,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new HttpFoundationExtension($c['requestStack']));
             $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add(new TranslationExtension($c['translator']));
+            $extensions->add(new AssetExtension($c['assetPackages']));
             $extensions->add(new IntlExtension());
             $extensions->add($c['twig.routingExtension']);
             $extensions->add(new TextExtension());

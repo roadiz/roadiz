@@ -37,6 +37,9 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\Utils\Asset\Packages;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -175,6 +178,14 @@ class RozierApp extends BackendController
     public static function setupDependencyInjection(Container $container)
     {
         parent::setupDependencyInjection($container);
+
+        /** @var Packages $packages */
+        $packages = $container['assetPackages'];
+        $packages->addPackage('Rozier', new PathPackage(
+            'themes/Rozier/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
 
         $container->extend('translator', function (Translator $translator, $c) {
             $settingPath = __DIR__ . '/Resources/translations/settings.' . $c['translator.locale'] .  '.xlf';
