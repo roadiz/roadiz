@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Utils\Clearer\EventListener;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Exception\ConnectException;
 use Pimple\Container;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\FilterCacheEvent;
@@ -95,6 +96,12 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
                 );
             }
         } catch (ClientException $e) {
+            $event->addError(
+                $e->getMessage(),
+                static::class,
+                'reverseProxyCache'
+            );
+        } catch (ConnectException $e) {
             $event->addError(
                 $e->getMessage(),
                 static::class,
