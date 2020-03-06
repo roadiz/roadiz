@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\MediaFinders\DailymotionEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\DeezerEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\MixcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SpotifyEmbedFinder;
@@ -60,6 +61,7 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
             return [
                 'youtube' => YoutubeEmbedFinder::class,
                 'vimeo' => VimeoEmbedFinder::class,
+                'deezer' => DeezerEmbedFinder::class,
                 'dailymotion' => DailymotionEmbedFinder::class,
                 'soundcloud' => SoundcloudEmbedFinder::class,
                 'mixcloud' => MixcloudEmbedFinder::class,
@@ -77,6 +79,10 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
 
         $container['embed_finder.vimeo'] = $container->factory(function () {
             return new VimeoEmbedFinder('', false);
+        });
+
+        $container['embed_finder.deezer'] = $container->factory(function () {
+            return new DeezerEmbedFinder('', false);
         });
 
         $container['embed_finder.mixcloud'] = $container->factory(function () {
