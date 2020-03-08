@@ -45,11 +45,9 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler
      */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        if ($exception instanceof BadCredentialsException) {
-            if (null !== $this->logger) {
-                $username = $request->request->get('_username');
-                $this->logger->error($exception->getMessage(), ['username' => $username]);
-            }
+        if (null !== $this->logger) {
+            $username = $request->request->get('_username');
+            $this->logger->error($exception->getMessage(), ['username' => $username]);
         }
 
         return parent::onAuthenticationFailure($request, $exception);
