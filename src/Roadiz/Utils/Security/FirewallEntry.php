@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2016, Ambroise Maupate and Julien Blanchet
  *
@@ -202,7 +203,7 @@ class FirewallEntry
         $this->listeners[] = [new AnonymousAuthenticationListener(
             $this->container['securityTokenStorage'],
             $this->container['config']['security']['secret'],
-            $this->container['kernel']->isDebug() ? $this->container['logger'] : null,
+            $this->container['kernel']->isDebug() ? $this->container['logger.security'] : null,
             $this->container['authenticationManager']
         ), 8888];
         return $this;
@@ -217,7 +218,7 @@ class FirewallEntry
     {
         $this->accessDeniedHandler = new AccessDeniedHandler(
             $this->container['urlGenerator'],
-            $this->container['logger'],
+            $this->container['logger.security'],
             $redirectRoute,
             $redirectParameters
         );
@@ -316,7 +317,7 @@ class FirewallEntry
                 'login_path' => $this->firewallLogin,
                 'failure_path_parameter' => '_failure_path',
             ],
-            $this->container['logger']
+            $this->container['logger.security']
         );
 
         return new UsernamePasswordFormAuthenticationListener(
@@ -330,7 +331,7 @@ class FirewallEntry
             [
                 'check_path' => $this->firewallLoginCheck,
             ],
-            $this->container['logger'],
+            $this->container['logger.security'],
             $this->container['dispatcher'],
             null
         );
@@ -368,7 +369,7 @@ class FirewallEntry
             $this->getAuthenticationEntryPoint($useForward),
             null,
             $this->accessDeniedHandler,
-            $this->container['logger']
+            $this->container['logger.security']
         );
     }
 

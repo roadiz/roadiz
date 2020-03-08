@@ -31,12 +31,12 @@ namespace RZ\Roadiz\Core\Services;
 
 use AM\InterventionRequest\Configuration;
 use AM\InterventionRequest\InterventionRequest;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\Log\LoggerFactory;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 
 /**
@@ -132,12 +132,12 @@ class AssetsServiceProvider implements ServiceProviderInterface
 
         /**
          * @param Container $c
-         * @return Logger
+         * @return LoggerInterface
          */
         $container['interventionRequestLogger'] = function (Container $c) {
-            $log = new Logger('InterventionRequest');
-            $log->pushHandler(new StreamHandler($c['kernel']->getLogDir() . '/interventionRequest.log', Logger::INFO));
-            return $log;
+            /** @var LoggerFactory $factory */
+            $factory = $c[LoggerFactory::class];
+            return $factory->createLogger('interventionRequest', 'interventionRequest');
         };
 
         /**

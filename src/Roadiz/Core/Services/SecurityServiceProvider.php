@@ -153,8 +153,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AuthenticationUtils($c['requestStack']);
         };
 
-
-
         $container['contextListener'] = function (Container $c) {
             $c['session']; //Force session handler
             return new ContextListener(
@@ -163,7 +161,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     $c['userProvider'],
                 ],
                 Kernel::SECURITY_DOMAIN,
-                $c['logger'],
+                $c['logger.security'],
                 $c['dispatcher']
             );
         };
@@ -236,7 +234,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'secure' => false,
                     'httponly' => false,
                 ],
-                $c['kernel']->isDebug() ? $c['logger'] : null
+                $c['logger.security']
             );
         };
 
@@ -245,7 +243,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['securityTokenStorage'],
                 $c['tokenBasedRememberMeServices'],
                 $c['authenticationManager'],
-                $c['kernel']->isDebug() ? $c['logger'] : null,
+                $c['logger.security'],
                 $c['dispatcher']
             );
         };
@@ -356,7 +354,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['userChecker'],
                 $c['config']["security"]['secret'],
                 $c['accessDecisionManager'],
-                $c['logger'],
+                $c['logger.security'],
                 '_su',
                 Role::ROLE_SUPERADMIN,
                 $c['dispatcher']
@@ -392,7 +390,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
          * Default denied handler
          */
         $container['accessDeniedHandler'] = function (Container $c) {
-            return new AccessDeniedHandler($c['urlGenerator'], $c['logger']);
+            return new AccessDeniedHandler($c['urlGenerator'], $c['logger.security']);
         };
 
         return $container;

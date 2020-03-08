@@ -28,27 +28,24 @@
  */
 namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\KernelInterface;
 use Symfony\Component\Console\Helper\Helper;
 
 class LoggerHelper extends Helper
 {
-    private $logger;
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
 
     /**
      * @param Kernel $kernel
      */
-    public function __construct(Kernel $kernel)
+    public function __construct(KernelInterface $kernel)
     {
-        $name = 'roadizcli';
-        $logPath = $kernel->getLogDir() . '/' .
-            $name. '_' .
-            $kernel->getEnvironment().'.log';
-
-        $this->logger = new Logger('roadiz-cli');
-        $this->logger->pushHandler(new StreamHandler($logPath, Logger::DEBUG));
+        $this->kernel = $kernel;
     }
 
     /**
@@ -56,7 +53,7 @@ class LoggerHelper extends Helper
      */
     public function getLogger()
     {
-        return $this->logger;
+        return $this->kernel->get('logger.cli');
     }
 
     /**
