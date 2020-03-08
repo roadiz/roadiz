@@ -28,7 +28,7 @@ declare(strict_types=1);
  * @file AuthenticationSuccessHandler.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Authentification;
+namespace RZ\Roadiz\Core\Authentication;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\User;

@@ -31,8 +31,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Security;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler;
-use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
+use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
+use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;

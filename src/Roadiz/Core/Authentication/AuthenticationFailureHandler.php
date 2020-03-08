@@ -28,7 +28,7 @@ declare(strict_types=1);
  * @file AuthenticationFailureHandler.php
  * @author Ambroise Maupate
  */
-namespace RZ\Roadiz\Core\Authentification;
+namespace RZ\Roadiz\Core\Authentication;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
