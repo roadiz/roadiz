@@ -33,6 +33,8 @@ use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
+use RZ\Roadiz\Core\Authentication\Provider\AttemptAwareDaoAuthenticationProvider;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Authorization\Voter\GroupVoter;
 use RZ\Roadiz\Core\Entities\Role;
@@ -177,8 +179,13 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new UserChecker();
         };
 
+        $container[LoginAttemptManager::class] = function (Container $c) {
+            return new LoginAttemptManager($c['requestStack'], $c['em']);
+        };
+
         $container['daoAuthenticationProvider'] = function (Container $c) {
-            return new DaoAuthenticationProvider(
+            return new AttemptAwareDaoAuthenticationProvider(
+                $c[LoginAttemptManager::class],
                 $c['userProvider'],
                 $c['userChecker'],
                 Kernel::SECURITY_DOMAIN,

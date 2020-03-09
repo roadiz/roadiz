@@ -5446,6 +5446,10 @@
           <source>Bad credentials.</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="Too many login attemps">
+          <source>Too many login attemps, wait before trying again.</source>
+          <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="User account has expired.">
           <source>User account has expired.</source>

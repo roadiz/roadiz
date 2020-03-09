@@ -33,6 +33,8 @@ namespace RZ\Roadiz\Utils\Security;
 use Pimple\Container;
 use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
+use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
+use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -319,6 +321,17 @@ class FirewallEntry
             ],
             $this->container['logger.security']
         );
+
+        if ($this->authenticationSuccessHandler instanceof LoginAttemptAwareInterface) {
+            $this->authenticationSuccessHandler->setLoginAttemptManager(
+                $this->container[LoginAttemptManager::class]
+            );
+        }
+        if ($this->authenticationFailureHandler instanceof LoginAttemptAwareInterface) {
+            $this->authenticationFailureHandler->setLoginAttemptManager(
+                $this->container[LoginAttemptManager::class]
+            );
+        }
 
         return new UsernamePasswordFormAuthenticationListener(
             $this->container['securityTokenStorage'],

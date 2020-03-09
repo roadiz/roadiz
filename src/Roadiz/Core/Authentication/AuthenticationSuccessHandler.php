@@ -31,6 +31,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Authentication;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
+use RZ\Roadiz\Core\Entities\LoginAttempt;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
@@ -42,10 +44,11 @@ use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 /**
  * {@inheritdoc}
  */
-class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
+class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler implements LoginAttemptAwareInterface
 {
     protected $em;
     protected $rememberMeServices;
+    private $loginAttemptManager;
 
     /**
      * Constructor.
@@ -78,6 +81,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
     {
         $user = $token->getUser();
         if (null !== $user && $user instanceof User) {
+            $this->getLoginAttemptManager()->onSuccessLoginAttempt($user->getUsername());
             $user->setLastLogin(new \DateTime('now'));
             $this->em->flush();
         }
@@ -89,5 +93,22 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler
         }
 
         return $response;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLoginAttemptManager(): LoginAttemptManager
+    {
+        return $this->loginAttemptManager;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setLoginAttemptManager(LoginAttemptManager $loginAttemptManager)
+    {
+        $this->loginAttemptManager = $loginAttemptManager;
+        return $this;
     }
 }
