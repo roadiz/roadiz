@@ -711,11 +711,9 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      */
     public function getNodeSourcesByTranslation(Translation $translation)
     {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('translation', $translation));
-        $criteria->setMaxResults(1);
-
-        return $this->nodeSources->matching($criteria);
+        return $this->nodeSources->filter(function (NodesSources $nodeSource) use ($translation) {
+            return $nodeSource->getTranslation()->getLocale() === $translation->getLocale();
+        });
     }
 
     /**

@@ -272,10 +272,9 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      */
     public function getTranslatedTagsByTranslation(Translation $translation)
     {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('translation', $translation));
-
-        return $this->translatedTags->matching($criteria);
+        return $this->translatedTags->filter(function (TagTranslation $tagTranslation) use ($translation) {
+            return $tagTranslation->getTranslation()->getLocale() === $translation->getLocale();
+        });
     }
 
     /**
