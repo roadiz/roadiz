@@ -57,7 +57,7 @@ class SettingDocumentType extends AbstractType
                 $document = $options['entityManager']->find(Document::class, $value);
                 if (null !== $document) {
                     // transform the array to a string
-                    return new File($packages->getDocumentFilePath($document));
+                    return new File($packages->getDocumentFilePath($document), false);
                 }
                 return null;
             },
