@@ -382,7 +382,7 @@ class Font extends AbstractDateTimed
      */
     public function getEOTRelativeUrl(): ?string
     {
-        return $this->getFolder() . DIRECTORY_SEPARATOR . $this->getEOTFilename();
+        return $this->getFolder() . '/' . $this->getEOTFilename();
     }
 
     /**
@@ -416,7 +416,7 @@ class Font extends AbstractDateTimed
      */
     public function getWOFFRelativeUrl(): ?string
     {
-        return $this->getFolder() . DIRECTORY_SEPARATOR . $this->getWOFFFilename();
+        return $this->getFolder() . '/' . $this->getWOFFFilename();
     }
 
     /**
@@ -442,7 +442,7 @@ class Font extends AbstractDateTimed
      */
     public function getWOFF2RelativeUrl(): ?string
     {
-        return $this->getFolder() . DIRECTORY_SEPARATOR . $this->getWOFF2Filename();
+        return $this->getFolder() . '/' . $this->getWOFF2Filename();
     }
 
     /**
@@ -469,7 +469,7 @@ class Font extends AbstractDateTimed
      */
     public function getOTFRelativeUrl(): ?string
     {
-        return $this->getFolder() . DIRECTORY_SEPARATOR . $this->getOTFFilename();
+        return $this->getFolder() . '/' . $this->getOTFFilename();
     }
 
     /**
@@ -495,7 +495,7 @@ class Font extends AbstractDateTimed
      */
     public function getSVGRelativeUrl(): ?string
     {
-        return $this->getFolder() . DIRECTORY_SEPARATOR . $this->getSVGFilename();
+        return $this->getFolder() . '/' . $this->getSVGFilename();
     }
 
     /**
