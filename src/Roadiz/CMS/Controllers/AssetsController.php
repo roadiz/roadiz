@@ -28,6 +28,7 @@ declare(strict_types=1);
  * @file AssetsController.php
  * @author Ambroise Maupate
  */
+
 namespace RZ\Roadiz\CMS\Controllers;
 
 use AM\InterventionRequest\ShortUrlExpander;
@@ -58,8 +59,9 @@ class AssetsController extends CmsController
 
     /**
      * @param Request $request
-     * @param string $queryString
-     * @param string $filename
+     * @param string  $queryString
+     * @param string  $filename
+     *
      * @return Response
      */
     public function interventionRequestAction(Request $request, $queryString, $filename)
@@ -77,9 +79,11 @@ class AssetsController extends CmsController
              */
             $interventionRequest = $this->get('interventionRequest');
             $interventionRequest->handleRequest($request);
+
             return $interventionRequest->getResponse($request);
         } catch (\ReflectionException $e) {
             $message = '[Configuration] ' . $e->getMessage();
+
             return new Response(
                 $message,
                 Response::HTTP_INTERNAL_SERVER_ERROR,
@@ -99,7 +103,7 @@ class AssetsController extends CmsController
      *
      * @param Request $request
      * @param string  $filename
-     * @param int  $variant
+     * @param int     $variant
      * @param string  $extension
      *
      * @return Response
@@ -171,6 +175,7 @@ class AssetsController extends CmsController
             }
         }
         $msg = "Font doesn't exist " . $filename;
+
         return new Response(
             $msg,
             Response::HTTP_NOT_FOUND,
