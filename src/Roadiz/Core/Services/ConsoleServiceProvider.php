@@ -72,6 +72,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\GeneratePrivateKeyCommand(),
                 new Console\PurgeLoginAttemptCommand(),
                 new Console\CleanLoginAttemptCommand(),
+                new Console\PimpleDumperCommand(),
             ];
         };
     }
