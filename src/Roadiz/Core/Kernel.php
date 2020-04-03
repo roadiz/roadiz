@@ -40,7 +40,6 @@ use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\NodeNameSubscriber;
 use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
-use RZ\Roadiz\Core\Events\PimpleDumperSubscriber;
 use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
 use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
@@ -358,7 +357,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
              */
             if (!$kernel->isInstallMode() && $kernel->isDebug()) {
                 $dispatcher->addSubscriber(new DebugBarSubscriber($c));
-                $dispatcher->addSubscriber(new PimpleDumperSubscriber($c));
             }
 
             return $dispatcher;

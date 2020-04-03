@@ -66,6 +66,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\LogsCleanupCommand(),
                 new Console\DocumentSizeCommand(),
                 new Console\ThemeMigrateCommand(),
+                new Console\PimpleDumperCommand(),
             ];
         };
     }
