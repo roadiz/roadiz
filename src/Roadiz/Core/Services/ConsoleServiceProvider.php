@@ -70,6 +70,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\ThemeMigrateCommand(),
                 new Console\VersionsPurgeCommand(),
                 new Console\GeneratePrivateKeyCommand(),
+                new Console\PimpleDumperCommand(),
             ];
         };
     }
