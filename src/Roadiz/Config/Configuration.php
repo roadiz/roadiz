@@ -300,7 +300,7 @@ EOF
                             ->end()
                             ->scalarNode('timeout')->defaultValue(3)->end()
                             ->scalarNode('port')->defaultValue(8983)->end()
-                            ->scalarNode('path')->defaultValue('/solr')->end()
+                            ->scalarNode('path')->defaultValue('/')->end()
                         ->end()
                     ->end()
                 ->end()

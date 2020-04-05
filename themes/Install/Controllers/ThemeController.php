@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace Themes\Install\Controllers;
 
 use RZ\Roadiz\Console\Tools\Fixtures;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
@@ -120,16 +121,18 @@ class ThemeController extends InstallApp
      */
     public function themesAction(Request $request)
     {
-        $siteName = $this->get('settingsBag')->get('site_name');
-        $metaDescription = $this->get('settingsBag')->get('seo_description');
-        $emailSender = $this->get('settingsBag')->get('email_sender');
-        $emailSenderName = $this->get('settingsBag')->get('email_sender_name');
+        /** @var Settings $settingsBag */
+        $settingsBag = $this->get('settingsBag');
+        $siteName = $settingsBag->get('site_name', 'My website');
+        $metaDescription = $settingsBag->get('seo_description', 'My website is beautiful');
+        $emailSender = $settingsBag->get('email_sender', '');
+        $emailSenderName = $settingsBag->get('email_sender_name', 'My website');
         $timeZone = $this->get('config')['timezone'];
         $defaults = [
-            'site_name' => $siteName != '' ? $siteName : "My website",
-            'seo_description' => $metaDescription != '' ? $metaDescription : "My website is beautiful!",
-            'email_sender' => $emailSender != '' ? $emailSender : "",
-            'email_sender_name' => $emailSenderName != '' ? $emailSenderName : "",
+            'site_name' => $siteName,
+            'seo_description' => $metaDescription,
+            'email_sender' => $emailSender,
+            'email_sender_name' => $emailSenderName,
             'install_frontend' => true,
             'timezone' => $timeZone != '' ? $timeZone : "Europe/Paris",
         ];
