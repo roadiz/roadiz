@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -51,14 +52,14 @@ use Themes\Install\InstallApp;
 class DatabaseController extends InstallApp
 {
     /**
-     * Test database connexion with given configuration.
+     * Test database connection with given configuration.
      *
-     * @param array $connexion Doctrine array parameters
+     * @param array $connection Doctrine array parameters
      *
      * @return bool
      * @throws \PDOException
      */
-    protected function testDoctrineConnexion($connexion = [])
+    protected function testDoctrineConnection($connection = [])
     {
         $config = Setup::createAnnotationMetadataConfiguration(
             [],
@@ -68,7 +69,7 @@ class DatabaseController extends InstallApp
             false
         );
 
-        $em = EntityManager::create($connexion, $config);
+        $em = EntityManager::create($connection, $config);
         return $em->getConnection()->connect();
     }
     /**
@@ -87,7 +88,7 @@ class DatabaseController extends InstallApp
 
         if ($databaseForm->isSubmitted() && $databaseForm->isValid()) {
             try {
-                if (false !== $this->testDoctrineConnexion($databaseForm->getData())) {
+                if (false !== $this->testDoctrineConnection($databaseForm->getData())) {
                     $tempConf = $yamlConfigHandler->getConfiguration();
                     foreach ($databaseForm->getData() as $key => $value) {
                         $tempConf['doctrine'][$key] = $value;
@@ -95,18 +96,10 @@ class DatabaseController extends InstallApp
                     $yamlConfigHandler->setConfiguration($tempConf);
 
                     /*
-                     * Test connexion
+                     * Test connection
                      */
-                    /** @var Kernel $kernel */
-                    $kernel = $this->get('kernel');
-                    $fixtures = new Fixtures(
-                        $this->get('em'),
-                        $kernel->getCacheDir(),
-                        $kernel->getRootDir() . '/conf/config.yml',
-                        $kernel->getRootDir(),
-                        $kernel->isDebug(),
-                        $request
-                    );
+                    $fixtures = $this->getFixtures($request);
+
                     $fixtures->createFolders();
                     $yamlConfigHandler->writeConfiguration();
 
@@ -152,7 +145,7 @@ class DatabaseController extends InstallApp
     public function databaseSchemaAction(Request $request)
     {
         /*
-         * Test connexion
+         * Test connection
          */
         if (null === $this->get('em')) {
             $this->assignation['error'] = true;
@@ -200,17 +193,7 @@ class DatabaseController extends InstallApp
      */
     public function databaseFixturesAction(Request $request)
     {
-        /** @var Kernel $kernel */
-        $kernel = $this->get('kernel');
-
-        $fixtures = new Fixtures(
-            $this->get('em'),
-            $kernel->getCacheDir(),
-            $kernel->getRootDir() . '/conf/config.yml',
-            $kernel->getRootDir(),
-            $kernel->isDebug(),
-            $request
-        );
+        $fixtures = $this->getFixtures($request);
         $fixtures->installFixtures();
 
         $this->assignation['imports'] = [];
@@ -226,7 +209,6 @@ class DatabaseController extends InstallApp
     }
 
     /**
-     *
      * @param Request $request
      *
      * @return JsonResponse

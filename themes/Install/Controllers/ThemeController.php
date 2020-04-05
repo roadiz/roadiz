@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2015, Ambroise Maupate and Julien Blanchet
  *
@@ -143,16 +144,7 @@ class ThemeController extends InstallApp
              * Save information
              */
             try {
-                /** @var Kernel $kernel */
-                $kernel = $this->get('kernel');
-                $fixtures = new Fixtures(
-                    $this->get('em'),
-                    $kernel->getCacheDir(),
-                    $kernel->getRootDir() . '/conf/config.yml',
-                    $kernel->getRootDir(),
-                    $kernel->isDebug(),
-                    $request
-                );
+                $fixtures = $this->getFixtures($request);
                 $fixtures->saveInformations($informationData);
 
                 if (!empty($informationData["install_theme"])) {

@@ -47,7 +47,7 @@ class YamlConfigurationHandler extends ConfigurationHandler
      * @return string|array|\stdClass
      * @throws NoYamlConfigurationFoundException
      */
-    protected function loadFromFile($file)
+    protected function loadFromFile(string $file)
     {
         if (file_exists($file)) {
             $parser = new Parser();
@@ -60,12 +60,11 @@ class YamlConfigurationHandler extends ConfigurationHandler
     /**
      * @return bool
      */
-    public function writeConfiguration()
+    public function writeConfiguration(): bool
     {
         if (file_exists($this->path)) {
             unlink($this->path);
         }
-
         try {
             $dumper = new Dumper();
             $yaml = $dumper->dump($this->getConfiguration(), 4);

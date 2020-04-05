@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright © 2014, Ambroise Maupate and Julien Blanchet
  *
@@ -189,16 +190,7 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
-                    /** @var Kernel $kernel */
-                    $kernel = $this->get('kernel');
-                    $fixtures = new Fixtures(
-                        $this->get('em'),
-                        $kernel->getCacheDir(),
-                        $kernel->getRootDir() . '/conf/config.yml',
-                        $kernel->getRootDir(),
-                        $kernel->isDebug(),
-                        $request
-                    );
+                    $fixtures = $this->getFixtures($request);
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -397,5 +389,24 @@ class InstallApp extends AppController
             ]);
 
         return $builder->getForm();
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Fixtures
+     */
+    protected function getFixtures(Request $request): Fixtures
+    {
+        /** @var Kernel $kernel */
+        $kernel = $this->get('kernel');
+        return new Fixtures(
+            $this->get('em'),
+            $kernel->getCacheDir(),
+            $kernel->getRootDir() . '/conf/config.yml',
+            $kernel->getRootDir(),
+            $kernel->isDebug(),
+            $request
+        );
     }
 }
