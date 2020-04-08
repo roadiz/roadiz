@@ -71,152 +71,142 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
         $this->repository = $this->em->getRepository(Node::class);
         $decodedUrl = rawurldecode($pathinfo);
-
         /*
          * Try nodes routes
          */
-        if (false !== $ret = $this->matchNode($decodedUrl)) {
-            if (null !== $this->logger) {
-                $this->logger->debug('NodeUrlMatcher has matched node (' . $ret['node']->getNodeName() . ').', $ret);
-            }
-            return $ret;
-        }
-
-        throw new ResourceNotFoundException();
+        return $this->matchNode($decodedUrl);
     }
 
     /**
      * @param string $decodedUrl
      *
-     * @return array|bool
+     * @return array
      * @throws \ReflectionException
      */
-    protected function matchNode($decodedUrl)
+    protected function matchNode($decodedUrl): array
     {
-        if (null !== $this->theme) {
-            $tokens = explode('/', $decodedUrl);
-            // Remove empty tokens (especially when a trailing slash is present)
-            $tokens = array_values(array_filter($tokens));
+        if (null === $this->theme) {
+            throw new ResourceNotFoundException();
+        }
+        $tokens = explode('/', $decodedUrl);
+        // Remove empty tokens (especially when a trailing slash is present)
+        $tokens = array_values(array_filter($tokens));
 
-            $_format = 'html';
-            $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
-            $supportedFormats = $this->getSupportedFormatExtensions();
-            $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
+        $_format = 'html';
+        $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
+        $supportedFormats = $this->getSupportedFormatExtensions();
+        $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
-            /*
-             * Prevent searching nodes with special characters.
-             */
-            if (0 === preg_match('#'.$nodeNamePattern.'#', $identifier)) {
-                return false;
+        /*
+         * Prevent searching nodes with special characters.
+         */
+        if (0 === preg_match('#'.$nodeNamePattern.'#', $identifier)) {
+            throw new ResourceNotFoundException();
+        }
+
+        /*
+         * Look for any supported format extension after last token.
+         */
+        if (0 !== preg_match('#^('.$nodeNamePattern.')\.('.implode('|', $supportedFormats).')$#', $identifier, $matches)) {
+            $realIdentifier = $matches[1];
+            $_format = $matches[2];
+            // replace last token with real node-name without extension.
+            $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
+        }
+
+        /*
+         * Try with URL Aliases
+         */
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('parseFromUrlAlias');
+        }
+        $node = $this->parseFromUrlAlias($tokens);
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('parseFromUrlAlias');
+        }
+
+        if ($node !== null) {
+            /** @var Translation $translation */
+            $translation = $node->getNodeSources()->first()->getTranslation();
+            $nodeRouteHelper = new NodeRouteHelper(
+                $node,
+                $this->theme,
+                $this->preview
+            );
+
+            if (!$this->preview && !$translation->isAvailable()) {
+                throw new ResourceNotFoundException();
             }
 
-            /*
-             * Look for any supported format extension after last token.
-             */
-            if (0 !== preg_match('#^('.$nodeNamePattern.')\.('.implode('|', $supportedFormats).')$#', $identifier, $matches)) {
-                $realIdentifier = $matches[1];
-                $_format = $matches[2];
-                // replace last token with real node-name without extension.
-                $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
+            if (false === $nodeRouteHelper->isViewable()) {
+                throw new ResourceNotFoundException();
             }
 
+            return [
+                '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
+                '_locale' => $translation->getPreferredLocale(), //pass request locale to init translator
+                '_route' => null,
+                '_format' => $_format,
+                'node' => $node,
+                'translation' => $translation,
+                'theme' => $this->theme,
+            ];
+        } else {
             /*
-             * Try with URL Aliases
+             * Try with node name
              */
             if (null !== $this->stopwatch) {
-                $this->stopwatch->start('parseFromUrlAlias');
+                $this->stopwatch->start('parseTranslation');
             }
-            $node = $this->parseFromUrlAlias($tokens);
+            $translation = $this->parseTranslation($tokens);
             if (null !== $this->stopwatch) {
-                $this->stopwatch->stop('parseFromUrlAlias');
+                $this->stopwatch->stop('parseTranslation');
             }
 
-            if ($node !== null) {
-                /** @var Translation $translation */
-                $translation = $node->getNodeSources()->first()->getTranslation();
+            if ($translation === null) {
+                throw new ResourceNotFoundException();
+            }
+
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->start('parseNode');
+            }
+            $node = $this->parseNode($tokens, $translation);
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->stop('parseNode');
+            }
+
+            /*
+             * Prevent displaying home node using its nodeName
+             */
+            if ($node !== null && !$node->isHome()) {
                 $nodeRouteHelper = new NodeRouteHelper(
                     $node,
                     $this->theme,
                     $this->preview
                 );
-
-                if (!$this->preview && !$translation->isAvailable()) {
-                    return false;
-                }
-
+                /*
+                 * Try with nodeName
+                 */
                 if (false === $nodeRouteHelper->isViewable()) {
-                    return false;
+                    throw new ResourceNotFoundException();
                 }
-
-                return [
+                $match = [
                     '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
-                    '_locale' => $translation->getPreferredLocale(), //pass request locale to init translator
                     '_route' => null,
                     '_format' => $_format,
                     'node' => $node,
                     'translation' => $translation,
                     'theme' => $this->theme,
                 ];
-            } else {
-                /*
-                 * Try with node name
-                 */
-                if (null !== $this->stopwatch) {
-                    $this->stopwatch->start('parseTranslation');
-                }
-                $translation = $this->parseTranslation($tokens);
-                if (null !== $this->stopwatch) {
-                    $this->stopwatch->stop('parseTranslation');
+
+                if (null !== $translation) {
+                    $match['_locale'] = $translation->getPreferredLocale(); //pass request locale to init translator
                 }
 
-                if ($translation === null) {
-                    return false;
-                }
-
-                if (null !== $this->stopwatch) {
-                    $this->stopwatch->start('parseNode');
-                }
-                $node = $this->parseNode($tokens, $translation);
-                if (null !== $this->stopwatch) {
-                    $this->stopwatch->stop('parseNode');
-                }
-
-                /*
-                 * Prevent displaying home node using its nodeName
-                 */
-                if ($node !== null && !$node->isHome()) {
-                    $nodeRouteHelper = new NodeRouteHelper(
-                        $node,
-                        $this->theme,
-                        $this->preview
-                    );
-                    /*
-                     * Try with nodeName
-                     */
-                    if (false === $nodeRouteHelper->isViewable()) {
-                        return false;
-                    }
-                    $match = [
-                        '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
-                        '_route' => null,
-                        '_format' => $_format,
-                        'node' => $node,
-                        'translation' => $translation,
-                        'theme' => $this->theme,
-                    ];
-
-                    if (null !== $translation) {
-                        $match['_locale'] = $translation->getPreferredLocale(); //pass request locale to init translator
-                    }
-
-                    return $match;
-                } else {
-                    return false;
-                }
+                return $match;
             }
-        } else {
-            return false;
         }
+        throw new ResourceNotFoundException();
     }
 
     /**
