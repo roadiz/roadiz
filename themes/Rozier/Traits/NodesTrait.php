@@ -97,16 +97,17 @@ trait NodesTrait
         if ($node->isHidingChildren()) {
             $defaults = [];
             $builder = $this->createNamedFormBuilder('add_stack_type', $defaults)
-                            ->add('nodeId', HiddenType::class, [
-                                'data' => (int) $node->getId(),
-                            ])
-                            ->add('nodeTypeId', NodeTypesType::class, [
-                                'entityManager' => $this->get('em'),
-                                'label' => false,
-                                'constraints' => [
-                                    new NotBlank(),
-                                ],
-                            ]);
+                ->add('nodeId', HiddenType::class, [
+                    'data' => (int) $node->getId(),
+                ])
+                ->add('nodeTypeId', NodeTypesType::class, [
+                    'entityManager' => $this->get('em'),
+                    'showInvisible' => true,
+                    'label' => false,
+                    'constraints' => [
+                        new NotBlank(),
+                    ],
+                ]);
 
             return $builder->getForm();
         } else {
