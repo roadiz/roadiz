@@ -355,6 +355,8 @@ class NodesController extends RozierApp
                     ));
                 } catch (EntityAlreadyExistsException $e) {
                     $form->addError(new FormError($e->getMessage()));
+                } catch (\InvalidArgumentException $e) {
+                    $form->addError(new FormError($e->getMessage()));
                 }
             }
 
@@ -438,6 +440,8 @@ class NodesController extends RozierApp
                         ]
                     ));
                 } catch (EntityAlreadyExistsException $e) {
+                    $form->addError(new FormError($e->getMessage()));
+                } catch (\InvalidArgumentException $e) {
                     $form->addError(new FormError($e->getMessage()));
                 }
             }

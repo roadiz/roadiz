@@ -19,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -37,6 +38,9 @@ class FolderType extends AbstractType
                     'entityManager' => $options['em'],
                     'currentValue' => $options['name'],
                 ]),
+                new Length([
+                    'max' => 255,
+                ])
             ],
         ])
         ->add('visible', CheckboxType::class, [
