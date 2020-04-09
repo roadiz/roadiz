@@ -61,6 +61,9 @@ class UserType extends AbstractType
                         'entityManager' => $options['em'],
                         'currentValue' => $options['username'],
                     ]),
+                    new Length([
+                        'max' => 200,
+                    ])
                 ],
             ])
             ->add('username', TextType::class, [

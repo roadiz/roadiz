@@ -58,6 +58,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Forms\NodeTreeType;
@@ -360,6 +361,9 @@ class NodeSourceType extends AbstractType
                 $options = array_merge_recursive($options, [
                     'constraints' => [
                         new Email(),
+                        new Length([
+                            'max' => 255
+                        ])
                     ],
                 ]);
                 break;
@@ -372,6 +376,15 @@ class NodeSourceType extends AbstractType
                 $options = array_merge_recursive($options, [
                     'constraints' => [
                         new Type('numeric'),
+                    ],
+                ]);
+                break;
+            case NodeTypeField::STRING_T:
+                $options = array_merge_recursive($options, [
+                    'constraints' => [
+                        new Length([
+                            'max' => 255
+                        ])
                     ],
                 ]);
                 break;

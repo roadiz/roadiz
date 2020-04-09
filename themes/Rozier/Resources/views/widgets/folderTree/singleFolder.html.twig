@@ -1,5 +1,5 @@
 {% set editUrl = path('documentsHomePage', { folderId:folder.id }) %}
-{% set folderName = folder.translatedFolders.first.name|default(folder.folderName) %}
+{% set folderName = folder.translatedFolders.first.name|default(folder.folderName)|replace({'${':'--'}) %} {# Remove VueJS placeholder marks #}
 
 <li data-folder-id="{{ folder.id }}"
     class="uk-nestable-item uk-nestable-list-item-folder foldertree-element{% if folder.children.count > 0 %} has-children{% endif %}">

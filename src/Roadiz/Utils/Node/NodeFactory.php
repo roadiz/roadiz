@@ -79,6 +79,9 @@ final class NodeFactory implements ContainerAwareInterface
         if (empty($nodeName)) {
             throw new \RuntimeException('Node name is empty.');
         }
+        if (mb_strlen($nodeName) > 250) {
+            throw new \InvalidArgumentException(sprintf('Node name "%s" is too long.', $nodeName));
+        }
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
         /** @var NodeRepository $repository */

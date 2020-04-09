@@ -1,8 +1,8 @@
 {% set source = node.nodeSources.first %}
 {% if source.title %}
-    {% set name = source.title %}
+    {% set name = source.title|replace({'${':'--'}) %} {# Remove VueJS placeholder marks #}
 {% else %}
-    {% set name = node.nodeName %}
+    {% set name = node.nodeName|replace({'${':'--'}) %} {# Remove VueJS placeholder marks #}
 {% endif %}
 {% set type = node.nodeType.name %}
 
