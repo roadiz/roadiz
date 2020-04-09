@@ -96,7 +96,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
      *     targetEntity="RZ\Roadiz\Core\Entities\AttributeGroup",
      *     inversedBy="attributes",
      *     fetch="EAGER",
-     *     cascade={"all"}
+     *     cascade={"persist", "merge"}
      * )
      * @ORM\JoinColumn(name="group_id", onDelete="SET NULL")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
