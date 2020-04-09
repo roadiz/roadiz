@@ -38,6 +38,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -54,6 +55,9 @@ class TagTranslationType extends AbstractType
                     new UniqueTagName([
                         'entityManager' => $options['em'],
                         'currentValue' => $options['tagName'],
+                    ]),
+                    new Length([
+                        'max' => 255,
                     ])
                 ],
             ])
