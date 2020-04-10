@@ -47,10 +47,10 @@
                 </div>
             {% endif %}
             <div class="table-cell">
-                {% if log.channel != 'roadiz' %}
+                {% if log.channel and log.channel != 'roadiz' %}
                     <span class="uk-badge">{{ log.channel|trans }}</span>&nbsp;
                 {% endif %}
-                {% if log.level >= 300 %}
+                {% if log.level and log.level >= 300 %}
                     <span class="uk-badge{% if log.level >= 400 %} uk-badge-danger{% elseif log.level >= 300 %} uk-badge-warning{% endif %}">{{ levels[log.level]|trans }}</span>
                 {% endif %}
                 {{ log.message -}}

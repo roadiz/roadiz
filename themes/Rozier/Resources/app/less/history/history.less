@@ -13,17 +13,19 @@
 .history-log-item{
     position: relative;
     vertical-align: top;
-    display: flex;
+    display: block;
     align-items: stretch;
     width:100%;
     border-top:1px solid #cccccc;
     background:#fff;
 
+    @media (min-width: @screen-sm-min) {
+        display: flex;
+    }
+
     &:last-child {
         border-bottom:1px solid #cccccc;
     }
-
-
 
     .table {
         display: table;
@@ -128,6 +130,10 @@
         }
     }
 
+    &.has-user,
+    &.has-source {
+        min-height: 60px;
+    }
 
     &.has-user .history-log-date,
     &.has-source .history-log-date {
