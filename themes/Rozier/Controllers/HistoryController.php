@@ -54,7 +54,6 @@ class HistoryController extends RozierApp
         Log::NOTICE => "notice",
         Log::INFO => "info",
         Log::DEBUG => "debug",
-        Log::LOG => "log",
     ];
 
     /**
@@ -63,6 +62,7 @@ class HistoryController extends RozierApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -94,6 +94,10 @@ class HistoryController extends RozierApp
      * @param integer $userId
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Doctrine\ORM\TransactionRequiredException
+     * @throws \Twig_Error_Runtime
      */
     public function userAction(Request $request, $userId)
     {

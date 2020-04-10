@@ -12,18 +12,21 @@
 
 .history-log-item{
     position: relative;
-    display: inline-block; vertical-align: top;
-    width:100%; height:80px;
+    vertical-align: top;
+    display: flex;
+    align-items: stretch;
+    width:100%;
     border-top:1px solid #cccccc;
     background:#fff;
 
-    &:last-child{
+    &:last-child {
         border-bottom:1px solid #cccccc;
     }
 
-    .table{
+
+
+    .table {
         display: table;
-        height:80px;
     }
 
     .table-cell{
@@ -31,14 +34,14 @@
         vertical-align:middle;
     }
 
-    .history-log-date{
-        display: inline-block; vertical-align: top;
-        width:20%; height:80px;
-        padding:0 40px 0 15px;
+    .history-log-date {
+        display: flex;
+        align-items: center;
+        width:20%;
+        padding:10px 20px;
         background: #eee;
         color:#232323;
-        font-size:14px;
-
+        font-size:12px;
         .box-sizing();
     }
 
@@ -46,17 +49,18 @@
         position: relative;
         vertical-align: top;
         display: inline-block;
-        margin-left:-30px;
-        width: 60px;
-        height:80px;
+        margin-left: -20px;
+        width: 40px;
 
         .box-sizing();
 
         &:before{
             position: absolute;
             content:'';
-            top: 40px; left: -13px;
-            width:15px; height:1px;
+            top: 30px;
+            left: -13px;
+            width:15px;
+            height:1px;
             background:#909090;
         }
 
@@ -64,8 +68,8 @@
             position: relative;
             vertical-align: middle;
             top:10px;
-            width:60px;
-            height:60px;
+            width:40px;
+            height:40px;
             box-shadow: none;
         }
 
@@ -76,7 +80,7 @@
 
             .uk-icon-rz-users{
                 font-size:24px;
-                line-height:60px;
+                line-height:40px;
                 color:#969696;
             }
         }
@@ -91,24 +95,43 @@
 
         img,
         .no-thumb {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             max-width: none;
             background-color: #CCC;
             .rounded(30px);
         }
     }
 
-    .history-log-message{
-        display: inline-block;
-        height:80px;
-        padding-left:20px;
-        font-size:13px;
+    .history-log-message-details {
+        display: none;
+    }
+
+
+    .history-log-message {
+        display: flex;
+        align-items: center;
+        padding: 10px 20px;
+        font-size: 12px;
+        line-height: 18px;
         color:#4c4c4c;
-        width: 70%;
-
-
+        width: 80%;
         .box-sizing();
+
+        .table-cell {
+            &:active,
+            &:focus {
+                .history-log-message-details {
+                    display: block;
+                }
+            }
+        }
+    }
+
+
+    &.has-user .history-log-date,
+    &.has-source .history-log-date {
+        padding-right: 35px;
     }
 
     &.has-source {

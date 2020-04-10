@@ -51,6 +51,7 @@ class RequestProcessor
                 'ip'          => $request->getClientIp(),
                 'http_method' => $request->getMethod(),
                 'server'      => $request->getHost(),
+                'user_agent'  => $request->headers->get('user-agent'),
                 'referrer'    => $request->headers->get('referer'),
                 'locale'      => $request->getLocale(),
             ];

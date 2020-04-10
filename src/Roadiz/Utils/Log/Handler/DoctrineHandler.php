@@ -140,6 +140,22 @@ class DoctrineHandler extends AbstractProcessingHandler
                     $record['message']
                 );
 
+                $log->setChannel((string) $record['channel']);
+                $data = $record['extra'];
+                if (isset($record['context']['request'])) {
+                    $data = array_merge(
+                        $data,
+                        $record['context']['request']
+                    );
+                }
+                if (isset($record['context']['username'])) {
+                    $data = array_merge(
+                        $data,
+                        ['username' => $record['context']['username']]
+                    );
+                }
+                $log->setAdditionalData($data);
+
                 /*
                  * Use available securityAuthorizationChecker to provide a valid user
                  */

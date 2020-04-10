@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Authentication\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\LoginAttempt;
 use RZ\Roadiz\Core\Exceptions\TooManyLoginAttemptsException;
 use RZ\Roadiz\Core\Repositories\LoginAttemptRepository;
@@ -61,16 +62,26 @@ class LoginAttemptManager
      * @var LoginAttemptRepository
      */
     private $loginAttemptRepository;
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
 
     /**
      * LoginAttemptManager constructor.
      *
-     * @param RequestStack $requestStack
+     * @param RequestStack           $requestStack
+     * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface        $logger
      */
-    public function __construct(RequestStack $requestStack, EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        RequestStack $requestStack,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ) {
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -87,14 +98,14 @@ class LoginAttemptManager
             $this->getIpAttemptGraceTime(),
             $this->getIpAttemptCount()
         )) {
-            throw new TooManyRequestsHttpException(
-                $this->getIpAttemptGraceTime(),
-                'Too many login attemps for current IP address, wait before trying again.'
+            throw new TooManyLoginAttemptsException(
+                'Too many login attempts for current IP address, wait before trying again.',
+                Response::HTTP_TOO_MANY_REQUESTS
             );
         }
         if ($this->getLoginAttemptRepository()->isUsernameBlocked($username)) {
             throw new TooManyLoginAttemptsException(
-                'Too many login attemps for this username, wait before trying again.',
+                'Too many login attempts for this username, wait before trying again.',
                 Response::HTTP_TOO_MANY_REQUESTS
             );
         }
@@ -104,6 +115,7 @@ class LoginAttemptManager
      * @param string $username
      *
      * @return $this
+     * @throws \Exception
      */
     public function onFailedLoginAttempt(string $username)
     {
@@ -118,12 +130,24 @@ class LoginAttemptManager
         if ($loginAttempt->getAttemptCount() >= 9) {
             $blocksUntil->add(new \DateInterval('PT30M'));
             $loginAttempt->setBlocksLoginUntil($blocksUntil);
+            $this->logger->info(sprintf(
+                'Client has been blocked from login until %s',
+                $blocksUntil->format('Y-m-d H:i:s')
+            ));
         } elseif ($loginAttempt->getAttemptCount() >= 6) {
             $blocksUntil->add(new \DateInterval('PT15M'));
             $loginAttempt->setBlocksLoginUntil($blocksUntil);
+            $this->logger->info(sprintf(
+                'Client has been blocked from login until %s',
+                $blocksUntil->format('Y-m-d H:i:s')
+            ));
         } elseif ($loginAttempt->getAttemptCount() >= 3) {
             $blocksUntil->add(new \DateInterval('PT3M'));
             $loginAttempt->setBlocksLoginUntil($blocksUntil);
+            $this->logger->info(sprintf(
+                'Client has been blocked from login until %s',
+                $blocksUntil->format('Y-m-d H:i:s')
+            ));
         }
         $this->entityManager->flush();
         return $this;

@@ -13,39 +13,10 @@
         {% spaceless %}
         <div class="history-logs">
             {% for log in entries %}
-            {% if levels[log.getLevel] == 'error' %}
-            {% set tdClass = 'class="uk-alert-danger"' %}
-            {% set icon = 'uk-icon-warning' %}
-            {% else %}
-            {% set tdClass = 'class=""' %}
-            {% set icon = 'uk-icon-info-circle' %}
-            {% endif %}
-
-            <div class="history-log-item has-source {% if log.user %}has-user{% endif %}">
-                <div class="history-log-date">
-                    <div class="table">
-                        <div class="table-cell">{{ log.getDatetime|localizeddate('medium') }}</div>
-                    </div>
-                </div>
-                {% if log.user %}
-                <div class="history-log-user">
-                    <a href="{{ path("usersEditPage", {"userId":log.user.id }) }}">
-                        <img width="60"
-                             height="60"
-                             class="user-image uk-thumbnail"
-                             src="{{ log.user.getPictureUrl }}"
-                             alt="{{ log.user.identifier }}"
-                             title="{{ log.user.identifier }}"
-                             data-uk-tooltip="{animation:true}"/>
-                    </a>
-                </div>
-                {% endif %}
-                <div class="history-log-message">
-                    <div class="table">
-                        <div class="table-cell">{{ log.getMessage }}</div>
-                    </div>
-                </div>
-            </div>
+                {% include 'modules/history-item.html.twig' with {
+                    'levels': levels,
+                    'log': log
+                } only %}
             {% endfor %}
         </div>
         {% endspaceless %}

@@ -31,6 +31,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Monolog\Logger;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -40,21 +41,22 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\LogRepository")
  * @ORM\Table(name="log", indexes={
  *     @ORM\Index(columns={"datetime"}),
- *     @ORM\Index(columns={"level"})
+ *     @ORM\Index(columns={"level"}),
+ *     @ORM\Index(columns={"channel"})
  * })
  * @ORM\HasLifecycleCallbacks
  */
 class Log extends AbstractEntity
 {
-    const EMERGENCY = 0;
-    const CRITICAL =  1;
-    const ALERT =     2;
-    const ERROR =     3;
-    const WARNING =   4;
-    const NOTICE =    5;
-    const INFO =      6;
-    const DEBUG =     7;
-    const LOG =       8;
+    const EMERGENCY = Logger::EMERGENCY;
+    const CRITICAL =  Logger::CRITICAL;
+    const ALERT =     Logger::ALERT;
+    const ERROR =     Logger::ERROR;
+    const WARNING =   Logger::WARNING;
+    const NOTICE =    Logger::NOTICE;
+    const INFO =      Logger::INFO;
+    const DEBUG =     Logger::DEBUG;
+    const LOG =       Logger::INFO;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\User")
@@ -93,10 +95,24 @@ class Log extends AbstractEntity
      * @var string|null
      */
     protected $clientIp = null;
+    /**
+     * @ORM\Column(type="string", name="channel", unique=false, nullable=true)
+     * @Serializer\Groups({"log"})
+     * @var string|null
+     */
+    protected $channel = null;
+    /**
+     * @ORM\Column(type="json", name="additional_data", unique=false, nullable=true)
+     * @Serializer\Groups({"log"})
+     * @var array|null
+     */
+    protected $additionalData = null;
 
     /**
-     * @param int $level
+     * @param int    $level
      * @param string $message
+     *
+     * @throws \Exception
      */
     public function __construct(int $level, string $message)
     {
@@ -183,6 +199,46 @@ class Log extends AbstractEntity
     public function setClientIp(?string $clientIp): Log
     {
         $this->clientIp = $clientIp;
+        return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getAdditionalData(): ?array
+    {
+        return $this->additionalData;
+    }
+
+    /**
+     * @param array|null $additionalData
+     *
+     * @return Log
+     */
+    public function setAdditionalData(?array $additionalData): Log
+    {
+        $this->additionalData = $additionalData;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getChannel(): ?string
+    {
+        return $this->channel;
+    }
+
+    /**
+     * @param string|null $channel
+     *
+     * @return Log
+     */
+    public function setChannel(?string $channel): Log
+    {
+        $this->channel = $channel;
+
         return $this;
     }
 

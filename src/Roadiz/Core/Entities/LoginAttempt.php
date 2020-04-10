@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright (c) 2020. Ambroise Maupate and Julien Blanchet
  *
@@ -26,7 +27,6 @@
  * @file LoginAttempt.php
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
-declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Entities;
 

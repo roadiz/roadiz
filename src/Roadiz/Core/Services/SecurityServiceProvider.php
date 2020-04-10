@@ -180,7 +180,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container[LoginAttemptManager::class] = function (Container $c) {
-            return new LoginAttemptManager($c['requestStack'], $c['em']);
+            return new LoginAttemptManager($c['requestStack'], $c['em'], $c['logger']);
         };
 
         $container['daoAuthenticationProvider'] = function (Container $c) {

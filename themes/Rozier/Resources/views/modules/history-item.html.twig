@@ -1,0 +1,70 @@
+{% if levels[log.level] == 'error' %}
+    {% set tdClass = 'class="uk-alert-danger"' %}
+    {% set icon = 'uk-icon-warning' %}
+{% else %}
+    {% set tdClass = 'class=""' %}
+    {% set icon = 'uk-icon-info-circle' %}
+{% endif %}
+
+<div class="history-log-item {% if log.nodeSource %}has-source {% endif %}{% if log.user %}has-user{% endif %}">
+    <div class="history-log-date">
+        <div class="table">
+            <div class="table-cell">{{ log.datetime|localizeddate('short') }}</div>
+        </div>
+    </div>
+    {% if log.user %}
+        <div class="history-log-user">
+            <a href="{{ path("usersEditPage", {"userId":log.user.id }) }}">
+                <img width="60"
+                     height="60"
+                     class="user-image uk-thumbnail"
+                     src="{{ log.user.getPictureUrl }}"
+                     alt="{{ log.user.identifier }}"
+                     title="{{ log.user.identifier }}"
+                     data-uk-tooltip="{animation:true}"/>
+            </a>
+        </div>
+    {% endif %}
+    <div class="history-log-message">
+        <div class="table">
+            {% if log.nodeSource %}
+                <div class="history-log-source table-cell">
+                    <a href="{{ path("nodesEditSourcePage", {"nodeId":log.nodeSource.node.id, "translationId":log.nodeSource.translation.id }) }}">
+                        {% set thumbnail = log.nodeSource.getDocumentsByFields.first.getDocument %}
+                        {% if thumbnail and thumbnail.image %}
+                            <figure>
+                                <img src="{{ thumbnail|url({"width":60, "crop":"1x1", "quality":80}) }}"
+                                     alt="{{ log.nodeSource.title }}"
+                                     title="{{ log.nodeSource.title }}"
+                                     data-uk-tooltip="{animation:true}" />
+                            </figure>
+                        {% else %}
+                            <span class="no-thumb"
+                                  title="{{ log.nodeSource.title }}"
+                                  data-uk-tooltip="{animation:true}"></span>
+                        {% endif %}
+                    </a>
+                </div>
+            {% endif %}
+            <div class="table-cell">
+                {% if log.channel != 'roadiz' %}
+                    <span class="uk-badge">{{ log.channel|trans }}</span>&nbsp;
+                {% endif %}
+                {% if log.level >= 300 %}
+                    <span class="uk-badge{% if log.level >= 400 %} uk-badge-danger{% elseif log.level >= 300 %} uk-badge-warning{% endif %}">{{ levels[log.level]|trans }}</span>
+                {% endif %}
+                {{ log.message -}}
+                {% if is_granted('ROLE_SUPERADMIN') %}
+                    <div class="history-log-message-details">
+                        <dl>
+                            {% for key, data in log.additionalData %}
+                                <dt>{{ key|trans }}</dt>
+                                <dd>{{ data }}</dd>
+                            {% endfor %}
+                        </dl>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
