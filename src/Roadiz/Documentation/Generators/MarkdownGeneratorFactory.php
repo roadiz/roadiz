@@ -28,7 +28,7 @@
  */
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Markdown\Generators;
+namespace RZ\Roadiz\Documentation\Generators;
 
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;

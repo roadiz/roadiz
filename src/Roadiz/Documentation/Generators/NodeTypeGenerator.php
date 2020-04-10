@@ -28,7 +28,7 @@ declare(strict_types=1);
  * @author Ambroise Maupate <ambroise@rezo-zero.com>
  */
 
-namespace RZ\Roadiz\Utils\Markdown\Generators;
+namespace RZ\Roadiz\Documentation\Generators;
 
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -38,7 +38,7 @@ use Symfony\Component\Translation\Translator;
 /**
  * Class EntityGenerator
  *
- * @package RZ\Roadiz\Utils\Markdown\Generators
+ * @package RZ\Roadiz\Documentation\Generators
  */
 class NodeTypeGenerator
 {
