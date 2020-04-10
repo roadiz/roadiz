@@ -88,8 +88,10 @@ class UserViewer
      * @return bool
      * @throws \Exception
      */
-    public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator, $route = 'loginResetPage')
-    {
+    public function sendPasswordResetLink(
+        UrlGeneratorInterface $urlGenerator,
+        $route = 'loginResetPage'
+    ) {
         $emailContact = $this->getContactEmail();
         $siteName = $this->getSiteName();
 

@@ -52,7 +52,7 @@ class CreatePasswordType extends RepeatedType
                 'constraints' => [
                     new Blacklist(),
                     new PasswordStrength([
-                        'minLength' => 6,
+                        'minLength' => 8,
                         'minStrength' => 3,
                         'message' => 'password_should_contains_at_least_one_capital_one_digit',
                         'tooShortMessage' => 'password_should_be_at_least_{{length}}_characters_long',

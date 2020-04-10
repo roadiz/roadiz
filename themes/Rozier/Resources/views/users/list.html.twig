@@ -73,7 +73,7 @@
                             {% endif %}
                             {% if not user.credentialsNonExpired or not user.accountNonExpired %}
                             <div class="uk-button-status uk-button-danger" title="{% trans %}user.expired{% endtrans %}" data-uk-tooltip="{animation:true}">
-                                <i class="uk-icon-bug"></i>
+                                <i class="uk-icon-hourglass-end"></i>
                             </div>
                             {% endif %}
                         </td>
