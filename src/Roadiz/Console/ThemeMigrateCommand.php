@@ -95,7 +95,7 @@ class ThemeMigrateCommand extends ThemesCommand implements ContainerAwareInterfa
         /** @var Kernel $existingKernel */
         $existingKernel = $this->getHelper('kernel')->getKernel();
         $process = new Process(
-            'bin/roadiz ' . $command . ' -e ' . $environment . ($preview ? ' --preview' : '')
+            'php bin/roadiz ' . $command . ' -e ' . $environment . ($preview ? ' --preview' : '')
         );
         $process->setWorkingDirectory($existingKernel->getProjectDir());
         $process->setTty(true);
