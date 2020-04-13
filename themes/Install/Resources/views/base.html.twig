@@ -1,8 +1,6 @@
+{% set formattedLocale = request.locale|replace({'_': '-'})|lower %}
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html class="no-js" lang="{{ formattedLocale }}"{% if request.locale is rtl %} dir="rtl"{% endif %}>
     <head>
         <meta charset="utf-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -18,14 +16,11 @@
         <link rel="stylesheet" href="{{ asset('public' ~ head.grunt.staticAssets.global.css[0], 'Install') }}" />
 
         <!-- Modernizr -->
-        <script src="{{ asset('js/vendor/modernizr-2.6.2.min.js', 'Install') }}"></script>
+        <script src="{{ asset('js/vendor/modernizr-custom.js', 'Install') }}"></script>
     </head>
     <body class="install {{ request.locale }}" data-locale="{{ request.locale }}" data-session-locale="{{ session.locale }}">
-
         <div id="main-container" class="absolute">
-
             <section id="inner-container">
-
                 <aside class="infos">
                     <div class="logo">
                         <i class="uk-icon-rz-roadiz-icon"></i>
@@ -37,22 +32,13 @@
                         </div>
                     </div>
                 </aside>
-
-                <!-- Add your site or application content here -->
                 {% block content %}
                     <h1>{% trans %}welcome.title{% endtrans %}</h1>
                 {% endblock %}
-
             </section>
-
         </div>
 
-        <!-- Scripts -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"
-                integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-                crossorigin="anonymous"></script>
-        <script>window.jQuery || document.write('<script src="{{ asset('js/vendor/jquery-1.10.2.min.js', 'Install') }}"><\/script>')</script>
-
+        <script src="{{ asset('js/vendor/jquery.min.js', 'Install') }}"></script>
         {% if head.devMode %}
         <script src="{{ asset('js/vendor/bootstrap-switch.js', 'Install') }}"></script>
         <script src="{{ asset('js/vendor/uikit.min.js', 'Install') }}"></script>
