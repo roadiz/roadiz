@@ -17,15 +17,16 @@
 /* -------- STYLES -------- */
 
 .navbar-navigation {
-
     & > .uk-navbar-nav {
         background-color: @maincontent-header-bg;
         text-align: center;
+        display: flex;
+        flex-wrap: wrap;
 
-        li { // .navbar-item
+        li {
             position: relative;
             float: none;
-            display: inline-block;
+            display: block;
             background: none transparent;
 
             a { // .navbar-link
@@ -66,11 +67,8 @@
         }
 
         &:first-child {
-
             & > li {
-
                 &:first-child {
-
                     & > a {
                         .rounded(0);
                     }
@@ -79,16 +77,13 @@
         }
 
         .uk-active {
-
             & > a {
                 box-shadow: none;
                 color: #1a1a1a;
             }
-
             &:after{
                 height:@active-border-size;
             }
         }
-
     }
 }

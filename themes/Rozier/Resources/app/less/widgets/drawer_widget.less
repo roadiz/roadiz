@@ -50,7 +50,7 @@
         display: none;
     }
 
-    .uk-form-label{
+    .uk-form-label {
         position: absolute;
         left:70px;
         height:55px;
@@ -69,7 +69,7 @@
     }
 }
 
-.drawer-widget-nav{
+.drawer-widget-nav {
     min-height:45px;
     border-bottom:1px dashed @documents-widget-border;
 
@@ -122,13 +122,16 @@
 .drawer-widget-sortable-container {
     background: #fff;
     position: relative;
-    min-height: 121px;
+
+    @media (min-width: @screen-sm-min) {
+        min-height: 108px;
+    }
 }
 
 .drawer-widget-sortable{
-    margin:0;
-    padding:13px 25px 20px;
-    background:#fff;
+    margin: 0;
+    padding: 10px;
+    background: #fff;
 }
 
 .sortable-ghost {
