@@ -34,6 +34,11 @@
                 <source>Maximum versions count showed in actions menu.</source>
                 <target state="translated">Maximum versions count showed in actions menu.</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="hide_roadiz_version.help">
+                <source>hide_roadiz_version.help</source>
+                <target state="translated">Hide Roadiz version and name from any response headers and theme variables.</target>
+                <note>Setting</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

@@ -50,7 +50,6 @@
                 <source>exclude_this_field_from_fulltext_search_engine</source>
                 <target></target>
             </trans-unit>
-
         </body>
     </file>
 </xliff>

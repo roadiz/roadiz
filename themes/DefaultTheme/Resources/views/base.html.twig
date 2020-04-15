@@ -25,7 +25,7 @@
     <title>{{ pageMetaTitle }}</title>
     <meta name="description" content="{{ pageMetaDescription }}" />
     {% if pageMeta.keywords %}<meta name="keywords" content="{{ pageMeta.keywords }}" />{% endif %}
-    <meta name="generator" content="Roadiz {{ cms_prefix }} {{ cms_version }} - {{ head.themeName }} v{{ head.themeVersion }}" />
+    <meta name="generator" content="{% if cms_prefix or cms_version %}Roadiz {{ cms_prefix }} {{ cms_version }} - {% endif %}{{ head.themeName }} v{{ head.themeVersion }}" />
     {#
      # This will enable mobile viewports
      #}

@@ -29,6 +29,7 @@
 
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Kernel;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -55,9 +56,11 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals()
     {
+        /** @var Settings $settingsBag */
+        $settingsBag = $this->kernel->get('settingsBag');
         return [
-            'cms_version' => Kernel::$cmsVersion,
-            'cms_prefix' => Kernel::CMS_VERSION,
+            'cms_version' => !$settingsBag->get('hide_roadiz_version', false) ? Kernel::$cmsVersion : null,
+            'cms_prefix' => !$settingsBag->get('hide_roadiz_version', false) ? Kernel::CMS_VERSION : null,
             'help_external_url' => 'http://docs.roadiz.io',
             'request' => $this->kernel->get('requestStack')->getCurrentRequest(),
             'is_debug' => $this->kernel->isDebug(),
@@ -65,7 +68,7 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
             'is_dev_mode' => $this->kernel->isDevMode(),
             'is_prod_mode' => $this->kernel->isProdMode(),
             'bags' => [
-                'settings' => $this->kernel->get('settingsBag'),
+                'settings' => $settingsBag,
                 'roles' => $this->kernel->get('rolesBag'),
                 'nodeTypes' => $this->kernel->get('nodeTypesBag'),
             ]

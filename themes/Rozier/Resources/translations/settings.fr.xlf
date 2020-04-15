@@ -34,6 +34,11 @@
                 <source>Maximum versions count showed in actions menu.</source>
                 <target state="translated">Nombre maximum de versions affichées dans le menu des actions.</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="hide_roadiz_version.help">
+                <source>hide_roadiz_version.help</source>
+                <target state="translated">Cache le numéro et le nom du CMS des en-têtes HTTP et des variables du thème.</target>
+                <note>Setting</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

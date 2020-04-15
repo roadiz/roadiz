@@ -485,7 +485,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">569</context>
         </context-group>
-      <alt-trans><target>Facebook user ID (%name%) does not exist.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="48" approved="yes">
         <source>email</source>
         <target state="final">Email</target>
@@ -553,7 +553,7 @@
       <trans-unit xml:space="preserve" id="phone" approved="yes">
         <source>phone</source>
         <target state="final">Phone</target>
-      <alt-trans><target>phone</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="54" approved="yes">
         <source>company</source>
         <target state="final">Company</target>
@@ -809,7 +809,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
           <context context-type="linenumber">792</context>
         </context-group>
-      <alt-trans><target>Tag name</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="81" approved="yes">
         <source>node.seo.updated</source>
         <target state="final">Node SEO data has been updated.</target>
@@ -1065,7 +1065,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">561</context>
         </context-group>
-      <alt-trans><target>Il nodo% nome% è stato creato.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="child_node.%name%.created" approved="yes">
         <source>child_node.%name%.created</source>
         <target state="final">Child node %name% has been created.</target>
@@ -3326,7 +3326,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/88/9a/f2a9ab31044ec747813125ad428def2be716184dc2d6462206038ed37577.php</context>
           <context context-type="linenumber">152</context>
         </context-group>
-      <alt-trans><target>Sterile status</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="322" approved="yes">
         <source>archive-status</source>
         <target state="final">Archive status</target>
@@ -3594,7 +3594,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/f3/09/8d88fd0c6586dfeba8654bccecbb2f7fda5277d58aa166b55ba824f8b5aa.php</context>
           <context context-type="linenumber">35</context>
         </context-group>
-      <alt-trans><target>Node content</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="355" approved="yes">
         <source>node.parameters</source>
         <target state="final">Parameters</target>
@@ -3602,7 +3602,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/f3/09/8d88fd0c6586dfeba8654bccecbb2f7fda5277d58aa166b55ba824f8b5aa.php</context>
           <context context-type="linenumber">48</context>
         </context-group>
-      <alt-trans><target>Node parameters</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="356" approved="yes">
         <source>seo</source>
         <target state="final">SEO</target>
@@ -3786,7 +3786,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/9c/58/6b7377e4e0199f222b386af4ab53323fa8706432615c927d15d12a5c2b3a.php</context>
           <context context-type="linenumber">51</context>
         </context-group>
-      <alt-trans><target>etichetta il contenuto </target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="376" approved="yes">
         <source>tag.settings</source>
         <target state="final">Tag settings</target>
@@ -3886,7 +3886,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/de/03/6cb30cfbaeddb9370c458b1694d8751a7c5e34716db56ef2a35604ef8003.php</context>
           <context context-type="linenumber">58</context>
         </context-group>
-      <alt-trans><target>Scollegare il documento</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="388" approved="yes">
         <source>edit.document</source>
         <target state="final">Edit document</target>
@@ -3950,7 +3950,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/41/8d/7960bb87be336f81a137e8312c241bf87671ced5b671a5a284994a30ec3b.php</context>
           <context context-type="linenumber">57</context>
         </context-group>
-      <alt-trans><target>nome file</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="396" approved="yes">
         <source>document.createdAt</source>
         <target state="final">Created at</target>
@@ -4221,7 +4221,7 @@
       <trans-unit xml:space="preserve" id="449" approved="yes">
         <source>document.embedId</source>
         <target state="final">Media identifier on platform</target>
-      <alt-trans><target>Platform media identifier</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="%field%.is.reserved.word" approved="yes">
         <source>%field%.is.reserved.word</source>
         <target state="final">“%field%” name is a reserved word, please choose another one.</target>
@@ -4234,7 +4234,7 @@
       <trans-unit xml:space="preserve" id="%group%.settings" approved="yes">
         <source>%group%.settings</source>
         <target state="final">“%group%” settings</target>
-      <alt-trans><target>Impostazioni "% gruppo%"</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="settingGroup.%name%.updated" approved="yes">
         <source>settingGroup.%name%.updated</source>
         <target state="final">Setting group %name% has been updated.</target>
@@ -4274,7 +4274,7 @@
       <trans-unit xml:space="preserve" id="save.settingGroup" approved="yes">
         <source>save.settingGroup</source>
         <target state="final">Save</target>
-      <alt-trans><target>Save setting group</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.settingGroup" approved="yes">
         <source>are_you_sure.delete.settingGroup</source>
         <target state="final">Are you sure you want to delete this setting group ?</target>
@@ -4331,7 +4331,7 @@
       <trans-unit xml:space="preserve" id="twitter_client_id" approved="yes">
         <source>twitter_client_id</source>
         <target state="final">Twitter API - Client ID</target>
-      <alt-trans><target>Twitter client ID</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="facebook_client_id" approved="yes">
         <source>facebook_client_id</source>
         <target state="final">Facebook client ID</target>
@@ -4403,7 +4403,7 @@
       <trans-unit xml:space="preserve" id="recaptcha_private_key" approved="yes">
         <source>recaptcha_private_key</source>
         <target state="final">Recaptcha private key (secret)</target>
-      <alt-trans><target>Recaptcha private key</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="you_must_show_youre_not_robot" approved="yes">
         <source>you_must_show_youre_not_robot</source>
         <target state="final">You must validate the Recaptcha to verify you’re not a robot.</target>
@@ -4605,7 +4605,7 @@
       <trans-unit xml:space="preserve" id="embedId.is_not_valid">
         <source>embedId.is_not_valid</source>
         <target state="translated">L'identificativo del supporto non è valido.</target>
-      <alt-trans><target>Media identifier is not valid.</target></alt-trans><alt-trans><target>L’identifiant du média n’est pas valide.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="document.metas" approved="yes">
         <source>document.metas</source>
         <target state="final">Metas</target>
@@ -5372,6 +5372,10 @@
           <source>Bad credentials.</source>
           <target state="final">Bad credentials</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="Too many login attemps">
+          <source>Too many login attemps, wait before trying again.</source>
+          <target state="translated">Too many login attemps, wait before trying again.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
           <source>User account has expired.</source>
           <target state="final">User account has expired.</target>
@@ -5447,7 +5451,7 @@
       <trans-unit xml:space="preserve" id="nodeType.not_visible" approved="yes">
           <source>nodeType.not_visible</source>
           <target state="final">Invisible node-type</target>
-      <alt-trans><target>Unvisible node-type</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.nodeType" approved="yes">
           <source>newsletter.nodeType</source>
           <target state="final">Newsletters reserved type</target>
@@ -5467,7 +5471,7 @@
       <trans-unit xml:space="preserve" id="duplicated.newsletter.%name%" approved="yes">
           <source>duplicated.newsletter.%name%</source>
           <target state="final">Newsletter “%name%” has been duplicated.</target>
-      <alt-trans><target>Newsletter “%name%” duplicated.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="impossible.duplicate.newsletter.%name%" approved="yes">
           <source>impossible.duplicate.newsletter.%name%</source>
           <target state="final">Impossible to duplicate newsletter “%name%”</target>
@@ -5527,7 +5531,7 @@
       <trans-unit xml:space="preserve" id="are_you_sure.delete.nodeSource" approved="yes">
           <source>are_you_sure.delete.nodeSource</source>
           <target state="final">Are you sure you want to delete this node source?</target>
-      <alt-trans><target>Are you sure to delete this node source?</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node_source.%node_source%.%translation%.cant.deleted" approved="yes">
           <source>node_source.%node_source%.%translation%.cant.deleted</source>
           <target state="final">“%node_source%” %translation% translation can not be deleted</target>
@@ -5543,15 +5547,15 @@
       <trans-unit xml:space="preserve" id="latest.node-sources.updates" approved="yes">
           <source>latest.node-sources.updates</source>
           <target state="final">Latest updated node sources</target>
-      <alt-trans><target>Latest updated node-sources</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.updated" approved="yes">
           <source>customForm.%name%.updated</source>
           <target state="final">Custom form “%name%” has been updated</target>
-      <alt-trans><target>Custom form “%name%” has been updated.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.created" approved="yes">
           <source>customForm.%name%.created</source>
           <target state="final">Custom form “%name%” has been created</target>
-      <alt-trans><target>Custom form “%name%” has been created.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.deleted" approved="yes">
           <source>customForm.%name%.deleted</source>
           <target state="final">Custom form “%name%” has been deleted.</target>
@@ -5559,11 +5563,11 @@
       <trans-unit xml:space="preserve" id="customForm.%name%.cannot_rename_already_exists" approved="yes">
           <source>customForm.%name%.cannot_rename_already_exists</source>
           <target state="final">Custom form “%name%” can not be renamed, another one already exists</target>
-      <alt-trans><target>Custom form “%name%” cannot be renamed, another one already exists.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.already_exists" approved="yes">
           <source>customForm.%name%.already_exists</source>
           <target state="final">Custom form “%name%” already exists</target>
-      <alt-trans><target>Custom form “%name%” already exists.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="select.all" approved="yes">
           <source>select.all</source>
           <target state="final">Select all</target>
@@ -5595,7 +5599,7 @@
       <trans-unit xml:space="preserve" id="node.noCreation.alreadyExists" approved="yes">
           <source>node.noCreation.alreadyExists</source>
           <target state="final">Node can not be created, a node already exists with its name</target>
-      <alt-trans><target>Node can't be created, a node already exists with its name.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="maps_style" approved="yes">
           <source>maps_style</source>
           <target state="final">Default Google Maps styles</target>
@@ -5651,11 +5655,11 @@
       <trans-unit xml:space="preserve" id="user.account.has-expired" approved="yes">
           <source>user.account.has-expired</source>
           <target state="final">User account has expired</target>
-      <alt-trans><target>User account has expired.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="user.crendentials.has-expired" approved="yes">
           <source>user.crendentials.has-expired</source>
           <target state="final">User account credentials have expired</target>
-      <alt-trans><target>User account credentials have expired.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="user.last-login" approved="yes">
           <source>user.last-login</source>
           <target state="final">Last login date</target>
@@ -5695,7 +5699,7 @@
       <trans-unit xml:space="preserve" id="your.account.email" approved="yes">
           <source>your.account.email</source>
           <target state="final">Your account email</target>
-      <alt-trans><target>Your email account</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="%email%.email.does.not.exist.in.user.account.database" approved="yes">
           <source>%email%.email.does.not.exist.in.user.account.database</source>
           <target state="final">“%email%” email does not exist in users database.</target>
@@ -5881,7 +5885,7 @@
       <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters" approved="yes">
           <source>string.should.only.contain.latin.characters</source>
           <target state="final">Characters string should only contain simple latin alphabet</target>
-      <alt-trans><target>String should only contain simple latin characters</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="string.should.not.be.a.sql.reserved.word" approved="yes">
           <source>string.should.not.be.a.sql.reserved.word</source>
           <target state="final">String should not be a SQL reserved word</target>
@@ -5889,7 +5893,7 @@
       <trans-unit xml:space="preserve" id="This value should not be blank." approved="yes">
           <source>This value should not be blank.</source>
           <target state="final">This value should not be blank</target>
-      <alt-trans><target>This value should not be blank.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="This value is not valid." approved="yes">
           <source>This value is not valid.</source>
           <target state="final">This value is not valid.</target>
@@ -5982,7 +5986,7 @@
       <trans-unit xml:space="preserve" id="update_roadiz.download_archive" approved="yes">
           <source>update_roadiz.download_archive</source>
           <target state="final">Roadiz is downloading lastest archive file…</target>
-      <alt-trans><target>Roadiz is downloading last version archive…</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="update_roadiz.unarchive" approved="yes">
           <source>update_roadiz.unarchive</source>
           <target state="final">Roadiz is unpacking latest archive file…</target>
@@ -6054,7 +6058,7 @@
       <trans-unit xml:space="preserve" id="nodeName.alreadyExists.as.urlAlias" approved="yes">
           <source>nodeName.alreadyExists.as.urlAlias</source>
           <target state="final">This node name is already used as an URL alias</target>
-      <alt-trans><target>This node name is already used as an Url alias</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="new.version.available" approved="yes">
           <source>new.version.available</source>
           <target state="final">A new version is available</target>
@@ -6062,7 +6066,7 @@
       <trans-unit xml:space="preserve" id="node.childrenOrder" approved="yes">
           <source>node.childrenOrder</source>
           <target state="final">Children nodes are ordered by</target>
-      <alt-trans><target>Children nodes ordering by</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.childrenOrderDirection" approved="yes">
           <source>node.childrenOrderDirection</source>
           <target state="final">Children nodes order direction</target>
@@ -6078,11 +6082,11 @@
       <trans-unit xml:space="preserve" id="createdAt" approved="yes">
           <source>createdAt</source>
           <target state="final">Creation date</target>
-      <alt-trans><target>Created at</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="updatedAt" approved="yes">
           <source>updatedAt</source>
           <target state="final">Update date</target>
-      <alt-trans><target>Updated at</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="ascendant" approved="yes">
           <source>ascendant</source>
           <target state="final">Ascendant</target>
@@ -6246,7 +6250,7 @@
       <trans-unit xml:space="preserve" id="no_valid_class_found" approved="yes">
           <source>no_valid_class_found</source>
           <target state="final">No valid class found!</target>
-      <alt-trans><target>No valid class available!</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="duplicated.custom.form.%name%" approved="yes">
           <source>duplicated.custom.form.%name%</source>
           <target state="final">Custom form “%name%” has been duplicated.</target>
@@ -6345,7 +6349,7 @@
       <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%" approved="yes">
           <source>node.%name%.status_changed_to.%status%</source>
           <target state="final">"%name%" node status has been changed to: %status%.</target>
-      <alt-trans><target>« %name% » node status has been changed to: %status%.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%" approved="yes">
           <source>node.%name%.visibility_changed_to.%visible%</source>
           <target state="final">"%name%" node visibility has been changed to: %visible%.</target>
@@ -6797,7 +6801,7 @@
             <source>label_for_field_with_empty_data</source>
             <target state="translated">Placeholder is displayed inside a field with no data in.</target>
             <note>Description for «placeholder» field for Custom form field and Node-Type field. Placeholder is the HTML placeholder attribute for inputs and select-boxes.</note>
-        <alt-trans><target>Le placeholder s’affiche dans un champ ne contenant aucune donnée.</target></alt-trans></trans-unit>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="session.expire.title">
             <source>session.expire.title</source>
             <target state="translated">Session expired</target>
@@ -6962,6 +6966,11 @@
             <source>export.documentation</source>
             <target state="translated">Export documentation</target>
             <note>Button label, for exporting node-type Markdown documentation</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="hide_roadiz_version">
+            <source>hide_roadiz_version</source>
+            <target state="translated">Hide Roadiz version</target>
+            <note>Setting</note>
         </trans-unit>
     </body>
   </file>

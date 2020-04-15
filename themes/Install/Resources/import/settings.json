@@ -441,5 +441,16 @@
         },
         "type": 0,
         "defaultValues": ""
+    },
+    {
+        "name": "hide_roadiz_version",
+        "description": "hide_roadiz_version.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 5
     }
 ]

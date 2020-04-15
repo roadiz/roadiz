@@ -283,7 +283,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
             $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
-            $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
+            $dispatcher->addSubscriber(new SignatureListener(
+                $c['settingsBag'],
+                $kernel::$cmsVersion,
+                $kernel->isDebug()
+            ));
             if (!$kernel->isDebug()) {
                 /**
                  * Do not prevent Symfony Debug tool to perform

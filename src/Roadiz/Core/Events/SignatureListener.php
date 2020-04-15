@@ -29,6 +29,7 @@
  */
 namespace RZ\Roadiz\Core\Events;
 
+use RZ\Roadiz\Core\Bags\Settings;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -40,18 +41,25 @@ use Symfony\Component\HttpKernel\KernelEvents;
  */
 final class SignatureListener implements EventSubscriberInterface
 {
+    /**
+     * @var Settings
+     */
+    protected $settingsBag;
     private $version;
     private $debug;
 
     /**
      * SignatureListener constructor.
-     * @param string $version
-     * @param bool $debug
+     *
+     * @param Settings $settingsBag
+     * @param string   $version
+     * @param bool     $debug
      */
-    public function __construct($version, $debug = false)
+    public function __construct(Settings $settingsBag, $version, $debug = false)
     {
         $this->version = $version;
         $this->debug = $debug;
+        $this->settingsBag = $settingsBag;
     }
     /**
      * Filters the Response.
@@ -60,7 +68,7 @@ final class SignatureListener implements EventSubscriberInterface
      */
     public function onKernelResponse(ResponseEvent $event)
     {
-        if (!$event->isMasterRequest()) {
+        if (!$event->isMasterRequest() || $this->settingsBag->get('hide_roadiz_version', false)) {
             return;
         }
 
