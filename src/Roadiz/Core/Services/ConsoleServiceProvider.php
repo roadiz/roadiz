@@ -73,6 +73,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\PurgeLoginAttemptCommand(),
                 new Console\CleanLoginAttemptCommand(),
                 new Console\PimpleDumperCommand(),
+                new Console\DocumentClearFolderCommand(),
             ];
         };
     }
