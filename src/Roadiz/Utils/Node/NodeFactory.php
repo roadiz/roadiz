@@ -42,6 +42,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
+use RZ\Roadiz\Core\Repositories\UrlAliasRepository;
 use RZ\Roadiz\Utils\StringHandler;
 
 final class NodeFactory implements ContainerAwareInterface
@@ -141,12 +142,15 @@ final class NodeFactory implements ContainerAwareInterface
         Node $parent = null
     ): Node {
         $node = $this->create($title, $type, $translation, $node, $parent);
-        $alias = new UrlAlias($node->getNodeSources()->first());
-        $alias->setAlias($urlAlias);
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->get('em');
-
-        $entityManager->persist($alias);
+        /** @var UrlAliasRepository $repository */
+        $repository = $this->get('em')->getRepository(UrlAlias::class);
+        if (false === $repository->exists($urlAlias)) {
+            $alias = new UrlAlias($node->getNodeSources()->first());
+            $alias->setAlias($urlAlias);
+            /** @var EntityManager $entityManager */
+            $entityManager = $this->get('em');
+            $entityManager->persist($alias);
+        }
 
         return $node;
     }
