@@ -49,13 +49,14 @@ class FolderRepository extends EntityRepository
     /**
      * Find a folder according to the given path or create it.
      *
-     * @param string $folderPath
+     * @param string           $folderPath
+     * @param Translation|null $translation
      *
      * @return Folder
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function findOrCreateByPath($folderPath)
+    public function findOrCreateByPath(string $folderPath, ?Translation $translation = null)
     {
         $folderPath = trim($folderPath);
 
@@ -87,7 +88,9 @@ class FolderRepository extends EntityRepository
              * Add folder translation
              * with given name
              */
-            $translation = $this->_em->getRepository(Translation::class)->findDefault();
+            if (null === $translation) {
+                $translation = $this->_em->getRepository(Translation::class)->findDefault();
+            }
             $folderTranslation = new FolderTranslation($folder, $translation);
             $folderTranslation->setName($folderName);
 

@@ -616,13 +616,14 @@ class TagRepository extends EntityRepository
     /**
      * Find a tag according to the given path or create it.
      *
-     * @param string $tagPath
+     * @param string           $tagPath
+     * @param Translation|null $translation
      *
      * @return Tag
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function findOrCreateByPath($tagPath)
+    public function findOrCreateByPath(string $tagPath, ?Translation $translation = null)
     {
         $tagPath = trim($tagPath);
         $tags = explode('/', $tagPath);
@@ -658,11 +659,13 @@ class TagRepository extends EntityRepository
                     }
                 }
             }
-            $trans = $this->_em->getRepository(Translation::class)->findDefault();
+            if (null === $translation) {
+                $translation = $this->_em->getRepository(Translation::class)->findDefault();
+            }
 
             $tag = new Tag();
             $tag->setTagName($tagName);
-            $translatedTag = new TagTranslation($tag, $trans);
+            $translatedTag = new TagTranslation($tag, $translation);
             $translatedTag->setName($tagName);
             $tag->getTranslatedTags()->add($translatedTag);
 
