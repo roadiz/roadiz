@@ -45,23 +45,25 @@ use RZ\Roadiz\Utils\StringHandler;
  */
 class FolderRepository extends EntityRepository
 {
-
     /**
      * Find a folder according to the given path or create it.
      *
      * @param string           $folderPath
      * @param Translation|null $translation
      *
-     * @return Folder
+     * @return Folder|null
      * @throws ORMException
      * @throws OptimisticLockException
      */
     public function findOrCreateByPath(string $folderPath, ?Translation $translation = null)
     {
         $folderPath = trim($folderPath);
-
         $folders = explode('/', $folderPath);
         $folders = array_filter($folders);
+
+        if (count($folders) === 0) {
+            return null;
+        }
 
         $folderName = $folders[count($folders) - 1];
         $folder = $this->findOneByFolderName($folderName);

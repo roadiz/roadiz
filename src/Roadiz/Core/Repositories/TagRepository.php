@@ -619,7 +619,7 @@ class TagRepository extends EntityRepository
      * @param string           $tagPath
      * @param Translation|null $translation
      *
-     * @return Tag
+     * @return Tag|null
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
@@ -628,6 +628,10 @@ class TagRepository extends EntityRepository
         $tagPath = trim($tagPath);
         $tags = explode('/', $tagPath);
         $tags = array_filter($tags);
+
+        if (count($tags) === 0) {
+            return null;
+        }
 
         $tagName = $tags[count($tags) - 1];
         $tag = $this->findOneByTagName(StringHandler::slugify($tagName));
