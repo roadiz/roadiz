@@ -19,23 +19,23 @@
     <div id="tree-wrapper">
         {# Only display tabs if there are more than 1 available tree #}
         {% if tabCount > 1 %}
-        <ul id="tree-menu" class="uk-tab" data-uk-tab="{connect:'#tree-container', swiping: false}">
+        <ul id="tree-menu" class="uk-tab">
             {% if is_granted('ROLE_ACCESS_NODES')%}
-            <li class="tabs uk-active"><a class="tab-link" href="#"><i class="uk-icon-rz-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
+            <li id="tree-menu-tab-nodes" data-index="0" class="tabs"><a class="tab-link" href="#"><i class="uk-icon-rz-node-tree"></i><span class="label">{% trans %}nodes{% endtrans %}</span></a></li>
             {% endif %}
             {% if is_granted('ROLE_ACCESS_TAGS')%}
-            <li class="tabs"><a class="tab-link" href="#"><i class="uk-icon-rz-tag-tree"></i><span class="label">{% trans %}tags{% endtrans %}</span></a></li>
+            <li id="tree-menu-tab-tags" data-index="1" class="tabs"><a class="tab-link" href="#"><i class="uk-icon-rz-tag-tree"></i><span class="label">{% trans %}tags{% endtrans %}</span></a></li>
             {% endif %}
             {% if is_granted('ROLE_ACCESS_DOCUMENTS')%}
-            <li class="tabs"><a class="tab-link" href="#"><i class="uk-icon-rz-folder-tree"></i><span class="label">{% trans %}folders{% endtrans %}</span></a></li>
+            <li id="tree-menu-tab-folders" data-index="2" class="tabs"><a class="tab-link" href="#"><i class="uk-icon-rz-folder-tree"></i><span class="label">{% trans %}folders{% endtrans %}</span></a></li>
             {% endif %}
         </ul>
         {% endif %}
-        <!-- This is the container of the content items -->
+        {# This is the container of the content items #}
         <ul id="tree-container" class="uk-switcher uk-margin">
             {% if is_granted('ROLE_ACCESS_NODES')%}
             {% if session.user and session.user.chroot.hidingChildren %}
-                <li class="uk-active">
+                <li>
                 {% include '@Rozier/widgets/nodeTree/nodeStackTree.html.twig' with {
                     "node":themeServices.nodeTree.getRootNode,
                     'mainNodeTree':true,
@@ -44,7 +44,7 @@
                 } only %}
                 </li>
             {% else %}
-                <li class="uk-active">
+                <li>
                 {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
                     "nodeTree":themeServices.nodeTree,
                     "node":themeServices.nodeTree.getRootNode,
@@ -56,7 +56,7 @@
             {% endif %}
             {% endif %}
             {% if is_granted('ROLE_ACCESS_TAGS')%}
-                <li class="">
+                <li>
                 {% include '@Rozier/widgets/tagTree/tagTree.html.twig' with {
                     "tagTree":themeServices.tagTree,
                     "tag":themeServices.tagTree.getRootTag,
@@ -66,7 +66,7 @@
                 </li>
             {% endif %}
             {% if is_granted('ROLE_ACCESS_DOCUMENTS')%}
-                <li class="">
+                <li>
                 {% include '@Rozier/widgets/folderTree/folderTree.html.twig' with {
                     "folderTree":themeServices.folderTree,
                     "folder":themeServices.folderTree.getRootFolder,
