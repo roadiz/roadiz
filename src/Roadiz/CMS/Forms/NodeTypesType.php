@@ -68,6 +68,7 @@ class NodeTypesType extends AbstractType
             foreach ($nodeTypes as $nodeType) {
                 $choices[$nodeType->getDisplayName()] = $nodeType->getId();
             }
+            ksort($choices);
 
             return $choices;
         });
