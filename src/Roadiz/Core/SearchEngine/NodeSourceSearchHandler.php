@@ -126,8 +126,6 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             $tmp = "node_visible_b:" . (($args['visible']) ? 'true' : 'false');
             unset($args['visible']);
             $args["fq"][] = $tmp;
-        } else {
-            $args["fq"][] = "node_visible_b:true";
         }
 
         // filter by tag or tags
