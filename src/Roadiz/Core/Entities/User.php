@@ -58,7 +58,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      *
      * @var int
      */
-    const CONFIRMATION_TTL = 300;
+    const CONFIRMATION_TTL = 900;
 
     /**
      * @var bool
