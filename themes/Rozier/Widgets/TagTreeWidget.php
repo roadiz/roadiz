@@ -45,6 +45,7 @@ class TagTreeWidget extends AbstractWidget
     protected $tags = null;
     protected $translation = null;
     protected $canReorder = true;
+    protected $forceTranslation = false;
 
     /**
      * @param Request    $request
@@ -54,11 +55,13 @@ class TagTreeWidget extends AbstractWidget
     public function __construct(
         Request $request,
         Controller $refereeController,
-        Tag $parent = null
+        Tag $parent = null,
+        bool $forceTranslation = false
     ) {
         parent::__construct($request, $refereeController);
 
         $this->parentTag = $parent;
+        $this->forceTranslation = $forceTranslation;
         $this->translation = $this->getController()->get('em')
             ->getRepository(Translation::class)
             ->findOneBy(['defaultTranslation' => true]);
@@ -82,16 +85,15 @@ class TagTreeWidget extends AbstractWidget
 
             $this->canReorder = false;
         }
-
+        $criteria = [
+            'parent' => $this->parentTag,
+        ];
+        if ($this->forceTranslation) {
+            $criteria['translation'] = $this->translation;
+        }
         $this->tags = $this->getController()->get('em')
              ->getRepository(Tag::class)
-            ->findBy(
-                [
-                     'parent' => $this->parentTag,
-                     'translation' => $this->translation,
-                 ],
-                $ordering
-            );
+            ->findBy($criteria, $ordering);
     }
 
     /**
@@ -112,12 +114,16 @@ class TagTreeWidget extends AbstractWidget
                 ];
             }
 
+            $criteria = [
+                'parent' => $parent,
+            ];
+            if ($this->forceTranslation) {
+                $criteria['translation'] = $this->translation;
+            }
+
             return $this->tags = $this->getController()->get('em')
                         ->getRepository(Tag::class)
-                        ->findBy([
-                            'parent' => $parent,
-                            'translation' => $this->translation,
-                        ], $ordering);
+                        ->findBy($criteria, $ordering);
         }
 
         return null;
