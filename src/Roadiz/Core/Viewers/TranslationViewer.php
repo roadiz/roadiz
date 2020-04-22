@@ -181,9 +181,24 @@ class TranslationViewer
 
         $return = [];
 
-        /** @var Translation $translation */
         foreach ($translations as $translation) {
             $url = null;
+            /*
+             * Remove existing _locale in query string
+             */
+            if (key_exists('_locale', $query)) {
+                unset($query["_locale"]);
+            }
+            /*
+             * Remove existing page parameter in query string
+             * if listing is different between 2 languages, maybe
+             * page 2 or 3 does not exist in language B but exists in
+             * language A
+             */
+            if (key_exists('page', $query)) {
+                unset($query['page']);
+            }
+
             if (!empty($attr['_route']) && is_string($attr['_route'])) {
                 $name = $attr['_route'];
                 /*
@@ -204,11 +219,15 @@ class TranslationViewer
                         unset($attr['_route_params']['_locale']);
                     }
                 }
+
                 /*
-                 * Remove existing _locale in query string
+                 * Remove existing page parameter in route parameters
+                 * if listing is different between 2 languages, maybe
+                 * page 2 or 3 does not exist in language B but exists in
+                 * language A
                  */
-                if (key_exists('_locale', $query)) {
-                    unset($query["_locale"]);
+                if (key_exists('page', $attr['_route_params'])) {
+                    unset($attr['_route_params']['page']);
                 }
 
                 $url = $this->router->generate(
@@ -232,7 +251,7 @@ class TranslationViewer
                     'name' => $name,
                     'url' => $url,
                     'locale' => $translation->getPreferredLocale(),
-                    'active' => ($this->translation->getPreferredLocale() == $translation->getPreferredLocale()) ? true : false,
+                    'active' => $this->translation->getPreferredLocale() == $translation->getPreferredLocale(),
                     'translation' => $translation->getName(),
                 ];
             }
