@@ -1,0 +1,23 @@
+<tr>
+    <th>{% trans %}nodeName{% endtrans %}
+        {% include 'includes/column_ordering.html.twig' with {
+            'field': 'nodeName',
+            'filters': filters,
+        } only %}
+    </th>
+    <th class="mobile-hidden">
+        {% trans %}node.type{% endtrans %}
+        {% include 'includes/column_ordering.html.twig' with {
+            'field': 'nt.name',
+            'filters': filters,
+        } only %}
+    </th>
+    <th class="mobile-hidden uk-visible-large">{% trans %}node.status{% endtrans %}</th>
+    <th class="mobile-hidden uk-visible-xlarge">{% trans %}last.modification{% endtrans %}
+        {% include 'includes/column_ordering.html.twig' with {
+            'field': 'updatedAt',
+            'filters': filters,
+        } only %}
+    </th>
+    <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+</tr>
