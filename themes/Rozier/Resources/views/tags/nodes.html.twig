@@ -16,53 +16,15 @@
         <div class="content-table-cont">
             <table class="tags content-table uk-table">
                 <thead>
-                    <tr>
-                        <th>{% trans %}nodeName{% endtrans %}
-                        {% if request.query.get("field") == 'nodeName' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=nodeName&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a>
-                        {% else %}
-                            <a href="?field=nodeName&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a>
-                        {% endif %}
-                        </th>
-                        <th>{% trans %}node.type{% endtrans %}
-                        {% if request.query.get("field") == 'nodeType' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=nodeType&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
-                        {% else %}
-                            <a href="?field=nodeType&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
-                        {% endif %}
-                        </th>
-                        <th>{% trans %}node.status{% endtrans %}</th>
-                        <th>{% trans %}last.modification{% endtrans %}
-                        {% if request.query.get("field") == 'updatedAt' and request.query.get("ordering") == "DESC" %}
-                            <a href="?field=updatedAt&amp;ordering=ASC"><i class="uk-icon-caret-down"></i></a></th>
-                        {% else %}
-                            <a href="?field=updatedAt&amp;ordering=DESC"><i class="uk-icon-caret-up"></i></a></th>
-                        {% endif %}
-                        </th>
-                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
-                    </tr>
+                {% include 'nodes/widgets/node-header.html.twig' with {
+                    'filters': filters
+                } only %}
                 </thead>
                 <tbody>
                     {% for node in nodes %}
-                    <tr>
-                        <td><a href="{{ path('nodesEditSourcePage', { nodeId:node.id, translationId:node.nodeSources.first.translation.id}) }}">{{ node.nodeSources.first.title }}</a></td>
-                        <td>{{ node.getNodeType.getDisplayName }}</td>
-                        <td>
-                            {% if node.isPublished == false %}<div class="uk-badge uk-badge-table uk-badge-warning">{% trans %}node.not.published{% endtrans %}</div>{% endif %}
-                            {% if node.isVisible == false %}<div class="uk-badge uk-badge-table uk-badge-notification"><span class="uk-icon-eye-slash"></span></div>{% endif %}
-                            {% if node.isLocked %}<div class="uk-badge uk-badge-table uk-badge-notification"><span class="uk-icon-lock"></span></div>{% endif %}
-                            {% if node.isArchived %}<div class="uk-badge uk-badge-table uk-badge-notification"><span class="uk-icon-archive"></span></div>{% endif %}
-                        </td>
-                        <td>{{ node.getUpdatedAt|localizeddate('full', 'none') }}</td>
-                        <td>
-                        {% spaceless %}
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesEditSourcePage', { nodeId:node.id, translationId:node.nodeSources.first.translation.id}) }}" title="{% trans %}edit.node{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesTreePage', { nodeId: node.getId }) }}" title="{% trans %}see.nodetree{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-tree"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('nodesDeletePage', { nodeId: node.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-
-                        {% endspaceless %}
-                        </td>
-                    </tr>
+                        {% include 'nodes/widgets/node-row.html.twig' with {
+                            'node': node
+                        } only %}
                     {% endfor %}
                 </tbody>
             </table>
