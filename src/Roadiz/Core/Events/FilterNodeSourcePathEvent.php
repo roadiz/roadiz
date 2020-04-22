@@ -43,6 +43,10 @@ use Symfony\Component\Routing\RequestContext;
 class FilterNodeSourcePathEvent extends Event
 {
     /**
+     * @var bool
+     */
+    protected $forceLocaleWithUrlAlias;
+    /**
      * @var Theme|null
      */
     private $theme;
@@ -83,19 +87,22 @@ class FilterNodeSourcePathEvent extends Event
      * @param RequestContext|null $requestContext
      * @param array               $parameters
      * @param bool                $forceLocale
+     * @param bool                $forceLocaleWithUrlAlias
      */
     public function __construct(
         ?Theme $theme,
         ?NodesSources $nodeSource,
         ?RequestContext $requestContext,
         array $parameters = [],
-        bool $forceLocale = false
+        bool $forceLocale = false,
+        bool $forceLocaleWithUrlAlias = false
     ) {
         $this->theme = $theme;
         $this->nodeSource = $nodeSource;
         $this->requestContext = $requestContext;
         $this->forceLocale = $forceLocale;
         $this->parameters = $parameters;
+        $this->forceLocaleWithUrlAlias = $forceLocaleWithUrlAlias;
     }
 
     /**
@@ -218,6 +225,26 @@ class FilterNodeSourcePathEvent extends Event
     public function setContainsScheme(bool $containsScheme): FilterNodeSourcePathEvent
     {
         $this->containsScheme = $containsScheme;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isForceLocaleWithUrlAlias(): bool
+    {
+        return $this->forceLocaleWithUrlAlias;
+    }
+
+    /**
+     * @param bool $forceLocaleWithUrlAlias
+     *
+     * @return FilterNodeSourcePathEvent
+     */
+    public function setForceLocaleWithUrlAlias(bool $forceLocaleWithUrlAlias): FilterNodeSourcePathEvent
+    {
+        $this->forceLocaleWithUrlAlias = $forceLocaleWithUrlAlias;
 
         return $this;
     }

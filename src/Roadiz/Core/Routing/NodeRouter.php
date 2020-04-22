@@ -302,7 +302,8 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $source,
             $this->getContext(),
             $parameters,
-            (boolean) $this->settingsBag->get('force_locale')
+            (boolean) $this->settingsBag->get('force_locale'),
+            (boolean) $this->settingsBag->get('force_locale_with_urlaliases')
         );
         /*
          * Dispatch node-source URL generation to any listener

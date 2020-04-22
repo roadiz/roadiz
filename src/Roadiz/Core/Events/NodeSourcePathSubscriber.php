@@ -53,7 +53,8 @@ class NodeSourcePathSubscriber implements EventSubscriberInterface
         $urlGenerator = new NodesSourcesUrlGenerator(
             null,
             $event->getNodeSource(),
-            $event->isForceLocale()
+            $event->isForceLocale(),
+            $event->isForceLocaleWithUrlAlias()
         );
         $event->setPath($urlGenerator->getNonContextualUrl($event->getTheme(), $event->getParameters()));
     }

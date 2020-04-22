@@ -33,26 +33,47 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 
-class NodesSourcesUrlGenerator implements UrlGeneratorInterface
+/**
+ * Do not extend this class, use NodesSourcesPathGeneratingEvent::class event
+ *
+ * @package RZ\Roadiz\Utils\UrlGenerators
+ */
+final class NodesSourcesUrlGenerator implements UrlGeneratorInterface
 {
+    /**
+     * @var Request|null
+     */
     protected $request;
+    /**
+     * @var NodesSources|null
+     */
     protected $nodeSource;
+    /**
+     * @var bool
+     */
     protected $forceLocale;
+    /**
+     * @var bool
+     */
+    protected $forceLocaleWithUrlAlias;
 
     /**
      *
-     * @param Request $request
+     * @param Request      $request
      * @param NodesSources $nodeSource
-     * @param bool $forceLocale
+     * @param bool         $forceLocale
+     * @param bool         $forceLocaleWithUrlAlias
      */
     public function __construct(
         Request $request = null,
         NodesSources $nodeSource = null,
-        $forceLocale = false
+        bool $forceLocale = false,
+        bool $forceLocaleWithUrlAlias = false
     ) {
         $this->request = $request;
         $this->nodeSource = $nodeSource;
         $this->forceLocale = $forceLocale;
+        $this->forceLocaleWithUrlAlias = $forceLocaleWithUrlAlias;
     }
 
 
@@ -145,7 +166,7 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
              * If using node-name, we must use shortLocale when current
              * translation is not the default one.
              */
-            if ($this->urlNeedsLocalePrefix($this->nodeSource, $this->forceLocale)) {
+            if ($this->urlNeedsLocalePrefix($this->nodeSource)) {
                 $urlTokens[] = $this->nodeSource->getTranslation()->getPreferredLocale();
             }
 
@@ -177,19 +198,28 @@ class NodesSourcesUrlGenerator implements UrlGeneratorInterface
 
     /**
      * @param NodesSources $nodesSources
-     * @param bool         $forceLocale
      *
      * @return bool
      */
-    protected function urlNeedsLocalePrefix(NodesSources $nodesSources, bool $forceLocale): bool
+    protected function urlNeedsLocalePrefix(NodesSources $nodesSources): bool
     {
         /*
          * Needs a prefix only if translation is not default AND nodeSource does not have an Url alias
          * for this translation.
          * Of course we force prefix if admin said so…
+         * Or we can force prefix only when we use urlAliases
          */
-        if ((!$this->useUrlAlias($nodesSources) && !$nodesSources->getTranslation()->isDefaultTranslation()) ||
-            true === $forceLocale) {
+        if ((
+                !$this->useUrlAlias($nodesSources) &&
+                !$nodesSources->getTranslation()->isDefaultTranslation()
+            ) ||
+            (
+                $this->useUrlAlias($nodesSources) &&
+                !$nodesSources->getTranslation()->isDefaultTranslation() &&
+                true === $this->forceLocaleWithUrlAlias
+            ) ||
+            true === $this->forceLocale
+        ) {
             return true;
         }
 
