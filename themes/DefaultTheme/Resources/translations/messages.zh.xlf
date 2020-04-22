@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="none" source-language="en" datatype="plaintext" target-language="zh-CN">
+    <body>
+      <trans-unit id="hello.world">
+        <source>hello.world</source>
+        <target state="translated">世界，你好！</target>
+      </trans-unit>
+      <trans-unit id="nodeName">
+        <source>node.name.is.%name%</source>
+        <target state="translated">这是 “%name%” 节点</target>
+      </trans-unit>
+      <trans-unit id="translationName">
+        <source>translation.is.%name%</source>
+        <target state="translated">这是 “%name%” 翻译</target>
+      </trans-unit>
+      <trans-unit id="contact">
+        <source>contact</source>
+        <target state="translated">联系人</target>
+      </trans-unit>
+      <trans-unit id="contact.us">
+        <source>contact.us</source>
+        <target state="translated">联系我们</target>
+      </trans-unit>
+      <trans-unit id="your.email">
+        <source>your.email</source>
+        <target state="translated">您的电子邮件</target>
+      </trans-unit>
+      <trans-unit id="your.name">
+        <source>your.name</source>
+        <target state="translated">您的名字</target>
+      </trans-unit>
+      <trans-unit id="your.message">
+        <source>your.message</source>
+        <target state="translated">您的信息</target>
+      </trans-unit>
+      <trans-unit id="call.me.back">
+        <source>call.me.back</source>
+        <target state="translated">请回电话</target>
+      </trans-unit>
+      <trans-unit id="send.contact.form">
+        <source>send.contact.form</source>
+        <target state="translated">发送表格</target>
+      </trans-unit>
+      <trans-unit id="document">
+        <source><![CDATA[document]]></source>
+        <target state="translated"><![CDATA[添加一个图片或 PDF 附件（＜ 5 MB）]]></target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.consent_message">
+        <source>cookie_choice.consent_message</source>
+        <target state="translated">我们使用 cookies 以改进您在我们网站的体验。继续停留在我们的网站，代表您同意我们设定这些 cookies 。</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.close_message">
+        <source>cookie_choice.close_message</source>
+        <target state="translated">好的</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.find_out_more_message">
+        <source>cookie_choice.find_out_more_message</source>
+        <target state="translated">了解更多</target>
+      </trans-unit>
+      <trans-unit id="no_javascript_message">
+        <source>no_javascript_message</source>
+        <target state="translated">您的浏览器不支持或已禁用 JavaScripts 。请开启它或更新您的浏览器以获得更好的浏览体验。</target>
+      </trans-unit>
+      <trans-unit id="browser_update.message">
+        <source>browser_update.message</source>
+        <target state="translated">您的浏览器过时了。它有一些安全故障且无法正确显示此网站的某些特性。</target>
+      </trans-unit>
+      <trans-unit id="browser_update.link">
+        <source>browser_update.link</source>
+        <target state="translated">查看如何升级您的浏览器</target>
+      </trans-unit>
+      <trans-unit id="error404.title">
+        <source>error404.title</source>
+        <target state="translated">404 错误</target>
+      </trans-unit>
+      <trans-unit id="error404.message">
+        <source>error404.message</source>
+        <target state="translated">无法找到请求的页面。</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

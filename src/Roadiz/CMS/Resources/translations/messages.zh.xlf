@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="zh-CN">
+    <body>
+      <!-- welcome.user.email -->
+      <trans-unit id="welcome.user.email.%site%">
+        <source>welcome.user.email.%site%</source>
+        <target state="translated">您在 “%site%” 的用户帐号已创建。</target>
+      </trans-unit>
+      <trans-unit id="your.user.account">
+        <source>your.user.account</source>
+        <target state="translated">您的用户帐号</target>
+      </trans-unit>
+      <trans-unit id="username">
+        <source>username</source>
+        <target state="translated">用户名</target>
+      </trans-unit>
+      <trans-unit id="email">
+        <source>email</source>
+        <target state="translated">电子邮件</target>
+      </trans-unit>
+      <trans-unit id="password">
+        <source>password</source>
+        <target state="translated">密码</target>
+      </trans-unit>
+      <trans-unit id="for.questions.email">
+        <source>for.questions.email</source>
+        <target state="translated">有任何问题？请用电子邮件联系我们：</target>
+      </trans-unit>
+      <!-- Contact forms -->
+      <trans-unit id="contact.form">
+        <source>contact.form</source>
+        <target state="translated">联系表</target>
+      </trans-unit>
+      <trans-unit id="new.contact.form.%site%">
+        <source>new.contact.form.%site%</source>
+        <target state="translated">“%site%” 的新联系请求</target>
+      </trans-unit>
+      <trans-unit id="form.successfully.sent">
+        <source>form.successfully.sent</source>
+        <target state="translated">您的表格已成功送出</target>
+      </trans-unit>
+      <trans-unit id="form.has.errors">
+        <source>form.has.errors</source>
+        <target state="translated">您的表格无效，请正确填写必填字段。</target>
+      </trans-unit>
+      <trans-unit id="%field%.is.mandatory">
+        <source>%field%.is.mandatory</source>
+        <target state="translated">字段 “%field%” 是必填的。</target>
+      </trans-unit>
+      <trans-unit id="email.not.valid">
+        <source>email.not.valid</source>
+        <target state="translated">电子邮件无效</target>
+      </trans-unit>
+      <trans-unit id="date">
+        <source>date</source>
+        <target state="translated">日期</target>
+      </trans-unit>
+      <trans-unit id="ip.address">
+        <source>ip.address</source>
+        <target state="translated">IP 地址</target>
+      </trans-unit>
+      <trans-unit id="submittedAt">
+        <source>submittedAt</source>
+        <target state="translated">注册于</target>
+      </trans-unit>
+      <trans-unit id="form.submit">
+        <source>form.submit</source>
+        <target state="translated">注册</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="answer.form">
+                <source>answer.form</source>
+                <target state="translated">答复表</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.send">
+                <source>customForm.%name%.send</source>
+                <target state="translated">答复 “%name%” 已送出。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+                <source>new.answer.form.%site%</source>
+                <target state="translated">来自 “%site%” 的新答复表。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="file.not.accepted">
+                <source>file.not.accepted</source>
+                <target state="translated">附件无法接受。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.answer.sent">
+                <source>customForm.answer.sent</source>
+                <target state="translated">您的回复已成功送出。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target state="translated">无</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.password.request">
+              <source>reset.password.request</source>
+              <target state="translated">重置密码请求</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+                <source>you.asked.for.a.password.reset.on.%site%</source>
+                <target state="translated">您请求重置 “%site%” 的密码</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+                <source>you.need.to.choose.a.new.password.using.following.link</source>
+                <target state="translated">您需要使用以下链接为您的帐号创建新密码。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+                <source>as.a.reminder.here.are.your.credentials</source>
+                <target state="translated">提醒您，这是您的公开凭据。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+                <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+                <target state="translated">如果您没有请求此电子邮件，请忽略它且您的密码不会被更改。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target state="translated">重置您的密码</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target state="translated">您需要填写此必填字段。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target state="translated">* 必填字段</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance">
+                <source>website.is.under.maintenance</source>
+                <target state="translated">网站正在维护</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon">
+                <source>website.is.under.maintenance.we.will.be.back.soon</source>
+                <target state="translated">网站正在维护中，很快回来！</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target state="translated">YAML 代码无效。 {{ error }}</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target state="translated">此值已使用。</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_should_contains_at_least_one_capital_one_digit">
+                <source>password_should_contains_at_least_one_capital_one_digit</source>
+                <target state="translated">密码应包含至少一个大写字母和一个数字。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_blacklisted">
+                <source>password_blacklisted</source>
+                <target state="translated">密码在黑名单中</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_should_be_at_least_characters_long">
+                <source>password_should_be_at_least_{{length}}_characters_long</source>
+                <target state="translated">密码长度应至少有 {{length}} 位</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

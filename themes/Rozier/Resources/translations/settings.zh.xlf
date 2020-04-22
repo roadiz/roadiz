@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="zh-CN">
+    <body>
+      <trans-unit xml:space="preserve" id="force_locale.description">
+                <source>Force displaying translation locale in every node’ paths. This should be ON if you redirect users based on their language on homepage.</source>
+                <target state="translated">强制在每个节点的路径中显示翻译本地化。如果您在首页基于他们的语言重定向用户，这应该要开启。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender.description">
+                <source>Default sender email, used as origin for every system email sent. This email **must be allowed by your SMTP server.**</source>
+                <target state="translated">默认电子邮件发送者，作为所有系统邮件的发送来源。此电子邮件 **必须被您的 SMTP 服务器允许**。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="leaflet_map_tile_url.description">
+                <source>Default maps tiles layout when using *Leaflet*.</source>
+                <target state="translated">当使用 *Leaflet* 时的默认地图图层布局。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="login_image.description">
+                <source>Replace random *Splashbase* login images with your own.</source>
+                <target state="translated">用您自己的图片替换 *Splashbase* 的随机登录图片。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="maintenance_mode.description">
+                <source>Switch maintenance mode. Only login page will be available for public requests.</source>
+                <target state="translated">切换维护模式。只有登录页面会回应公开请求。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="maps_default_location.description">
+                <source>Default maps marker location.</source>
+                <target state="translated">默认地图标记位置。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="maps_style.description">
+                <source>Default maps tiles layout when using *Google Maps*.</source>
+                <target state="translated">当使用 *Google Maps* 时的默认地图图层布局。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="max_versions_showed.description">
+                <source>Maximum versions count showed in actions menu.</source>
+                <target state="translated">操作菜单中显示的最大版本数计数。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="hide_roadiz_version.help">
+                <source>hide_roadiz_version.help</source>
+                <target state="translated">在回应头及主题变量中隐藏 Roadiz 版本和名称。</target>
+                <note>Setting</note>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

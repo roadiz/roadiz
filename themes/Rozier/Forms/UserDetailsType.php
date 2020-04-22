@@ -134,6 +134,7 @@ class UserDetailsType extends AbstractType
                     'Türkçe' => 'tr',
                     'Italiano' => 'it',
                     'српска ћирилица' => 'sr_Cyrl',
+                    '中文' => 'zh',
                 ],
                 'placeholder' => 'use.website.default_language'
             ])

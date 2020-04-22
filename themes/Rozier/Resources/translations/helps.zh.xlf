@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="zh-CN">
+    <body>
+      <trans-unit xml:space="preserve" id="document.private.help">
+                <source>document.private.help</source>
+                <target state="translated">移动目前的文档到一个非公开的服务器目录。此选项禁用您网站上的文档显示。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="document.imageAverageColor.help">
+                <source>document.imageAverageColor.help</source>
+                <target state="translated">图像平均颜色，对于您网站上的图片加载时创建彩色占位符是非常有用的。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="node.nodeName.help">
+                <source>node.nodeName.help</source>
+                <target state="translated">节点名必须是唯一的，且被用于生成您的页面网址和在主题中取得目前的节点。它必须不包含任何特殊字符。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.tagName.help">
+                <source>tag.tagName.help</source>
+                <target state="translated">标签名必须是唯一的，且被用于生成您的页面网址和在主题中取得目前的标签。它必须不包含任何特殊字符。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.locked.help">
+                <source>tag.locked.help</source>
+                <target state="translated">被锁定的标签不会在更新翻译称谓后被重命名。它也不会被删除。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.metaTitle.help">
+                <source>nodeSource.metaTitle.help</source>
+                <target state="translated">SEO 标题能让您写下您页面的全部标题。为了在搜索引擎中完全显示，标题一般不应该超过 55 到 65 个字。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.metaKeywords.help">
+                <source>nodeSource.metaKeywords.help</source>
+                <target state="translated">SEO 关键词现在是可选的，且不再被搜索引擎重视。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.metaDescription.help">
+                <source>nodeSource.metaDescription.help</source>
+                <target state="translated">SEO 描述是您页面的几个字的总结。它的目的是为了简略的描述它的内容。此描述的长度必须介于 120 到 155 个字之间。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.urlAlias.help">
+                <source>nodeSource.urlAlias.help</source>
+                <target state="translated">网址别名能让您为页面的每个翻译重写页面的网址的最后一部分。它们必须不同于节点名且全站唯一。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.redirections.help">
+                <source>nodeSource.redirections.help</source>
+                <target state="translated">自动重定向总是将访客从给出的请求路径重定向到此翻译现有节点最新的网址。已创建的重定向会是 “固定的” 形式。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes.help">
+                <source>nodeType.hidingNonReachableNodes.help</source>
+                <target state="translated">此节点类型将只会隐藏它不可到达的子节点。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_fulltext_search_engine">
+                <source>exclude_this_field_from_fulltext_search_engine</source>
+                <target state="translated">除了全文搜索引擎中的此字段值。</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

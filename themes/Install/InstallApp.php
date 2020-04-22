@@ -360,6 +360,7 @@ class InstallApp extends AppController
                     'Türkçe' => 'tr',
                     'Italiano' => 'it',
                     'српска ћирилица' => 'sr_Cyrl',
+                    '中文' => 'zh',
                 ],
                 'constraints' => [
                     new NotBlank(),

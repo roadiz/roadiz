@@ -322,8 +322,10 @@ abstract class FrontendController extends AppController
         $this->container['stopwatch']->start('prepareThemeAssignation');
         $this->storeNodeAndTranslation($node, $translation);
         $home = $this->getHome($translation);
-        $this->assignation['home'] = $home;
-        $this->assignation['homeSource'] = $home->getNodeSourcesByTranslation($translation)->first();
+        if (null !== $home) {
+            $this->assignation['home'] = $home;
+            $this->assignation['homeSource'] = $home->getNodeSourcesByTranslation($translation)->first();
+        }
         /*
          * Use a DI container to delay API requests
          */

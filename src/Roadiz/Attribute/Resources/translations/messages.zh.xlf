@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="zh-CN">
+    <body>
+      <trans-unit xml:space="preserve" id="manage.attributes">
+                <source>manage.attributes</source>
+                <target state="translated">管理属性</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes">
+                <source>attributes</source>
+                <target state="translated">属性</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.code">
+                <source>attributes.code</source>
+                <target state="translated">代码</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute">
+                <source>add.a.attribute</source>
+                <target state="translated">创建一个属性</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.code">
+                <source>attributes.form.code</source>
+                <target state="translated">代码</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type">
+                <source>attributes.form.type</source>
+                <target state="translated">属性类型</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.attributeTranslations">
+                <source>attributes.form.attributeTranslations</source>
+                <target state="translated">翻译</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.options">
+                <source>attributes.form.options</source>
+                <target state="translated">可用的选项（选择类型）</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="edit.attribute.%name%">
+                <source>edit.attribute.%name%</source>
+                <target state="translated">%name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.attributes">
+                <source>back_to.attributes</source>
+                <target state="translated">回到属性</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.string">
+                <source>attributes.form.type.string</source>
+                <target state="translated">基本文字字符串</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.datetime">
+                <source>attributes.form.type.datetime</source>
+                <target state="translated">日期与时间</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.boolean">
+                <source>attributes.form.type.boolean</source>
+                <target state="translated">布尔值（是 或 否）</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.integer">
+                <source>attributes.form.type.integer</source>
+                <target state="translated">整数</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.decimal">
+                <source>attributes.form.type.decimal</source>
+                <target state="translated">小数</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.percent">
+                <source>attributes.form.type.percent</source>
+                <target state="translated">百分比</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.email">
+                <source>attributes.form.type.email</source>
+                <target state="translated">单个电子邮件地址</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.colour">
+                <source>attributes.form.type.colour</source>
+                <target state="translated">十六进制颜色</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.enum">
+                <source>attributes.form.type.enum</source>
+                <target state="translated">单个选择</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.date">
+                <source>attributes.form.type.date</source>
+                <target state="translated">日期</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.country">
+                <source>attributes.form.type.country</source>
+                <target state="translated">国家及地区代码</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="node.attributes">
+                <source>node.attributes</source>
+                <target state="translated">属性</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_values.form.attribute">
+                <source>attribute_values.form.attribute</source>
+                <target state="translated">添加一个新属性</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new_attribute">
+                <source>new_attribute</source>
+                <target state="translated">-- 选择一个属性 --</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.node.attribute">
+                <source>add.a.node.attribute</source>
+                <target state="translated">添加属性到现有代码</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.no_value">
+                <source>attributes.no_value</source>
+                <target state="translated">-- 没有值 --</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.created">
+                <source>attribute.%name%.created</source>
+                <target state="translated">属性 %name% 已创建</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.updated">
+                <source>attribute.%name%.updated</source>
+                <target state="translated">属性 %name% 已更新</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.deleted">
+                <source>attribute.%name%.deleted</source>
+                <target state="translated">属性 %name% 已删除</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.value">
+                <source>attributes.value</source>
+                <target state="translated">值</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.group">
+                <source>attributes.group</source>
+                <target state="translated">群组</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
+                <source>are_you_sure.delete.attribute</source>
+                <target state="translated">您确定要删除此属性吗？</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.deleted_from_node.%nodeName%">
+                <source>attribute.%name%.deleted_from_node.%nodeName%</source>
+                <target state="translated">属性 %name% 已从节点 %nodeName% 中删除</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute.%name%">
+                <source>delete.attribute.%name%</source>
+                <target state="translated">删除属性 %name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_value_translation.%name%.updated_from_node.%nodeName%">
+                <source>attribute_value_translation.%name%.updated_from_node.%nodeName%</source>
+                <target state="translated">节点源 %nodeName% 的属性 %name% 的值已更新。</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_code.must_contain_alpha_underscore">
+                <source>attribute_code.must_contain_alpha_underscore</source>
+                <target state="translated">属性代码应只包含字母及下划线。</target>
+                <note>Validation failed message on Attribute code that must only contain alpha and underscore characters.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.searchable">
+                <source>attributes.form.searchable</source>
+                <target state="translated">在搜索引擎中索引？</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.searchable">
+                <source>attributes.form_help.searchable</source>
+                <target state="translated">在全文搜索引擎中，为每个翻译索引目前的属性值。</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.code">
+                <source>attributes.form_help.code</source>
+                <target state="translated">代码能让属性名在您的网站翻译中是唯一的。</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.import_form.file.label">
+                <source>attributes.import_form.file.label</source>
+                <target state="translated">导入属性文件</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.import_form.file.help">
+                <source>attributes.import_form.file.help</source>
+                <target state="translated">属性文件必须是包含 Roadiz 属性结构的有效 JSON 文件。</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.group">
+                <source>attributes.form.group</source>
+                <target state="translated">群组</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.group">
+                <source>attributes.form_help.group</source>
+                <target state="translated">群组能让开发者在同一个位置收集属性以公开展示。</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.color">
+                <source>attributes.form.color</source>
+                <target state="translated">颜色</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.color">
+                <source>attributes.form_help.color</source>
+                <target state="translated">可能公开展示的属性颜色</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.documents">
+                <source>attributes.form.documents</source>
+                <target state="translated">文档</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.documents">
+                <source>attributes.form_help.documents</source>
+                <target state="translated">可能会公开展示的说明现有属性的文档</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.group.placeholder">
+                <source>attributes.form.group.placeholder</source>
+                <target state="translated">-- 没有群组 --</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.attribute_groups">
+                <source>back_to.attribute_groups</source>
+                <target state="translated">回到属性组</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute_group">
+                <source>add.a.attribute_group</source>
+                <target state="translated">创建一个属性组</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_groups">
+                <source>attribute_groups</source>
+                <target state="translated"> 属性组</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_groups.name">
+                <source>attribute_groups.name</source>
+                <target state="translated">群组名</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.name">
+                <source>attribute_group.form.name</source>
+                <target state="translated">群组名</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.created">
+                <source>attribute_group.%name%.created</source>
+                <target state="translated">%name% 属性组已创建</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.updated">
+                <source>attribute_group.%name%.updated</source>
+                <target state="translated">%name% 属性组已更新</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.deleted">
+                <source>attribute_group.%name%.deleted</source>
+                <target state="translated">%name% 属性组已删除</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute_group.%name%">
+                <source>delete.attribute_group.%name%</source>
+                <target state="translated">删除 %name% 属性组</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute_group">
+                <source>are_you_sure.delete.attribute_group</source>
+                <target state="translated">您确定要删除此属性组吗？</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.canonicalName">
+                <source>attribute_group.form.canonicalName</source>
+                <target state="translated">规范名称</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.attributeGroupTranslations">
+                <source>attribute_group.form.attributeGroupTranslations</source>
+                <target state="translated">群组翻译</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.reset_value">
+                <source>attributes.reset_value</source>
+                <target state="translated">重置属性值为默认语言</target>
+                <note>Action label to reset value to the default language one. This does not delete attribute, only its translation.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.reset_for_node.%nodeName%">
+                <source>attribute.%name%.reset_for_node.%nodeName%</source>
+                <target state="translated">节点 %nodeName% 的属性 %name% 已被重置。</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.delete_value">
+                <source>attributes.delete_value</source>
+                <target state="translated">删除此节点的属性值</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete_value.attribute">
+                <source>are_you_sure.delete_value.attribute</source>
+                <target state="translated">您确定要删除此节点的属性值吗？</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute.%name%.for_node.%nodeName%">
+                <source>delete.attribute.%name%.for_node.%nodeName%</source>
+                <target state="translated">删除节点 %nodeName% 的 %name% 属性。</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.attribute.%name%">
+                <source>reset.attribute.%name%</source>
+                <target state="translated">重置 %name% 属性值</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.attribute.%name%.for_node.%nodeName%">
+                <source>reset.attribute.%name%.for_node.%nodeName%</source>
+                <target state="translated">重置 %nodeName% 节点的 %name% 属性值</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.reset.attribute_value">
+                <source>are_you_sure.reset.attribute_value</source>
+                <target state="translated">您确定要重置此语言的属性值吗？</target>
+                <note/>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>
