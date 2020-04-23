@@ -259,7 +259,7 @@ class SearchController extends RozierApp
      * @return null|RedirectResponse|Response
      * @throws Twig_Error_Runtime
      */
-    public function searchNodeSourceAction(Request $request, $nodetypeId)
+    public function searchNodeSourceAction(Request $request, int $nodetypeId)
     {
         $nodetype = $this->get('em')->find(NodeType::class, $nodetypeId);
 
@@ -284,7 +284,7 @@ class SearchController extends RozierApp
         }
 
         $this->assignation['form'] = $form->createView();
-        $this->assignation['nodeTypeForm'] = $nodeTypeForm->createView();
+        $this->assignation['nodeType'] = $nodetype;
         $this->assignation['filters']['searchDisable'] = true;
 
         return $this->render('search/list.html.twig', $this->assignation);
