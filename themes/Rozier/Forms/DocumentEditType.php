@@ -46,6 +46,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class DocumentEditType extends AbstractType
@@ -62,8 +63,8 @@ class DocumentEditType extends AbstractType
             ])
             ->add('filename', TextType::class, [
                 'label' => 'filename',
-                'required' => false,
                 'constraints' => [
+                    new NotBlank(),
                     new Regex([
                         'pattern' => '/\.[a-z0-9]+$/i',
                         'htmlPattern' => ".[a-z0-9]+$",
@@ -78,6 +79,9 @@ class DocumentEditType extends AbstractType
             ->add('mimeType', TextType::class, [
                 'label' => 'document.mimeType',
                 'required' => true,
+                'constraints' => [
+                    new NotBlank(),
+                ],
             ])
             ->add('private', CheckboxType::class, [
                 'label' => 'private',
