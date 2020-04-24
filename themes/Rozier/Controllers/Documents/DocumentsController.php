@@ -29,8 +29,11 @@
 namespace Themes\Rozier\Controllers\Documents;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\Entities\AttributeDocuments;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\TagTranslation;
+use RZ\Roadiz\Core\Entities\TagTranslationDocuments;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\DocumentCreatedEvent;
 use RZ\Roadiz\Core\Events\DocumentDeletedEvent;
@@ -778,6 +781,14 @@ class DocumentsController extends RozierApp
         if ($document !== null) {
             $this->assignation['document'] = $document;
             $this->assignation['usages'] = $document->getNodesSourcesByFields();
+            $this->assignation['attributes'] = $document->getAttributeDocuments()
+                ->map(function (AttributeDocuments $attributeDocument) {
+                    return $attributeDocument->getAttribute();
+                });
+            $this->assignation['tags'] = $document->getTagTranslations()
+                ->map(function (TagTranslationDocuments $tagTranslationDocuments) {
+                    return $tagTranslationDocuments->getTagTranslation()->getTag();
+                });
 
             return $this->render('documents/usage.html.twig', $this->assignation);
         }
