@@ -137,11 +137,12 @@ class AttributesExtension extends AbstractExtension
     /**
      * @param AttributableInterface $attributable
      * @param Translation $translation
+     * @param bool $hideNotTranslated
      *
      * @return array
      * @throws SyntaxError
      */
-    public function getAttributeValues($attributable, Translation $translation)
+    public function getAttributeValues($attributable, Translation $translation, bool $hideNotTranslated = false)
     {
         if (null === $attributable) {
             throw new SyntaxError('Cannot call get_attributes on NULL');
@@ -151,12 +152,25 @@ class AttributesExtension extends AbstractExtension
         }
         $attributeValueTranslations = [];
 
-        $attributeValues = $this->entityManager
-            ->getRepository(AttributeValue::class)
-            ->findByAttributableAndTranslation(
-                $attributable,
-                $translation
-            );
+        if ($hideNotTranslated) {
+            $attributeValues = $this->entityManager
+                ->getRepository(AttributeValue::class)
+                ->findByAttributableAndTranslation(
+                    $attributable,
+                    $translation
+                );
+        } else {
+            /*
+             * Do not filter by translation here as we need to
+             * fallback attributeValues to defaultTranslation
+             * if not filled up.
+             */
+            $attributeValues = $this->entityManager
+                ->getRepository(AttributeValue::class)
+                ->findByAttributable(
+                    $attributable
+                );
+        }
 
         /** @var AttributeValueInterface $attributeValue */
         foreach ($attributeValues as $attributeValue) {
@@ -173,25 +187,27 @@ class AttributesExtension extends AbstractExtension
 
     /**
      * @param NodesSources|null $nodesSources
+     * @param bool $hideNotTranslated
      *
      * @return array
      * @throws SyntaxError
      */
-    public function getNodeSourceAttributeValues(?NodesSources $nodesSources)
+    public function getNodeSourceAttributeValues(?NodesSources $nodesSources, bool $hideNotTranslated = false)
     {
         if (null === $nodesSources) {
             throw new SyntaxError('Cannot call node_source_attributes on NULL');
         }
-        return $this->getAttributeValues($nodesSources->getNode(), $nodesSources->getTranslation());
+        return $this->getAttributeValues($nodesSources->getNode(), $nodesSources->getTranslation(), $hideNotTranslated);
     }
 
     /**
      * @param NodesSources|null $nodesSources
+     * @param bool $hideNotTranslated
      *
      * @return array
      * @throws SyntaxError
      */
-    public function getNodeSourceGroupedAttributeValues(?NodesSources $nodesSources): array
+    public function getNodeSourceGroupedAttributeValues(?NodesSources $nodesSources, bool $hideNotTranslated = false): array
     {
         $groups = [
             INF => [
@@ -199,7 +215,7 @@ class AttributesExtension extends AbstractExtension
                 'attributeValues' => []
             ]
         ];
-        $attributeValueTranslations  = $this->getNodeSourceAttributeValues($nodesSources);
+        $attributeValueTranslations  = $this->getNodeSourceAttributeValues($nodesSources, $hideNotTranslated);
         /** @var AttributeValueTranslationInterface $attributeValueTranslation */
         foreach ($attributeValueTranslations as $attributeValueTranslation) {
             $group = $attributeValueTranslation->getAttributeValue()->getAttribute()->getGroup();

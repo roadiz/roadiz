@@ -15,6 +15,38 @@ final class AttributeValueRepository extends EntityRepository
      *
      * @return array
      */
+    public function findByAttributable(
+        AttributableInterface $attributable
+    ): array {
+        $qb = $this->createQueryBuilder('av');
+        return $qb->addSelect('avt')
+            ->addSelect('a')
+            ->addSelect('at')
+            ->addSelect('ad')
+            ->addSelect('ag')
+            ->addSelect('agt')
+            ->innerJoin('av.attributeValueTranslations', 'avt')
+            ->innerJoin('av.attribute', 'a')
+            ->leftJoin('a.attributeDocuments', 'ad')
+            ->leftJoin('a.attributeTranslations', 'at')
+            ->leftJoin('a.group', 'ag')
+            ->leftJoin('ag.attributeGroupTranslations', 'agt')
+            ->andWhere($qb->expr()->eq('av.node', ':attributable'))
+            ->addOrderBy('av.position', 'ASC')
+            ->setParameters([
+                'attributable' => $attributable,
+            ])
+            ->setCacheable(true)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param AttributableInterface $attributable
+     * @param Translation           $translation
+     *
+     * @return array
+     */
     public function findByAttributableAndTranslation(
         AttributableInterface $attributable,
         Translation $translation
