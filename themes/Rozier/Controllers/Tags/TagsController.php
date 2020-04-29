@@ -46,6 +46,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -173,32 +174,46 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                /*
-                 * Update tag slug if not locked
-                 * only from default translation.
-                 */
-                if (!$tag->isLocked() &&
-                    $translation->isDefaultTranslation()) {
-                    $tag->setTagName($tagTranslation->getName());
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    /*
+                     * Update tag slug if not locked
+                     * only from default translation.
+                     */
+                    if (!$tag->isLocked() &&
+                        $translation->isDefaultTranslation()) {
+                        $tag->setTagName($tagTranslation->getName());
+                    }
+                    $this->get('em')->flush();
+                    /*
+                     * Dispatch event
+                     */
+                    $this->get('dispatcher')->dispatch(
+                        new TagUpdatedEvent($tag)
+                    );
+
+                    $msg = $this->getTranslator()->trans('tag.%name%.updated', [
+                        '%name%' => $tagTranslation->getName(),
+                    ]);
+                    $this->publishConfirmMessage($request, $msg);
+
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->getPostUpdateRedirection($tagTranslation);
                 }
-                $this->get('em')->flush();
-                /*
-                 * Dispatch event
-                 */
-                $this->get('dispatcher')->dispatch(
-                    new TagUpdatedEvent($tag)
-                );
-
-                $msg = $this->getTranslator()->trans('tag.%name%.updated', [
-                    '%name%' => $tagTranslation->getName(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
 
                 /*
-                 * Force redirect to avoid resending form when refreshing page
+                 * Handle errors when Ajax POST requests
                  */
-                return $this->getPostUpdateRedirection($tagTranslation);
+                if ($request->isXmlHttpRequest()) {
+                    $errors = $this->getErrorsAsArray($form);
+                    return new JsonResponse([
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                    ], JsonResponse::HTTP_BAD_REQUEST);
+                }
             }
 
             $this->assignation['tag'] = $tag;
@@ -357,23 +372,36 @@ class TagsController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->get('em')->flush();
-                /*
-                 * Dispatch event
-                 */
-                $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    $this->get('em')->flush();
+                    /*
+                     * Dispatch event
+                     */
+                    $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
 
-                $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
-                $this->publishConfirmMessage($request, $msg);
+                    $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
+                    $this->publishConfirmMessage($request, $msg);
 
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($this->generateUrl(
+                        'tagsSettingsPage',
+                        ['tagId' => $tag->getId()]
+                    ));
+                }
                 /*
-                 * Force redirect to avoid resending form when refreshing page
+                 * Handle errors when Ajax POST requests
                  */
-                return $this->redirect($this->generateUrl(
-                    'tagsSettingsPage',
-                    ['tagId' => $tag->getId()]
-                ));
+                if ($request->isXmlHttpRequest()) {
+                    $errors = $this->getErrorsAsArray($form);
+                    return new JsonResponse([
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                    ], JsonResponse::HTTP_BAD_REQUEST);
+                }
             }
 
             $this->assignation['form'] = $form->createView();
