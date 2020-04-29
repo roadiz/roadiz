@@ -173,10 +173,10 @@ class DatabaseController extends InstallApp
                     $message = $e->getMessage();
                 }
                 $this->assignation['error'] = true;
-                $this->publishErrorMessage(ucfirst($message));
+                $this->publishErrorMessage($request, ucfirst($message));
             } catch (\Exception $e) {
                 $this->assignation['error'] = true;
-                $this->publishErrorMessage($e->getMessage() . PHP_EOL . $e->getTraceAsString());
+                $this->publishErrorMessage($request, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
 
