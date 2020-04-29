@@ -34,7 +34,7 @@
         {# This is the container of the content items #}
         <ul id="tree-container" class="uk-switcher uk-margin">
             {% if is_granted('ROLE_ACCESS_NODES')%}
-            {% if session.user and session.user.chroot.hidingChildren %}
+            {% if app.user and app.user.chroot.hidingChildren %}
                 <li>
                 {% include '@Rozier/widgets/nodeTree/nodeStackTree.html.twig' with {
                     "node":themeServices.nodeTree.getRootNode,

@@ -1,9 +1,9 @@
 {% extends '@Rozier/layout.html.twig' %}
 
-{% if session.user.getFirstName %}
-{% set displayName = session.user.getFirstName %}
+{% if app.user.getFirstName %}
+{% set displayName = app.user.getFirstName %}
 {% else %}
-{% set displayName = session.user.getUsername %}
+{% set displayName = app.user.getUsername %}
 {% endif %}
 
 {% block content %}

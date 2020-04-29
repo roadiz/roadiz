@@ -31,6 +31,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Bridge\Twig\AppVariable;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
 
@@ -56,6 +57,12 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
      */
     public function getGlobals()
     {
+        $appVariable = new AppVariable();
+        $appVariable->setDebug($this->kernel->isDebug());
+        $appVariable->setEnvironment($this->kernel->getEnvironment());
+        $appVariable->setRequestStack($this->kernel->get('requestStack'));
+        $appVariable->setTokenStorage($this->kernel->get('securityTokenStorage'));
+
         /** @var Settings $settingsBag */
         $settingsBag = $this->kernel->get('settingsBag');
         return [
@@ -71,7 +78,8 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
                 'settings' => $settingsBag,
                 'roles' => $this->kernel->get('rolesBag'),
                 'nodeTypes' => $this->kernel->get('nodeTypesBag'),
-            ]
+            ],
+            'app' => $appVariable
         ];
     }
 }

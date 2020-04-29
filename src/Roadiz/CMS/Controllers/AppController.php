@@ -396,20 +396,23 @@ abstract class AppController extends Controller
             ]
         ];
 
-        /** @var RequestStack $requestStack */
-        $requestStack = $this->get('requestStack');
-        if (null !== $requestStack->getMasterRequest()->getSession()) {
-            $this->assignation['session'] = [
-                'id' => $requestStack->getMasterRequest()->getSession()->getId(),
-                'user' => $this->getUser(),
-            ];
-        }
-
         if ('' != $this->get('settingsBag')->get('static_domain_name')) {
             $this->assignation['head']['staticDomainName'] = $this->get('settingsBag')->get('static_domain_name');
         }
 
         return $this;
+    }
+
+    /**
+     * Returns the current session.
+     *
+     * @return Session|null The session
+     */
+    public function getSession()
+    {
+        $request = $this->getRequest();
+
+        return $request && $request->hasSession() ? $request->getSession() : null;
     }
 
     /**

@@ -158,7 +158,7 @@ class ContactFormManager extends EmailManager
     public function getFormName(): string
     {
         return $this->formName;
-    } // 5MB
+    }
 
     /**
      * @param string $formName
