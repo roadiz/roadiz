@@ -468,14 +468,16 @@ abstract class FrontendController extends AppController
      */
     protected function prepareNodeSourceAssignation(NodesSources $nodeSource = null, Translation $translation = null)
     {
-        $this->storeNodeSourceAndTranslation($nodeSource, $translation);
-        $this->assignation['home'] = $this->getHome($translation);
-        /*
-         * Use a DI container to delay API requests
-         */
-        $this->themeContainer = new Container();
+        if (null === $this->themeContainer) {
+            $this->storeNodeSourceAndTranslation($nodeSource, $translation);
+            $this->assignation['home'] = $this->getHome($translation);
+            /*
+             * Use a DI container to delay API requests
+             */
+            $this->themeContainer = new Container();
 
-        $this->extendAssignation();
+            $this->extendAssignation();
+        }
     }
 
     /**
