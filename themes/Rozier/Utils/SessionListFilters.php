@@ -65,7 +65,8 @@ class SessionListFilters
         /*
          * Check if item_per_page is available from session
          */
-        if (null !== $request->getSession() &&
+        if ($request->hasPreviousSession() &&
+            null !== $request->getSession() &&
             $request->getSession()->has($this->sessionIdentifier) &&
             $request->getSession()->get($this->sessionIdentifier) > 0 &&
             (!$request->query->has('item_per_page') ||

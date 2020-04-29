@@ -156,7 +156,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['contextListener'] = function (Container $c) {
-            $c['session']; //Force session handler
             return new ContextListener(
                 $c['securityTokenStorage'],
                 [

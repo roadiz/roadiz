@@ -46,6 +46,7 @@ use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,13 +85,6 @@ class InstallApp extends AppController
                 'fontToken' => $this->get('csrfTokenManager')->getToken(static::FONT_TOKEN_INTENTION),
             ]
         ];
-
-        if (null !== $this->getRequest()->getSession()) {
-            $this->assignation['session'] = [
-                'id' => $this->getRequest()->getSession()->getId(),
-                'locale' => $this->getRequest()->getSession()->get('_locale', 'en'),
-            ];
-        }
 
         $this->assignation['head']['grunt'] = include dirname(__FILE__) . '/static/public/config/assets.config.php';
 
@@ -206,7 +200,7 @@ class InstallApp extends AppController
                     ));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage();
+                    $userForm->addError(new FormError($e->getMessage()));
                 }
             }
             $this->assignation['userForm'] = $userForm->createView();
@@ -284,7 +278,7 @@ class InstallApp extends AppController
                     return $this->redirect($this->generateUrl('installAfterDonePage'));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                    $doneForm->addError(new FormError($e->getMessage() . PHP_EOL . $e->getTraceAsString()));
                 }
             }
             $this->assignation['doneForm'] = $doneForm->createView();

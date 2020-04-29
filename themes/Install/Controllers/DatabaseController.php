@@ -149,7 +149,6 @@ class DatabaseController extends InstallApp
          */
         if (null === $this->get('em')) {
             $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = $this->get('session')->getFlashBag()->all();
         } else {
             try {
                 /*
@@ -174,10 +173,10 @@ class DatabaseController extends InstallApp
                     $message = $e->getMessage();
                 }
                 $this->assignation['error'] = true;
-                $this->assignation['errorMessage'] = ucfirst($message);
+                $this->publishErrorMessage(ucfirst($message));
             } catch (\Exception $e) {
                 $this->assignation['error'] = true;
-                $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                $this->publishErrorMessage($e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
 

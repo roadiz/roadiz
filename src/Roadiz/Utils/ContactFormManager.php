@@ -337,10 +337,13 @@ class ContactFormManager extends EmailManager
                         ];
                         return new JsonResponse($responseArray);
                     } else {
-                        /** @var Session $session */
-                        $session = $this->request->getSession();
-                        $session->getFlashBag()
-                             ->add('confirm', $this->translator->trans($this->successMessage));
+                        if ($this->request->hasPreviousSession()) {
+                            /** @var Session $session */
+                            $session = $this->request->getSession();
+                            $session->getFlashBag()
+                                ->add('confirm', $this->translator->trans($this->successMessage));
+                        }
+
                         $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
                         return new RedirectResponse($this->redirectUrl);
                     }

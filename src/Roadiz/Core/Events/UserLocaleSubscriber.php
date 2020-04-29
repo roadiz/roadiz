@@ -76,12 +76,13 @@ class UserLocaleSubscriber implements EventSubscriberInterface
         if (!$request->hasPreviousSession()) {
             return;
         }
+        $session = $request->getSession();
 
         // try to see if the locale has been set as a _locale routing parameter
-        if ($request->getSession()->has('_locale')) {
+        if ($session->has('_locale')) {
             // if no explicit locale has been set on this request, use one from the session
-            $request->setLocale($request->getSession()->get('_locale'));
-            \Locale::setDefault($request->getSession()->get('_locale'));
+            $request->setLocale($session->get('_locale'));
+            \Locale::setDefault($session->get('_locale'));
         }
     }
 
@@ -91,12 +92,14 @@ class UserLocaleSubscriber implements EventSubscriberInterface
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         $user = $event->getAuthenticationToken()->getUser();
-        $session = $event->getRequest()->getSession();
-
-        if (null !== $session &&
-            $user instanceof User &&
-            null !== $user->getLocale()) {
-            $session->set('_locale', $user->getLocale());
+        
+        if ($event->getRequest()->hasPreviousSession()) {
+            $session = $event->getRequest()->getSession();
+            if (null !== $session &&
+                $user instanceof User &&
+                null !== $user->getLocale()) {
+                $session->set('_locale', $user->getLocale());
+            }
         }
     }
 
@@ -115,6 +118,7 @@ class UserLocaleSubscriber implements EventSubscriberInterface
         $request = $requestStack->getMasterRequest();
 
         if (null !== $request &&
+            $request->hasPreviousSession() &&
             null !== $request->getSession() &&
             null !== $tokenStorage->getToken() &&
             $tokenStorage->getToken()->getUser() instanceof User &&

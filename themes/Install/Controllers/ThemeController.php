@@ -36,6 +36,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Install\Forms\SiteInformationType;
@@ -164,7 +165,7 @@ class ThemeController extends InstallApp
                 }
             } catch (\Exception $e) {
                 $this->assignation['error'] = true;
-                $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                $informationForm->addError(new FormError($e->getMessage() . PHP_EOL . $e->getTraceAsString()));
             }
         }
         $this->assignation['infosForm'] = $informationForm->createView();

@@ -412,7 +412,7 @@ abstract class AppController extends Controller
     {
         $request = $this->getRequest();
 
-        return $request && $request->hasSession() ? $request->getSession() : null;
+        return $request && $request->hasPreviousSession() ? $request->getSession() : null;
     }
 
     /**
@@ -530,7 +530,7 @@ abstract class AppController extends Controller
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
-        $session = $request->getSession();
+        $session = $this->getSession();
         if (null !== $session && $session instanceof Session) {
             $session->getFlashBag()->add($level, $msg);
         }
