@@ -319,22 +319,24 @@ abstract class FrontendController extends AppController
      */
     protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
     {
-        $this->container['stopwatch']->start('prepareThemeAssignation');
-        $this->storeNodeAndTranslation($node, $translation);
-        $home = $this->getHome($translation);
-        if (null !== $home) {
-            $this->assignation['home'] = $home;
-            $this->assignation['homeSource'] = $home->getNodeSourcesByTranslation($translation)->first();
-        }
-        /*
-         * Use a DI container to delay API requests
-         */
-        $this->themeContainer = new Container();
+        if (null === $this->themeContainer) {
+            $this->container['stopwatch']->start('prepareThemeAssignation');
+            $this->storeNodeAndTranslation($node, $translation);
+            $home = $this->getHome($translation);
+            if (null !== $home) {
+                $this->assignation['home'] = $home;
+                $this->assignation['homeSource'] = $home->getNodeSourcesByTranslation($translation)->first();
+            }
+            /*
+             * Use a DI container to delay API requests
+             */
+            $this->themeContainer = new Container();
 
-        $this->container['stopwatch']->start('extendAssignation');
-        $this->extendAssignation();
-        $this->container['stopwatch']->stop('extendAssignation');
-        $this->container['stopwatch']->stop('prepareThemeAssignation');
+            $this->container['stopwatch']->start('extendAssignation');
+            $this->extendAssignation();
+            $this->container['stopwatch']->stop('extendAssignation');
+            $this->container['stopwatch']->stop('prepareThemeAssignation');
+        }
     }
 
     /**
