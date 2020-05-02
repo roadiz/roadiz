@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\LogicException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -80,6 +81,7 @@ class ThemesCommand extends Command
     /**
      * @param string $name
      * @return string
+     * @deprecated Use ThemeGenerator
      */
     public function validateThemeName(string $name)
     {
@@ -90,7 +92,7 @@ class ThemesCommand extends Command
             throw new \RuntimeException('Theme class ' . $name . ' does not exist.');
         }
 
-        if (in_array($name, ['Debug', 'Install', 'Rozier'])) {
+        if (in_array($name, ['Default', 'Debug', 'Base', 'Install', 'Rozier'])) {
             $this->getThemePath($name);
             return $name;
         }
@@ -115,6 +117,7 @@ class ThemesCommand extends Command
      *
      * @param string $themeName Theme name WITH «Theme» suffix.
      * @return string Theme absolute path.
+     * @deprecated Use ThemeGenerator
      */
     protected function getThemePath($themeName)
     {
@@ -141,6 +144,7 @@ class ThemesCommand extends Command
     /**
      * @param string $themeName Theme name WITH «Theme» suffix.
      * @return string
+     * @deprecated Use ThemeGenerator
      */
     protected function getNewThemePath($themeName)
     {
@@ -151,8 +155,8 @@ class ThemesCommand extends Command
 
     /**
      * @param string $className
-     *
      * @return null|ReflectionClass
+     * @deprecated Use ThemeGenerator
      */
     protected function getThemeReflectionClass($className)
     {
@@ -170,8 +174,8 @@ class ThemesCommand extends Command
 
     /**
      * @param string $className
-     *
      * @return string|null
+     * @deprecated Use ThemeGenerator
      */
     protected function getThemeReflectionClassPath($className)
     {
@@ -185,6 +189,7 @@ class ThemesCommand extends Command
     /**
      * @param string $name Theme name WITHOUT suffix.
      * @return string
+     * @deprecated Use ThemeGenerator
      */
     protected function getThemeName($name)
     {
@@ -203,8 +208,8 @@ class ThemesCommand extends Command
 
     /**
      * @param string $themeName
-     *
      * @return string
+     * @deprecated Use ThemeGenerator
      */
     protected function getThemeFolderName($themeName)
     {
@@ -221,6 +226,7 @@ class ThemesCommand extends Command
      * @param string $themeName Theme name WITH suffix.
      * @param string $expectedMethod
      * @return string|null
+     * @deprecated Use ThemeGenerator
      */
     protected function generateThemeSymlink($themeName, $expectedMethod)
     {
@@ -299,6 +305,7 @@ class ThemesCommand extends Command
      * @param string $originDir
      * @param string $targetDir
      * @return string
+     * @deprecated Use ThemeGenerator
      */
     private function relativeSymlinkWithFallback($originDir, $targetDir)
     {
@@ -319,6 +326,7 @@ class ThemesCommand extends Command
      * @param string $originDir
      * @param string $targetDir
      * @return string
+     * @deprecated Use ThemeGenerator
      */
     private function absoluteSymlinkWithFallback($originDir, $targetDir)
     {
@@ -338,6 +346,7 @@ class ThemesCommand extends Command
      * @param string $originDir
      * @param string $targetDir
      * @param bool $relative
+     * @deprecated Use ThemeGenerator
      */
     private function symlink($originDir, $targetDir, $relative = false)
     {
@@ -357,6 +366,7 @@ class ThemesCommand extends Command
      * @param string $originDir
      * @param string $targetDir
      * @return string
+     * @deprecated Use ThemeGenerator
      */
     private function hardCopy($originDir, $targetDir)
     {
