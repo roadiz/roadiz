@@ -144,10 +144,6 @@ class ThemeGenerator
                 apcu_clear_cache();
             }
             $this->logger->info('Rename main theme class.');
-            $loader = new ClassLoader();
-            if (!$loader->loadClass($themeInfo->getClassname())) {
-                $this->logger->error($themeInfo->getClassname() . ' could not be loaded.');
-            }
         }
 
         $serviceProviderFile = $themeInfo->getThemePath() .

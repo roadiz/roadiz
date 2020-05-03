@@ -92,27 +92,10 @@ class InstallApp extends AppController
     }
 
     /**
-     * @inheritDoc
-     */
-    public static function setupDependencyInjection(Container $container)
-    {
-        parent::setupDependencyInjection($container);
-
-        /** @var Packages $packages */
-        $packages = $container['assetPackages'];
-        $packages->addPackage('Install', new PathPackage(
-            'themes/Install/static',
-            $container['versionStrategy'],
-            new RequestStackContext($container['requestStack'])
-        ));
-    }
-
-    /**
-     * Welcome screen.
-     *
      * @param Request $request
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {

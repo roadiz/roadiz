@@ -41,6 +41,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\ThemeGenerateCommand(),
                 new Console\ThemeInstallCommand(),
                 new Console\ThemeInfoCommand(),
+                new Console\ThemeRegisterCommand(),
                 new Console\InstallCommand(),
                 new Console\UsersCommand(),
                 new Console\UsersCreationCommand(),

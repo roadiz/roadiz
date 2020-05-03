@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Theme\ThemeGenerator;
 use RZ\Roadiz\Utils\Theme\ThemeInfo;
 use Symfony\Component\Console\Command\Command;
@@ -13,6 +14,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Process\Process;
 
 class ThemeGenerateCommand extends Command implements ContainerAwareInterface
 {
@@ -83,17 +85,34 @@ class ThemeGenerateCommand extends Command implements ContainerAwareInterface
             }
 
             $themeGenerator->renameTheme($themeInfo);
-            $io->success('Theme main classname: ' . $themeInfo->getClassname());
-            if (!class_exists($themeInfo->getClassname())) {
-                $io->error('Theme main classname ' . $themeInfo->getClassname() . ' is not recognized.');
-                return 1;
-            }
-            $themeGenerator->installThemeAssets($themeInfo, $expectedMethod);
-            $themeGenerator->registerTheme($themeInfo);
 
-            $io->success($themeInfo->getThemePath() . ' has been regenerated and is ready to be installed, have fun!');
+            $themeGenerator->installThemeAssets($themeInfo, $expectedMethod);
+
+            $this->runCommand(sprintf('themes:register "%s" -v', $themeInfo->getClassname()));
+
+            $io->success($themeInfo->getThemeName() . ' has been regenerated and is ready to be installed, have fun!');
         }
 
         return 0;
+    }
+
+    /**
+     * @param string $command
+     * @param string $environment
+     * @param bool   $preview
+     *
+     * @return int
+     */
+    protected function runCommand(string $command, $environment = 'dev', $preview = false)
+    {
+        /** @var Kernel $existingKernel */
+        $existingKernel = $this->getHelper('kernel')->getKernel();
+        $process = Process::fromShellCommandline(
+            'php bin/roadiz ' . $command . ' -e ' . $environment . ($preview ? ' --preview' : '')
+        );
+        $process->setWorkingDirectory($existingKernel->getProjectDir());
+        $process->setTty(true);
+        $process->run();
+        return $process->wait();
     }
 }

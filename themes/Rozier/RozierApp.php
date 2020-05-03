@@ -179,14 +179,6 @@ class RozierApp extends BackendController
     {
         parent::setupDependencyInjection($container);
 
-        /** @var Packages $packages */
-        $packages = $container['assetPackages'];
-        $packages->addPackage('Rozier', new PathPackage(
-            'themes/Rozier/static',
-            $container['versionStrategy'],
-            new RequestStackContext($container['requestStack'])
-        ));
-
         $container->extend('translator', function (Translator $translator, $c) {
             $settingPath = __DIR__ . '/Resources/translations/settings.' . $c['translator.locale'] .  '.xlf';
             if (file_exists($settingPath)) {
