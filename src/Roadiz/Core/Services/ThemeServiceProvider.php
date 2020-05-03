@@ -31,8 +31,14 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Log\LoggerFactory;
+use RZ\Roadiz\Utils\Log\Processor\RequestProcessor;
+use RZ\Roadiz\Utils\Log\Processor\TokenStorageProcessor;
 use RZ\Roadiz\Utils\Theme\StaticThemeResolver;
+use RZ\Roadiz\Utils\Theme\ThemeGenerator;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Register Theme services for dependency injection container.
@@ -48,6 +54,25 @@ class ThemeServiceProvider implements ServiceProviderInterface
          */
         $container['themeResolver'] = function (Container $c) {
             return new StaticThemeResolver($c['config'], $c['stopwatch'], $c['kernel']->isInstallMode());
+        };
+
+        $container['logger.themes'] = function (Container $c) {
+            /** @var LoggerFactory $factory */
+            $factory = $c[LoggerFactory::class];
+
+            return $factory->createLogger('themes', 'themes');
+        };
+
+        $container[ThemeGenerator::class] = function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return new ThemeGenerator(
+                $kernel->getProjectDir(),
+                $kernel->getPublicDir(),
+                $kernel->getCacheDir(),
+                $c['config.handler'],
+                $c['logger.themes']
+            );
         };
 
         return $container;

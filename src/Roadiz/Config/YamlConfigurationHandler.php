@@ -59,7 +59,7 @@ class YamlConfigurationHandler extends ConfigurationHandler
                 throw new FileException($file->getPathname() . ' file is not readable.');
             }
             $parser = new Parser();
-            return $parser->parse(file_get_contents($file));
+            return $parser->parse(file_get_contents($file->getPathname()));
         }
 
         throw new NoYamlConfigurationFoundException();
@@ -70,10 +70,6 @@ class YamlConfigurationHandler extends ConfigurationHandler
      */
     public function writeConfiguration(): bool
     {
-        $fileSystem = new Filesystem();
-        if ($fileSystem->exists($this->path)) {
-            $fileSystem->remove($this->path);
-        }
         $file = new File($this->path);
         if (!$file->isWritable()) {
             throw new FileException($file->getPathname() . ' file is not writable.');

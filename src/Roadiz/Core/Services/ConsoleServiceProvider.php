@@ -36,7 +36,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\NodesDetailsCommand(),
                 new Console\NodesCleanNamesCommand(),
                 new Console\NodeApplyUniversalFieldsCommand(),
-                new Console\ThemesCommand(),
+                new Console\ThemesListCommand(),
                 new Console\ThemeAssetsCommand(),
                 new Console\ThemeGenerateCommand(),
                 new Console\ThemeInstallCommand(),

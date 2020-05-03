@@ -267,6 +267,7 @@ abstract class AppController extends Controller
      * Return theme root folder.
      *
      * @return string
+     * @throws \ReflectionException
      */
     public static function getThemeFolder()
     {
@@ -282,6 +283,7 @@ abstract class AppController extends Controller
      * whether it’s located in project folder or in vendor folder.
      *
      * @return string
+     * @throws \ReflectionException
      */
     public static function getResourcesFolder()
     {
@@ -301,8 +303,10 @@ abstract class AppController extends Controller
     {
         return static::getResourcesFolder() . '/translations';
     }
+
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public static function getPublicFolder()
     {

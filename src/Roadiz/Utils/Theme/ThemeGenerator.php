@@ -3,17 +3,12 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Theme;
 
+use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Config\ConfigurationHandler;
-use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
-use Symfony\Component\Console\Exception\LogicException;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
@@ -35,11 +30,6 @@ class ThemeGenerator
      * @var string
      */
     protected $projectDir;
-
-    /**
-     * @var string
-     */
-    protected $rootDir;
 
     /**
      * @var string
@@ -70,7 +60,6 @@ class ThemeGenerator
      * ThemeGenerator constructor.
      *
      * @param string $projectDir
-     * @param string $rootDir
      * @param string $publicDir
      * @param string $cacheDir
      * @param ConfigurationHandler $configurationHandler
@@ -78,14 +67,13 @@ class ThemeGenerator
      */
     public function __construct(
         string $projectDir,
-        string $rootDir,
         string $publicDir,
         string $cacheDir,
         ConfigurationHandler $configurationHandler,
         LoggerInterface $logger
     ) {
+        $this->filesystem = new Filesystem();
         $this->projectDir = $projectDir;
-        $this->rootDir = $rootDir;
         $this->publicDir = $publicDir;
         $this->cacheDir = $cacheDir;
         $this->configurationHandler = $configurationHandler;
@@ -93,106 +81,93 @@ class ThemeGenerator
     }
 
     /**
-     * @param string $classname
-     * @return string
-     */
-    protected function validateThemeClassname(string $classname)
-    {
-        if (false !== strpos($classname, '\\')) {
-            if (null !== $reflection = $this->getThemeReflectionClass($classname)) {
-                return $reflection->getName();
-            }
-            throw new \RuntimeException('Theme class ' . $classname . ' does not exist.');
-        }
-
-        if (in_array($classname, ['Default', 'Debug', 'Base', 'Install', 'Rozier'])) {
-            $this->getThemePath($classname);
-            return $classname;
-        }
-
-        if (1 !== preg_match('#^[A-Z][a-zA-Z]+$#', $classname)) {
-            throw new \RuntimeException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
-        }
-
-        if (1 === preg_match('#[Tt]heme$#', $classname)) {
-            throw new \RuntimeException('Theme name must not contain "Theme" suffix, it will be added automatically.');
-        }
-
-        $this->getThemePath($this->getThemeName($classname));
-
-        return $classname;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return string
-     */
-    protected function validateName(string $name): string
-    {
-        if (1 !== preg_match('#^[A-Z][a-zA-Z]+$#', $name)) {
-            throw new LogicException('Theme name must only contain alphabetical characters and begin with uppercase letter.');
-        }
-
-        if (1 === preg_match('#[Tt]heme$#', $name)) {
-            throw new LogicException('Theme name must not contain "Theme" suffix, it will be added automatically.');
-        }
-
-        if ($this->filesystem->exists($this->projectDir . '/themes/' . $name . 'Theme')) {
-            throw new LogicException('Theme already exists.');
-        }
-
-        if (in_array($name, ['Default', 'Debug', 'Base', 'Install', 'Rozier'])) {
-            throw new LogicException('You cannot name your theme after system themes (Default, Install, Base, Rozier or Debug).');
-        }
-
-        return $name;
-    }
-
-    /**
-     * @param string $themePath
-     * @param string $branch
+     * @param ThemeInfo $themeInfo
+     * @param string    $branch
      *
      * @return $this
      */
-    protected function downloadTheme(string $themePath, string $branch = 'master'): ThemeGenerator
+    public function downloadTheme(ThemeInfo $themeInfo, string $branch = 'master'): ThemeGenerator
     {
-        /*
-         * Clone BaseTheme
-         */
-        $process = new Process(
-            ['git', 'clone', '-b', $branch, static::REPOSITORY, $themePath]
-        );
-        $process->run();
-        $this->logger->info('BaseTheme cloned into ' . $themePath);
+        if (!$themeInfo->exists()) {
+            /*
+             * Clone BaseTheme
+             */
+            $process = new Process(
+                ['git', 'clone', '-b', $branch, static::REPOSITORY, $themeInfo->getThemePath()]
+            );
+            $process->run();
+            $this->logger->info('BaseTheme cloned into ' . $themeInfo->getThemePath());
+        } else {
+            $this->logger->info($themeInfo->getClassname() . ' already exists.');
+        }
 
         return $this;
     }
 
     /**
-     * @param string $themePath
-     * @param string $name
+     * @param ThemeInfo $themeInfo
      *
      * @return $this
      */
-    protected function renameTheme(string $themePath, string $name): ThemeGenerator
+    public function renameTheme(ThemeInfo $themeInfo): ThemeGenerator
     {
-        if (!$this->filesystem->exists($themePath)) {
-            throw new FileException($themePath . ' theme does not exist.');
+        if (!$themeInfo->exists()) {
+            throw new FileException($themeInfo->getThemePath() . ' theme does not exist.');
+        }
+        if ($themeInfo->isProtected()) {
+            throw new \InvalidArgumentException(
+                $themeInfo->getThemeName() . ' is protected and cannot renamed.'
+            );
         }
         /*
          * Remove existing Git history.
          */
-        $this->filesystem->remove($themePath . '/.git');
+        $this->filesystem->remove($themeInfo->getThemePath() . '/.git');
         $this->logger->info('Remove Git history.');
 
         /*
          * Rename main theme class.
          */
-        $this->filesystem->rename($themePath . '/BaseThemeApp.php', $themePath . '/' . $name . 'ThemeApp.php');
-        $this->logger->info('Rename main theme class.');
-        $this->filesystem->rename($themePath . '/Services/BaseThemeServiceProvider.php', $themePath . '/Services/' . $name . 'ThemeServiceProvider.php');
-        $this->logger->info('Rename theme service provider class.');
+        $mainClassFile = $themeInfo->getThemePath() . '/' . $themeInfo->getThemeName() . 'App.php';
+        if (!$this->filesystem->exists($mainClassFile)) {
+            $this->filesystem->rename(
+                $themeInfo->getThemePath() . '/BaseThemeApp.php',
+                $mainClassFile
+            );
+            /*
+             * Force Zend OPcache to reset file
+             */
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($mainClassFile, true);
+            }
+            if (function_exists('apcu_clear_cache')) {
+                apcu_clear_cache();
+            }
+            $this->logger->info('Rename main theme class.');
+            $loader = new ClassLoader();
+            if (!$loader->loadClass($themeInfo->getClassname())) {
+                $this->logger->error($themeInfo->getClassname() . ' could not be loaded.');
+            }
+        }
+
+        $serviceProviderFile = $themeInfo->getThemePath() .
+            '/Services/' . $themeInfo->getThemeName() . 'ServiceProvider.php';
+        if (!$this->filesystem->exists($serviceProviderFile)) {
+            $this->filesystem->rename(
+                $themeInfo->getThemePath() . '/Services/BaseThemeServiceProvider.php',
+                $serviceProviderFile
+            );
+            /*
+             * Force Zend OPcache to reset file
+             */
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate($serviceProviderFile, true);
+            }
+            if (function_exists('apcu_clear_cache')) {
+                apcu_clear_cache();
+            }
+            $this->logger->info('Rename theme service provider class.');
+        }
 
         /*
          * Rename every occurrences of BaseTheme in your theme.
@@ -200,31 +175,31 @@ class ThemeGenerator
         $processes = new ArrayCollection();
         $processes->add(new Process(
             [
-                'find', $themePath, '-type', 'f', '-exec', 'sed', '-i.bak',
-                '-e', 's/BaseTheme/' . $name . 'Theme/g', '{}', ';',
+                'find', $themeInfo->getThemePath(), '-type', 'f', '-exec', 'sed', '-i.bak',
+                '-e', 's/BaseTheme/' . $themeInfo->getThemeName() . '/g', '{}', ';',
             ],
             null,
             ['LC_ALL' => 'C']
         ));
         $processes->add(new Process(
             [
-                'find', $themePath, '-type', 'f', '-exec', 'sed', '-i.bak',
-                '-e', 's/Base theme/' . $name . ' theme/g', '{}', ';',
+                'find', $themeInfo->getThemePath(), '-type', 'f', '-exec', 'sed', '-i.bak',
+                '-e', 's/Base theme/' . $themeInfo->getName() . ' theme/g', '{}', ';',
             ],
             null,
             ['LC_ALL' => 'C']
         ));
         $processes->add(new Process(
             [
-                'find', $themePath . '/static', '-type', 'f', '-exec', 'sed', '-i.bak',
-                '-e', 's/Base/' . $name . '/g', '{}', ';',
+                'find', $themeInfo->getThemePath() . '/static', '-type', 'f', '-exec', 'sed', '-i.bak',
+                '-e', 's/Base/' . $themeInfo->getName() . '/g', '{}', ';',
             ],
             null,
             ['LC_ALL' => 'C']
         ));
         $processes->add(new Process(
             [
-                'find', $themePath , '-type', 'f', '-name', '*.bak', '-exec', 'rm', '-f', '{}', ';',
+                'find', $themeInfo->getThemePath() , '-type', 'f', '-name', '*.bak', '-exec', 'rm', '-f', '{}', ';',
             ],
             null,
             ['LC_ALL' => 'C']
@@ -235,22 +210,37 @@ class ThemeGenerator
             $process->run();
         }
 
+        $cacheClearer = new OPCacheClearer();
+        $cacheClearer->clear();
+
         return $this;
     }
 
     /**
-     * @param string $themeName
+     * @param ThemeInfo $themeInfo
      *
      * @return $this
      */
-    protected function registerTheme(string $themeName): ThemeGenerator
+    public function registerTheme(ThemeInfo $themeInfo): ThemeGenerator
     {
-        $className = '\\Themes\\'.$themeName.'\\'.$themeName. 'App';
-
-        /** @var array $config */
+        if ($themeInfo->isProtected()) {
+            throw new \InvalidArgumentException(
+                $themeInfo->getThemeName() . ' is protected and cannot be registered.'
+            );
+        }
         $config = $this->configurationHandler->getConfiguration();
+        /*
+         * Checks if theme is not already registered
+         */
+        foreach ($config['themes'] as $themeParams) {
+            if ($themeParams['classname'] === $themeInfo->getClassname()) {
+                $this->logger->info($themeInfo->getClassname() . ' is already registered.');
+                return $this;
+            }
+        }
+
         $config['themes'][] = [
-            'classname' => $className,
+            'classname' => $themeInfo->getClassname(),
             'hostname' => '*',
             'routePrefix' => '',
         ];
@@ -266,130 +256,31 @@ class ThemeGenerator
     }
 
     /**
-     * Get real theme path from its name.
-     *
-     * Attention: theme could be located in vendor folder (/vendor/roadiz/roadiz)
-     *
-     * @param string $themeName Theme name WITH «Theme» suffix.
-     * @return string Theme absolute path.
-     */
-    protected function getThemePath(string $themeName): string
-    {
-        if (false !== strpos($themeName, '\\')) {
-            if (null !== $themePath = $this->getThemeReflectionClassPath($themeName)) {
-                return $themePath;
-            }
-        }
-
-        if ($this->filesystem->exists($this->projectDir . '/themes/' . $themeName)) {
-            return $this->projectDir . '/themes/' . $themeName;
-        }
-
-        if ($this->filesystem->exists($this->projectDir . '/vendor/roadiz/roadiz/themes/' . $themeName)) {
-            return $this->projectDir . '/vendor/roadiz/roadiz/themes/' . $themeName;
-        }
-
-        throw new \RuntimeException('Theme "'.$themeName.'" does not exist in "' . $this->projectDir . '/themes/" nor in ' . $this->projectDir . '/vendor/roadiz/roadiz/themes/ folders.');
-    }
-
-    /**
-     * @param string $themeName Theme name WITH «Theme» suffix.
-     * @return string
-     */
-    protected function getNewThemePath(string $themeName): string
-    {
-        return $this->projectDir . '/themes/' . $themeName;
-    }
-
-    /**
-     * @param string $className
-     *
-     * @return null|\ReflectionClass
-     */
-    protected function getThemeReflectionClass(string $className): ?\ReflectionClass
-    {
-        try {
-            $reflection = new \ReflectionClass($className);
-            if ($reflection->isSubclassOf(AppController::class)) {
-                return $reflection;
-            }
-        } catch (ReflectionException $Exception) {
-            return null;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $className
+     * @param ThemeInfo $themeInfo
+     * @param string    $expectedMethod
      *
      * @return string|null
      */
-    protected function getThemeReflectionClassPath(string $className): ?string
+    public function installThemeAssets(ThemeInfo $themeInfo, string $expectedMethod): ?string
     {
-        if (null !== $reflection = $this->getThemeReflectionClass($className)) {
-            return call_user_func([$className, 'getThemeFolder']);
-        }
+        if ($themeInfo->exists()) {
+            $publicThemeDir = $this->publicDir . '/themes/' . $themeInfo->getThemeName();
+            if ($publicThemeDir !== $themeInfo->getThemePath()) {
+                $targetDir = $publicThemeDir . '/static';
+                $originDir = $themeInfo->getThemePath() . '/static';
 
-        return null;
-    }
+                $this->filesystem->remove($publicThemeDir);
+                $this->filesystem->mkdir($publicThemeDir);
 
-    /**
-     * @param string $name Theme name WITHOUT suffix.
-     * @return string
-     */
-    protected function getThemeName(string $name): string
-    {
-        if (false !== strpos($name, '\\')) {
-            if (null !== $reflection = $this->getThemeReflectionClass($name)) {
-                return $reflection->getName();
-            }
-        }
-
-        if (in_array($name, ['Debug', 'Install', 'Rozier'])) {
-            return $name;
-        }
-
-        return $name . 'Theme';
-    }
-
-    /**
-     * @param string $themeName
-     *
-     * @return string
-     */
-    protected function getThemeFolderName(string $themeName): string
-    {
-        if (false !== strpos($themeName, '\\')) {
-            if (null !== $reflection = $this->getThemeReflectionClass($themeName)) {
-                return call_user_func([$reflection->getName(), 'getThemeDir']);
-            }
-        }
-
-        return $themeName;
-    }
-
-    /**
-     * @param string $themeName Theme name WITH suffix.
-     * @param string $expectedMethod
-     * @return string|null
-     */
-    protected function generateThemeSymlink(string $themeName, string $expectedMethod)
-    {
-        if ($this->rootDir !== $this->publicDir) {
-            $publicThemeDir = $this->publicDir . '/themes/' . $this->getThemeFolderName($themeName);
-            $targetDir = $publicThemeDir . '/static';
-            $originDir = $this->getThemePath($themeName) . '/static';
-
-            $this->filesystem->remove($publicThemeDir);
-            $this->filesystem->mkdir($publicThemeDir);
-
-            if (static::METHOD_RELATIVE_SYMLINK === $expectedMethod) {
-                return $this->relativeSymlinkWithFallback($originDir, $targetDir);
-            } elseif (static::METHOD_ABSOLUTE_SYMLINK === $expectedMethod) {
-                return $this->absoluteSymlinkWithFallback($originDir, $targetDir);
+                if (static::METHOD_RELATIVE_SYMLINK === $expectedMethod) {
+                    return $this->relativeSymlinkWithFallback($originDir, $targetDir);
+                } elseif (static::METHOD_ABSOLUTE_SYMLINK === $expectedMethod) {
+                    return $this->absoluteSymlinkWithFallback($originDir, $targetDir);
+                } else {
+                    return $this->hardCopy($originDir, $targetDir);
+                }
             } else {
-                return $this->hardCopy($originDir, $targetDir);
+                $this->logger->info($themeInfo->getThemeName() . ' assets are already public.');
             }
         }
         return null;
@@ -404,7 +295,7 @@ class ThemeGenerator
      * @param string $targetDir
      * @return string
      */
-    private function relativeSymlinkWithFallback(string $originDir, string $targetDir)
+    private function relativeSymlinkWithFallback(string $originDir, string $targetDir): string
     {
         try {
             $this->symlink($originDir, $targetDir, true);
@@ -424,7 +315,7 @@ class ThemeGenerator
      * @param string $targetDir
      * @return string
      */
-    private function absoluteSymlinkWithFallback(string $originDir, string $targetDir)
+    private function absoluteSymlinkWithFallback(string $originDir, string $targetDir): string
     {
         try {
             $this->symlink($originDir, $targetDir);
@@ -443,7 +334,7 @@ class ThemeGenerator
      * @param string $targetDir
      * @param bool $relative
      */
-    private function symlink(string $originDir, string $targetDir, bool $relative = false)
+    private function symlink(string $originDir, string $targetDir, bool $relative = false): void
     {
         if ($relative) {
             $this->filesystem->mkdir(dirname($targetDir));
@@ -451,7 +342,12 @@ class ThemeGenerator
         }
         $this->filesystem->symlink($originDir, $targetDir);
         if (!file_exists($targetDir)) {
-            throw new IOException(sprintf('Symbolic link "%s" was created but appears to be broken.', $targetDir), 0, null, $targetDir);
+            throw new IOException(
+                sprintf('Symbolic link "%s" was created but appears to be broken.', $targetDir),
+                0,
+                null,
+                $targetDir
+            );
         }
     }
 
@@ -466,7 +362,11 @@ class ThemeGenerator
     {
         $this->filesystem->mkdir($targetDir, 0777);
         // We use a custom iterator to ignore VCS files
-        $this->filesystem->mirror($originDir, $targetDir, Finder::create()->ignoreDotFiles(false)->in($originDir));
+        $this->filesystem->mirror(
+            $originDir,
+            $targetDir,
+            Finder::create()->ignoreDotFiles(false)->in($originDir)
+        );
 
         return static::METHOD_COPY;
     }
