@@ -157,6 +157,16 @@ final class ThemeInfo
         return false;
     }
 
+    protected function getProtectedThemePath(): string
+    {
+        if ($this->filesystem->exists($this->projectDir . '/vendor/roadiz/roadiz/themes/' . $this->getThemeName())) {
+            return $this->projectDir . '/vendor/roadiz/roadiz/themes/' . $this->getThemeName();
+        } elseif ($this->filesystem->exists($this->projectDir . '/themes/' . $this->getThemeName())) {
+            return $this->projectDir . '/themes/' . $this->getThemeName();
+        }
+        throw new \InvalidArgumentException($this->getThemeName() . ' does not exist in project and vendor.');
+    }
+
     /**
      * Get real theme path from its name.
      *
@@ -167,7 +177,9 @@ final class ThemeInfo
     public function getThemePath(): string
     {
         if (null === $this->themePath) {
-            if ($this->isValid()) {
+            if ($this->isProtected()) {
+                $this->themePath = $this->getProtectedThemePath();
+            } elseif ($this->isValid()) {
                 $this->themePath = call_user_func([$this->getClassname(), 'getThemeFolder']);
             } else {
                 $this->themePath = $this->projectDir . '/themes/' . $this->getThemeName();
