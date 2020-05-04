@@ -239,7 +239,11 @@ final class ThemeInfo
      */
     public function isValid(): bool
     {
-        if (null === $this->getClassname()) {
+        try {
+            if (null === $this->getClassname()) {
+                return false;
+            }
+        } catch (\InvalidArgumentException $exception) {
             return false;
         }
 

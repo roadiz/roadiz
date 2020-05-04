@@ -58,14 +58,10 @@ class ThemeAssetsCommand extends Command implements ContainerAwareInterface
         $themeGenerator = $this->get(ThemeGenerator::class);
 
         if ($themeInfo->exists()) {
-            if (!$themeInfo->isValid()) {
-                throw new InvalidArgumentException($themeInfo->getClassname() . ' is not a valid theme.');
-            }
             $io->table([
                 'Description', 'Value'
             ], [
                 ['Given name', $themeInfo->getName()],
-                ['Theme classname', $themeInfo->getClassname()],
                 ['Theme path', $themeInfo->getThemePath()],
                 ['Assets path', $themeInfo->getThemePath().'/static'],
             ]);
@@ -73,6 +69,6 @@ class ThemeAssetsCommand extends Command implements ContainerAwareInterface
             $themeGenerator->installThemeAssets($themeInfo, $expectedMethod);
             return 0;
         }
-        throw new InvalidArgumentException($themeInfo->getClassname() . ' does not exist.');
+        throw new InvalidArgumentException($themeInfo->getThemePath() . ' does not exist.');
     }
 }

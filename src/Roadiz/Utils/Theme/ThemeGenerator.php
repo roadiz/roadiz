@@ -356,13 +356,17 @@ class ThemeGenerator
      */
     private function hardCopy(string $originDir, string $targetDir): string
     {
-        $this->filesystem->mkdir($targetDir, 0777);
-        // We use a custom iterator to ignore VCS files
-        $this->filesystem->mirror(
-            $originDir,
-            $targetDir,
-            Finder::create()->ignoreDotFiles(false)->in($originDir)
-        );
+        try {
+            $this->filesystem->mkdir($targetDir, 0777);
+            // We use a custom iterator to ignore VCS files
+            $this->filesystem->mirror(
+                $originDir,
+                $targetDir,
+                Finder::create()->ignoreDotFiles(false)->in($originDir)
+            );
+        } catch (IOException $exception) {
+            // Do nothing
+        }
 
         return static::METHOD_COPY;
     }
