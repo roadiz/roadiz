@@ -147,7 +147,7 @@ final class ThemeInfo
         if ($this->isProtected()) {
             return true;
         }
-        if ($this->filesystem->exists($this->projectDir . '/themes/' . $this->getThemeName()) ||
+        if ($this->filesystem->exists($this->getThemePath()) ||
             $this->filesystem->exists($this->projectDir . '/vendor/roadiz/' . $this->getThemeName()) ||
             $this->filesystem->exists($this->projectDir . '/vendor/roadiz/roadiz/themes/' . $this->getThemeName())
         ) {
