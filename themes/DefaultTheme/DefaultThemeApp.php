@@ -175,14 +175,6 @@ class DefaultThemeApp extends FrontendController
     {
         parent::setupDependencyInjection($container);
 
-        /** @var Packages $packages */
-        $packages = $container['assetPackages'];
-        $packages->addPackage('DefaultTheme', new PathPackage(
-            'themes/DefaultTheme/static',
-            $container['versionStrategy'],
-            new RequestStackContext($container['requestStack'])
-        ));
-
         $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
             $extensions->add(new ImageFormatsExtension());
             return $extensions;

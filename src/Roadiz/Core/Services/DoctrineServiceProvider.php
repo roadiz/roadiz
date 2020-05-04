@@ -186,13 +186,8 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
                 $c['stopwatch']->stop('initDoctrine');
                 return $em;
-            } catch (NoConfigurationFoundException $e) {
-                $c['stopwatch']->stop('initDoctrine');
-                $c['session']->getFlashBag()->add('error', $e->getMessage());
-                return null;
             } catch (\PDOException $e) {
                 $c['stopwatch']->stop('initDoctrine');
-                $c['session']->getFlashBag()->add('error', $e->getMessage());
                 return null;
             }
         };

@@ -45,6 +45,8 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
@@ -267,6 +269,7 @@ abstract class AppController extends Controller
      * Return theme root folder.
      *
      * @return string
+     * @throws \ReflectionException
      */
     public static function getThemeFolder()
     {
@@ -282,6 +285,7 @@ abstract class AppController extends Controller
      * whether it’s located in project folder or in vendor folder.
      *
      * @return string
+     * @throws \ReflectionException
      */
     public static function getResourcesFolder()
     {
@@ -301,8 +305,10 @@ abstract class AppController extends Controller
     {
         return static::getResourcesFolder() . '/translations';
     }
+
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public static function getPublicFolder()
     {
@@ -477,6 +483,12 @@ abstract class AppController extends Controller
     public static function setupDependencyInjection(Container $container)
     {
         static::addThemeTemplatesPath($container);
+
+        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
+            'themes/' . static::getThemeDir() . '/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
     }
 
     /**
