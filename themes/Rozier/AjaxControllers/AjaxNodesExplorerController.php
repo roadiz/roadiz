@@ -157,7 +157,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     {
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
-        $arrayFilter['translation'] = $this->get('defaultTranslation');
+
         $results = $searchHandler->searchWithHighlight(
                 $request->get('search'),
                 $arrayFilter,
@@ -178,6 +178,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             return $result['nodeSource'];
         }, $results);
         $nodesArray = $this->normalizeNodes($nodeSources);
+
         return [
             'status' => 'confirm',
             'statusCode' => 200,
