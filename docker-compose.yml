@@ -57,6 +57,11 @@ services:
             - "traefik.http.routers.roadiz.service=roadiz"
 
     solr:
+        build:
+            # Custom image for file permissions
+            context: ./docker/solr
+            args:
+                USER_UID: ${USER_UID}
         image: solr:8
         ports:
             - "${SOLR_PORT}:8983/tcp"
@@ -65,6 +70,9 @@ services:
         command:
             - solr-precreate
             - roadiz
+        environment:
+            SOLR_UID: ${USER_UID}
+            SOLR_GID: ${USER_UID}
         networks:
             - default
 
