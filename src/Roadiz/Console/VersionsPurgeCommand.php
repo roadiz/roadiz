@@ -136,7 +136,7 @@ EOT
         )) {
             /** @var QueryBuilder $qb */
             $qb = $em->getRepository(UserLogEntry::class)->createQueryBuilder('l');
-            $objects = $qb->select('MAX(l.version) as maxVersion', 'l.objectId', 'l.objectClass', 'l.loggedAt')
+            $objects = $qb->select('MAX(l.version) as maxVersion', 'l.objectId', 'l.objectClass')
                 ->groupBy('l.objectId', 'l.objectClass')
                 ->getQuery()
                 ->getArrayResult()
