@@ -156,6 +156,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     {
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
+        
         $results = $searchHandler->search(
             $request->get('search'),
             $arrayFilter,
@@ -166,6 +167,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         );
         $pageCount = ceil($results->getResultCount()/$this->getItemPerPage());
         $nodesArray = $this->normalizeNodes($results);
+
         return [
             'status' => 'confirm',
             'statusCode' => 200,

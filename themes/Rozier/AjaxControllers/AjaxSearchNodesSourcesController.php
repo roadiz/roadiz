@@ -71,7 +71,6 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             static::RESULT_COUNT
         );
 
-
         if (null !== $nodesSources && count($nodesSources) > 0) {
             $responseArray = [
                 'statusCode' => Response::HTTP_OK,
