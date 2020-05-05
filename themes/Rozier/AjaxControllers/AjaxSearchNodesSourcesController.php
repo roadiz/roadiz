@@ -62,32 +62,14 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             throw new BadRequestHttpException('searchTerms parameter is missing.');
         }
 
-        /** @var NodeSourceSearchHandler|null $searchHandler */
-        $searchHandler = $this->get('solr.search.nodeSource');
-        if (null !== $searchHandler) {
-            $searchHandler->boostByUpdateDate();
-            $results = $searchHandler->searchWithHighlight(
-                $request->get('searchTerms'),
-                [],
-                static::RESULT_COUNT,
-                false,
-                10000
-            );
-            $nodesSources = array_map(function ($result) {
-                return $result['nodeSource'];
-            }, $results);
-        } else {
-            $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
-            $searchHandler->setDisplayNonPublishedNodes(true);
+        $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
+        $searchHandler->setDisplayNonPublishedNodes(true);
 
-            /** @var array $nodesSources */
-            $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
-                $request->get('searchTerms'),
-                static::RESULT_COUNT,
-                $this->get('defaultTranslation')
-            );
-        }
-
+        /** @var array $nodesSources */
+        $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
+            $request->get('searchTerms'),
+            static::RESULT_COUNT
+        );
 
         if (null !== $nodesSources && count($nodesSources) > 0) {
             $responseArray = [
@@ -98,9 +80,11 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             ];
 
             foreach ($nodesSources as $source) {
-                if (null !== $source && $source instanceof NodesSources) {
-                    $responseArray['data'][] = [
-                        'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
+                if (!key_exists($source->getNode()->getId(), $responseArray['data']) &&
+                    null !== $source &&
+                    $source instanceof NodesSources) {
+                    $responseArray['data'][$source->getNode()->getId()] = [
+                        'title' => $source->getTitle() ?? $source->getNode()->getNodeName(),
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
                         'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
@@ -115,6 +99,10 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                     ];
                 }
             }
+            /*
+             * Only display one nodeSource
+             */
+            $responseArray['data'] = array_values($responseArray['data']);
 
             return new JsonResponse(
                 $responseArray

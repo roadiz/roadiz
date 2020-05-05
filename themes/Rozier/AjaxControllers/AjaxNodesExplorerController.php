@@ -157,7 +157,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     {
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
-        $arrayFilter['translation'] = $this->get('defaultTranslation');
+
         $results = $searchHandler->searchWithHighlight(
                 $request->get('search'),
                 $arrayFilter,
@@ -178,6 +178,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             return $result['nodeSource'];
         }, $results);
         $nodesArray = $this->normalizeNodes($nodeSources);
+
         return [
             'status' => 'confirm',
             'statusCode' => 200,
@@ -246,14 +247,19 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         foreach ($nodes as $node) {
             if (null !== $node) {
                 if ($node instanceof NodesSources) {
-                    $nodeModel = new NodeSourceModel($node, $this->getContainer());
+                    if (!key_exists($node->getNode()->getId(), $nodesArray)) {
+                        $nodeModel = new NodeSourceModel($node, $this->getContainer());
+                        $nodesArray[$node->getNode()->getId()] = $nodeModel->toArray();
+                    }
                 } else {
-                    $nodeModel = new NodeModel($node, $this->getContainer());
+                    if (!key_exists($node->getId(), $nodesArray)) {
+                        $nodeModel = new NodeModel($node, $this->getContainer());
+                        $nodesArray[$node->getId()] = $nodeModel->toArray();
+                    }
                 }
-                $nodesArray[] = $nodeModel->toArray();
             }
         }
 
-        return $nodesArray;
+        return array_values($nodesArray);
     }
 }
