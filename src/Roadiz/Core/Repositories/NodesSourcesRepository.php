@@ -446,6 +446,7 @@ class NodesSourcesRepository extends StatusAwareRepository
         /** @var NodeSourceSearchHandler|null $service */
         $service = $this->get('solr.search.nodeSource');
         if (null !== $service) {
+            $service->boostByUpdateDate();
             $arguments = [];
             if ($this->isDisplayingNotPublishedNodes()) {
                 $arguments['status'] = ['<=', Node::PUBLISHED];

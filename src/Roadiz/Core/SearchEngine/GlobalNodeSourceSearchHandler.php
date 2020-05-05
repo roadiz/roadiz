@@ -76,10 +76,10 @@ class GlobalNodeSourceSearchHandler
     /**
      * @param string $searchTerm
      * @param int $resultCount
-     * @param Translation $translation
+     * @param Translation|null $translation
      * @return NodesSources[]
      */
-    public function getNodeSourcesBySearchTerm($searchTerm, $resultCount, Translation $translation)
+    public function getNodeSourcesBySearchTerm($searchTerm, $resultCount, ?Translation $translation = null)
     {
         $safeSearchTerms = strip_tags($searchTerm);
 
@@ -107,17 +107,21 @@ class GlobalNodeSourceSearchHandler
                 /*
                  * Then try with node name.
                  */
-                /** @var QueryBuilder $qb */
                 $qb = $this->repository->createQueryBuilder('ns');
 
                 $qb->select('ns, n')
                     ->innerJoin('ns.node', 'n')
-                    ->andWhere($qb->expr()->like('n.nodeName', ':nodeName'))
-                    ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+                    ->andWhere($qb->expr()->orX(
+                        $qb->expr()->like('n.nodeName', ':nodeName'),
+                        $qb->expr()->like('ns.title', ':nodeName')
+                    ))
                     ->setMaxResults($resultCount)
-                    ->setParameter('translation', $translation)
                     ->setParameter('nodeName', '%' . $safeSearchTerms . '%');
 
+                if (null !== $translation) {
+                    $qb->andWhere($qb->expr()->eq('ns.translation', ':translation'))
+                        ->setParameter('translation', $translation);
+                }
                 try {
                     return $qb->getQuery()->getResult();
                 } catch (NoResultException $e) {
