@@ -62,25 +62,15 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             throw new BadRequestHttpException('searchTerms parameter is missing.');
         }
 
-        /** @var NodeSourceSearchHandler|null $searchHandler */
-        $searchHandler = $this->get('solr.search.nodeSource');
-        if (null !== $searchHandler) {
-            $searchHandler->boostByUpdateDate();
-            $results = $searchHandler->search(
-                $request->get('searchTerms')
-            );
-            $nodesSources = $results->getResultItems();
-        } else {
-            $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
-            $searchHandler->setDisplayNonPublishedNodes(true);
+        $searchHandler = new GlobalNodeSourceSearchHandler($this->get('em'));
+        $searchHandler->setDisplayNonPublishedNodes(true);
 
-            /** @var array $nodesSources */
-            $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
-                $request->get('searchTerms'),
-                static::RESULT_COUNT,
-                $this->get('defaultTranslation')
-            );
-        }
+        /** @var array $nodesSources */
+        $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
+            $request->get('searchTerms'),
+            static::RESULT_COUNT,
+            $this->get('defaultTranslation')
+        );
 
 
         if (null !== $nodesSources && count($nodesSources) > 0) {
@@ -94,7 +84,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             foreach ($nodesSources as $source) {
                 if (null !== $source && $source instanceof NodesSources) {
                     $responseArray['data'][] = [
-                        'title' => "" != $source->getTitle() ? $source->getTitle() : $source->getNode()->getNodeName(),
+                        'title' => $source->getTitle() ?? $source->getNode()->getNodeName(),
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
                         'typeName' => $source->getNode()->getNodeType()->getDisplayName(),

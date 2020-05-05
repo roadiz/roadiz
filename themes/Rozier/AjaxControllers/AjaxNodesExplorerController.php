@@ -156,7 +156,6 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     {
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
-        $arrayFilter['translation'] = $this->get('defaultTranslation');
         $results = $searchHandler->search(
             $request->get('search'),
             $arrayFilter,
