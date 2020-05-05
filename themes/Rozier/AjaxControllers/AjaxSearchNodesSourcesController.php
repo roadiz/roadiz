@@ -68,8 +68,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
         /** @var array $nodesSources */
         $nodesSources = $searchHandler->getNodeSourcesBySearchTerm(
             $request->get('searchTerms'),
-            static::RESULT_COUNT,
-            $this->get('defaultTranslation')
+            static::RESULT_COUNT
         );
 
         if (null !== $nodesSources && count($nodesSources) > 0) {
@@ -81,8 +80,10 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             ];
 
             foreach ($nodesSources as $source) {
-                if (null !== $source && $source instanceof NodesSources) {
-                    $responseArray['data'][] = [
+                if (!key_exists($source->getNode()->getId(), $responseArray['data']) &&
+                    null !== $source &&
+                    $source instanceof NodesSources) {
+                    $responseArray['data'][$source->getNode()->getId()] = [
                         'title' => $source->getTitle() ?? $source->getNode()->getNodeName(),
                         'nodeId' => $source->getNode()->getId(),
                         'translationId' => $source->getTranslation()->getId(),
@@ -98,6 +99,10 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                     ];
                 }
             }
+            /*
+             * Only display one nodeSource
+             */
+            $responseArray['data'] = array_values($responseArray['data']);
 
             return new JsonResponse(
                 $responseArray
