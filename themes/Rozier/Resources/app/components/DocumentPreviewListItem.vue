@@ -20,6 +20,16 @@
                     <template v-if="document.isSvg">
                         <div v-html="document.preview_html" class="svg"></div>
                     </template>
+                    <template v-else-if="document.isImage && !document.isWebp && !document.isPrivate">
+                        <picture>
+                            <source :srcset="document.thumbnail_80 + '.webp'" type="image/webp">
+                            <img class="document-image"
+                                 width="80"
+                                 height="80"
+                                 loading="lazy"
+                                 :src="document.thumbnail_80" />
+                        </picture>
+                    </template>
                     <template v-else-if="document.isImage && !document.isPrivate">
                         <img class="document-image" width="80" height="80"
                              src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="

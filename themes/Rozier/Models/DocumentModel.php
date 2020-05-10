@@ -108,6 +108,7 @@ class DocumentModel implements ModelInterface
             'name' => $name,
             'hasThumbnail' => $hasThumbnail,
             'isImage' => $this->document->isImage(),
+            'isWebp' => $this->document->getMimeType() === 'image/webp',
             'isVideo' => $this->document->isVideo(),
             'isSvg' => $this->document->isSvg(),
             'isEmbed' => $this->document->isEmbed(),
@@ -131,12 +132,14 @@ class DocumentModel implements ModelInterface
 DocumentModel::$thumbnailArray = [
     "fit" => "40x40",
     "quality" => 50,
+    "sharpen" => 5,
     "inline" => false,
 ];
 
 DocumentModel::$thumbnail80Array = [
     "fit" => "80x80",
     "quality" => 50,
+    "sharpen" => 5,
     "inline" => false,
 ];
 

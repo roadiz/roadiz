@@ -80,10 +80,11 @@ class DocumentsController extends RozierApp
     protected $thumbnailFormat = [
         'quality' => 50,
         'fit' => '128x128',
+        'sharpen' => 5,
         'inline' => false,
+        'picture' => true,
+        'loading' => 'lazy',
     ];
-
-
 
     /**
      * @param Request $request
