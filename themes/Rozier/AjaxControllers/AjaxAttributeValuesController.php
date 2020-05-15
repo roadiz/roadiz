@@ -48,8 +48,8 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
                 $responseArray = [
                     'statusCode' => '200',
                     'status' => 'success',
-                    'responseText' => $this->getTranslator()->trans('attribute_value.%id%.updated', [
-                        '%name%' => $attributeValue->getId(),
+                    'responseText' => $this->getTranslator()->trans('attributeValue.%name%.updated', [
+                        '%name%' => $attributeValue->getAttribute()->getLabelOrCode(),
                     ]),
                 ];
             }
@@ -61,7 +61,7 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
         }
 
         throw $this->createNotFoundException($this->getTranslator()->trans(
-            'attribute_value.%attributeValueId%.not_exists',
+            'attributeValue.%attributeValueId%.not_exists',
             [
                 '%attributeValueId%' => $attributeValueId
             ]
