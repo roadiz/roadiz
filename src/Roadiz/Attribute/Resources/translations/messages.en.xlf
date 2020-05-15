@@ -307,6 +307,10 @@
                 <target state="translated">Are you sure you want to reset attribute value for this language?</target>
                 <note/>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_value.%attributeValueId%.not_exists">
+          <source>attribute_value.%attributeValueId%.not_exists</source>
+          <target state="translated">Attribute %attributeValueId% value does not exist</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

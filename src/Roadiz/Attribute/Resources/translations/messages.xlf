@@ -174,7 +174,6 @@
                 <target></target>
                 <note></note>
             </trans-unit>
-
             <trans-unit xml:space="preserve" id="attributes.form.group">
                 <source>attributes.form.group</source>
                 <target></target>
@@ -309,6 +308,11 @@
             </trans-unit>
             <trans-unit xml:space="preserve" id="are_you_sure.reset.attribute_value">
                 <source>are_you_sure.reset.attribute_value</source>
+                <target></target>
+                <note></note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="attribute_value.%attributeValueId%.not_exists">
+                <source>attribute_value.%attributeValueId%.not_exists</source>
                 <target></target>
                 <note></note>
             </trans-unit>

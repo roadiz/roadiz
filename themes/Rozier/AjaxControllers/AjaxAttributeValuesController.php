@@ -30,6 +30,7 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
          */
         $this->validateRequest($request, 'POST', false);
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODE_ATTRIBUTES');
+
         /** @var AttributeValue|null $attributeValue */
         $attributeValue = $this->get('em')->find(AttributeValue::class, (int) $attributeValueId);
 
