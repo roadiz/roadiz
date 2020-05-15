@@ -164,6 +164,14 @@
                 <target state="translated">Attributes file must be a valid JSON file with Roadiz attributes structure.</target>
                 <note/>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attributeValue.%attributeValueId%.not_exists">
+          <source>attributeValue.%attributeValueId%.not_exists</source>
+          <target state="translated">Attribute %attributeValueId% value does not exist</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="attributeValue.%name%.updated">
+          <source>attributeValue.%name%.updated</source>
+          <target>Attribute %name% value has been updated</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

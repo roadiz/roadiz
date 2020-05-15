@@ -32,8 +32,10 @@ namespace RZ\Roadiz\Attribute\Event;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
+use RZ\Roadiz\Core\Entities\AttributeValue;
 
 class AttributeValueLifeCycleSubscriber implements EventSubscriber
 {
@@ -44,6 +46,7 @@ class AttributeValueLifeCycleSubscriber implements EventSubscriber
     {
         return [
             Events::prePersist,
+            Events::onFlush,
         ];
     }
 
@@ -69,6 +72,44 @@ class AttributeValueLifeCycleSubscriber implements EventSubscriber
                 }
 
                 $entity->setPosition($lastPosition);
+            }
+        }
+    }
+
+    /**
+     * @param OnFlushEventArgs $eventArgs
+     *
+     * @throws \Exception
+     */
+    public function onFlush(OnFlushEventArgs $eventArgs)
+    {
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
+
+        foreach ($uow->getScheduledEntityUpdates() as $entity) {
+            if ($entity instanceof AttributeValueInterface) {
+                $classMetadata = $em->getClassMetadata(AttributeValue::class);
+                foreach ($uow->getEntityChangeSet($entity) as $keyField => $field) {
+                    if ($keyField === 'position') {
+                        $nodeAttributes = $entity->getAttributable()->getAttributeValues();
+                        /*
+                         * Need to resort collection based on updated position.
+                         */
+                        $iterator = $nodeAttributes->getIterator();
+                        // define ordering closure, using preferred comparison method/field
+                        $iterator->uasort(function (AttributeValueInterface $first, AttributeValueInterface $second) {
+                            return $first->getPosition() > $second->getPosition() ? 1 : -1;
+                        });
+
+                        $lastPosition = 1;
+                        /** @var AttributeValueInterface $nodeAttribute */
+                        foreach ($iterator as $nodeAttribute) {
+                            $nodeAttribute->setPosition($lastPosition);
+                            $uow->computeChangeSet($classMetadata, $nodeAttribute);
+                            $lastPosition++;
+                        }
+                    }
+                }
             }
         }
     }

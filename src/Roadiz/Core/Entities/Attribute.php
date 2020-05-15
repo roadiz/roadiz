@@ -90,7 +90,13 @@ class Attribute extends AbstractEntity implements AttributeInterface
 
     /**
      * @var Collection<AttributeValueInterface>
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="attribute", fetch="EXTRA_LAZY", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(
+     *     targetEntity="RZ\Roadiz\Core\Entities\AttributeValue",
+     *     mappedBy="attribute",
+     *     fetch="EXTRA_LAZY",
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
+     * )
      * @Serializer\Exclude
      */
     protected $attributeValues;
