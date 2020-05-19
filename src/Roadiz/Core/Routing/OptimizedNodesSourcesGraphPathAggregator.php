@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
+use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -15,6 +16,10 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
      * @var EntityManagerInterface
      */
     private $entityManager;
+    /**
+     * @var ArrayCache
+     */
+    private $cache;
 
     /**
      * NodesSourcesPathResolver constructor.
@@ -24,6 +29,7 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
+        $this->cache = new ArrayCache();
     }
 
     /**
@@ -33,8 +39,11 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
      */
     public function aggregatePath(NodesSources $nodesSources): string
     {
-        $urlTokens = array_reverse($this->getIdentifiers($nodesSources));
-        return implode('/', $urlTokens);
+        if (!$this->cache->contains($nodesSources->getId())) {
+            $urlTokens = array_reverse($this->getIdentifiers($nodesSources));
+            $this->cache->save($nodesSources->getId(), implode('/', $urlTokens));
+        }
+        return $this->cache->fetch($nodesSources->getId());
     }
 
     /**
