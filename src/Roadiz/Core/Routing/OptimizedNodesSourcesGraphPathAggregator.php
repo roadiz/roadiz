@@ -62,6 +62,14 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
         return $parentIds;
     }
 
+    /**
+     * Get every nodeSource parents identifier from current to
+     * farest ancestor.
+     *
+     * @param NodesSources $source
+     *
+     * @return array
+     */
     protected function getIdentifiers(NodesSources $source): array
     {
         $urlTokens = [];
@@ -91,9 +99,9 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
                         'visible' => true,
                         'translation' => $source->getTranslation()
                     ])
-                    ->setCacheable(true)
                     ->getQuery()
                     ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
+                    ->setCacheable(true)
                     ->getArrayResult()
                 ;
                 usort($parents, function ($a, $b) use ($parentIds) {
@@ -104,7 +112,7 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
         }
 
         $urlTokens[] = $source->getIdentifier();
-        
+
         foreach ($parents as $parent) {
             $urlTokens[] = $parent['alias'] ?? $parent['nodeName'];
         }
