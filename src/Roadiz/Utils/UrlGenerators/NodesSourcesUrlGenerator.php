@@ -32,6 +32,7 @@ namespace RZ\Roadiz\Utils\UrlGenerators;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\HttpFoundation\Request;
+use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
 
 /**
  * Do not extend this class, use NodesSourcesPathGeneratingEvent::class event
@@ -56,20 +57,27 @@ final class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * @var bool
      */
     protected $forceLocaleWithUrlAlias;
+    /**
+     * @var NodesSourcesPathAggregator
+     */
+    protected $pathAggregator;
 
     /**
      *
-     * @param Request      $request
-     * @param NodesSources $nodeSource
-     * @param bool         $forceLocale
-     * @param bool         $forceLocaleWithUrlAlias
+     * @param NodesSourcesPathAggregator $pathAggregator
+     * @param Request                    $request
+     * @param NodesSources               $nodeSource
+     * @param bool                       $forceLocale
+     * @param bool                       $forceLocaleWithUrlAlias
      */
     public function __construct(
+        NodesSourcesPathAggregator $pathAggregator,
         Request $request = null,
         NodesSources $nodeSource = null,
         bool $forceLocale = false,
         bool $forceLocaleWithUrlAlias = false
     ) {
+        $this->pathAggregator = $pathAggregator;
         $this->request = $request;
         $this->nodeSource = $nodeSource;
         $this->forceLocale = $forceLocale;
@@ -145,38 +153,27 @@ final class NodesSourcesUrlGenerator implements UrlGeneratorInterface
                 }
             }
 
-            $urlTokens = [];
-            if (isset($parameters['_format']) && in_array($parameters['_format'], ['xml', 'json', 'pdf'])) {
-                $urlTokens[] = $this->nodeSource->getIdentifier() . '.' . $parameters['_format'];
-            } else {
-                $urlTokens[] = $this->nodeSource->getIdentifier();
-            }
-
-            $parent = $this->nodeSource->getParent();
-            if ($parent !== null && !$parent->getNode()->isHome()) {
-                do {
-                    if ($parent->getNode()->isVisible()) {
-                        $urlTokens[] = $parent->getIdentifier();
-                    }
-                    $parent = $parent->getParent();
-                } while ($parent !== null && !$parent->getNode()->isHome());
-            }
+            $path = $this->pathAggregator->aggregatePath($this->nodeSource);
 
             /*
              * If using node-name, we must use shortLocale when current
              * translation is not the default one.
              */
             if ($this->urlNeedsLocalePrefix($this->nodeSource)) {
-                $urlTokens[] = $this->nodeSource->getTranslation()->getPreferredLocale();
+                $path = $this->nodeSource->getTranslation()->getPreferredLocale() . '/' . $path;
             }
-
-            $urlTokens = array_reverse($urlTokens);
 
             if (null !== $theme && $theme->getRoutePrefix() != '') {
-                return $theme->getRoutePrefix() . '/' . implode('/', $urlTokens);
+                $path = $theme->getRoutePrefix() . '/' . $path;
+            }
+            /*
+             * Add non default format at the path end.
+             */
+            if (isset($parameters['_format']) && in_array($parameters['_format'], ['xml', 'json', 'pdf'])) {
+                $path .= '.' . $parameters['_format'];
             }
 
-            return implode('/', $urlTokens);
+            return $path;
         } else {
             throw new \RuntimeException("Cannot generate Url for a NULL NodesSources", 1);
         }

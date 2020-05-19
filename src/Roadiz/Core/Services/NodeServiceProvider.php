@@ -30,6 +30,9 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Routing\NodesSourcesGraphPathAggregator;
+use RZ\Roadiz\Core\Routing\OptimizedNodesSourcesGraphPathAggregator;
+use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\NodeTranstyper;
 
@@ -45,6 +48,11 @@ class NodeServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container[NodesSourcesPathAggregator::class] = function (Container $c) {
+            // return new NodesSourcesGraphPathAggregator();
+            return new OptimizedNodesSourcesGraphPathAggregator($c['em']);
+        };
+
         $container[NodeTranstyper::class] = function (Container $c) {
             return new NodeTranstyper($c['em'], $c['logger.doctrine']);
         };

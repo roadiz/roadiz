@@ -49,6 +49,7 @@ use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
+use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\Subscriber\DefaultNodesSourcesIndexingSubscriber;
 use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
@@ -282,7 +283,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
-            $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
             $dispatcher->addSubscriber(new SignatureListener(
                 $c['settingsBag'],
                 $kernel::$cmsVersion,
@@ -313,6 +313,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $dispatcher->addSubscriber(
                     new NodesSourcesUrlSubscriber($c['nodesSourcesUrlCacheProvider'])
                 );
+
+                $dispatcher->addSubscriber(new NodeSourcePathSubscriber($c[NodesSourcesPathAggregator::class]));
                 /*
                  * Add custom event subscriber to Translation result cache
                  */
