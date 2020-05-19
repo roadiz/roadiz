@@ -103,9 +103,8 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
             }
         }
 
-        if ($source->getNode()->isVisible()) {
-            $urlTokens[] = $source->getIdentifier();
-        }
+        $urlTokens[] = $source->getIdentifier();
+        
         foreach ($parents as $parent) {
             $urlTokens[] = $parent['alias'] ?? $parent['nodeName'];
         }

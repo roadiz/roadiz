@@ -49,6 +49,9 @@ class NodeServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container[NodesSourcesPathAggregator::class] = function (Container $c) {
+            /*
+             * You can override this service to change NS path aggregator strategy
+             */
             // return new NodesSourcesGraphPathAggregator();
             return new OptimizedNodesSourcesGraphPathAggregator($c['em']);
         };
