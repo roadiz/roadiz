@@ -37,6 +37,9 @@ use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
+use Solarium\Core\Client\Adapter\AdapterHelper;
+use Solarium\Core\Client\Adapter\AdapterInterface;
+use Solarium\Core\Client\Adapter\Curl;
 
 /**
  * Register Solr services for dependency injection container.
@@ -44,11 +47,22 @@ use Solarium\Client;
 class SolrServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Container $container [description]
-     * @return Container
+     * @param Container $container
+     *
+     * @return AdapterInterface
      */
     public function register(Container $container)
     {
+        $container[AdapterInterface::class] = function (Container $c) {
+            $adapter = new Curl();
+            if (isset($c['config']['solr']['endpoint'])) {
+                $endpoints = $c['config']['solr']['endpoint'];
+                $firstEndpoint = reset($endpoints);
+                $adapter->setTimeout($firstEndpoint['timeout']);
+            }
+            return $adapter;
+        };
+
         /**
          * @param Container $c
          *
@@ -56,8 +70,15 @@ class SolrServiceProvider implements ServiceProviderInterface
          */
         $container['solr'] = function (Container $c) {
             if (isset($c['config']['solr']['endpoint'])) {
-                // Do not pass $c['dispatcher'] - it can cause dependency infinite loop
-                $solrService = new Client($c['config']['solr']);
+                $options = $c['config']['solr'];
+                if (isset($options['timeout'])) {
+                    unset($options['timeout']);
+                }
+                $solrService = new Client(
+                    $c[AdapterInterface::class],
+                    $c['dispatcher'],
+                    $options
+                );
                 $solrService->setDefaultEndpoint('localhost');
                 return $solrService;
             } else {

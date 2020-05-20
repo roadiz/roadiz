@@ -143,8 +143,6 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
             $solarium->index();
             $buffer->addDocument($solarium->getDocument());
             $this->io->progressAdvance();
-
-            $this->entityManager->detach($row[0]);
         }
 
         $buffer->flush();
@@ -191,7 +189,6 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
                 $buffer->addDocument($document);
             }
             $this->io->progressAdvance();
-            $this->entityManager->detach($row[0]);
         }
 
         $buffer->flush();
