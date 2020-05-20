@@ -321,7 +321,9 @@ class ContactFormManager extends EmailManager
         $this->form = $this->getFormBuilder()->getForm();
         $this->form->handleRequest($this->request);
         $returnJson = $this->request->isXmlHttpRequest() ||
-            ($this->request->attributes->has('_format') && $this->request->attributes->get('_format') == 'json');
+            $this->request->getRequestFormat() === 'json' ||
+            (count($this->request->getAcceptableContentTypes()) === 1 && $this->request->getAcceptableContentTypes()[0] === 'application/json') ||
+            ($this->request->attributes->has('_format') && $this->request->attributes->get('_format') === 'json');
 
         if ($this->form->isSubmitted()) {
             if ($this->form->isSubmitted() && $this->form->isValid()) {
