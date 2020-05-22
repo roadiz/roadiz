@@ -51,7 +51,7 @@
                     li.attr("connection",stmt.connection);
                     if ( $.inArray(stmt.connection, filters) == -1 ) {
                         filters.push(stmt.connection);
-                        $('<a />')
+                        $('<a data-router-disabled />')
                             .addClass(csscls('filter'))
                             .text(stmt.connection)
                             .attr('rel', stmt.connection)
