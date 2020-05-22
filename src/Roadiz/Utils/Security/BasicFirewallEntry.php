@@ -36,7 +36,6 @@ use Symfony\Component\Security\Http\EntryPoint\BasicAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\BasicAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
  * BasicFirewallEntry automatize firewall and access-map configuration with
@@ -72,9 +71,6 @@ class BasicFirewallEntry extends FirewallEntry
         $this->listeners = [];
     }
 
-    /**
-     * @return ListenerInterface
-     */
     protected function getAuthenticationListener()
     {
         $this->authenticationSuccessHandler = null;

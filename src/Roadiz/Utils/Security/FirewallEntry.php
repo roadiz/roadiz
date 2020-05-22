@@ -44,7 +44,6 @@ use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
@@ -292,10 +291,7 @@ class FirewallEntry
             return $a[0];
         }, $this->listeners);
     }
-
-    /**
-     * @return ListenerInterface
-     */
+    
     protected function getAuthenticationListener()
     {
         $this->authenticationSuccessHandler = new $this->authenticationSuccessHandlerClass(
