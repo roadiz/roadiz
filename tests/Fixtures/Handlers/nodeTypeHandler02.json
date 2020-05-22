@@ -8,5 +8,6 @@
     "hidingNodes": false,
     "color": "#000000",
     "fields": [],
-    "defaultTtl": 0
+    "defaultTtl": 0,
+    "hidingNonReachableNodes": false
 }
