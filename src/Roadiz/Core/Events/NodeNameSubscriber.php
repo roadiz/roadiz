@@ -36,6 +36,7 @@ use Monolog\Logger;
 use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
+use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
 use RZ\Roadiz\Utils\StringHandler;
@@ -51,9 +52,13 @@ class NodeNameSubscriber implements EventSubscriberInterface
      * @var NodeMover
      */
     protected $nodeMover;
-    /** @var Logger */
+    /**
+     * @var Logger
+     */
     private $logger;
-    /** @var NodeNameChecker */
+    /**
+     * @var NodeNameChecker
+     */
     private $nodeNameChecker;
 
     /**
@@ -105,10 +110,17 @@ class NodeNameSubscriber implements EventSubscriberInterface
              */
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
                 $this->nodeNameChecker->isNodeNameValid($testingNodeName) &&
-                !$this->nodeNameChecker->isNodeNameWithUniqId($testingNodeName, $nodeSource->getNode()->getNodeName())) {
-                if ($nodeSource->getNode()->getNodeType()->isReachable()) {
-                    $oldPaths = $this->nodeMover->getNodeSourcesUrls($nodeSource->getNode());
-                    $oldUpdateAt = $nodeSource->getNode()->getUpdatedAt();
+                !$this->nodeNameChecker->isNodeNameWithUniqId(
+                    $testingNodeName,
+                    $nodeSource->getNode()->getNodeName()
+                )) {
+                try {
+                    if ($nodeSource->getNode()->getNodeType()->isReachable()) {
+                        $oldPaths = $this->nodeMover->getNodeSourcesUrls($nodeSource->getNode());
+                        $oldUpdateAt = $nodeSource->getNode()->getUpdatedAt();
+                    }
+                } catch (SameNodeUrlException $e) {
+                    $oldPaths = [];
                 }
                 $alreadyUsed = $this->nodeNameChecker->isNodeNameAlreadyUsed($title);
                 if (!$alreadyUsed) {
