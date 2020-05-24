@@ -12,6 +12,7 @@ use RZ\Roadiz\Core\Entities\Redirection;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -124,7 +125,7 @@ final class NodeMover
         foreach ($node->getNodeSources() as $nodeSource) {
             $url = $this->urlGenerator->generate($nodeSource);
             if (null !== $lastUrl && $url === $lastUrl) {
-                throw new \RuntimeException('NodeSource URL are the same between translations.');
+                throw new SameNodeUrlException('NodeSource URL are the same between translations.');
             }
             $paths[$nodeSource->getTranslation()->getLocale()] = $url;
             $this->logger->debug('Redirect '.$nodeSource->getId().' '.$nodeSource->getTranslation()->getLocale().': '.$url);

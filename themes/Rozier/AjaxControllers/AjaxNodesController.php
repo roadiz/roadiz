@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Events\Node\NodeStatusChangedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
@@ -171,8 +172,12 @@ class AjaxNodesController extends AbstractAjaxController
 
         /** @var NodeMover $nodeMover */
         $nodeMover = $this->get(NodeMover::class);
-        if ($node->getNodeType()->isReachable()) {
-            $oldPaths = $nodeMover->getNodeSourcesUrls($node);
+        try {
+            if ($node->getNodeType()->isReachable()) {
+                $oldPaths = $nodeMover->getNodeSourcesUrls($node);
+            }
+        } catch (SameNodeUrlException $e) {
+            $oldPaths = [];
         }
 
         $nodeMover->move($node, $parent, $position);

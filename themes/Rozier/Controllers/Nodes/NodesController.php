@@ -40,6 +40,7 @@ use RZ\Roadiz\Core\Events\Node\NodeUndeletedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\Form\Form;
@@ -211,13 +212,16 @@ class NodesController extends RozierApp
             /*
              * Handle main form
              */
-            /** @var Form $form */
             $form = $this->createForm(Forms\NodeType::class, $node, [
                 'em' => $this->get('em'),
                 'nodeName' => $node->getNodeName(),
             ]);
-            if ($node->getNodeType()->isReachable()) {
-                $oldPaths = $this->get(NodeMover::class)->getNodeSourcesUrls($node);
+            try {
+                if ($node->getNodeType()->isReachable()) {
+                    $oldPaths = $this->get(NodeMover::class)->getNodeSourcesUrls($node);
+                }
+            } catch (SameNodeUrlException $e) {
+                $oldPaths = [];
             }
             $form->handleRequest($request);
 
