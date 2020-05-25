@@ -122,6 +122,16 @@ abstract class AbstractSearchHandler
     }
 
     /**
+     * @param string $q
+     *
+     * @return bool
+     */
+    protected function isQuerySingleWord(string $q): bool
+    {
+        return preg_match('#[\s\-\'\"\–\—\’\”\‘\“\/\+\.\,]#', $q) !== 1;
+    }
+
+    /**
      * Default Solr query builder.
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
@@ -137,7 +147,7 @@ abstract class AbstractSearchHandler
         $q = trim($q);
         $qHelper = new Helper();
         $q = $qHelper->escapeTerm($q);
-        $singleWord = strpos($q, ' ') === false ? true : false;
+        $singleWord = $this->isQuerySingleWord($q);
         $titleField = $this->getTitleField($args);
         /*
          * Search in node-sources tags name…
