@@ -175,7 +175,9 @@ class UserLifeCycleSubscriber implements EventSubscriber
                 $userViewer->setUser($user);
                 $userViewer->sendPasswordResetLink(
                     $this->container['urlGenerator'],
-                    'loginResetPage'
+                    'loginResetPage',
+                    'users/welcome_user_email.html.twig',
+                    'users/welcome_user_email.txt.twig'
                 );
             } else {
                 $this->setPassword($user, $user->getPlainPassword());

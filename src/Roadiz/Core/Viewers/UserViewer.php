@@ -63,13 +63,17 @@ class UserViewer
      *
      * @param UrlGeneratorInterface $urlGenerator
      * @param string                $route
+     * @param string                $htmlTemplate
+     * @param string                $txtTemplate
      *
      * @return bool
      * @throws \Exception
      */
     public function sendPasswordResetLink(
         UrlGeneratorInterface $urlGenerator,
-        $route = 'loginResetPage'
+        $route = 'loginResetPage',
+        $htmlTemplate = 'users/reset_password_email.html.twig',
+        $txtTemplate = 'users/reset_password_email.txt.twig'
     ) {
         $emailContact = $this->getContactEmail();
         $siteName = $this->getSiteName();
@@ -82,8 +86,8 @@ class UserViewer
             'site' => $siteName,
             'mailContact' => $emailContact,
         ]);
-        $this->emailManager->setEmailTemplate('users/reset_password_email.html.twig');
-        $this->emailManager->setEmailPlainTextTemplate('users/reset_password_email.txt.twig');
+        $this->emailManager->setEmailTemplate($htmlTemplate);
+        $this->emailManager->setEmailPlainTextTemplate($txtTemplate);
         $this->emailManager->setSubject($this->translator->trans(
             'reset.password.request'
         ));

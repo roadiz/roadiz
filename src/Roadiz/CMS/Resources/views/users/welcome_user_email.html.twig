@@ -1,0 +1,14 @@
+{% extends 'users/reset_password_email.html.twig' %}
+
+{% block title %}<title>{{ 'welcome.user.email.%site%'|trans({'%site%':site})|escape }}</title>{% endblock %}
+
+{% block content_title %}
+    <h1 itemprop="name">{% trans %}your.user.account{% endtrans %}</h1>
+{% endblock %}
+
+{% block content_subtitle %}
+    <h2>{{ 'welcome.user.email.%site%'|trans({'%site%':site})|escape }}</h2>
+{% endblock %}
+
+{% block content_disclaimer %}
+{% endblock %}
