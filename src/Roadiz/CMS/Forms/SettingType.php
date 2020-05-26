@@ -154,7 +154,7 @@ class SettingType extends AbstractType
         switch ($setting->getType()) {
             case AbstractField::ENUM_T:
             case AbstractField::MULTIPLE_T:
-                $values = explode(',', $setting->getDefaultValues());
+                $values = explode(',', $setting->getDefaultValues() ?? '');
                 $values = array_map(function ($item) {
                     return trim($item);
                 }, $values);

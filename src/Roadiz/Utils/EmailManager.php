@@ -236,7 +236,7 @@ class EmailManager
      */
     public function getSubject()
     {
-        return trim(strip_tags($this->subject));
+        return null !== $this->subject ? trim(strip_tags($this->subject)) : null;
     }
 
     /**
@@ -254,7 +254,7 @@ class EmailManager
      */
     public function getEmailTitle()
     {
-        return trim(strip_tags($this->emailTitle));
+        return null !== $this->emailTitle ? trim(strip_tags($this->emailTitle)) : null;
     }
 
     /**
