@@ -190,7 +190,13 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
         });
         $container['user.viewer'] = $container->factory(function (Container $c) {
-            return new UserViewer($c['em'], $c['settingsBag'], $c['translator'], $c['emailManager']);
+            return new UserViewer(
+                $c['em'],
+                $c['settingsBag'],
+                $c['translator'],
+                $c['emailManager'],
+                $c['logger']
+            );
         });
 
         /*

@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Security\Core\Role\Role as BaseRole;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -17,7 +16,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\RoleRepository")
  * @ORM\Table(name="roles")
  */
-class Role extends BaseRole implements PersistableInterface
+class Role implements PersistableInterface
 {
     const ROLE_DEFAULT = 'ROLE_USER';
     const ROLE_SUPERADMIN = 'ROLE_SUPERADMIN';
@@ -67,7 +66,7 @@ class Role extends BaseRole implements PersistableInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getRole(): string
     {
@@ -201,7 +200,6 @@ class Role extends BaseRole implements PersistableInterface
     public function __construct($name)
     {
         $this->name = static::cleanName($name);
-        parent::__construct($this->name);
 
         $this->groups = new ArrayCollection();
     }

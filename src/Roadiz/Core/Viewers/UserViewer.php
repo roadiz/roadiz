@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
+use Swift_TransportException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -15,6 +17,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class UserViewer
 {
+    /** @var LoggerInterface */
+    protected $logger;
+
     /** @var User|null  */
     protected $user;
 
@@ -31,22 +36,26 @@ class UserViewer
     protected $emailManager;
 
     /**
-     * @param EntityManager $entityManager
-     * @param Settings $settingsBag
+     * @param EntityManager       $entityManager
+     * @param Settings            $settingsBag
      * @param TranslatorInterface $translator
-     * @param EmailManager $emailManager
+     * @param EmailManager        $emailManager
+     * @param LoggerInterface     $logger
+     *
      * @internal param User $user
      */
     public function __construct(
         EntityManager $entityManager,
         Settings $settingsBag,
         TranslatorInterface $translator,
-        EmailManager $emailManager
+        EmailManager $emailManager,
+        LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->settingsBag = $settingsBag;
         $this->translator = $translator;
         $this->emailManager = $emailManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -81,8 +90,17 @@ class UserViewer
         $this->emailManager->setReceiver($this->user->getEmail());
         $this->emailManager->setSender([$emailContact => $siteName]);
 
-        // Send the message
-        return $this->emailManager->send();
+        try {
+            // Send the message
+            return $this->emailManager->send();
+        } catch (Swift_TransportException $e) {
+            // Silent error not to prevent user creation if mailer is not configured
+            $this->logger->error('Unable to send password reset link', [
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+            ]);
+            return false;
+        }
     }
 
     /**

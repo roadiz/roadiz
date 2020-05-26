@@ -85,7 +85,7 @@ class RedirectionMatcher extends UrlMatcher
             $this->stopwatch->stop('findRedirection');
         }
 
-        throw new ResourceNotFoundException();
+        throw new ResourceNotFoundException(sprintf('%s did not match any Doctrine Redirection', $pathinfo));
     }
 
     /**
