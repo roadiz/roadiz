@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Theme;
 
-use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Config\ConfigurationHandler;
