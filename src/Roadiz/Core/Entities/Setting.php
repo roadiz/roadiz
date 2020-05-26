@@ -345,7 +345,7 @@ class Setting extends AbstractEntity
     private $defaultValues = "";
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDefaultValues()
     {

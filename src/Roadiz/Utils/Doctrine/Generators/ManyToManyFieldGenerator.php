@@ -26,7 +26,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
          */
         $entityA = StringHandler::variablize($this->field->getNodeType()->getName());
         $entityB = $this->field->getName();
-        $configuration = Yaml::parse($this->field->getDefaultValues());
+        $configuration = Yaml::parse($this->field->getDefaultValues() ?? '');
         $joinColumnParams = [
             'name' => '"'.$entityA.'_id"',
             'referencedColumnName' => '"id"'

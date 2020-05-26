@@ -45,7 +45,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     protected function hasOnlyOneNodeType()
     {
         if (null !== $this->field->getDefaultValues()) {
-            return count(explode(',', $this->field->getDefaultValues())) === 1;
+            return count(explode(',', $this->field->getDefaultValues() ?? '')) === 1;
         }
         return false;
     }
@@ -56,7 +56,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     protected function getRepositoryClass(): string
     {
         if (null !== $this->field->getDefaultValues() && $this->hasOnlyOneNodeType() === true) {
-            $nodeTypeName = trim(explode(',', $this->field->getDefaultValues())[0]);
+            $nodeTypeName = trim(explode(',', $this->field->getDefaultValues() ?? '')[0]);
 
             /** @var NodeType $nodeType */
             $nodeType = $this->nodeTypesBag->get($nodeTypeName);

@@ -9,6 +9,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
+/**
+ * Class AttributeGroupController
+ *
+ * @package Themes\Rozier\Controllers\Attributes
+ */
 class AttributeGroupController extends RozierApp
 {
     /**

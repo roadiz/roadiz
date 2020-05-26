@@ -206,7 +206,7 @@ class CustomFormsType extends AbstractType
                     $option['placeholder'] = $field->getPlaceholder();
                 }
                 if ($field->getDefaultValues() !== '') {
-                    $countries = explode(',', $field->getDefaultValues());
+                    $countries = explode(',', $field->getDefaultValues() ?? '');
                     $countries = array_map('trim', $countries);
                     $option['preferred_choices'] = $countries;
                 }
@@ -230,7 +230,7 @@ class CustomFormsType extends AbstractType
      */
     protected function getChoices(CustomFormField $field)
     {
-        $choices = explode(',', $field->getDefaultValues());
+        $choices = explode(',', $field->getDefaultValues() ?? '');
         $choices = array_map('trim', $choices);
         $choices = array_combine(array_values($choices), array_values($choices));
 

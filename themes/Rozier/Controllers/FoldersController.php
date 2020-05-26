@@ -1,44 +1,15 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- *
- * @file FoldersController.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\FolderTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Events\FilterFolderEvent;
 use RZ\Roadiz\Core\Events\Folder\FolderCreatedEvent;
 use RZ\Roadiz\Core\Events\Folder\FolderDeletedEvent;
 use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
-use RZ\Roadiz\Core\Events\FolderEvents;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
@@ -52,7 +23,9 @@ use Themes\Rozier\Forms\FolderType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Folders controller
+ * Class FoldersController
+ *
+ * @package Themes\Rozier\Controllers
  */
 class FoldersController extends RozierApp
 {
@@ -60,6 +33,7 @@ class FoldersController extends RozierApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {

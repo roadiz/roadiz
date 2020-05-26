@@ -24,7 +24,7 @@ class ChildrenNodeFieldGenerator extends AbstractFieldGenerator
         if (null !== $this->field->getDefaultValues()) {
             return array_filter(array_map(function (string $nodeTypeName) {
                 return $this->nodeTypesBag->get(trim($nodeTypeName));
-            }, explode(',', $this->field->getDefaultValues())));
+            }, explode(',', $this->field->getDefaultValues() ?? '')));
         }
         return [];
     }

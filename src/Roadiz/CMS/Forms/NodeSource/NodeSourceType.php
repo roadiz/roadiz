@@ -287,7 +287,7 @@ class NodeSourceType extends AbstractType
                 $options = array_merge_recursive($options, [
                     'nodeHandler' => $formOptions['container']->offsetGet('node.handler'),
                     'attr' => [
-                        'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues()))
+                        'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues() ?? ''))
                     ],
                 ]);
                 break;
@@ -404,7 +404,7 @@ class NodeSourceType extends AbstractType
                     $options['placeholder'] = $field->getPlaceholder();
                 }
                 if ($field->getDefaultValues() !== '') {
-                    $countries = explode(',', $field->getDefaultValues());
+                    $countries = explode(',', $field->getDefaultValues() ?? '');
                     $countries = array_map('trim', $countries);
                     $options = array_merge_recursive($options, [
                         'preferred_choices' => $countries,
@@ -412,7 +412,7 @@ class NodeSourceType extends AbstractType
                 }
                 break;
             case NodeTypeField::COLLECTION_T:
-                $configuration = Yaml::parse($field->getDefaultValues());
+                $configuration = Yaml::parse($field->getDefaultValues() ?? '');
                 $collectionOptions = [
                     'allow_add' => true,
                     'allow_delete' => true,

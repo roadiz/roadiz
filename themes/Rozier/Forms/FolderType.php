@@ -1,14 +1,6 @@
 <?php
-/**
- * Copyright (c) Rezo Zero 2016.
- *
- * prison-insider
- *
- * Created on 05/05/16 15:32
- *
- * @author ambroisemaupate
- * @file FolderType.php
- */
+declare(strict_types=1);
+
 namespace Themes\Rozier\Forms;
 
 use Doctrine\Persistence\ObjectManager;

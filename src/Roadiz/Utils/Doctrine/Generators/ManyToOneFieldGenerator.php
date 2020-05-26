@@ -23,7 +23,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
          * @ORM\JoinColumn(name="address_id", referencedColumnName="id", onDelete="SET NULL")
          *
          */
-        $configuration = Yaml::parse($this->field->getDefaultValues());
+        $configuration = Yaml::parse($this->field->getDefaultValues() ?? '');
         $ormParams = [
             'name' => '"' . $this->field->getName() . '_id"',
             'referencedColumnName' => '"id"',
