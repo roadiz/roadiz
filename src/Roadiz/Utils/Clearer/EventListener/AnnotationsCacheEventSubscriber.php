@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Clearer\EventListener;
 
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
-use RZ\Roadiz\Utils\Clearer\NodesSourcesUrlsCacheClearer;
+use RZ\Roadiz\Utils\Clearer\AnnotationsCacheClearer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class NodesSourcesUrlsCacheEventSubscriber implements EventSubscriberInterface
+class AnnotationsCacheEventSubscriber implements EventSubscriberInterface
 {
     /**
      * @inheritDoc
@@ -15,7 +15,7 @@ class NodesSourcesUrlsCacheEventSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            CachePurgeRequestEvent::class => ['onPurgeRequest', 3],
+            CachePurgeRequestEvent::class => ['onPurgeRequest', 2],
         ];
     }
 
@@ -25,11 +25,11 @@ class NodesSourcesUrlsCacheEventSubscriber implements EventSubscriberInterface
     public function onPurgeRequest(CachePurgeRequestEvent $event)
     {
         try {
-            $clearer = new NodesSourcesUrlsCacheClearer($event->getKernel()->get('nodesSourcesUrlCacheProvider'));
+            $clearer = new AnnotationsCacheClearer($event->getKernel()->getCacheDir());
             $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'nodeSourcesUrlsCache');
+            $event->addMessage($clearer->getOutput(), static::class, 'annotationsCache');
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'nodeSourcesUrlsCache');
+            $event->addError($e->getMessage(), static::class, 'annotationsCache');
         }
     }
 }

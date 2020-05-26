@@ -6,10 +6,7 @@ namespace RZ\Roadiz\Utils\Clearer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-/**
- * RoutingCacheClearer.
- */
-class RoutingCacheClearer extends Clearer
+class AnnotationsCacheClearer extends Clearer
 {
     public function clear()
     {
@@ -17,10 +14,11 @@ class RoutingCacheClearer extends Clearer
         $finder = new Finder();
 
         if ($fs->exists($this->getCacheDir())) {
-            if ($fs->exists($this->getCacheDir() . '/routing')) {
-                $finder->in($this->getCacheDir() . '/routing');
+            if ($fs->exists($this->getCacheDir() . '/annotations')) {
+                $finder->in($this->getCacheDir() . '/annotations');
                 $fs->remove($finder);
-                $this->output .= 'Compiled route collections have been purged.';
+
+                $this->output .= 'Doctrine annotations cache have been purged.';
 
                 return true;
             }

@@ -141,8 +141,7 @@ class CacheController extends RozierApp
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var EventDispatcher $dispatcher */
             $dispatcher = $this->get('dispatcher');
-            $event = new CachePurgeAssetsRequestEvent($this->get('kernel'));
-            $dispatcher->dispatch($event);
+            $event = $dispatcher->dispatch(new CachePurgeAssetsRequestEvent($this->get('kernel')));
 
             $msg = $this->getTranslator()->trans('cache.deleted');
             $this->publishConfirmMessage($request, $msg);
