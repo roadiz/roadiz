@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * TranslationType.
@@ -26,6 +27,7 @@ class TranslationType extends AbstractType
         $builder->add('name', TextType::class, [
             'label' => 'name',
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
                 new Length([
                     'max' => 255,

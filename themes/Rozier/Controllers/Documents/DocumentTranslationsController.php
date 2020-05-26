@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\DocumentTranslationType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\VersionedControllerTrait;
@@ -220,6 +221,7 @@ class DocumentTranslationsController extends RozierApp
                         ->add('documentTranslationId', HiddenType::class, [
                             'data' => $doc->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

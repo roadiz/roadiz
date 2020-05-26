@@ -39,6 +39,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\DocumentEditType;
 use Themes\Rozier\Forms\DocumentEmbedType;
 use Themes\Rozier\Models\DocumentModel;
@@ -786,6 +787,7 @@ class DocumentsController extends RozierApp
             ->add('documentId', HiddenType::class, [
                 'data' => $doc->getId(),
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -807,6 +809,7 @@ class DocumentsController extends RozierApp
         ])
             ->add('checksum', HiddenType::class, [
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -829,6 +832,7 @@ class DocumentsController extends RozierApp
         ])
             ->add('checksum', HiddenType::class, [
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -893,6 +897,7 @@ class DocumentsController extends RozierApp
             ->add('documentsId', HiddenType::class, [
                 'attr' => ['class' => 'document-id-bulk-folder'],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
@@ -903,6 +908,7 @@ class DocumentsController extends RozierApp
                     'placeholder' => 'list.folders.to_link',
                 ],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])

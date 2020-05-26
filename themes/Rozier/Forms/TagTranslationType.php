@@ -14,6 +14,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * TagTranslationType.
@@ -25,6 +26,7 @@ class TagTranslationType extends AbstractType
         $builder->add('name', TextType::class, [
                 'label' => 'name',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new UniqueTagName([
                         'entityManager' => $options['em'],

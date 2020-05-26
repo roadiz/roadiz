@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class DatabaseType extends AbstractType
 {
@@ -26,6 +27,7 @@ class DatabaseType extends AbstractType
                 ],
                 'label' => 'driver',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
                 'attr' => [
@@ -71,6 +73,7 @@ class DatabaseType extends AbstractType
                 ],
                 'label' => 'username',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])

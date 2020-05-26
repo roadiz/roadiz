@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -96,6 +97,7 @@ class TagMultiCreationController extends RozierApp
                     'placeholder' => 'write.every.tags.names.comma.separated',
                 ],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new UniqueTagName([
                         'entityManager' => $this->get('em'),

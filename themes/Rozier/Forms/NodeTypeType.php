@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  *
@@ -29,12 +30,13 @@ class NodeTypeType extends AbstractType
             $builder->add('name', TextType::class, [
                 'label' => 'name',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new NonSqlReservedWord(),
                     new SimpleLatinString(),
                     new UniqueNodeTypeName([
                         'entityManager' => $options['em'],
-                        'currentValue' => $options['name'],
+                        'currentValue' => $options['name'] ?? '',
                     ]),
                 ],
             ]);
@@ -43,6 +45,7 @@ class NodeTypeType extends AbstractType
             ->add('displayName', TextType::class, [
                 'label' => 'nodeType.displayName',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])

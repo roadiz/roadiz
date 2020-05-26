@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 trait NodesTrait
 {
@@ -82,6 +83,7 @@ trait NodesTrait
                     'showInvisible' => true,
                     'label' => false,
                     'constraints' => [
+                        new NotNull(),
                         new NotBlank(),
                     ],
                 ]);
@@ -105,6 +107,7 @@ trait NodesTrait
                         ->add('nodeName', TextType::class, [
                             'label' => 'nodeName',
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                                 new UniqueNodeName([
                                     'entityManager' => $this->get('em'),
@@ -115,6 +118,7 @@ trait NodesTrait
                 'label' => 'nodeType',
                 'entityManager' => $this->get('em'),
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -123,6 +127,7 @@ trait NodesTrait
             $builder->add('parentId', HiddenType::class, [
                 'data' => (int) $parentNode->getId(),
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -142,6 +147,7 @@ trait NodesTrait
                         ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

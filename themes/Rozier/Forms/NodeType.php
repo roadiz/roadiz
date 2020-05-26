@@ -16,6 +16,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  *
@@ -28,6 +29,7 @@ class NodeType extends AbstractType
                 'label' => 'nodeName',
                 'help' => 'node.nodeName.help',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new UniqueNodeName([
                         'entityManager' => $options['em'],

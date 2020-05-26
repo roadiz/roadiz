@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Install\Forms\UserType;
 
 /**
@@ -309,6 +310,7 @@ class InstallApp extends AppController
                     '中文' => 'zh',
                 ],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
                 'label' => 'choose.a.language',

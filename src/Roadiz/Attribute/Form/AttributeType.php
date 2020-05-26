@@ -17,6 +17,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Regex;
 
 class AttributeType extends AbstractType
@@ -31,6 +32,7 @@ class AttributeType extends AbstractType
                 'required' => true,
                 'help' => 'attributes.form_help.code',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank()
                 ]
             ])

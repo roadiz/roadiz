@@ -13,6 +13,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class FolderType
@@ -25,6 +26,7 @@ class FolderType extends AbstractType
         $builder->add('folderName', TextType::class, [
             'label' => 'folder.name',
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
                 new UniqueFolderName([
                     'entityManager' => $options['em'],

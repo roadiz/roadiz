@@ -24,6 +24,7 @@ class UserType extends AbstractType
                 'required' => true,
                 'label' => 'username',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
@@ -42,6 +43,7 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'password.verify'],
                 'required' => true,
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])

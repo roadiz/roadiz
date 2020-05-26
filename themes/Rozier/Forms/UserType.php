@@ -49,6 +49,7 @@ class UserType extends AbstractType
             ->add('username', TextType::class, [
                 'label' => 'username',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new UniqueUsername([
                         'entityManager' => $options['em'],

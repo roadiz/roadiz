@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Type;
 
 class SettingType extends AbstractType
@@ -41,6 +42,7 @@ class SettingType extends AbstractType
                 ->add('name', TextType::class, [
                     'label' => 'name',
                     'constraints' => [
+                        new NotNull(),
                         new NotBlank(),
                     ],
                 ])
