@@ -39,6 +39,16 @@
                 <target state="translated">Hide Roadiz version and name from any response headers and theme variables.</target>
                 <note>Setting</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale_with_urlaliases">
+                <source>force_locale_with_urlaliases</source>
+                <target state="translated">Display locale when using url-aliases</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale_with_urlaliases.help">
+                <source>force_locale_with_urlaliases.help</source>
+                <target state="translated">This will force displaying translation locale in generated node-source paths even if there is an url-alias in it.</target>
+                <note>Setting description</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>
