@@ -34,6 +34,21 @@
                 <source>Maximum versions count showed in actions menu.</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="hide_roadiz_version.help">
+                <source>hide_roadiz_version.help</source>
+                <target></target>
+                <note>Setting</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="force_locale_with_urlaliases">
+                <source>force_locale_with_urlaliases</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="force_locale_with_urlaliases.help">
+                <source>force_locale_with_urlaliases.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>

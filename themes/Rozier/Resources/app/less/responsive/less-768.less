@@ -7,9 +7,6 @@
      * Styles for screens with width <= 768 (mobile)
      */
     .uk-button {
-        height: 32px;
-        //padding: 0px 12px 0;
-
         &-content {
             width: 32px;
             height: 32px;
@@ -509,10 +506,10 @@
             }
         }
 
-        &.content-no-action-menu{
-            padding:30px 0 80px;
+        &.content-no-action-menu {
+            padding:30px 0;
 
-            & > *{
+            & > * {
                 padding:0 5px;
             }
         }
@@ -521,6 +518,10 @@
     .content-header{
         height: auto;
         padding:10px 15px 0;
+
+        &.header-node-edit-source {
+            padding: 10px 45px 0 15px;
+        }
 
         .navbar-navigation{
             position: relative;
@@ -561,21 +562,25 @@
         }
     }
 
-    .content-breadcrumb{
+    .content-breadcrumb {
         position: relative;
-        top:0;
+        top: 0;
         height: auto;
-        padding: 15px 20px 0;
+        padding: 15px 0 0;
         margin: 0;
+
+        & > li {
+            font-size: 9px;
+        }
     }
 
     .content-header-nav-back{
         top:15px; left:15px;
     }
 
-    .content-title{
-        font-size:24px;
-        line-height:32px;
+    .content-title {
+        font-size: 20px;
+        line-height: 28px;
         padding: 20px 0;
     }
 
@@ -611,12 +616,23 @@
         top:0;
         right:0;
         left:0;
-        padding: 10px 15px;
+        padding: 10px 0;
         text-align: center;
         justify-content: center;
 
         .uk-button {
             overflow: hidden;
+            width: 100%;
+            margin: 0 0 7px;
+        }
+
+        .uk-button-dropdown {
+            width: 100%;
+            margin: 0 0 7px;
+        }
+
+        .uk-dropdown {
+            margin-top: -8px;
         }
     }
 
@@ -660,7 +676,7 @@
 
         header,
         .uk-button {
-            display: inline-block;
+            display: block;
             margin: 0 8px 8px 0;
 
             &:before{
@@ -689,13 +705,17 @@
             }
         }
 
+        .uk-button {
+            width: 100%;
+        }
+
         .with-subnav{
             display: block;
             vertical-align:top;
             height:auto;
             width:auto;
 
-            &.node-actions{
+            &.node-actions {
                 display: none;
             }
 
@@ -746,7 +766,7 @@
     /* -------- PAGES -------- */
 
     // History
-    .history-log-item{
+    .history-log-item {
         height:auto;
         overflow:hidden;
 

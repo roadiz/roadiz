@@ -11,365 +11,328 @@ import {
 /**
  * Rozier Mobile
  */
-export default function RozierMobile () {
-    var _this = this
+export default class RozierMobile {
+    constructor () {
+        // Selectors
+        this.$menu = $('#menu-mobile')
+        this.$adminMenu = $('#admin-menu')
+        this.$adminMenuLink = this.$adminMenu.find('a')
+        this.$adminMenuNavParent = this.$adminMenu.find('.uk-parent')
 
-    // Selectors
-    _this.$menu = $('#menu-mobile')
-    _this.$adminMenu = $('#admin-menu')
-    _this.$adminMenuLink = _this.$adminMenu.find('a')
-    _this.$adminMenuNavParent = _this.$adminMenu.find('.uk-parent')
+        this.$searchButton = $('#search-button')
+        this.$searchPanel = $('#nodes-sources-search')
+        this.$treeButton = $('#tree-button')
+        this.$treeWrapper = $('#tree-wrapper')
+        this.$treeWrapperLink = this.$treeWrapper.find('a')
+        this.$userPicture = $('#user-picture')
+        this.$userActions = $('.user-actions')
+        this.$userActionsLink = this.$userActions.find('a')
+        this.$mainContentOverlay = $('#main-content-overlay')
 
-    _this.$searchButton = $('#search-button')
-    _this.$searchPanel = $('#nodes-sources-search')
+        this.menuOpen = false
+        this.searchOpen = false
+        this.treeOpen = false
+        this.adminOpen = false
 
-    _this.$treeButton = $('#tree-button')
-    _this.$treeWrapper = $('#tree-wrapper')
-    _this.$treeWrapperLink = _this.$treeWrapper.find('a')
+        this.menuClick = this.menuClick.bind(this)
+        this.adminMenuLinkClick = this.adminMenuLinkClick.bind(this)
+        this.adminMenuNavParentClick = this.adminMenuNavParentClick.bind(this)
+        this.searchButtonClick = this.searchButtonClick.bind(this)
+        this.treeButtonClick = this.treeButtonClick.bind(this)
+        this.treeWrapperLinkClick = this.treeWrapperLinkClick.bind(this)
+        this.userPictureClick = this.userPictureClick.bind(this)
+        this.userActionsLinkClick = this.userActionsLinkClick.bind(this)
+        this.mainContentOverlayClick = this.mainContentOverlayClick.bind(this)
 
-    _this.$userPicture = $('#user-picture')
-    _this.$userActions = $('.user-actions')
-    _this.$userActionsLink = _this.$userActions.find('a')
-
-    _this.$mainContentOverlay = $('#main-content-overlay')
-
-    _this.menuOpen = false
-    _this.searchOpen = false
-    _this.treeOpen = false
-    _this.adminOpen = false
-
-    // Methods
-    _this.init()
-}
-
-/**
- * Init
- * @return {[type]} [description]
- */
-RozierMobile.prototype.init = function () {
-    var _this = this
-
-    if (_this.$userPicture.length) {
-        // Add class on user picture link to unbind default event
-        addClass(_this.$userPicture[0], 'rz-no-ajax-link')
+        // Methods
+        this.init()
+    }
+    /**
+     * Init
+     * @return {[type]} [description]
+     */
+    init () {
+        if (this.$userPicture.length) {
+            // Add class on user picture link to unbind default event
+            addClass(this.$userPicture[0], 'rz-no-ajax-link')
+        }
+        // Events
+        this.$menu.on('click', this.menuClick)
+        this.$adminMenuLink.on('click', this.adminMenuLinkClick)
+        this.$adminMenuNavParent.on('click', this.adminMenuNavParentClick)
+        this.$searchButton.on('click', this.searchButtonClick)
+        this.$treeButton.on('click', this.treeButtonClick)
+        this.$treeWrapperLink.on('click', this.treeWrapperLinkClick)
+        this.$userPicture.on('click', this.userPictureClick)
+        this.$userActionsLink.on('click', this.userActionsLinkClick)
+        this.$mainContentOverlay.on('click', this.mainContentOverlayClick)
     }
 
-    // Events
-    _this.$menu.on('click', $.proxy(_this.menuClick, _this))
-    _this.$adminMenuLink.on('click', $.proxy(_this.adminMenuLinkClick, _this))
-    _this.$adminMenuNavParent.on('click', $.proxy(_this.adminMenuNavParentClick, _this))
+    /**
+     * Menu click
+     * @return {[type]} [description]
+     */
+    menuClick (e) {
+        if (!this.menuOpen) this.openMenu()
+        else this.closeMenu()
+    }
 
-    _this.$searchButton.on('click', $.proxy(_this.searchButtonClick, _this))
+    /**
+     * Admin menu nav parent click
+     * @return {[type]} [description]
+     */
+    adminMenuNavParentClick (e) {
+        let $target = $(e.currentTarget)
+        let $ukNavSub = $(e.currentTarget).find('.uk-nav-sub')
 
-    _this.$treeButton.on('click', $.proxy(_this.treeButtonClick, _this))
-    _this.$treeWrapperLink.on('click', $.proxy(_this.treeWrapperLinkClick, _this))
+        // Open
+        if (!$target.hasClass('nav-open')) {
+            let $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item')
+            let ukNavSubHeight = ($ukNavSubItem.length * 41) - 3
 
-    _this.$userPicture.on('click', $.proxy(_this.userPictureClick, _this))
-    _this.$userActionsLink.on('click', $.proxy(_this.userActionsLinkClick, _this))
+            $ukNavSub[0].style.display = 'block'
+            TweenLite.to($ukNavSub, 0.6, {height: ukNavSubHeight,
+                ease: Expo.easeOut,
+                onComplete: function () {
+                }})
 
-    _this.$mainContentOverlay.on('click', $.proxy(_this.mainContentOverlayClick, _this))
-}
+            $target.addClass('nav-open')
+        } else { // Close
+            TweenLite.to($ukNavSub, 0.6, {height: 0,
+                ease: Expo.easeOut,
+                onComplete: function () {
+                    $ukNavSub[0].style.display = 'none'
+                }})
 
-/**
- * Menu click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.menuClick = function (e) {
-    var _this = this
+            $target.removeClass('nav-open')
+        }
+    }
 
-    if (!_this.menuOpen)_this.openMenu()
-    else _this.closeMenu()
-}
+    /**
+     * Admin menu link click
+     * @return {[type]} [description]
+     */
+    adminMenuLinkClick (e) {
+        if (this.menuOpen) this.closeMenu()
+    }
 
-/**
- * Admin menu nav parent click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.adminMenuNavParentClick = function (e) {
-    var $target = $(e.currentTarget)
-    var $ukNavSub = $(e.currentTarget).find('.uk-nav-sub')
+    /**
+     * Open menu
+     * @return {[type]} [description]
+     */
+    openMenu () {
+        // Close panel if open
+        this.closeSearch()
+        this.closeTree()
+        this.closeUser()
 
-    // Open
-    if (!$target.hasClass('nav-open')) {
-        let $ukNavSubItem = $ukNavSub.find('.uk-nav-sub-item')
-        let ukNavSubHeight = ($ukNavSubItem.length * 41) - 3
+        // Translate menu panel
+        TweenLite.to(this.$adminMenu, 0.6, {x: 0, ease: Expo.easeOut})
+        this.$mainContentOverlay[0].style.display = 'block'
+        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+        this.menuOpen = true
+    }
 
-        $ukNavSub[0].style.display = 'block'
-        TweenLite.to($ukNavSub, 0.6, {height: ukNavSubHeight,
+    /**
+     * Close menu
+     * @return {[type]} [description]
+     */
+    closeMenu () {
+        let adminMenuX = -window.Rozier.windowWidth * 0.8
+        TweenLite.to(this.$adminMenu, 0.6, {x: adminMenuX, ease: Expo.easeOut})
+        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
             ease: Expo.easeOut,
             onComplete: function () {
+                this.$mainContentOverlay[0].style.display = 'none'
             }})
 
-        $target.addClass('nav-open')
-    } else { // Close
-        TweenLite.to($ukNavSub, 0.6, {height: 0,
+        this.menuOpen = false
+    }
+
+    /**
+     * Search button click
+     * @return {[type]} [description]
+     */
+    searchButtonClick (e) {
+        if (!this.searchOpen) this.openSearch()
+        else this.closeSearch()
+    }
+
+    /**
+     * Open search
+     * @return {[type]} [description]
+     */
+    openSearch () {
+        // Close panel if open
+        this.closeMenu()
+        this.closeTree()
+        this.closeUser()
+
+        // Translate search panel
+        TweenLite.to(this.$searchPanel, 0.6, {x: 0, ease: Expo.easeOut})
+
+        this.$mainContentOverlay[0].style.display = 'block'
+        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+
+        // Add active class
+        this.$searchButton.addClass('active')
+        this.searchOpen = true
+    }
+
+    /**
+     * Close search
+     * @return {[type]} [description]
+     */
+    closeSearch () {
+        let searchPanelX = -window.Rozier.windowWidth * 0.8
+        TweenLite.to(this.$searchPanel, 0.6, {x: searchPanelX, ease: Expo.easeOut})
+        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
             ease: Expo.easeOut,
             onComplete: function () {
-                $ukNavSub[0].style.display = 'none'
+                this.$mainContentOverlay[0].style.display = 'none'
             }})
 
-        $target.removeClass('nav-open')
-    }
-}
-
-/**
- * Admin menu link click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.adminMenuLinkClick = function (e) {
-    var _this = this
-
-    if (_this.menuOpen) _this.closeMenu()
-}
-
-/**
- * Open menu
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openMenu = function () {
-    var _this = this
-
-    // Close panel if open
-    if (_this.searchOpen) _this.closeSearch()
-    else if (_this.treeOpen) _this.closeTree()
-    else if (_this.userOpen) _this.closeUser()
-
-    // Translate menu panel
-    TweenLite.to(_this.$adminMenu, 0.6, {x: 0, ease: Expo.easeOut})
-
-    _this.$mainContentOverlay[0].style.display = 'block'
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
-
-    _this.menuOpen = true
-}
-
-/**
- * Close menu
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeMenu = function () {
-    var _this = this
-
-    var adminMenuX = -window.Rozier.windowWidth * 0.8
-
-    TweenLite.to(_this.$adminMenu, 0.6, {x: adminMenuX, ease: Expo.easeOut})
-
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0,
-        ease: Expo.easeOut,
-        onComplete: function () {
-            _this.$mainContentOverlay[0].style.display = 'none'
-        }})
-
-    _this.menuOpen = false
-}
-
-/**
- * Search button click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.searchButtonClick = function (e) {
-    var _this = this
-
-    if (!_this.searchOpen)_this.openSearch()
-    else _this.closeSearch()
-}
-
-/**
- * Open search
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openSearch = function () {
-    var _this = this
-
-    // Close panel if open
-    if (_this.menuOpen) _this.closeMenu()
-    else if (_this.treeOpen) _this.closeTree()
-    else if (_this.userOpen) _this.closeUser()
-
-    // Translate search panel
-    TweenLite.to(_this.$searchPanel, 0.6, {x: 0, ease: Expo.easeOut})
-
-    _this.$mainContentOverlay[0].style.display = 'block'
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
-
-    // Add active class
-    _this.$searchButton.addClass('active')
-    _this.searchOpen = true
-}
-
-/**
- * Close search
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeSearch = function () {
-    var _this = this
-    var searchPanelX = -window.Rozier.windowWidth * 0.8
-    TweenLite.to(_this.$searchPanel, 0.6, {x: searchPanelX, ease: Expo.easeOut})
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0,
-        ease: Expo.easeOut,
-        onComplete: function () {
-            _this.$mainContentOverlay[0].style.display = 'none'
-        }})
-
-    // Remove active class
-    _this.$searchButton.removeClass('active')
-    _this.searchOpen = false
-}
-
-/**
- * Tree button click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.treeButtonClick = function (e) {
-    var _this = this
-
-    if (!_this.treeOpen)_this.openTree()
-    else _this.closeTree()
-}
-
-/**
- * Tree wrapper link click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.treeWrapperLinkClick = function (e) {
-    var _this = this
-
-    if (e.currentTarget.className.indexOf('tab-link') === -1 && _this.treeOpen) {
-        _this.closeTree()
-    }
-}
-
-/**
- * Open tree
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openTree = function () {
-    var _this = this
-
-    // Close panel if open
-    if (_this.menuOpen) _this.closeMenu()
-    else if (_this.searchOpen) _this.closeSearch()
-    else if (_this.userOpen) _this.closeUser()
-
-    // Translate tree panel
-    TweenLite.to(_this.$treeWrapper, 0.6, {x: 0, ease: Expo.easeOut})
-
-    _this.$mainContentOverlay[0].style.display = 'block'
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
-
-    // Add active class
-    _this.$treeButton.addClass('active')
-
-    _this.treeOpen = true
-}
-
-/**
- * Close tree
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeTree = function () {
-    var _this = this
-
-    var treeWrapperX = -window.Rozier.windowWidth * 0.8
-
-    TweenLite.to(_this.$treeWrapper, 0.6, {x: treeWrapperX, ease: Expo.easeOut})
-
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0,
-        ease: Expo.easeOut,
-        onComplete: function () {
-            _this.$mainContentOverlay[0].style.display = 'none'
-        }})
-
-    // Remove active class
-    removeClass(_this.$treeButton[0], 'active')
-
-    _this.treeOpen = false
-}
-
-/**
- * User picture click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.userPictureClick = function (e) {
-    var _this = this
-
-    if (!_this.userOpen)_this.openUser()
-    else _this.closeUser()
-
-    return false
-}
-
-/**
- * User actions link click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.userActionsLinkClick = function (e) {
-    var _this = this
-
-    if (_this.userOpen) {
-        _this.closeUser()
-    }
-}
-
-/**
- * Open user
- * @return {[type]} [description]
- */
-RozierMobile.prototype.openUser = function () {
-    var _this = this
-
-    // Close panel if open
-    if (_this.menuOpen) _this.closeMenu()
-    else if (_this.searchOpen) _this.closeSearch()
-    else if (_this.treeOpen) _this.closeTree()
-
-    // Translate user panel
-    TweenLite.to(_this.$userActions, 0.6, {x: 0, ease: Expo.easeOut})
-
-    if (_this.$mainContentOverlay.length) {
-        _this.$mainContentOverlay[0].style.display = 'block'
-        TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+        // Remove active class
+        this.$searchButton.removeClass('active')
+        this.searchOpen = false
     }
 
-    // Add active class
-    _this.$userPicture.addClass('active')
-    _this.userOpen = true
+    /**
+     * Tree button click
+     * @return {[type]} [description]
+     */
+    treeButtonClick (e) {
+        if (!this.treeOpen) this.openTree()
+        else this.closeTree()
+    }
+
+    /**
+     * Tree wrapper link click
+     * @return {[type]} [description]
+     */
+    treeWrapperLinkClick (e) {
+        if (e.currentTarget.className.indexOf('tab-link') === -1 && this.treeOpen) {
+            this.closeTree()
+        }
+    }
+
+    /**
+     * Open tree
+     * @return {[type]} [description]
+     */
+    openTree () {
+        // Close panel if open
+        this.closeMenu()
+        this.closeSearch()
+        this.closeUser()
+
+        // Translate tree panel
+        TweenLite.to(this.$treeWrapper, 0.6, {x: 0, ease: Expo.easeOut})
+
+        this.$mainContentOverlay[0].style.display = 'block'
+        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+
+        // Add active class
+        this.$treeButton.addClass('active')
+        this.treeOpen = true
+    }
+
+    /**
+     * Close tree
+     * @return {[type]} [description]
+     */
+    closeTree () {
+        let treeWrapperX = -window.Rozier.windowWidth * 0.8
+
+        TweenLite.to(this.$treeWrapper, 0.6, {x: treeWrapperX, ease: Expo.easeOut})
+        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
+            ease: Expo.easeOut,
+            onComplete: function () {
+                this.$mainContentOverlay[0].style.display = 'none'
+            }})
+
+        // Remove active class
+        removeClass(this.$treeButton[0], 'active')
+
+        this.treeOpen = false
+    }
+
+    /**
+     * User picture click
+     * @return {[type]} [description]
+     */
+    userPictureClick (e) {
+        if (!this.userOpen) this.openUser()
+        else this.closeUser()
+        return false
+    }
+
+    /**
+     * User actions link click
+     * @return {[type]} [description]
+     */
+    userActionsLinkClick (e) {
+        if (this.userOpen) {
+            this.closeUser()
+        }
+    }
+
+    /**
+     * Open user
+     * @return {[type]} [description]
+     */
+    openUser () {
+        // Close panel if open
+        this.closeMenu()
+        this.closeSearch()
+        this.closeTree()
+
+        // Translate user panel
+        TweenLite.to(this.$userActions, 0.6, {x: 0, ease: Expo.easeOut})
+
+        if (this.$mainContentOverlay.length) {
+            this.$mainContentOverlay[0].style.display = 'block'
+            TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+        }
+
+        // Add active class
+        this.$userPicture.addClass('active')
+        this.userOpen = true
+    }
+
+    /**
+     * Close user
+     * @return {[type]} [description]
+     */
+    closeUser () {
+        let userActionsX = window.Rozier.windowWidth * 0.8
+        TweenLite.to(this.$userActions, 0.6, {x: userActionsX, ease: Expo.easeOut})
+        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
+            ease: Expo.easeOut,
+            onComplete: function () {
+                this.$mainContentOverlay[0].style.display = 'none'
+            }})
+
+        // Remove active class
+        this.$userPicture.removeClass('active')
+        this.userOpen = false
+    }
+
+    /**
+     * Main content overlay click
+     * @return {[type]} [description]
+     */
+    mainContentOverlayClick (e) {
+        this.closeMenu()
+        this.closeTree()
+        this.closeUser()
+        this.closeSearch()
+    }
+
+    /**
+     * Window resize callback
+     * @return {[type]} [description]
+     */
+    resize () {
+    }
 }
-
-/**
- * Close user
- * @return {[type]} [description]
- */
-RozierMobile.prototype.closeUser = function () {
-    var _this = this
-    var userActionsX = window.Rozier.windowWidth * 0.8
-
-    TweenLite.to(_this.$userActions, 0.6, {x: userActionsX, ease: Expo.easeOut})
-    TweenLite.to(_this.$mainContentOverlay, 0.6, {opacity: 0,
-        ease: Expo.easeOut,
-        onComplete: function () {
-            _this.$mainContentOverlay[0].style.display = 'none'
-        }})
-
-    // Remove active class
-    _this.$userPicture.removeClass('active')
-    _this.userOpen = false
-}
-
-/**
- * Main content overlay click
- * @return {[type]} [description]
- */
-RozierMobile.prototype.mainContentOverlayClick = function (e) {
-    var _this = this
-
-    if (_this.menuOpen) _this.closeMenu()
-    else if (_this.treeOpen) _this.closeTree()
-    else if (_this.userOpen) _this.closeUser()
-}
-
-/**
- * Window resize callback
- * @return {[type]} [description]
- */
-RozierMobile.prototype.resize = function () {}

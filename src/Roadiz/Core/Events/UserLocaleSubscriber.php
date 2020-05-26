@@ -1,32 +1,5 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright (c) 2018. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file UserLocaleSubscriber.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
 
 namespace RZ\Roadiz\Core\Events;
 
@@ -76,12 +49,13 @@ class UserLocaleSubscriber implements EventSubscriberInterface
         if (!$request->hasPreviousSession()) {
             return;
         }
+        $session = $request->getSession();
 
         // try to see if the locale has been set as a _locale routing parameter
-        if ($request->getSession()->has('_locale')) {
+        if ($session->has('_locale')) {
             // if no explicit locale has been set on this request, use one from the session
-            $request->setLocale($request->getSession()->get('_locale'));
-            \Locale::setDefault($request->getSession()->get('_locale'));
+            $request->setLocale($session->get('_locale'));
+            \Locale::setDefault($session->get('_locale'));
         }
     }
 
@@ -91,12 +65,14 @@ class UserLocaleSubscriber implements EventSubscriberInterface
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
         $user = $event->getAuthenticationToken()->getUser();
-        $session = $event->getRequest()->getSession();
 
-        if (null !== $session &&
-            $user instanceof User &&
-            null !== $user->getLocale()) {
-            $session->set('_locale', $user->getLocale());
+        if ($event->getRequest()->hasPreviousSession()) {
+            $session = $event->getRequest()->getSession();
+            if (null !== $session &&
+                $user instanceof User &&
+                null !== $user->getLocale()) {
+                $session->set('_locale', $user->getLocale());
+            }
         }
     }
 
@@ -115,6 +91,7 @@ class UserLocaleSubscriber implements EventSubscriberInterface
         $request = $requestStack->getMasterRequest();
 
         if (null !== $request &&
+            $request->hasPreviousSession() &&
             null !== $request->getSession() &&
             null !== $tokenStorage->getToken() &&
             $tokenStorage->getToken()->getUser() instanceof User &&

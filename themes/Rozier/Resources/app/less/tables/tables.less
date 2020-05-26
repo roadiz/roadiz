@@ -17,7 +17,9 @@
     font-size: 12px;
 
     td, th {
-        padding: 10px 8px;
+        @media (min-width: @screen-sm-min) {
+            padding: 10px 8px;
+        }
     }
 
     td {

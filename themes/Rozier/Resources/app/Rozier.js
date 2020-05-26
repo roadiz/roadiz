@@ -132,6 +132,13 @@ export default class Rozier {
 
         this.lazyload.generalBind()
         this.bindMainNodeTreeLangs()
+
+        /*
+         * Fetch main tree widgets for the first time
+         */
+        this.refreshMainNodeTree()
+        this.refreshMainTagTree()
+        this.refreshMainFolderTree()
     }
 
     /**
@@ -210,7 +217,6 @@ export default class Rozier {
             this.lazyload.canvasLoader.show()
             let $link = $(event.currentTarget)
             let translationId = parseInt($link.attr('data-translation-id'))
-
             this.refreshMainNodeTree(translationId)
             return false
         })
@@ -386,6 +392,49 @@ export default class Rozier {
             })
         } else {
             console.error('No main tag-tree available.')
+        }
+    }
+
+    /**
+     * Refresh only main folderTree.
+     */
+    refreshMainFolderTree () {
+        let $currentFolderTree = $('#tree-container').find('.foldertree-widget')
+
+        if ($currentFolderTree.length) {
+            let postData = {
+                '_token': this.ajaxToken,
+                '_action': 'requestMainFolderTree'
+            }
+
+            let url = this.routes.foldersTreeAjax
+
+            $.ajax({
+                url: url,
+                type: 'get',
+                cache: false,
+                dataType: 'json',
+                data: postData
+            })
+            .done(data => {
+                if ($currentFolderTree.length &&
+                    typeof data.folderTree !== 'undefined') {
+                    $currentFolderTree.fadeOut('slow', () => {
+                        $currentFolderTree.replaceWith(data.folderTree)
+                        $currentFolderTree = $('#tree-container').find('.foldertree-widget')
+                        $currentFolderTree.fadeIn()
+                        this.initNestables()
+                        this.bindMainTrees()
+                        this.resize()
+                        this.lazyload.bindAjaxLink()
+                    })
+                }
+            })
+            .always(() => {
+                this.lazyload.canvasLoader.hide()
+            })
+        } else {
+            console.error('No main folder-tree available.')
         }
     }
 

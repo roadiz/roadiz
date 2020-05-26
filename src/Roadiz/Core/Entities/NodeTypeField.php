@@ -1,32 +1,6 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodeTypeField.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -62,6 +36,16 @@ class NodeTypeField extends AbstractField
      * @Serializer\Type("bool")
      */
     private $universal = false;
+
+    /**
+     * Exclude current field from full-text search engines.
+     *
+     * @var bool
+     * @ORM\Column(name="exclude_from_search", type="boolean", nullable=false, options={"default" = false})
+     * @Serializer\Groups({"node_type"})
+     * @Serializer\Type("bool")
+     */
+    private $excludeFromSearch = false;
 
     /**
      * @var NodeType
@@ -222,7 +206,7 @@ class NodeTypeField extends AbstractField
      */
     public function isSearchable()
     {
-        return (boolean) in_array($this->getType(), static::$searchableTypes);
+        return !$this->excludeFromSearch && (boolean) in_array($this->getType(), static::$searchableTypes);
     }
 
     /**
@@ -260,6 +244,42 @@ class NodeTypeField extends AbstractField
     public function setUniversal($universal)
     {
         $this->universal = (bool) $universal;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getExcludeFromSearch()
+    {
+        return $this->excludeFromSearch;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExcludeFromSearch()
+    {
+        return $this->getExcludeFromSearch();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isExcludedFromSearch()
+    {
+        return $this->getExcludeFromSearch();
+    }
+
+    /**
+     * @param bool $excludeFromSearch
+     *
+     * @return NodeTypeField
+     */
+    public function setExcludeFromSearch(bool $excludeFromSearch)
+    {
+        $this->excludeFromSearch = $excludeFromSearch;
+
         return $this;
     }
 }

@@ -1,39 +1,11 @@
 <?php
-/**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file DatabaseController.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace Themes\Install\Controllers;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use RZ\Roadiz\Config\YamlConfigurationHandler;
-use RZ\Roadiz\Console\Tools\Fixtures;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
@@ -51,14 +23,14 @@ use Themes\Install\InstallApp;
 class DatabaseController extends InstallApp
 {
     /**
-     * Test database connexion with given configuration.
+     * Test database connection with given configuration.
      *
-     * @param array $connexion Doctrine array parameters
+     * @param array $connection Doctrine array parameters
      *
      * @return bool
-     * @throws \PDOException
+     * @throws \PDOException|\Doctrine\ORM\ORMException
      */
-    protected function testDoctrineConnexion($connexion = [])
+    protected function testDoctrineConnection($connection = [])
     {
         $config = Setup::createAnnotationMetadataConfiguration(
             [],
@@ -68,15 +40,17 @@ class DatabaseController extends InstallApp
             false
         );
 
-        $em = EntityManager::create($connexion, $config);
+        $em = EntityManager::create($connection, $config);
         return $em->getConnection()->connect();
     }
+
     /**
      * Install database screen.
      *
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function databaseAction(Request $request)
     {
@@ -87,7 +61,7 @@ class DatabaseController extends InstallApp
 
         if ($databaseForm->isSubmitted() && $databaseForm->isValid()) {
             try {
-                if (false !== $this->testDoctrineConnexion($databaseForm->getData())) {
+                if (false !== $this->testDoctrineConnection($databaseForm->getData())) {
                     $tempConf = $yamlConfigHandler->getConfiguration();
                     foreach ($databaseForm->getData() as $key => $value) {
                         $tempConf['doctrine'][$key] = $value;
@@ -95,18 +69,10 @@ class DatabaseController extends InstallApp
                     $yamlConfigHandler->setConfiguration($tempConf);
 
                     /*
-                     * Test connexion
+                     * Test connection
                      */
-                    /** @var Kernel $kernel */
-                    $kernel = $this->get('kernel');
-                    $fixtures = new Fixtures(
-                        $this->get('em'),
-                        $kernel->getCacheDir(),
-                        $kernel->getRootDir() . '/conf/config.yml',
-                        $kernel->getRootDir(),
-                        $kernel->isDebug(),
-                        $request
-                    );
+                    $fixtures = $this->getFixtures($request);
+
                     $fixtures->createFolders();
                     $yamlConfigHandler->writeConfiguration();
 
@@ -148,15 +114,15 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function databaseSchemaAction(Request $request)
     {
         /*
-         * Test connexion
+         * Test connection
          */
         if (null === $this->get('em')) {
             $this->assignation['error'] = true;
-            $this->assignation['errorMessage'] = $this->get('session')->getFlashBag()->all();
         } else {
             try {
                 /*
@@ -181,10 +147,10 @@ class DatabaseController extends InstallApp
                     $message = $e->getMessage();
                 }
                 $this->assignation['error'] = true;
-                $this->assignation['errorMessage'] = ucfirst($message);
+                $this->publishErrorMessage($request, ucfirst($message));
             } catch (\Exception $e) {
                 $this->assignation['error'] = true;
-                $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                $this->publishErrorMessage($request, $e->getMessage() . PHP_EOL . $e->getTraceAsString());
             }
         }
 
@@ -197,20 +163,12 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
+     * @throws \ReflectionException
+     * @throws \Twig_Error_Runtime
      */
     public function databaseFixturesAction(Request $request)
     {
-        /** @var Kernel $kernel */
-        $kernel = $this->get('kernel');
-
-        $fixtures = new Fixtures(
-            $this->get('em'),
-            $kernel->getCacheDir(),
-            $kernel->getRootDir() . '/conf/config.yml',
-            $kernel->getRootDir(),
-            $kernel->isDebug(),
-            $request
-        );
+        $fixtures = $this->getFixtures($request);
         $fixtures->installFixtures();
 
         $this->assignation['imports'] = [];
@@ -226,10 +184,10 @@ class DatabaseController extends InstallApp
     }
 
     /**
-     *
      * @param Request $request
      *
      * @return JsonResponse
+     * @throws \Doctrine\DBAL\DBALException
      */
     public function updateSchemaAction(Request $request)
     {
@@ -239,7 +197,6 @@ class DatabaseController extends InstallApp
         return new JsonResponse(['status' => true]);
     }
     /**
-     *
      * @param Request $request
      *
      * @return JsonResponse

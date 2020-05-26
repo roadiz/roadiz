@@ -1,39 +1,9 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright (c) 2016.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file ConfigurationHandler.php
- * @author ambroisemaupate
- *
- */
+
 namespace RZ\Roadiz\Config;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Config\Configuration as Config;
-use Doctrine\ORM\Tools\Setup;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Definition\Processor;
@@ -42,7 +12,7 @@ use Symfony\Component\Config\Resource\FileResource;
 /**
  * Configuration class
  */
-class ConfigurationHandler
+abstract class ConfigurationHandler
 {
     /**
      * @var array
@@ -74,7 +44,7 @@ class ConfigurationHandler
      * @param boolean $debug
      * @param string $path
      */
-    public function __construct($cacheDir, $debug, $path)
+    public function __construct(string $cacheDir, bool $debug, string $path)
     {
         $this->cacheDir = $cacheDir;
         $this->path = $path;
@@ -85,7 +55,7 @@ class ConfigurationHandler
     /**
      * @return string
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->cacheDir;
     }
@@ -95,7 +65,7 @@ class ConfigurationHandler
      *
      * @return array
      */
-    public function load()
+    public function load(): array
     {
         if (!$this->confCache->isFresh()) {
             $this->setConfiguration($this->loadFromFile($this->path));
@@ -116,7 +86,7 @@ class ConfigurationHandler
     /**
      * @return array
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         return $this->configuration;
     }
@@ -141,56 +111,14 @@ class ConfigurationHandler
     }
 
     /**
-     * Test database connexion with given configuration.
-     *
-     * @param array $connexion Doctrine array parameters
-     *
-     * @throws \PDOException
-     * @deprecated This method does not belong here.
-     */
-    public function testDoctrineConnexion($connexion = [])
-    {
-        $config = Setup::createAnnotationMetadataConfiguration(
-            [],
-            true,
-            null,
-            null,
-            false
-        );
-
-        $em = EntityManager::create($connexion, $config);
-        $em->getConnection()->connect();
-    }
-
-    /**
      * @param string $file Absolute path to conf file
-     * @return array
+     * @return string|array|\stdClass
      * @throws NoConfigurationFoundException
      */
-    protected function loadFromFile($file)
-    {
-        if (file_exists($file)) {
-            return json_decode(file_get_contents($file), true);
-        }
-
-        throw new NoConfigurationFoundException();
-    }
+    abstract protected function loadFromFile(string $file);
 
     /**
-     * @return void
+     * @return bool
      */
-    public function writeConfiguration()
-    {
-        if (file_exists($this->path)) {
-            unlink($this->path);
-        }
-
-        file_put_contents(
-            $this->path,
-            json_encode(
-                $this->getConfiguration(),
-                JSON_PRETTY_PRINT|JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE
-            )
-        );
-    }
+    abstract public function writeConfiguration(): bool;
 }

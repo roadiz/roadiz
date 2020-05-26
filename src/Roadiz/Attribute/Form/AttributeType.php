@@ -1,39 +1,11 @@
 <?php
-/**
- * Copyright © 2019, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the roadiz shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file AttributeType.php
- * @author Ambroise Maupate
- *
- */
 declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Attribute;
 use Symfony\Component\Form\AbstractType;
@@ -59,13 +31,19 @@ class AttributeType extends AbstractType
                 'required' => true,
                 'help' => 'attributes.form_help.code',
                 'constraints' => [
-                    new NotBlank(),
-                    new Regex([
-                        'pattern' => "/^[a-z_]+$/i",
-                        'htmlPattern' => "^[a-z_]+$",
-                        'message' => 'attribute_code.must_contain_alpha_underscore'
-                    ])
+                    new NotBlank()
                 ]
+            ])
+            ->add('group', AttributeGroupsType::class, [
+                'label' => 'attributes.form.group',
+                'required' => false,
+                'help' => 'attributes.form_help.group',
+                'placeholder' => 'attributes.form.group.placeholder',
+                'entityManager' => $options['entityManager']
+            ])
+            ->add('color', ColorType::class, [
+                'label' => 'attributes.form.color',
+                'help' => 'attributes.form_help.color'
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'attributes.form.type',
@@ -76,6 +54,7 @@ class AttributeType extends AbstractType
                     'attributes.form.type.boolean' => AttributeInterface::BOOLEAN_T,
                     'attributes.form.type.integer' => AttributeInterface::INTEGER_T,
                     'attributes.form.type.decimal' => AttributeInterface::DECIMAL_T,
+                    'attributes.form.type.percent' => AttributeInterface::PERCENT_T,
                     'attributes.form.type.email' => AttributeInterface::EMAIL_T,
                     'attributes.form.type.colour' => AttributeInterface::COLOUR_T,
                     'attributes.form.type.enum' => AttributeInterface::ENUM_T,
@@ -105,6 +84,13 @@ class AttributeType extends AbstractType
                 'attr' => [
                     'class' => 'rz-collection-form-type'
                 ]
+            ])
+            ->add('attributeDocuments', AttributeDocumentType::class, [
+                'label' => 'attributes.form.documents',
+                'help' => 'attributes.form_help.documents',
+                'required' => false,
+                'attribute' => $builder->getForm()->getData(),
+                'entityManager' => $options['entityManager'],
             ])
         ;
     }

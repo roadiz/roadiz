@@ -1,32 +1,6 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file Document.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,6 +11,7 @@ use RZ\Roadiz\Core\Models\AbstractDocument;
 use RZ\Roadiz\Core\Models\AdvancedDocumentInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
+use RZ\Roadiz\Core\Models\HasThumbnailInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -47,10 +22,11 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="documents", indexes={
  *     @ORM\Index(columns={"raw"}),
  *     @ORM\Index(columns={"private"}),
+ *     @ORM\Index(columns={"raw", "private"}),
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
-class Document extends AbstractDocument implements AdvancedDocumentInterface
+class Document extends AbstractDocument implements AdvancedDocumentInterface, HasThumbnailInterface
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
@@ -68,13 +44,13 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     protected $raw = false;
     /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedId = null;
     /**
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedPlatform = null;
@@ -91,6 +67,12 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
      */
     protected $tagTranslations = null;
     /**
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeDocuments", mappedBy="document")
+     * @var ArrayCollection
+     * @Serializer\Exclude
+     */
+    protected $attributeDocuments = null;
+    /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
      * @Serializer\Groups({"document"})
@@ -100,19 +82,19 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
      * @var ArrayCollection
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\DocumentTranslation>")
      */
     protected $documentTranslations;
     /**
      * @ORM\Column(type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $filename;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $mimeType;
@@ -124,44 +106,63 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     private $downscaledDocument = null;
     /**
      * @ORM\Column(type="string")
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $folder;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("bool")
      */
     private $private = false;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $imageWidth = 0;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $imageHeight = 0;
     /**
      * @var string|null
      * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $imageAverageColor;
     /**
      * @var int|null The filesize in bytes.
      * @ORM\Column(type="integer", nullable=true, unique=false)
-     * @Serializer\Groups({"document", "nodes_sources", "tag"})
+     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $filesize;
+
+    /**
+     * @var ArrayCollection<Document>
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", mappedBy="original")
+     * @Serializer\Groups({"document_thumbnails"})
+     * @Serializer\MaxDepth(2)
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Document>")
+     */
+    private $thumbnails;
+
+    /**
+     * @var Document|null
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="thumbnails")
+     * @ORM\JoinColumn(name="original", nullable=true, onDelete="SET NULL")
+     * @Serializer\Groups({"document_original"})
+     * @Serializer\MaxDepth(2)
+     * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
+     */
+    private $original = null;
 
     /**
      * Document constructor.
@@ -174,6 +175,8 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
         $this->documentTranslations = new ArrayCollection();
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
+        $this->attributeDocuments = new ArrayCollection();
+        $this->thumbnails = new ArrayCollection();
         $this->imageWidth = 0;
         $this->imageHeight = 0;
     }
@@ -311,6 +314,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
     public function getTagTranslations()
     {
         return $this->tagTranslations;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getAttributeDocuments(): Collection
+    {
+        return $this->attributeDocuments;
     }
 
     /**
@@ -551,5 +562,89 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface
             $this->id = null;
             $this->rawDocument = null;
         }
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getThumbnails(): Collection
+    {
+        return $this->thumbnails;
+    }
+
+    /**
+     * @param Collection $thumbnails
+     *
+     * @return Document
+     */
+    public function setThumbnails(Collection $thumbnails): Document
+    {
+        if ($this->thumbnails->count()) {
+            /** @var HasThumbnailInterface $thumbnail */
+            foreach ($this->thumbnails as $thumbnail) {
+                $thumbnail->setOriginal(null);
+            }
+        }
+        $this->thumbnails = $thumbnails->filter(function (HasThumbnailInterface $thumbnail) {
+            return $thumbnail !== $this;
+        });
+        /** @var HasThumbnailInterface $thumbnail */
+        foreach ($this->thumbnails as $thumbnail) {
+            $thumbnail->setOriginal($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return HasThumbnailInterface|null
+     */
+    public function getOriginal(): ?HasThumbnailInterface
+    {
+        return $this->original;
+    }
+
+    /**
+     * @param HasThumbnailInterface|null $original
+     *
+     * @return Document
+     */
+    public function setOriginal(?HasThumbnailInterface $original): Document
+    {
+        if ($original !== $this) {
+            $this->original = $original;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     * @Serializer\Groups({"document"})
+     * @Serializer\SerializedName("isThumbnail")
+     * @Serializer\VirtualProperty()
+     */
+    public function isThumbnail(): bool
+    {
+        return $this->getOriginal() !== null;
+    }
+
+    /**
+     * @return bool
+     * @Serializer\Groups({"document"})
+     * @Serializer\SerializedName("hasThumbnail")
+     * @Serializer\VirtualProperty()
+     */
+    public function hasThumbnails(): bool
+    {
+        return $this->getThumbnails()->count() > 0;
+    }
+
+    /**
+     * @return bool
+     */
+    public function needsThumbnail(): bool
+    {
+        return !$this->isProcessable();
     }
 }

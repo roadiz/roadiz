@@ -1,37 +1,13 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file AbstractSearchHandler.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
+
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Entities\Translation;
 use Solarium\Core\Client\Client;
+use Solarium\Core\Query\Helper;
 use Solarium\QueryType\Select\Query\Query;
 
 abstract class AbstractSearchHandler
@@ -48,6 +24,11 @@ abstract class AbstractSearchHandler
      * @var LoggerInterface|null
      */
     protected $logger = null;
+
+    /**
+     * @var int
+     */
+    protected $highlightingFragmentSize = 150;
 
     /**
      * @param Client $client
@@ -72,6 +53,7 @@ abstract class AbstractSearchHandler
     /**
      * @param array|null $response
      * @return array
+     * @deprecated Use SolrSearchResults DTO
      */
     abstract protected function parseSolrResponse($response);
 
@@ -92,6 +74,77 @@ abstract class AbstractSearchHandler
      * @return array
      */
     abstract protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
+
+    /**
+     * @param array $args
+     *
+     * @return string
+     */
+    protected function getTitleField(array &$args): string
+    {
+        /*
+         * Use title_txt_LOCALE when search
+         * is filtered by translation.
+         */
+        if (isset($args['locale']) && is_string($args['locale'])) {
+            return 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
+        }
+        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
+            return 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        }
+        return 'title';
+    }
+
+    /**
+     * @param string $q
+     *
+     * @return bool
+     */
+    protected function isQuerySingleWord(string $q): bool
+    {
+        return preg_match('#[\s\-\'\"\–\—\’\”\‘\“\/\+\.\,]#', $q) !== 1;
+    }
+
+    /**
+     * Default Solr query builder.
+     *
+     * Extends this method to customize your Solr queries. Eg. to boost custom fields.
+     *
+     * @param string $q
+     * @param array $args
+     * @param bool $searchTags
+     * @param int $proximity
+     * @return string
+     */
+    protected function buildQuery($q, array &$args, $searchTags, $proximity)
+    {
+        $q = trim($q);
+        $qHelper = new Helper();
+        $q = $qHelper->escapeTerm($q);
+        $singleWord = $this->isQuerySingleWord($q);
+        $titleField = $this->getTitleField($args);
+        /*
+         * Search in node-sources tags name…
+         */
+        if ($searchTags) {
+            /*
+             * @see http://www.solrtutorial.com/solr-query-syntax.html
+             */
+            if ($singleWord) {
+                // Need to use wildcard BEFORE and AFTER
+                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*) (tags_txt:*%s*)', $q, $q, $q);
+            } else {
+                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
+            }
+        } else {
+            if ($singleWord) {
+                // Need to use wildcard BEFORE and AFTER
+                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*)', $q, $q);
+            } else {
+                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
+            }
+        }
+    }
 
     /**
      * Create Solr Select query. Override it to add DisMax fields and rules.
@@ -132,6 +185,7 @@ abstract class AbstractSearchHandler
     /**
      * @param array $response
      * @return int
+     * @deprecated Use SolrSearchResults DTO
      */
     protected function parseResultCount($response)
     {
@@ -157,22 +211,37 @@ abstract class AbstractSearchHandler
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      * @param int $page
      *
-     * @return array Return a array of **tuple** for each result.
+     * @return SolrSearchResults Return a SolrSearchResults iterable object.
      * [document, highlighting] for Documents and [nodeSource, highlighting]
      */
-    public function searchWithHighlight($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
-    {
+    public function searchWithHighlight(
+        $q,
+        $args = [],
+        $rows = 20,
+        $searchTags = false,
+        $proximity = 10000000,
+        $page = 1
+    ): SolrSearchResults {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
+        $args = array_merge($this->getHighlightingOptions(), $args);
+        $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
+        return new SolrSearchResults(null !== $response ? $response : [], $this->em);
+    }
+
+    /**
+     * @return array
+     */
+    protected function getHighlightingOptions(): array
+    {
         $tmp = [];
         $tmp["hl"] = true;
         $tmp["hl.fl"] = "collection_txt";
+        $tmp["hl.fragsize"] = $this->getHighlightingFragmentSize();
         $tmp["hl.simple.pre"] = '<span class="solr-highlight">';
         $tmp["hl.simple.post"] = '</span>';
-        $args = array_merge($tmp, $args);
 
-        $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
-        return $this->parseSolrResponse($response);
+        return $tmp;
     }
 
     /**
@@ -207,26 +276,33 @@ abstract class AbstractSearchHandler
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
      * @param int $page Retrieve a specific page
      *
-     * @return array Return an array of doctrine Entities (Document, NodesSources)
+     * @return SolrSearchResults Return an array of doctrine Entities (Document, NodesSources)
      */
-    public function search($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
-    {
+    public function search(
+        $q,
+        $args = [],
+        $rows = 20,
+        $searchTags = false,
+        $proximity = 10000000,
+        $page = 1
+    ): SolrSearchResults {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
         $tmp = [];
         $args = array_merge($tmp, $args);
 
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
-        return $this->parseSolrResponse($response);
+        return new SolrSearchResults(null !== $response ? $response : [], $this->em);
     }
 
     /**
      * @param string $q
      * @param array $args
-     * @param int $rows Useless var but keep it for retrocompatibility
+     * @param int $rows Useless var but keep it for retro-compatibility
      * @param bool $searchTags
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
      * @return int
+     * @deprecated Use SolrSearchResults DTO
      */
     public function count($q, $args = [], $rows = 0, $searchTags = false, $proximity = 10000000)
     {
@@ -234,8 +310,27 @@ abstract class AbstractSearchHandler
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
         $tmp = [];
         $args = array_merge($tmp, $args);
-
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity);
-        return $this->parseResultCount($response);
+        return null !== $response ? $this->parseResultCount($response) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHighlightingFragmentSize(): int
+    {
+        return $this->highlightingFragmentSize;
+    }
+
+    /**
+     * @param int $highlightingFragmentSize
+     *
+     * @return AbstractSearchHandler
+     */
+    public function setHighlightingFragmentSize(int $highlightingFragmentSize): AbstractSearchHandler
+    {
+        $this->highlightingFragmentSize = $highlightingFragmentSize;
+
+        return $this;
     }
 }

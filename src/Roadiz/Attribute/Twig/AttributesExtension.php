@@ -1,41 +1,15 @@
 <?php
-/**
- * Copyright © 2019, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the roadiz shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file AttributesExtension.php
- * @author Ambroise Maupate
- *
- */
 declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Twig;
 
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
+use RZ\Roadiz\Core\Entities\AttributeValue;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use Twig\Error\SyntaxError;
@@ -46,11 +20,27 @@ use Twig\TwigTest;
 
 class AttributesExtension extends AbstractExtension
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * AttributesExtension constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function getFunctions()
     {
         return [
             new TwigFunction('get_attributes', [$this, 'getAttributeValues']),
             new TwigFunction('node_source_attributes', [$this, 'getNodeSourceAttributeValues']),
+            new TwigFunction('node_source_grouped_attributes', [$this, 'getNodeSourceGroupedAttributeValues']),
         ];
     }
 
@@ -58,7 +48,9 @@ class AttributesExtension extends AbstractExtension
     {
         return [
             new TwigFilter('attributes', [$this, 'getNodeSourceAttributeValues']),
+            new TwigFilter('grouped_attributes', [$this, 'getNodeSourceGroupedAttributeValues']),
             new TwigFilter('attribute_label', [$this, 'getAttributeLabelOrCode']),
+            new TwigFilter('attribute_group_label', [$this, 'getAttributeGroupLabelOrCode']),
         ];
     }
 
@@ -71,6 +63,8 @@ class AttributesExtension extends AbstractExtension
             new TwigTest('boolean', [$this, 'isBoolean']),
             new TwigTest('choice', [$this, 'isEnum']),
             new TwigTest('enum', [$this, 'isEnum']),
+            new TwigTest('number', [$this, 'isNumber']),
+            new TwigTest('percent', [$this, 'isPercent']),
         ];
     }
 
@@ -99,15 +93,27 @@ class AttributesExtension extends AbstractExtension
         return $attributeValueTranslation->getAttributeValue()->getAttribute()->isEnum();
     }
 
+    public function isPercent(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isPercent();
+    }
+
+    public function isNumber(AttributeValueTranslationInterface $attributeValueTranslation)
+    {
+        return $attributeValueTranslation->getAttributeValue()->getAttribute()->isInteger() ||
+            $attributeValueTranslation->getAttributeValue()->getAttribute()->isDecimal();
+    }
+
 
     /**
      * @param AttributableInterface $attributable
      * @param Translation $translation
+     * @param bool $hideNotTranslated
      *
      * @return array
      * @throws SyntaxError
      */
-    public function getAttributeValues($attributable, Translation $translation)
+    public function getAttributeValues($attributable, Translation $translation, bool $hideNotTranslated = false)
     {
         if (null === $attributable) {
             throw new SyntaxError('Cannot call get_attributes on NULL');
@@ -116,7 +122,27 @@ class AttributesExtension extends AbstractExtension
             throw new SyntaxError('get_attributes only accepts entities that implement AttributableInterface');
         }
         $attributeValueTranslations = [];
-        $attributeValues = $attributable->getAttributeValues();
+
+        if ($hideNotTranslated) {
+            $attributeValues = $this->entityManager
+                ->getRepository(AttributeValue::class)
+                ->findByAttributableAndTranslation(
+                    $attributable,
+                    $translation
+                );
+        } else {
+            /*
+             * Do not filter by translation here as we need to
+             * fallback attributeValues to defaultTranslation
+             * if not filled up.
+             */
+            $attributeValues = $this->entityManager
+                ->getRepository(AttributeValue::class)
+                ->findByAttributable(
+                    $attributable
+                );
+        }
+
         /** @var AttributeValueInterface $attributeValue */
         foreach ($attributeValues as $attributeValue) {
             $attributeValueTranslation = $attributeValue->getAttributeValueTranslation($translation);
@@ -132,16 +158,54 @@ class AttributesExtension extends AbstractExtension
 
     /**
      * @param NodesSources|null $nodesSources
+     * @param bool $hideNotTranslated
      *
      * @return array
      * @throws SyntaxError
      */
-    public function getNodeSourceAttributeValues(?NodesSources $nodesSources)
+    public function getNodeSourceAttributeValues(?NodesSources $nodesSources, bool $hideNotTranslated = false)
     {
         if (null === $nodesSources) {
             throw new SyntaxError('Cannot call node_source_attributes on NULL');
         }
-        return $this->getAttributeValues($nodesSources->getNode(), $nodesSources->getTranslation());
+        return $this->getAttributeValues($nodesSources->getNode(), $nodesSources->getTranslation(), $hideNotTranslated);
+    }
+
+    /**
+     * @param NodesSources|null $nodesSources
+     * @param bool $hideNotTranslated
+     *
+     * @return array
+     * @throws SyntaxError
+     */
+    public function getNodeSourceGroupedAttributeValues(?NodesSources $nodesSources, bool $hideNotTranslated = false): array
+    {
+        $groups = [
+            INF => [
+                'group' => null,
+                'attributeValues' => []
+            ]
+        ];
+        $attributeValueTranslations  = $this->getNodeSourceAttributeValues($nodesSources, $hideNotTranslated);
+        /** @var AttributeValueTranslationInterface $attributeValueTranslation */
+        foreach ($attributeValueTranslations as $attributeValueTranslation) {
+            $group = $attributeValueTranslation->getAttributeValue()->getAttribute()->getGroup();
+            if (null !== $group) {
+                if (!isset($groups[$group->getCanonicalName()])) {
+                    $groups[$group->getCanonicalName()] = [
+                        'group' => $group,
+                        'attributeValues' => []
+                    ];
+                }
+                $groups[$group->getCanonicalName()]['attributeValues'][] = $attributeValueTranslation;
+            } else {
+                $groups[INF]['attributeValues'][] = $attributeValueTranslation;
+            }
+        }
+
+        return array_filter($groups, function (array $group) {
+            return count($group['attributeValues']) > 0;
+        });
     }
 
     /**
@@ -167,6 +231,30 @@ class AttributesExtension extends AbstractExtension
                 $translation = $mixed->getTranslation();
             }
             return $mixed->getAttributeValue()->getAttribute()->getLabelOrCode($translation);
+        }
+
+        return null;
+    }
+
+    public function getAttributeGroupLabelOrCode($mixed, Translation $translation = null): ?string
+    {
+        if (null === $mixed) {
+            return null;
+        }
+        if ($mixed instanceof AttributeGroupInterface) {
+            return $mixed->getTranslatedName($translation);
+        }
+        if ($mixed instanceof AttributeInterface && null !== $mixed->getGroup()) {
+            return $mixed->getGroup()->getTranslatedName($translation);
+        }
+        if ($mixed instanceof AttributeValueInterface && null !== $mixed->getAttribute()->getGroup()) {
+            return $mixed->getAttribute()->getGroup()->getTranslatedName($translation);
+        }
+        if ($mixed instanceof AttributeValueTranslationInterface && null !== $mixed->getAttribute()->getGroup()) {
+            if (null === $translation) {
+                $translation = $mixed->getTranslation();
+            }
+            return $mixed->getAttribute()->getGroup()->getTranslatedName($translation);
         }
 
         return null;

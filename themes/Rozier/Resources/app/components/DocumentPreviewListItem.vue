@@ -20,6 +20,16 @@
                     <template v-if="document.isSvg">
                         <div v-html="document.preview_html" class="svg"></div>
                     </template>
+                    <template v-else-if="document.isImage && !document.isWebp && !document.isPrivate">
+                        <picture>
+                            <source :srcset="document.thumbnail_80 + '.webp'" type="image/webp">
+                            <img class="document-image"
+                                 width="80"
+                                 height="80"
+                                 loading="lazy"
+                                 :src="document.thumbnail_80" />
+                        </picture>
+                    </template>
                     <template v-else-if="document.isImage && !document.isPrivate">
                         <img class="document-image" width="80" height="80"
                              src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
@@ -29,6 +39,11 @@
                         <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
                     </template>
                     <template v-else>
+                        <img v-if="document.hasThumbnail"
+                             class="document-image"
+                             width="80" height="80"
+                             src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                             v-dynamic-img="document.thumbnail_80" />
                         <div class="document-platform-icon"><i :class="'uk-icon-file-' + document.shortType +'-o'"></i></div>
                     </template>
                     <template v-if="drawerName">

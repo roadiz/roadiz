@@ -1,38 +1,11 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file DocumentSearchHandler.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
+
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
-use Solarium\Core\Query\Helper;
 
 /**
  * Class DocumentSearchHandler
@@ -54,44 +27,7 @@ class DocumentSearchHandler extends AbstractSearchHandler
     {
         if (!empty($q)) {
             $query = $this->createSolrQuery($args, $rows, $page);
-
-            $q = trim($q);
-            $qHelper = new Helper();
-            $q = $qHelper->escapeTerm($q);
-            $singleWord = strpos($q, ' ') === false ? true : false;
-
-            $titleField = 'title';
-            /*
-             * Use title_txt_LOCALE when search
-             * is filtered by translation.
-             */
-            if (isset($args['translation']) && $args['translation'] instanceof Translation) {
-                $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
-            }
-            if (isset($args['locale']) && is_string($args['locale'])) {
-                $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
-            }
-
-            /*
-             * Search in node-sources tags name…
-             */
-            if ($searchTags) {
-                /*
-                 * @see http://www.solrtutorial.com/solr-query-syntax.html
-                 */
-                if ($singleWord) {
-                    $queryTxt = sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
-                } else {
-                    $queryTxt = sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
-                }
-            } else {
-                if ($singleWord) {
-                    $queryTxt = sprintf('(' . $titleField . ':%s*)^5 (collection_txt:%s*)', $q, $q);
-                } else {
-                    $queryTxt = sprintf('(' . $titleField . ':"%s"~%d)^5 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
-                }
-            }
-
+            $queryTxt = $this->buildQuery($q, $args, $searchTags, $proximity);
             $query->setQuery($queryTxt);
 
             /*

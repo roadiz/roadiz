@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+    <file source-language="en" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="docs.yes">
+                <source>docs.yes</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.no">
+                <source>docs.no</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.available_children_blocks">
+                <source>docs.available_children_blocks</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.type">
+                <source>docs.type</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.universal">
+                <source>docs.universal</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.technical_name">
+                <source>docs.technical_name</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.group">
+                <source>docs.group</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.excluded_from_search">
+                <source>docs.excluded_from_search</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.visible">
+                <source>docs.visible</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.pages">
+                <source>docs.pages</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.blocks">
+                <source>docs.blocks</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.available_referenced_nodes">
+                <source>docs.available_referenced_nodes</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.fields">
+                <source>docs.fields</source>
+                <target/>
+            </trans-unit>
+            <trans-unit id="docs.publishable">
+                <source>docs.publishable</source>
+                <target/>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

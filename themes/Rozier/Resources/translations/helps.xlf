@@ -42,6 +42,14 @@
                 <source>nodeSource.redirections.help</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes.help">
+                <source>nodeType.hidingNonReachableNodes.help</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="exclude_this_field_from_fulltext_search_engine">
+                <source>exclude_this_field_from_fulltext_search_engine</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

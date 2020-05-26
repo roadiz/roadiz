@@ -1,33 +1,5 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file AppController.php
- * @author Ambroise Maupate
- */
 
 namespace RZ\Roadiz\CMS\Controllers;
 
@@ -45,6 +17,8 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Component\Asset\Context\RequestStackContext;
+use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormError;
@@ -267,6 +241,7 @@ abstract class AppController extends Controller
      * Return theme root folder.
      *
      * @return string
+     * @throws \ReflectionException
      */
     public static function getThemeFolder()
     {
@@ -282,6 +257,7 @@ abstract class AppController extends Controller
      * whether it’s located in project folder or in vendor folder.
      *
      * @return string
+     * @throws \ReflectionException
      */
     public static function getResourcesFolder()
     {
@@ -301,8 +277,10 @@ abstract class AppController extends Controller
     {
         return static::getResourcesFolder() . '/translations';
     }
+
     /**
      * @return string
+     * @throws \ReflectionException
      */
     public static function getPublicFolder()
     {
@@ -396,15 +374,6 @@ abstract class AppController extends Controller
             ]
         ];
 
-        /** @var RequestStack $requestStack */
-        $requestStack = $this->get('requestStack');
-        if (null !== $requestStack->getMasterRequest()->getSession()) {
-            $this->assignation['session'] = [
-                'id' => $requestStack->getMasterRequest()->getSession()->getId(),
-                'user' => $this->getUser(),
-            ];
-        }
-
         if ('' != $this->get('settingsBag')->get('static_domain_name')) {
             $this->assignation['head']['staticDomainName'] = $this->get('settingsBag')->get('static_domain_name');
         }
@@ -413,11 +382,26 @@ abstract class AppController extends Controller
     }
 
     /**
+     * Returns the current session.
+     *
+     * @return Session|null The session
+     */
+    public function getSession()
+    {
+        $request = $this->getRequest();
+
+        return $request && $request->hasPreviousSession() ? $request->getSession() : null;
+    }
+
+    /**
      * Return a Response with default backend 404 error page.
      *
      * @param string $message Additionnal message to describe 404 error.
      *
      * @return Response
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function throw404($message = "")
     {
@@ -465,14 +449,24 @@ abstract class AppController extends Controller
      * Append objects to the global dependency injection container.
      *
      * @param \Pimple\Container $container
+     *
+     * @throws \Twig\Error\LoaderError
      */
     public static function setupDependencyInjection(Container $container)
     {
         static::addThemeTemplatesPath($container);
+
+        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
+            'themes/' . static::getThemeDir() . '/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
     }
 
     /**
      * @param Container $container
+     *
+     * @throws \Twig\Error\LoaderError
      */
     public static function addThemeTemplatesPath(Container $container)
     {
@@ -491,7 +485,7 @@ abstract class AppController extends Controller
      * @param Translation|null $translation
      * @return null|Node
      */
-    protected function getHome(Translation $translation = null)
+    protected function getHome(Translation $translation = null): ?Node
     {
         $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {
@@ -520,7 +514,7 @@ abstract class AppController extends Controller
      */
     protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
     {
-        $session = $request->getSession();
+        $session = $this->getSession();
         if (null !== $session && $session instanceof Session) {
             $session->getFlashBag()->add($level, $msg);
         }

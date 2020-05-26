@@ -1,39 +1,11 @@
 <?php
-/**
- * Copyright © 2019, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the roadiz shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file AttributeTrait.php
- * @author Ambroise Maupate
- *
- */
 declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\StringHandler;
 
 trait AttributeTrait
 {
@@ -52,7 +24,7 @@ trait AttributeTrait
      */
     public function setCode(string $code)
     {
-        $this->code = $code;
+        $this->code = StringHandler::slugify($code);
         return $this;
     }
 
@@ -72,6 +44,44 @@ trait AttributeTrait
     public function setType(int $type)
     {
         $this->type = $type;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    /**
+     * @param string|null $color
+     *
+     * @return mixed
+     */
+    public function setColor(?string $color)
+    {
+        $this->color = $color;
+        return $this;
+    }
+
+    /**
+     * @return AttributeGroupInterface|null
+     */
+    public function getGroup(): ?AttributeGroupInterface
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param AttributeGroupInterface|null $group
+     *
+     * @return mixed
+     */
+    public function setGroup(?AttributeGroupInterface $group)
+    {
+        $this->group = $group;
         return $this;
     }
 
@@ -104,13 +114,12 @@ trait AttributeTrait
         if (null !== $translation) {
             $attributeTranslation = $this->getAttributeTranslations()->filter(
                 function (AttributeTranslationInterface $attributeTranslation) use ($translation) {
-                    if ($attributeTranslation->getTranslation() === $translation) {
-                        return true;
-                    }
-                    return false;
+                    return $attributeTranslation->getTranslation() === $translation;
                 }
             );
-            if ($attributeTranslation->count() > 0 && $attributeTranslation->first()->getLabel() !== '') {
+
+            if ($attributeTranslation->first() &&
+                $attributeTranslation->first()->getLabel() !== '') {
                 return $attributeTranslation->first()->getLabel();
             }
         }
@@ -127,10 +136,7 @@ trait AttributeTrait
     {
         $attributeTranslation = $this->getAttributeTranslations()->filter(
             function (AttributeTranslationInterface $attributeTranslation) use ($translation) {
-                if ($attributeTranslation->getTranslation() === $translation) {
-                    return true;
-                }
-                return false;
+                return $attributeTranslation->getTranslation() === $translation;
             }
         );
         if ($attributeTranslation->count() > 0) {
@@ -218,6 +224,11 @@ trait AttributeTrait
     public function isDecimal(): bool
     {
         return $this->getType() === AttributeInterface::DECIMAL_T;
+    }
+
+    public function isPercent(): bool
+    {
+        return $this->getType() === AttributeInterface::PERCENT_T;
     }
 
     public function isEmail(): bool

@@ -124,7 +124,7 @@ const getWebpackConfigBase = (config) => {
                 loader: 'file-loader',
                 options: {
                     name: config.assets_name_font,
-                    publicPath: '../',
+                    publicPath: '../'
                 }
             },
             {

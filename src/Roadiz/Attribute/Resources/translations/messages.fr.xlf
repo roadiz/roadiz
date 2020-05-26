@@ -62,6 +62,10 @@
                 <source>attributes.form.type.decimal</source>
                 <target state="translated">Nombre décimal</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type.percent">
+                <source>attributes.form.type.percent</source>
+                <target state="translated">Pourcentage</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="attributes.form.type.email">
                 <source>attributes.form.type.email</source>
                 <target state="translated">Adresse email unique</target>
@@ -118,6 +122,10 @@
                 <source>attributes.value</source>
                 <target state="translated">Valeur</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.group">
+                <source>attributes.group</source>
+                <target state="translated">Groupe</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute">
                 <source>are_you_sure.delete.attribute</source>
                 <target state="translated">Êtes-vous sûr·e de vouloir supprimer cet attribut ?</target>
@@ -164,16 +172,145 @@
                 <target state="translated">Le fichier d’attributs doit être un fichier au format JSON valide respectant la structure des attributs Roadiz.</target>
                 <note/>
             </trans-unit>
-
-        <trans-unit xml:space="preserve" id="attributeValue.%attributeValueId%.not_exists">
-            <source>attributeValue.%attributeValueId%.not_exists</source>
+      <trans-unit xml:space="preserve" id="attributes.form.group">
+                <source>attributes.form.group</source>
+                <target state="translated">Groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.group">
+                <source>attributes.form_help.group</source>
+                <target state="translated">Permet de rassembler les attributs au sein de groupes pour l’affichage publique.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.color">
+                <source>attributes.form.color</source>
+                <target state="translated">Couleur</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.color">
+                <source>attributes.form_help.color</source>
+                <target state="translated">Couleur de l’attribut pouvant être affichée publiquement.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.documents">
+                <source>attributes.form.documents</source>
+                <target state="translated">Documents</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form_help.documents">
+                <source>attributes.form_help.documents</source>
+                <target state="translated">Documents illustrant l’attribut pour son affichage public.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.group.placeholder">
+                <source>attributes.form.group.placeholder</source>
+                <target state="translated">-- Aucun groupe --</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.attribute_groups">
+                <source>back_to.attribute_groups</source>
+                <target state="translated">Retour aux groupes d’attributs</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute_group">
+                <source>add.a.attribute_group</source>
+                <target state="translated">Créer un groupe d’attributs</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_groups">
+                <source>attribute_groups</source>
+                <target state="translated">Groupes d’attributs</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_groups.name">
+                <source>attribute_groups.name</source>
+                <target state="translated">Nom du groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.name">
+                <source>attribute_group.form.name</source>
+                <target state="translated">Nom du groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.created">
+                <source>attribute_group.%name%.created</source>
+                <target state="translated">Le groupe %name% a bien été créé</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.updated">
+                <source>attribute_group.%name%.updated</source>
+                <target state="translated">Le groupe %name% a bien été mis à jour</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.%name%.deleted">
+                <source>attribute_group.%name%.deleted</source>
+                <target state="translated">Le groupe %name% a bien été supprimé</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute_group.%name%">
+                <source>delete.attribute_group.%name%</source>
+                <target state="translated">Supprimer le groupe d’attribut %name%</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.attribute_group">
+                <source>are_you_sure.delete.attribute_group</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir supprimer le groupe d'attributs ?</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.canonicalName">
+                <source>attribute_group.form.canonicalName</source>
+                <target state="translated">Nom canonique</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_group.form.attributeGroupTranslations">
+                <source>attribute_group.form.attributeGroupTranslations</source>
+                <target state="translated">Traductions du groupe</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.reset_value">
+                <source>attributes.reset_value</source>
+                <target state="translated">Réinitialiser la valeur à celle de la langue principale</target>
+                <note>Action label to reset value to the default language one. This does not delete attribute, only its translation.</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute.%name%.reset_for_node.%nodeName%">
+                <source>attribute.%name%.reset_for_node.%nodeName%</source>
+                <target state="translated">L'attribut %name% a été réinitialisé pour le nœud %nodeName%.</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.delete_value">
+                <source>attributes.delete_value</source>
+                <target state="translated">Supprimer la valeur pour ce nœud</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.delete_value.attribute">
+                <source>are_you_sure.delete_value.attribute</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir supprimer la valeur de cet attribut pour ce nœud ?</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="delete.attribute.%name%.for_node.%nodeName%">
+                <source>delete.attribute.%name%.for_node.%nodeName%</source>
+                <target state="translated">Supprimer l’attribut «%name%» pour le nœud «%nodeName%»</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.attribute.%name%">
+                <source>reset.attribute.%name%</source>
+                <target state="translated">Réinitialiser la valeur de l’attribut %name%</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.attribute.%name%.for_node.%nodeName%">
+                <source>reset.attribute.%name%.for_node.%nodeName%</source>
+                <target state="translated">Réinitialiser la valeur de l’attribut «%name%» pour le nœud «%nodeName%»</target>
+                <note/>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.reset.attribute_value">
+                <source>are_you_sure.reset.attribute_value</source>
+                <target state="translated">Êtes-vous sûr·e de vouloir réinitialiser la valeur de l'attribut pour cette langue ?</target>
+                <note/>
+            </trans-unit>
+        <trans-unit xml:space="preserve" id="attribute_value.%attributeValueId%.not_exists">
+            <source>attribute_value.%attributeValueId%.not_exists</source>
             <target state="translated">La valeur de l’attribut %attributeValueId% n’existe pas</target>
-            <note></note>
-        </trans-unit>
-        <trans-unit xml:space="preserve" id="attributeValue.%name%.updated">
-            <source>attributeValue.%name%.updated</source>
-            <target>La valeur de l’attribut %name% a été mise à jour</target>
-            <note></note>
+             <note></note>
         </trans-unit>
     </body>
   </file>

@@ -1,33 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- *
- * @file AjaxNodesExplorerController.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
@@ -43,7 +16,9 @@ use Themes\Rozier\Models\NodeModel;
 use Themes\Rozier\Models\NodeSourceModel;
 
 /**
- * {@inheritdoc}
+ * Class AjaxNodesExplorerController
+ *
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodesExplorerController extends AbstractAjaxController
 {
@@ -113,7 +88,6 @@ class AjaxNodesExplorerController extends AbstractAjaxController
                 $arrayFilter['nodeType'] = $nodeTypes;
             }
         }
-
         return $arrayFilter;
     }
 
@@ -158,35 +132,25 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
 
-        $results = $searchHandler->searchWithHighlight(
-                $request->get('search'),
-                $arrayFilter,
-                $this->getItemPerPage(),
-                true,
-                10000,
-                $currentPage
-            )
-        ;
-        $resultsCount = $searchHandler->count(
-                $request->get('search'),
-                $arrayFilter,
-                0,
-                true
-            );
-        $pageCount = ceil($resultsCount/$this->getItemPerPage());
-        $nodeSources = array_map(function ($result) {
-            return $result['nodeSource'];
-        }, $results);
-        $nodesArray = $this->normalizeNodes($nodeSources);
+        $results = $searchHandler->search(
+            $request->get('search'),
+            $arrayFilter,
+            $this->getItemPerPage(),
+            true,
+            10000000,
+            $currentPage
+        );
+        $pageCount = ceil($results->getResultCount()/$this->getItemPerPage());
+        $nodesArray = $this->normalizeNodes($results);
 
         return [
             'status' => 'confirm',
             'statusCode' => 200,
             'nodes' => $nodesArray,
-            'nodesCount' => $resultsCount,
+            'nodesCount' => $results->getResultCount(),
             'filters' => [
                 'currentPage' => $currentPage,
-                'itemCount' => $resultsCount,
+                'itemCount' => $results->getResultCount(),
                 'itemPerPage' => $this->getItemPerPage(),
                 'pageCount' => $pageCount,
                 'nextPage' => $currentPage < $pageCount ? $currentPage + 1 : null,

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
@@ -18,6 +19,6 @@ abstract class AbstractConfigurableNodeSourceFieldType extends AbstractNodeSourc
      */
     protected function getFieldConfiguration(array $options)
     {
-        return Yaml::parse($options['nodeTypeField']->getDefaultValues());
+        return Yaml::parse($options['nodeTypeField']->getDefaultValues() ?? '');
     }
 }

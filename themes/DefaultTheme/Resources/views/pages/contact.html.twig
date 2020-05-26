@@ -5,15 +5,16 @@
         {#
          # Display contact errors
          #}
-        {% if session.messages|length %}
-            {% for type, msgs in session.messages %}
-                {% for msg in msgs %}
+        {% if app.request.hasPreviousSession %}
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
                     <div class="alert alert-{% if type == "confirm" %}success{% elseif type == "warning" %}warning{% else %}danger{% endif %}">
-                        <p>{{ msg }}</p>
+                        <p>{{- message -}}</p>
                     </div>
                 {% endfor %}
             {% endfor %}
         {% endif %}
+
         {#
          # Display contact form
          #}

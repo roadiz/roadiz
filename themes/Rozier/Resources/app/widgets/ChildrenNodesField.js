@@ -70,8 +70,8 @@ export default class ChildrenNodesField {
                     .done(() => {
                         window.Rozier.refreshMainNodeTree()
                         window.Rozier.getMessages()
-                        let $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget')
-                        this.refreshNodeTree($nodeTree, parentNodeId, translationId)
+                        let $nodeTree = $link.parents('.children-nodes-widget').find('.nodetree-widget').eq(0)
+                        this.refreshNodeTree($nodeTree)
                     })
                     .fail(data => {
                         data = JSON.parse(data.responseText)
@@ -93,25 +93,27 @@ export default class ChildrenNodesField {
 
     /**
      * @param $nodeTree
-     * @param rootNodeId
-     * @param translationId
      */
-    refreshNodeTree ($nodeTree, rootNodeId, translationId) {
+    refreshNodeTree ($nodeTree) {
         if ($nodeTree.length) {
             if (this.currentRequest && this.currentRequest.readyState !== 4) {
                 this.currentRequest.abort()
             }
 
-            if (typeof rootNodeId === 'undefined') {
-                let $rootTree = $($nodeTree.find('.root-tree')[0])
-                rootNodeId = parseInt($rootTree.attr('data-parent-node-id'))
-                translationId = parseInt($rootTree.attr('data-translation-id'))
+            let linkedTypes = []
+            let $rootTree = $nodeTree.find('.root-tree').eq(0)
+            let rootNodeId = parseInt($rootTree.attr('data-parent-node-id'))
+            let translationId = parseInt($rootTree.attr('data-translation-id'))
+            if ($rootTree.attr('data-linked-types')) {
+                linkedTypes = JSON.parse($rootTree.attr('data-linked-types'))
             }
+
             window.Rozier.lazyload.canvasLoader.show()
             let postData = {
                 '_token': window.Rozier.ajaxToken,
                 '_action': 'requestNodeTree',
-                'parentNodeId': parseInt(rootNodeId)
+                'parentNodeId': parseInt(rootNodeId),
+                'linkedTypes': linkedTypes
             }
 
             let url = window.Rozier.routes.nodesTreeAjax

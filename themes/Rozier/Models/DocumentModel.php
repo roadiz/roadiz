@@ -1,36 +1,11 @@
 <?php
-/**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file DocumentModel.php
- * @author Adrien Scholaert <adrien@rezo-zero.com>
- */
+declare(strict_types=1);
 
 namespace Themes\Rozier\Models;
 
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Models\HasThumbnailInterface;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
@@ -80,6 +55,14 @@ class DocumentModel implements ModelInterface
         /** @var DocumentUrlGenerator $documentUrlGenerator */
         $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
         $documentUrlGenerator->setDocument($this->document);
+        $hasThumbnail = false;
+
+        if ($this->document instanceof HasThumbnailInterface &&
+            $this->document->needsThumbnail() &&
+            $this->document->hasThumbnails()) {
+            $documentUrlGenerator->setDocument($this->document->getThumbnails()->first());
+            $hasThumbnail = true;
+        }
 
         $documentUrlGenerator->setOptions(static::$thumbnailArray);
         $thumbnailUrl = $documentUrlGenerator->getUrl();
@@ -97,7 +80,9 @@ class DocumentModel implements ModelInterface
             'id' => $this->document->getId(),
             'filename' => $this->document->getFilename(),
             'name' => $name,
+            'hasThumbnail' => $hasThumbnail,
             'isImage' => $this->document->isImage(),
+            'isWebp' => $this->document->getMimeType() === 'image/webp',
             'isVideo' => $this->document->isVideo(),
             'isSvg' => $this->document->isSvg(),
             'isEmbed' => $this->document->isEmbed(),
@@ -121,12 +106,14 @@ class DocumentModel implements ModelInterface
 DocumentModel::$thumbnailArray = [
     "fit" => "40x40",
     "quality" => 50,
+    "sharpen" => 5,
     "inline" => false,
 ];
 
 DocumentModel::$thumbnail80Array = [
     "fit" => "80x80",
     "quality" => 50,
+    "sharpen" => 5,
     "inline" => false,
 ];
 

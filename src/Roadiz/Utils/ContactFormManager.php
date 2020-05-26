@@ -1,32 +1,6 @@
 <?php
-/**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file ContactFormManager.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Utils;
 
 use RZ\Roadiz\CMS\Forms\HoneypotType;
@@ -61,9 +35,13 @@ use Twig\Environment;
  */
 class ContactFormManager extends EmailManager
 {
-    /** @var string  */
+    /**
+     * @var string
+     */
     protected $formName = 'contact_form';
-    /** @var array|null  */
+    /**
+     * @var array|null
+     */
     protected $uploadedFiles = null;
     /**
      * @var string
@@ -158,7 +136,7 @@ class ContactFormManager extends EmailManager
     public function getFormName(): string
     {
         return $this->formName;
-    } // 5MB
+    }
 
     /**
      * @param string $formName
@@ -321,7 +299,9 @@ class ContactFormManager extends EmailManager
         $this->form = $this->getFormBuilder()->getForm();
         $this->form->handleRequest($this->request);
         $returnJson = $this->request->isXmlHttpRequest() ||
-            ($this->request->attributes->has('_format') && $this->request->attributes->get('_format') == 'json');
+            $this->request->getRequestFormat() === 'json' ||
+            (count($this->request->getAcceptableContentTypes()) === 1 && $this->request->getAcceptableContentTypes()[0] === 'application/json') ||
+            ($this->request->attributes->has('_format') && $this->request->attributes->get('_format') === 'json');
 
         if ($this->form->isSubmitted()) {
             if ($this->form->isSubmitted() && $this->form->isValid()) {
@@ -337,10 +317,13 @@ class ContactFormManager extends EmailManager
                         ];
                         return new JsonResponse($responseArray);
                     } else {
-                        /** @var Session $session */
-                        $session = $this->request->getSession();
-                        $session->getFlashBag()
-                             ->add('confirm', $this->translator->trans($this->successMessage));
+                        if ($this->request->hasPreviousSession()) {
+                            /** @var Session $session */
+                            $session = $this->request->getSession();
+                            $session->getFlashBag()
+                                ->add('confirm', $this->translator->trans($this->successMessage));
+                        }
+
                         $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
                         return new RedirectResponse($this->redirectUrl);
                     }

@@ -1194,6 +1194,11 @@
           <context context-type="linenumber">386</context>
         </context-group>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes">
+        <source>nodeType.hidingNonReachableNodes</source>
+        <target></target>
+      </trans-unit>
+
       <trans-unit xml:space="preserve" id="125">
         <source>role.imported</source>
         <target></target>
@@ -5441,6 +5446,10 @@
           <source>Bad credentials.</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="Too many login attemps">
+          <source>Too many login attemps, wait before trying again.</source>
+          <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="User account has expired.">
           <source>User account has expired.</source>
@@ -7093,7 +7102,39 @@
         <trans-unit xml:space="preserve" id="encrypted">
             <source>encrypted</source>
             <target></target>
-            <note>Settings : defaines if setting value will be encrypted in database.</note>
+            <note>Settings : defines if setting value will be encrypted in database.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="original.document">
+            <source>original.document</source>
+            <target></target>
+            <note>Document : Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="see.original.document">
+            <source>see.original.document</source>
+            <target></target>
+            <note>Document : Button Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+
+        <trans-unit xml:space="preserve" id="document.thumbnails">
+            <source>document.thumbnails</source>
+            <target></target>
+            <note>Document : Input Label to display thumbnail documents when dealing with original.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="excludeFromSearch">
+            <source>excludeFromSearch</source>
+            <target></target>
+            <note>Node type field : Input Label.</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="export.documentation">
+            <source>export.documentation</source>
+            <target></target>
+            <note>Button label, for exporting node-type Markdown documentation</note>
+        </trans-unit>
+        <trans-unit xml:space="preserve" id="hide_roadiz_version">
+            <source>hide_roadiz_version</source>
+            <target></target>
+            <note>Setting</note>
         </trans-unit>
     </body>
   </file>

@@ -1,42 +1,14 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * Description
- *
- * @file UserViewer.php
- * @author Ambroise Maupate
- */
 
 namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
+use Swift_TransportException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -45,6 +17,9 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class UserViewer
 {
+    /** @var LoggerInterface */
+    protected $logger;
+
     /** @var User|null  */
     protected $user;
 
@@ -61,22 +36,26 @@ class UserViewer
     protected $emailManager;
 
     /**
-     * @param EntityManager $entityManager
-     * @param Settings $settingsBag
+     * @param EntityManager       $entityManager
+     * @param Settings            $settingsBag
      * @param TranslatorInterface $translator
-     * @param EmailManager $emailManager
+     * @param EmailManager        $emailManager
+     * @param LoggerInterface     $logger
+     *
      * @internal param User $user
      */
     public function __construct(
         EntityManager $entityManager,
         Settings $settingsBag,
         TranslatorInterface $translator,
-        EmailManager $emailManager
+        EmailManager $emailManager,
+        LoggerInterface $logger
     ) {
         $this->entityManager = $entityManager;
         $this->settingsBag = $settingsBag;
         $this->translator = $translator;
         $this->emailManager = $emailManager;
+        $this->logger = $logger;
     }
 
     /**
@@ -84,12 +63,18 @@ class UserViewer
      *
      * @param UrlGeneratorInterface $urlGenerator
      * @param string                $route
+     * @param string                $htmlTemplate
+     * @param string                $txtTemplate
      *
      * @return bool
      * @throws \Exception
      */
-    public function sendPasswordResetLink(UrlGeneratorInterface $urlGenerator, $route = 'loginResetPage')
-    {
+    public function sendPasswordResetLink(
+        UrlGeneratorInterface $urlGenerator,
+        $route = 'loginResetPage',
+        $htmlTemplate = 'users/reset_password_email.html.twig',
+        $txtTemplate = 'users/reset_password_email.txt.twig'
+    ) {
         $emailContact = $this->getContactEmail();
         $siteName = $this->getSiteName();
 
@@ -101,16 +86,25 @@ class UserViewer
             'site' => $siteName,
             'mailContact' => $emailContact,
         ]);
-        $this->emailManager->setEmailTemplate('users/reset_password_email.html.twig');
-        $this->emailManager->setEmailPlainTextTemplate('users/reset_password_email.txt.twig');
+        $this->emailManager->setEmailTemplate($htmlTemplate);
+        $this->emailManager->setEmailPlainTextTemplate($txtTemplate);
         $this->emailManager->setSubject($this->translator->trans(
             'reset.password.request'
         ));
         $this->emailManager->setReceiver($this->user->getEmail());
         $this->emailManager->setSender([$emailContact => $siteName]);
 
-        // Send the message
-        return $this->emailManager->send();
+        try {
+            // Send the message
+            return $this->emailManager->send();
+        } catch (Swift_TransportException $e) {
+            // Silent error not to prevent user creation if mailer is not configured
+            $this->logger->error('Unable to send password reset link', [
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+            ]);
+            return false;
+        }
     }
 
     /**

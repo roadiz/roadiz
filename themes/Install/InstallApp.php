@@ -1,35 +1,8 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file InstallApp.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace Themes\Install;
 
-use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
@@ -37,14 +10,12 @@ use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Kernel;
-use RZ\Roadiz\Utils\Asset\Packages;
-use Symfony\Component\Asset\Context\RequestStackContext;
-use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,40 +55,16 @@ class InstallApp extends AppController
             ]
         ];
 
-        if (null !== $this->getRequest()->getSession()) {
-            $this->assignation['session'] = [
-                'id' => $this->getRequest()->getSession()->getId(),
-                'locale' => $this->getRequest()->getSession()->get('_locale', 'en'),
-            ];
-        }
-
         $this->assignation['head']['grunt'] = include dirname(__FILE__) . '/static/public/config/assets.config.php';
 
         return $this;
     }
 
     /**
-     * @inheritDoc
-     */
-    public static function setupDependencyInjection(Container $container)
-    {
-        parent::setupDependencyInjection($container);
-
-        /** @var Packages $packages */
-        $packages = $container['assetPackages'];
-        $packages->addPackage('Install', new PathPackage(
-            'themes/Install/static',
-            $container['versionStrategy'],
-            new RequestStackContext($container['requestStack'])
-        ));
-    }
-
-    /**
-     * Welcome screen.
-     *
      * @param Request $request
      *
-     * @return Response
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -189,16 +136,7 @@ class InstallApp extends AppController
                  * Create user
                  */
                 try {
-                    /** @var Kernel $kernel */
-                    $kernel = $this->get('kernel');
-                    $fixtures = new Fixtures(
-                        $this->get('em'),
-                        $kernel->getCacheDir(),
-                        $kernel->getRootDir() . '/conf/config.yml',
-                        $kernel->getRootDir(),
-                        $kernel->isDebug(),
-                        $request
-                    );
+                    $fixtures = $this->getFixtures($request);
                     $fixtures->createDefaultUser($userForm->getData());
                     /*
                      * Force redirect to avoid resending form when refreshing page
@@ -214,7 +152,7 @@ class InstallApp extends AppController
                     ));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage();
+                    $userForm->addError(new FormError($e->getMessage()));
                 }
             }
             $this->assignation['userForm'] = $userForm->createView();
@@ -292,7 +230,7 @@ class InstallApp extends AppController
                     return $this->redirect($this->generateUrl('installAfterDonePage'));
                 } catch (\Exception $e) {
                     $this->assignation['error'] = true;
-                    $this->assignation['errorMessage'] = $e->getMessage() . PHP_EOL . $e->getTraceAsString();
+                    $doneForm->addError(new FormError($e->getMessage() . PHP_EOL . $e->getTraceAsString()));
                 }
             }
             $this->assignation['doneForm'] = $doneForm->createView();
@@ -368,6 +306,7 @@ class InstallApp extends AppController
                     'Türkçe' => 'tr',
                     'Italiano' => 'it',
                     'српска ћирилица' => 'sr_Cyrl',
+                    '中文' => 'zh',
                 ],
                 'constraints' => [
                     new NotBlank(),
@@ -397,5 +336,24 @@ class InstallApp extends AppController
             ]);
 
         return $builder->getForm();
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Fixtures
+     */
+    protected function getFixtures(Request $request): Fixtures
+    {
+        /** @var Kernel $kernel */
+        $kernel = $this->get('kernel');
+        return new Fixtures(
+            $this->get('em'),
+            $kernel->getCacheDir(),
+            $kernel->getRootDir() . '/conf/config.yml',
+            $kernel->getRootDir(),
+            $kernel->isDebug(),
+            $request
+        );
     }
 }

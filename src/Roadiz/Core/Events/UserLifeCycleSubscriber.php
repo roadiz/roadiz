@@ -1,31 +1,5 @@
 <?php
-/**
- * Copyright (c) 2017. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file UserLifeCycleSubscriber.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
+declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Events;
 
@@ -41,10 +15,9 @@ use RZ\Roadiz\Core\Events\User\UserDisabledEvent;
 use RZ\Roadiz\Core\Events\User\UserEnabledEvent;
 use RZ\Roadiz\Core\Events\User\UserPasswordChangedEvent;
 use RZ\Roadiz\Core\Events\User\UserUpdatedEvent;
-use RZ\Roadiz\Utils\EmailManager;
+use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
-use RZ\Roadiz\Utils\Security\PasswordGenerator;
-use Swift_TransportException;
+use RZ\Roadiz\Utils\Security\TokenGenerator;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserLifeCycleSubscriber implements EventSubscriber
@@ -172,16 +145,6 @@ class UserLifeCycleSubscriber implements EventSubscriber
     {
         $user = $event->getEntity();
         if ($user instanceof User) {
-            if ($user->willSendCreationConfirmationEmail()) {
-                try {
-                    $this->sendSignUpConfirmation($user);
-                } catch (Swift_TransportException $e) {
-                    $this->container->offsetGet('logger.doctrine')->emergency('Cannot send user sign-up confirmation by email', [
-                        'message' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString()
-                    ]);
-                }
-            }
             $userEvent = new UserCreatedEvent($user);
             $this->container->offsetGet('dispatcher')->dispatch($userEvent);
         }
@@ -189,70 +152,43 @@ class UserLifeCycleSubscriber implements EventSubscriber
 
     /**
      * @param LifecycleEventArgs $event
+     *
+     * @throws \Exception
      */
     public function prePersist(LifecycleEventArgs $event)
     {
         $user = $event->getEntity();
         if ($user instanceof User) {
-            /*
-             * If no plain password is present, we must generate one
-             */
-            if (null === $user->getPlainPassword() ||
-                $user->getPlainPassword() === '') {
-                $passwordGenerator = new PasswordGenerator();
-                $plainPassword = $passwordGenerator->generatePassword(12);
-                $user->setPlainPassword($plainPassword);
-                $this->setPassword($user, $plainPassword);
+            if ($user->willSendCreationConfirmationEmail() &&
+                (null === $user->getPlainPassword() ||
+                $user->getPlainPassword() === '')) {
+                /*
+                 * Do not generate password for new users
+                 * just send them a password reset link.
+                 */
+                $tokenGenerator = new TokenGenerator($this->container['logger']);
+                $user->setCredentialsExpired(true);
+                $user->setPasswordRequestedAt(new \DateTime());
+                $user->setConfirmationToken($tokenGenerator->generateToken());
+                /** @var UserViewer $userViewer */
+                $userViewer = $this->container['user.viewer'];
+                $userViewer->setUser($user);
+                $userViewer->sendPasswordResetLink(
+                    $this->container['urlGenerator'],
+                    'loginResetPage',
+                    'users/welcome_user_email.html.twig',
+                    'users/welcome_user_email.txt.twig'
+                );
             } else {
                 $this->setPassword($user, $user->getPlainPassword());
             }
 
             /*
-             * Force a gravatar image if not defined
+             * Force a Gravatar image if not defined
              */
             if ($user->getPictureUrl() == '') {
                 $user->setPictureUrl($user->getGravatarUrl());
             }
         }
-    }
-
-    /**
-     * Send an email with credentials details to user.
-     *
-     * @param User $user
-     *
-     * @return bool
-     * @throws \Exception
-     */
-    private function sendSignUpConfirmation(User $user)
-    {
-        $emailContact = $this->container['settingsBag']->get('email_sender');
-        if (empty($emailContact)) {
-            $emailContact = "noreply@roadiz.io";
-        }
-
-        $siteName = $this->container['settingsBag']->get('site_name');
-        if (empty($siteName)) {
-            $siteName = "Unnamed site";
-        }
-
-        /** @var EmailManager $emailManager */
-        $emailManager = $this->container['emailManager'];
-        $emailManager->setAssignation([
-            'user' => $user,
-            'site' => $siteName,
-            'mailContact' => $emailContact,
-        ]);
-        $emailManager->setEmailTemplate('users/newUser_email.html.twig');
-        $emailManager->setEmailPlainTextTemplate('users/newUser_email.txt.twig');
-        $emailManager->setSubject($this->container->offsetGet('translator')->trans(
-            'welcome.user.email.%site%',
-            ['%site%' => $siteName]
-        ));
-        $emailManager->setReceiver($user->getEmail());
-        $emailManager->setSender([$emailContact => $siteName]);
-
-        // Send the message
-        return $emailManager->send();
     }
 }

@@ -1,33 +1,5 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file TranslationViewer.php
- * @author Maxime Constantinian
- */
 
 namespace RZ\Roadiz\Core\Viewers;
 
@@ -181,9 +153,24 @@ class TranslationViewer
 
         $return = [];
 
-        /** @var Translation $translation */
         foreach ($translations as $translation) {
             $url = null;
+            /*
+             * Remove existing _locale in query string
+             */
+            if (key_exists('_locale', $query)) {
+                unset($query["_locale"]);
+            }
+            /*
+             * Remove existing page parameter in query string
+             * if listing is different between 2 languages, maybe
+             * page 2 or 3 does not exist in language B but exists in
+             * language A
+             */
+            if (key_exists('page', $query)) {
+                unset($query['page']);
+            }
+
             if (!empty($attr['_route']) && is_string($attr['_route'])) {
                 $name = $attr['_route'];
                 /*
@@ -204,11 +191,15 @@ class TranslationViewer
                         unset($attr['_route_params']['_locale']);
                     }
                 }
+
                 /*
-                 * Remove existing _locale in query string
+                 * Remove existing page parameter in route parameters
+                 * if listing is different between 2 languages, maybe
+                 * page 2 or 3 does not exist in language B but exists in
+                 * language A
                  */
-                if (key_exists('_locale', $query)) {
-                    unset($query["_locale"]);
+                if (key_exists('page', $attr['_route_params'])) {
+                    unset($attr['_route_params']['page']);
                 }
 
                 $url = $this->router->generate(
@@ -232,7 +223,7 @@ class TranslationViewer
                     'name' => $name,
                     'url' => $url,
                     'locale' => $translation->getPreferredLocale(),
-                    'active' => ($this->translation->getPreferredLocale() == $translation->getPreferredLocale()) ? true : false,
+                    'active' => $this->translation->getPreferredLocale() == $translation->getPreferredLocale(),
                     'translation' => $translation->getName(),
                 ];
             }

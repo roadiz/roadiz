@@ -809,7 +809,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/TagsController.php</context>
           <context context-type="linenumber">792</context>
         </context-group>
-      <alt-trans><target>Nom de l’étiquette</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="81" approved="yes">
         <source>node.seo.updated</source>
         <target state="final">Le référencement du nœud a été mis à jour.</target>
@@ -1193,6 +1193,10 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/NodeTypesController.php</context>
           <context context-type="linenumber">386</context>
         </context-group>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes">
+        <source>nodeType.hidingNonReachableNodes</source>
+        <target state="translated">Cache ses nœuds non-accessibles ?</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="125" approved="yes">
         <source>role.imported</source>
@@ -4319,7 +4323,7 @@
       <trans-unit xml:space="preserve" id="google_client_id" approved="yes">
         <source>google_client_id</source>
         <target state="final">Google API - Clef navigateur</target>
-      <alt-trans><target>Google : Id client</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="google_server_id" approved="yes">
         <source>google_server_id</source>
         <target state="final">Google API - Clef serveur</target>
@@ -4331,7 +4335,7 @@
       <trans-unit xml:space="preserve" id="facebook_client_id" approved="yes">
         <source>facebook_client_id</source>
         <target state="final">Facebook - ID client</target>
-      <alt-trans><target>Facebook : Id client</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="seo_description" approved="yes">
         <source>seo_description</source>
         <target state="final">Description de référencement</target>
@@ -4361,7 +4365,7 @@
         <source>instagram_url</source>
         <target state="final">Instagram - Url</target>
         <note>Setting name for social page url.</note>
-      <alt-trans><target>Url Instagram</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="instagram_user_id">
         <source>instagram_user_id</source>
             <target state="translated">Instagram - Id de l'utilisateur</target>
@@ -4987,7 +4991,7 @@
       <trans-unit xml:space="preserve" id="add.a.nodeType" approved="yes">
           <source>add.a.nodeType</source>
           <target state="final">Ajouter un type de nœud</target>
-      <alt-trans><target>Ajouter un type de noeud</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="add.a.nodeTypeField" approved="yes">
           <source>add.a.nodeTypeField</source>
           <target state="final">Ajouter un champ de type de nœud</target>
@@ -5368,6 +5372,10 @@
           <source>Bad credentials.</source>
           <target state="final">Identifiants non reconnus</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="Too many login attemps">
+          <source>Too many login attemps, wait before trying again.</source>
+          <target state="translated">Trop de tentatives de connexion ont échoué. Veuillez patienter avant de réessayer. </target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
           <source>User account has expired.</source>
           <target state="final">Votre compte utilisateur a expiré.</target>
@@ -5527,15 +5535,15 @@
       <trans-unit xml:space="preserve" id="node_source.%node_source%.%translation%.cant.deleted" approved="yes">
           <source>node_source.%node_source%.%translation%.cant.deleted</source>
           <target state="final">La suppression de «%node_source%» en «%translation%» n'est pas possible</target>
-      <alt-trans><target>La supression de «%node_source%» en «%translation%» n'est pas possible</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node_source.%node_source%.deleted.%translation%" approved="yes">
           <source>node_source.%node_source%.deleted.%translation%</source>
           <target state="final">La suppression de «%node_source%» en «%translation%» n'est pas possible</target>
-      <alt-trans><target>La supression de «%node_source%» en «%translation%» n'est pas possible</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="delete.nodesource" approved="yes">
           <source>delete.nodesource</source>
           <target state="final">Supprimer la source du nœud</target>
-      <alt-trans><target>Supprimer la source du noeud</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="latest.node-sources.updates" approved="yes">
           <source>latest.node-sources.updates</source>
           <target state="final">Dernières sources modifiées</target>
@@ -5739,7 +5747,7 @@
       <trans-unit xml:space="preserve" id="a.confirmation.email.has.already.be.sent" approved="yes">
           <source>a.confirmation.email.has.already.be.sent</source>
           <target state="final">Un email de confirmation vous a déjà été envoyé, veuillez vérifier dans vos courriers indésirables.</target>
-      <alt-trans><target>Un email de confirmation vous a déjà été envoyé par email, veuillez vérifier dans vos courriers indésirables.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="email.invalid" approved="yes">
           <source>email.invalid</source>
           <target state="final">L’email est invalide ou n’existe pas.</target>
@@ -5803,7 +5811,7 @@
       <trans-unit xml:space="preserve" id="changelog" approved="yes">
           <source>changelog</source>
           <target state="final">Notes de mise à jour</target>
-      <alt-trans><target>Note de mise à jour</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="download.folder.content" approved="yes">
           <source>download.folder.content</source>
           <target state="final">Télécharger le contenu du dossier</target>
@@ -5894,7 +5902,7 @@
       <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
           <source>font_variant.regular</source>
           <target state="final">Normal</target>
-      <alt-trans><target>Regular</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="font_variant.italic" approved="yes">
           <source>font_variant.italic</source>
           <target state="final">Italique</target>
@@ -5902,11 +5910,11 @@
       <trans-unit xml:space="preserve" id="font_variant.bold" approved="yes">
           <source>font_variant.bold</source>
           <target state="final">Bold</target>
-      <alt-trans><target>Gras</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="font_variant.bold.italic" approved="yes">
           <source>font_variant.bold.italic</source>
           <target state="final">Bold italique</target>
-      <alt-trans><target>Gras italique</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="font_variant.light" approved="yes">
           <source>font_variant.light</source>
           <target state="final">Light</target>
@@ -6058,11 +6066,11 @@
       <trans-unit xml:space="preserve" id="node.childrenOrder" approved="yes">
           <source>node.childrenOrder</source>
           <target state="final">Les nœuds enfant sont ordonnés par</target>
-      <alt-trans><target>Children nodes ordering by</target></alt-trans><alt-trans><target>Children nodes ordering</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.childrenOrderDirection" approved="yes">
           <source>node.childrenOrderDirection</source>
           <target state="final">Direction de l’ordre des nœuds enfants</target>
-      <alt-trans><target>Children nodes order direction</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.ttl" approved="yes">
           <source>node.ttl</source>
             <target state="final">TTL frontal</target>
@@ -6074,11 +6082,11 @@
       <trans-unit xml:space="preserve" id="createdAt" approved="yes">
           <source>createdAt</source>
           <target state="final">Date de création</target>
-      <alt-trans><target>Créé le</target></alt-trans><alt-trans><target>Created at</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="updatedAt" approved="yes">
           <source>updatedAt</source>
           <target state="final">Date de mise à jour</target>
-      <alt-trans><target>Mis à jour le</target></alt-trans><alt-trans><target>Updated at</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="ascendant" approved="yes">
           <source>ascendant</source>
           <target state="final">Ascendant</target>
@@ -6130,7 +6138,7 @@
       <trans-unit xml:space="preserve" id="font.variant.alreadyExists" approved="yes">
           <source>font.variant.alreadyExists</source>
           <target state="final">La variante de fonte existe déjà</target>
-      <alt-trans><target>La variant de fonte est existe déjà</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="file.is_not_a.valid.font.file" approved="yes">
           <source>file.is_not_a.valid.font.file</source>
           <target state="final">Ce fichier n’est pas un fichier de fonte valide</target>
@@ -6146,7 +6154,7 @@
       <trans-unit xml:space="preserve" id="folder.%name%.deleted" approved="yes">
           <source>folder.%name%.deleted</source>
           <target state="final">Le dossier « %name% » a été supprimé</target>
-      <alt-trans><target>Le dossier « %name% » a été supprimé.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="no.folder.found" approved="yes">
           <source>no.folder.found</source>
           <target state="final">Aucun dossier trouvé</target>
@@ -6341,7 +6349,7 @@
       <trans-unit xml:space="preserve" id="node.%name%.status_changed_to.%status%" approved="yes">
           <source>node.%name%.status_changed_to.%status%</source>
           <target state="final">Le statut du nœud « %name% »a été changé à : %status%.</target>
-      <alt-trans><target>Le statut du nœud « %name% »a été changé en : %status%.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.%name%.visibility_changed_to.%visible%" approved="yes">
           <source>node.%name%.visibility_changed_to.%visible%</source>
           <target state="final">La visibilité du nœud « %name% » a été changée à : %visible%.</target>
@@ -6773,7 +6781,7 @@
             <source>make_this_field_mandatory_for_users</source>
             <target state="translated">Rend ce champ obligatoire pour les utilisateurs.</target>
             <note>Form field description for Required switch</note>
-        <alt-trans><target>Rend ce champ obligatoire pour les utilisateurs</target></alt-trans></trans-unit>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="expanded">
             <source>expanded</source>
             <target state="translated">Étendu</target>
@@ -6903,17 +6911,17 @@
             <source>versions</source>
             <target state="final">Versions</target>
             <note>Version management</note>
-        <alt-trans><target>Révisions</target></alt-trans></trans-unit>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="versions.working_copy" approved="yes">
             <source>versions.working_copy</source>
             <target state="final">Version actuelle</target>
             <note>Version management : latest version aka working copy</note>
-        <alt-trans><target>Copie de travail</target></alt-trans></trans-unit>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="versions.viewing_a_previous_version" approved="yes">
             <source>versions.viewing_a_previous_version</source>
             <target state="final">Vous êtes en train de consulter une version précédente. Le formulaire est en lecture-seule.</target>
             <note>Version management : Disclaimer that user is viewing a previous version</note>
-        <alt-trans><target>Vous êtes en train de consulter une révision précédente. Le formulaire est en lecture-seule.</target></alt-trans></trans-unit>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="versions.revert_to_this_version" approved="yes">
             <source>versions.revert_to_this_version</source>
             <target state="final">Restaurer cette version</target>
@@ -6932,7 +6940,37 @@
       <trans-unit xml:space="preserve" id="encrypted">
             <source>encrypted</source>
             <target state="translated">Chiffré</target>
-            <note>Settings : defaines if setting value will be encrypted in database.</note>
+            <note>Settings : defines if setting value will be encrypted in database.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="original.document">
+            <source>original.document</source>
+            <target state="translated">Document original</target>
+            <note>Document : Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="see.original.document">
+            <source>see.original.document</source>
+            <target state="translated">Voir le document original</target>
+            <note>Document : Button Label to display original document when dealing with thumbnails.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="document.thumbnails">
+            <source>document.thumbnails</source>
+            <target state="translated">Vignettes</target>
+            <note>Document : Input Label to display thumbnail documents when dealing with original.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="excludeFromSearch">
+            <source>excludeFromSearch</source>
+            <target state="translated">Exclure de la recherche</target>
+            <note>Node type field : Input Label.</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="export.documentation">
+            <source>export.documentation</source>
+            <target state="translated">Exporter la documentation</target>
+            <note>Button label, for exporting node-type Markdown documentation</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="hide_roadiz_version">
+            <source>hide_roadiz_version</source>
+            <target state="translated">Cacher la version de Roadiz</target>
+            <note>Setting</note>
         </trans-unit>
     </body>
   </file>

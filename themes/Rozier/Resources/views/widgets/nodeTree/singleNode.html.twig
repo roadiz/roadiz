@@ -17,9 +17,16 @@ type|lower,
     {% set classes = classes|merge(['non-nestable-list-item']) %}
 {% endif %}
 
-{% if not node.isHidingChildren and not node.nodeType.isHidingNodes %}
+{% if not node.isHidingChildren and
+    not node.nodeType.isHidingNodes and
+    not node.nodeType.isHidingNonReachableNodes %}
     {# Get children using EntityListManager for more control. #}
-    {% set children = nodeTree.childrenNodes(node, true) %}
+    {% set children = nodeTree.getChildrenNodes(node, true) %}
+{% elseif not node.isHidingChildren and
+    not node.nodeType.isHidingNodes and
+    node.nodeType.isHidingNonReachableNodes %}
+    {# Get children using EntityListManager for more control. #}
+    {% set children = nodeTree.getReachableChildrenNodes(node, true) %}
 {% else %}
     {% set children = false %}
 {% endif %}
@@ -101,7 +108,6 @@ type|lower,
                 {% for tag in node.tags %}
                     {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
                     {% set tagName = ttag[0].name|default(tag.tagName) %}
-
                     <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName -}}</a>
                 {% endfor %}
             </div>
@@ -126,7 +132,9 @@ type|lower,
     {% if not mainNodeTree and not nodeTree.isStackTree %}
         {% set subListClasses = subListClasses|merge(['children-node-widget-list']) %}
     {% endif %}
-    {% if node.isHidingChildren or node.nodeType.isHidingNodes or node.getChildren.count == 0 %}
+    {% if node.isHidingChildren or
+        node.nodeType.isHidingNodes or
+        node.getChildren.count == 0 %}
         {% set subListClasses = subListClasses|merge(['empty']) %}
     {% endif %}
     {% spaceless %}

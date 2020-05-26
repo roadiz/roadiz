@@ -1,33 +1,6 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright © 2016, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file Kernel.php
- * @author Ambroise Maupate
- */
+
 namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
@@ -49,7 +22,10 @@ use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
+use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
+use RZ\Roadiz\Core\SearchEngine\Subscriber\DefaultNodesSourcesIndexingSubscriber;
+use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
@@ -76,10 +52,12 @@ use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
+use RZ\Roadiz\Utils\Clearer\EventListener\AnnotationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\MetadataCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\NodesSourcesUrlsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\OPCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\ReverseProxyCacheEventSubscriber;
@@ -111,7 +89,6 @@ use Themes\Rozier\Events\NodeRedirectionSubscriber;
 use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
 use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
-use Themes\Rozier\Events\SolariumSubscriber;
 use Themes\Rozier\Events\SvgDocumentSubscriber;
 use Themes\Rozier\Events\TranslationSubscriber;
 
@@ -128,7 +105,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.3.15";
+    public static $cmsVersion = "1.4.0";
 
     protected $environment;
     protected $debug;
@@ -271,6 +248,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new AppCacheEventSubscriber());
             $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
             $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());
+            $dispatcher->addSubscriber(new AnnotationsCacheEventSubscriber());
+            $dispatcher->addSubscriber(new MetadataCacheEventSubscriber());
             $dispatcher->addSubscriber(new DoctrineCacheEventSubscriber());
             $dispatcher->addSubscriber(new NodesSourcesUrlsCacheEventSubscriber());
             $dispatcher->addSubscriber(new OPCacheEventSubscriber());
@@ -281,8 +260,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
-            $dispatcher->addSubscriber(new NodeSourcePathSubscriber());
-            $dispatcher->addSubscriber(new SignatureListener($kernel::$cmsVersion, $kernel->isDebug()));
+            $dispatcher->addSubscriber(new SignatureListener(
+                $c['settingsBag'],
+                $kernel::$cmsVersion,
+                $kernel->isDebug()
+            ));
             if (!$kernel->isDebug()) {
                 /**
                  * Do not prevent Symfony Debug tool to perform
@@ -308,6 +290,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $dispatcher->addSubscriber(
                     new NodesSourcesUrlSubscriber($c['nodesSourcesUrlCacheProvider'])
                 );
+
+                $dispatcher->addSubscriber(new NodeSourcePathSubscriber($c[NodesSourcesPathAggregator::class]));
                 /*
                  * Add custom event subscriber to Translation result cache
                  */
@@ -513,6 +497,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $this->get('solr'),
                 $this->get('logger'),
                 $this->get(SolariumFactoryInterface::class)
+            )
+        );
+        $this->get('dispatcher')->addSubscriber(
+            new DefaultNodesSourcesIndexingSubscriber(
+                $this->get('factory.handler')
             )
         );
         /*

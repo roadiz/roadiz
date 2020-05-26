@@ -50,11 +50,14 @@
     .filters-infos {
         height: 60px;
         margin-left: 0px;
-        margin-top: 35px;
+        margin-top: 25px;
         margin-bottom: 30px;
-
         border-bottom: 1px solid #444444;
         padding: 0px;
+
+        @media (min-width: @screen-sm-min) {
+            margin-top: 35px;
+        }
 
         .infos-content {
             font-size: 12px;

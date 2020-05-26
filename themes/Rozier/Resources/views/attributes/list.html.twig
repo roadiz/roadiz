@@ -9,6 +9,9 @@
             <a class="uk-button" href="{{ path('attributesAddPage') }}">
                 <i class="uk-icon-rz-plus"></i> {% trans %}add.a.attribute{% endtrans %}
             </a>
+            <a class="uk-button" href="{{ path('attributeGroupsHomePage') }}">
+                <i class="uk-icon-gears"></i> {% trans %}attribute_groups{% endtrans %}
+            </a>
             <a class="uk-button rz-no-ajax-link" href="{{ path('attributesExportPage') }}">
                 <i class="uk-icon-rz-download"></i> {% trans %}export.all{% endtrans %}
             </a>
@@ -22,7 +25,7 @@
 
     <article class="content content-no-action-menu">
         <div class="content-table-cont">
-            <table class="items content-table uk-table">
+            <table class="items content-table uk-table attributes">
                 <thead>
                     <tr>
                         <th>
@@ -32,17 +35,22 @@
                                 'filters': filters,
                             } only %}
                         </th>
+                        <th>{% trans %}attributes.group{% endtrans %}</th>
                         <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in items %}
                     <tr>
-                        <td>
+                        <td class="name">
                             <a href="{{ path('attributesEditPage', { id: item.id }) }}">
-                                {{- item.attributeTranslations.first.label|default(item.code) -}}
+                                <span class="color" style="background-color:{{ item.color|default('transparent') }};"></span>
+                                {{ item.attributeTranslations.first.label|default(item.code) -}}
                             </a>
                         </td>
+                        <td>{%- if item.group -%}
+                                {{- item.group.name -}}
+                            {%- endif -%}</td>
                         <td class="table-actions-row">
                         {% spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('attributesEditPage', { id: item.id }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>

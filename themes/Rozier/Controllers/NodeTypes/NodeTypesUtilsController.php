@@ -1,33 +1,5 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- *
- * @file NodeTypesUtilsController.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\NodeTypes;
 
@@ -35,6 +7,8 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Documentation\Generators\DocumentationGenerator;
+use RZ\Roadiz\Documentation\Generators\NodeTypeGenerator;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
@@ -48,12 +22,14 @@ use Twig_Error_Runtime;
 use ZipArchive;
 
 /**
- * {@inheritdoc}
+ * Class NodeTypesUtilsController
+ *
+ * @package Themes\Rozier\Controllers\NodeTypes
  */
 class NodeTypesUtilsController extends RozierApp
 {
     /**
-     * Export a Json file containing NodeType datas and fields.
+     * Export a Json file containing NodeType data and fields.
      *
      * @param Request $request
      * @param int     $nodeTypeId
@@ -86,6 +62,53 @@ class NodeTypesUtilsController extends RozierApp
             ],
             true
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return BinaryFileResponse
+     */
+    public function exportDocumentationAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
+
+        $documentationGenerator = new DocumentationGenerator($this->get('nodeTypesBag'), $this->get('translator'));
+
+        $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
+        $zipArchive = new ZipArchive();
+        $zipArchive->open($tmpfname, ZipArchive::CREATE);
+
+        $zipArchive->addFromString(
+            '_sidebar.md',
+            $documentationGenerator->getNavBar()
+        );
+
+        /** @var NodeTypeGenerator $reachableTypeGenerator */
+        foreach ($documentationGenerator->getReachableTypeGenerators() as $reachableTypeGenerator) {
+            $zipArchive->addFromString(
+                $reachableTypeGenerator->getPath(),
+                $reachableTypeGenerator->getContents()
+            );
+        }
+
+        /** @var NodeTypeGenerator $nonReachableTypeGenerator */
+        foreach ($documentationGenerator->getNonReachableTypeGenerators() as $nonReachableTypeGenerator) {
+            $zipArchive->addFromString(
+                $nonReachableTypeGenerator->getPath(),
+                $nonReachableTypeGenerator->getContents()
+            );
+        }
+
+        $zipArchive->close();
+        $response = new BinaryFileResponse($tmpfname);
+        $response->setContentDisposition(
+            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+            'documentation-' . date('Y-m-d-H-i-s') . '.zip'
+        );
+        $response->prepare($request);
+
+        return $response;
     }
 
     /**

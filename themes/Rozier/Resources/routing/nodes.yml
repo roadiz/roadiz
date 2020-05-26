@@ -60,6 +60,12 @@ nodesDeleteAttributesPage:
         _controller: Themes\Rozier\Controllers\Nodes\NodesAttributesController::deleteAction
     requirements: { nodeId : "[0-9]+", translationId : "[0-9]+", attributeValueId : "[0-9]+" }
 
+nodesResetAttributesPage:
+    path:     /edit/{nodeId}/source/{translationId}/attributes/{attributeValueId}/reset
+    defaults:
+        _controller: Themes\Rozier\Controllers\Nodes\NodesAttributesController::resetAction
+    requirements: { nodeId: "[0-9]+", translationId: "[0-9]+", attributeValueId: "[0-9]+" }
+
 nodesEditTagsPage:
     path:     /edit/{nodeId}/tags
     defaults:

@@ -1,32 +1,6 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file AbstractSolarium.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
+
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Psr\Log\LoggerInterface;
@@ -43,6 +17,8 @@ use Solarium\QueryType\Update\Query\Query;
  */
 abstract class AbstractSolarium
 {
+    const DOCUMENT_TYPE = 'AbstractDocument';
+    const IDENTIFIER_KEY = 'abstract_id_i';
     const TYPE_DISCRIMINATOR = 'document_type_s';
 
     public static $availableLocalizedTextFields = [
@@ -116,6 +92,7 @@ abstract class AbstractSolarium
      * Use this method only when you need to index single NodeSources.
      *
      * @return boolean|Result
+     * @throws \Exception
      */
     public function indexAndCommit()
     {
@@ -139,6 +116,7 @@ abstract class AbstractSolarium
      * Use this method **only** when you need to re-index a single NodeSources.
      *
      * @return Result
+     * @throws \Exception
      */
     public function updateAndCommit()
     {
@@ -157,7 +135,9 @@ abstract class AbstractSolarium
      *
      * Use this method only when you need to re-index bulk NodeSources.
      *
-     * @param  Query  $update
+     * @param Query $update
+     *
+     * @throws \Exception
      */
     public function update(Query $update)
     {
@@ -219,7 +199,7 @@ abstract class AbstractSolarium
      * Index current document with entity data.
      *
      * @return boolean
-     * @throws \RuntimeException If no document is available.
+     * @throws \Exception
      */
     public function index()
     {
@@ -272,9 +252,34 @@ abstract class AbstractSolarium
 
 
     /**
-     * @return boolean
+     * @return int|string
      */
-    abstract public function getDocumentFromIndex();
+    abstract public function getDocumentId();
+
+    /**
+     * Get document from Solr index.
+     *
+     * @return boolean *FALSE* if no document found linked to current node-source.
+     */
+    public function getDocumentFromIndex()
+    {
+        $query = $this->client->createSelect();
+        $query->setQuery(static::IDENTIFIER_KEY . ':' . $this->getDocumentId());
+        $query->createFilterQuery('type')->setQuery(static::TYPE_DISCRIMINATOR . ':' . static::DOCUMENT_TYPE);
+
+        // this executes the query and returns the result
+        $resultset = $this->client->select($query);
+
+        if (0 === $resultset->getNumFound()) {
+            return false;
+        } else {
+            foreach ($resultset as $document) {
+                $this->document = $document;
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Get a key/value array representation of current indexed object.

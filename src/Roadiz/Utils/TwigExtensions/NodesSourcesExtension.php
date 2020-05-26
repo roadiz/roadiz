@@ -1,42 +1,19 @@
 <?php
-/**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodesSourcesExtension.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use RZ\Roadiz\CMS\Utils\NodeSourceApi;
+use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
+use Twig\TwigTest;
 
 /**
  * Extension that allow to gather nodes-source from hierarchy
@@ -57,6 +34,10 @@ class NodesSourcesExtension extends AbstractExtension
      * @var NodeSourceApi
      */
     private $nodeSourceApi;
+    /**
+     * @var NodeTypes
+     */
+    private $nodeTypesBag;
 
     /**
      * NodesSourcesExtension constructor.
@@ -71,6 +52,7 @@ class NodesSourcesExtension extends AbstractExtension
         AuthorizationChecker $securityAuthorizationChecker,
         HandlerFactory $handlerFactory,
         NodeSourceApi $nodeSourceApi,
+        NodeTypes $nodeTypesBag,
         $preview = false,
         $throwExceptions = false
     ) {
@@ -79,6 +61,7 @@ class NodesSourcesExtension extends AbstractExtension
         $this->throwExceptions = $throwExceptions;
         $this->nodeSourceApi = $nodeSourceApi;
         $this->handlerFactory = $handlerFactory;
+        $this->nodeTypesBag = $nodeTypesBag;
     }
 
     public function getFilters()
@@ -93,6 +76,23 @@ class NodesSourcesExtension extends AbstractExtension
             new TwigFilter('parents', [$this, 'getParents']),
             new TwigFilter('tags', [$this, 'getTags']),
         ];
+    }
+
+    public function getTests()
+    {
+        $tests = [];
+
+        /** @var NodeType $nodeType */
+        foreach ($this->nodeTypesBag->all() as $nodeType) {
+            $tests[] = new TwigTest($nodeType->getName(), function ($mixed) use ($nodeType) {
+                return null !== $mixed && get_class($mixed) === $nodeType->getSourceEntityFullQualifiedClassName();
+            });
+            $tests[] = new TwigTest($nodeType->getSourceEntityClassName(), function ($mixed) use ($nodeType) {
+                return null !== $mixed && get_class($mixed) === $nodeType->getSourceEntityFullQualifiedClassName();
+            });
+        }
+
+        return $tests;
     }
 
     /**

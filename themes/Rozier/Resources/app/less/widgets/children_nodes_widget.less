@@ -93,6 +93,13 @@
             background: @children-nodes-btn-bg;
             margin-top: -1px;
             padding: 0;
+            max-height: 45vh;
+            overflow-y: auto;
+            width: 230px;
+
+            @media (min-width: @screen-xl-min) {
+                width: 17vw;
+            }
 
             &.uk-dropdown-top {
                 margin-top: 0;

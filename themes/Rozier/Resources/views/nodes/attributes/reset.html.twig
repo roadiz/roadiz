@@ -1,0 +1,29 @@
+{% extends '@Rozier/layout.html.twig' %}
+
+{% block content %}
+<section class="content-global delete-item">
+    <header class="content-header header-document header-document-preview">
+        <h1 class="content-title document-delete-title">{{ "reset.attribute.%name%.for_node.%nodeName%"|trans({
+                '%name%': item|attribute_label(translation),
+                '%nodeName%': node.nodeName
+            }) }}</h1>
+    </header>
+    <article class="content content-delete content-no-action-menu">
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        {{ form_start(form, {
+            'attr': {
+                'class': 'uk-form uk-form-stacked'
+            }
+        }) }}{{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <legend class="uk-alert uk-alert-warning"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.reset.attribute_value{% endtrans %}</legend>
+                <a href="{{ path('nodesEditAttributesPage', {
+                    nodeId: node.id,
+                    translationId: translation.id
+                }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-warning" type="submit"><i class="uk-icon-undo"></i> {% trans %}attributes.reset_value{% endtrans %}</button>
+            </fieldset>
+        {{ form_end(form) }}
+    </article>
+</section>
+{% endblock %}

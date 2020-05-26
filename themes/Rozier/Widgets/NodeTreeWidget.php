@@ -1,59 +1,59 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- *
- * @file NodeTreeWidget.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace Themes\Rozier\Widgets;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
- *
- * {@inheritdoc}
  */
 class NodeTreeWidget extends AbstractWidget
 {
     const SESSION_ITEM_PER_PAGE = 'nodetree_item_per_page';
 
+    /**
+     * @var Node|null
+     */
     protected $parentNode = null;
+    /**
+     * @var array|null
+     */
     protected $nodes = null;
+    /**
+     * @var Tag|null
+     */
     protected $tag = null;
+    /**
+     * @var Translation|null
+     */
     protected $translation = null;
+    /**
+     * @var array|null
+     */
     protected $availableTranslations = null;
+    /**
+     * @var bool
+     */
     protected $stackTree = false;
+    /**
+     * @var array|null
+     */
     protected $filters = null;
+    /**
+     * @var bool
+     */
     protected $canReorder = true;
+    /**
+     * @var array
+     */
+    protected $additionalCriteria = [];
 
     /**
      * @param Request     $request           Current kernel request
@@ -129,7 +129,29 @@ class NodeTreeWidget extends AbstractWidget
      */
     protected function getRootListManager()
     {
-        return $this->getListManager($this->parentNode);
+        /*
+         * Only use additional criteria for ROOT list-manager
+         */
+        return $this->getListManager($this->parentNode, false, $this->additionalCriteria);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAdditionalCriteria(): array
+    {
+        return $this->additionalCriteria;
+    }
+
+    /**
+     * @param array $additionalCriteria
+     *
+     * @return NodeTreeWidget
+     */
+    public function setAdditionalCriteria(array $additionalCriteria): NodeTreeWidget
+    {
+        $this->additionalCriteria = $additionalCriteria;
+        return $this;
     }
 
     /**
@@ -156,14 +178,15 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Node|null $parent
      * @param bool $subRequest Default: false
+     * @param array $additionalCriteria Default: []
      * @return \RZ\Roadiz\Core\ListManagers\EntityListManager
      */
-    protected function getListManager(Node $parent = null, $subRequest = false)
+    protected function getListManager(Node $parent = null, $subRequest = false, array $additionalCriteria = [])
     {
-        $criteria = [
+        $criteria = array_merge($additionalCriteria, [
             'parent' => $parent,
             'translation' => $this->translation,
-        ];
+        ]);
 
         if (null !== $this->tag) {
             $criteria['tags'] = $this->tag;
@@ -220,6 +243,19 @@ class NodeTreeWidget extends AbstractWidget
     {
         return $this->getListManager($parent, $subRequest)->getEntities();
     }
+
+    /**
+     * @param Node $parent
+     * @param bool $subRequest Default: false
+     * @return array
+     */
+    public function getReachableChildrenNodes(Node $parent = null, $subRequest = false)
+    {
+        return $this->getListManager($parent, $subRequest, [
+            'nodeType.reachable' => true,
+        ])->getEntities();
+    }
+
     /**
      * @return Node
      */

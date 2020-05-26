@@ -37,6 +37,12 @@ tagsTreeAjax:
     defaults:
         _controller: Themes\Rozier\AjaxControllers\AjaxTagTreeController::getTreeAction
         _format: json
+foldersTreeAjax:
+    path:     /folders/tree
+    methods: [GET]
+    defaults:
+        _controller: Themes\Rozier\AjaxControllers\AjaxFolderTreeController::getTreeAction
+        _format: json
 nodesQuickAddAjax:
     path:     /nodes/add
     defaults:

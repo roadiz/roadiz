@@ -5,7 +5,7 @@
     <section class="content-global manage-document">
 
         <header class="content-header header-document header-document-edit">
-            <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename})|truncate(25, true, '[…]') }}</h1>
+            <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.filename|default(document.documentTranslations.first.name)})|truncate(25, true, '[…]') }}</h1>
             {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'preview'} %}
             {% include '@Rozier/documents/backLink.html.twig' %}
         </header>
@@ -18,7 +18,7 @@
                 {% if not document.private %}
                     {% if document.image or document.svg or document.video or document.pdf %}
                         {% if document.pdf %}
-                            {% set thumbnailFormat = thumbnailFormat|merge({'height': 700}) %}
+                            {% set thumbnailFormat = thumbnailFormat|merge({'height': 700, 'embed': true}) %}
                         {% endif %}
                         <figure class="uk-thumbnail">{{ document|display(thumbnailFormat) }}</figure>
                         {% if document.mimeType == 'image/gif' %}

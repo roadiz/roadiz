@@ -1,33 +1,4 @@
 <?php
-/**
- * Copyright © 2019, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the roadiz shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodesAttributesController.php
- * @author Ambroise Maupate
- *
- */
 declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Nodes;
@@ -51,10 +22,11 @@ class NodesAttributesController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param int $nodeId
-     * @param int $translationId
+     * @param int     $nodeId
+     * @param int     $translationId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $nodeId, $translationId)
     {
@@ -110,7 +82,7 @@ class NodesAttributesController extends RozierApp
             $attributeValueTranslationForm->handleRequest($request);
 
             if ($attributeValueTranslationForm->isSubmitted()) {
-                if ($attributeValueTranslationForm->isSubmitted() && $attributeValueTranslationForm->isValid()) {
+                if ($attributeValueTranslationForm->isValid()) {
                     $this->get('em')->flush();
 
                     /*
@@ -126,6 +98,13 @@ class NodesAttributesController extends RozierApp
                         ]
                     );
                     $this->publishConfirmMessage($request, $msg, $nodeSource);
+
+                    if ($request->isXmlHttpRequest() || $request->getRequestFormat('html') === 'json') {
+                        return new JsonResponse([
+                            'status' => 'success',
+                            'message' => $msg,
+                        ], JsonResponse::HTTP_ACCEPTED);
+                    }
                     return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
                         'nodeId' => $node->getId(),
                         'translationId' => $translation->getId(),
@@ -135,7 +114,7 @@ class NodesAttributesController extends RozierApp
                     /*
                      * Handle errors when Ajax POST requests
                      */
-                    if ($request->isXmlHttpRequest()) {
+                    if ($request->isXmlHttpRequest() || $request->getRequestFormat('html') === 'json') {
                         return new JsonResponse([
                             'status' => 'fail',
                             'errors' => $errors,
@@ -192,11 +171,12 @@ class NodesAttributesController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int $nodeId
-     * @param int $translationId
-     * @param int $attributeValueId
+     * @param int     $nodeId
+     * @param int     $translationId
+     * @param int     $attributeValueId
      *
      * @return RedirectResponse|Response
+     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
     {
@@ -226,10 +206,6 @@ class NodesAttributesController extends RozierApp
         if (null === $nodeSource) {
             throw $this->createNotFoundException('Node-source does not exist');
         }
-        $availableTranslations = $this->get('em')
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsForNode($node);
-
 
         $form = $this->createForm();
         $form->handleRequest($request);
@@ -261,9 +237,83 @@ class NodesAttributesController extends RozierApp
         $this->assignation['item'] = $item;
         $this->assignation['source'] = $nodeSource;
         $this->assignation['translation'] = $translation;
-        $this->assignation['available_translations'] = $availableTranslations;
         $this->assignation['node'] = $node;
 
         return $this->render('nodes/attributes/delete.html.twig', $this->assignation);
+    }
+
+    /**
+     * @param Request $request
+     * @param int     $nodeId
+     * @param int     $translationId
+     * @param int     $attributeValueId
+     */
+    public function resetAction(Request $request, $nodeId, $translationId, $attributeValueId)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
+
+        /** @var AttributeValueTranslation $item */
+        $item = $this->get('em')
+            ->getRepository(AttributeValueTranslation::class)
+            ->findOneBy([
+                'attributeValue' => $attributeValueId,
+                'translation' => $translationId
+            ]);
+        if ($item === null) {
+            throw $this->createNotFoundException('AttributeValueTranslation does not exist.');
+        }
+        /** @var Translation $translation */
+        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        /** @var Node $node */
+        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+
+        if (null === $translation || null === $node) {
+            throw $this->createNotFoundException('Node-source does not exist');
+        }
+
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $this->get('em')
+            ->getRepository(NodesSources::class)
+            ->setDisplayingAllNodesStatuses(true)
+            ->setDisplayingNotPublishedNodes(true)
+            ->findOneBy(['translation' => $translation, 'node' => $node]);
+
+        if (null === $nodeSource) {
+            throw $this->createNotFoundException('Node-source does not exist');
+        }
+
+        $form = $this->createForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->get('em')->remove($item);
+                $this->get('em')->flush();
+
+                $msg = $this->getTranslator()->trans(
+                    'attribute.%name%.reset_for_node.%nodeName%',
+                    [
+                        '%name%' => $item->getAttribute()->getLabelOrCode($translation),
+                        '%nodeName%' => $nodeSource->getTitle(),
+                    ]
+                );
+                $this->publishConfirmMessage($request, $msg);
+            } catch (\RuntimeException $e) {
+                $this->publishErrorMessage($request, $e->getMessage());
+            }
+
+            return $this->redirect($this->generateUrl('nodesEditAttributesPage', [
+                'nodeId' => $node->getId(),
+                'translationId' => $translation->getId(),
+            ]));
+        }
+
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['item'] = $item;
+        $this->assignation['source'] = $nodeSource;
+        $this->assignation['translation'] = $translation;
+        $this->assignation['node'] = $node;
+
+        return $this->render('nodes/attributes/reset.html.twig', $this->assignation);
     }
 }

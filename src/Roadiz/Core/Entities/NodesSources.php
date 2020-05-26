@@ -1,32 +1,6 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodesSources.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -49,7 +23,10 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\UniqueConstraint(columns={"node_id", "translation_id"})
  * }, indexes={
  *     @ORM\Index(columns={"title"}),
- *     @ORM\Index(columns={"published_at"})
+ *     @ORM\Index(columns={"published_at"}),
+ *     @ORM\Index(columns={"node_id", "translation_id", "published_at"}),
+ *     @ORM\Index(columns={"title", "published_at"}),
+ *     @ORM\Index(columns={"title", "published_at", "translation_id"})
  * })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
@@ -77,7 +54,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @var Node
      * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Serializer\Groups({"nodes_sources", "log_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "log_sources"})
      */
     private $node;
 
@@ -170,18 +147,74 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="nodeSource", orphanRemoval=true, cascade={"persist"}, fetch="LAZY")
+     * @ORM\OneToMany(
+     *     targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments",
+     *     mappedBy="nodeSource",
+     *     orphanRemoval=true,
+     *     cascade={"persist"},
+     *     fetch="LAZY"
+     * )
      * @var ArrayCollection
      * @Serializer\Exclude
      */
     private $documentsByFields;
 
     /**
-     * @return Collection
+     * @return Collection|ArrayCollection
      */
     public function getDocumentsByFields(): Collection
     {
         return $this->documentsByFields;
+    }
+
+    /**
+     * @param ArrayCollection $documentsByFields
+     *
+     * @return NodesSources
+     */
+    public function setDocumentsByFields(ArrayCollection $documentsByFields): NodesSources
+    {
+        $this->documentsByFields = $documentsByFields;
+        return $this;
+    }
+
+    /**
+     * Used by any NSClass to add directly new documents to source.
+     *
+     * @param NodesSourcesDocuments $nodesSourcesDocuments
+     *
+     * @return $this
+     */
+    public function addDocumentsByFields(NodesSourcesDocuments $nodesSourcesDocuments): NodesSources
+    {
+        if (!$this->getDocumentsByFields()->contains($nodesSourcesDocuments)) {
+            $this->getDocumentsByFields()->add($nodesSourcesDocuments);
+        }
+        return $this;
+    }
+
+    /**
+     * @param NodeTypeField $field
+     *
+     * @return Document[]
+     */
+    public function getDocumentsByFieldsWithField(NodeTypeField $field): array
+    {
+        $criteria = Criteria::create();
+        $criteria->orderBy(['position' => 'ASC']);
+        return $this->getDocumentsByFields()
+            ->matching($criteria)
+            ->filter(function ($element) use ($field) {
+                if ($element instanceof NodesSourcesDocuments) {
+                    return $element->getField() === $field;
+                }
+                return false;
+            })
+            ->map(function (NodesSourcesDocuments $nodesSourcesDocuments) {
+                return $nodesSourcesDocuments->getDocument();
+            })
+            ->toArray()
+        ;
     }
 
     /**
@@ -192,22 +225,19 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     {
         $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);
-        $relations = $this->getDocumentsByFields()
+        return $this->getDocumentsByFields()
             ->matching($criteria)
             ->filter(function ($element) use ($fieldName) {
                 if ($element instanceof NodesSourcesDocuments) {
                     return $element->getField()->getName() === $fieldName;
                 }
                 return false;
-            });
-
-        $documents = [];
-        /** @var NodesSourcesDocuments $relation */
-        foreach ($relations as $relation) {
-            $documents[] = $relation->getDocument();
-        }
-
-        return $documents;
+            })
+            ->map(function (NodesSourcesDocuments $nodesSourcesDocuments) {
+                return $nodesSourcesDocuments->getDocument();
+            })
+            ->toArray()
+        ;
     }
 
     /**
@@ -241,7 +271,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
 
     /**
      * @ORM\Column(type="string", name="title", unique=false, nullable=true)
-     * @Serializer\Groups({"nodes_sources", "log_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "log_sources"})
      * @Gedmo\Versioned
      */
     protected $title = '';
@@ -269,7 +299,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     /**
      * @var \DateTime
      * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
-     * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base"})
      * @Gedmo\Versioned
      */
     protected $publishedAt;

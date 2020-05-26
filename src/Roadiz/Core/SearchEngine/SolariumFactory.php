@@ -85,7 +85,6 @@ class SolariumFactory implements SolariumFactoryInterface
             $nodeSource,
             $this->solr,
             $this->dispatcher,
-            $this->handlerFactory,
             $this->logger,
             $this->markdown
         );

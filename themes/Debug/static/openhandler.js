@@ -22,7 +22,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
             var self = this;
 
             this.$el.appendTo('body').hide();
-            this.$closebtn = $('<a><i class="phpdebugbar-fa phpdebugbar-fa-times"></i></a>');
+            this.$closebtn = $('<a data-router-disabled><i class="phpdebugbar-fa phpdebugbar-fa-times"></i></a>');
             this.$table = $('<tbody />');
             $('<div>PHP DebugBar | Open</div>').addClass(csscls('header')).append(this.$closebtn).appendTo(this.$el);
             $('<table><thead><tr><th width="150">Date</th><th width="55">Method</th><th>URL</th><th width="125">IP</th><th width="100">Filter data</th></tr></thead></table>').append(this.$table).appendTo(this.$el);
@@ -32,33 +32,33 @@ if (typeof(PhpDebugBar) == 'undefined') {
                 self.hide();
             });
 
-            this.$loadmorebtn = $('<a>Load more</a>')
+            this.$loadmorebtn = $('<a data-router-disabled>Load more</a>')
                 .appendTo(this.$actions)
                 .on('click', function() {
                     self.find(self.last_find_request, self.last_find_request.offset + self.get('items_per_page'), self.handleFind.bind(self));
                 });
 
-            this.$showonlycurrentbtn = $('<a>Show only current URL</a>')
+            this.$showonlycurrentbtn = $('<a data-router-disabled>Show only current URL</a>')
                 .appendTo(this.$actions)
                 .on('click', function() {
                     self.$table.empty();
                     self.find({uri: window.location.pathname}, 0, self.handleFind.bind(self));
                 });
 
-            this.$showallbtn = $('<a>Show all</a>')
+            this.$showallbtn = $('<a data-router-disabled>Show all</a>')
                 .appendTo(this.$actions)
                 .on('click', function() {
                     self.refresh();
                 });
 
-            this.$clearbtn = $('<a>Delete all</a>')
+            this.$clearbtn = $('<a data-router-disabled>Delete all</a>')
                 .appendTo(this.$actions)
                 .on('click', function() {
                     self.clear(function() {
                         self.hide();
                     });
                 });
-                
+
             this.addSearch();
 
             this.$overlay = $('<div />').addClass(csscls('overlay')).hide().appendTo('body');
@@ -72,7 +72,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
             this.$loadmorebtn.show();
             this.find({}, 0, this.handleFind.bind(this));
         },
-        
+
         addSearch: function(){
             var self = this;
             var searchBtn = $('<button />')
@@ -104,7 +104,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
         handleFind: function(data) {
             var self = this;
             $.each(data, function(i, meta) {
-               var a = $('<a />')
+               var a = $('<a data-router-disabled />')
                     .text('Load dataset')
                     .on('click', function(e) {
                        self.hide();
@@ -113,8 +113,8 @@ if (typeof(PhpDebugBar) == 'undefined') {
                        });
                        e.preventDefault();
                     });
-                    
-                var method = $('<a />')
+
+                var method = $('<a data-router-disabled />')
                     .text(meta['method'])
                     .on('click', function(e) {
                         self.$table.empty();
@@ -122,7 +122,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
                         e.preventDefault();
                     });
 
-                var uri = $('<a />')
+                var uri = $('<a data-router-disabled />')
                     .text(meta['uri'])
                     .on('click', function(e) {
                         self.hide();
@@ -132,7 +132,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
                         e.preventDefault();
                     });
 
-                var ip = $('<a />')
+                var ip = $('<a data-router-disabled />')
                     .text(meta['ip'])
                     .on('click', function(e) {
                         self.$table.empty();
@@ -140,14 +140,14 @@ if (typeof(PhpDebugBar) == 'undefined') {
                         e.preventDefault();
                     });
 
-                var search = $('<a />')
+                var search = $('<a data-router-disabled />')
                     .text('Show URL')
                     .on('click', function(e) {
                         self.$table.empty();
                         self.find({uri: meta['uri']}, 0, self.handleFind.bind(self));
                         e.preventDefault();
                     });
-                    
+
                 $('<tr />')
                     .append('<td>' + meta['datetime'] + '</td>')
                     .append('<td>' + meta['method'] + '</td>')

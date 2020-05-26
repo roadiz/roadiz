@@ -1,36 +1,12 @@
 <?php
-/**
- * Copyright (c) 2016. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodeSourceType.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
 use Doctrine\ORM\EntityManager;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\Controller;
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
 use RZ\Roadiz\CMS\Forms\JsonType;
@@ -42,7 +18,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
@@ -82,7 +57,7 @@ class NodeSourceType extends AbstractType
         foreach ($fields as $field) {
             if ($options['withVirtual'] === true || !$field->isVirtual()) {
                 $builder->add(
-                    $field->getName(),
+                    $field->getVarName(),
                     static::getFormTypeFromFieldType($field),
                     $this->getFormOptionsFromFieldType($builder->getData(), $field, $options)
                 );
@@ -198,8 +173,10 @@ class NodeSourceType extends AbstractType
     public static function getFormTypeFromString($type)
     {
         switch ($type) {
-            case AbstractField::STRING_T:
             case AbstractField::COLOUR_T:
+                return ColorType::class;
+
+            case AbstractField::STRING_T:
             case AbstractField::GEOTAG_T:
             case AbstractField::MULTI_GEOTAG_T:
                 return TextType::class;
@@ -310,7 +287,7 @@ class NodeSourceType extends AbstractType
                 $options = array_merge_recursive($options, [
                     'nodeHandler' => $formOptions['container']->offsetGet('node.handler'),
                     'attr' => [
-                        'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues()))
+                        'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues() ?? ''))
                     ],
                 ]);
                 break;
@@ -385,13 +362,6 @@ class NodeSourceType extends AbstractType
                     ],
                 ]);
                 break;
-            case NodeTypeField::COLOUR_T:
-                $options = array_merge_recursive($options, [
-                    'attr' => [
-                        'class' => 'colorpicker-input',
-                    ],
-                ]);
-                break;
             case NodeTypeField::GEOTAG_T:
                 $options = array_merge_recursive($options, [
                     'attr' => [
@@ -434,7 +404,7 @@ class NodeSourceType extends AbstractType
                     $options['placeholder'] = $field->getPlaceholder();
                 }
                 if ($field->getDefaultValues() !== '') {
-                    $countries = explode(',', $field->getDefaultValues());
+                    $countries = explode(',', $field->getDefaultValues() ?? '');
                     $countries = array_map('trim', $countries);
                     $options = array_merge_recursive($options, [
                         'preferred_choices' => $countries,
@@ -442,7 +412,7 @@ class NodeSourceType extends AbstractType
                 }
                 break;
             case NodeTypeField::COLLECTION_T:
-                $configuration = Yaml::parse($field->getDefaultValues());
+                $configuration = Yaml::parse($field->getDefaultValues() ?? '');
                 $collectionOptions = [
                     'allow_add' => true,
                     'allow_delete' => true,
@@ -477,7 +447,7 @@ class NodeSourceType extends AbstractType
     public function getDefaultOptions(NodesSources $nodeSource, NodeTypeField $field, array &$formOptions)
     {
         $label = $field->getLabel();
-        $devName = '{{ nodeSource.' . StringHandler::camelCase($field->getName()) . ' }}';
+        $devName = '{{ nodeSource.' . $field->getVarName() . ' }}';
         $options = [
             'label' => $label,
             'required' => false,

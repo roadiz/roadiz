@@ -28,8 +28,9 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
         /*
          * Validate
          */
-        $this->validateRequest($request);
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
+        $this->validateRequest($request, 'POST', false);
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODE_ATTRIBUTES');
+
         /** @var AttributeValue|null $attributeValue */
         $attributeValue = $this->get('em')->find(AttributeValue::class, (int) $attributeValueId);
 
@@ -44,16 +45,6 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
                     break;
             }
 
-            if ($responseArray === null) {
-                $responseArray = [
-                    'statusCode' => '200',
-                    'status' => 'success',
-                    'responseText' => $this->getTranslator()->trans('attributeValue.%name%.updated', [
-                        '%name%' => $attributeValue->getAttribute()->getLabelOrCode(),
-                    ]),
-                ];
-            }
-
             return new JsonResponse(
                 $responseArray,
                 Response::HTTP_PARTIAL_CONTENT
@@ -61,7 +52,7 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
         }
 
         throw $this->createNotFoundException($this->getTranslator()->trans(
-            'attributeValue.%attributeValueId%.not_exists',
+            'attribute_value.%attributeValueId%.not_exists',
             [
                 '%attributeValueId%' => $attributeValueId
             ]
@@ -86,16 +77,18 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
             return [
                 'statusCode' => '200',
                 'status' => 'success',
-                'responseText' => $this->getTranslator()->trans('attributeValue.%name%.updated', [
+                'responseText' => $this->getTranslator()->trans('attribute_value_translation.%name%.updated_from_node.%nodeName%', [
                     '%name%' => $attributeValue->getAttribute()->getLabelOrCode(),
+                    '%nodeName%' => $attributeValue->getAttributable()->getNodeName(),
                 ]),
             ];
         }
         return [
             'statusCode' => '400',
             'status' => 'error',
-            'responseText' => $this->getTranslator()->trans('attributeValue.%name%.updated', [
+            'responseText' => $this->getTranslator()->trans('attribute_value_translation.%name%.updated_from_node.%nodeName%', [
                 '%name%' => $attributeValue->getAttribute()->getLabelOrCode(),
+                '%nodeName%' => $attributeValue->getAttributable()->getNodeName(),
             ]),
         ];
     }

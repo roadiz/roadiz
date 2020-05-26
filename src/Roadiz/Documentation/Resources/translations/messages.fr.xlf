@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="fr">
+    <body>
+      <trans-unit id="docs.yes">
+        <source>docs.yes</source>
+        <target state="translated">Oui</target>
+      </trans-unit>
+      <trans-unit id="docs.no">
+        <source>docs.no</source>
+        <target state="translated">Non</target>
+      </trans-unit>
+      <trans-unit id="docs.available_children_blocks">
+        <source>docs.available_children_blocks</source>
+        <target state="translated">Blocs-enfants disponibles</target>
+      </trans-unit>
+      <trans-unit id="docs.type">
+        <source>docs.type</source>
+        <target state="translated">Type</target>
+      </trans-unit>
+      <trans-unit id="docs.universal">
+        <source>docs.universal</source>
+        <target state="translated">Universel</target>
+      </trans-unit>
+      <trans-unit id="docs.technical_name">
+        <source>docs.technical_name</source>
+        <target state="translated">Nom technique</target>
+      </trans-unit>
+      <trans-unit id="docs.group">
+        <source>docs.group</source>
+        <target state="translated">Groupe</target>
+      </trans-unit>
+      <trans-unit id="docs.excluded_from_search">
+        <source>docs.excluded_from_search</source>
+        <target state="translated">Exclu du moteur de recherche</target>
+      </trans-unit>
+      <trans-unit id="docs.visible">
+        <source>docs.visible</source>
+        <target state="translated">Visible</target>
+      </trans-unit>
+      <trans-unit id="docs.pages">
+        <source>docs.pages</source>
+        <target state="translated">Pages</target>
+      </trans-unit>
+      <trans-unit id="docs.blocks">
+        <source>docs.blocks</source>
+        <target state="translated">Blocs</target>
+      </trans-unit>
+      <trans-unit id="docs.available_referenced_nodes">
+        <source>docs.available_referenced_nodes</source>
+        <target state="translated">Références aux nœuds disponibles</target>
+      </trans-unit>
+      <trans-unit id="docs.fields">
+        <source>docs.fields</source>
+        <target state="translated">Champs</target>
+      </trans-unit>
+      <trans-unit id="docs.publishable">
+        <source>docs.publishable</source>
+        <target state="translated">Publiable par date et heure</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

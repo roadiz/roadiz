@@ -5,7 +5,7 @@
 <section class="content-global manage-document">
 
     <header class="content-header header-document header-document-edit">
-        <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.getFilename})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.filename|default(document.documentTranslations.first.name)})|truncate(25, true, '[…]') }}</h1>
         {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'edit'} %}
         {% include '@Rozier/documents/backLink.html.twig' %}
     </header>
@@ -29,6 +29,19 @@
             <dd>{{ document.updatedAt|localizeddate('medium', 'short') }}</dd>
             <dt>{% trans %}createdAt{% endtrans %}</dt>
             <dd>{{ document.createdAt|localizeddate('medium', 'short') }}</dd>
+            {% if document.original %}
+                <dt>{% trans %}original.document{% endtrans %}</dt>
+                <dd>
+                    <p>{{ document.original.filename }}</p>
+                    <p><a
+                        href="{{ path('documentsEditPage', { documentId: document.original.id}) }}"
+                        class="uk-button uk-button-small rz-no-ajax-link">
+                            <i class="uk-icon-rz-link"></i>
+                            {% trans %}see.original.document{%- endtrans -%}
+                        </a>
+                    </p>
+                </dd>
+            {% endif %}
             {% if not document.private %}
             <dt>{% trans %}document.public_url{% endtrans %}</dt>
             <dd>{{ document|url({noProcess: true}) }}</dd>

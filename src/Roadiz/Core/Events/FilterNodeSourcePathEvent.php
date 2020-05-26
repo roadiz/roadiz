@@ -1,31 +1,5 @@
 <?php
-/**
- * Copyright (c) 2019. Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file FilterNodeSourcePathEvent.php
- * @author Ambroise Maupate <ambroise@rezo-zero.com>
- */
+declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Events;
 
@@ -42,6 +16,10 @@ use Symfony\Component\Routing\RequestContext;
  */
 class FilterNodeSourcePathEvent extends Event
 {
+    /**
+     * @var bool
+     */
+    protected $forceLocaleWithUrlAlias;
     /**
      * @var Theme|null
      */
@@ -83,19 +61,22 @@ class FilterNodeSourcePathEvent extends Event
      * @param RequestContext|null $requestContext
      * @param array               $parameters
      * @param bool                $forceLocale
+     * @param bool                $forceLocaleWithUrlAlias
      */
     public function __construct(
         ?Theme $theme,
         ?NodesSources $nodeSource,
         ?RequestContext $requestContext,
         array $parameters = [],
-        bool $forceLocale = false
+        bool $forceLocale = false,
+        bool $forceLocaleWithUrlAlias = false
     ) {
         $this->theme = $theme;
         $this->nodeSource = $nodeSource;
         $this->requestContext = $requestContext;
         $this->forceLocale = $forceLocale;
         $this->parameters = $parameters;
+        $this->forceLocaleWithUrlAlias = $forceLocaleWithUrlAlias;
     }
 
     /**
@@ -218,6 +199,26 @@ class FilterNodeSourcePathEvent extends Event
     public function setContainsScheme(bool $containsScheme): FilterNodeSourcePathEvent
     {
         $this->containsScheme = $containsScheme;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isForceLocaleWithUrlAlias(): bool
+    {
+        return $this->forceLocaleWithUrlAlias;
+    }
+
+    /**
+     * @param bool $forceLocaleWithUrlAlias
+     *
+     * @return FilterNodeSourcePathEvent
+     */
+    public function setForceLocaleWithUrlAlias(bool $forceLocaleWithUrlAlias): FilterNodeSourcePathEvent
+    {
+        $this->forceLocaleWithUrlAlias = $forceLocaleWithUrlAlias;
 
         return $this;
     }

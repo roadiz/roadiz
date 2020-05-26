@@ -42,6 +42,14 @@
                 <source>nodeSource.redirections.help</source>
                 <target state="translated">Les redirections automatiques permettent de rediriger la requête saisie vers l'URL actuel du noeud, et pour cette langue en particulier. Les redirections créées sont toujours du type "permanent".</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes.help">
+                <source>nodeType.hidingNonReachableNodes.help</source>
+                <target state="translated">Ce type de nœud cachera seulement les nœuds enfant non-accessibles.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_fulltext_search_engine">
+                <source>exclude_this_field_from_fulltext_search_engine</source>
+                <target state="translated">Exclut la valeur de ce champ du moteur de recherche plein-texte.</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>

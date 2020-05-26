@@ -1,38 +1,14 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file SecurityServiceProvider.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
+use RZ\Roadiz\Core\Authentication\Provider\AttemptAwareDaoAuthenticationProvider;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Authorization\Voter\GroupVoter;
 use RZ\Roadiz\Core\Entities\Role;
@@ -49,7 +25,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
-use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Provider\RememberMeAuthenticationProvider;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\RememberMeToken;
@@ -153,17 +128,14 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AuthenticationUtils($c['requestStack']);
         };
 
-
-
         $container['contextListener'] = function (Container $c) {
-            $c['session']; //Force session handler
             return new ContextListener(
                 $c['securityTokenStorage'],
                 [
                     $c['userProvider'],
                 ],
                 Kernel::SECURITY_DOMAIN,
-                $c['logger'],
+                $c['logger.security'],
                 $c['dispatcher']
             );
         };
@@ -179,8 +151,13 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new UserChecker();
         };
 
+        $container[LoginAttemptManager::class] = function (Container $c) {
+            return new LoginAttemptManager($c['requestStack'], $c['em'], $c['logger']);
+        };
+
         $container['daoAuthenticationProvider'] = function (Container $c) {
-            return new DaoAuthenticationProvider(
+            return new AttemptAwareDaoAuthenticationProvider(
+                $c[LoginAttemptManager::class],
                 $c['userProvider'],
                 $c['userChecker'],
                 Kernel::SECURITY_DOMAIN,
@@ -236,7 +213,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'secure' => false,
                     'httponly' => false,
                 ],
-                $c['kernel']->isDebug() ? $c['logger'] : null
+                $c['logger.security']
             );
         };
 
@@ -245,19 +222,23 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['securityTokenStorage'],
                 $c['tokenBasedRememberMeServices'],
                 $c['authenticationManager'],
-                $c['kernel']->isDebug() ? $c['logger'] : null,
+                $c['logger.security'],
                 $c['dispatcher']
             );
         };
 
-        $container['authenticationManager'] = function (Container $c) {
-            $authenticationManager = new AuthenticationProviderManager([
+        $container['authenticationProviderList'] = function (Container $c) {
+            return [
                 new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
-            ]);
-            return $authenticationManager;
+            ];
         };
+
+        $container['authenticationManager'] = function (Container $c) {
+            return new AuthenticationProviderManager($c['authenticationProviderList']);
+        };
+
         $container['authentificationManager'] = function (Container $c) {
             return $c['authenticationManager'];
         };
@@ -352,7 +333,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['userChecker'],
                 $c['config']["security"]['secret'],
                 $c['accessDecisionManager'],
-                $c['logger'],
+                $c['logger.security'],
                 '_su',
                 Role::ROLE_SUPERADMIN,
                 $c['dispatcher']
@@ -388,7 +369,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
          * Default denied handler
          */
         $container['accessDeniedHandler'] = function (Container $c) {
-            return new AccessDeniedHandler($c['urlGenerator'], $c['logger']);
+            return new AccessDeniedHandler($c['urlGenerator'], $c['logger.security']);
         };
 
         return $container;

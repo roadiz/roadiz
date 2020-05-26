@@ -255,7 +255,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
         className: csscls('panel'),
 
         render: function() {
-            this.$tab = $('<a />').addClass(csscls('tab'));
+            this.$tab = $('<a data-router-disabled />').addClass(csscls('tab'));
 
             this.$icon = $('<i />').appendTo(this.$tab);
             this.bindAttr('icon', function(icon) {
@@ -500,31 +500,31 @@ if (typeof(PhpDebugBar) == 'undefined') {
             };
 
             // close button
-            this.$closebtn = $('<a />').addClass(csscls('close-btn')).appendTo(this.$headerRight);
+            this.$closebtn = $('<a data-router-disabled />').addClass(csscls('close-btn')).appendTo(this.$headerRight);
             this.$closebtn.click(function() {
                 self.close();
             });
 
             // minimize button
-            this.$minimizebtn = $('<a />').addClass(csscls('minimize-btn') ).appendTo(this.$headerRight);
+            this.$minimizebtn = $('<a data-router-disabled />').addClass(csscls('minimize-btn') ).appendTo(this.$headerRight);
             this.$minimizebtn.click(function() {
                 self.minimize();
             });
 
             // maximize button
-            this.$maximizebtn = $('<a />').addClass(csscls('maximize-btn') ).appendTo(this.$headerRight);
+            this.$maximizebtn = $('<a data-router-disabled />').addClass(csscls('maximize-btn') ).appendTo(this.$headerRight);
             this.$maximizebtn.click(function() {
                 self.restore();
             });
 
             // restore button
-            this.$restorebtn = $('<a />').addClass(csscls('restore-btn')).hide().appendTo(this.$el);
+            this.$restorebtn = $('<a data-router-disabled />').addClass(csscls('restore-btn')).hide().appendTo(this.$el);
             this.$restorebtn.click(function() {
                 self.restore();
             });
 
             // open button
-            this.$openbtn = $('<a />').addClass(csscls('open-btn')).appendTo(this.$headerRight).hide();
+            this.$openbtn = $('<a data-router-disabled />').addClass(csscls('open-btn')).appendTo(this.$headerRight).hide();
             this.$openbtn.click(function() {
                 self.openHandler.show(function(id, dataset) {
                     self.addDataSet(dataset, id, "(opened)");

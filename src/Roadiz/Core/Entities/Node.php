@@ -1,33 +1,6 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file Node.php
- * @author Ambroise Maupate
- */
+
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -60,6 +33,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     @ORM\Index(columns={"created_at"}),
  *     @ORM\Index(columns={"updated_at"}),
  *     @ORM\Index(columns={"hide_children"}),
+ *     @ORM\Index(columns={"node_name", "status"}),
+ *     @ORM\Index(columns={"visible", "status"}),
+ *     @ORM\Index(columns={"visible", "status", "parent_node_id"}),
  *     @ORM\Index(columns={"home"})
  * })
  * @ORM\HasLifecycleCallbacks
@@ -111,7 +87,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="string", name="node_name", unique=true)
-     * @Serializer\Groups({"nodes_sources", "node", "log_sources"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node", "log_sources"})
      * @Serializer\Accessor(getter="getNodeName", setter="setNodeName")
      */
     private $nodeName;
@@ -576,7 +552,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
      * @var ArrayCollection<Tag>
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node"})
      */
     private $tags = null;
 
@@ -708,11 +684,9 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      */
     public function getNodeSourcesByTranslation(Translation $translation)
     {
-        $criteria = Criteria::create();
-        $criteria->where(Criteria::expr()->eq('translation', $translation));
-        $criteria->setMaxResults(1);
-
-        return $this->nodeSources->matching($criteria);
+        return $this->nodeSources->filter(function (NodesSources $nodeSource) use ($translation) {
+            return $nodeSource->getTranslation()->getLocale() === $translation->getLocale();
+        });
     }
 
     /**

@@ -61,14 +61,20 @@
                 </ul>
                 <div class="uk-navbar-content uk-navbar-flip">
                     <div class="drawer-widget-quick-creation uk-button-group">
-                        <rz-button :is-active="drawer.isActive" :callback="onExplorerButtonClick">
+                        <rz-button :is-active="drawer.isActive"
+                                   :callback="onExplorerButtonClick">
                             <i class="uk-icon-rz-explore"></i>
-                            {% trans %}documents.toggle-explorer{% endtrans %}
+                            <span class="uk-hidden-small">
+                                {%- trans -%}documents.toggle-explorer{%- endtrans -%}
+                            </span>
                         </rz-button>
                         {% if enableDropzone %}
-                            <rz-button :is-active="drawer.isDropzoneEnable" :callback="onDropzoneButtonClick">
+                            <rz-button :is-active="drawer.isDropzoneEnable"
+                                       :callback="onDropzoneButtonClick">
                                 <i class="uk-icon-rz-upload"></i>
-                                {% trans %}documents.toggle-uploader{% endtrans %}
+                                <span class="uk-hidden-small">
+                                    {%- trans -%}documents.toggle-uploader{%- endtrans -%}
+                                </span>
                             </rz-button>
                         {% endif %}
                     </div>

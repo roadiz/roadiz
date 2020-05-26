@@ -367,7 +367,7 @@ if (typeof(PhpDebugBar) == 'undefined') {
                         continue;
                     }
                     filters.push(data[i].label);
-                    $('<a />')
+                    $('<a data-router-disabled />')
                         .addClass(csscls('filter'))
                         .text(data[i].label)
                         .attr('rel', data[i].label)
@@ -518,11 +518,11 @@ if (typeof(PhpDebugBar) == 'undefined') {
                     var header = $('<span />').addClass(csscls('filename')).text(e.file + "#" + e.line);
                     if (e.xdebug_link) {
                         if (e.xdebug_link.ajax) {
-                            $('<a title="' + e.xdebug_link.url + '"></a>').on('click', function () {
+                            $('<a data-router-disabled title="' + e.xdebug_link.url + '"></a>').on('click', function () {
                                 $.ajax(e.xdebug_link.url);
                             }).addClass(csscls('editor-link')).appendTo(header);
                         } else {
-                            $('<a href="' + e.xdebug_link.url + '"></a>').addClass(csscls('editor-link')).appendTo(header);
+                            $('<a data-router-disabled href="' + e.xdebug_link.url + '"></a>').addClass(csscls('editor-link')).appendTo(header);
                         }
                     }
                     header.appendTo(li);

@@ -1,37 +1,13 @@
 <?php
-/**
- * Copyright © 2016, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file FirewallEntry.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Utils\Security;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Authentification\AuthenticationFailureHandler;
-use RZ\Roadiz\Core\Authentification\AuthenticationSuccessHandler;
+use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
+use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
+use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
+use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -41,7 +17,6 @@ use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
@@ -202,7 +177,7 @@ class FirewallEntry
         $this->listeners[] = [new AnonymousAuthenticationListener(
             $this->container['securityTokenStorage'],
             $this->container['config']['security']['secret'],
-            $this->container['kernel']->isDebug() ? $this->container['logger'] : null,
+            $this->container['kernel']->isDebug() ? $this->container['logger.security'] : null,
             $this->container['authenticationManager']
         ), 8888];
         return $this;
@@ -217,7 +192,7 @@ class FirewallEntry
     {
         $this->accessDeniedHandler = new AccessDeniedHandler(
             $this->container['urlGenerator'],
-            $this->container['logger'],
+            $this->container['logger.security'],
             $redirectRoute,
             $redirectParameters
         );
@@ -290,9 +265,6 @@ class FirewallEntry
         }, $this->listeners);
     }
 
-    /**
-     * @return ListenerInterface
-     */
     protected function getAuthenticationListener()
     {
         $this->authenticationSuccessHandler = new $this->authenticationSuccessHandlerClass(
@@ -316,8 +288,19 @@ class FirewallEntry
                 'login_path' => $this->firewallLogin,
                 'failure_path_parameter' => '_failure_path',
             ],
-            $this->container['logger']
+            $this->container['logger.security']
         );
+
+        if ($this->authenticationSuccessHandler instanceof LoginAttemptAwareInterface) {
+            $this->authenticationSuccessHandler->setLoginAttemptManager(
+                $this->container[LoginAttemptManager::class]
+            );
+        }
+        if ($this->authenticationFailureHandler instanceof LoginAttemptAwareInterface) {
+            $this->authenticationFailureHandler->setLoginAttemptManager(
+                $this->container[LoginAttemptManager::class]
+            );
+        }
 
         return new UsernamePasswordFormAuthenticationListener(
             $this->container['securityTokenStorage'],
@@ -330,7 +313,7 @@ class FirewallEntry
             [
                 'check_path' => $this->firewallLoginCheck,
             ],
-            $this->container['logger'],
+            $this->container['logger.security'],
             $this->container['dispatcher'],
             null
         );
@@ -368,7 +351,7 @@ class FirewallEntry
             $this->getAuthenticationEntryPoint($useForward),
             null,
             $this->accessDeniedHandler,
-            $this->container['logger']
+            $this->container['logger.security']
         );
     }
 

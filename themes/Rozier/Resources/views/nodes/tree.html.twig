@@ -20,6 +20,10 @@
         {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
         {% if node %}
             {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tree'} %}
+            {% include '@Rozier/nodes/translationBar.html.twig' with {
+                "current": translation.id,
+                'route': 'nodesTreePage'
+            } %}
         {% endif %}
         {% if node.stackTypes|length %}
         <div class="content-header-action-menu stack-tree-quick-creation">
@@ -42,6 +46,16 @@
     } only %}
 
     <article class="content content-node-tree">
+        {% if availableTags %}
+            <div class="available-nodetree-tags uk-visible-large">
+                <a href="?" class="uk-badge">{{- 'see_all'|trans -}}</a>
+                {% for tag in availableTags %}
+                    {% set ttag = tag.translatedTagsByTranslation(translation) %}
+                    {% set tagName = ttag[0].name|default(tag.tagName) %}
+                    <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName -}}</a>
+                {% endfor %}
+            </div>
+        {% endif %}
         {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
             "nodeTree":specificNodeTree,
             "node":specificNodeTree.getRootNode,

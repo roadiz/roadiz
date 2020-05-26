@@ -26,6 +26,7 @@
 {% endif %}
 @font-face {
     font-family: "{{ font.hash }}";
+    font-display: swap;
     src: url('{{ path('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "eot" }) }}');
     src: {{ fontAlternatives|join(', \n')|raw }};
 {% for key, value in font.fontVariantInfos %}

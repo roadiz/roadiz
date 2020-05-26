@@ -56,6 +56,7 @@ import CssEditor from './widgets/CssEditor'
 import LeafletGeotagField from './widgets/LeafletGeotagField'
 import MultiLeafletGeotagField from './widgets/MultiLeafletGeotagField'
 import TagEdit from './components/tag/TagEdit'
+import MainTreeTabs from './components/tabs/MainTreeTabs'
 
 /**
  * Lazyload
@@ -208,42 +209,41 @@ export default class Lazyload {
                     xhr.setRequestHeader('X-Partial', true)
                 }
             })
-                .done(data => {
-                    this.applyContent(data)
-                    this.canvasLoader.hide()
-                    let pageLoadEvent = new CustomEvent('pageload', { 'detail': data })
-                    window.dispatchEvent(pageLoadEvent)
-                })
-                .fail(data => {
-                    if (typeof data.responseText !== 'undefined') {
-                        try {
-                            let exception = JSON.parse(data.responseText)
-                            window.UIkit.notify({
-                                message: exception.message,
-                                status: 'danger',
-                                timeout: 3000,
-                                pos: 'top-center'
-                            })
-                        } catch (e) {
-                            // No valid JsonResponse, need to refresh page
-                            window.location.href = location.href
-                        }
-                    } else {
+            .done(data => {
+                this.applyContent(data)
+                this.canvasLoader.hide()
+                let pageLoadEvent = new CustomEvent('pageload', { 'detail': data })
+                window.dispatchEvent(pageLoadEvent)
+            })
+            .fail(data => {
+                if (typeof data.responseText !== 'undefined') {
+                    try {
+                        let exception = JSON.parse(data.responseText)
                         window.UIkit.notify({
-                            message: window.Rozier.messages.forbiddenPage,
+                            message: exception.message,
                             status: 'danger',
                             timeout: 3000,
                             pos: 'top-center'
                         })
+                    } catch (e) {
+                        // No valid JsonResponse, need to refresh page
+                        window.location.href = location.href
                     }
+                } else {
+                    window.UIkit.notify({
+                        message: window.Rozier.messages.forbiddenPage,
+                        status: 'danger',
+                        timeout: 3000,
+                        pos: 'top-center'
+                    })
+                }
 
-                    this.canvasLoader.hide()
-                })
+                this.canvasLoader.hide()
+            })
         }, 100)
     }
 
     refreshCodemirrorEditor () {
-        console.debug('Refreshing all codemirror instances…')
         for (let editor of this.markdownEditors) {
             editor.forceEditorUpdate()
         }
@@ -304,6 +304,7 @@ export default class Lazyload {
     generalBind () {
         this.generalUnbind([
             this.documentsBulk,
+            this.mainTreeTabs,
             this.nodesBulk,
             this.tagsBulk,
             this.inputLengthWatcher,
@@ -332,6 +333,7 @@ export default class Lazyload {
         this.yamlEditors = []
 
         this.documentsBulk = new DocumentsBulk()
+        this.mainTreeTabs = new MainTreeTabs()
         this.nodesBulk = new NodesBulk()
         this.tagsBulk = new TagsBulk()
         this.inputLengthWatcher = new InputLengthWatcher()

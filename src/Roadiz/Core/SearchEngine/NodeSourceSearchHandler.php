@@ -1,33 +1,6 @@
 <?php
 declare(strict_types=1);
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodeSourceSearchHandler.php
- * @author Maxime Constantinian
- */
+
 namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\Common\Collections\Collection;
@@ -36,7 +9,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use Solarium\Core\Query\Helper;
 
 /**
  * Class NodeSourceSearchHandler
@@ -56,57 +28,6 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
      * @var bool
      */
     protected $boostByCreationDate = false;
-
-    /**
-     * Default Solr query builder.
-     *
-     * Extends this method to customize your Solr queries. Eg. to boost custom fields.
-     *
-     * @param string $q
-     * @param array $args
-     * @param bool $searchTags
-     * @param int $proximity
-     * @return string
-     */
-    protected function buildQuery($q, array &$args, $searchTags, $proximity)
-    {
-        $q = trim($q);
-        $qHelper = new Helper();
-        $q = $qHelper->escapeTerm($q);
-        $singleWord = strpos($q, ' ') === false ? true : false;
-        $titleField = 'title';
-
-        /*
-         * Use title_txt_LOCALE when search
-         * is filtered by translation.
-         */
-        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
-            $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
-        }
-        if (isset($args['locale']) && is_string($args['locale'])) {
-            $titleField = 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
-        }
-
-        /*
-         * Search in node-sources tags name…
-         */
-        if ($searchTags) {
-            /*
-             * @see http://www.solrtutorial.com/solr-query-syntax.html
-             */
-            if ($singleWord) {
-                return sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*) (tags_txt:*%s*)', $q, $q, $q);
-            } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
-            }
-        } else {
-            if ($singleWord) {
-                return sprintf('(' . $titleField . ':%s*)^10 (collection_txt:%s*)', $q, $q);
-            } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
-            }
-        }
-    }
 
     /**
      * @param string  $q
@@ -136,6 +57,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                 $boost = '{!boost b=recip(ms(NOW,created_at_dt),3.16e-11,1,1)}';
                 $queryTxt = $boost . $queryTxt;
             }
+
             $query->setQuery($queryTxt);
 
             /*
@@ -177,8 +99,6 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             $tmp = "node_visible_b:" . (($args['visible']) ? 'true' : 'false');
             unset($args['visible']);
             $args["fq"][] = $tmp;
-        } else {
-            $args["fq"][] = "node_visible_b:true";
         }
 
         // filter by tag or tags
@@ -195,6 +115,9 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             unset($args['tags']);
         }
 
+        /*
+         * Filter by Node type
+         */
         if (!empty($args['nodeType'])) {
             if (is_array($args['nodeType']) || $args['nodeType'] instanceof Collection) {
                 $orQuery = [];
@@ -212,6 +135,20 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                 $args["fq"][] = "node_type_s:" . $args['nodeType'];
             }
             unset($args['nodeType']);
+        }
+
+        /*
+         * Filter by parent node
+         */
+        if (!empty($args['parent'])) {
+            if ($args['parent'] instanceof Node) {
+                $args["fq"][] = "node_parent_i:" . $args['parent']->getId();
+            } elseif (is_string($args['parent'])) {
+                $args["fq"][] = "node_parent_s:" . trim($args['parent']);
+            } elseif (is_numeric($args['parent'])) {
+                $args["fq"][] = "node_parent_i:" . (int) $args['parent'];
+            }
+            unset($args['parent']);
         }
 
         /*
@@ -275,6 +212,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
     /**
      * @param array|null $response
      * @return array
+     * @deprecated Use SolrSearchResults DTO
      */
     protected function parseSolrResponse($response)
     {

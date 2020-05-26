@@ -1,10 +1,4 @@
 <?php
-/**
- * leseclaireurs.net - ConsoleServiceProvider.php
- *
- * Initial version by: ambroisemaupate
- * Initial version created on: 2019-02-01
- */
 declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
@@ -36,11 +30,12 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\NodesDetailsCommand(),
                 new Console\NodesCleanNamesCommand(),
                 new Console\NodeApplyUniversalFieldsCommand(),
-                new Console\ThemesCommand(),
+                new Console\ThemesListCommand(),
                 new Console\ThemeAssetsCommand(),
                 new Console\ThemeGenerateCommand(),
                 new Console\ThemeInstallCommand(),
                 new Console\ThemeInfoCommand(),
+                new Console\ThemeRegisterCommand(),
                 new Console\InstallCommand(),
                 new Console\UsersCommand(),
                 new Console\UsersCreationCommand(),
@@ -70,7 +65,11 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\ThemeMigrateCommand(),
                 new Console\VersionsPurgeCommand(),
                 new Console\GeneratePrivateKeyCommand(),
+                new Console\PurgeLoginAttemptCommand(),
+                new Console\CleanLoginAttemptCommand(),
                 new Console\PimpleDumperCommand(),
+                new Console\DocumentClearFolderCommand(),
+                new Console\NodeClearTagCommand(),
             ];
         };
     }

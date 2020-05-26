@@ -1,33 +1,6 @@
 <?php
-/*
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- *
- * @file TagsController.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 namespace Themes\Rozier\Controllers\Tags;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
@@ -46,6 +19,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -58,7 +32,9 @@ use Themes\Rozier\Widgets\TagTreeWidget;
 use Twig_Error_Runtime;
 
 /**
- * {@inheritdoc}
+ * Class TagsController
+ *
+ * @package Themes\Rozier\Controllers\Tags
  */
 class TagsController extends RozierApp
 {
@@ -173,32 +149,46 @@ class TagsController extends RozierApp
             ]);
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                /*
-                 * Update tag slug if not locked
-                 * only from default translation.
-                 */
-                if (!$tag->isLocked() &&
-                    $translation->isDefaultTranslation()) {
-                    $tag->setTagName($tagTranslation->getName());
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    /*
+                     * Update tag slug if not locked
+                     * only from default translation.
+                     */
+                    if (!$tag->isLocked() &&
+                        $translation->isDefaultTranslation()) {
+                        $tag->setTagName($tagTranslation->getName());
+                    }
+                    $this->get('em')->flush();
+                    /*
+                     * Dispatch event
+                     */
+                    $this->get('dispatcher')->dispatch(
+                        new TagUpdatedEvent($tag)
+                    );
+
+                    $msg = $this->getTranslator()->trans('tag.%name%.updated', [
+                        '%name%' => $tagTranslation->getName(),
+                    ]);
+                    $this->publishConfirmMessage($request, $msg);
+
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->getPostUpdateRedirection($tagTranslation);
                 }
-                $this->get('em')->flush();
-                /*
-                 * Dispatch event
-                 */
-                $this->get('dispatcher')->dispatch(
-                    new TagUpdatedEvent($tag)
-                );
-
-                $msg = $this->getTranslator()->trans('tag.%name%.updated', [
-                    '%name%' => $tagTranslation->getName(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
 
                 /*
-                 * Force redirect to avoid resending form when refreshing page
+                 * Handle errors when Ajax POST requests
                  */
-                return $this->getPostUpdateRedirection($tagTranslation);
+                if ($request->isXmlHttpRequest()) {
+                    $errors = $this->getErrorsAsArray($form);
+                    return new JsonResponse([
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                    ], JsonResponse::HTTP_BAD_REQUEST);
+                }
             }
 
             $this->assignation['tag'] = $tag;
@@ -357,23 +347,36 @@ class TagsController extends RozierApp
 
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->get('em')->flush();
-                /*
-                 * Dispatch event
-                 */
-                $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
+            if ($form->isSubmitted()) {
+                if ($form->isValid()) {
+                    $this->get('em')->flush();
+                    /*
+                     * Dispatch event
+                     */
+                    $this->get('dispatcher')->dispatch(new TagUpdatedEvent($tag));
 
-                $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
-                $this->publishConfirmMessage($request, $msg);
+                    $msg = $this->getTranslator()->trans('tag.%name%.updated', ['%name%' => $tag->getTagName()]);
+                    $this->publishConfirmMessage($request, $msg);
 
+                    /*
+                     * Force redirect to avoid resending form when refreshing page
+                     */
+                    return $this->redirect($this->generateUrl(
+                        'tagsSettingsPage',
+                        ['tagId' => $tag->getId()]
+                    ));
+                }
                 /*
-                 * Force redirect to avoid resending form when refreshing page
+                 * Handle errors when Ajax POST requests
                  */
-                return $this->redirect($this->generateUrl(
-                    'tagsSettingsPage',
-                    ['tagId' => $tag->getId()]
-                ));
+                if ($request->isXmlHttpRequest()) {
+                    $errors = $this->getErrorsAsArray($form);
+                    return new JsonResponse([
+                        'status' => 'fail',
+                        'errors' => $errors,
+                        'message' => $this->getTranslator()->trans('form_has_errors.check_you_fields'),
+                    ], JsonResponse::HTTP_BAD_REQUEST);
+                }
             }
 
             $this->assignation['form'] = $form->createView();

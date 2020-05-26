@@ -18,8 +18,11 @@
             "nodeTypeName": "BlogPost",
             "universal": false,
             "indexed": false,
-            "visible": true
+            "visible": true,
+            "excludeFromSearch": false
+
         }
     ],
-    "defaultTtl": 0
+    "defaultTtl": 0,
+    "hidingNonReachableNodes": false
 }

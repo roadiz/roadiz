@@ -29,7 +29,13 @@
                 <div class="uk-alert uk-alert-danger">
                     <a href="#" class="uk-alert-close uk-close"></a>
                     <p>{% trans %}database.cannot_connect{% endtrans %}</p>
-                    <p>{{ errorMessage }}</p>
+                    {% for label, messages in app.flashes(['warning', 'error']) %}
+                        {% for message in messages %}
+                            <p class="alert alert-{{ label }}">
+                                {{- message -}}
+                            </p>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
                 {% endif %}
 
