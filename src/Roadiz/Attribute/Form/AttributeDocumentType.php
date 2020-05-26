@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManager;
@@ -85,8 +87,8 @@ class AttributeDocumentType extends AbstractType
             $attribute = $event->getForm()->getConfig()->getOption('attribute');
 
             if ($attribute instanceof Attribute && $attribute->getId()) {
-                /** @var QueryBuilder $qb */
-                $qb = $entityManager->getRepository(AttributeDocuments::class)->createQueryBuilder('ad');
+                $qb = $entityManager->getRepository(AttributeDocuments::class)
+                    ->createQueryBuilder('ad');
                 $qb->delete()
                     ->andWhere($qb->expr()->eq('ad.attribute', ':attribute'))
                     ->setParameter(':attribute', $attribute);

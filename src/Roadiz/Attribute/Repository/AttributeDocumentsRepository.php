@@ -7,7 +7,9 @@ use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 
 /**
- * {@inheritdoc}
+ * Class AttributeDocumentsRepository
+ *
+ * @package RZ\Roadiz\Attribute\Repository
  */
 final class AttributeDocumentsRepository extends EntityRepository
 {
