@@ -6,6 +6,7 @@
     "reachable": true,
     "newsletterType": false,
     "hidingNodes": false,
+    "hidingNonReachableNodes": true,
     "color": "#000000",
     "fields": [
         {
@@ -16,6 +17,7 @@
             "expanded": false,
             "nodeTypeName": "Page",
             "universal": false,
+            "excludeFromSearch": false,
             "indexed": false,
             "visible": true
         },
@@ -23,10 +25,12 @@
             "position": 2.0,
             "name": "children",
             "label": "N\u0153uds enfants",
+            "defaultValues": "BasicBlock",
             "type": 16,
             "expanded": false,
             "nodeTypeName": "Page",
             "universal": false,
+            "excludeFromSearch": false,
             "indexed": false,
             "visible": true
         },
@@ -38,6 +42,7 @@
             "expanded": false,
             "nodeTypeName": "Page",
             "universal": false,
+            "excludeFromSearch": false,
             "indexed": false,
             "visible": true
         },
@@ -49,6 +54,20 @@
             "expanded": false,
             "nodeTypeName": "Page",
             "universal": false,
+            "excludeFromSearch": false,
+            "indexed": false,
+            "visible": true
+        },
+        {
+            "position": 5.0,
+            "name": "node_references",
+            "label": "References",
+            "defaultValues": "Page",
+            "type": 13,
+            "expanded": false,
+            "nodeTypeName": "Page",
+            "universal": false,
+            "excludeFromSearch": false,
             "indexed": false,
             "visible": true
         }
