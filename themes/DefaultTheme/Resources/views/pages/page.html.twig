@@ -18,15 +18,24 @@
                                 {% endfor %}
                             {% endif %}
                             <strong>{{ attributeValueTranslation|attribute_label(translation) }}:</strong>
+
                             {% if attributeValueTranslation is datetime %}
                                 {{ attributeValueTranslation.value|localizeddate('medium', 'short') }}
                             {% elseif attributeValueTranslation is date %}
-                                {{ attributeValueTranslation.value|localizeddate('medium') }}
+                                {{ attributeValueTranslation.value|date('Y') }}
+                            {% elseif attributeValueTranslation is number %}
+                                {{ attributeValueTranslation.value|localizednumber }}
                             {% elseif attributeValueTranslation is country %}
                                 {{ attributeValueTranslation.value|country_iso(request.locale) }}
+                            {% elseif attributeValueTranslation is percent %}
+                                {% set spacer = '' %}
+                                {% if request.locale == 'fr' or request.locale == 'fr_FR' %}
+                                    {% set spacer = ' ' %}
+                                {% endif %}
+                                {{ attributeValueTranslation.value|localizednumber }}{{ spacer }}%
                             {% else %}
                                 {{ attributeValueTranslation.value }}
-                            {% endif%}
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>

@@ -11,7 +11,6 @@ final class AttributeValueRepository extends EntityRepository
 {
     /**
      * @param AttributableInterface $attributable
-     * @param Translation           $translation
      *
      * @return array
      */

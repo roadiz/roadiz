@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManager;
