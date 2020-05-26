@@ -248,7 +248,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             return new TwigFilter(
                 'centralTruncate',
                 function ($object, $length, $offset = 0, $ellipsis = "[…]") {
-                    if (strlen($object) > $length + strlen($ellipsis)) {
+                    if (null !== $object && strlen($object) > $length + strlen($ellipsis)) {
                         $str1 = substr($object, 0, (int) (floor($length / 2) + floor($offset / 2)));
                         $str2 = substr($object, (int) ((floor($length / 2) * -1) + floor($offset / 2)));
 
