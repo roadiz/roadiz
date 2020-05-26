@@ -34,44 +34,26 @@
         {# This is the container of the content items #}
         <ul id="tree-container" class="uk-switcher uk-margin">
             {% if is_granted('ROLE_ACCESS_NODES')%}
-            {% if app.user and app.user.chroot.hidingChildren %}
                 <li>
-                {% include '@Rozier/widgets/nodeTree/nodeStackTree.html.twig' with {
-                    "node":themeServices.nodeTree.getRootNode,
-                    'mainNodeTree':true,
-                    "nodeStatuses":nodeStatuses,
-                    "request":request,
-                } only %}
+                    <nav class="tree-widget nodetree-widget">
+                        <div class="root-tree">
+                            <i class="main-tree-loader uk-icon uk-icon-cog uk-icon-spin"></i>
+                        </div>
+                    </nav>
                 </li>
-            {% else %}
-                <li>
-                {% include '@Rozier/widgets/nodeTree/nodeTree.html.twig' with {
-                    "nodeTree":themeServices.nodeTree,
-                    "node":themeServices.nodeTree.getRootNode,
-                    'mainNodeTree':true,
-                    "nodeStatuses":nodeStatuses,
-                    "request":request,
-                } only %}
-                </li>
-            {% endif %}
             {% endif %}
             {% if is_granted('ROLE_ACCESS_TAGS')%}
                 <li>
-                {% include '@Rozier/widgets/tagTree/tagTree.html.twig' with {
-                    "tagTree":themeServices.tagTree,
-                    "tag":themeServices.tagTree.getRootTag,
-                    'mainTagTree':true,
-                    "nodeStatuses":nodeStatuses
-                } only %}
+                    <nav id="tagtree-widget" class="tree-widget tagtree-widget">
+                        <i class="main-tree-loader uk-icon uk-icon-cog uk-icon-spin"></i>
+                    </nav>
                 </li>
             {% endif %}
             {% if is_granted('ROLE_ACCESS_DOCUMENTS')%}
                 <li>
-                {% include '@Rozier/widgets/folderTree/folderTree.html.twig' with {
-                    "folderTree":themeServices.folderTree,
-                    "folder":themeServices.folderTree.getRootFolder,
-                    'mainFolderTree':true
-                } only %}
+                    <nav id="foldertree-widget" class="tree-widget foldertree-widget">
+                        <i class="main-tree-loader uk-icon uk-icon-cog uk-icon-spin"></i>
+                    </nav>
                 </li>
             {% endif %}
         </ul>

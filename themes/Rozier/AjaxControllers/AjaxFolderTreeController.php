@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\AjaxControllers;
 
-use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Themes\Rozier\Widgets\TagTreeWidget;
+use Themes\Rozier\Widgets\FolderTreeWidget;
 
 /**
- * Class AjaxTagTreeController
+ * Class AjaxFolderTreeController
  *
  * @package Themes\Rozier\AjaxControllers
  */
-class AjaxTagTreeController extends AbstractAjaxController
+class AjaxFolderTreeController extends AbstractAjaxController
 {
     /**
      * @param Request $request
@@ -26,59 +26,59 @@ class AjaxTagTreeController extends AbstractAjaxController
      */
     public function getTreeAction(Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        /** @var TagTreeWidget|null $tagTree */
-        $tagTree = null;
+        /** @var FolderTreeWidget|null $folderTree */
+        $folderTree = null;
 
         switch ($request->get("_action")) {
             /*
-             * Inner tag edit for tagTree
+             * Inner folder edit for folderTree
              */
-            case 'requestTagTree':
-                if ($request->get('parentTagId') > 0) {
-                    $tag = $this->get('em')
+            case 'requestFolderTree':
+                if ($request->get('parentFolderId') > 0) {
+                    $folder = $this->get('em')
                                 ->find(
-                                    Tag::class,
-                                    (int) $request->get('parentTagId')
+                                    Folder::class,
+                                    (int) $request->get('parentFolderId')
                                 );
                 } else {
-                    $tag = null;
+                    $folder = null;
                 }
 
-                $tagTree = new TagTreeWidget(
+                $folderTree = new FolderTreeWidget(
                     $this->getRequest(),
                     $this,
-                    $tag
+                    $folder
                 );
 
-                $this->assignation['mainTagTree'] = false;
+                $this->assignation['mainFolderTree'] = false;
 
                 break;
             /*
-             * Main panel tree tagTree
+             * Main panel tree folderTree
              */
-            case 'requestMainTagTree':
+            case 'requestMainFolderTree':
                 $parent = null;
                 if (null !== $this->getUser() && $this->getUser() instanceof User) {
                     $parent = $this->getUser()->getChroot();
                 }
 
-                $tagTree = new TagTreeWidget(
+                $folderTree = new FolderTreeWidget(
                     $this->getRequest(),
                     $this,
                     $parent
                 );
-                $this->assignation['mainTagTree'] = true;
+                $this->assignation['mainFolderTree'] = true;
                 break;
         }
 
-        $this->assignation['tagTree'] = $tagTree;
+        $this->assignation['folderTree'] = $folderTree;
 
         $responseArray = [
             'statusCode' => '200',
             'status' => 'success',
-            'tagTree' => $this->getTwig()->render('widgets/tagTree/tagTree.html.twig', $this->assignation),
+            'folderTree' => $this->getTwig()->render('widgets/folderTree/folderTree.html.twig', $this->assignation),
         ];
 
         return new JsonResponse(
