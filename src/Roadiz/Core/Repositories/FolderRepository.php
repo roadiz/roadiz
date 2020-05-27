@@ -205,7 +205,7 @@ class FolderRepository extends EntityRepository
             $field = $metadata->getFieldName($col);
             $type = $metadata->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
+                $criteriaFields[$field] = '%' . strip_tags((string) $pattern) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {

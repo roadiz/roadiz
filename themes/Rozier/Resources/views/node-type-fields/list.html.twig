@@ -35,7 +35,7 @@
                     {% for field in fields %}
                         <tr class="node-type-field-row" data-position="{{ field.position }}" data-field-id="{{ field.getId }}">
                             <td class="node-type-field-col node-type-field-col-1">
-                                <a class="node-type-field-edit-button edit-button-chevron"
+                                <a class="node-type-field-edit-button"
                                    href="{{ path('nodeTypeFieldsEditPage', { nodeTypeFieldId: field.getId }) }}"
                                    data-index="{{ loop.index0 }}">
                                     {{- field.getName -}}
