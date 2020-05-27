@@ -262,7 +262,7 @@ class AjaxNodesController extends AbstractAjaxController
             if (in_array($request->get('statusName'), array_keys($availableStatuses))) {
                 $setter = $availableStatuses[$request->get('statusName')];
                 $value = $request->get('statusValue');
-                $node->$setter($value);
+                $node->$setter((bool) $value);
 
                 /*
                  * If set locked to true,
