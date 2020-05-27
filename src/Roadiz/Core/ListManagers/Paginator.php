@@ -239,7 +239,7 @@ class Paginator
     }
 
     /**
-     * @return \Doctrine\ORM\EntityRepository|EntityRepository
+     * @return \Doctrine\ORM\EntityRepository|EntityRepository|StatusAwareRepository
      */
     protected function getRepository()
     {

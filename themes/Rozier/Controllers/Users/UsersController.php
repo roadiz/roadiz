@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\AddUserType;
 use Themes\Rozier\Forms\UserDetailsType;
 use Themes\Rozier\Forms\UserType;
@@ -293,6 +294,7 @@ class UsersController extends RozierApp
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
+                                    new NotNull(),
                                     new NotBlank(),
                                 ],
                             ]

@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\VersionedControllerTrait;
 use Twig\Error\RuntimeError;
@@ -184,6 +185,7 @@ class NodesSourcesController extends RozierApp
                         ->add('nodeId', HiddenType::class, [
                             'data' => $nodeSourceId,
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

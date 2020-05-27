@@ -285,13 +285,13 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @param string $title
+     * @param string|null $title
      *
      * @return $this
      */
     public function setTitle($title): NodesSources
     {
-        $this->title = trim($title);
+        $this->title = null !== $title ? trim($title) : '';
 
         return $this;
     }
@@ -338,13 +338,13 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @param string $metaTitle
+     * @param string|null $metaTitle
      *
      * @return $this
      */
     public function setMetaTitle($metaTitle): NodesSources
     {
-        $this->metaTitle = trim($metaTitle);
+        $this->metaTitle = null !== $metaTitle ? trim($metaTitle) : '';
 
         return $this;
     }
@@ -364,13 +364,13 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @param string $metaKeywords
+     * @param string|null $metaKeywords
      *
      * @return $this
      */
     public function setMetaKeywords($metaKeywords): NodesSources
     {
-        $this->metaKeywords = trim($metaKeywords);
+        $this->metaKeywords = null !== $metaKeywords ? trim($metaKeywords) : '';
 
         return $this;
     }
@@ -390,13 +390,13 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @param String $metaDescription
+     * @param string|null $metaDescription
      *
      * @return $this
      */
     public function setMetaDescription($metaDescription): NodesSources
     {
-        $this->metaDescription = trim($metaDescription);
+        $this->metaDescription = null !== $metaDescription ? trim($metaDescription) : '';
 
         return $this;
     }

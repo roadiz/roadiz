@@ -17,6 +17,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Utils\XlsxExporter;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -391,7 +392,8 @@ class SearchController extends RozierApp
             /*
              * Export all entries into XLSX format
              */
-            if ($form->get('export')->isClicked()) {
+            $button = $form->get('export');
+            if ($button instanceof ClickableInterface && $button->isClicked()) {
                 $response = new Response(
                     $this->getXlsxResults($nodetype, $entities),
                     Response::HTTP_OK,

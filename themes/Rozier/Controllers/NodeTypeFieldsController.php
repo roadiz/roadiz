@@ -11,6 +11,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\NodeTypeFieldType;
 use Themes\Rozier\RozierApp;
 
@@ -259,6 +260,7 @@ class NodeTypeFieldsController extends RozierApp
                         ->add('nodeTypeFieldId', HiddenType::class, [
                             'data' => $field->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

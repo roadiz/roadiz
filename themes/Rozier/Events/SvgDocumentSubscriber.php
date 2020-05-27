@@ -17,7 +17,7 @@ class SvgDocumentSubscriber implements EventSubscriberInterface
      */
     private $packages;
     /**
-     * @var LoggerInterface
+     * @var LoggerInterface|null
      */
     private $logger;
 
@@ -54,9 +54,11 @@ class SvgDocumentSubscriber implements EventSubscriberInterface
 
         // Load the dirty svg
         $dirtySVG = file_get_contents($documentPath);
-
-        file_put_contents($documentPath, $sanitizer->sanitize($dirtySVG));
-
-        $this->logger->info('Svg document sanitized.');
+        if (false !== $dirtySVG) {
+            file_put_contents($documentPath, $sanitizer->sanitize($dirtySVG));
+            if (null !== $this->logger) {
+                $this->logger->info('Svg document sanitized.');
+            }
+        }
     }
 }

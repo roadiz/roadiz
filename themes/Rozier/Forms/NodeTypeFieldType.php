@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class NodeTypeFieldType
@@ -32,6 +33,7 @@ class NodeTypeFieldType extends AbstractType
             'label' => 'name',
             'help' => 'technical_name_for_database_and_templating',
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
                 new UniqueNodeTypeFieldName([
                     'entityManager' => $options['em'],
@@ -49,6 +51,7 @@ class NodeTypeFieldType extends AbstractType
             'label' => 'label',
             'help' => 'human_readable_field_name',
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
             ],
         ])

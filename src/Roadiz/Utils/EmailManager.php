@@ -71,7 +71,7 @@ class EmailManager
     protected $assignation;
 
     /**
-     * @var \Swift_Message
+     * @var \Swift_Message|null
      */
     protected $message;
 
@@ -79,6 +79,7 @@ class EmailManager
      * @var null|Settings
      */
     protected $settingsBag;
+
     /**
      * @var null|DocumentUrlGenerator
      */
@@ -91,12 +92,14 @@ class EmailManager
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'emailManager' Factory Service
      *
-     * @param Request $request
-     * @param TranslatorInterface $translator
-     * @param Environment $templating
-     * @param \Swift_Mailer $mailer
-     * @param Settings|null $settingsBag
+     * @param Request                   $request
+     * @param TranslatorInterface       $translator
+     * @param Environment               $templating
+     * @param \Swift_Mailer             $mailer
+     * @param Settings|null             $settingsBag
      * @param DocumentUrlGenerator|null $documentUrlGenerator
+     *
+     * @throws \ReflectionException
      */
     public function __construct(
         Request $request,
@@ -236,7 +239,7 @@ class EmailManager
      */
     public function getSubject()
     {
-        return trim(strip_tags($this->subject));
+        return null !== $this->subject ? trim(strip_tags($this->subject)) : null;
     }
 
     /**
@@ -254,7 +257,7 @@ class EmailManager
      */
     public function getEmailTitle()
     {
-        return trim(strip_tags($this->emailTitle));
+        return null !== $this->emailTitle ? trim(strip_tags($this->emailTitle)) : null;
     }
 
     /**

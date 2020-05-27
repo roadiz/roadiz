@@ -12,7 +12,9 @@ class UniqueNodeTypeNameValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $value = StringHandler::classify($value);
+        if (null !== $value) {
+            $value = StringHandler::classify($value);
+        }
 
         /*
          * If value is already the node name

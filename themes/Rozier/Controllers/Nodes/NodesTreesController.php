@@ -8,14 +8,17 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Workflow\Workflow;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Widgets\NodeTreeWidget;
@@ -100,9 +103,11 @@ class NodesTreesController extends RozierApp
         if ($tagNodesForm->isSubmitted() && $tagNodesForm->isValid()) {
             $data = $tagNodesForm->getData();
 
-            if ($tagNodesForm->get('submitTag')->isClicked()) {
+            $submitTag = $tagNodesForm->get('submitTag');
+            $submitUntag = $tagNodesForm->get('submitUntag');
+            if ($submitTag instanceof ClickableInterface && $submitTag->isClicked()) {
                 $msg = $this->tagNodes($data);
-            } elseif ($tagNodesForm->get('submitUntag')->isClicked()) {
+            } elseif ($submitUntag instanceof ClickableInterface && $submitUntag->isClicked()) {
                 $msg = $this->untagNodes($data);
             } else {
                 $msg = $this->getTranslator()->trans('wrong.request');
@@ -262,6 +267,7 @@ class NodesTreesController extends RozierApp
                             'data' => implode(',', $nodesIds),
                             'attr' => ['class' => 'nodes-id-bulk-tags'],
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);
@@ -345,7 +351,7 @@ class NodesTreesController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildBulkTagForm()
     {
@@ -355,6 +361,7 @@ class NodesTreesController extends RozierApp
                         ->add('nodesIds', HiddenType::class, [
                             'attr' => ['class' => 'nodes-id-bulk-tags'],
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
@@ -365,6 +372,7 @@ class NodesTreesController extends RozierApp
                                 'placeholder' => 'list.tags.to_link.or_unlink',
                             ],
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
@@ -492,6 +500,7 @@ class NodesTreesController extends RozierApp
                             'data' => implode(',', $nodesIds),
                             'constraints' => [
                                 new NotBlank(),
+                                new NotNull(),
                             ],
                         ])
                         ->add('status', ChoiceType::class, [
@@ -504,6 +513,7 @@ class NodesTreesController extends RozierApp
                                 Node::getStatusLabel(Node::ARCHIVED) => 'archive',
                             ],
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\NodeTagsType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
@@ -194,12 +195,14 @@ class NodesTagsController extends RozierApp
                         ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
                         ->add('tagId', HiddenType::class, [
                             'data' => $tag->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

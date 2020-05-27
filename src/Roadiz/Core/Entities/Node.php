@@ -551,7 +551,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\ManyToMany(targetEntity="Tag", inversedBy="nodes")
      * @ORM\JoinTable(name="nodes_tags")
-     * @var ArrayCollection<Tag>
+     * @var Collection<Tag>
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node"})
      */
     private $tags = null;

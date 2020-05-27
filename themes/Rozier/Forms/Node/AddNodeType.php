@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Add node form type.
@@ -33,6 +34,7 @@ class AddNodeType extends AbstractType
             'label' => 'title',
             'mapped' => false,
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
                 new Length([
                     'max' => 255
@@ -45,6 +47,7 @@ class AddNodeType extends AbstractType
                 'label' => 'nodeType',
                 'entityManager' => $options['em'],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);

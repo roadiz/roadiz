@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class LoginType extends AbstractType
 {
@@ -28,6 +29,7 @@ class LoginType extends AbstractType
                 'autocomplete' => 'username'
             ],
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
             ],
         ])
@@ -37,6 +39,7 @@ class LoginType extends AbstractType
                 'autocomplete' => 'current-password'
             ],
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
             ],
         ])
@@ -77,6 +80,6 @@ class LoginType extends AbstractType
         /*
          * No prefix for firewall to catch username and password from request.
          */
-        return null;
+        return '';
     }
 }

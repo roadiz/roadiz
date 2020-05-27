@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
+use Solarium\Core\Query\DocumentInterface;
 use Solarium\Core\Query\Result\Result;
 use Solarium\QueryType\Update\Query\Document;
 use Solarium\QueryType\Update\Query\Query;
@@ -60,7 +61,7 @@ abstract class AbstractSolarium
     /** @var bool */
     protected $indexed = false;
 
-    /** @var Document|null */
+    /** @var Document|DocumentInterface|null */
     protected $document = null;
 
     /** @var LoggerInterface|null */
@@ -157,7 +158,7 @@ abstract class AbstractSolarium
      */
     public function remove(Query $update)
     {
-        if (null !== $this->document) {
+        if (null !== $this->document && isset($this->document->id)) {
             $update->addDeleteById($this->document->id);
 
             return true;
@@ -203,12 +204,12 @@ abstract class AbstractSolarium
      */
     public function index()
     {
-        if (null !== $this->document) {
-            $this->document->id = uniqid();
+        if (null !== $this->document && $this->document instanceof Document) {
+            $this->document->setField('id', uniqid());
 
             try {
                 foreach ($this->getFieldsAssoc() as $key => $value) {
-                    $this->document->$key = $value;
+                    $this->document->setField($key, $value);
                 }
                 return true;
             } catch (\RuntimeException $e) {
@@ -220,7 +221,7 @@ abstract class AbstractSolarium
     }
 
     /**
-     * @return Document
+     * @return DocumentInterface|Document|null
      */
     public function getDocument()
     {

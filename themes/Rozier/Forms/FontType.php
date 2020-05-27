@@ -14,6 +14,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * FontType.
@@ -30,6 +31,7 @@ class FontType extends AbstractType
                 'label' => 'font.name',
                 'help' => 'font_name_should_be_the_same_for_all_variants',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new Length([
                         'max' => 100,

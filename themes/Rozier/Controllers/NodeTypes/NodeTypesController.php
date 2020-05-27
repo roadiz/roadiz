@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\NodeTypeType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -224,6 +225,7 @@ class NodeTypesController extends RozierApp
                         ->add('nodeTypeId', HiddenType::class, [
                             'data' => $nodeType->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

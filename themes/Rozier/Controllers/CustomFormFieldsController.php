@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\CustomFormFieldType;
 use Themes\Rozier\RozierApp;
 
@@ -233,6 +234,7 @@ class CustomFormFieldsController extends RozierApp
                         ->add('customFormFieldId', HiddenType::class, [
                             'data' => $field->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

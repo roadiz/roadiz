@@ -37,9 +37,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Utils\Asset\Packages;
-use Symfony\Component\Asset\Context\RequestStackContext;
-use Symfony\Component\Asset\PathPackage;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -104,8 +101,8 @@ class RozierApp extends BackendController
         };
         $this->themeContainer['maxFilesize'] = function () {
             $requirements = new Requirements($this->get('kernel'));
-            $post_max_size = $requirements->parseSuffixedAmount(ini_get('post_max_size'));
-            $upload_max_filesize = $requirements->parseSuffixedAmount(ini_get('upload_max_filesize'));
+            $post_max_size = $requirements->parseSuffixedAmount(ini_get('post_max_size') ?: '');
+            $upload_max_filesize = $requirements->parseSuffixedAmount(ini_get('upload_max_filesize') ?: '');
             $maxFileSize = min($post_max_size, $upload_max_filesize);
             return $maxFileSize;
         };

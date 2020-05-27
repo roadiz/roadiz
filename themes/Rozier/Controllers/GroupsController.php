@@ -14,6 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -387,6 +388,7 @@ class GroupsController extends RozierApp
                         ->add('name', TextType::class, [
                             'label' => 'group.name',
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);
@@ -410,6 +412,7 @@ class GroupsController extends RozierApp
                         ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
@@ -417,6 +420,7 @@ class GroupsController extends RozierApp
                             'label' => 'group.name',
                             'data' => $group->getName(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);
@@ -437,6 +441,7 @@ class GroupsController extends RozierApp
                         ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);
@@ -458,6 +463,7 @@ class GroupsController extends RozierApp
                         ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
@@ -489,6 +495,7 @@ class GroupsController extends RozierApp
                         ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
@@ -498,6 +505,7 @@ class GroupsController extends RozierApp
                             [
                                 'label' => 'choose.user',
                                 'constraints' => [
+                                    new NotNull(),
                                     new NotBlank(),
                                 ],
                                 'entityManager' => $this->get('em'),
@@ -520,12 +528,14 @@ class GroupsController extends RozierApp
                         ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
                         ->add('roleId', HiddenType::class, [
                             'data' => $role->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);
@@ -545,12 +555,14 @@ class GroupsController extends RozierApp
                         ->add('groupId', HiddenType::class, [
                             'data' => $group->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
                         ->add('userId', HiddenType::class, [
                             'data' => $user->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

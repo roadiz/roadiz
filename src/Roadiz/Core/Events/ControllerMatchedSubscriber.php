@@ -18,6 +18,9 @@ use Symfony\Component\Stopwatch\Stopwatch;
 class ControllerMatchedSubscriber implements EventSubscriberInterface
 {
     private $kernel;
+    /**
+     * @var Stopwatch|null
+     */
     private $stopwatch;
 
     /**
@@ -51,47 +54,50 @@ class ControllerMatchedSubscriber implements EventSubscriberInterface
         if (null !== $this->stopwatch) {
             $this->stopwatch->start('onControllerMatched');
         }
-        $matchedCtrl = $event->getController()[0];
+        $matchedCtrl = $event->getController();
+        if (isset($matchedCtrl[0])) {
+            $matchedCtrl = $matchedCtrl[0];
 
-        /*
-         * Inject current Kernel to the matched Controller
-         */
-        if ($matchedCtrl instanceof ContainerAwareInterface) {
-            $matchedCtrl->setContainer($this->kernel->getContainer());
-        }
-        /*
-         * Do not inject current theme when
-         * Install mode is active.
-         */
-        $request = $event->getRequest();
-        if (null !== $event->getRequest()->get('theme') &&
-            $request instanceof RoadizRequest) {
-            $request->setTheme($event->getRequest()->get('theme'));
-        } elseif (true !== $this->kernel->isInstallMode() &&
-            $request instanceof RoadizRequest &&
-            $matchedCtrl instanceof AppController) {
-            // No node controller matching in install mode
-            $request->setTheme($matchedCtrl->getTheme());
-        }
+            /*
+             * Inject current Kernel to the matched Controller
+             */
+            if ($matchedCtrl instanceof ContainerAwareInterface) {
+                $matchedCtrl->setContainer($this->kernel->getContainer());
+            }
+            /*
+             * Do not inject current theme when
+             * Install mode is active.
+             */
+            $request = $event->getRequest();
+            if (null !== $event->getRequest()->get('theme') &&
+                $request instanceof RoadizRequest) {
+                $request->setTheme($event->getRequest()->get('theme'));
+            } elseif (true !== $this->kernel->isInstallMode() &&
+                $request instanceof RoadizRequest &&
+                $matchedCtrl instanceof AppController) {
+                // No node controller matching in install mode
+                $request->setTheme($matchedCtrl->getTheme());
+            }
 
-        /*
-         * Set request locale if _locale param
-         * is present in Route.
-         */
-        $locale = $event->getRequest()->get('_locale');
-        if (null !== $locale) {
-            $event->getRequest()->setLocale($locale);
-        }
+            /*
+             * Set request locale if _locale param
+             * is present in Route.
+             */
+            $locale = $event->getRequest()->get('_locale');
+            if (null !== $locale) {
+                $event->getRequest()->setLocale($locale);
+            }
 
-        /*
-         * Prepare base assignation
-         */
-        if ($matchedCtrl instanceof AppController) {
-            $matchedCtrl->__init();
-        }
+            /*
+             * Prepare base assignation
+             */
+            if ($matchedCtrl instanceof AppController) {
+                $matchedCtrl->__init();
+            }
 
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->stop('onControllerMatched');
+            if (null !== $this->stopwatch) {
+                $this->stopwatch->stop('onControllerMatched');
+            }
         }
     }
 }

@@ -96,7 +96,7 @@ class UserViewer
 
         try {
             // Send the message
-            return $this->emailManager->send();
+            return $this->emailManager->send() > 0;
         } catch (Swift_TransportException $e) {
             // Silent error not to prevent user creation if mailer is not configured
             $this->logger->error('Unable to send password reset link', [

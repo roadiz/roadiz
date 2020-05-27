@@ -41,10 +41,12 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /*
              * Add processors
              */
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $log->pushProcessor(new RequestProcessor($requestStack));
-            $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+            if ($log instanceof Logger) {
+                /** @var RequestStack $requestStack */
+                $requestStack = $c['requestStack'];
+                $log->pushProcessor(new RequestProcessor($requestStack));
+                $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+            }
 
             return $log;
         };
@@ -66,6 +68,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             if (null !== $c['em'] &&
+                $log instanceof Logger &&
                 false === $kernel->isInstallMode() &&
                 $kernel->getEnvironment() == 'prod') {
                 $log->pushHandler(new DoctrineHandler(
@@ -79,10 +82,12 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /*
              * Add processors
              */
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $log->pushProcessor(new RequestProcessor($requestStack));
-            $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+            if ($log instanceof Logger) {
+                /** @var RequestStack $requestStack */
+                $requestStack = $c['requestStack'];
+                $log->pushProcessor(new RequestProcessor($requestStack));
+                $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+            }
 
             return $log;
         };
@@ -98,6 +103,7 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             if (null !== $c['em'] &&
+                $log instanceof Logger &&
                 false === $kernel->isInstallMode() &&
                 $kernel->getEnvironment() == 'prod') {
                 $log->pushHandler(new DoctrineHandler(
@@ -111,10 +117,12 @@ class LoggerServiceProvider implements ServiceProviderInterface
             /*
              * Add processors
              */
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $log->pushProcessor(new RequestProcessor($requestStack));
-            $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+            if ($log instanceof Logger) {
+                /** @var RequestStack $requestStack */
+                $requestStack = $c['requestStack'];
+                $log->pushProcessor(new RequestProcessor($requestStack));
+                $log->pushProcessor(new TokenStorageProcessor($c['securityTokenStorage']));
+            }
 
             return $log;
         };

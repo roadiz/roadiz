@@ -18,6 +18,7 @@ class DocumentEmbedType extends AbstractType
     {
         $services = [];
         foreach (array_keys($options['document_platforms']) as $value) {
+            $value = (string) $value;
             $services[ucwords($value)] = $value;
         }
 

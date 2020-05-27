@@ -13,6 +13,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\SolrSearchResults;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -445,7 +446,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param Translation $translation Current translation
      * @param int $limit
-     * @return array
+     * @return SolrSearchResults
      */
     public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
@@ -462,7 +463,7 @@ class NodesSourcesRepository extends StatusAwareRepository
                 return $service->search($query, $params, 999999);
             }
         }
-        return [];
+        return new SolrSearchResults([], $this->_em);
     }
 
     /**

@@ -92,12 +92,10 @@ class RedirectionRouter extends Router implements VersatileGeneratorInterface
 
     /**
      * No generator for a node router.
-     *
-     * @return null
      */
     public function getGenerator()
     {
-        return null;
+        throw new \BadMethodCallException(get_class($this) . ' does not support path generation.');
     }
 
     public function supports($name): bool

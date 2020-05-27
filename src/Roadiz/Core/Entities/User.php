@@ -731,7 +731,10 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      */
     public function getGravatarUrl($type = "identicon", $size = "200"): string
     {
-        return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=".$type."&s=".$size;
+        if (null !== $this->getEmail()) {
+            return "https://www.gravatar.com/avatar/" . md5(strtolower(trim($this->getEmail()))) . "?d=".$type."&s=".$size;
+        }
+        return '';
     }
 
     /**

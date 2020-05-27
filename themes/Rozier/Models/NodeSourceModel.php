@@ -39,18 +39,21 @@ class NodeSourceModel implements ModelInterface
     {
         /** @var UrlGenerator $urlGenerator */
         $urlGenerator = $this->container->offsetGet('urlGenerator');
-
+        $node = $this->nodeSource->getNode();
+        if (null === $node) {
+            throw new \RuntimeException('Node-source does not have a Node.');
+        }
         $result = [
-            'id' => $this->nodeSource->getNode()->getId(),
+            'id' => $node->getId(),
             'title' => $this->nodeSource->getTitle(),
-            'nodeName' => $this->nodeSource->getNode()->getNodeName(),
-            'isPublished' => $this->nodeSource->getNode()->isPublished(),
+            'nodeName' => $node->getNodeName(),
+            'isPublished' => $node->isPublished(),
             'nodesEditPage' => $urlGenerator->generate('nodesEditSourcePage', [
-                'nodeId' => $this->nodeSource->getNode()->getId(),
+                'nodeId' => $node->getId(),
                 'translationId' => $this->nodeSource->getTranslation()->getId(),
             ]),
             'nodeType' => [
-                'color' => $this->nodeSource->getNode()->getNodeType()->getColor()
+                'color' => $node->getNodeType()->getColor()
             ]
         ];
 
@@ -63,10 +66,11 @@ class NodeSourceModel implements ModelInterface
 
             if ($parent->getParent()) {
                 $subparent = $parent->getParent();
-
-                $result['subparent'] = [
-                    'title' => $subparent->getTitle()
-                ];
+                if (null !== $subparent) {
+                    $result['subparent'] = [
+                        'title' => $subparent->getTitle()
+                    ];
+                }
             }
         }
 

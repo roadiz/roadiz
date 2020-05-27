@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * TagType.
@@ -27,6 +28,7 @@ class TagType extends AbstractType
                 'label' => 'tagName',
                 'help' => 'tag.tagName.help',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new UniqueTagName([
                         'entityManager' => $options['em'],

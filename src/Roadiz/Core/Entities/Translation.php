@@ -611,13 +611,13 @@ class Translation extends AbstractDateTimed
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      *
      * @return $this
      */
-    public function setName(string $name): Translation
+    public function setName(?string $name): Translation
     {
-        $this->name = $name;
+        $this->name = $name ?? '';
         return $this;
     }
 

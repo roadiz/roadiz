@@ -135,7 +135,7 @@ class NodesSourcesExtension extends AbstractExtension
      * @param NodesSources|null $ns
      * @param array|null $criteria
      * @param array|null $order
-     * @return NodesSources
+     * @return NodesSources|null
      * @throws RuntimeError
      */
     public function getNext(NodesSources $ns = null, array $criteria = null, array $order = null)
@@ -156,7 +156,7 @@ class NodesSourcesExtension extends AbstractExtension
      * @param NodesSources|null $ns
      * @param array|null $criteria
      * @param array|null $order
-     * @return NodesSources
+     * @return NodesSources|null
      * @throws RuntimeError
      */
     public function getPrevious(NodesSources $ns = null, array $criteria = null, array $order = null)
@@ -177,7 +177,7 @@ class NodesSourcesExtension extends AbstractExtension
      * @param NodesSources|null $ns
      * @param array|null $criteria
      * @param array|null $order
-     * @return NodesSources
+     * @return NodesSources|null
      * @throws RuntimeError
      */
     public function getLastSibling(NodesSources $ns = null, array $criteria = null, array $order = null)
@@ -198,7 +198,7 @@ class NodesSourcesExtension extends AbstractExtension
      * @param NodesSources|null $ns
      * @param array|null $criteria
      * @param array|null $order
-     * @return NodesSources
+     * @return NodesSources|null
      * @throws RuntimeError
      */
     public function getFirstSibling(NodesSources $ns = null, array $criteria = null, array $order = null)
@@ -217,7 +217,7 @@ class NodesSourcesExtension extends AbstractExtension
 
     /**
      * @param NodesSources|null $ns
-     * @return NodesSources
+     * @return NodesSources|null
      * @throws RuntimeError
      */
     public function getParent(NodesSources $ns = null)

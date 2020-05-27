@@ -137,12 +137,10 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
 
     /**
      * No generator for a node router.
-     *
-     * @return null
      */
     public function getGenerator()
     {
-        return null;
+        throw new \BadMethodCallException(get_class($this) . ' does not support path generation.');
     }
 
     /**
@@ -218,9 +216,11 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
 
         $queryString = '';
         $parameters = $nodePathInfo->getParameters();
+        $matcher = $this->getMatcher();
 
         if (isset($parameters['_format']) &&
-            in_array($parameters['_format'], $this->getMatcher()->getSupportedFormatExtensions())) {
+            $matcher instanceof NodeUrlMatcher &&
+            in_array($parameters['_format'], $matcher->getSupportedFormatExtensions())) {
             unset($parameters['_format']);
         }
         if (count($parameters) > 0) {

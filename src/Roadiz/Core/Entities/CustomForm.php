@@ -105,13 +105,13 @@ class CustomForm extends AbstractDateTimed
     }
 
     /**
-     * @param string $displayName
+     * @param string|null $displayName
      * @return $this
      */
-    public function setDisplayName(string $displayName): CustomForm
+    public function setDisplayName(?string $displayName): CustomForm
     {
-        $this->displayName = $displayName;
-        $this->setName($displayName);
+        $this->displayName = $displayName ?? '';
+        $this->setName($displayName ?? '');
 
         return $this;
     }

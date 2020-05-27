@@ -111,7 +111,7 @@ class CustomFormController extends CmsController
         }
 
         // Send the message
-        return $emailManager->send();
+        return $emailManager->send() > 0;
     }
 
     /**
@@ -271,7 +271,7 @@ class CustomFormController extends CmsController
                 /*
                  * Send answer notification
                  */
-                $receiver = array_map('trim', explode(',', $customFormsEntity->getEmail()));
+                $receiver = array_map('trim', explode(',', $customFormsEntity->getEmail() ?? ''));
                 $this->sendAnswer(
                     [
                         'mailContact' => $assignation['mailContact'],

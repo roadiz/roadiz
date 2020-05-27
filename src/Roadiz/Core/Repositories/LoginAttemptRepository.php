@@ -105,9 +105,6 @@ class LoginAttemptRepository extends EntityRepository
         ;
     }
 
-    /**
-     * @param string $username
-     */
     public function cleanLoginAttempts(): void
     {
         $qb = $this->_em->createQueryBuilder();

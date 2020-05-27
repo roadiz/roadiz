@@ -8,7 +8,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class UserType extends AbstractType
 {
@@ -22,6 +24,7 @@ class UserType extends AbstractType
                 'required' => true,
                 'label' => 'username',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
@@ -29,6 +32,8 @@ class UserType extends AbstractType
                 'required' => true,
                 'label' => 'email',
                 'constraints' => [
+                    new NotNull(),
+                    new Email(),
                     new NotBlank(),
                 ],
             ])
@@ -38,6 +43,7 @@ class UserType extends AbstractType
                 'second_options' => ['label' => 'password.verify'],
                 'required' => true,
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])

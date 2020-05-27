@@ -69,7 +69,7 @@ class SolariumDocument extends AbstractSolarium
 
     public function getDocumentId()
     {
-        return null;
+        return 0;
     }
 
     /**
@@ -106,7 +106,9 @@ class SolariumDocument extends AbstractSolarium
     }
 
     /**
-     * @inheritdoc
+     * @param Query $update
+     *
+     * @return bool
      */
     public function clean(Query $update)
     {
@@ -119,7 +121,8 @@ class SolariumDocument extends AbstractSolarium
     }
 
     /**
-     * @inheritdoc
+     * @return bool
+     * @throws \Exception
      */
     public function indexAndCommit()
     {
@@ -131,20 +134,25 @@ class SolariumDocument extends AbstractSolarium
     }
 
     /**
-     * @inheritdoc
+     * @return \Solarium\Core\Query\Result\Result
+     * @throws \Exception
      */
     public function updateAndCommit()
     {
+        $last = null;
         /** @var SolariumDocumentTranslation $documentTranslationItem */
         foreach ($this->documentTranslationItems as $documentTranslationItem) {
-            $documentTranslationItem->updateAndCommit();
+            $last = $documentTranslationItem->updateAndCommit();
         }
 
-        return true;
+        return $last;
     }
 
     /**
-     * @inheritdoc
+     * @param Query $update
+     *
+     * @return bool
+     * @throws \Exception
      */
     public function update(Query $update)
     {
@@ -152,10 +160,13 @@ class SolariumDocument extends AbstractSolarium
         foreach ($this->documentTranslationItems as $documentTranslationItem) {
             $documentTranslationItem->update($update);
         }
+        return true;
     }
 
     /**
-     * @inheritdoc
+     * @param Query $update
+     *
+     * @return bool
      */
     public function remove(Query $update)
     {

@@ -29,6 +29,7 @@ class SiteInformationType extends AbstractType
                 'required' => true,
                 'label' => 'site_name',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
@@ -36,6 +37,7 @@ class SiteInformationType extends AbstractType
                 'required' => true,
                 'label' => 'email_sender',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
@@ -43,6 +45,7 @@ class SiteInformationType extends AbstractType
                 'required' => true,
                 'label' => 'email_sender_name',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
