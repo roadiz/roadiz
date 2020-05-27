@@ -111,7 +111,7 @@ class CustomFormController extends CmsController
         }
 
         // Send the message
-        return $emailManager->send();
+        return $emailManager->send() > 0;
     }
 
     /**

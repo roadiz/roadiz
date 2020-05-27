@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
@@ -478,9 +479,9 @@ class NodeType extends AbstractEntity
     /**
      * Get every searchable node-type fields as a Doctrine ArrayCollection.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getSearchableFields(): ArrayCollection
+    public function getSearchableFields(): Collection
     {
         return $this->getFields()->filter(function (NodeTypeField $field) {
             return $field->isSearchable();

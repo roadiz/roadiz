@@ -176,7 +176,7 @@ class CustomFormHelper
     /**
      * @param CustomFormAnswer $answer
      * @param CustomFormField $field
-     * @return null|CustomFormFieldAttribute
+     * @return CustomFormFieldAttribute|null
      */
     private function getAttribute(CustomFormAnswer $answer, CustomFormField $field)
     {

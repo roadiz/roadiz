@@ -37,7 +37,7 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
      * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      * @param integer $page
      *
-     * @return array
+     * @return array|null
      */
     protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1)
     {

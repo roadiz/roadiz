@@ -114,7 +114,9 @@ class LoggerFactory
                                     constant('\Monolog\Logger::'.$config['level'])
                                 );
                                 $handlers[] = $handler;
-                            } elseif (class_exists('Raven_Client')) {
+                            } elseif (class_exists('\Raven_Client') &&
+                                class_exists('\Raven_ErrorHandler')
+                            ) {
                                 $client = new \Raven_Client($config['url']);
                                 $error_handler = new \Raven_ErrorHandler($client);
                                 $error_handler->registerExceptionHandler();

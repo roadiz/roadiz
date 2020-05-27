@@ -24,6 +24,7 @@ use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -98,9 +99,11 @@ class DocumentsController extends RozierApp
         if ($joinFolderForm->isSubmitted() && $joinFolderForm->isValid()) {
             $data = $joinFolderForm->getData();
 
-            if ($joinFolderForm->get('submitFolder')->isClicked()) {
+            $submitFolder = $joinFolderForm->get('submitFolder');
+            $submitUnfolder = $joinFolderForm->get('submitUnfolder');
+            if ($submitFolder instanceof ClickableInterface && $submitFolder->isClicked()) {
                 $msg = $this->joinFolder($data);
-            } elseif ($joinFolderForm->get('submitUnfolder')->isClicked()) {
+            } elseif ($submitUnfolder instanceof ClickableInterface && $submitUnfolder->isClicked()) {
                 $msg = $this->leaveFolder($data);
             } else {
                 $msg = $this->getTranslator()->trans('wrong.request');

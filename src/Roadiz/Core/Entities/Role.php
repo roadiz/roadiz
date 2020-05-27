@@ -84,7 +84,7 @@ class Role implements PersistableInterface
 
     /**
      * @param string $name
-     * @return $this
+     * @return Role
      * @deprecated Use setRole method
      */
     public function setName(string $name): Role

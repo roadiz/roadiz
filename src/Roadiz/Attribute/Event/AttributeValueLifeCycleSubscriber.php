@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Event;
 
+use ArrayIterator;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -69,10 +70,12 @@ class AttributeValueLifeCycleSubscriber implements EventSubscriber
                          * Need to resort collection based on updated position.
                          */
                         $iterator = $nodeAttributes->getIterator();
-                        // define ordering closure, using preferred comparison method/field
-                        $iterator->uasort(function (AttributeValueInterface $first, AttributeValueInterface $second) {
-                            return $first->getPosition() > $second->getPosition() ? 1 : -1;
-                        });
+                        if ($iterator instanceof ArrayIterator) {
+                            // define ordering closure, using preferred comparison method/field
+                            $iterator->uasort(function (AttributeValueInterface $first, AttributeValueInterface $second) {
+                                return $first->getPosition() > $second->getPosition() ? 1 : -1;
+                            });
+                        }
 
                         $lastPosition = 1;
                         /** @var AttributeValueInterface $nodeAttribute */

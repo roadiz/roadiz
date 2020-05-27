@@ -22,7 +22,7 @@ class SolrServiceProvider implements ServiceProviderInterface
     /**
      * @param Container $container
      *
-     * @return AdapterInterface
+     * @return Container
      */
     public function register(Container $container)
     {

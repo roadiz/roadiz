@@ -35,10 +35,10 @@ class Attribute extends AbstractEntity implements AttributeInterface
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    protected $code = "";
+    protected $code = '';
 
     /**
-     * @var string
+     * @var bool
      * @ORM\Column(type="boolean", nullable=false, unique=false, options={"default" = false})
      * @Serializer\Groups({"attribute"})
      * @Serializer\Type("boolean")
@@ -111,7 +111,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
      *     cascade={"persist", "merge"}
      * )
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection|null
+     * @var Collection<AttributeDocuments>|null
      * @Serializer\Exclude
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\AttributeDocuments>")
      */

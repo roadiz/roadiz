@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Controllers;
 
+use Exception;
+use InvalidArgumentException;
 use Pimple\Container;
+use ReflectionClass;
+use ReflectionException;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -27,11 +31,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\ConstraintViolation;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Base class for Roadiz themes.
@@ -199,6 +208,7 @@ abstract class AppController extends Controller
      * Resource folder.
      *
      * @return FileLocator
+     * @throws ReflectionException
      */
     public static function getFileLocator()
     {
@@ -212,6 +222,7 @@ abstract class AppController extends Controller
 
     /**
      * @return RouteCollection
+     * @throws ReflectionException
      */
     public static function getRoutes()
     {
@@ -223,7 +234,8 @@ abstract class AppController extends Controller
     /**
      * These routes are used to extend Roadiz back-office.
      *
-     * @return RouteCollection
+     * @return RouteCollection|null
+     * @throws ReflectionException
      */
     public static function getBackendRoutes()
     {
@@ -232,7 +244,7 @@ abstract class AppController extends Controller
         try {
             $loader = new YamlFileLoader($locator);
             return $loader->load('backend-routes.yml');
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return null;
         }
     }
@@ -241,11 +253,11 @@ abstract class AppController extends Controller
      * Return theme root folder.
      *
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getThemeFolder()
     {
-        $class_info = new \ReflectionClass(static::getThemeMainClass());
+        $class_info = new ReflectionClass(static::getThemeMainClass());
         return dirname($class_info->getFileName());
     }
 
@@ -257,21 +269,25 @@ abstract class AppController extends Controller
      * whether it’s located in project folder or in vendor folder.
      *
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getResourcesFolder()
     {
         return static::getThemeFolder() . '/Resources';
     }
+
     /**
      * @return string
+     * @throws ReflectionException
      */
     public static function getViewsFolder()
     {
         return static::getResourcesFolder() . '/views';
     }
+
     /**
      * @return string
+     * @throws ReflectionException
      */
     public static function getTranslationsFolder()
     {
@@ -280,7 +296,7 @@ abstract class AppController extends Controller
 
     /**
      * @return string
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getPublicFolder()
     {
@@ -384,7 +400,7 @@ abstract class AppController extends Controller
     /**
      * Returns the current session.
      *
-     * @return Session|null The session
+     * @return SessionInterface|null
      */
     public function getSession()
     {
@@ -396,12 +412,12 @@ abstract class AppController extends Controller
     /**
      * Return a Response with default backend 404 error page.
      *
-     * @param string $message Additionnal message to describe 404 error.
+     * @param string $message Additional message to describe 404 error.
      *
      * @return Response
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function throw404($message = "")
     {
@@ -448,9 +464,10 @@ abstract class AppController extends Controller
     /**
      * Append objects to the global dependency injection container.
      *
-     * @param \Pimple\Container $container
+     * @param Container $container
      *
-     * @throws \Twig\Error\LoaderError
+     * @throws ReflectionException
+     * @throws LoaderError
      */
     public static function setupDependencyInjection(Container $container)
     {
@@ -466,11 +483,12 @@ abstract class AppController extends Controller
     /**
      * @param Container $container
      *
-     * @throws \Twig\Error\LoaderError
+     * @throws ReflectionException
+     * @throws LoaderError
      */
     public static function addThemeTemplatesPath(Container $container)
     {
-        /** @var \Twig_Loader_Filesystem $loader */
+        /** @var FilesystemLoader $loader */
         $loader = $container['twig.loaderFileSystem'];
         /*
          * Enable theme templates in main namespace and in its own theme namespace.
@@ -658,7 +676,7 @@ abstract class AppController extends Controller
                     $cause = $cause->getCause();
                 }
                 if (null !== $cause && is_object($cause)) {
-                    if ($cause instanceof \Exception) {
+                    if ($cause instanceof Exception) {
                         $errors[$errorFieldName . '_cause_message'] = $cause->getMessage();
                     }
                     $errors[$errorFieldName . '_cause'] = get_class($cause);

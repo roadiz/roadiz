@@ -68,7 +68,7 @@ trait NodesTrait
     /**
      * @param Node $node
      *
-     * @return Form
+     * @return FormInterface|null
      */
     public function buildStackTypesForm(Node $node)
     {
@@ -97,7 +97,7 @@ trait NodesTrait
     /**
      * @param Node $parentNode
      *
-     * @return Form
+     * @return FormInterface
      */
     protected function buildAddChildForm(Node $parentNode = null)
     {
@@ -156,7 +156,7 @@ trait NodesTrait
     }
 
     /**
-     * @return Form
+     * @return FormInterface
      */
     protected function buildEmptyTrashForm()
     {

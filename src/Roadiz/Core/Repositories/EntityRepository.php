@@ -17,7 +17,6 @@ use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
@@ -108,7 +107,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param string $property
      * @param mixed $value
      *
-     * @return FilterQueryBuilderCriteriaEvent
+     * @return QueryBuilderBuildEvent
      */
     protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
     {
@@ -128,7 +127,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param string $property
      * @param mixed $value
      *
-     * @return FilterQueryBuilderCriteriaEvent
+     * @return QueryBuilderApplyEvent
      */
     protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
     {

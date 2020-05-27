@@ -8,12 +8,12 @@ use RZ\Roadiz\Core\Entities\Translation;
 interface AttributeGroupTranslationInterface
 {
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getName(): ?string;
 
     /**
-     * @param mixed $value
+     * @param string|null $value
      *
      * @return mixed
      */

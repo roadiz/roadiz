@@ -73,7 +73,7 @@ class TagTreeWidget extends AbstractWidget
     /**
      * @param Tag $parent
      *
-     * @return ArrayCollection
+     * @return ArrayCollection|null
      */
     public function getChildrenTags(Tag $parent)
     {

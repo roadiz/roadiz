@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Console\Helper;
 
-use Monolog\Logger;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\KernelInterface;
 use Symfony\Component\Console\Helper\Helper;
 
@@ -23,11 +24,11 @@ class LoggerHelper extends Helper
     }
 
     /**
-     * @return Logger
+     * @return LoggerInterface|null
      */
-    public function getLogger()
+    public function getLogger(): ?LoggerInterface
     {
-        return $this->kernel->get('logger.cli');
+        return $this->kernel instanceof ContainerAwareInterface ? $this->kernel->get('logger.cli') : null;
     }
 
     /**

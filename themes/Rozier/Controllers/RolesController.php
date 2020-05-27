@@ -200,6 +200,8 @@ class RolesController extends RozierApp
                         ->add('name', TextType::class, [
                             'label' => 'name',
                             'constraints' => [
+                                new NotNull(),
+                                new NotBlank(),
                                 new Regex([
                                     'pattern' => '#^ROLE_([A-Z\_]+)$#',
                                     'message' => 'role.name.must_comply_with_standard',

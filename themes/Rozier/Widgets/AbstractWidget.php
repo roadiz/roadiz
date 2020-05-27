@@ -36,13 +36,6 @@ abstract class AbstractWidget
      */
     public function __construct(Request $request, Controller $refereeController)
     {
-        if ($refereeController === null) {
-            throw new \RuntimeException("Referee AppController cannot be null to instantiate a new Widget", 1);
-        }
-        if ($request === null) {
-            throw new \RuntimeException("Request cannot be null to instantiate a new Widget", 1);
-        }
-
         $this->controller = $refereeController;
         $this->request = $request;
     }

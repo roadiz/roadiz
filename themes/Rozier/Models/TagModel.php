@@ -71,7 +71,7 @@ class TagModel implements ModelInterface
         $result = '';
         $parent = $tag->getParent();
 
-        if ($parent) {
+        if (null !== $parent && $parent instanceof Tag) {
             $superParent = $this->getTagParents($parent, true);
             $firstTrans = $parent->getTranslatedTags()->first();
             $name = $parent->getTagName();

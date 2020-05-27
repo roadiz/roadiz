@@ -18,13 +18,13 @@ trait AttributeTrait
     }
 
     /**
-     * @param string $code
+     * @param string|null $code
      *
      * @return mixed
      */
-    public function setCode(string $code)
+    public function setCode(?string $code)
     {
-        $this->code = StringHandler::slugify($code);
+        $this->code = StringHandler::slugify($code ?? '');
         return $this;
     }
 

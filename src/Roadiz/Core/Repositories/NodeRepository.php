@@ -731,7 +731,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $nodeName
      *
      * @return bool
-     * @throws NonUniqueResultException
+     * @throws NonUniqueResultException|\Doctrine\ORM\NoResultException
      */
     public function exists($nodeName)
     {

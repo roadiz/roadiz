@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
@@ -25,20 +26,28 @@ class NodesSourcesHandler extends AbstractHandler
     protected $nodeSource;
 
     /**
-     * @var NodesSources[]
+     * @var array<NodesSources>
      */
     protected $parentsNodeSources = null;
 
-    /** @var AuthorizationChecker */
+    /**
+     * @var AuthorizationChecker
+     */
     protected $authorizationChecker;
 
-    /** @var bool  */
+    /**
+     * @var bool
+     */
     protected $isPreview = false;
 
-    /** @var Settings  */
+    /**
+     * @var Settings
+     */
     protected $settingsBag;
 
-    /** @var TagApi */
+    /**
+     * @var TagApi
+     */
     protected $tagApi;
 
     /**
@@ -143,7 +152,7 @@ class NodesSourcesHandler extends AbstractHandler
      * Get documents linked to current node-source for a given fieldname.
      *
      * @param string $fieldName Name of the node-type field
-     * @return Document[]
+     * @return array<Document>
      */
     public function getDocumentsFromFieldName($fieldName)
     {
@@ -176,7 +185,7 @@ class NodesSourcesHandler extends AbstractHandler
      * Get parent node-source to get the current translation.
      *
      * @deprecated Use directly NodesSources::getParent
-     * @return NodesSources
+     * @return NodesSources|null
      */
     public function getParent()
     {
@@ -187,7 +196,7 @@ class NodesSourcesHandler extends AbstractHandler
      * Get every nodeSources parents from direct parent to farest ancestor.
      *
      * @param  array $criteria
-     * @return array
+     * @return array<NodesSources>
      */
     public function getParents(
         array $criteria = null
@@ -231,7 +240,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @param array|null $criteria Additionnal criteria
      * @param array|null $order Non default ordering
      *
-     * @return NodesSources[] collection
+     * @return array<NodesSources>
      */
     public function getChildren(
         array $criteria = null,
@@ -446,7 +455,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @param array|null $criteria
      * @param array|null $order
      *
-     * @return NodesSources|object|null
+     * @return NodesSources|null
      */
     public function getNext(
         array $criteria = null,
@@ -486,16 +495,14 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get node tags with current source translation.
      *
-     * @return array
+     * @return array<Tag>
      */
     public function getTags()
     {
-        $tags = $this->tagApi->getBy([
+        return $this->tagApi->getBy([
             "nodes" => $this->nodeSource->getNode(),
             "translation" => $this->nodeSource->getTranslation(),
         ]);
-
-        return $tags;
     }
 
     /**
@@ -507,7 +514,7 @@ class NodesSourcesHandler extends AbstractHandler
      * * description
      * * keywords
      *
-     * @return array
+     * @return array<string>
      */
     public function getSEO()
     {
@@ -527,7 +534,7 @@ class NodesSourcesHandler extends AbstractHandler
      *
      * @param string $fieldName Name of the node-type field
      *
-     * @return array Collection of nodes
+     * @return array<Node> Collection of nodes
      */
     public function getNodesFromFieldName($fieldName)
     {
@@ -545,7 +552,7 @@ class NodesSourcesHandler extends AbstractHandler
      *
      * @param string $fieldName Name of the node-type field
      *
-     * @return array Collection of nodes
+     * @return array<Node> Collection of nodes
      */
     public function getReverseNodesFromFieldName($fieldName)
     {

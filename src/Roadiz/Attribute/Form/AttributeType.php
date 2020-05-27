@@ -18,7 +18,6 @@ use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Symfony\Component\Validator\Constraints\Regex;
 
 class AttributeType extends AbstractType
 {
@@ -45,7 +44,8 @@ class AttributeType extends AbstractType
             ])
             ->add('color', ColorType::class, [
                 'label' => 'attributes.form.color',
-                'help' => 'attributes.form_help.color'
+                'help' => 'attributes.form_help.color',
+                'required' => false,
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'attributes.form.type',

@@ -34,7 +34,7 @@ class UserExplorerItem extends AbstractExplorerItem
      */
     public function getAlternativeDisplayable()
     {
-        return $this->user->getEmail();
+        return null !== ($this->user) ? ($this->user->getEmail() ?: '') : ('');
     }
 
     /**

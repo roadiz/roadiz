@@ -80,6 +80,6 @@ class LoginType extends AbstractType
         /*
          * No prefix for firewall to catch username and password from request.
          */
-        return null;
+        return '';
     }
 }

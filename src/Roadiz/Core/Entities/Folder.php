@@ -191,14 +191,14 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     public function setFolderName($folderName)
     {
         $this->dirtyFolderName = $folderName;
-        $this->folderName = StringHandler::slugify($folderName);
+        $this->folderName = StringHandler::slugify($folderName ?? '');
         return $this;
     }
 
     /**
      * @param string $folderName
      * @return Folder
-     * @deprecated Use setFolderName() method instead to differenciate from FolderTranslation’ name.
+     * @deprecated Use setFolderName() method instead to differentiate from FolderTranslation’ name.
      */
     public function setName($folderName)
     {

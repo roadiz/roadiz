@@ -42,7 +42,6 @@ final class UsersProvider extends AbstractDoctrineExplorerProvider
         if ($item instanceof User) {
             return new UserExplorerItem($item);
         }
-
-        return null;
+        throw new \InvalidArgumentException('Explorer item must be instance of ' . User::class);
     }
 }

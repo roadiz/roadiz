@@ -103,7 +103,7 @@ class TagHandler extends AbstractHandler
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
     /**
@@ -146,7 +146,7 @@ class TagHandler extends AbstractHandler
         try {
             return $query->getResult();
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 
@@ -171,7 +171,7 @@ class TagHandler extends AbstractHandler
 
             return $simpleArray;
         } catch (NoResultException $e) {
-            return null;
+            return [];
         }
     }
 

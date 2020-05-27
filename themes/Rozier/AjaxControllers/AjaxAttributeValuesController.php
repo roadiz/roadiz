@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\AttributeValue;
+use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -65,31 +66,37 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
      *
      * @return array
      */
-    protected function updatePosition($parameters, AttributeValue $attributeValue = null): array
+    protected function updatePosition($parameters, AttributeValue $attributeValue): array
     {
+        $attributable = $attributeValue->getAttributable();
+        $details = [
+            '%name%' => $attributeValue->getAttribute()->getLabelOrCode(),
+            '%nodeName%' => $attributable instanceof Node ? $attributable->getNodeName() : '',
+        ];
         /*
          * First, we set the new parent
          */
-        if (!empty($parameters['newPosition']) && null !== $attributeValue) {
+        if (!empty($parameters['newPosition'])) {
             $attributeValue->setPosition($parameters['newPosition']);
             // Apply position update before cleaning
             $this->get('em')->flush();
             return [
                 'statusCode' => '200',
                 'status' => 'success',
-                'responseText' => $this->getTranslator()->trans('attribute_value_translation.%name%.updated_from_node.%nodeName%', [
-                    '%name%' => $attributeValue->getAttribute()->getLabelOrCode(),
-                    '%nodeName%' => $attributeValue->getAttributable()->getNodeName(),
-                ]),
+                'responseText' => $this->getTranslator()->trans(
+                    'attribute_value_translation.%name%.updated_from_node.%nodeName%',
+                    $details
+                ),
             ];
         }
+
         return [
             'statusCode' => '400',
             'status' => 'error',
-            'responseText' => $this->getTranslator()->trans('attribute_value_translation.%name%.updated_from_node.%nodeName%', [
-                '%name%' => $attributeValue->getAttribute()->getLabelOrCode(),
-                '%nodeName%' => $attributeValue->getAttributable()->getNodeName(),
-            ]),
+            'responseText' => $this->getTranslator()->trans(
+                'attribute_value_translation.%name%.updated_from_node.%nodeName%',
+                $details
+            ),
         ];
     }
 }

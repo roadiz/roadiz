@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Form;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Attribute\Form\DataTransformer\AttributeDocumentsTransformer;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;

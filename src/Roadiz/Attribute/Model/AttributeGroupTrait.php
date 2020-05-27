@@ -19,7 +19,7 @@ trait AttributeGroupTrait
      */
     protected $canonicalName;
     /**
-     * @var Collection
+     * @var Collection<AttributeInterface>
      */
     protected $attributes;
 
@@ -51,7 +51,7 @@ trait AttributeGroupTrait
         return $this->getCanonicalName();
     }
 
-    public function setName(string $name)
+    public function setName(?string $name)
     {
         if ($this->getAttributeGroupTranslations()->count() === 0) {
             $this->getAttributeGroupTranslations()->add(
@@ -59,7 +59,7 @@ trait AttributeGroupTrait
             );
         }
 
-        $this->canonicalName = StringHandler::slugify($name);
+        $this->canonicalName = StringHandler::slugify($name ?? '');
         return $this;
     }
 
@@ -68,9 +68,9 @@ trait AttributeGroupTrait
         return $this->canonicalName;
     }
 
-    public function setCanonicalName(string $canonicalName)
+    public function setCanonicalName(?string $canonicalName)
     {
-        $this->canonicalName = StringHandler::slugify($canonicalName);
+        $this->canonicalName = StringHandler::slugify($canonicalName ?? '');
         return $this;
     }
 
