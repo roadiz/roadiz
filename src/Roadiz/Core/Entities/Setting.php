@@ -101,13 +101,13 @@ class Setting extends AbstractEntity
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      *
      * @return $this
      */
     public function setName($name)
     {
-        $this->name = trim(strtolower($name));
+        $this->name = trim(strtolower($name ?? ''));
         $this->name = StringHandler::removeDiacritics($this->name);
         $this->name = preg_replace('#([^a-z])#', '_', $this->name);
 

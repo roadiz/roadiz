@@ -42,8 +42,9 @@ class UserExplorerItem extends AbstractExplorerItem
      */
     public function getDisplayable()
     {
-        if (trim($this->user->getFirstName() . ' ' . $this->user->getLastName()) !== '') {
-            return trim($this->user->getFirstName() . ' ' . $this->user->getLastName());
+        $fullName = trim((string) $this->user->getFirstName() . ' ' . (string) $this->user->getLastName());
+        if ($fullName !== '') {
+            return $fullName;
         }
         return $this->user->getUsername();
     }

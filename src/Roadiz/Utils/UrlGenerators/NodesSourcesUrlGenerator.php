@@ -67,7 +67,7 @@ final class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      * @return string
      * @deprecated Do not use this method directly to generate NodesSources URI but ChainRouter::generate method.
      */
-    public function getUrl(bool $absolute = false, $canonicalSchemeAuthority = ''): string
+    public function getUrl(bool $absolute = false, string $canonicalSchemeAuthority = ''): string
     {
         trigger_error('NodesSourcesUrlGenerator::getUrl method is deprecated. Use ChainRouter::generate method instead.', E_USER_DEPRECATED);
 
