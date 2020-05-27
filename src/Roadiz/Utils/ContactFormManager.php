@@ -485,7 +485,7 @@ class ContactFormManager extends EmailManager
                     'value' => null,
                 ];
                 $fields = $this->flattenFormData($value, $fields);
-            } elseif (!empty($value)) {
+            } elseif (null !== $value && !empty($value)) {
                 if ($value instanceof \DateTimeInterface) {
                     $displayValue = $value->format('Y-m-d H:i:s');
                 } else {

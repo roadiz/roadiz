@@ -32,7 +32,7 @@ class SimpleQueryBuilder
      *
      * @return string
      */
-    public function getParameterKey($key): string
+    public function getParameterKey(string $key): string
     {
         return strtolower(str_replace('.', '_', $key));
     }
@@ -114,7 +114,7 @@ class SimpleQueryBuilder
                         $fullKey = sprintf('LOWER(%s)', $prefix . $key);
                         return $this->queryBuilder->expr()->like(
                             $fullKey,
-                            $this->queryBuilder->expr()->literal(strtolower($value[1]))
+                            $this->queryBuilder->expr()->literal(strtolower($value[1] ?? ''))
                         );
                     case 'NOT IN':
                         return $this->queryBuilder->expr()->notIn($prefix . $key, ':' . $baseKey);

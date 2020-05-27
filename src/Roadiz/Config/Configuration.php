@@ -116,7 +116,7 @@ EOF
                         ->cannotBeEmpty()
                         ->beforeNormalization()
                             ->always()
-                            ->then(function ($v) {
+                            ->then(function (string $v) {
                                 return strtolower(preg_replace('#[^a-z^A-Z^_]#', '_', trim($v)));
                             })
                         ->end()
@@ -327,7 +327,7 @@ EOF
                     ->info('Full qualified theme class (this must start with \ character and ends with App suffix)')
                     ->isRequired()
                     ->validate()
-                        ->ifTrue(function ($s) {
+                        ->ifTrue(function (string $s) {
                             return preg_match('/^\\\[a-zA-Z\\\]+App$/', trim($s)) !== 1 || !class_exists($s);
                         })
                         ->thenInvalid('Theme class does not exist or classname is invalid: must start with \ character and ends with App suffix.')
