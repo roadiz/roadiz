@@ -1163,7 +1163,7 @@ class NodeRepository extends StatusAwareRepository
             $field = $metadatas->getFieldName($col);
             $type = $metadatas->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
+                $criteriaFields[$field] = '%' . strip_tags((string) $pattern) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {

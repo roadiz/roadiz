@@ -181,13 +181,13 @@ class DocumentRepository extends EntityRepository
          */
         $qb->leftJoin($alias . '.documentTranslations', 'dt');
         $criteriaFields = [];
-        $metadatas = $this->_em->getClassMetadata(DocumentTranslation::class);
-        $cols = $metadatas->getColumnNames();
+        $metadata = $this->_em->getClassMetadata(DocumentTranslation::class);
+        $cols = $metadata->getColumnNames();
         foreach ($cols as $col) {
-            $field = $metadatas->getFieldName($col);
-            $type = $metadatas->getTypeOfField($field);
+            $field = $metadata->getFieldName($col);
+            $type = $metadata->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
+                $criteriaFields[$field] = '%' . strip_tags((string) $pattern) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {

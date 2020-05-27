@@ -455,17 +455,17 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
         /*
          * Get fields needed for a search query
          */
-        $metadatas = $this->_em->getClassMetadata($this->getEntityName());
+        $metadata = $this->_em->getClassMetadata($this->getEntityName());
         $criteriaFields = [];
-        $cols = $metadatas->getColumnNames();
+        $cols = $metadata->getColumnNames();
         foreach ($cols as $col) {
-            $field = $metadatas->getFieldName($col);
-            $type = $metadatas->getTypeOfField($field);
+            $field = $metadata->getFieldName($col);
+            $type = $metadata->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes) &&
                 $field != 'folder' &&
                 $field != 'childrenOrder' &&
                 $field != 'childrenOrderDirection') {
-                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
+                $criteriaFields[$field] = '%' . strip_tags((string) $pattern) . '%';
             }
         }
 

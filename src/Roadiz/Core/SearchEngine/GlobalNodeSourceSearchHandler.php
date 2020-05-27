@@ -53,7 +53,7 @@ class GlobalNodeSourceSearchHandler
      * @param Translation|null $translation
      * @return NodesSources[]
      */
-    public function getNodeSourcesBySearchTerm($searchTerm, $resultCount, ?Translation $translation = null)
+    public function getNodeSourcesBySearchTerm(string $searchTerm, $resultCount, ?Translation $translation = null)
     {
         $safeSearchTerms = strip_tags($searchTerm);
 

@@ -85,6 +85,7 @@ class FolderRepository extends EntityRepository
      * @param string $folderPath
      *
      * @return Folder|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByPath(string $folderPath)
     {
@@ -205,7 +206,7 @@ class FolderRepository extends EntityRepository
             $field = $metadata->getFieldName($col);
             $type = $metadata->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
-                $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
+                $criteriaFields[$field] = '%' . strip_tags((string) $pattern) . '%';
             }
         }
         foreach ($criteriaFields as $key => $value) {
