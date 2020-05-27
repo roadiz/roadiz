@@ -86,7 +86,7 @@ class FolderRepository extends EntityRepository
      *
      * @return Folder|null
      */
-    public function findByPath($folderPath)
+    public function findByPath(string $folderPath)
     {
         $folderPath = trim($folderPath);
 
@@ -123,12 +123,13 @@ class FolderRepository extends EntityRepository
     }
 
     /**
-     * @param string $folderName
+     * @param string           $folderName
      * @param Translation|null $translation
      *
      * @return mixed|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findOneByFolderName($folderName, Translation $translation = null)
+    public function findOneByFolderName(string $folderName, Translation $translation = null)
     {
         $qb = $this->createQueryBuilder('f');
         $qb->addSelect('f')
@@ -198,11 +199,11 @@ class FolderRepository extends EntityRepository
          */
         $qb->leftJoin('obj.translatedFolders', 'tf');
         $criteriaFields = [];
-        $metadatas = $this->_em->getClassMetadata(FolderTranslation::class);
-        $cols = $metadatas->getColumnNames();
+        $metadata = $this->_em->getClassMetadata(FolderTranslation::class);
+        $cols = $metadata->getColumnNames();
         foreach ($cols as $col) {
-            $field = $metadatas->getFieldName($col);
-            $type = $metadatas->getTypeOfField($field);
+            $field = $metadata->getFieldName($col);
+            $type = $metadata->getTypeOfField($field);
             if (in_array($type, $this->searchableTypes)) {
                 $criteriaFields[$field] = '%' . strip_tags($pattern) . '%';
             }

@@ -665,7 +665,7 @@ class TagRepository extends EntityRepository
      *
      * @return Tag|null
      */
-    public function findByPath($tagPath)
+    public function findByPath(string $tagPath)
     {
         $tagPath = trim($tagPath);
         $tags = explode('/', $tagPath);

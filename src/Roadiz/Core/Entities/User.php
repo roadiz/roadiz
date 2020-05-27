@@ -873,11 +873,11 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     {
         $data = unserialize($serialized);
         if (13 === count($data)) {
-            // Unserializing a User object from 1.3.x
+            // unserialize a User object from 1.3.x
             unset($data[4], $data[5], $data[6], $data[9], $data[10]);
             $data = array_values($data);
         } elseif (11 === count($data)) {
-            // Unserializing a User from a dev version somewhere between 2.0-alpha3 and 2.0-beta1
+            // unserialize a User from a dev version somewhere between 2.0-alpha3 and 2.0-beta1
             unset($data[4], $data[7], $data[8]);
             $data = array_values($data);
         }
@@ -892,7 +892,6 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * {@inheritdoc}
      * @Serializer\Groups({"user"})
      * @Serializer\VirtualProperty()
      */
@@ -902,18 +901,22 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $name
+     *
+     * @return bool
      */
     public function hasGroup($name)
     {
-        return in_array($name, $this->getGroupNames());
+        return in_array((string) $name, $this->getGroupNames());
     }
 
     /**
-     * {@inheritdoc}
+     * @param mixed $role
+     *
+     * @return bool
      */
     public function hasRole($role)
     {
-        return in_array(strtoupper($role), $this->getRoles(), true);
+        return in_array(strtoupper((string) $role), $this->getRoles(), true);
     }
 }

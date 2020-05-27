@@ -10,7 +10,10 @@ class TokenGenerator extends RandomGenerator implements TokenGeneratorInterface
         return rtrim(strtr(base64_encode($this->getRandomNumber()), '+/', '-_'), '=');
     }
 
-    private function getRandomNumber()
+    /**
+     * @return string
+     */
+    private function getRandomNumber(): string
     {
         $nbBytes = 32;
 
