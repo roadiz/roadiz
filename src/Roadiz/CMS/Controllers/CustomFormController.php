@@ -104,7 +104,7 @@ class CustomFormController extends CmsController
         $emailManager->setEmailTitle($assignation['title']);
         $emailManager->setSender($this->get('settingsBag')->get('email_sender'));
 
-        if (empty($receiver)) {
+        if (null === $receiver || empty($receiver)) {
             $emailManager->setReceiver($this->get('settingsBag')->get('email_sender'));
         } else {
             $emailManager->setReceiver($receiver);
@@ -271,7 +271,9 @@ class CustomFormController extends CmsController
                 /*
                  * Send answer notification
                  */
-                $receiver = array_map('trim', explode(',', $customFormsEntity->getEmail() ?? ''));
+                $receiver = array_filter(
+                    array_map('trim', explode(',', $customFormsEntity->getEmail() ?? ''))
+                );
                 $this->sendAnswer(
                     [
                         'mailContact' => $assignation['mailContact'],

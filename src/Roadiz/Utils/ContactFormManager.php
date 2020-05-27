@@ -440,7 +440,7 @@ class ContactFormManager extends EmailManager
          */
         foreach ($this->uploadedFiles as $key => $uploadedFile) {
             $fields[] = [
-                'name' => strip_tags($key),
+                'name' => strip_tags((string) $key),
                 'value' => (strip_tags($uploadedFile->getClientOriginalName()) .
                     ' [' . $uploadedFile->guessExtension() . ']'),
             ];
@@ -481,7 +481,7 @@ class ContactFormManager extends EmailManager
                 continue;
             } elseif (is_array($value) && count($value) > 0) {
                 $fields[] = [
-                    'name' => strip_tags($key),
+                    'name' => strip_tags((string) $key),
                     'value' => null,
                 ];
                 $fields = $this->flattenFormData($value, $fields);
@@ -489,9 +489,9 @@ class ContactFormManager extends EmailManager
                 if ($value instanceof \DateTimeInterface) {
                     $displayValue = $value->format('Y-m-d H:i:s');
                 } else {
-                    $displayValue = strip_tags(trim($value));
+                    $displayValue = strip_tags(trim((string) $value));
                 }
-                $name = is_numeric($key) ? null : strip_tags(trim($key));
+                $name = is_numeric($key) ? null : strip_tags(trim((string) $key));
                 $fields[] = [
                     'name' => $name,
                     'value' => $displayValue,

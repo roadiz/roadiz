@@ -76,7 +76,7 @@ abstract class DynamicUrlMatcher extends UrlMatcher
 
         if (!empty($tokens[0])) {
             $firstToken = $tokens[0];
-            $locale = strip_tags($firstToken);
+            $locale = strip_tags((string) $firstToken);
             // First token is for language
             if ($locale !== null && $locale != '') {
                 if ($this->preview === true) {

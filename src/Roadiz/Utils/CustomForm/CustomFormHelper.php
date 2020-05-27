@@ -169,7 +169,7 @@ class CustomFormHelper
             $values = array_map('strip_tags', $values);
             return implode(static::ARRAY_SEPARATOR, $values);
         } else {
-            return strip_tags($rawValue);
+            return strip_tags((string) $rawValue);
         }
     }
 

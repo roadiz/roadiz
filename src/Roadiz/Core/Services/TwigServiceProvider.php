@@ -29,6 +29,7 @@ use Symfony\Bridge\Twig\Extension\SecurityExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
+use Symfony\Component\HttpFoundation\UrlHelper;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
@@ -166,6 +167,10 @@ class TwigServiceProvider implements ServiceProviderInterface
             ], $kernel->isDebug());
         };
 
+        $container[UrlHelper::class] = function (Container $c) {
+            return new UrlHelper($c['requestStack'], $c['requestContext']);
+        };
+
         /**
          * Twig extensions.
          *
@@ -183,7 +188,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new FormExtension());
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
-            $extensions->add(new HttpFoundationExtension($c['requestStack']));
+            $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
             $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add(new TranslationExtension($c['translator']));
             $extensions->add(new AssetExtension($c['assetPackages']));
