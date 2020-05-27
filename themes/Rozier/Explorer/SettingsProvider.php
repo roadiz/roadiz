@@ -42,7 +42,6 @@ final class SettingsProvider extends AbstractDoctrineExplorerProvider
         if ($item instanceof Setting) {
             return new SettingExplorerItem($item);
         }
-
-        return null;
+        throw new \InvalidArgumentException('Explorer item must be instance of ' . Setting::class);
     }
 }

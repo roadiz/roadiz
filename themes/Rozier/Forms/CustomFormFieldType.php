@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class CustomFormFieldType
@@ -28,6 +29,7 @@ class CustomFormFieldType extends AbstractType
         $builder->add('label', TextType::class, [
                 'label' => 'label',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new UniqueCustomFormFieldName([
                         'entityManager' => $options['em'],

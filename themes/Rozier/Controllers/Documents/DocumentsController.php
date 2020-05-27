@@ -24,6 +24,7 @@ use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -39,6 +40,7 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Translation\Translator;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\DocumentEditType;
 use Themes\Rozier\Forms\DocumentEmbedType;
 use Themes\Rozier\Models\DocumentModel;
@@ -97,9 +99,11 @@ class DocumentsController extends RozierApp
         if ($joinFolderForm->isSubmitted() && $joinFolderForm->isValid()) {
             $data = $joinFolderForm->getData();
 
-            if ($joinFolderForm->get('submitFolder')->isClicked()) {
+            $submitFolder = $joinFolderForm->get('submitFolder');
+            $submitUnfolder = $joinFolderForm->get('submitUnfolder');
+            if ($submitFolder instanceof ClickableInterface && $submitFolder->isClicked()) {
                 $msg = $this->joinFolder($data);
-            } elseif ($joinFolderForm->get('submitUnfolder')->isClicked()) {
+            } elseif ($submitUnfolder instanceof ClickableInterface && $submitUnfolder->isClicked()) {
                 $msg = $this->leaveFolder($data);
             } else {
                 $msg = $this->getTranslator()->trans('wrong.request');
@@ -786,6 +790,7 @@ class DocumentsController extends RozierApp
             ->add('documentId', HiddenType::class, [
                 'data' => $doc->getId(),
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -807,6 +812,7 @@ class DocumentsController extends RozierApp
         ])
             ->add('checksum', HiddenType::class, [
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -829,6 +835,7 @@ class DocumentsController extends RozierApp
         ])
             ->add('checksum', HiddenType::class, [
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -893,6 +900,7 @@ class DocumentsController extends RozierApp
             ->add('documentsId', HiddenType::class, [
                 'attr' => ['class' => 'document-id-bulk-folder'],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
@@ -903,6 +911,7 @@ class DocumentsController extends RozierApp
                     'placeholder' => 'list.folders.to_link',
                 ],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])

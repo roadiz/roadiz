@@ -31,7 +31,7 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
     }
 
     /**
-     * Deserializes a json file into a readable array of datas.
+     * Deserializes a json file into a readable array of data.
      *
      * @param string $jsonString
      *

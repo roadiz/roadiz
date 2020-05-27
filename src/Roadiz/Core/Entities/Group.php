@@ -28,7 +28,7 @@ class Group extends AbstractEntity
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\User", mappedBy="groups")
      * @Serializer\Groups({"group_user"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\User>")
-     * @var ArrayCollection
+     * @var Collection<User>
      */
     private $users;
     /**
@@ -37,7 +37,7 @@ class Group extends AbstractEntity
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="role_id", referencedColumnName="id")}
      * )
-     * @var ArrayCollection<Role>
+     * @var Collection<Role>
      * @Serializer\Groups({"group"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Role>")
      * @Serializer\Accessor(getter="getRolesEntities", setter="setRolesEntities")

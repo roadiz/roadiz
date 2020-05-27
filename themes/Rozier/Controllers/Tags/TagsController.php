@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\TagTranslationType;
 use Themes\Rozier\Forms\TagType;
 use Themes\Rozier\RozierApp;
@@ -604,6 +605,7 @@ class TagsController extends RozierApp
             ->add('tagId', HiddenType::class, [
                 'data' => $tag->getId(),
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);
@@ -628,6 +630,7 @@ class TagsController extends RozierApp
                 'data' => implode(',', $tagsIds),
                 'attr' => ['class' => 'tags-id-bulk-tags'],
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]);

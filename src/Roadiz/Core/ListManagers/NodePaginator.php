@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\ListManagers;
 
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
  * A paginator class to filter node entities with limit and search.
@@ -12,10 +13,13 @@ use RZ\Roadiz\Core\Entities\Translation;
  */
 class NodePaginator extends Paginator
 {
+    /**
+     * @var Translation|null
+     */
     protected $translation = null;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Translation
+     * @return Translation|null
      */
     public function getTranslation()
     {
@@ -23,12 +27,13 @@ class NodePaginator extends Paginator
     }
 
     /**
-     * @param  \RZ\Roadiz\Core\Entities\Translation $newtranslation
+     * @param Translation|null $translation
+     *
      * @return $this
      */
-    public function setTranslation(Translation $newtranslation = null)
+    public function setTranslation(Translation $translation = null)
     {
-        $this->translation = $newtranslation;
+        $this->translation = $translation;
         return $this;
     }
 
@@ -45,14 +50,22 @@ class NodePaginator extends Paginator
         if (null !== $this->searchPattern) {
             return $this->searchByAtPage($order, $page);
         } else {
-            return $this->getRepository()
-                ->findBy(
+            $repository = $this->getRepository();
+            if ($repository instanceof NodeRepository) {
+                return $repository->findBy(
                     $this->criteria,
                     $order,
                     $this->getItemsPerPage(),
                     $this->getItemsPerPage() * ($page - 1),
-                    $this->translation
+                    $this->getTranslation()
                 );
+            }
+            return $repository->findBy(
+                $this->criteria,
+                $order,
+                $this->getItemsPerPage(),
+                $this->getItemsPerPage() * ($page - 1)
+            );
         }
     }
 
@@ -66,11 +79,16 @@ class NodePaginator extends Paginator
                 $this->totalCount = $this->getRepository()
                     ->countSearchBy($this->searchPattern, $this->criteria);
             } else {
-                $this->totalCount = $this->getRepository()
-                    ->countBy(
+                $repository = $this->getRepository();
+                if ($repository instanceof NodeRepository) {
+                    $this->totalCount = $repository->countBy(
                         $this->criteria,
-                        $this->translation
+                        $this->getTranslation()
                     );
+                }
+                $this->totalCount = $repository->countBy(
+                    $this->criteria
+                );
             }
         }
 

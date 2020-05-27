@@ -27,6 +27,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\RedirectionType;
 use Themes\Rozier\RozierApp;
 
@@ -288,6 +289,7 @@ class UrlAliasesController extends RozierApp
                         ->add('nodeId', HiddenType::class, [
                             'data' => $node->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
@@ -297,6 +299,7 @@ class UrlAliasesController extends RozierApp
                                 'placeholder' => 'urlAlias',
                             ],
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ]
                         ])
@@ -324,12 +327,14 @@ class UrlAliasesController extends RozierApp
                         ->add('urlaliasId', HiddenType::class, [
                             'data' => $ua->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
                         ->add('alias', TextType::class, [
                             'label' => false,
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

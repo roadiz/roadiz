@@ -63,10 +63,11 @@ class NodeModel implements ModelInterface
 
             if ($parent->getParent()) {
                 $subparent = $parent->getParent();
-
-                $result['subparent'] = [
-                    'title' => $subparent->getNodeSources()->first()->getTitle()
-                ];
+                if (null !== $subparent) {
+                    $result['subparent'] = [
+                        'title' => $subparent->getNodeSources()->first()->getTitle()
+                    ];
+                }
             }
         }
 

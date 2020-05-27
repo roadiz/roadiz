@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
+use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -404,12 +405,12 @@ class DocumentRepository extends EntityRepository
     /**
      * Just like the findOneBy method but with relational criteria.
      *
-     * @param array $criteria
-     * @param array|null $orderBy
+     * @param array            $criteria
+     * @param array|null       $orderBy
      * @param Translation|null $translation
      *
-     * @return ArrayCollection
-     *
+     * @return Document|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneBy(
         array $criteria,

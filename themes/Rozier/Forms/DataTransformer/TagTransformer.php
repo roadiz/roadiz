@@ -27,7 +27,7 @@ class TagTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param ArrayCollection $tags
+     * @param ArrayCollection|null $tags
      * @return array|string
      */
     public function transform($tags)
@@ -44,7 +44,7 @@ class TagTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param string $tagIds
+     * @param string|array $tagIds
      * @return array
      */
     public function reverseTransform($tagIds)

@@ -52,16 +52,17 @@ class UniqueNodeNameValidator extends ConstraintValidator
     }
 
     /**
-     * @param string $name
+     * @param string        $name
      * @param EntityManager $entityManager
      *
      * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException|\Doctrine\ORM\NoResultException
      */
     protected function nodeNameExists($name, $entityManager)
     {
         /** @var NodeRepository $nodeRepo */
         $nodeRepo = $entityManager->getRepository(Node::class);
-        return (boolean) $nodeRepo->setDisplayingNotPublishedNodes(true)
-                                  ->exists($name);
+        $nodeRepo->setDisplayingNotPublishedNodes(true);
+        return (boolean) $nodeRepo->exists($name);
     }
 }

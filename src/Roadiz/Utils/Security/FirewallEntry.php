@@ -62,7 +62,7 @@ class FirewallEntry
      */
     protected $firewallLoginCheck;
     /**
-     * @var string
+     * @var array
      */
     protected $firewallBaseRole;
     /**
@@ -70,11 +70,11 @@ class FirewallEntry
      */
     protected $container;
     /**
-     * @var AuthenticationSuccessHandler
+     * @var AuthenticationSuccessHandler|null
      */
     protected $authenticationSuccessHandler;
     /**
-     * @var AuthenticationFailureHandler
+     * @var AuthenticationFailureHandler|null
      */
     protected $authenticationFailureHandler;
     /**
@@ -98,7 +98,7 @@ class FirewallEntry
      */
     protected $authenticationFailureHandlerClass;
     /**
-     * @var AccessDeniedHandlerInterface
+     * @var AccessDeniedHandlerInterface|null
      */
     protected $accessDeniedHandler;
     /**

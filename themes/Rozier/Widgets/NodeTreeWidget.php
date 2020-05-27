@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Widgets;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
@@ -85,7 +86,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\Tag
+     * @return Tag|null
      */
     public function getTag()
     {
@@ -93,7 +94,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Tag $tag
+     * @param Tag|null $tag
      *
      * @return $this
      */
@@ -196,7 +197,7 @@ class NodeTreeWidget extends AbstractWidget
             'position' => 'ASC',
         ];
 
-        if ($this->canOrderByParent($parent, $subRequest)) {
+        if (null !== $parent && $this->canOrderByParent($parent, $subRequest)) {
             $ordering = [
                 $parent->getChildrenOrder() => $parent->getChildrenOrderDirection(),
             ];
@@ -237,7 +238,7 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Node $parent
      * @param bool $subRequest Default: false
-     * @return array
+     * @return array|Paginator
      */
     public function getChildrenNodes(Node $parent = null, $subRequest = false)
     {
@@ -247,7 +248,7 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Node $parent
      * @param bool $subRequest Default: false
-     * @return array
+     * @return array|Paginator
      */
     public function getReachableChildrenNodes(Node $parent = null, $subRequest = false)
     {
@@ -257,7 +258,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @return Node
+     * @return Node|null
      */
     public function getRootNode()
     {
@@ -276,7 +277,7 @@ class NodeTreeWidget extends AbstractWidget
         return $this->filters;
     }
     /**
-     * @return Translation
+     * @return Translation|null
      */
     public function getTranslation()
     {
@@ -288,7 +289,7 @@ class NodeTreeWidget extends AbstractWidget
      */
     public function getAvailableTranslations()
     {
-        return $this->availableTranslations;
+        return $this->availableTranslations ?? [];
     }
 
     /**

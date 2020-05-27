@@ -22,14 +22,14 @@ class NewsletterSubscriber extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Newsletter", inversedBy="newsletterSubscribers")
      * @ORM\JoinColumn(name="newsletter_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Newsletter
+     * @var Newsletter|null
      */
     private $newsletter;
 
     /**
-     * @return Newsletter
+     * @return Newsletter|null
      */
-    public function getNewsletter(): Newsletter
+    public function getNewsletter(): ?Newsletter
     {
         return $this->newsletter;
     }

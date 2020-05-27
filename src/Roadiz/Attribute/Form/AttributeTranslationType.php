@@ -24,7 +24,7 @@ class AttributeTranslationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('label', TextType::class, [
-                'empty_data' => "",
+                'empty_data' => '',
                 'label' => false,
                 'required' => false,
             ])

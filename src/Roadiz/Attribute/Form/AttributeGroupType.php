@@ -12,13 +12,19 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 class AttributeGroupType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('canonicalName', TextType::class, [
-                'label' => 'attribute_group.form.canonicalName'
+                'label' => 'attribute_group.form.canonicalName',
+                'constraints' => [
+                    new NotNull(),
+                    new NotBlank(),
+                ]
             ])
             ->add('attributeGroupTranslations', CollectionType::class, [
                 'label' => 'attribute_group.form.attributeGroupTranslations',

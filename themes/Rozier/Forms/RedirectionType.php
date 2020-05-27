@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class RedirectionType
@@ -29,6 +30,7 @@ class RedirectionType extends AbstractType
                 'placeholder' => $options['placeholder']
             ],
             'constraints' => [
+                new NotNull(),
                 new NotBlank(),
             ],
         ]);

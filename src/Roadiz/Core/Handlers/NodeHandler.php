@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectRepository;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
@@ -627,7 +628,7 @@ class NodeHandler extends AbstractHandler
      * @param  array|null           $criteria
      * @param  array|null           $order
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function getPrevious(
         array $criteria = null,
@@ -668,7 +669,7 @@ class NodeHandler extends AbstractHandler
      * @param  array|null $criteria
      * @param  array|null $order
      *
-     * @return \RZ\Roadiz\Core\Entities\Node|null
+     * @return Node|null
      */
     public function getNext(
         array $criteria = null,
@@ -701,9 +702,9 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * @return \Doctrine\Common\Persistence\ObjectRepository|NodeRepository
+     * @return NodeRepository
      */
-    public function getRepository()
+    public function getRepository(): NodeRepository
     {
         return $this->objectManager->getRepository(Node::class);
     }

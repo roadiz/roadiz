@@ -10,6 +10,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -181,6 +182,7 @@ class UsersGroupsController extends RozierApp
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
+                                    new NotNull(),
                                     new NotBlank(),
                                 ],
                             ]
@@ -213,6 +215,7 @@ class UsersGroupsController extends RozierApp
                             [
                                 'data' => $user->getId(),
                                 'constraints' => [
+                                    new NotNull(),
                                     new NotBlank(),
                                 ],
                             ]
@@ -223,6 +226,7 @@ class UsersGroupsController extends RozierApp
                             [
                                 'data' => $group->getId(),
                                 'constraints' => [
+                                    new NotNull(),
                                     new NotBlank(),
                                 ],
                             ]

@@ -105,12 +105,12 @@ class Newsletter extends AbstractDateTimed
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NewsletterSubscriber", mappedBy="newsletter")
-     * @var ArrayCollection
+     * @var Collection<NewsletterSubscriber>
      */
     private $newsletterSubscribers;
 
     /**
-     * @return Collection
+     * @return Collection<NewsletterSubscriber>
      */
     public function getNewsletterSubscribers(): Collection
     {
@@ -118,7 +118,7 @@ class Newsletter extends AbstractDateTimed
     }
 
     /**
-     * @param Collection $newsletterSubscribers
+     * @param Collection<NewsletterSubscriber> $newsletterSubscribers
      * @return Newsletter
      */
     public function setNewsletterSubscriber(Collection $newsletterSubscribers): Newsletter

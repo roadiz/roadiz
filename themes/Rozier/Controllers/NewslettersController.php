@@ -16,6 +16,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
 
@@ -83,6 +84,7 @@ class NewslettersController extends RozierApp
                          ->add('title', TextType::class, [
                              'label' => 'title',
                              'constraints' => [
+                                 new NotNull(),
                                  new NotBlank(),
                              ],
                          ])

@@ -46,7 +46,6 @@ class CacheInfosCommand extends Command
         if (null !== $cacheDriver) {
             $outputs[] = implode(', ', [
                 '<info>Result cache driver:</info> ' . get_class($cacheDriver),
-                '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
             ]);
         }
 
@@ -54,7 +53,6 @@ class CacheInfosCommand extends Command
         if (null !== $cacheDriver) {
             $outputs[] = implode(', ', [
                 '<info>Hydratation cache driver:</info> ' . get_class($cacheDriver),
-                '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
             ]);
         }
 
@@ -62,7 +60,6 @@ class CacheInfosCommand extends Command
         if (null !== $cacheDriver) {
             $outputs[] = implode(', ', [
                 '<info>Query cache driver:</info> ' . get_class($cacheDriver),
-                 '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
             ]);
         }
 
@@ -70,7 +67,6 @@ class CacheInfosCommand extends Command
         if (null !== $cacheDriver) {
             $outputs[] = implode(', ', [
                 '<info>Metadata cache driver:</info> ' . get_class($cacheDriver),
-                 '<info>Namespace:</info> ' . $cacheDriver->getNamespace()
             ]);
         }
 
@@ -79,7 +75,6 @@ class CacheInfosCommand extends Command
             $nsCache = $this->nsCacheHelper->getCacheProvider();
             $outputs[] = implode(', ', [
                 '<info>Node-sources URLs cache driver:</info> ' . get_class($nsCache),
-                 '<info>Namespace:</info> ' . $nsCache->getNamespace()
             ]);
         }
 

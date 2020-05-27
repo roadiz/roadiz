@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Authentication\Provider;
 
-use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use Symfony\Component\Security\Core\Authentication\Provider\DaoAuthenticationProvider;
@@ -22,7 +21,7 @@ class AttemptAwareDaoAuthenticationProvider extends DaoAuthenticationProvider im
     /**
      * AttemptAwareDaoAuthenticationProvider constructor.
      *
-     * @param EntityManagerInterface  $entityManager
+     * @param LoginAttemptManager     $loginAttemptManager
      * @param UserProviderInterface   $userProvider
      * @param UserCheckerInterface    $userChecker
      * @param string                  $providerKey

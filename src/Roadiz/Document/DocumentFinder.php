@@ -6,10 +6,13 @@ namespace RZ\Roadiz\Document;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Core\Repositories\DocumentRepository;
 
 final class DocumentFinder implements DocumentFinderInterface
 {
-    /** @var EntityManagerInterface */
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
 
     /**
@@ -27,12 +30,10 @@ final class DocumentFinder implements DocumentFinderInterface
      */
     public function findAllByFilenames(array $fileNames)
     {
-        return $this->entityManager
-            ->getRepository(Document::class)
-            ->findBy([
-                "filename" => $fileNames,
-                "raw" => false,
-            ]);
+        return $this->getRepository()->findBy([
+            "filename" => $fileNames,
+            "raw" => false,
+        ]);
     }
 
     /**
@@ -40,11 +41,17 @@ final class DocumentFinder implements DocumentFinderInterface
      */
     public function findOneByFilenames(array $fileNames): ?DocumentInterface
     {
-        return $this->entityManager
-            ->getRepository(Document::class)
-            ->findOneBy([
-                "filename" => $fileNames,
-                "raw" => false,
-            ]);
+        return $this->getRepository()->findOneBy([
+            "filename" => $fileNames,
+            "raw" => false,
+        ]);
+    }
+
+    /**
+     * @return DocumentRepository
+     */
+    protected function getRepository(): DocumentRepository
+    {
+        return $this->entityManager->getRepository(Document::class);
     }
 }

@@ -93,9 +93,9 @@ class NodeTypeHandler extends AbstractHandler
     }
 
     /**
-     * Generate Doctrine entity class for current nodetype.
+     * Generate Doctrine entity class for current node-type.
      *
-     * @return string or false
+     * @return bool
      */
     public function generateSourceEntityClass()
     {

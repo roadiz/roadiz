@@ -12,7 +12,7 @@ class SettingGroupRepository extends EntityRepository
 {
 
     /**
-     * @param $name
+     * @param string $name
      *
      * @return bool
      * @throws \Doctrine\ORM\NoResultException

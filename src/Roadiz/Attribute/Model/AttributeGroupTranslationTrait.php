@@ -23,7 +23,7 @@ trait AttributeGroupTranslationTrait
     protected $attributeGroup;
 
     /**
-     * @return mixed
+     * @return string|null
      */
     public function getName(): ?string
     {
@@ -31,9 +31,9 @@ trait AttributeGroupTranslationTrait
     }
 
     /**
-     * @param mixed $value
+     * @param string|null $value
      *
-     * @return mixed
+     * @return self
      */
     public function setName(?string $value)
     {

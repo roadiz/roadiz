@@ -41,9 +41,9 @@ class NodesToNodes extends AbstractPositioned
     /**
      * Create a new relation between two Nodes and a NodeTypeField.
      *
-     * @param \RZ\Roadiz\Core\Entities\Node $nodeA
-     * @param \RZ\Roadiz\Core\Entities\Node $nodeB
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
+     * @param Node          $nodeA
+     * @param Node          $nodeB
+     * @param NodeTypeField $field NodeTypeField
      */
     public function __construct(Node $nodeA, Node $nodeB, NodeTypeField $field)
     {

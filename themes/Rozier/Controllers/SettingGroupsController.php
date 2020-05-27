@@ -12,6 +12,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -286,6 +287,7 @@ class SettingGroupsController extends RozierApp
                         ->add('name', TextType::class, [
                             'label' => 'name',
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ])
@@ -316,7 +318,10 @@ class SettingGroupsController extends RozierApp
                             TextType::class,
                             [
                                 'label' => 'name',
-                                'constraints' => [new NotBlank()],
+                                'constraints' => [
+                                    new NotNull(),
+                                    new NotBlank()
+                                ],
                             ]
                         )
                         ->add(
@@ -342,6 +347,7 @@ class SettingGroupsController extends RozierApp
                         ->add('settingGroupId', HiddenType::class, [
                             'data' => $settingGroup->getId(),
                             'constraints' => [
+                                new NotNull(),
                                 new NotBlank(),
                             ],
                         ]);

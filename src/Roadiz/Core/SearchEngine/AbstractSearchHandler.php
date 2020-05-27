@@ -118,7 +118,7 @@ abstract class AbstractSearchHandler
      */
     protected function buildQuery($q, array &$args, $searchTags, $proximity)
     {
-        $q = trim($q);
+        $q = null !== $q ? trim($q) : '';
         $qHelper = new Helper();
         $q = $qHelper->escapeTerm($q);
         $singleWord = $this->isQuerySingleWord($q);

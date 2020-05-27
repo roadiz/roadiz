@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\TranslationType;
 use Themes\Rozier\RozierApp;
 
@@ -254,6 +255,7 @@ class TranslationsController extends RozierApp
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [
+                                    new NotNull(),
                                     new NotBlank(),
                                 ],
                             ]
@@ -276,6 +278,7 @@ class TranslationsController extends RozierApp
                             [
                                 'data' => $translation->getId(),
                                 'constraints' => [
+                                    new NotNull(),
                                     new NotBlank(),
                                 ],
                             ]

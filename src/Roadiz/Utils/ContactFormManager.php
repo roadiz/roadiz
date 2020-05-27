@@ -3,21 +3,20 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils;
 
-use RZ\Roadiz\CMS\Forms\HoneypotType;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\CMS\Forms\Constraints\Recaptcha;
+use RZ\Roadiz\CMS\Forms\HoneypotType;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -27,6 +26,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 use Twig\Environment;
 
 /**
@@ -48,11 +48,11 @@ class ContactFormManager extends EmailManager
      */
     protected $redirectUrl = null;
     /**
-     * @var FormBuilder
+     * @var FormBuilderInterface|null
      */
     protected $formBuilder = null;
     /**
-     * @var Form
+     * @var FormInterface|null
      */
     protected $form = null;
     /**
@@ -88,13 +88,15 @@ class ContactFormManager extends EmailManager
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'contactFormManager' Factory Service
      *
-     * @param Request $request
+     * @param Request              $request
      * @param FormFactoryInterface $formFactory
-     * @param TranslatorInterface $translator
-     * @param Environment $templating
-     * @param \Swift_Mailer $mailer
-     * @param Settings $settingsBag
+     * @param TranslatorInterface  $translator
+     * @param Environment          $templating
+     * @param \Swift_Mailer        $mailer
+     * @param Settings             $settingsBag
      * @param DocumentUrlGenerator $documentUrlGenerator
+     *
+     * @throws \ReflectionException
      */
     public function __construct(
         Request $request,
@@ -160,7 +162,7 @@ class ContactFormManager extends EmailManager
     }
 
     /**
-     * @return Form
+     * @return FormInterface
      */
     public function getForm()
     {
@@ -179,6 +181,7 @@ class ContactFormManager extends EmailManager
         $this->getFormBuilder()->add('email', EmailType::class, [
                 'label' => 'your.email',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new Email([
                         'message' => 'email.not.valid',
@@ -188,12 +191,14 @@ class ContactFormManager extends EmailManager
             ->add('name', TextType::class, [
                 'label' => 'your.name',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
             ->add('message', TextareaType::class, [
                 'label' => 'your.message',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ])
@@ -413,9 +418,11 @@ class ContactFormManager extends EmailManager
     }
 
     /**
-     * @param Form $form
+     * @param FormInterface $form
+     *
+     * @throws \Exception
      */
-    protected function handleFormData(Form $form)
+    protected function handleFormData(FormInterface $form)
     {
         $formData = $form->getData();
         $fields = $this->flattenFormData($formData, []);

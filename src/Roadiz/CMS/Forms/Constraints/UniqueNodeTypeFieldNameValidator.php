@@ -14,7 +14,7 @@ class UniqueNodeTypeFieldNameValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $value = StringHandler::variablize($value);
+        $value = StringHandler::variablize($value ?? '');
 
         if ($constraint instanceof UniqueNodeTypeFieldName) {
             /*

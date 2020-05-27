@@ -18,6 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  *
@@ -29,6 +30,7 @@ class CustomFormType extends AbstractType
         $builder->add('displayName', TextType::class, [
                 'label' => 'customForm.displayName',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                     new Length([
                         'max' => 255,

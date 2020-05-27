@@ -61,7 +61,7 @@ class TranslationViewer
     }
 
     /**
-     * @return TranslationRepository<Translation>
+     * @return TranslationRepository
      */
     public function getRepository()
     {

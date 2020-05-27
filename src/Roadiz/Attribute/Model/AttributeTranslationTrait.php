@@ -16,13 +16,13 @@ trait AttributeTranslationTrait
     }
 
     /**
-     * @param string $label
+     * @param string|null $label
      *
      * @return mixed
      */
     public function setLabel(?string $label)
     {
-        $this->label = trim($label);
+        $this->label = null !== $label ? trim($label) : null;
         return $this;
     }
 

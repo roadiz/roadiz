@@ -11,13 +11,15 @@ class NonSqlReservedWordValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        $fieldName = StringHandler::variablize($value);
-        $lowerName = strtolower($value);
-        if (in_array($value, NonSqlReservedWord::$forbiddenNames) ||
-            in_array($lowerName, NonSqlReservedWord::$forbiddenNames) ||
-            in_array($fieldName, NonSqlReservedWord::$forbiddenNames)) {
-            if ($constraint instanceof NonSqlReservedWord) {
-                $this->context->addViolation($constraint->message);
+        if (null !== $value) {
+            $fieldName = StringHandler::variablize($value);
+            $lowerName = strtolower($value);
+            if (in_array($value, NonSqlReservedWord::$forbiddenNames) ||
+                in_array($lowerName, NonSqlReservedWord::$forbiddenNames) ||
+                in_array($fieldName, NonSqlReservedWord::$forbiddenNames)) {
+                if ($constraint instanceof NonSqlReservedWord) {
+                    $this->context->addViolation($constraint->message);
+                }
             }
         }
     }

@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
  * Class TranstypeType
@@ -32,6 +33,7 @@ class TranstypeType extends AbstractType
                 'choices' => $this->getAvailableTypes($options['em'], $options['currentType']),
                 'label' => 'nodeType',
                 'constraints' => [
+                    new NotNull(),
                     new NotBlank(),
                 ],
             ]

@@ -16,7 +16,7 @@ class UniqueUsernameValidator extends ConstraintValidator
          * If value is already the node name
          * do nothing.
          */
-        if (null !== $constraint->currentValue && strtolower($value) == strtolower($constraint->currentValue)) {
+        if (null !== $value && null !== $constraint->currentValue && strtolower($value) == strtolower($constraint->currentValue)) {
             return;
         }
 

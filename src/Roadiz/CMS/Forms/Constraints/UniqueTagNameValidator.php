@@ -33,7 +33,7 @@ class UniqueTagNameValidator extends ConstraintValidator
      */
     protected function testSingleValue($value, Constraint $constraint)
     {
-        $value = StringHandler::slugify($value);
+        $value = StringHandler::slugify($value ?? '');
 
         /*
          * If value is already the node name
@@ -68,11 +68,11 @@ class UniqueTagNameValidator extends ConstraintValidator
     }
 
     /**
-     * @param $value
+     * @param string|null $value
      * @return bool
      */
     protected function isMulti($value)
     {
-        return (boolean) strpos($value, ',');
+        return (boolean) strpos($value ?? '', ',');
     }
 }
