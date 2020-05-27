@@ -85,6 +85,7 @@ class FolderRepository extends EntityRepository
      * @param string $folderPath
      *
      * @return Folder|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findByPath(string $folderPath)
     {
