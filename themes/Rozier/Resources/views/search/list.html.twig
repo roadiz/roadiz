@@ -11,8 +11,6 @@
             {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         </header>
 
-        {% include '@Rozier/widgets/filtersBar.html.twig' %}
-
         <article class="content content-no-action-menu">
             {% if nodeTypeForm %}
                 {% form_theme nodeTypeForm '@Rozier/forms.html.twig' %}
@@ -37,7 +35,11 @@
                 </form>
             {% endif %}
 
-            <hr>
+            {% if filters.itemCount > filters.itemPerPage %}
+                {% include '@Rozier/widgets/filtersBar.html.twig' %}
+            {% else %}
+                <hr>
+            {% endif %}
             <div class="data-uk-margin content-table-cont">
                 <table class="nodes content-table uk-table">
                     <thead>
@@ -52,6 +54,9 @@
                     </tbody>
                 </table>
             </div>
+            {% if filters.itemCount > filters.itemPerPage %}
+                {% include '@Rozier/widgets/filtersBar.html.twig' %}
+            {% endif %}
         </article>
     </section>
 {% endblock %}

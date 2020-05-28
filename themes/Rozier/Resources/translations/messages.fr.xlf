@@ -6972,6 +6972,11 @@
             <target state="translated">Cacher la version de Roadiz</target>
             <note>Setting</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="exact_search">
+            <source>exact_search</source>
+            <target state="translated">Recherche exacte</target>
+            <note>Node search page, search exact query</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
