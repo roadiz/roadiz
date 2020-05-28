@@ -26,6 +26,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,7 +89,15 @@ class SearchController extends RozierApp
     protected function processCriteria($data, $prefix = "")
     {
         if (!empty($data[$prefix . "nodeName"])) {
-            $data[$prefix . "nodeName"] = ["LIKE", "%" . $data[$prefix . "nodeName"] . "%"];
+            if (isset($data[$prefix . "nodeName_exact"]) && $data[$prefix . "nodeName_exact"] === true) {
+                $data[$prefix . "nodeName"] = $data[$prefix . "nodeName"];
+            } else {
+                $data[$prefix . "nodeName"] = ["LIKE", "%" . $data[$prefix . "nodeName"] . "%"];
+            }
+        }
+
+        if (key_exists($prefix . "nodeName_exact", $data)) {
+            unset($data[$prefix . "nodeName_exact"]);
         }
 
         if (isset($data[$prefix . 'parent']) && !$this->isBlank($data[$prefix . "parent"])) {
@@ -139,10 +148,16 @@ class SearchController extends RozierApp
         $fields = $nodetype->getFields();
         foreach ($data as $key => $value) {
             if ($key === 'title') {
-                $data[$key] = ["LIKE", "%" . $value . "%"];
+                $data['title'] = ["LIKE", "%" . $value . "%"];
+                if (isset($data[$key . '_exact'])) {
+                    if ($data[$key . '_exact'] === true) {
+                        $data['title'] = $value;
+                    }
+                }
             } elseif ($key === 'publishedAt') {
                 $this->appendDateTimeCriteria($data, 'publishedAt');
             } else {
+                /** @var NodeTypeField $field */
                 foreach ($fields as $field) {
                     if ($key == $field->getName()) {
                         if ($field->getType() === NodeTypeField::MARKDOWN_T
@@ -152,11 +167,14 @@ class SearchController extends RozierApp
                             || $field->getType() === NodeTypeField::TEXT_T
                             || $field->getType() === NodeTypeField::EMAIL_T
                             || $field->getType() === NodeTypeField::CSS_T) {
-                            $data[$key] = ["LIKE", "%" . $value . "%"];
+                            $data[$field->getVarName()] = ["LIKE", "%" . $value . "%"];
+                            if (isset($data[$key . '_exact']) && $data[$key . '_exact'] === true) {
+                                $data[$field->getVarName()] = $value;
+                            }
                         } elseif ($field->getType() === NodeTypeField::BOOLEAN_T) {
-                            $data[$key] = (bool) $value;
+                            $data[$field->getVarName()] = (bool) $value;
                         } elseif ($field->getType() === NodeTypeField::MULTIPLE_T) {
-                            $data[$key] = implode(",", $value);
+                            $data[$field->getVarName()] = implode(",", $value);
                         } elseif ($field->getType() === NodeTypeField::DATETIME_T) {
                             $this->appendDateTimeCriteria($data, $key);
                         } elseif ($field->getType() === NodeTypeField::DATE_T) {
@@ -164,6 +182,9 @@ class SearchController extends RozierApp
                         }
                     }
                 }
+            }
+            if (key_exists($key . '_exact', $data)) {
+                unset($data[$key . '_exact']);
             }
         }
         return $data;
@@ -308,7 +329,7 @@ class SearchController extends RozierApp
             'label' => 'search.a.node',
             'attr' => [
                 'class' => 'uk-button uk-button-primary',
-            ]
+            ],
         ]);
 
         if ($exportXlsx) {
@@ -316,7 +337,7 @@ class SearchController extends RozierApp
                 'label' => 'export.all.nodesSource',
                 'attr' => [
                     'class' => 'uk-button rz-no-ajax',
-                ]
+                ],
             ]);
         }
 
@@ -461,61 +482,103 @@ class SearchController extends RozierApp
     protected function buildSimpleForm($prefix)
     {
         /** @var FormBuilder $builder */
-        $builder = $this->createFormBuilder([], ["method" => "get"])
-                        ->add($prefix . 'status', NodeStatesType::class, [
-                            'label' => 'node.status',
-                            'required' => false,
-                        ])
-                        ->add($prefix . 'visible', ExtendedBooleanType::class, [
-                            'label' => 'visible',
-                        ])
-                        ->add($prefix . 'locked', ExtendedBooleanType::class, [
-                            'label' => 'locked',
-                        ])
-                        ->add($prefix . 'sterile', ExtendedBooleanType::class, [
-                            'label' => 'sterile-status',
-                        ])
-                        ->add($prefix . 'hideChildren', ExtendedBooleanType::class, [
-                            'label' => 'hiding-children',
-                        ])
-                        ->add($prefix . 'nodeName', TextType::class, [
-                            'label' => 'nodeName',
-                            'required' => false,
-                        ])
-                        ->add($prefix . 'parent', TextType::class, [
-                            'label' => 'node.id.parent',
-                            'required' => false,
-                        ])
-                        ->add($prefix . 'createdAt', CompareDatetimeType::class, [
-                            'label' => 'created.at',
-                            'inherit_data' => false,
-                            'required' => false,
-                        ])
-                        ->add($prefix . 'updatedAt', CompareDatetimeType::class, [
-                            'label' => 'updated.at',
-                            'inherit_data' => false,
-                            'required' => false,
-                        ])
-                        ->add($prefix . 'limitResult', NumberType::class, [
-                            'label' => 'node.limit.result',
-                            'required' => false,
-                            'constraints' => [
-                                new GreaterThan(0),
-                            ],
-                        ])
-                        // No need to prefix tags
-                        ->add('tags', TextType::class, [
-                            'label' => 'node.tags',
-                            'required' => false,
-                            'attr' => ['class' => 'rz-tag-autocomplete'],
-                        ])
-                        // No need to prefix tags
-                        ->add('tagExclusive', CheckboxType::class, [
-                            'label' => 'node.tag.exclusive',
-                            'required' => false,
-                        ]);
+        $builder = $this->createFormBuilder([], ["method" => "get"]);
+
+        $builder->add($prefix . 'status', NodeStatesType::class, [
+            'label' => 'node.status',
+            'required' => false,
+        ]);
+        $builder->add(
+            $builder->create('status_group', FormType::class, [
+                'label' => false,
+                'inherit_data' => true,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-col-status-group',
+                ],
+            ])
+            ->add($prefix . 'visible', ExtendedBooleanType::class, [
+                'label' => 'visible',
+            ])
+            ->add($prefix . 'locked', ExtendedBooleanType::class, [
+                'label' => 'locked',
+            ])
+            ->add($prefix . 'sterile', ExtendedBooleanType::class, [
+                'label' => 'sterile-status',
+            ])
+            ->add($prefix . 'hideChildren', ExtendedBooleanType::class, [
+                'label' => 'hiding-children',
+            ])
+        );
+        $builder->add(
+            $this->createTextSearchForm($builder, $prefix . 'nodeName', 'nodeName')
+        );
+        $builder->add($prefix . 'parent', TextType::class, [
+                'label' => 'node.id.parent',
+                'required' => false,
+            ])
+            ->add($prefix . 'createdAt', CompareDatetimeType::class, [
+                'label' => 'created.at',
+                'inherit_data' => false,
+                'required' => false,
+            ])
+            ->add($prefix . 'updatedAt', CompareDatetimeType::class, [
+                'label' => 'updated.at',
+                'inherit_data' => false,
+                'required' => false,
+            ])
+            ->add($prefix . 'limitResult', NumberType::class, [
+                'label' => 'node.limit.result',
+                'required' => false,
+                'constraints' => [
+                    new GreaterThan(0),
+                ],
+            ])
+            // No need to prefix tags
+            ->add('tags', TextType::class, [
+                'label' => 'node.tags',
+                'required' => false,
+                'attr' => ['class' => 'rz-tag-autocomplete'],
+            ])
+            // No need to prefix tags
+            ->add('tagExclusive', CheckboxType::class, [
+                'label' => 'node.tag.exclusive',
+                'required' => false,
+            ])
+        ;
 
         return $builder;
+    }
+
+    /**
+     * @param FormBuilderInterface $builder
+     * @param string               $formName
+     * @param string               $label
+     *
+     * @return FormBuilderInterface
+     */
+    protected function createTextSearchForm(
+        FormBuilderInterface $builder,
+        string $formName,
+        string $label
+    ): FormBuilderInterface {
+        return $builder->create($formName . '_group', FormType::class, [
+                'label' => false,
+                'inherit_data' => true,
+                'mapped' => false,
+                'attr' => [
+                    'class' => 'form-col-search-group',
+                ],
+            ])
+            ->add($formName, TextType::class, [
+                'label' => $label,
+                'required' => false,
+            ])
+            ->add($formName . '_exact', CheckboxType::class, [
+                'label' => 'exact_search',
+                'required' => false,
+            ])
+        ;
     }
 
     /**
@@ -534,15 +597,10 @@ class SearchController extends RozierApp
                 'label' => 'nodetypefield',
                 'attr' => ["class" => "label-separator"],
             ]
-        )->add(
-            "title",
-            TextType::class,
-            [
-                'label' => 'title',
-                'required' => false,
-            ]
         );
-
+        $builder->add(
+            $this->createTextSearchForm($builder, 'title', 'title')
+        );
         if ($nodetype->isPublishable()) {
             $builder->add(
                 "publishedAt",
@@ -604,10 +662,12 @@ class SearchController extends RozierApp
                 $field->getType() === NodeTypeField::YAML_T ||
                 $field->getType() === NodeTypeField::CSS_T
             ) {
-                $type = TextType::class;
+                $builder->add(
+                    $this->createTextSearchForm($builder, $field->getVarName(), $field->getLabel())
+                );
+            } else {
+                $builder->add($field->getVarName(), $type, $option);
             }
-
-            $builder->add($field->getName(), $type, $option);
         }
         return $builder;
     }

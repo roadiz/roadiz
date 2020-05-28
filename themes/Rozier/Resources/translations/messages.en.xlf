@@ -2380,7 +2380,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="219" approved="yes">
         <source>remove.user.%name%.from.group.%group%</source>
-        <target state="final">Remove %name% form group %group%</target>
+        <target state="final">Remove %name% from group %group%</target>
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/bb/05/3e465f9f17976280fe8af115c529fb5a48db95f9004b652cae5202baf8bb.php</context>
           <context context-type="linenumber">35</context>
@@ -4602,9 +4602,9 @@
         <source>embed.document.already_exists</source>
         <target state="final">Document to embed already exists.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
+      <trans-unit xml:space="preserve" id="embedId.is_not_valid" approved="yes">
         <source>embedId.is_not_valid</source>
-        <target state="translated">L'identificativo del supporto non è valido.</target>
+        <target state="final">Media identifier is not valid.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="document.metas" approved="yes">
         <source>document.metas</source>
@@ -6971,6 +6971,11 @@
             <source>hide_roadiz_version</source>
             <target state="translated">Hide Roadiz version</target>
             <note>Setting</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="exact_search">
+            <source>exact_search</source>
+            <target state="translated">Exact search</target>
+            <note>Node search page, search exact query</note>
         </trans-unit>
     </body>
   </file>
