@@ -12,7 +12,11 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesToNodesRepository")
  * @ORM\Table(name="nodes_to_nodes", indexes={
- *     @ORM\Index(columns={"position"})
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"node_a_id", "node_type_field_id"}),
+ *     @ORM\Index(columns={"node_a_id", "node_type_field_id", "position"}),
+ *     @ORM\Index(columns={"node_b_id", "node_type_field_id"}),
+ *     @ORM\Index(columns={"node_b_id", "node_type_field_id", "position"})
  * })
  */
 class NodesToNodes extends AbstractPositioned

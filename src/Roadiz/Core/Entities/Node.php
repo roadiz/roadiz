@@ -36,6 +36,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *     @ORM\Index(columns={"node_name", "status"}),
  *     @ORM\Index(columns={"visible", "status"}),
  *     @ORM\Index(columns={"visible", "status", "parent_node_id"}),
+ *     @ORM\Index(columns={"visible", "parent_node_id"}),
  *     @ORM\Index(columns={"home"})
  * })
  * @ORM\HasLifecycleCallbacks

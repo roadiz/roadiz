@@ -54,6 +54,7 @@ class NodeTypes extends ParameterBag
             /** @var NodeType $nodeType */
             foreach ($nodeTypes as $nodeType) {
                 $this->parameters[$nodeType->getName()] = $nodeType;
+                $this->parameters[$nodeType->getSourceEntityFullQualifiedClassName()] = $nodeType;
             }
         } catch (DBALException $e) {
             $this->parameters = [];
