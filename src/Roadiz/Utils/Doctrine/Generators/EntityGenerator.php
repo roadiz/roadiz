@@ -99,7 +99,7 @@ class EntityGenerator
     {
         return 'class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
 {
-    ' . $this->getClassProperties() . $this->getClassConstructor() . $this->getClassMethods() . '
+    ' . $this->getClassProperties() . $this->getClassConstructor() . $this->getNodeTypeNameGetter() . $this->getClassMethods() . '
 }'.PHP_EOL;
     }
 
@@ -190,6 +190,24 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
         }
 
         return '';
+    }
+
+    /**
+     * @return string
+     */
+    protected function getNodeTypeNameGetter(): string
+    {
+            return '
+    /**
+     * @return string
+     * @Serializer\VirtualProperty
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_default"})
+     * @Serializer\SerializedName("@type")
+     */
+    public function getNodeTypeName(): string
+    {
+        return \''.$this->nodeType->getName().'\';
+    }'.PHP_EOL;
     }
 
     /**
