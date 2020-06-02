@@ -12,6 +12,7 @@ use RZ\Roadiz\Core\Entities\Redirection;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Core\Routing\NodeRouter;
 use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -167,7 +168,7 @@ final class NodeMover
             return $nodeSource;
         }
         $newPath = $this->urlGenerator->generate($nodeSource, [
-            'noCache' => true // do not use nodeSourceUrl cache provider
+            NodeRouter::NO_CACHE_PARAMETER => true // do not use nodeSourceUrl cache provider
         ]);
         /*
          * Only creates redirection if path changed
@@ -194,6 +195,10 @@ final class NodeMover
                 $existingRedirection = new Redirection();
                 $this->entityManager->persist($existingRedirection);
                 $existingRedirection->setQuery($previousPath);
+                $this->logger->info('New redirection created', [
+                    'oldPath' => $previousPath,
+                    'nodeSource' => $nodeSource->getId(),
+                ]);
             }
             $existingRedirection->setRedirectNodeSource($nodeSource);
             if ($permanently) {

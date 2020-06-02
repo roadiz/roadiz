@@ -69,7 +69,7 @@ final class NodesSourcesUrlGenerator implements UrlGeneratorInterface
      */
     public function getUrl(bool $absolute = false, string $canonicalSchemeAuthority = ''): string
     {
-        trigger_error('NodesSourcesUrlGenerator::getUrl method is deprecated. Use ChainRouter::generate method instead.', E_USER_DEPRECATED);
+        @trigger_error('NodesSourcesUrlGenerator::getUrl method is deprecated. Use ChainRouter::generate method instead.', E_USER_DEPRECATED);
 
         if (null !== $this->request) {
             $schemeAuthority = '';
@@ -127,7 +127,7 @@ final class NodesSourcesUrlGenerator implements UrlGeneratorInterface
                 }
             }
 
-            $path = $this->pathAggregator->aggregatePath($this->nodeSource);
+            $path = $this->pathAggregator->aggregatePath($this->nodeSource, $parameters);
 
             /*
              * If using node-name, we must use shortLocale when current

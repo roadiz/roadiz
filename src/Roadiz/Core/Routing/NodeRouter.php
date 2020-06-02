@@ -24,6 +24,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class NodeRouter extends Router implements VersatileGeneratorInterface
 {
     /**
+     * @var string
+     */
+    const NO_CACHE_PARAMETER = '_no_cache';
+
+    /**
      * @var EntityManagerInterface
      */
     protected $em;
@@ -197,9 +202,8 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         }
 
         $noCache = false;
-        if (!empty($parameters['noCache'])) {
-            $noCache = (bool)($parameters['noCache']);
-            unset($parameters['noCache']);
+        if (!empty($parameters[static::NO_CACHE_PARAMETER])) {
+            $noCache = (bool)($parameters[static::NO_CACHE_PARAMETER]);
         }
 
         $nodePathInfo = $this->getResourcePath($name, $parameters, $noCache);
@@ -222,6 +226,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $matcher instanceof NodeUrlMatcher &&
             in_array($parameters['_format'], $matcher->getSupportedFormatExtensions())) {
             unset($parameters['_format']);
+        }
+        if (array_key_exists(static::NO_CACHE_PARAMETER, $parameters)) {
+            unset($parameters[static::NO_CACHE_PARAMETER]);
         }
         if (count($parameters) > 0) {
             $queryString = '?' . http_build_query($parameters);
