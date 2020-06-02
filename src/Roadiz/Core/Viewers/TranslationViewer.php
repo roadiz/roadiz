@@ -7,10 +7,13 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -202,17 +205,29 @@ class TranslationViewer
                     unset($attr['_route_params']['page']);
                 }
 
-                $url = $this->router->generate(
-                    $name,
-                    array_merge($attr['_route_params'], $query),
-                    $absolute
-                );
-            } elseif ($node) {
-                $nodesSources = $node->getNodeSourcesByTranslation($translation)->first();
-                if (null !== $nodesSources && false !== $nodesSources) {
+                if (is_string($name)) {
                     $url = $this->router->generate(
-                        $nodesSources,
-                        $query,
+                        $name,
+                        array_merge($attr['_route_params'], $query),
+                        $absolute
+                    );
+                } else {
+                    $url = $this->router->generate(
+                        RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                        array_merge($attr['_route_params'], $query, [
+                            RouteObjectInterface::ROUTE_OBJECT => $name
+                        ]),
+                        $absolute
+                    );
+                }
+            } elseif ($node) {
+                $nodesSources = $node->getNodeSourcesByTranslation($translation)->first() ?: null;
+                if (null !== $nodesSources && $nodesSources instanceof NodesSources) {
+                    $url = $this->router->generate(
+                        RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                        array_merge($query, [
+                            RouteObjectInterface::ROUTE_OBJECT => $nodesSources
+                        ]),
                         $absolute
                     );
                 }

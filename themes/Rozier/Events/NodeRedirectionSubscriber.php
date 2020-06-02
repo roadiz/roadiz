@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Themes\Rozier\Events;
 
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
-use RZ\Roadiz\Core\Events\FilterNodePathEvent;
 use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Node\NodeMover;
@@ -47,11 +46,11 @@ class NodeRedirectionSubscriber implements EventSubscriberInterface
     /**
      * Empty nodeSources Url cache
      *
-     * @param FilterNodePathEvent      $event
+     * @param NodePathChangedEvent     $event
      * @param string                   $eventName
      * @param EventDispatcherInterface $dispatcher
      */
-    public function redirectOldPaths(FilterNodePathEvent $event, $eventName, EventDispatcherInterface $dispatcher)
+    public function redirectOldPaths(NodePathChangedEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
         if (null !== $event->getNode() &&
             $event->getNode()->isPublished() &&

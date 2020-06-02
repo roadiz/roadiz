@@ -14,6 +14,8 @@ use Symfony\Component\Stopwatch\Stopwatch;
  * Class RoadizRouteCollection.
  *
  * @package RZ\Roadiz\Core\Routing
+ * TODO: Convert logic into Symfony\Cmf\Component\Routing\RouteProviderInterface
+ * @deprecated Convert logic into Symfony\Cmf\Component\Routing\RouteProviderInterface
  */
 class RoadizRouteCollection extends DeferredRouteCollection
 {

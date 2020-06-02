@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -144,19 +145,11 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     }
 
     /**
-     * Whether this generator supports the supplied $name.
-     *
-     * This check does not need to look if the specific instance can be
-     * resolved to a route, only whether the router can generate routes from
-     * objects of this class.
-     *
-     * @param mixed $name The route "name" which may also be an object or anything
-     *
-     * @return bool
+     * @inheritDoc
      */
     public function supports($name): bool
     {
-        return ($name instanceof NodesSources);
+        return ($name instanceof NodesSources || $name === RouteObjectInterface::OBJECT_BASED_ROUTE_NAME);
     }
 
     /**
@@ -172,10 +165,20 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     public function getRouteDebugMessage($name, array $parameters = []): string
     {
         if ($name instanceof NodesSources) {
+            @trigger_error('Passing an object as route name is deprecated since version 1.5. Pass the `RouteObjectInterface::OBJECT_BASED_ROUTE_NAME` as route name and the object in the parameters with key `RouteObjectInterface::ROUTE_OBJECT` resp the content id with content_id.', E_USER_DEPRECATED);
             return '['.$name->getTranslation()->getLocale().']' .
                 $name->getTitle() . ' - ' .
                 $name->getNode()->getNodeName() .
                 '['.$name->getNode()->getId().']';
+        } elseif (RouteObjectInterface::OBJECT_BASED_ROUTE_NAME === $name) {
+            if (array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters) &&
+                $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof NodesSources) {
+                $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
+                return '['.$route->getTranslation()->getLocale().']' .
+                    $route->getTitle() . ' - ' .
+                    $route->getNode()->getNodeName() .
+                    '['.$route->getNode()->getId().']';
+            }
         }
         return (string) $name;
     }
@@ -185,7 +188,22 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
-        if (null === $name || !$name instanceof NodesSources) {
+        if (!is_string($name)) {
+            @trigger_error('Passing an object as route name is deprecated since version 1.5. Pass the `RouteObjectInterface::OBJECT_BASED_ROUTE_NAME` as route name and the object in the parameters with key `RouteObjectInterface::ROUTE_OBJECT` resp the content id with content_id.', E_USER_DEPRECATED);
+            $route = $name;
+        } elseif (RouteObjectInterface::OBJECT_BASED_ROUTE_NAME === $name) {
+            if (array_key_exists(RouteObjectInterface::ROUTE_OBJECT, $parameters) &&
+                $parameters[RouteObjectInterface::ROUTE_OBJECT] instanceof NodesSources) {
+                $route = $parameters[RouteObjectInterface::ROUTE_OBJECT];
+                unset($parameters[RouteObjectInterface::ROUTE_OBJECT]);
+            } else {
+                $route = null;
+            }
+        } else {
+            $route = null;
+        }
+
+        if (null === $route || !$route instanceof NodesSources) {
             throw new RouteNotFoundException();
         }
 
@@ -202,7 +220,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             unset($parameters['noCache']);
         }
 
-        $nodePathInfo = $this->getResourcePath($name, $parameters, $noCache);
+        $nodePathInfo = $this->getResourcePath($route, $parameters, $noCache);
 
         /*
          * If node path is complete, do not alter path any more.

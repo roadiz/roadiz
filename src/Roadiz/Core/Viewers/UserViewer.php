@@ -9,6 +9,7 @@ use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
 use Swift_TransportException;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -78,10 +79,26 @@ class UserViewer
         $emailContact = $this->getContactEmail();
         $siteName = $this->getSiteName();
 
+        if (is_string($route)) {
+            $resetLink = $urlGenerator->generate(
+                $route,
+                [
+                    'token' => $this->user->getConfirmationToken(),
+                ],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        } else {
+            $resetLink = $urlGenerator->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                [
+                    RouteObjectInterface::ROUTE_OBJECT => $route,
+                    'token' => $this->user->getConfirmationToken(),
+                ],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
         $this->emailManager->setAssignation([
-            'resetLink' => $urlGenerator->generate($route, [
-                'token' => $this->user->getConfirmationToken(),
-            ], UrlGeneratorInterface::ABSOLUTE_URL),
+            'resetLink' => $resetLink,
             'user' => $this->user,
             'site' => $siteName,
             'mailContact' => $emailContact,
