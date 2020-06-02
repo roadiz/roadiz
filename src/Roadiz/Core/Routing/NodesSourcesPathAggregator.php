@@ -7,5 +7,5 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 
 interface NodesSourcesPathAggregator
 {
-    public function aggregatePath(NodesSources $nodesSources): string;
+    public function aggregatePath(NodesSources $nodesSources, array $parameters = []): string;
 }

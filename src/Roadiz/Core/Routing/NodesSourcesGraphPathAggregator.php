@@ -7,7 +7,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 
 class NodesSourcesGraphPathAggregator implements NodesSourcesPathAggregator
 {
-    public function aggregatePath(NodesSources $nodesSources): string
+    public function aggregatePath(NodesSources $nodesSources, array $parameters = []): string
     {
         $urlTokens[] = $nodesSources->getIdentifier();
 
