@@ -34,11 +34,18 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
 
     /**
      * @param NodesSources $nodesSources
+     * @param array        $parameters
      *
      * @return string
      */
-    public function aggregatePath(NodesSources $nodesSources): string
+    public function aggregatePath(NodesSources $nodesSources, array $parameters = []): string
     {
+        if (isset($parameters[NodeRouter::NO_CACHE_PARAMETER]) &&
+            $parameters[NodeRouter::NO_CACHE_PARAMETER] === true) {
+            $urlTokens = array_reverse($this->getIdentifiers($nodesSources));
+            return implode('/', $urlTokens);
+        }
+
         if (!$this->cache->contains($nodesSources->getId())) {
             $urlTokens = array_reverse($this->getIdentifiers($nodesSources));
             $this->cache->save($nodesSources->getId(), implode('/', $urlTokens));
