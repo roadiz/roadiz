@@ -131,13 +131,21 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container['contextListener'] = function (Container $c) {
             return new ContextListener(
                 $c['securityTokenStorage'],
-                [
-                    $c['userProvider'],
-                ],
+                $c['userProviders'],
                 Kernel::SECURITY_DOMAIN,
                 $c['logger.security'],
                 $c['dispatcher']
             );
+        };
+        
+        /*
+         * userProviders should be extendable to add new UserProviderInterface implementation
+         * if we add external IdentityProvider to expose private Roadiz content
+         */
+        $container['userProviders'] = function (Container $c) {
+            return [
+                $c['userProvider'],
+            ];
         };
 
         $container['accessMap'] = function () {
