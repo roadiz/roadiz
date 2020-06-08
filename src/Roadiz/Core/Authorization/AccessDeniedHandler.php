@@ -18,7 +18,13 @@ use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
  */
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
+    /**
+     * @var UrlGeneratorInterface
+     */
     protected $urlGenerator;
     /**
      * @var string
@@ -59,7 +65,12 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
     {
         $this->logger->error('User tried to access: ' . $request->getUri());
 
-        if ($request->isXmlHttpRequest()) {
+        $returnJson = $request->isXmlHttpRequest() ||
+            $request->getRequestFormat() === 'json' ||
+            (count($request->getAcceptableContentTypes()) === 1 && $request->getAcceptableContentTypes()[0] === 'application/json') ||
+            ($request->attributes->has('_format') && $request->attributes->get('_format') === 'json');
+
+        if ($returnJson) {
             return new JsonResponse(
                 [
                     'message' => $accessDeniedException->getMessage(),
@@ -74,10 +85,8 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
             } else {
                 $redirectUrl = $request->getBaseUrl();
             }
-            $response = new RedirectResponse($redirectUrl);
-            $response->setStatusCode(Response::HTTP_FORBIDDEN);
-
-            return $response;
+            // Forbidden code should be set on final response, not the redirection!
+            return new RedirectResponse($redirectUrl, Response::HTTP_FOUND);
         }
     }
 }
