@@ -267,7 +267,14 @@ class RozierApp extends BackendController
                 'name' => 'construction',
                 'path' => null,
                 'icon' => 'uk-icon-rz-construction',
-                'roles' => ['ROLE_ACCESS_NODETYPES', 'ROLE_ACCESS_TRANSLATIONS', 'ROLE_ACCESS_THEMES', 'ROLE_ACCESS_FONTS'],
+                'roles' => [
+                    'ROLE_ACCESS_NODETYPES',
+                    'ROLE_ACCESS_ATTRIBUTES',
+                    'ROLE_ACCESS_TRANSLATIONS',
+                    'ROLE_ACCESS_THEMES',
+                    'ROLE_ACCESS_FONTS',
+                    'ROLE_ACCESS_REDIRECTIONS',
+                ],
                 'subentries' => [
                     'manage.nodeTypes' => [
                         'name' => 'manage.nodeTypes',
