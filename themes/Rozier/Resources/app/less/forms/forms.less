@@ -225,6 +225,17 @@
         }
     }
 
+    .form-check-label {
+        font-size: 12px;
+        color: @grey-form-label;
+        font-weight: normal;
+    }
+
+    input[type=radio] + .form-check-label,
+    input[type=checkbox] + .form-check-label {
+        margin-left: 4px;
+    }
+
     legend {
         text-align: left;
         font-size: 16px;
