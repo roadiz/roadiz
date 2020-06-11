@@ -1,3 +1,5 @@
+{% use "bootstrap_4_layout.html.twig" %}
+
 {#
  #
  # This file extends default symfony2 fields types
@@ -11,14 +13,6 @@
         <textarea {{ block('widget_attributes') }} data-uk-rz-htmleditor{# data-uk-htmleditor #}>{{ value }}</textarea>
     {% endspaceless %}
 {% endblock markdown_widget %}
-
-{% block checkbox_widget -%}
-    <input class="rz-boolean-checkbox" type="checkbox" data-on-text="I" data-off-text="O" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
-{%- endblock checkbox_widget %}
-
-{% block number_widget -%}
-    <input type="number" step="any" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value|replace({',': '.'}) }}"{% endif %} />
-{%- endblock number_widget %}
 
 {% block separator_widget %}
     {% spaceless %}
@@ -38,45 +32,16 @@
     {%- endif %}
 {%- endblock time_widget %}
 
-
 {# Override default error block #}
 {% block form_errors -%}
     {% if errors|length > 0 -%}
-    <ul class="errors">
-        {%- for error in errors -%}
-        <li class="uk-alert uk-alert-danger"><i class="uk-icon-warning"></i> {{ error.message|trans }}</li>
-        {%- endfor -%}
-    </ul>
+        <ul class="errors">
+            {%- for error in errors -%}
+                <li class="uk-alert uk-alert-danger"><i class="uk-icon-warning"></i> {{ error.message|trans }}</li>
+            {%- endfor -%}
+        </ul>
     {%- endif %}
 {%- endblock form_errors %}
-
-
-{# Children node tree field #}
-{% block childrennodes_widget %}
-    {% spaceless %}
-    <div class="uk-form-row uk-margin-small-top children-nodes-widget" data-children-nodes-widget>
-        {{- form_label(form) -}}
-        <nav class="children-nodes-nav uk-navbar">
-            <ul class="uk-navbar-nav">
-                <li class="uk-navbar-brand"><i class="uk-icon-rz-node-tree"></i></li>
-            </ul>
-            <div class="uk-navbar-content uk-navbar-flip">
-                <div class="children-nodes-quick-creation uk-button-group">
-                    {% for linkedType in linkedTypes %}
-                    <a class="uk-button uk-button-small" href="#" data-children-node-type="{{ linkedType.getId }}" data-children-parent-node="{{ nodeTree.getRootNode.getId }}">
-                        <i class="uk-icon-rz-plus-simple"></i> {{ "add.a.%nodeType%"|trans({'%nodeType%': linkedType.getDisplayName}) }}
-                    </a>
-                    {% endfor %}
-                </div>
-            </div>
-        </nav>
-        <div class="children-nodes-tree">
-            {% include 'widgets/nodeTree/nodeTree.html.twig' with {"nodeTree":nodeTree, "node":nodeTree.getRootNode, 'mainNodeTree':false, "authorizationChecker":authorizationChecker} only %}
-        </div>
-    </div>
-    {% endspaceless %}
-{% endblock childrennodes_widget %}
-
 
 {#
  # Override default form rendering
@@ -93,33 +58,6 @@
         <input type="hidden" name="_method" value="{{ method }}" />
     {%- endif -%}
 {%- endblock form_start %}
-
-{% block form_label -%}
-    {% if label is not same as(false) -%}
-        {% if not compound -%}
-            {% set label_attr = label_attr|merge({'for': id}) %}
-        {%- endif %}
-        {% if required -%}
-            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
-        {%- endif %}
-        {% if label is empty -%}
-            {% set label = name|humanize %}
-        {%- endif -%}
-        <label class="uk-form-label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-            {{- label|trans({}, translation_domain) -}}
-        </label>
-    {%- endif %}
-{%- endblock form_label %}
-
-{% block form_widget_compound -%}
-    <div class="data-uk-margin{% if form.parent is not empty %} custom-form-group{% endif %}" {{ block('widget_container_attributes') }}>
-        {%- if form.parent is empty -%}
-            {{ form_errors(form) }}
-        {%- endif -%}
-        {{- block('form_rows') -}}
-        {{- form_rest(form) -}}
-    </div>
-{%- endblock form_widget_compound %}
 
 {% block choice_widget_collapsed -%}
     {% if required and placeholder is none and not placeholder_in_choices and not multiple -%}
@@ -159,9 +97,7 @@
             </select>
         </div>
     {% endif %}
-
 {%- endblock choice_widget_collapsed %}
-
 
 {% block form_row -%}
     <div class="uk-form-row form-col form-col-{{ form.vars.block_prefixes[1] }} form-col-{{ form.vars.name|replace({'_': '-'}) }}">
