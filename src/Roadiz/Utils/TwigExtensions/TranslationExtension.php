@@ -6,6 +6,8 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Intl\Countries;
+use Symfony\Component\Intl\Locales;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigTest;
@@ -40,6 +42,7 @@ class TranslationExtension extends AbstractExtension
         return [
             new TwigFilter('menu', [$this, 'getMenuAssignation']),
             new TwigFilter('country_iso', [$this, 'getCountryName']),
+            new TwigFilter('locale_iso', [$this, 'getLocaleName']),
         ];
     }
 
@@ -70,8 +73,10 @@ class TranslationExtension extends AbstractExtension
 
     /**
      * @param Translation|null $translation
-     * @param bool $absolute
+     * @param bool             $absolute
+     *
      * @return array
+     * @throws \Doctrine\ORM\ORMException
      */
     public function getMenuAssignation(Translation $translation = null, $absolute = false)
     {
@@ -85,11 +90,22 @@ class TranslationExtension extends AbstractExtension
 
     /**
      * @param string $iso
-     * @param string $locale
+     * @param string|null $locale
      * @return string
      */
-    public function getCountryName($iso, $locale = 'en')
+    public function getCountryName(string $iso, ?string $locale = null): string
     {
-        return \Locale::getDisplayRegion('-'.$iso, $locale);
+        return Countries::getName($iso, $locale);
+    }
+
+    /**
+     * @param string      $iso
+     * @param string|null $locale
+     *
+     * @return string
+     */
+    public function getLocaleName(string $iso, ?string $locale = null): string
+    {
+        return Locales::getName($iso, $locale);
     }
 }
