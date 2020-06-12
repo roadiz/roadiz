@@ -14,6 +14,7 @@ use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Utils\CustomForm\CustomFormHelper;
+use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -237,7 +238,7 @@ class CustomFormController extends CmsController
         $helper = new CustomFormHelper(
             $this->get('em'),
             $customFormsEntity,
-            $this->get('document.factory')
+            $this->get(PrivateDocumentFactory::class)
         );
         $form = $this->buildForm(
             $request,

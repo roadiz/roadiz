@@ -37,6 +37,7 @@ use RZ\Roadiz\Document\Renderer\ThumbnailRenderer;
 use RZ\Roadiz\Document\Renderer\VideoRenderer;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
+use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\Node\NodeFactory;
@@ -211,6 +212,12 @@ class FactoryServiceProvider implements ServiceProviderInterface
          */
         $container['document.factory'] = $container->factory(function (Container $c) {
             return new DocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
+        });
+        $container[DocumentFactory::class] = $container->factory(function (Container $c) {
+            return $c['document.factory'];
+        });
+        $container[PrivateDocumentFactory::class] = $container->factory(function (Container $c) {
+            return new PrivateDocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
         });
 
         return $container;
