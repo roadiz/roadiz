@@ -152,6 +152,17 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        $attribute = $this->getAnswers()->filter(function (CustomFormFieldAttribute $attribute) {
+            return $attribute->getCustomFormField()->isEmail();
+        })->first();
+        return $attribute ? (string) $attribute->getValue() : null;
+    }
+
+    /**
      * @param bool $namesAsKeys Use fields name as key. Default: true
      * @return array
      */
