@@ -65,9 +65,9 @@ class XlsxExporter
          */
         if (count($keys) > 0) {
             foreach ($keys as $key => $value) {
-                $columnAlpha = Coordinate::stringFromColumnIndex($key);
+                $columnAlpha = Coordinate::stringFromColumnIndex($key + 1);
                 $activeSheet->getStyle($columnAlpha . ($activeRow))->applyFromArray($headerStyles);
-                $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $this->translator->trans($value));
+                $activeSheet->setCellValueByColumnAndRow($key + 1, $activeRow, $this->translator->trans($value));
             }
             $activeRow++;
             $hasGlobalHeader = true;
@@ -84,9 +84,9 @@ class XlsxExporter
                 $headerkeys != array_keys($answer)) {
                 $headerkeys = array_keys($answer);
                 foreach ($headerkeys as $key => $value) {
-                    $columnAlpha = Coordinate::stringFromColumnIndex($key);
+                    $columnAlpha = Coordinate::stringFromColumnIndex($key + 1);
                     $activeSheet->getStyle($columnAlpha . $activeRow)->applyFromArray($headerStyles);
-                    $activeSheet->setCellValueByColumnAndRow($key, $activeRow, $this->translator->trans($value));
+                    $activeSheet->setCellValueByColumnAndRow($key + 1, $activeRow, $this->translator->trans($value));
                 }
                 $activeRow++;
             }
@@ -96,7 +96,7 @@ class XlsxExporter
              */
             $answer = array_values($answer);
             foreach ($answer as $k => $value) {
-                $columnAlpha = Coordinate::stringFromColumnIndex($k);
+                $columnAlpha = Coordinate::stringFromColumnIndex($k + 1);
 
                 if ($value instanceof Collection ||
                     is_array($value)) {
@@ -113,7 +113,7 @@ class XlsxExporter
                  * Set value into cell
                  */
                 $activeSheet->getStyle($columnAlpha . $activeRow)->getAlignment()->setWrapText(true);
-                $activeSheet->setCellValueByColumnAndRow($k, $activeRow, $this->translator->trans($value));
+                $activeSheet->setCellValueByColumnAndRow($k + 1, $activeRow, $this->translator->trans($value));
             }
 
             $activeRow++;
