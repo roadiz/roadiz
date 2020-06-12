@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
@@ -31,10 +33,25 @@ class CustomFormFieldAttribute extends AbstractEntity
     protected $customFormField;
 
     /**
+     * @var Collection<Document>
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="customFormFieldAttributes")
+     * @ORM\JoinTable(name="custom_form_answers_documents")
+     */
+    protected $documents;
+
+    /**
      * @ORM\Column(type="text", nullable=true)
      * @var string|null
      */
     protected $value = null;
+
+    /**
+     * CustomFormFieldAttribute constructor.
+     */
+    public function __construct()
+    {
+        $this->documents = new ArrayCollection();
+    }
 
     /**
      * @return string $value
@@ -100,6 +117,26 @@ class CustomFormFieldAttribute extends AbstractEntity
     public function setCustomFormField(CustomFormField $customFormField)
     {
         $this->customFormField = $customFormField;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param Collection $documents
+     *
+     * @return CustomFormFieldAttribute
+     */
+    public function setDocuments(Collection $documents): CustomFormFieldAttribute
+    {
+        $this->documents = $documents;
 
         return $this;
     }

@@ -73,6 +73,12 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     protected $attributeDocuments = null;
     /**
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="documents")
+     * @var ArrayCollection
+     * @Serializer\Exclude
+     */
+    protected $customFormFieldAttributes = null;
+    /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
      * @Serializer\Groups({"document"})
@@ -176,6 +182,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
         $this->nodesSourcesByFields = new ArrayCollection();
         $this->tagTranslations = new ArrayCollection();
         $this->attributeDocuments = new ArrayCollection();
+        $this->customFormFieldAttributes = new ArrayCollection();
         $this->thumbnails = new ArrayCollection();
         $this->imageWidth = 0;
         $this->imageHeight = 0;
