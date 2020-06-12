@@ -16,7 +16,9 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\All;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
@@ -111,7 +113,11 @@ class CustomFormsType extends AbstractType
      */
     protected function addSingleField(FormBuilderInterface $builder, CustomFormField $field, array $formOptions)
     {
-        $builder->add($field->getName(), $this->getTypeForField($field), $this->getOptionsForField($field, $formOptions));
+        $builder->add(
+            $field->getName(),
+            $this->getTypeForField($field),
+            $this->getOptionsForField($field, $formOptions)
+        );
         return $this;
     }
 
@@ -198,7 +204,27 @@ class CustomFormsType extends AbstractType
                 }
                 break;
             case AbstractField::DOCUMENTS_T:
-                $option['required'] = false;
+                $option['multiple'] = true;
+                $option['mapped'] = false;
+                $mimeTypes = [
+                    'application/pdf',
+                    'application/x-pdf',
+                    'image/jpeg',
+                    'image/png',
+                    'image/gif',
+                ];
+                if (!empty($field->getDefaultValues())) {
+                    $mimeTypes = explode(',', $field->getDefaultValues() ?? '');
+                    $mimeTypes = array_map('trim', $mimeTypes);
+                }
+                $option['constraints'][] = new All([
+                    'constraints' => [
+                        new File([
+                            'maxSize' => '10m',
+                            'mimeTypes' => $mimeTypes
+                        ])
+                    ]
+                ]);
                 break;
             case AbstractField::COUNTRY_T:
                 $option["expanded"] = $field->isExpanded();
@@ -220,7 +246,6 @@ class CustomFormsType extends AbstractType
             default:
                 break;
         }
-
         return $option;
     }
 

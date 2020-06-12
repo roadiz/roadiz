@@ -11,6 +11,12 @@
             <dd>{{ type.value|localizeddate('full', 'none') }}</dd>
         {% elseif type.customFormField.isDateTime %}
             <dd>{{ type.value|localizeddate('full', 'medium') }}</dd>
+        {% elseif type.customFormField.isDocuments %}
+            <dd>
+                {% for document in type.documents %}
+                    <a href="{{ document|url }}" class="rz-no-ajax-link" download>{{ document.filename }}</a><br>
+                {% endfor %}
+            </dd>
         {% else %}
             <dd>{{ type.value|trans }}</dd>
         {% endif %}
