@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\CustomForms;
 
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;

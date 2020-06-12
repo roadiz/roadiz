@@ -37,8 +37,8 @@
                     {% if answers is iterable %}
                         </table>
                         <div class="data-uk-margin">
-                            <h2>{{ groupName|trans }}</h2>
-                            <table class="uk-table-condensed">
+                            <h3>{{ groupName|trans }}</h3>
+                            <table class="uk-table uk-table-condensed">
                                 {% for type in answers %}
                                     {{ macro.column(type, request) }}
                                 {% endfor %}

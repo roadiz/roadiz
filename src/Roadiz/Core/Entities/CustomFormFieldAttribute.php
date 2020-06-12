@@ -58,6 +58,11 @@ class CustomFormFieldAttribute extends AbstractEntity
      */
     public function getValue(): ?string
     {
+        if ($this->getCustomFormField()->isDocuments()) {
+            return implode(', ', $this->getDocuments()->map(function (Document $document) {
+                return $document->getRelativePath();
+            })->toArray());
+        }
         return $this->value;
     }
 

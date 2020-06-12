@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace Themes\Rozier\Controllers;
+namespace Themes\Rozier\Controllers\CustomForms;
 
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
+use RZ\Roadiz\Utils\CustomForm\CustormFormAnswerSerializer;
 use RZ\Roadiz\Utils\XlsxExporter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +30,8 @@ class CustomFormsUtilsController extends RozierApp
     {
         /** @var CustomForm $customForm */
         $customForm = $this->get("em")->find(CustomForm::class, $customFormId);
+        /** @var CustormFormAnswerSerializer $serializer */
+        $serializer = $this->get(CustormFormAnswerSerializer::class);
         $answers = $customForm->getCustomFormAnswers();
 
         /**
@@ -38,7 +41,7 @@ class CustomFormsUtilsController extends RozierApp
         foreach ($answers as $key => $answer) {
             $array = array_merge(
                 [$answer->getIp(), $answer->getSubmittedAt()],
-                $answer->toArray()
+                $serializer->toSimpleArray($answer)
             );
             $answers[$key] = $array;
         }

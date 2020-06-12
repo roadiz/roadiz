@@ -165,6 +165,7 @@ class CustomFormAnswer extends AbstractEntity
     /**
      * @param bool $namesAsKeys Use fields name as key. Default: true
      * @return array
+     * @deprecated Use CustomFormAnswerSerializer instead
      */
     public function toArray($namesAsKeys = true): array
     {
