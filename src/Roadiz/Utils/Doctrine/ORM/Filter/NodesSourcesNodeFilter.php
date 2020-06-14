@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
-use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
-use RZ\Roadiz\Core\Events\FilterQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
@@ -27,48 +25,40 @@ class NodesSourcesNodeFilter implements EventSubscriberInterface
     }
 
     /**
-     * @param FilterQueryBuilderCriteriaEvent $event
+     * @param QueryBuilderNodesSourcesBuildEvent $event
      *
      * @return bool
      */
-    protected function supports(FilterQueryBuilderCriteriaEvent $event): bool
+    protected function supports(QueryBuilderNodesSourcesBuildEvent $event): bool
     {
-        if ($event instanceof FilterNodesSourcesQueryBuilderCriteriaEvent &&
-            $event->supports()) {
-            return true;
-        }
-
-        return false;
+        return $event->supports() && false !== strpos($event->getProperty(), 'node.');
     }
 
     /**
-     * @param FilterQueryBuilderCriteriaEvent $event
+     * @param QueryBuilderNodesSourcesBuildEvent $event
      */
-    public function onNodesSourcesQueryBuilderBuild(FilterQueryBuilderCriteriaEvent $event)
+    public function onNodesSourcesQueryBuilderBuild(QueryBuilderNodesSourcesBuildEvent $event)
     {
         if ($this->supports($event)) {
+            // Prevent other query builder filters to execute
+            $event->stopPropagation();
             $simpleQB = new SimpleQueryBuilder($event->getQueryBuilder());
-            if (false !== strpos($event->getProperty(), 'node.')) {
-                // Prevent other query builder filters to execute
-                $event->stopPropagation();
-                $qb = $event->getQueryBuilder();
-                $baseKey = $simpleQB->getParameterKey($event->getProperty());
+            $qb = $event->getQueryBuilder();
+            $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
-                if (!$simpleQB->joinExists(
-                    $simpleQB->getRootAlias(),
+            if (!$simpleQB->joinExists(
+                $simpleQB->getRootAlias(),
+                EntityRepository::NODE_ALIAS
+            )) {
+                $qb->innerJoin(
+                    $simpleQB->getRootAlias() . '.node',
                     EntityRepository::NODE_ALIAS
-                )
-                ) {
-                    $qb->innerJoin(
-                        $simpleQB->getRootAlias() . '.node',
-                        EntityRepository::NODE_ALIAS
-                    );
-                }
-
-                $prefix = EntityRepository::NODE_ALIAS . '.';
-                $key = str_replace('node.', '', $event->getProperty());
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($event->getValue(), $prefix, $key, $baseKey));
+                );
             }
+
+            $prefix = EntityRepository::NODE_ALIAS . '.';
+            $key = str_replace('node.', '', $event->getProperty());
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($event->getValue(), $prefix, $key, $baseKey));
         }
     }
 }

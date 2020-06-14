@@ -43,6 +43,7 @@ class NodeServiceProvider implements ServiceProviderInterface
             return $this->coreServices['nodeApi']
                 ->getOneBy(
                     [
+                        'nodeType' => $this->coreServices['nodeTypesBag']->get('Neutral'),
                         'nodeName' => 'main-menu',
                     ]
                 );

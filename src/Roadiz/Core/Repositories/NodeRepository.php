@@ -493,6 +493,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $nodeName
      * @param Translation $translation
      * @return null|Node
+     * @deprecated Use findOneByIdentifier
      */
     public function findByNodeNameWithTranslation(
         $nodeName,
@@ -568,6 +569,7 @@ class NodeRepository extends StatusAwareRepository
      *
      * @param string $nodeName
      * @return null|Node
+     * @deprecated Use findOneByIdentifier
      */
     public function findByNodeNameWithDefaultTranslation(
         $nodeName

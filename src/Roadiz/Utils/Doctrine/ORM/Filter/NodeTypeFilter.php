@@ -39,29 +39,27 @@ class NodeTypeFilter implements EventSubscriberInterface
     public function onNodeQueryBuilderBuild(QueryBuilderBuildEvent $event)
     {
         if ($this->supports($event)) {
+            // Prevent other query builder filters to execute
+            $event->stopPropagation();
             $simpleQB = new SimpleQueryBuilder($event->getQueryBuilder());
-            if (false !== strpos($event->getProperty(), 'nodeType.')) {
-                // Prevent other query builder filters to execute
-                $event->stopPropagation();
-                $qb = $event->getQueryBuilder();
-                $baseKey = $simpleQB->getParameterKey($event->getProperty());
+            $qb = $event->getQueryBuilder();
+            $baseKey = $simpleQB->getParameterKey($event->getProperty());
 
-                if (!$simpleQB->joinExists(
-                    $simpleQB->getRootAlias(),
+            if (!$simpleQB->joinExists(
+                $simpleQB->getRootAlias(),
+                EntityRepository::NODETYPE_ALIAS
+            )
+            ) {
+                $qb->addSelect(EntityRepository::NODETYPE_ALIAS);
+                $qb->innerJoin(
+                    $simpleQB->getRootAlias() . '.nodeType',
                     EntityRepository::NODETYPE_ALIAS
-                )
-                ) {
-                    $qb->addSelect(EntityRepository::NODETYPE_ALIAS);
-                    $qb->innerJoin(
-                        $simpleQB->getRootAlias() . '.nodeType',
-                        EntityRepository::NODETYPE_ALIAS
-                    );
-                }
-
-                $prefix = EntityRepository::NODETYPE_ALIAS . '.';
-                $key = str_replace('nodeType.', '', $event->getProperty());
-                $qb->andWhere($simpleQB->buildExpressionWithoutBinding($event->getValue(), $prefix, $key, $baseKey));
+                );
             }
+
+            $prefix = EntityRepository::NODETYPE_ALIAS . '.';
+            $key = str_replace('nodeType.', '', $event->getProperty());
+            $qb->andWhere($simpleQB->buildExpressionWithoutBinding($event->getValue(), $prefix, $key, $baseKey));
         }
     }
 
