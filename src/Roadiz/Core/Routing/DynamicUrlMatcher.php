@@ -63,7 +63,7 @@ abstract class DynamicUrlMatcher extends UrlMatcher
     }
 
     /**
-     * Parse translation from URL tokens.
+     * Parse translation from URL tokens even if it is not available yet.
      *
      * @param array $tokens
      *
@@ -76,14 +76,10 @@ abstract class DynamicUrlMatcher extends UrlMatcher
 
         if (!empty($tokens[0])) {
             $firstToken = $tokens[0];
-            $locale = strip_tags((string) $firstToken);
+            $locale = mb_strtolower(strip_tags((string) $firstToken));
             // First token is for language
             if ($locale !== null && $locale != '') {
-                if ($this->preview === true) {
-                    $translation = $repository->findOneByLocaleOrOverrideLocale($locale);
-                } else {
-                    $translation =  $repository->findOneAvailableByLocaleOrOverrideLocale($locale);
-                }
+                $translation = $repository->findOneByLocaleOrOverrideLocale($locale);
                 if (null !== $translation) {
                     return $translation;
                 }

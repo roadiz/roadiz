@@ -514,6 +514,56 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
+     * Find one node using its nodeName and a translation, or a unique URL alias.
+     *
+     * @param string           $identifier
+     * @param Translation|null $translation
+     * @param bool             $availableTranslation
+     *
+     * @return Node|null
+     */
+    public function findOneByIdentifier(
+        string $identifier,
+        ?Translation $translation,
+        bool $availableTranslation = false
+    ): ?Node {
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select('n, ns, t, uas')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
+            ->leftJoin('ns.urlAliases', 'uas')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->eq('uas.alias', ':identifier'),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('n.nodeName', ':identifier'),
+                    $qb->expr()->eq('t.id', ':translation')
+                )
+            ))
+            ->setParameter('identifier', $identifier)
+            ->setParameter('translation', $translation)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+
+        if ($availableTranslation) {
+            $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+                ->setParameter('available', true);
+        }
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+        $query = $qb->getQuery();
+        $query->enableResultCache(
+            120,
+            static::class .
+                '_findOneByIdentifier_' .
+                $identifier .
+                (null !== $translation ? (string) $translation->getId() : '') .
+                (string) $availableTranslation
+        );
+
+        return $query->getOneOrNullResult();
+    }
+
+    /**
      * Find one Node with its nodeName and the default translation.
      *
      * @param string $nodeName

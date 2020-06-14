@@ -87,18 +87,26 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
         }
 
-        /*
-         * Try with URL Aliases
-         */
         if (null !== $this->stopwatch) {
-            $this->stopwatch->start('parseFromUrlAlias');
+            $this->stopwatch->start('parseTranslation');
         }
-        $node = $this->parseFromUrlAlias($tokens);
+        $translation = $this->parseTranslation($tokens);
         if (null !== $this->stopwatch) {
-            $this->stopwatch->stop('parseFromUrlAlias');
+            $this->stopwatch->stop('parseTranslation');
         }
 
-        if ($node !== null) {
+        /*
+         * Try with URL Aliases OR nodeName
+         */
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->start('parseFromIdentifier');
+        }
+        $node = $this->parseFromIdentifier($tokens, $translation);
+        if (null !== $this->stopwatch) {
+            $this->stopwatch->stop('parseFromIdentifier');
+        }
+
+        if ($node !== null && !$node->isHome()) {
             /** @var Translation $translation */
             $translation = $node->getNodeSources()->first()->getTranslation();
             $nodeRouteHelper = new NodeRouteHelper(
@@ -124,60 +132,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                 'translation' => $translation,
                 'theme' => $this->theme,
             ];
-        } else {
-            /*
-             * Try with node name
-             */
-            if (null !== $this->stopwatch) {
-                $this->stopwatch->start('parseTranslation');
-            }
-            $translation = $this->parseTranslation($tokens);
-            if (null !== $this->stopwatch) {
-                $this->stopwatch->stop('parseTranslation');
-            }
-
-            if ($translation === null) {
-                throw new ResourceNotFoundException();
-            }
-
-            if (null !== $this->stopwatch) {
-                $this->stopwatch->start('parseNode');
-            }
-            $node = $this->parseNode($tokens, $translation);
-            if (null !== $this->stopwatch) {
-                $this->stopwatch->stop('parseNode');
-            }
-
-            /*
-             * Prevent displaying home node using its nodeName
-             */
-            if ($node !== null && !$node->isHome()) {
-                $nodeRouteHelper = new NodeRouteHelper(
-                    $node,
-                    $this->theme,
-                    $this->preview
-                );
-                /*
-                 * Try with nodeName
-                 */
-                if (false === $nodeRouteHelper->isViewable()) {
-                    throw new ResourceNotFoundException();
-                }
-                $match = [
-                    '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
-                    '_route' => null,
-                    '_format' => $_format,
-                    'node' => $node,
-                    'translation' => $translation,
-                    'theme' => $this->theme,
-                ];
-
-                if (null !== $translation) {
-                    $match['_locale'] = $translation->getPreferredLocale(); //pass request locale to init translator
-                }
-
-                return $match;
-            }
         }
         throw new ResourceNotFoundException();
     }
@@ -188,6 +142,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param array $tokens
      *
      * @return Node
+     * @deprecated
      */
     protected function parseFromUrlAlias(array &$tokens): ?Node
     {
@@ -204,6 +159,34 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     }
 
     /**
+     * @param array            $tokens
+     * @param Translation|null $translation
+     *
+     * @return Node|null
+     */
+    protected function parseFromIdentifier(array &$tokens, ?Translation $translation = null): ?Node
+    {
+        if (!empty($tokens[0])) {
+            /*
+             * If the only url token is not for language
+             */
+            if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
+                $identifier = mb_strtolower(strip_tags($tokens[(int) (count($tokens) - 1)]));
+                if ($identifier !== null && $identifier != '') {
+                    return $this->repository
+                        ->findOneByIdentifier(
+                            $identifier,
+                            $translation,
+                            !$this->preview
+                        );
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Parse URL searching nodeName.
      *
      * Cannot use securityAuthorizationChecker here as firewall
@@ -213,6 +196,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param Translation $translation
      *
      * @return Node
+     * @deprecated
      */
     protected function parseNode(array &$tokens, Translation $translation): ?Node
     {
