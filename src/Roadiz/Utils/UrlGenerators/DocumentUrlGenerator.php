@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  *
  * @package RZ\Roadiz\Utils\UrlGenerators
  */
-class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
+final class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
 {
     /**
      * @var UrlGeneratorInterface
