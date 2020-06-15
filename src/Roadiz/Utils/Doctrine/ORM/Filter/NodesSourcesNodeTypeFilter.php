@@ -53,8 +53,10 @@ final class NodesSourcesNodeTypeFilter implements EventSubscriberInterface
             $value = $event->getValue();
 
             if ($value instanceof NodeType) {
-                $qb->andWhere($qb->expr()->isInstanceOf($simpleQB->getRootAlias(), ':discr'))
-                    ->setParameter(':discr', $value->getSourceEntityFullQualifiedClassName());
+                $qb->andWhere($qb->expr()->isInstanceOf(
+                    $simpleQB->getRootAlias(), 
+                    $value->getSourceEntityFullQualifiedClassName()
+                ));
             } elseif (is_array($value)) {
                 $nodeTypes = [];
                 foreach ($value as $nodeType) {
