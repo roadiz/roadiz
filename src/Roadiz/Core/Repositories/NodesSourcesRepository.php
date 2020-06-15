@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Repositories;
 
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Log;
@@ -12,6 +13,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
+use RZ\Roadiz\Core\Events\QueryNodesSourcesEvent;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\SolrSearchResults;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
@@ -51,6 +53,20 @@ class NodesSourcesRepository extends StatusAwareRepository
         $eventDispatcher = $this->container['dispatcher'];
         return $eventDispatcher->dispatch(
             new QueryBuilderNodesSourcesApplyEvent($qb, $property, $value, $this->getEntityName())
+        );
+    }
+
+    /**
+     * @param Query  $query
+     *
+     * @return QueryNodesSourcesEvent
+     */
+    protected function dispatchQueryEvent(Query $query)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        return $eventDispatcher->dispatch(
+            new QueryNodesSourcesEvent($query, $this->getEntityName())
         );
     }
 
@@ -122,36 +138,6 @@ class NodesSourcesRepository extends StatusAwareRepository
                 $baseKey = $simpleQB->getParameterKey($key);
                 $qb->andWhere($simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey));
             }
-        }
-    }
-
-    /**
-     * Direct bind one single parameter without preparation.
-     *
-     * @param string       $key
-     * @param mixed        $value
-     * @param QueryBuilder $qb
-     * @param string       $alias
-     *
-     * @return QueryBuilder
-     * @deprecated Use findBy or manual QueryBuilder methods
-     */
-    protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
-    {
-        trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated. Use findBy or manual QueryBuilder methods',
-            E_USER_DEPRECATED
-        );
-        if (false !== strpos($key, 'node.')) {
-            if (!$this->hasJoinedNode($qb, $alias)) {
-                $qb->innerJoin($alias . '.node', static::NODE_ALIAS);
-            }
-
-            $prefix = static::NODE_ALIAS;
-            $prefixedkey = str_replace('node.', '', $key);
-            return parent::singleDirectComparison($prefixedkey, $value, $qb, $prefix);
-        } else {
-            return parent::singleDirectComparison($key, $value, $qb, $alias);
         }
     }
 
@@ -294,8 +280,10 @@ class NodesSourcesRepository extends StatusAwareRepository
      * Just like the countBy method but with relational criteria.
      *
      * @param array $criteria
-     * @return int
      *
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy($criteria)
     {
@@ -362,6 +350,8 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByTag($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -369,9 +359,9 @@ class NodesSourcesRepository extends StatusAwareRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($qb);
+            return new Paginator($query);
         } else {
-            return $qb->getQuery()->getResult();
+            return $query->getResult();
         }
     }
 
@@ -381,7 +371,9 @@ class NodesSourcesRepository extends StatusAwareRepository
      *
      * @param array $criteria
      * @param array $orderBy
+     *
      * @return null|NodesSources
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneBy(
         array $criteria,
@@ -405,8 +397,10 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByTag($criteria, $qb);
         $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -521,7 +515,10 @@ class NodesSourcesRepository extends StatusAwareRepository
             $this->applyFilterByCriteria($additionalCriteria, $qb);
         }
 
-        return $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
+
+        return $query->getResult();
     }
 
     /**
@@ -549,8 +546,10 @@ class NodesSourcesRepository extends StatusAwareRepository
     /**
      * Get node-source parent according to its translation.
      *
-     * @param  NodesSources $nodeSource
+     * @param NodesSources $nodeSource
+     *
      * @return NodesSources|null
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findParent(NodesSources $nodeSource)
     {
@@ -687,41 +686,6 @@ class NodesSourcesRepository extends StatusAwareRepository
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
         $qb->setParameter('field', $field)
-            ->setParameter('nodeA', $nodesSources->getNode())
-            ->setParameter('translation', $nodesSources->getTranslation());
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @deprecated Use findByNodesSourcesAndFieldAndTranslation instead because **filtering on field name is not safe**.
-     * @param NodesSources $nodesSources
-     * @param string $fieldName
-     * @return array|null
-     */
-    public function findByNodesSourcesAndFieldNameAndTranslation(
-        NodesSources $nodesSources,
-        string $fieldName
-    ) {
-        trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated. Use findByNodesSourcesAndFieldAndTranslation instead because filtering on field name is not safe.',
-            E_USER_DEPRECATED
-        );
-        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
-        $qb->select('ns, n, ua')
-            ->innerJoin('ns.node', static::NODE_ALIAS)
-            ->leftJoin('ns.urlAliases', 'ua')
-            ->innerJoin('n.aNodes', 'ntn')
-            ->innerJoin('ntn.field', 'f')
-            ->andWhere($qb->expr()->eq('f.name', ':name'))
-            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
-            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
-            ->addOrderBy('ntn.position', 'ASC')
-            ->setCacheable(true);
-
-        $this->alterQueryBuilderWithAuthorizationChecker($qb);
-
-        $qb->setParameter('name', $fieldName)
             ->setParameter('nodeA', $nodesSources->getNode())
             ->setParameter('translation', $nodesSources->getTranslation());
 

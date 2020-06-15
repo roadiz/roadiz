@@ -6,12 +6,14 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Class LoginController
@@ -23,8 +25,8 @@ class LoginController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -49,7 +51,8 @@ class LoginController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function checkAction(Request $request)
     {
@@ -59,7 +62,8 @@ class LoginController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function logoutAction(Request $request)
     {
@@ -69,7 +73,7 @@ class LoginController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function imageAction(Request $request)
     {
@@ -77,7 +81,7 @@ class LoginController extends RozierApp
 
         if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
             if ($document instanceof Document) {
-                /** @var DocumentUrlGenerator $documentUrlGenerator */
+                /** @var DocumentUrlGeneratorInterface $documentUrlGenerator */
                 $documentUrlGenerator = $this->get('document.url_generator');
                 $documentUrlGenerator->setDocument($document);
                 $documentUrlGenerator->setOptions([

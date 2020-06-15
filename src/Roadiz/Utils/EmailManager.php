@@ -7,7 +7,7 @@ use InlineStyle\InlineStyle;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -81,7 +81,7 @@ class EmailManager
     protected $settingsBag;
 
     /**
-     * @var null|DocumentUrlGenerator
+     * @var null|DocumentUrlGeneratorInterface
      */
     private $documentUrlGenerator;
 
@@ -92,12 +92,12 @@ class EmailManager
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'emailManager' Factory Service
      *
-     * @param Request                   $request
-     * @param TranslatorInterface       $translator
-     * @param Environment               $templating
-     * @param \Swift_Mailer             $mailer
-     * @param Settings|null             $settingsBag
-     * @param DocumentUrlGenerator|null $documentUrlGenerator
+     * @param Request                            $request
+     * @param TranslatorInterface                $translator
+     * @param Environment                        $templating
+     * @param \Swift_Mailer                      $mailer
+     * @param Settings|null                      $settingsBag
+     * @param DocumentUrlGeneratorInterface|null $documentUrlGenerator
      *
      * @throws \ReflectionException
      */
@@ -107,7 +107,7 @@ class EmailManager
         Environment $templating,
         \Swift_Mailer $mailer,
         Settings $settingsBag = null,
-        DocumentUrlGenerator $documentUrlGenerator = null
+        DocumentUrlGeneratorInterface $documentUrlGenerator = null
     ) {
         $this->request = $request;
         $this->translator = $translator;
@@ -126,6 +126,9 @@ class EmailManager
 
     /**
      * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function renderHtmlEmailBody()
     {
@@ -134,6 +137,9 @@ class EmailManager
 
     /**
      * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
      */
     public function renderHtmlEmailBodyWithCss()
     {

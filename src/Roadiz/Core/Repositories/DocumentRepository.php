@@ -378,7 +378,7 @@ class DocumentRepository extends EntityRepository
         $offset = null,
         Translation $translation = null
     ) {
-        $query = $this->getContextualQueryWithTranslation(
+        $qb = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
             $limit,
@@ -386,9 +386,11 @@ class DocumentRepository extends EntityRepository
             $translation
         );
 
-        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $this->applyFilterByFolder($criteria, $query);
-        $this->applyFilterByCriteria($criteria, $query);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+        $this->applyFilterByFolder($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -398,7 +400,7 @@ class DocumentRepository extends EntityRepository
              */
             return new Paginator($query);
         } else {
-            return $query->getQuery()->getResult();
+            return $query->getResult();
         }
     }
 
@@ -417,7 +419,7 @@ class DocumentRepository extends EntityRepository
         array $orderBy = null,
         Translation $translation = null
     ) {
-        $query = $this->getContextualQueryWithTranslation(
+        $qb = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
             1,
@@ -425,11 +427,13 @@ class DocumentRepository extends EntityRepository
             $translation
         );
 
-        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $this->applyFilterByFolder($criteria, $query);
-        $this->applyFilterByCriteria($criteria, $query);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+        $this->applyFilterByFolder($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
-        return $query->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
 
     /**

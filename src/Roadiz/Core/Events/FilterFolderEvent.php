@@ -4,12 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\Folder;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class FilterFolderEvent
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
 abstract class FilterFolderEvent extends Event
 {

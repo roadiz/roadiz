@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\ORM\Query;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
-class FilterQueryCriteriaEvent extends Event
+abstract class FilterQueryCriteriaEvent extends Event
 {
     /**
      * @var string

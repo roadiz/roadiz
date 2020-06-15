@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
+use Doctrine\ORM\Query;
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
+use RZ\Roadiz\Core\Events\QueryNodesSourcesEvent;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
+use RZ\Roadiz\Utils\Doctrine\ORM\SqlWalker;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -43,6 +46,7 @@ final class NodesSourcesReachableFilter implements EventSubscriberInterface
         return [
             QueryBuilderNodesSourcesBuildEvent::class => [['onNodesSourcesQueryBuilderBuild', 41]],
             QueryBuilderNodesSourcesApplyEvent::class => [['onNodesSourcesQueryBuilderApply', 41]],
+            QueryNodesSourcesEvent::class => [['onQueryNodesSourcesEvent', 0]],
         ];
     }
 
@@ -93,6 +97,13 @@ final class NodesSourcesReachableFilter implements EventSubscriberInterface
         if ($this->supports($event)) {
             // Prevent other query builder filters to execute
             $event->stopPropagation();
+        }
+    }
+
+    public function onQueryNodesSourcesEvent(QueryNodesSourcesEvent $event)
+    {
+        if ($event->supports()) {
+            // TODO: Find a way to reduce NodeSource query joins when filtered by node-types.
         }
     }
 }

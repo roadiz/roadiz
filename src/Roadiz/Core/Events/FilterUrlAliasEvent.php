@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\UrlAlias;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * @deprecated
+ * Class FilterUrlAliasEvent
+ *
+ * @package RZ\Roadiz\Core\Events
  */
-class FilterUrlAliasEvent extends Event
+abstract class FilterUrlAliasEvent extends Event
 {
     protected $urlAlias;
 

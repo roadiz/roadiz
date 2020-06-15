@@ -175,18 +175,6 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new DocumentFinder($c['em']);
         };
 
-        /** @deprecated */
-        $container['document.viewer'] = $container->factory(function (Container $c) {
-            return new DocumentViewer(
-                $c['requestStack'],
-                $c['twig.environment'],
-                $c['em'],
-                $c['urlGenerator'],
-                $c['document.url_generator'],
-                $c['assetPackages'],
-                $c['document.platforms']
-            );
-        });
         $container['translation.viewer'] = $container->factory(function (Container $c) {
             return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
         });
@@ -204,7 +192,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
          * UrlGenerators
          */
         $container['document.url_generator'] = $container->factory(function (Container $c) {
-            return new DocumentUrlGenerator($c['requestStack'], $c['assetPackages'], $c['urlGenerator']);
+            return new DocumentUrlGenerator($c['assetPackages'], $c['urlGenerator']);
         });
 
         /*

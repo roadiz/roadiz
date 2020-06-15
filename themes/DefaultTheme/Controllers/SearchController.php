@@ -31,7 +31,6 @@ namespace Themes\DefaultTheme\Controllers;
 use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\CMS\Utils\NodeSourceApi;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Events\FilterQueryBuilderEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use Symfony\Component\EventDispatcher\EventDispatcher;

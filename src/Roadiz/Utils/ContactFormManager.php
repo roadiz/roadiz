@@ -8,7 +8,7 @@ use RZ\Roadiz\CMS\Forms\HoneypotType;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -88,13 +88,13 @@ class ContactFormManager extends EmailManager
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'contactFormManager' Factory Service
      *
-     * @param Request              $request
-     * @param FormFactoryInterface $formFactory
-     * @param TranslatorInterface  $translator
-     * @param Environment          $templating
-     * @param \Swift_Mailer        $mailer
-     * @param Settings             $settingsBag
-     * @param DocumentUrlGenerator $documentUrlGenerator
+     * @param Request                       $request
+     * @param FormFactoryInterface          $formFactory
+     * @param TranslatorInterface           $translator
+     * @param Environment                   $templating
+     * @param \Swift_Mailer                 $mailer
+     * @param Settings                      $settingsBag
+     * @param DocumentUrlGeneratorInterface $documentUrlGenerator
      *
      * @throws \ReflectionException
      */
@@ -105,7 +105,7 @@ class ContactFormManager extends EmailManager
         Environment $templating,
         \Swift_Mailer $mailer,
         Settings $settingsBag,
-        DocumentUrlGenerator $documentUrlGenerator
+        DocumentUrlGeneratorInterface $documentUrlGenerator
     ) {
         parent::__construct($request, $translator, $templating, $mailer, $settingsBag, $documentUrlGenerator);
 

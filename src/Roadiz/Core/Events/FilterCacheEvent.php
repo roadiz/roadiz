@@ -6,13 +6,12 @@ namespace RZ\Roadiz\Core\Events;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\Kernel;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class FilterCacheEvent
  *
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
 abstract class FilterCacheEvent extends Event
 {
