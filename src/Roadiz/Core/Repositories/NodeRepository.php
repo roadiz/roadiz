@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -529,14 +530,15 @@ class NodeRepository extends StatusAwareRepository
      *
      * @return Node|null
      */
-    public function findOneByIdentifier(
+    public function findNodeTypeNameAndSourceIdByIdentifier(
         string $identifier,
         ?Translation $translation,
         bool $availableTranslation = false
-    ): ?Node {
+    ): array {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select('n, ns, t, uas')
+        $qb->select('nt.name, ns.id')
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('n.nodeType', static::NODETYPE_ALIAS)
             ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
             ->leftJoin('ns.urlAliases', 'uas')
             ->andWhere($qb->expr()->orX(
@@ -558,15 +560,8 @@ class NodeRepository extends StatusAwareRepository
 
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
         $query = $qb->getQuery();
-        $query->enableResultCache(
-            120,
-            static::class .
-                '_findOneByIdentifier_' .
-                $identifier .
-                (null !== $translation ? (string) $translation->getId() : '') .
-                (string) $availableTranslation
-        );
-
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setHydrationMode(Query::HYDRATE_ARRAY);
         return $query->getOneOrNullResult();
     }
 

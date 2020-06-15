@@ -4,7 +4,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 /**
@@ -101,16 +104,16 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         if (null !== $this->stopwatch) {
             $this->stopwatch->start('parseFromIdentifier');
         }
-        $node = $this->parseFromIdentifier($tokens, $translation);
+        $nodeSource = $this->parseFromIdentifier($tokens, $translation);
         if (null !== $this->stopwatch) {
             $this->stopwatch->stop('parseFromIdentifier');
         }
 
-        if ($node !== null && !$node->isHome()) {
+        if ($nodeSource !== null && !$nodeSource->getNode()->isHome()) {
             /** @var Translation $translation */
-            $translation = $node->getNodeSources()->first()->getTranslation();
+            $translation = $nodeSource->getTranslation();
             $nodeRouteHelper = new NodeRouteHelper(
-                $node,
+                $nodeSource->getNode(),
                 $this->theme,
                 $this->preview
             );
@@ -122,13 +125,14 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             if (false === $nodeRouteHelper->isViewable()) {
                 throw new ResourceNotFoundException();
             }
-
+            
             return [
                 '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
                 '_locale' => $translation->getPreferredLocale(), //pass request locale to init translator
-                '_route' => null,
+                '_route' => RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
                 '_format' => $_format,
-                'node' => $node,
+                'node' => $nodeSource->getNode(),
+                RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
                 'translation' => $translation,
                 'theme' => $this->theme,
             ];
@@ -137,34 +141,12 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     }
 
     /**
-     * Parse Node from UrlAlias.
-     *
-     * @param array $tokens
-     *
-     * @return Node
-     * @deprecated
-     */
-    protected function parseFromUrlAlias(array &$tokens): ?Node
-    {
-        if (count($tokens) > 0) {
-            $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-            if ($identifier != '') {
-                if ($this->preview === true) {
-                    return $this->repository->findOneWithAlias($identifier);
-                }
-                return $this->repository->findOneWithAliasAndAvailableTranslation($identifier);
-            }
-        }
-        return null;
-    }
-
-    /**
      * @param array            $tokens
      * @param Translation|null $translation
      *
-     * @return Node|null
+     * @return NodesSources|null
      */
-    protected function parseFromIdentifier(array &$tokens, ?Translation $translation = null): ?Node
+    protected function parseFromIdentifier(array &$tokens, ?Translation $translation = null): ?NodesSources
     {
         if (!empty($tokens[0])) {
             /*
@@ -173,46 +155,17 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
                 $identifier = mb_strtolower(strip_tags($tokens[(int) (count($tokens) - 1)]));
                 if ($identifier !== null && $identifier != '') {
-                    return $this->repository
-                        ->findOneByIdentifier(
+                    $array = $this->repository
+                        ->findNodeTypeNameAndSourceIdByIdentifier(
                             $identifier,
                             $translation,
                             !$this->preview
                         );
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Parse URL searching nodeName.
-     *
-     * Cannot use securityAuthorizationChecker here as firewall
-     * has not been hit yet.
-     *
-     * @param array $tokens
-     * @param Translation $translation
-     *
-     * @return Node
-     * @deprecated
-     */
-    protected function parseNode(array &$tokens, Translation $translation): ?Node
-    {
-        if (!empty($tokens[0])) {
-            /*
-             * If the only url token is not for language
-             */
-            if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
-                $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-
-                if ($identifier !== null && $identifier != '') {
-                    return $this->repository
-                        ->findByNodeNameWithTranslation(
-                            $identifier,
-                            $translation
-                        );
+                    $fqcn = NodeType::getGeneratedEntitiesNamespace() . '\\NS' . ucwords($array['name']);
+                    /** @var NodesSources $nodeSource */
+                    return $this->em->getRepository($fqcn)->findOneBy([
+                        'id' => $array['id']
+                    ]);
                 }
             }
         }

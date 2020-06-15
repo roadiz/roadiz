@@ -114,6 +114,9 @@ class TranslationViewer
         $query = $request->query->all();
         $name = '';
         $forceLocale = (boolean) $this->settingsBag->get('force_locale');
+        $useStaticRouting = !empty($attr['_route']) &&
+            is_string($attr['_route']) &&
+            $attr['_route'] !== RouteObjectInterface::OBJECT_BASED_ROUTE_NAME;
 
         /*
          * Fix absolute boolean to Int constant.
@@ -130,7 +133,7 @@ class TranslationViewer
         /*
          * If using a static route (routes.yml)…
          */
-        if (!empty($attr['_route']) && is_string($attr['_route'])) {
+        if ($useStaticRouting) {
             $translations = $this->getRepository()->findAllAvailable();
             /*
              * Search for a route without Locale suffix
@@ -173,7 +176,7 @@ class TranslationViewer
                 unset($query['page']);
             }
 
-            if (!empty($attr['_route']) && is_string($attr['_route'])) {
+            if ($useStaticRouting) {
                 $name = $attr['_route'];
                 /*
                  * Use suffixed route if locales are forced or
