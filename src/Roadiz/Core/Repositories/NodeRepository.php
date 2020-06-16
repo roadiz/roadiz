@@ -528,13 +528,13 @@ class NodeRepository extends StatusAwareRepository
      * @param Translation|null $translation
      * @param bool             $availableTranslation
      *
-     * @return Node|null
+     * @return array|null Array with node-type "name" and node-source "id"
      */
     public function findNodeTypeNameAndSourceIdByIdentifier(
         string $identifier,
         ?Translation $translation,
         bool $availableTranslation = false
-    ): array {
+    ): ?array {
         $qb = $this->createQueryBuilder(static::NODE_ALIAS);
         $qb->select('nt.name, ns.id')
             ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)

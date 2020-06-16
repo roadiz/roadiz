@@ -125,7 +125,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             if (false === $nodeRouteHelper->isViewable()) {
                 throw new ResourceNotFoundException();
             }
-            
+
             return [
                 '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
                 '_locale' => $translation->getPreferredLocale(), //pass request locale to init translator
@@ -161,11 +161,13 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                             $translation,
                             !$this->preview
                         );
-                    $fqcn = NodeType::getGeneratedEntitiesNamespace() . '\\NS' . ucwords($array['name']);
-                    /** @var NodesSources $nodeSource */
-                    return $this->em->getRepository($fqcn)->findOneBy([
-                        'id' => $array['id']
-                    ]);
+                    if (null !== $array) {
+                        $fqcn = NodeType::getGeneratedEntitiesNamespace() . '\\NS' . ucwords($array['name']);
+                        /** @var NodesSources $nodeSource */
+                        return $this->em->getRepository($fqcn)->findOneBy([
+                            'id' => $array['id']
+                        ]);
+                    }
                 }
             }
         }
