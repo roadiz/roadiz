@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Utils\Asset\Packages;
-use Symfony\Component\HttpFoundation\RequestStack;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -24,45 +21,32 @@ class UrlExtension extends AbstractExtension
     protected $forceLocale;
     protected $cacheProvider;
     /**
-     * @var RequestStack
-     */
-    private $requestStack;
-    /**
      * @var bool
      */
     private $throwExceptions;
     /**
-     * @var Packages
+     * @var DocumentUrlGeneratorInterface
      */
-    private $packages;
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    private $documentUrlGenerator;
 
     /**
      * UrlExtension constructor.
-     * @param RequestStack $requestStack
-     * @param Packages $packages
-     * @param UrlGeneratorInterface $urlGenerator
+     *
+     * @param DocumentUrlGeneratorInterface $documentUrlGenerator
      * @param CacheProvider|null $cacheProvider
      * @param bool $forceLocale
      * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
     public function __construct(
-        RequestStack $requestStack,
-        Packages $packages,
-        UrlGeneratorInterface $urlGenerator,
+        DocumentUrlGeneratorInterface $documentUrlGenerator,
         CacheProvider $cacheProvider = null,
         $forceLocale = false,
         $throwExceptions = false
     ) {
         $this->forceLocale = $forceLocale;
         $this->cacheProvider = $cacheProvider;
-        $this->requestStack = $requestStack;
         $this->throwExceptions = $throwExceptions;
-        $this->packages = $packages;
-        $this->urlGenerator = $urlGenerator;
+        $this->documentUrlGenerator = $documentUrlGenerator;
     }
 
     /**
@@ -116,14 +100,9 @@ class UrlExtension extends AbstractExtension
                     $absolute = (boolean) $criteria['absolute'];
                 }
 
-                $urlGenerator = new DocumentUrlGenerator(
-                    $this->requestStack,
-                    $this->packages,
-                    $this->urlGenerator,
-                    $mixed,
-                    $criteria
-                );
-                return $urlGenerator->getUrl($absolute);
+                $this->documentUrlGenerator->setOptions($criteria);
+                $this->documentUrlGenerator->setDocument($mixed);
+                return $this->documentUrlGenerator->getUrl($absolute);
             } catch (InvalidArgumentException $e) {
                 throw new RuntimeError($e->getMessage(), -1, null, $e);
             }

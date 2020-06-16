@@ -200,9 +200,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new BlockRenderExtension($c['twig.fragmentHandler']));
             $extensions->add(new HttpKernelExtension($c['twig.fragmentHandler']));
             $extensions->add(new UrlExtension(
-                $c['requestStack'],
-                $c['assetPackages'],
-                $c['urlGenerator'],
+                $c['document.url_generator'],
                 $c['nodesSourcesUrlCacheProvider'],
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
