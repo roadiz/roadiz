@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\UrlGenerators;
 
+use Doctrine\Common\Cache\CacheProvider;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -21,14 +22,16 @@ final class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
     /**
      * DocumentUrlGenerator constructor.
      *
-     * @param Packages               $packages
-     * @param UrlGeneratorInterface  $urlGenerator
+     * @param Packages              $packages
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param CacheProvider|null    $optionsCacheProvider
      */
     public function __construct(
         Packages $packages,
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
+        ?CacheProvider $optionsCacheProvider = null
     ) {
-        parent::__construct($packages);
+        parent::__construct($packages, null, [], $optionsCacheProvider);
         $this->urlGenerator = $urlGenerator;
     }
 
@@ -47,10 +50,9 @@ final class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
         }
 
         $referenceType = $absolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH;
-        $compiler = new OptionsCompiler();
 
         $routeParams = [
-            'queryString' => $compiler->compile($this->options),
+            'queryString' => $this->optionCompiler->compile($this->options),
             'filename' => $this->getDocument()->getRelativePath(),
         ];
 

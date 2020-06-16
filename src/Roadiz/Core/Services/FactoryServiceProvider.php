@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\CacheProvider;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
@@ -19,7 +21,6 @@ use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Document\DocumentFinder;
@@ -192,7 +193,11 @@ class FactoryServiceProvider implements ServiceProviderInterface
          * UrlGenerators
          */
         $container['document.url_generator'] = $container->factory(function (Container $c) {
-            return new DocumentUrlGenerator($c['assetPackages'], $c['urlGenerator']);
+            $cacheProvider = $c[CacheProvider::class];
+            if ($cacheProvider instanceof ArrayCache) {
+                $cacheProvider = null;
+            }
+            return new DocumentUrlGenerator($c['assetPackages'], $c['urlGenerator'], $cacheProvider);
         });
 
         /*

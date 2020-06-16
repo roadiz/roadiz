@@ -106,10 +106,9 @@ class UrlExtension extends AbstractExtension
                     $absolute = (boolean) $criteria['absolute'];
                 }
 
-                return $this->documentUrlGenerator
-                    ->setDocument($mixed)
-                    ->setOptions($criteria)
-                    ->getUrl($absolute);
+                $this->documentUrlGenerator->setOptions($criteria);
+                $this->documentUrlGenerator->setDocument($mixed);
+                return $this->documentUrlGenerator->getUrl($absolute);
             } catch (InvalidArgumentException $e) {
                 throw new RuntimeError($e->getMessage(), -1, null, $e);
             }

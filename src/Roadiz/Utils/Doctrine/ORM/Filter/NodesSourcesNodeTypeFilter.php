@@ -54,7 +54,7 @@ final class NodesSourcesNodeTypeFilter implements EventSubscriberInterface
 
             if ($value instanceof NodeType) {
                 $qb->andWhere($qb->expr()->isInstanceOf(
-                    $simpleQB->getRootAlias(), 
+                    $simpleQB->getRootAlias(),
                     $value->getSourceEntityFullQualifiedClassName()
                 ));
             } elseif (is_array($value)) {
