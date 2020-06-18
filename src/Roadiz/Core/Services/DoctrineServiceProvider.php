@@ -29,6 +29,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
+use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -118,6 +119,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                 $config->setMetadataDriverImpl($c[AnnotationDriver::class]);
                 $config->setProxyDir($proxyFolder);
                 $config->setProxyNamespace('Proxies');
+                $config->addCustomStringFunction(JsonContains::FUNCTION_NAME, JsonContains::class);
                 /*
                  * Override default repository factory
                  * to inject Container into Doctrine repositories!
