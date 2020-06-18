@@ -118,6 +118,9 @@ class SimpleQueryBuilder
                         );
                     case 'NOT IN':
                         return $this->queryBuilder->expr()->notIn($prefix . $key, ':' . $baseKey);
+                    case 'JSON_CONTAINS':
+                        // Json flat array/object contains a given value
+                        return new Func('JSON_CONTAINS', [$prefix . $key, ':' . $baseKey, '$']);
                     case 'INSTANCE OF':
                         return $this->queryBuilder->expr()->isInstanceOf($prefix . $key, ':' . $baseKey);
                 }
@@ -168,6 +171,9 @@ class SimpleQueryBuilder
                     case 'BETWEEN':
                         return $this->queryBuilder->setParameter($key . '_1', $value[1])
                                                   ->setParameter($key . '_2', $value[2]);
+                    case 'JSON_CONTAINS':
+                        // Need to quote Json value
+                        return $this->queryBuilder->setParameter($key, '"' . $value[1] . '"');
                     case 'LIKE':
                         // param is set in filterBy
                         return $this->queryBuilder;

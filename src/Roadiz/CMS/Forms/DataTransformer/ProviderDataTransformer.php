@@ -38,8 +38,8 @@ class ProviderDataTransformer implements DataTransformerInterface
      */
     public function transform($entitiesToForm)
     {
-        if ($this->nodeTypeField->isMultiProvider() && is_array($entitiesToForm)) {
-            if (count($entitiesToForm) > 0) {
+        if ($this->nodeTypeField->isMultiProvider() && (null === $entitiesToForm || is_array($entitiesToForm))) {
+            if (null !== $entitiesToForm && count($entitiesToForm) > 0) {
                 return $this->provider->getItemsById($entitiesToForm);
             }
             return [];

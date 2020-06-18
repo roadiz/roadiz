@@ -26,9 +26,9 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      * @param NodeTypeField $field
      * @param NodeTypes     $nodeTypesBag
      */
-    public function __construct(NodeTypeField $field, NodeTypes $nodeTypesBag)
+    public function __construct(NodeTypeField $field, NodeTypes $nodeTypesBag, array $options = [])
     {
-        parent::__construct($field);
+        parent::__construct($field, $options);
         $this->nodeTypesBag = $nodeTypesBag;
     }
 

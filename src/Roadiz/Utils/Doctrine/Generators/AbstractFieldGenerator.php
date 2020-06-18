@@ -7,18 +7,27 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 abstract class AbstractFieldGenerator
 {
+    const USE_NATIVE_JSON = 'use_native_json';
+    
     /**
      * @var NodeTypeField
      */
     protected $field;
+    /**
+     * @var array
+     */
+    protected $options;
 
     /**
      * AbstractFieldGenerator constructor.
+     * 
      * @param NodeTypeField $field
+     * @param array $options
      */
-    public function __construct(NodeTypeField $field)
+    public function __construct(NodeTypeField $field, array $options = [])
     {
         $this->field = $field;
+        $this->options = $options;
     }
 
     /**

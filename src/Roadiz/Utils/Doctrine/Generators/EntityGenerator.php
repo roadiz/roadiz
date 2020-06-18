@@ -30,16 +30,22 @@ class EntityGenerator
     private $nodeTypesBag;
 
     /**
+     * @var array
+     */
+    protected $options;
+
+    /**
      * EntityGenerator constructor.
      *
      * @param NodeType  $nodeType
      * @param NodeTypes $nodeTypesBag
      */
-    public function __construct(NodeType $nodeType, NodeTypes $nodeTypesBag)
+    public function __construct(NodeType $nodeType, NodeTypes $nodeTypesBag, array $options = [])
     {
         $this->nodeType = $nodeType;
         $this->nodeTypesBag = $nodeTypesBag;
         $this->fieldGenerators = [];
+        $this->options = $options;
 
         /** @var NodeTypeField $field */
         foreach ($this->nodeType->getFields() as $field) {
@@ -55,28 +61,28 @@ class EntityGenerator
     protected function getFieldGenerator(NodeTypeField $field): ?AbstractFieldGenerator
     {
         if ($field->getType() === AbstractField::YAML_T) {
-            return new YamlFieldGenerator($field);
+            return new YamlFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::COLLECTION_T) {
-            return new CollectionFieldGenerator($field);
+            return new CollectionFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::CUSTOM_FORMS_T) {
-            return new CustomFormsFieldGenerator($field);
+            return new CustomFormsFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::DOCUMENTS_T) {
-            return new DocumentsFieldGenerator($field);
+            return new DocumentsFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::MANY_TO_ONE_T) {
-            return new ManyToOneFieldGenerator($field);
+            return new ManyToOneFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::MANY_TO_MANY_T) {
-            return new ManyToManyFieldGenerator($field);
+            return new ManyToManyFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::NODES_T) {
-            return new NodesFieldGenerator($field, $this->nodeTypesBag);
+            return new NodesFieldGenerator($field, $this->nodeTypesBag, $this->options);
         }
         if (!$field->isVirtual()) {
-            return new NonVirtualFieldGenerator($field);
+            return new NonVirtualFieldGenerator($field, $this->options);
         }
 
         return null;

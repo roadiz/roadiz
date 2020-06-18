@@ -13,6 +13,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use RZ\Roadiz\Utils\Doctrine\Generators\AbstractFieldGenerator;
 use RZ\Roadiz\Utils\Doctrine\Generators\EntityGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -108,7 +109,11 @@ class NodeTypeHandler extends AbstractHandler
         }
 
         if (!$fileSystem->exists($file)) {
-            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag']);
+            $options = [
+                AbstractFieldGenerator::USE_NATIVE_JSON => $this->container['settingsBag']
+                    ->get(AbstractFieldGenerator::USE_NATIVE_JSON, false)
+            ];
+            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag'], $options);
             $content = $classGenerator->getClassContent();
 
             if (false === @file_put_contents($file, $content)) {

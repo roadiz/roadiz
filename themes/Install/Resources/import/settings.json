@@ -98,6 +98,18 @@
         "type": 6
     },
     {
+        "name": "use_native_json",
+        "description": "Use MySQL 5.7+ JSON field type.",
+        "value": "1",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 5
+    },
+    {
         "name": "email_sender",
         "visible": true,
         "encrypted": false,
