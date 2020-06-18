@@ -20,7 +20,7 @@ abstract class AbstractFieldGenerator
 
     /**
      * AbstractFieldGenerator constructor.
-     * 
+     *
      * @param NodeTypeField $field
      * @param array $options
      */
