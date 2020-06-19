@@ -22,6 +22,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="nodes_sources", uniqueConstraints={
  *     @ORM\UniqueConstraint(columns={"node_id", "translation_id"})
  * }, indexes={
+ *     @ORM\Index(columns={"discr"}),
+ *     @ORM\Index(columns={"discr", "translation_id"}),
+ *     @ORM\Index(columns={"published_at", "discr", "translation_id"}),
  *     @ORM\Index(columns={"title"}),
  *     @ORM\Index(columns={"published_at"}),
  *     @ORM\Index(columns={"published_at", "translation_id"}),
