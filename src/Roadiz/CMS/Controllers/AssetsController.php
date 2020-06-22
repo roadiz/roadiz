@@ -119,12 +119,14 @@ class AssetsController extends CmsController
                     $fontpath = $packages->getFontsPath($font->getOTFRelativeUrl());
                     break;
                 default:
-                    $fontpath = "";
+                    $fontpath = null;
                     $mime = "application/octet-stream";
                     break;
             }
 
-            if ("" != $fontpath && file_exists($fontpath)) {
+            if (null !== $fontpath &&
+                file_exists($fontpath) &&
+                is_file($fontpath)) {
                 $response = new Response(
                     '',
                     Response::HTTP_NOT_MODIFIED,
@@ -161,6 +163,7 @@ class AssetsController extends CmsController
      * @param Request $request
      *
      * @return Response
+     * @throws \Exception
      */
     public function fontFacesAction(Request $request)
     {
