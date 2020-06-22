@@ -60,10 +60,6 @@ class AjaxTagTreeController extends AbstractAjaxController
              */
             case 'requestMainTagTree':
                 $parent = null;
-                if (null !== $this->getUser() && $this->getUser() instanceof User) {
-                    $parent = $this->getUser()->getChroot();
-                }
-
                 $tagTree = new TagTreeWidget(
                     $this->getRequest(),
                     $this,

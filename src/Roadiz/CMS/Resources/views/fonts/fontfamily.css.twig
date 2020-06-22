@@ -1,9 +1,11 @@
-{% spaceless %}
 {% for item in fonts %}
 {% set font = item.font %}
-{% set fontAlternatives = [
-    'url(\'' ~ path('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "eot"}) ~ '?#iefix\') format(\'embedded-opentype\')'
-] %}
+{% set fontAlternatives = [] %}
+{% if font.getEOTFilename %}
+{% set fontAlternatives = fontAlternatives|merge([
+    'url(\'' ~ path('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "eot"}) ~ '\') format(\'embedded-opentype\')'
+]) %}
+{% endif %}
 {% if font.getWOFF2Filename %}
 {% set fontAlternatives = fontAlternatives|merge([
     'url(\'' ~ path('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "woff2"}) ~ '\') format(\'woff2\')'
@@ -27,11 +29,10 @@
 @font-face {
     font-family: "{{ font.hash }}";
     font-display: swap;
-    src: url('{{ path('FontFile', {'filename': font.hash, 'variant': font.variant, 'extension': "eot" }) }}');
-    src: {{ fontAlternatives|join(', \n')|raw }};
+    src: {{ fontAlternatives|join(', ')|raw }};
 {% for key, value in font.fontVariantInfos %}
     font-{{ key }}: {{ value }};
 {% endfor %}
 }
+
 {% endfor %}
-{% endspaceless %}
