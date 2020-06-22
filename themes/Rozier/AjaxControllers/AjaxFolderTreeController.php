@@ -60,10 +60,6 @@ class AjaxFolderTreeController extends AbstractAjaxController
              */
             case 'requestMainFolderTree':
                 $parent = null;
-                if (null !== $this->getUser() && $this->getUser() instanceof User) {
-                    $parent = $this->getUser()->getChroot();
-                }
-
                 $folderTree = new FolderTreeWidget(
                     $this->getRequest(),
                     $this,
