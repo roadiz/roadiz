@@ -704,6 +704,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
 
     /**
      * @return Node|null
+     * @internal Do use directly, use NodeChrootResolver class to support external users (SSO, oauth2, …)
      */
     public function getChroot(): ?Node
     {

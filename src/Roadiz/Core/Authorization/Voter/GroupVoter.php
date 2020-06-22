@@ -21,10 +21,7 @@ class GroupVoter extends RoleVoter
         $this->roleHierarchy = $roleHierarchy;
         parent::__construct($prefix);
     }
-
-    /**
-     * {@inheritdoc}
-     */
+    
     protected function extractRoles(TokenInterface $token)
     {
         return $this->roleHierarchy->getReachableRoleNames($token->getRoleNames());

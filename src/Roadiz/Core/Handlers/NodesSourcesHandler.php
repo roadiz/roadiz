@@ -195,8 +195,10 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get every nodeSources parents from direct parent to farest ancestor.
      *
-     * @param  array $criteria
+     * @param array $criteria
+     *
      * @return array<NodesSources>
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getParents(
         array $criteria = null

@@ -32,6 +32,7 @@ namespace Themes\Rozier;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
@@ -86,12 +87,11 @@ class RozierApp extends BackendController
         $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
 
         $this->themeContainer['nodeTree'] = function () {
-            if (null !== $this->getUser() && $this->getUser() instanceof User) {
-                $parent = $this->getUser()->getChroot();
-            } else {
-                $parent = null;
-            }
-            return new NodeTreeWidget($this->getRequest(), $this, $parent);
+            return new NodeTreeWidget(
+                $this->getRequest(),
+                $this,
+                $this->get(NodeChrootResolver::class)->getChroot($this->getUser())
+            );
         };
         $this->themeContainer['tagTree'] = function () {
             return new TagTreeWidget($this->getRequest(), $this);

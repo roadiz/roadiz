@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\User;
@@ -184,11 +185,9 @@ class AjaxNodesController extends AbstractAjaxController
         if (!empty($parameters['newParent']) && $parameters['newParent'] > 0) {
             /** @var Node|null $parent */
             return $this->get('em')->find(Node::class, (int) $parameters['newParent']);
-        } elseif (null !== $this->getUser() &&
-            $this->getUser() instanceof User &&
-            null !== $this->getUser()->getChroot()) {
+        } elseif (null !== $this->getUser()) {
             // If user is jailed in a node, prevent moving nodes out.
-            return $this->getUser()->getChroot();
+            return $this->get(NodeChrootResolver::class)->getChroot($this->getUser());
         }
         return null;
     }

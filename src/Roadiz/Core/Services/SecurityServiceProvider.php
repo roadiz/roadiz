@@ -10,6 +10,9 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use RZ\Roadiz\Core\Authentication\Provider\AttemptAwareDaoAuthenticationProvider;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootChainResolver;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
+use RZ\Roadiz\Core\Authorization\Chroot\RoadizUserNodeChrootResolver;
 use RZ\Roadiz\Core\Authorization\Voter\GroupVoter;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
@@ -137,7 +140,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['dispatcher']
             );
         };
-        
+
         /*
          * userProviders should be extendable to add new UserProviderInterface implementation
          * if we add external IdentityProvider to expose private Roadiz content
@@ -378,6 +381,16 @@ class SecurityServiceProvider implements ServiceProviderInterface
          */
         $container['accessDeniedHandler'] = function (Container $c) {
             return new AccessDeniedHandler($c['urlGenerator'], $c['logger.security']);
+        };
+
+        $container['nodeChrootResolvers'] = function (Container $c) {
+            return [
+                new RoadizUserNodeChrootResolver(),
+            ];
+        };
+
+        $container[NodeChrootResolver::class] = function (Container $c) {
+            return new NodeChrootChainResolver($c['nodeChrootResolvers']);
         };
 
         return $container;

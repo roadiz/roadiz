@@ -7,6 +7,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
@@ -87,7 +88,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
         };
 
         $container['node.handler'] = $container->factory(function (Container $c) {
-            return new NodeHandler($c['em'], $c['workflow.registry']);
+            return new NodeHandler($c['em'], $c['workflow.registry'], $c[NodeChrootResolver::class]);
         });
         $container['nodes_sources.handler'] = $container->factory(function (Container $c) {
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);

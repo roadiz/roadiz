@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Pimple\Container;
 use ReflectionClass;
 use ReflectionException;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -587,8 +588,11 @@ abstract class AppController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+        /** @var NodeChrootResolver $chrootResolver */
+        $chrootResolver = $this->get(NodeChrootResolver::class);
+        $chroot = $chrootResolver->getChroot($user);
 
-        if ($this->isGranted($role) && null !== $user && $user->getChroot() === null) {
+        if ($this->isGranted($role) && $chroot === null) {
             /*
              * Already grant access if user is not chrooted.
              */
@@ -621,9 +625,7 @@ abstract class AppController extends Controller
                 throw new AccessDeniedException("You don't have access to this page");
             }
 
-            if (null !== $user &&
-                $user->getChroot() !== null &&
-                !in_array($user->getChroot(), $parents, true)) {
+            if (null !== $user && $chroot !== null && !in_array($chroot, $parents, true)) {
                 throw new AccessDeniedException("You don't have access to this page");
             }
         }

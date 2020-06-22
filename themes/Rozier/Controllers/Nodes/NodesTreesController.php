@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -49,8 +50,8 @@ class NodesTreesController extends RozierApp
             }
 
             $this->get('em')->refresh($node);
-        } elseif (null !== $this->getUser() && $this->getUser() instanceof User) {
-            $node = $this->getUser()->getChroot();
+        } elseif (null !== $this->getUser()) {
+            $node = $this->get(NodeChrootResolver::class)->getChroot($this->getUser());
         } else {
             $node = null;
         }

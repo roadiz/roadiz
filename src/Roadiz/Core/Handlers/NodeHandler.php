@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
@@ -26,23 +26,30 @@ use Symfony\Component\Workflow\Workflow;
 class NodeHandler extends AbstractHandler
 {
     /**
+     * @var NodeChrootResolver
+     */
+    protected $chrootResolver;
+    /**
      * @var Registry
      */
     private $registry;
-
-    /** @var null|Node  */
+    /**
+     * @var null|Node
+     */
     private $node;
 
     /**
      * NodeHandler constructor.
      *
-     * @param ObjectManager $objectManager
-     * @param Registry      $registry
+     * @param ObjectManager      $objectManager
+     * @param Registry           $registry
+     * @param NodeChrootResolver $chrootResolver
      */
-    public function __construct(ObjectManager $objectManager, Registry $registry)
+    public function __construct(ObjectManager $objectManager, Registry $registry, NodeChrootResolver $chrootResolver)
     {
         parent::__construct($objectManager);
         $this->registry = $registry;
+        $this->chrootResolver = $chrootResolver;
     }
 
     /**
@@ -243,7 +250,7 @@ class NodeHandler extends AbstractHandler
     {
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->removeWithChildrenAndAssociations();
         }
@@ -305,7 +312,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->softRemoveWithChildren();
         }
@@ -329,7 +336,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->softUnremoveWithChildren();
         }
@@ -353,7 +360,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->publishWithChildren();
         }
@@ -376,7 +383,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->archiveWithChildren();
         }
@@ -487,14 +494,17 @@ class NodeHandler extends AbstractHandler
         $parentsArray = [];
         $parent = $this->node;
         $user = null;
+        $chroot = null;
 
         if ($tokenStorage !== null) {
             $user = $tokenStorage->getToken()->getUser();
+            /** @var Node|null $chroot */
+            $chroot = $this->chrootResolver->getChroot($user);
         }
 
         do {
             $parent = $parent->getParent();
-            if ($parent !== null && !($user !== null && $user instanceof User && $parent === $user->getChroot())) {
+            if ($parent !== null && $parent !== $chroot) {
                 $parentsArray[] = $parent;
             } else {
                 break;
@@ -515,7 +525,7 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            $parentHandler = new static($this->objectManager, $this->registry);
+            $parentHandler = new static($this->objectManager, $this->registry, $this->chrootResolver);
             $parentHandler->setNode($this->node->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {

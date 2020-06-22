@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Nodes;
 
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -53,7 +54,7 @@ class NodesController extends RozierApp
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
         $translation = $this->get('defaultTranslation');
 
-        /** @var User $user */
+        /** @var User|null $user */
         $user = $this->getUser();
 
         switch ($filter) {
@@ -87,8 +88,8 @@ class NodesController extends RozierApp
                 break;
         }
 
-        if (null !== $user && $user->getChroot() !== null) {
-            $arrayFilter["chroot"] = $user->getChroot();
+        if (null !== $user) {
+            $arrayFilter["chroot"] = $this->get(NodeChrootResolver::class)->getChroot($user);
         }
 
         /*
@@ -275,6 +276,9 @@ class NodesController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {
@@ -295,11 +299,10 @@ class NodesController extends RozierApp
         if ($type !== null && $translation !== null) {
             $node = new Node($type);
 
-            if (null !== $this->getUser() &&
-                $this->getUser() instanceof User &&
-                null !== $this->getUser()->getChroot()) {
+            $chroot = $this->get(NodeChrootResolver::class)->getChroot($this->getUser());
+            if (null !== $chroot) {
                 // If user is jailed in a node, prevent moving nodes out.
-                $node->setParent($this->getUser()->getChroot());
+                $node->setParent($chroot);
             }
 
             /** @var Form $form */
@@ -519,15 +522,13 @@ class NodesController extends RozierApp
 
         if ($form->isSubmitted() && $form->isValid()) {
             $criteria = ['status' => Node::DELETED];
-            $user = $this->getUser();
-            if ($user instanceof User) {
-                $chroot = $user->getChroot();
-                if ($chroot !== null) {
-                    /** @var NodeHandler $nodeHandler */
-                    $nodeHandler = $this->get('node.handler')->setNode($chroot);
-                    $ids = $nodeHandler->getAllOffspringId();
-                    $criteria["parent"] = $ids;
-                }
+            /** @var Node|null $chroot */
+            $chroot = $this->get(NodeChrootResolver::class)->getChroot($this->getUser());
+            if ($chroot !== null) {
+                /** @var NodeHandler $nodeHandler */
+                $nodeHandler = $this->get('node.handler')->setNode($chroot);
+                $ids = $nodeHandler->getAllOffspringId();
+                $criteria["parent"] = $ids;
             }
 
             $nodes = $this->get('em')
