@@ -48,7 +48,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
      * @param AuthenticationSuccessHandlerInterface  $successHandler
      * @param AuthenticationFailureHandlerInterface  $failureHandler
      * @param CsrfTokenManagerInterface              $csrfTokenManager
-     * @param Discovery|null                         $discovery
+     * @param Discovery                              $discovery
      * @param array                                  $options
      * @param LoggerInterface|null                   $logger
      * @param EventDispatcherInterface|null          $dispatcher
