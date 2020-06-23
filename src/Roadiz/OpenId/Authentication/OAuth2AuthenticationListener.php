@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\OpenId\Authentication;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use Lcobucci\JWT\Parser;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\OpenId\Discovery;
@@ -126,17 +127,25 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         if ($stateToken->getValue() !== $state || !$this->csrfTokenManager->isTokenValid($stateToken)) {
             throw new AuthenticationException('State token is not valid');
         }
-        $response = $this->client->post($this->discovery->get('token_endpoint'), [
-            'form_params' => [
-                'code' => $request->query->get('code'),
-                'client_id' => $this->options['oauth_client_id'] ?? '',
-                'client_secret' => $this->options['oauth_client_secret'] ?? '',
-                'redirect_uri' => $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $this->options['check_path'],
-                'grant_type' => 'authorization_code'
-            ]
-        ]);
+        try {
+            $response = $this->client->post($this->discovery->get('token_endpoint'), [
+                'form_params' => [
+                    'code' => $request->query->get('code'),
+                    'client_id' => $this->options['oauth_client_id'] ?? '',
+                    'client_secret' => $this->options['oauth_client_secret'] ?? '',
+                    'redirect_uri' => $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $this->options['check_path'],
+                    'grant_type' => 'authorization_code'
+                ]
+            ]);
+            $jsonResponse = json_decode($response->getBody()->getContents(), true);
+        } catch (ClientException $e) {
+            throw new AuthenticationException(
+                'Cannot contact Identity provider to issue authorization_code.',
+                $e->getCode(),
+                $e
+            );
+        }
 
-        $jsonResponse = json_decode($response->getBody()->getContents(), true);
         if (empty($jsonResponse['id_token'])) {
             throw new AuthenticationException('JWT is missing from response.');
         }
@@ -150,6 +159,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         return $this->authenticationManager->authenticate(new JwtAccountToken(
             (string) $jwt->getClaim('email'),
             (string) $jwt,
+            !empty($jsonResponse['access_token']) ? $jsonResponse['access_token'] : null,
             $this->providerKey,
             $this->options['roles']
         ));

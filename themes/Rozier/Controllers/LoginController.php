@@ -8,6 +8,7 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\OpenId\Discovery;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
+use RZ\Roadiz\Utils\Security\TokenGenerator;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,7 +62,7 @@ class LoginController extends RozierApp
                 'response_type' => 'code',
                 'hd' => $this->get('settingsBag')->get('openid_hd', null),
                 'state' => $state->getValue(),
-                'nonce' => 'test', // TODO: generate a nonce
+                'nonce' => (new TokenGenerator())->generateToken(),
                 'login_hint' => $request->get('email', null),
                 'scope' => implode(' ', $discovery->get('scopes_supported')),
                 'client_id' => $this->get('settingsBag')->get('oauth_client_id', null),

@@ -33,6 +33,7 @@ class OpenIdServiceProvider implements ServiceProviderInterface
 
         $container[OAuth2AuthenticationProvider::class] = function (Container $c) {
             return new OAuth2AuthenticationProvider(
+                $c[Discovery::class],
                 $c[JwtRoleStrategy::class],
                 Kernel::SECURITY_DOMAIN,
                 [

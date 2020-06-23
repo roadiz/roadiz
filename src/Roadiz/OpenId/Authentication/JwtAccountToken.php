@@ -17,16 +17,21 @@ class JwtAccountToken extends AbstractToken
      * @var string
      */
     protected $providerKey;
+    /**
+     * @var string|null
+     */
+    protected $accessToken;
 
     /**
      * JwtAccountToken constructor.
      *
      * @param string|UserInterface $user
-     * @param string $jwt
-     * @param string $providerKey
-     * @param array  $roles
+     * @param string               $jwt
+     * @param string|null          $accessToken
+     * @param string               $providerKey
+     * @param array                $roles
      */
-    public function __construct($user, string $jwt, string $providerKey, array $roles = [])
+    public function __construct($user, string $jwt, ?string $accessToken, string $providerKey, array $roles = [])
     {
         parent::__construct($roles);
         $this->setUser($user);
@@ -36,6 +41,7 @@ class JwtAccountToken extends AbstractToken
 
         $jwtToken = (new Parser())->parse((string) $jwt); // Parses from a string
         $this->setAttributes($jwtToken->getClaims());
+        $this->accessToken = $accessToken;
     }
 
     /**
@@ -64,6 +70,14 @@ class JwtAccountToken extends AbstractToken
         [$this->jwt, $this->providerKey, $parentData] = $data;
         $parentData = \is_array($parentData) ? $parentData : unserialize($parentData);
         parent::__unserialize($parentData);
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getAccessToken(): ?string
+    {
+        return $this->accessToken;
     }
 
     /**
