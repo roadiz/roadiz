@@ -6977,6 +6977,11 @@
             <target state="translated">Exact search</target>
             <note>Node search page, search exact query</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="login_with_openid">
+            <source>login_with_openid</source>
+            <target state="translated">Login with OpenID</target>
+            <note>Default login button label for OpenID</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>
