@@ -81,7 +81,8 @@
         "rollerworks/password-strength-validator": "^1.1",
         "gedmo/doctrine-extensions":               "^2.4",
         "rezozero/crypto":                         "^0.1.0",
-        "scienta/doctrine-json-functions":         "^4.1"
+        "scienta/doctrine-json-functions":         "^4.1",
+        "lcobucci/jwt": "^3.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.7.27",

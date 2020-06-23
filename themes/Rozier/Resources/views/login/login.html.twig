@@ -15,4 +15,8 @@
             <button class="uk-button" type="submit"><i class="uk-icon-sign-in"></i> {% trans %}login{% endtrans %}</button>
         </fieldset>
     </form>
+
+    {% if openid %}
+        <p><a href="{{ openid }}" class="uk-button uk-button-secondary">{{ (openid_button_label|default('login_with_openid'))|trans }}</a></p>
+    {% endif %}
 {% endblock %}

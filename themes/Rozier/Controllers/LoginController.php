@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
@@ -11,6 +12,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
 use Twig_Error_Runtime;
@@ -44,6 +47,24 @@ class LoginController extends RozierApp
 
         $this->assignation['last_username'] = $helper->getLastUsername();
         $this->assignation['error'] = $helper->getLastAuthenticationError();
+
+        if (false !== $this->get('settingsBag')->get('openid_auth_uri', false) &&
+            false !== $this->get('settingsBag')->get('oauth_client_id', false)) {
+            /** @var CsrfTokenManagerInterface $csrfTokenManager */
+            $csrfTokenManager = $this->get('csrfTokenManager');
+            $state = $csrfTokenManager->getToken(OAuth2AuthenticationListener::OAUTH_STATE_TOKEN);
+            $this->assignation['openid_button_label'] = $this->get('settingsBag')->get('openid_button_label');
+            $this->assignation['openid'] = $this->get('settingsBag')->get('openid_auth_uri') . '?' . http_build_query([
+                'response_type' => 'code',
+                'hd' => $this->get('settingsBag')->get('openid_hd', null),
+                'state' => $state->getValue(),
+                'nonce' => 'test', // TODO: generate a nonce
+                'login_hint' => $request->get('email', null),
+                'scope' => $this->get('settingsBag')->get('openid_scope', null),
+                'client_id' => $this->get('settingsBag')->get('oauth_client_id', null),
+                'redirect_uri' => $this->generateUrl('loginCheckPage', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            ]);
+        }
 
         return $this->render('login/login.html.twig', $this->assignation);
     }

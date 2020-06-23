@@ -62,6 +62,7 @@ abstract class BackendController extends AppController
         );
         $firewallEntry->withSwitchUserListener()
             ->withAnonymousAuthenticationListener()
+            ->withOAuth2AuthenticationListener()
             ->withReferer();
 
         $container['firewallMap']->add(

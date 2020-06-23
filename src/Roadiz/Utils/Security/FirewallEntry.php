@@ -8,6 +8,7 @@ use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
+use RZ\Roadiz\Core\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -209,6 +210,38 @@ class FirewallEntry
     }
 
     /**
+     * @param array $roles
+     *
+     * @return $this
+     */
+    public function withOAuth2AuthenticationListener(array $roles = ['ROLE_USER'])
+    {
+        $this->listeners[] = [
+            new OAuth2AuthenticationListener(
+                $this->container['securityTokenStorage'],
+                $this->container['authenticationManager'],
+                new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
+                $this->container['httpUtils'],
+                Kernel::SECURITY_DOMAIN,
+                $this->getAuthenticationSuccessHandler(),
+                $this->getAuthenticationFailureHandler(),
+                $this->container['csrfTokenManager'],
+                [
+                    'check_path' => $this->firewallLoginCheck,
+                    'openid_token_uri' => $this->container['settingsBag']->get('openid_token_uri'),
+                    'oauth_client_id' => $this->container['settingsBag']->get('oauth_client_id'),
+                    'oauth_client_secret' => $this->container['settingsBag']->get('oauth_client_secret'),
+                    'roles' => $roles
+                ],
+                $this->container['logger.security'],
+                $this->container['dispatcher']
+            ),
+            20
+        ];
+        return $this;
+    }
+
+    /**
      * @return $this
      */
     public function withReferer()
@@ -265,51 +298,64 @@ class FirewallEntry
         }, $this->listeners);
     }
 
+    protected function getAuthenticationSuccessHandler()
+    {
+        if (null === $this->authenticationSuccessHandler) {
+            $this->authenticationSuccessHandler = new $this->authenticationSuccessHandlerClass(
+                $this->container['httpUtils'],
+                $this->container['em'],
+                $this->container['tokenBasedRememberMeServices'],
+                [
+                    'always_use_default_target_path' => false,
+                    'default_target_path' => $this->firewallBasePath,
+                    'login_path' => $this->firewallLogin,
+                    'target_path_parameter' => '_target_path',
+                    'use_referer' => $this->useReferer,
+                ]
+            );
+            if ($this->authenticationSuccessHandler instanceof LoginAttemptAwareInterface) {
+                $this->authenticationSuccessHandler->setLoginAttemptManager(
+                    $this->container[LoginAttemptManager::class]
+                );
+            }
+        }
+        return $this->authenticationSuccessHandler;
+    }
+
+    protected function getAuthenticationFailureHandler()
+    {
+        if (null === $this->authenticationFailureHandler) {
+            $this->authenticationFailureHandler = new $this->authenticationFailureHandlerClass(
+                $this->container['httpKernel'],
+                $this->container['httpUtils'],
+                [
+                    'failure_path' => $this->firewallLogin,
+                    'failure_forward' => false,
+                    'login_path' => $this->firewallLogin,
+                    'failure_path_parameter' => '_failure_path',
+                ],
+                $this->container['logger.security']
+            );
+
+            if ($this->authenticationFailureHandler instanceof LoginAttemptAwareInterface) {
+                $this->authenticationFailureHandler->setLoginAttemptManager(
+                    $this->container[LoginAttemptManager::class]
+                );
+            }
+        }
+        return $this->authenticationFailureHandler;
+    }
+
     protected function getAuthenticationListener()
     {
-        $this->authenticationSuccessHandler = new $this->authenticationSuccessHandlerClass(
-            $this->container['httpUtils'],
-            $this->container['em'],
-            $this->container['tokenBasedRememberMeServices'],
-            [
-                'always_use_default_target_path' => false,
-                'default_target_path' => $this->firewallBasePath,
-                'login_path' => $this->firewallLogin,
-                'target_path_parameter' => '_target_path',
-                'use_referer' => $this->useReferer,
-            ]
-        );
-        $this->authenticationFailureHandler = new $this->authenticationFailureHandlerClass(
-            $this->container['httpKernel'],
-            $this->container['httpUtils'],
-            [
-                'failure_path' => $this->firewallLogin,
-                'failure_forward' => false,
-                'login_path' => $this->firewallLogin,
-                'failure_path_parameter' => '_failure_path',
-            ],
-            $this->container['logger.security']
-        );
-
-        if ($this->authenticationSuccessHandler instanceof LoginAttemptAwareInterface) {
-            $this->authenticationSuccessHandler->setLoginAttemptManager(
-                $this->container[LoginAttemptManager::class]
-            );
-        }
-        if ($this->authenticationFailureHandler instanceof LoginAttemptAwareInterface) {
-            $this->authenticationFailureHandler->setLoginAttemptManager(
-                $this->container[LoginAttemptManager::class]
-            );
-        }
-
         return new UsernamePasswordFormAuthenticationListener(
             $this->container['securityTokenStorage'],
             $this->container['authenticationManager'],
             new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
             $this->container['httpUtils'],
             Kernel::SECURITY_DOMAIN,
-            $this->authenticationSuccessHandler,
-            $this->authenticationFailureHandler,
+            $this->getAuthenticationSuccessHandler(),
+            $this->getAuthenticationFailureHandler(),
             [
                 'check_path' => $this->firewallLoginCheck,
             ],
