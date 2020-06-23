@@ -115,7 +115,7 @@
         "visible": true,
         "encrypted": true,
         "settingGroup": {
-            "name": "Development",
+            "name": "OpenId",
             "inMenu": true
         },
         "type": 0
@@ -126,7 +126,7 @@
         "visible": true,
         "encrypted": true,
         "settingGroup": {
-            "name": "Development",
+            "name": "OpenId",
             "inMenu": true
         },
         "type": 2
@@ -137,7 +137,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Development",
+            "name": "OpenId",
             "inMenu": true
         },
         "type": 0
@@ -148,7 +148,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Development",
+            "name": "OpenId",
             "inMenu": true
         },
         "type": 0
@@ -159,7 +159,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Development",
+            "name": "OpenId",
             "inMenu": true
         },
         "type": 0
@@ -170,7 +170,7 @@
         "visible": true,
         "encrypted": false,
         "settingGroup": {
-            "name": "Development",
+            "name": "OpenId",
             "inMenu": true
         },
         "type": 0
