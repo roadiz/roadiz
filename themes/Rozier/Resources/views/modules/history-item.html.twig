@@ -18,7 +18,7 @@
                 <img width="60"
                      height="60"
                      class="user-image uk-thumbnail"
-                     src="{{ log.user.getPictureUrl }}"
+                     src="{{ log.user.pictureUrl }}"
                      alt="{{ log.user.identifier }}"
                      title="{{ log.user.identifier }}"
                      data-uk-tooltip="{animation:true}"/>
@@ -57,6 +57,8 @@
                 {% if is_granted('ROLE_SUPERADMIN') %}
                     <div class="history-log-message-details">
                         <dl>
+                            <dt>{{ 'username'|trans }}</dt>
+                            <dd>{{ log.username }}</dd>
                             {% for key, data in log.additionalData %}
                                 <dt>{{ key|trans }}</dt>
                                 <dd>{{ data }}</dd>

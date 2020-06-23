@@ -8,9 +8,7 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
-use RZ\Roadiz\Core\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\Core\Authentication\Provider\AttemptAwareDaoAuthenticationProvider;
-use RZ\Roadiz\Core\Authentication\Provider\OAuth2AuthenticationProvider;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootChainResolver;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
@@ -53,7 +51,6 @@ use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 use Symfony\Component\Security\Http\FirewallMap;
 use Symfony\Component\Security\Http\Logout\CookieClearingLogoutHandler;
 use Symfony\Component\Security\Http\RememberMe\TokenBasedRememberMeServices;
-use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 
 /**
  * Register security services for dependency injection container.
@@ -161,6 +158,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container['userProvider'] = function (Container $c) {
             return new UserProvider($c['em']);
         };
+
         $container['userChecker'] = function () {
             return new UserChecker();
         };
@@ -241,18 +239,11 @@ class SecurityServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $container[OAuth2AuthenticationProvider::class] = function (Container $c) {
-            return new OAuth2AuthenticationProvider(Kernel::SECURITY_DOMAIN, [
-                Role::ROLE_SUPERADMIN
-            ]);
-        };
-
         $container['authenticationProviderList'] = function (Container $c) {
             return [
                 new AnonymousAuthenticationProvider($c['config']["security"]['secret']),
                 $c['rememberMeAuthenticationProvider'],
                 $c['daoAuthenticationProvider'],
-                $c[OAuth2AuthenticationProvider::class]
             ];
         };
 

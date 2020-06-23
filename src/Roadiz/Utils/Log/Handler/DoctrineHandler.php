@@ -133,11 +133,15 @@ class DoctrineHandler extends AbstractProcessingHandler
                 /*
                  * Use available securityAuthorizationChecker to provide a valid user
                  */
-                if (null !== $this->getTokenStorage() &&
-                    null !== $this->getTokenStorage()->getToken() &&
-                    null !== $user = $this->getTokenStorage()->getToken()->getUser()) {
-                    if ($user instanceof User) {
-                        $log->setUser($user);
+                if (null !== $this->getTokenStorage() && null !== $token = $this->getTokenStorage()->getToken()) {
+                    if (null !== $user = $token->getUser()) {
+                        if ($user instanceof User) {
+                            $log->setUser($user);
+                        } else {
+                            $log->setUsername($user->getUsername());
+                        }
+                    } else {
+                        $log->setUsername($token->getUsername());
                     }
                 }
                 /*

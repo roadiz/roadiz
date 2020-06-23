@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Core\Authentication;
+namespace RZ\Roadiz\OpenId\Authentication;
 
 use Lcobucci\JWT\Parser;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;

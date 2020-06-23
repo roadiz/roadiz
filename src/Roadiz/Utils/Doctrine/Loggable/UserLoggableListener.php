@@ -6,26 +6,27 @@ namespace RZ\Roadiz\Utils\Doctrine\Loggable;
 use Gedmo\Loggable\LoggableListener;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Entities\UserLogEntry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserLoggableListener extends LoggableListener
 {
-    /** @var User */
+    /** @var UserInterface */
     protected $user = null;
 
     /**
-     * @return User
+     * @return UserInterface|null
      */
-    public function getUser(): ?User
+    public function getUser(): ?UserInterface
     {
         return $this->user;
     }
 
     /**
-     * @param User $user
+     * @param UserInterface $user
      *
      * @return UserLoggableListener
      */
-    public function setUser(?User $user): UserLoggableListener
+    public function setUser(?UserInterface $user): UserLoggableListener
     {
         $this->user = $user;
         if (null !== $user) {
@@ -46,8 +47,9 @@ class UserLoggableListener extends LoggableListener
     {
         parent::prePersistLogEntry($logEntry, $object);
 
-        if ($logEntry instanceof UserLogEntry) {
-            $logEntry->setUser($this->getUser());
+        $user = $this->getUser();
+        if ($logEntry instanceof UserLogEntry && $user instanceof User) {
+            $logEntry->setUser($user);
         }
     }
 }

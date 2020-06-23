@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Core\Authentication\Provider;
+namespace RZ\Roadiz\OpenId\Authentication\Provider;
 
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\ValidationData;
-use RZ\Roadiz\Core\Authentication\JwtAccount;
-use RZ\Roadiz\Core\Authentication\JwtAccountToken;
+use RZ\Roadiz\OpenId\User\OpenIdAccount;
+use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -22,20 +22,26 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
     /**
      * @var array|string[]
      */
-    protected $roles;
+    protected $defaultRoles;
+    /**
+     * @var JwtRoleStrategy
+     */
+    protected $roleStrategy;
 
     /**
      * AccountAuthenticationProvider constructor.
      *
-     * @param string $providerKey
-     * @param array  $roles
-     * @param bool   $hideUserNotFoundExceptions
+     * @param JwtRoleStrategy $roleStrategy
+     * @param string          $providerKey
+     * @param array           $defaultRoles
+     * @param bool            $hideUserNotFoundExceptions
      */
-    public function __construct(string $providerKey, array $roles = ['ROLE_USER'], bool $hideUserNotFoundExceptions = true)
+    public function __construct(JwtRoleStrategy $roleStrategy, string $providerKey, array $defaultRoles = ['ROLE_USER'], bool $hideUserNotFoundExceptions = true)
     {
         $this->providerKey = $providerKey;
         $this->hideUserNotFoundExceptions = $hideUserNotFoundExceptions;
-        $this->roles = $roles;
+        $this->defaultRoles = $defaultRoles;
+        $this->roleStrategy = $roleStrategy;
     }
 
     /**
@@ -56,16 +62,22 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
             throw new BadCredentialsException('Bad JWT.');
         }
 
-//        $user = new JwtAccount(
-//            $token->getUsername(),
-//            $this->getRoles($token),
-//            $jwt->hasClaim('name') ? $jwt->getClaim('name') : null,
-//            $jwt->hasClaim('family_name') ? $jwt->getClaim('family_name', null) : null,
-//            $jwt->hasClaim('given_name') ? $jwt->getClaim('given_name', null) : null,
-//            $jwt->hasClaim('picture') ? $jwt->getClaim('picture', null) : null
-//        );
+        // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+        $user = new OpenIdAccount(
+            (string) $jwt->getClaim('email'),
+            $this->getRoles($token),
+            $jwt
+        );
 
-        return new JwtAccountToken($token, $token->getCredentials(), $this->providerKey, $this->getRoles($token));
+        $authenticatedToken = new JwtAccountToken(
+            $user,
+            $token->getCredentials(),
+            $this->providerKey,
+            $this->getRoles($token)
+        );
+        $authenticatedToken->setAttributes($token->getAttributes());
+
+        return $authenticatedToken;
     }
 
     /**
@@ -78,6 +90,9 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
 
     protected function getRoles(TokenInterface $token)
     {
-        return $this->roles;
+        if ($token instanceof JwtAccountToken && $this->roleStrategy->supports($token)) {
+            return $this->roleStrategy->getRoles($token);
+        }
+        return $this->defaultRoles;
     }
 }

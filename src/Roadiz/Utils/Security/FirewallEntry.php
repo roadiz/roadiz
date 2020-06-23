@@ -8,9 +8,11 @@ use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
-use RZ\Roadiz\Core\Authentication\OAuth2AuthenticationListener;
+use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\OpenId\Discovery;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
@@ -216,28 +218,37 @@ class FirewallEntry
      */
     public function withOAuth2AuthenticationListener(array $roles = ['ROLE_USER'])
     {
-        $this->listeners[] = [
-            new OAuth2AuthenticationListener(
-                $this->container['securityTokenStorage'],
-                $this->container['authenticationManager'],
-                new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
-                $this->container['httpUtils'],
-                Kernel::SECURITY_DOMAIN,
-                $this->getAuthenticationSuccessHandler(),
-                $this->getAuthenticationFailureHandler(),
-                $this->container['csrfTokenManager'],
-                [
-                    'check_path' => $this->firewallLoginCheck,
-                    'openid_token_uri' => $this->container['settingsBag']->get('openid_token_uri'),
-                    'oauth_client_id' => $this->container['settingsBag']->get('oauth_client_id'),
-                    'oauth_client_secret' => $this->container['settingsBag']->get('oauth_client_secret'),
-                    'roles' => $roles
-                ],
-                $this->container['logger.security'],
-                $this->container['dispatcher']
-            ),
-            20
-        ];
+        /** @var Settings $settingsBag */
+        $settingsBag = $this->container['settingsBag'];
+        /** @var Discovery|null $discovery */
+        $discovery = $this->container[Discovery::class];
+        if (null !== $discovery &&
+            !empty($settingsBag->get('oauth_client_id')) &&
+            !empty($settingsBag->get('oauth_client_secret'))) {
+            $this->listeners[] = [
+                new OAuth2AuthenticationListener(
+                    $this->container['securityTokenStorage'],
+                    $this->container['authenticationManager'],
+                    new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
+                    $this->container['httpUtils'],
+                    Kernel::SECURITY_DOMAIN,
+                    $this->getAuthenticationSuccessHandler(),
+                    $this->getAuthenticationFailureHandler(),
+                    $this->container['csrfTokenManager'],
+                    $discovery,
+                    [
+                        'check_path' => $this->firewallLoginCheck,
+                        'oauth_client_id' => $settingsBag->get('oauth_client_id'),
+                        'oauth_client_secret' => $settingsBag->get('oauth_client_secret'),
+                        'roles' => $roles
+                    ],
+                    $this->container['logger.security'],
+                    $this->container['dispatcher']
+                ),
+                20
+            ];
+        }
+
         return $this;
     }
 

@@ -79,16 +79,6 @@
                 <target></target>
                 <note>Setting description</note>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="openid_scope">
-                <source>openid_scope</source>
-                <target></target>
-                <note>Setting name</note>
-            </trans-unit>
-            <trans-unit xml:space="preserve" id="openid_scope.help">
-                <source>openid_scope.help</source>
-                <target></target>
-                <note>Setting description</note>
-            </trans-unit>
             <trans-unit xml:space="preserve" id="openid_hd">
                 <source>openid_hd</source>
                 <target></target>
@@ -109,6 +99,17 @@
                 <target></target>
                 <note>Setting description</note>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_discovery">
+                <source>openid_discovery</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_discovery.help">
+                <source>openid_discovery.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
         </body>
     </file>
 </xliff>

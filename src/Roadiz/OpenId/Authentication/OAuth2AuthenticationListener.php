@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Core\Authentication;
+namespace RZ\Roadiz\OpenId\Authentication;
 
 use GuzzleHttp\Client;
 use Lcobucci\JWT\Parser;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\OpenId\Discovery;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -31,6 +32,10 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
      * @var Client
      */
     protected $client;
+    /**
+     * @var ?Discovery
+     */
+    protected $discovery;
 
     /**
      * OAuth2AuthenticationListener constructor.
@@ -43,6 +48,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
      * @param AuthenticationSuccessHandlerInterface  $successHandler
      * @param AuthenticationFailureHandlerInterface  $failureHandler
      * @param CsrfTokenManagerInterface              $csrfTokenManager
+     * @param Discovery|null                         $discovery
      * @param array                                  $options
      * @param LoggerInterface|null                   $logger
      * @param EventDispatcherInterface|null          $dispatcher
@@ -56,6 +62,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         AuthenticationSuccessHandlerInterface $successHandler,
         AuthenticationFailureHandlerInterface $failureHandler,
         CsrfTokenManagerInterface $csrfTokenManager,
+        Discovery $discovery,
         array $options = [],
         LoggerInterface $logger = null,
         EventDispatcherInterface $dispatcher = null
@@ -67,8 +74,8 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
             // You can set any number of default request options.
             'timeout'  => 2.0,
         ]);
-        if (empty($options['openid_token_uri'])) {
-            throw new \InvalidArgumentException('openid_token_uri option must not be empty');
+        if (null === $discovery) {
+            throw new \InvalidArgumentException('Discovery cannot be null');
         }
         if (empty($options['oauth_client_id'])) {
             throw new \InvalidArgumentException('oauth_client_id option must not be empty');
@@ -79,6 +86,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         if (empty($options['roles'])) {
             throw new \InvalidArgumentException('roles option must not be empty');
         }
+        $this->discovery = $discovery;
     }
 
 
@@ -91,7 +99,8 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
             $request->query->has('state') &&
             $request->query->has('code') &&
             $request->query->has('scope') &&
-            $request->query->has('authuser');
+            $request->query->has('authuser') &&
+            in_array('authorization_code', $this->discovery->get('grant_types_supported'));
     }
 
     /**
@@ -107,7 +116,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         if ($stateToken->getValue() !== $state || !$this->csrfTokenManager->isTokenValid($stateToken)) {
             throw new AuthenticationException('State token is not valid');
         }
-        $response = $this->client->post($this->options['openid_token_uri'], [
+        $response = $this->client->post($this->discovery->get('token_endpoint'), [
             'form_params' => [
                 'code' => $request->query->get('code'),
                 'client_id' => $this->options['oauth_client_id'] ?? '',

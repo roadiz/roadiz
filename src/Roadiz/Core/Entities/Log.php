@@ -15,6 +15,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="log", indexes={
  *     @ORM\Index(columns={"datetime"}),
  *     @ORM\Index(columns={"level"}),
+ *     @ORM\Index(columns={"username"}),
  *     @ORM\Index(columns={"channel"})
  * })
  * @ORM\HasLifecycleCallbacks
@@ -38,6 +39,12 @@ class Log extends AbstractEntity
      * @Serializer\Groups({"log_user"})
      */
     protected $user = null;
+    /**
+     * @ORM\Column(type="string", name="username", nullable=true)
+     * @var string|null
+     * @Serializer\Groups({"log_user"})
+     */
+    protected $username = null;
     /**
      * @ORM\Column(type="text", name="message")
      * @Serializer\Groups({"log"})
@@ -110,6 +117,7 @@ class Log extends AbstractEntity
     public function setUser(User $user): Log
     {
         $this->user = $user;
+        $this->username = $user->getUsername();
         return $this;
     }
 
@@ -211,6 +219,26 @@ class Log extends AbstractEntity
     public function setChannel(?string $channel): Log
     {
         $this->channel = $channel;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    /**
+     * @param string|null $username
+     *
+     * @return Log
+     */
+    public function setUsername(?string $username)
+    {
+        $this->username = $username;
 
         return $this;
     }

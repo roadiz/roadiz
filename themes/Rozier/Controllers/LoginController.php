@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\Authentication\OAuth2AuthenticationListener;
+use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\OpenId\Discovery;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -48,19 +49,21 @@ class LoginController extends RozierApp
         $this->assignation['last_username'] = $helper->getLastUsername();
         $this->assignation['error'] = $helper->getLastAuthenticationError();
 
-        if (false !== $this->get('settingsBag')->get('openid_auth_uri', false) &&
-            false !== $this->get('settingsBag')->get('oauth_client_id', false)) {
+        /** @var Discovery|null $discovery */
+        $discovery = $this->get(Discovery::class);
+
+        if (null !== $discovery && in_array('code', $discovery->get('response_types_supported'))) {
             /** @var CsrfTokenManagerInterface $csrfTokenManager */
             $csrfTokenManager = $this->get('csrfTokenManager');
             $state = $csrfTokenManager->getToken(OAuth2AuthenticationListener::OAUTH_STATE_TOKEN);
             $this->assignation['openid_button_label'] = $this->get('settingsBag')->get('openid_button_label');
-            $this->assignation['openid'] = $this->get('settingsBag')->get('openid_auth_uri') . '?' . http_build_query([
+            $this->assignation['openid'] = $discovery->get('authorization_endpoint') . '?' . http_build_query([
                 'response_type' => 'code',
                 'hd' => $this->get('settingsBag')->get('openid_hd', null),
                 'state' => $state->getValue(),
                 'nonce' => 'test', // TODO: generate a nonce
                 'login_hint' => $request->get('email', null),
-                'scope' => $this->get('settingsBag')->get('openid_scope', null),
+                'scope' => implode(' ', $discovery->get('scopes_supported')),
                 'client_id' => $this->get('settingsBag')->get('oauth_client_id', null),
                 'redirect_uri' => $this->generateUrl('loginCheckPage', [], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
