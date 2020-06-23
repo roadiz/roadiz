@@ -109,7 +109,16 @@
                 <target></target>
                 <note>Setting description</note>
             </trans-unit>
-
+            <trans-unit xml:space="preserve" id="openid_default_roles">
+                <source>openid_default_roles</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_default_roles.help">
+                <source>openid_default_roles.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>

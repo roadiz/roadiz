@@ -12,6 +12,7 @@ use RZ\Roadiz\OpenId\Authentication\Provider\ChainJwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\JwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\OAuth2AuthenticationProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\OpenIdAccountProvider;
+use RZ\Roadiz\OpenId\Authentication\Provider\SettingsRoleStrategy;
 
 class OpenIdServiceProvider implements ServiceProviderInterface
 {
@@ -22,7 +23,7 @@ class OpenIdServiceProvider implements ServiceProviderInterface
     {
         $container['jwtRoleStrategies'] = function (Container $c) {
             return [
-
+                new SettingsRoleStrategy($c['settingsBag'])
             ];
         };
 
@@ -35,7 +36,7 @@ class OpenIdServiceProvider implements ServiceProviderInterface
                 $c[JwtRoleStrategy::class],
                 Kernel::SECURITY_DOMAIN,
                 [
-                    Role::ROLE_SUPERADMIN
+                    Role::ROLE_DEFAULT
                 ]
             );
         };

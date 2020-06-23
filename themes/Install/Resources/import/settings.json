@@ -143,6 +143,17 @@
         "type": 0
     },
     {
+        "name": "openid_default_roles",
+        "description": "openid_default_roles.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
         "name": "openid_button_label",
         "description": "openid_button_label.help",
         "visible": true,

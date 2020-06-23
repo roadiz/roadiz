@@ -67,8 +67,18 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         LoggerInterface $logger = null,
         EventDispatcherInterface $dispatcher = null
     ) {
-        parent::__construct($tokenStorage, $authenticationManager, $sessionStrategy, $httpUtils, $providerKey,
-            $successHandler, $failureHandler, $options, $logger, $dispatcher);
+        parent::__construct(
+            $tokenStorage,
+            $authenticationManager,
+            $sessionStrategy,
+            $httpUtils,
+            $providerKey,
+            $successHandler,
+            $failureHandler,
+            $options,
+            $logger,
+            $dispatcher
+        );
         $this->csrfTokenManager = $csrfTokenManager;
         $this->client = new Client([
             // You can set any number of default request options.

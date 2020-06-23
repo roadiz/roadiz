@@ -28,7 +28,10 @@
                 {% for log in latestLogs %}
                     {% set source = log.nodeSource %}
                     <div class="latest-source">
-                        <a href="{{ path("nodesEditSourcePage", {"nodeId":source.node.id, "translationId":source.translation.id }) }}">
+                        <a href="{{ path("nodesEditSourcePage", {
+                            "nodeId": source.node.id,
+                            "translationId": source.translation.id
+                        }) }}">
                             {% set thumbnail = source.documentsByFields.first.document %}
                             <figure>
                                 {% if thumbnail and thumbnail.image %}
@@ -40,13 +43,17 @@
                                 <span class="no-thumb"></span>
                                 {% endif %}
                                 {% if log.user %}
-                                <img width="60"
-                                     height="60"
-                                     class="user-image"
-                                     src="{{ log.user.pictureUrl }}"
-                                     alt="{{ log.user.identifier }}"
-                                     title="{{ log.user.identifier }}"
-                                     data-uk-tooltip="{animation:true}" />
+                                    <img width="60"
+                                         height="60"
+                                         class="user-image"
+                                         src="{{ log.user.pictureUrl }}"
+                                         alt="{{ log.user.identifier }}"
+                                         title="{{ log.user.identifier }}"
+                                         data-uk-tooltip="{animation:true}" />
+                                {% elseif log.username %}
+                                    <span class="user-image"
+                                          title="{{ log.username }}"
+                                          data-uk-tooltip="{animation:true}" ><i class="uk-icon uk-icon-rz-user"></i></span>
                                 {% endif %}
                             </figure>
                             <p class="source-title">{{ source.title }}</p>
