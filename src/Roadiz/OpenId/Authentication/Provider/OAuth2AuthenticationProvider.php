@@ -9,6 +9,7 @@ use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\ValidationData;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Discovery;
+use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -65,6 +66,10 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
     {
         if (!$this->supports($token)) {
             throw new AuthenticationException('The token is not supported by this authentication provider.');
+        }
+
+        if (null === $this->discovery) {
+            throw new DiscoveryNotAvailableException();
         }
 
         $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string

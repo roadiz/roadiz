@@ -21,6 +21,14 @@ class OpenIdServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container[OAuth2LinkGenerator::class] = function (Container $c) {
+            return new OAuth2LinkGenerator(
+                $c[Discovery::class],
+                $c['csrfTokenManager'],
+                $c['settingsBag']
+            );
+        };
+
         $container['jwtRoleStrategies'] = function (Container $c) {
             return [
                 new SettingsRoleStrategy($c['settingsBag'])
