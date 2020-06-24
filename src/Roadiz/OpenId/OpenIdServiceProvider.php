@@ -43,6 +43,7 @@ class OpenIdServiceProvider implements ServiceProviderInterface
             return new OAuth2AuthenticationProvider(
                 $c[Discovery::class],
                 $c[JwtRoleStrategy::class],
+                $c['settingsBag'],
                 Kernel::SECURITY_DOMAIN,
                 [
                     Role::ROLE_DEFAULT

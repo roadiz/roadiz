@@ -7,6 +7,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\ValidationData;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Discovery;
 use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
@@ -35,12 +36,17 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
      * @var Discovery|null
      */
     protected $discovery;
+    /**
+     * @var Settings
+     */
+    protected $settingsBag;
 
     /**
      * AccountAuthenticationProvider constructor.
      *
      * @param Discovery|null  $discovery
      * @param JwtRoleStrategy $roleStrategy
+     * @param Settings        $settingsBag
      * @param string          $providerKey
      * @param array           $defaultRoles
      * @param bool            $hideUserNotFoundExceptions
@@ -48,6 +54,7 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
     public function __construct(
         ?Discovery $discovery,
         JwtRoleStrategy $roleStrategy,
+        Settings $settingsBag,
         string $providerKey,
         array $defaultRoles = ['ROLE_USER'],
         bool $hideUserNotFoundExceptions = true
@@ -57,6 +64,7 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
         $this->defaultRoles = $defaultRoles;
         $this->roleStrategy = $roleStrategy;
         $this->discovery = $discovery;
+        $this->settingsBag = $settingsBag;
     }
 
     /**
@@ -100,6 +108,16 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
             $this->getRoles($token),
             $jwt
         );
+        /*
+         * Check that Hosted Domain is the same as required by Roadiz
+         */
+        if ($jwt->hasClaim('hd')) {
+            if ($jwt->getClaim('hd') !== trim((string) $this->settingsBag->get('openid_hd'))) {
+                throw new BadCredentialsException(
+                    'User ('.$jwt->getClaim('hd').') does not belong to Hosted Domain.'
+                );
+            }
+        }
 
         $authenticatedToken = new JwtAccountToken(
             $user,
