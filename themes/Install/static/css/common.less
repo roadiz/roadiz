@@ -57,7 +57,10 @@ body {
 
 #inner-container{
     position: relative;
-    display: inline-block;
+
+    @media (min-width: @screen-sm-min) {
+        display: inline-block;
+    }
 }
 
 .infos {

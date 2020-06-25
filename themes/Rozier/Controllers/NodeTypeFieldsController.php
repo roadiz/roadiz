@@ -72,6 +72,7 @@ class NodeTypeFieldsController extends RozierApp
                 'em' => $this->get('em'),
                 'fieldName' => $field->getName(),
                 'nodeType' => $field->getNodeType(),
+                'inheritance_type' => $this->get('config')['inheritance']['type']
             ]);
             $form->handleRequest($request);
 
@@ -136,6 +137,7 @@ class NodeTypeFieldsController extends RozierApp
             $form = $this->createForm(NodeTypeFieldType::class, $field, [
                 'em' => $this->get('em'),
                 'nodeType' => $field->getNodeType(),
+                'inheritance_type' => $this->get('config')['inheritance']['type']
             ]);
             $form->handleRequest($request);
 

@@ -11,6 +11,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    const INHERITANCE_TYPE_JOINED = 'joined';
+    const INHERITANCE_TYPE_SINGLE_TABLE = 'single_table';
+
     public function getConfigTreeBuilder()
     {
         $builder = new TreeBuilder('roadiz');
@@ -184,7 +187,7 @@ EOD
         $node->addDefaultsIfNotSet()
             ->children()
                 ->scalarNode('type')
-                    ->defaultValue('joined')
+                    ->defaultValue(static::INHERITANCE_TYPE_JOINED)
                     ->info(<<<EOD
 Doctrine inheritance strategy for creating NodesSources
 classes table(s). BE CAREFUL, if you change this
@@ -193,7 +196,10 @@ node-sources data will be lost.
 EOD
                     )
                     ->validate()
-                    ->ifNotInArray(['joined', 'single_table'])
+                    ->ifNotInArray([
+                        static::INHERITANCE_TYPE_JOINED,
+                        static::INHERITANCE_TYPE_SINGLE_TABLE
+                    ])
                     ->thenInvalid('The %s inheritance type is not supported ("joined", "single_table" are accepted).')
                 ->end()
             ->end()
