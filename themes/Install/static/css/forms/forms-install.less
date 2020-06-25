@@ -10,16 +10,19 @@
 
 /* -------- STYLES -------- */
 
-
-.form-col{
+.form-col {
     display: inline-block;
     vertical-align: top;
-    width: 50%;
+    width: 100%;
     padding: 0 @form-col-gutter;
     box-sizing: border-box;
 
-    input, select{
+    input, select, .rz-select {
         width: 100%;
+    }
+
+    @media (min-width: @screen-sm-min) {
+        width: 50%;
     }
 }
 
@@ -36,10 +39,6 @@
     margin-bottom: 10px;
 }
 
-#databaseForm .rz-select{
-    width: 237px;
-}
-
 #infosForm{
     margin-top: 20px;
     padding-top: 20px;
@@ -48,7 +47,7 @@
     .form-col-separator{
         border-top: 1px dashed @grey-border;
         width:100%;
-        margin:10px 4px 15px;
+        margin: 10px 0 15px;
         padding-top: 20px;
     }
     .form-col-checkbox{

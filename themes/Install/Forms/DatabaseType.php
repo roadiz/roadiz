@@ -21,9 +21,8 @@ class DatabaseType extends AbstractType
     {
         $builder->add('driver', ChoiceType::class, [
                 'choices' => [
-                    'pdo_mysql' => 'pdo_mysql',
-                    'pdo_pgsql' => 'pdo_pgsql',
-                    'pdo_sqlite' => 'pdo_sqlite',
+                    'MySQL/MariaDB' => 'pdo_mysql',
+                    'PostgreSQL' => 'pdo_pgsql'
                 ],
                 'label' => 'driver',
                 'constraints' => [
@@ -92,6 +91,22 @@ class DatabaseType extends AbstractType
                     "autocomplete" => "off",
                     'id' => 'dbname',
                 ],
+            ])
+            ->add('inheritance_type', ChoiceType::class, [
+                'choices' => [
+                    'inheritance_type.joined' => 'joined',
+                    'inheritance_type.single_table' => 'single_table'
+                ],
+                'label' => 'inheritance_type',
+                'help' => 'inheritance_type.help',
+                'constraints' => [
+                    new NotNull(),
+                    new NotBlank(),
+                ],
+                'attr' => [
+                    "autocomplete" => "off",
+                ],
+                'mapped' => false,
             ])
         ;
     }

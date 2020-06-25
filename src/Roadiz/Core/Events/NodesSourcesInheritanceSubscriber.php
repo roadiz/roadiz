@@ -64,6 +64,15 @@ class NodesSourcesInheritanceSubscriber implements EventSubscriber
                 }
 
                 $metadata->setDiscriminatorMap($map);
+
+                /*
+                 * change here your inheritance type according to configuration
+                 */
+                if ($this->container['config']['inheritance']['type'] === 'joined') {
+                    $metadata->setInheritanceType(ClassMetadataInfo::INHERITANCE_TYPE_JOINED);
+                } elseif ($this->container['config']['inheritance']['type'] === 'single_table') {
+                    $metadata->setInheritanceType(ClassMetadataInfo::INHERITANCE_TYPE_SINGLE_TABLE);
+                }
             } catch (\Exception $e) {
                 /*
                  * Database tables don't exist yet

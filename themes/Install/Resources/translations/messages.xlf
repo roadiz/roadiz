@@ -447,6 +447,24 @@
                 <source>import_node</source>
                 <target></target>
             </trans-unit>
+
+
+            <trans-unit xml:space="preserve" id="inheritance_type">
+                <source>inheritance_type</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="inheritance_type.joined">
+                <source>inheritance_type.joined</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="inheritance_type.single_table">
+                <source>inheritance_type.single_table</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="inheritance_type.help">
+                <source>inheritance_type.help</source>
+                <target></target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

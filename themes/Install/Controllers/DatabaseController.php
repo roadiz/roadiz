@@ -55,6 +55,9 @@ class DatabaseController extends InstallApp
     public function databaseAction(Request $request)
     {
         $databaseForm = $this->createForm(DatabaseType::class, $this->get('config')['doctrine']);
+        if ($databaseForm->has('inheritance_type')) {
+            $databaseForm->get('inheritance_type')->setData($this->get('config')['inheritance']['type']);
+        }
         /** @var YamlConfigurationHandler $yamlConfigHandler */
         $yamlConfigHandler = $this->get('config.handler');
         $databaseForm->handleRequest($request);
@@ -66,6 +69,11 @@ class DatabaseController extends InstallApp
                     foreach ($databaseForm->getData() as $key => $value) {
                         $tempConf['doctrine'][$key] = $value;
                     }
+
+                    if ($databaseForm->has('inheritance_type')) {
+                        $tempConf['inheritance']['type'] = $databaseForm->get('inheritance_type')->getData();
+                    }
+
                     $yamlConfigHandler->setConfiguration($tempConf);
 
                     /*

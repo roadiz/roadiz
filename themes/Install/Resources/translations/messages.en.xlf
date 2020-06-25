@@ -4,411 +4,411 @@
     <body>
       <trans-unit id="1" approved="yes">
         <source>Node name</source>
-        <target state="translated">Node name</target>
+        <target state="final">Node name</target>
       </trans-unit>
       <trans-unit id="2" approved="yes">
         <source>See tree</source>
-        <target state="translated">See tree</target>
+        <target state="final">See tree</target>
       </trans-unit>
       <trans-unit id="3" approved="yes">
         <source>_username</source>
-        <target state="translated">Username</target>
+        <target state="final">Username</target>
       </trans-unit>
       <trans-unit id="4" approved="yes">
         <source>_password</source>
-        <target state="translated">Password</target>
+        <target state="final">Password</target>
       </trans-unit>
       <trans-unit id="password.verify" approved="yes">
         <source>password.verify</source>
-        <target state="translated">Verify password</target>
+        <target state="final">Verify password</target>
       </trans-unit>
       <trans-unit id="delete" approved="yes">
         <source>delete</source>
-        <target state="translated">Delete</target>
+        <target state="final">Delete</target>
       </trans-unit>
       <trans-unit id="status" approved="yes">
         <source>status</source>
-        <target state="translated">Status</target>
+        <target state="final">Status</target>
       </trans-unit>
       <!-- Welcome -->
       <trans-unit id="welcome.title" approved="yes">
         <source>welcome.title</source>
-        <target state="translated">Roadiz’s Installation</target>
+        <target state="final">Roadiz’s Installation</target>
       </trans-unit>
       <trans-unit id="welcome.subtitle" approved="yes">
         <source>welcome.subtitle</source>
-        <target state="translated">Welcome to Roadiz CMS!</target>
+        <target state="final">Welcome to Roadiz CMS!</target>
       </trans-unit>
       <trans-unit id="welcome.message" approved="yes">
         <source>welcome.message</source>
-        <target state="translated">&lt;p&gt;Here is just a bit of configuration before letting you play. So start the engine!&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Here is just a bit of configuration before letting you play. So start the engine!&lt;/p&gt;</target>
       </trans-unit>
       <!-- Requirements -->
       <trans-unit id="requirements.title" approved="yes">
         <source>requirements.title</source>
-        <target state="translated">Requirements</target>
+        <target state="final">Requirements</target>
       </trans-unit>
       <trans-unit id="requirements.message" approved="yes">
         <source>requirements.message</source>
-        <target state="translated">&lt;p&gt;To use Roadiz, your server needs some requirements, especially with PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;To use Roadiz, your server needs some requirements, especially with PHP. If you have access to your configuration file (php.ini), you could modify some of them.&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="requirements.spec" approved="yes">
         <source>requirements.spec</source>
-        <target state="translated">Specification</target>
+        <target state="final">Specification</target>
       </trans-unit>
       <trans-unit id="requirements.requirement" approved="yes">
         <source>requirements.requirement</source>
-        <target state="translated">Requirement</target>
+        <target state="final">Requirement</target>
       </trans-unit>
       <trans-unit id="requirements.actual_value" approved="yes">
         <source>requirements.actual_value</source>
-        <target state="translated">Actual value</target>
+        <target state="final">Actual value</target>
       </trans-unit>
       <!-- Database -->
       <trans-unit id="database.title" approved="yes">
         <source>database.title</source>
-        <target state="translated">Database</target>
+        <target state="final">Database</target>
       </trans-unit>
       <trans-unit id="database.message" approved="yes">
         <source>database.message</source>
-        <target state="translated">&lt;p&gt;Roadiz need a database to store all your content. You could select your favorite database driver and configure it.&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Roadiz need a database to store all your content. You could select your favorite database driver and configure it.&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="database.cannot_connect" approved="yes">
         <source>database.cannot_connect</source>
-        <target state="translated">Cannot connect to database</target>
+        <target state="final">Cannot connect to database</target>
       </trans-unit>
       <trans-unit id="database.build" approved="yes">
         <source>database.build</source>
-        <target state="translated">Build database</target>
+        <target state="final">Build database</target>
       </trans-unit>
       <!-- Database done -->
       <trans-unit id="database_done.title" approved="yes">
         <source>database_done.title</source>
-        <target state="translated">Database installed</target>
+        <target state="final">Database installed</target>
       </trans-unit>
       <trans-unit id="database_done.message" approved="yes">
         <source>database_done.message</source>
-        <target state="translated">&lt;p&gt;Your database has been successfully installed. We are going to import base contents and parameters for your website.&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Your database has been successfully installed. We are going to import base contents and parameters for your website.&lt;/p&gt;</target>
       </trans-unit>
       <!-- Database fail -->
       <trans-unit id="database_fail.title" approved="yes">
         <source>database_fail.title</source>
-        <target state="translated">Database could not be installed</target>
+        <target state="final">Database could not be installed</target>
       </trans-unit>
       <trans-unit id="database_fail.message" approved="yes">
         <source>database_fail.message</source>
-        <target state="translated">&lt;p&gt;Your database could not be installed due to following errors. Verify your database credentials or if database has been installed yet.&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Your database could not be installed due to following errors. Verify your database credentials or if database has been installed yet.&lt;/p&gt;</target>
       </trans-unit>
       <!-- Import -->
       <trans-unit id="import.title" approved="yes">
         <source>import.title</source>
-        <target state="translated">Import default data</target>
+        <target state="final">Import default data</target>
       </trans-unit>
       <trans-unit id="import.message" approved="yes">
         <source>import.message</source>
-        <target state="translated">&lt;p&gt;Importing default data for settings, roles and groups&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Importing default data for settings, roles and groups&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="import.step_name" approved="yes">
         <source>import.step_name</source>
-        <target state="translated">Step</target>
+        <target state="final">Step</target>
       </trans-unit>
       <!-- User -->
       <trans-unit id="user.title" approved="yes">
         <source>user.title</source>
-        <target state="translated">Create user</target>
+        <target state="final">Create user</target>
       </trans-unit>
       <trans-unit id="user.message" approved="yes">
         <source>user.message</source>
-        <target state="translated">&lt;p&gt;Create an user to access to the back-office.&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Create an user to access to the back-office.&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="user.create" approved="yes">
         <source>user.create</source>
-        <target state="translated">Create user</target>
+        <target state="final">Create user</target>
       </trans-unit>
       <trans-unit id="user.name" approved="yes">
         <source>user.name</source>
-        <target state="translated">Username</target>
+        <target state="final">Username</target>
       </trans-unit>
       <trans-unit id="user.email" approved="yes">
         <source>user.email</source>
-        <target state="translated">Email</target>
+        <target state="final">Email</target>
       </trans-unit>
       <trans-unit id="user.create_another" approved="yes">
         <source>user.create_another</source>
-        <target state="translated">Create another user</target>
+        <target state="final">Create another user</target>
       </trans-unit>
       <!-- User summary -->
       <trans-unit id="user_summary.title" approved="yes">
         <source>user_summary.title</source>
-        <target state="translated">User created</target>
+        <target state="final">User created</target>
       </trans-unit>
       <!-- Themes -->
       <trans-unit id="themes.title" approved="yes">
         <source>themes.title</source>
-        <target state="translated">Information</target>
+        <target state="final">Information</target>
       </trans-unit>
       <trans-unit id="themes.message" approved="yes">
         <source>themes.message</source>
-        <target state="translated">&lt;p&gt;Enter basic informations about your site&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Enter basic informations about your site&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="themes.save_informations" approved="yes">
         <source>themes.save_informations</source>
-        <target state="translated">Save informations</target>
+        <target state="final">Save informations</target>
       </trans-unit>
       <trans-unit id="themes.frontend.description" approved="yes">
         <source>themes.frontend.description</source>
-        <target state="translated">You can install some default theme(s) and content to your site</target>
+        <target state="final">You can install some default theme(s) and content to your site</target>
       </trans-unit>
       <!-- Import node type -->
       <trans-unit id="import_node_type.title" approved="yes">
         <source>import_node_type.title</source>
-        <target state="translated">Import node type</target>
+        <target state="final">Import node type</target>
       </trans-unit>
       <trans-unit id="import_node_type.message" approved="yes">
         <source>import_node_type.message</source>
-        <target state="translated">Node type</target>
+        <target state="final">Node type</target>
       </trans-unit>
       <trans-unit id="import_node_type.node_type" approved="yes">
         <source>import_node_type.node_type</source>
-        <target state="translated">Import node type</target>
+        <target state="final">Import node type</target>
       </trans-unit>
       <trans-unit id="import_node_type.node" approved="yes">
         <source>import_node_type.node</source>
-        <target state="translated">Node type</target>
+        <target state="final">Node type</target>
       </trans-unit>
       <trans-unit id="import_tags" approved="yes">
         <source>import_tags</source>
-        <target state="translated">Tags</target>
+        <target state="final">Tags</target>
       </trans-unit>
       <!-- Success -->
       <trans-unit id="success.title" approved="yes">
         <source>success.title</source>
-        <target state="translated">Success</target>
+        <target state="final">Success</target>
       </trans-unit>
       <trans-unit id="success.message" approved="yes">
         <source>success.message</source>
-        <target state="translated">&lt;p&gt;Roadiz has been successfully installed&lt;/p&gt;</target>
+        <target state="final">&lt;p&gt;Roadiz has been successfully installed&lt;/p&gt;</target>
       </trans-unit>
       <trans-unit id="success.quit_install" approved="yes">
         <source>success.quit_install</source>
-        <target state="translated">Exit installation</target>
+        <target state="final">Exit installation</target>
       </trans-unit>
       <!-- Goto -->
       <trans-unit id="goto.requirements" approved="yes">
         <source>goto.requirements</source>
-        <target state="translated">Requirements</target>
+        <target state="final">Requirements</target>
       </trans-unit>
       <trans-unit id="goto.welcome" approved="yes">
         <source>goto.welcome</source>
-        <target state="translated">Back to home</target>
+        <target state="final">Back to home</target>
       </trans-unit>
       <trans-unit id="goto.database" approved="yes">
         <source>goto.database</source>
-        <target state="translated">Database</target>
+        <target state="final">Database</target>
       </trans-unit>
       <trans-unit id="goto.import" approved="yes">
         <source>goto.import</source>
-        <target state="translated">Import</target>
+        <target state="final">Import</target>
       </trans-unit>
       <trans-unit id="goto.user" approved="yes">
         <source>goto.user</source>
-        <target state="translated">User</target>
+        <target state="final">User</target>
       </trans-unit>
       <trans-unit id="goto.theme" approved="yes">
         <source>goto.theme</source>
-        <target state="translated">Theme</target>
+        <target state="final">Theme</target>
       </trans-unit>
       <trans-unit id="goto.informations" approved="yes">
         <source>goto.informations</source>
-        <target state="translated">Informations</target>
+        <target state="final">Informations</target>
       </trans-unit>
       <trans-unit id="skip.user.goto.theme" approved="yes">
         <source>skip.user.goto.theme</source>
-        <target state="translated">Skip</target>
+        <target state="final">Skip</target>
       </trans-unit>
       <trans-unit id="skip.user.goto.done" approved="yes">
         <source>skip.user.goto.done</source>
-        <target state="translated">User summary</target>
+        <target state="final">User summary</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.import" approved="yes">
         <source>skip.database.goto.import</source>
-        <target state="translated">Skip</target>
+        <target state="final">Skip</target>
       </trans-unit>
       <trans-unit id="choose.language" approved="yes">
         <source>choose.language</source>
-        <target state="translated">Choose language</target>
+        <target state="final">Choose language</target>
       </trans-unit>
       <trans-unit id="choose.a.language" approved="yes">
         <source>choose.a.language</source>
-        <target state="translated">Choose your main language</target>
+        <target state="final">Choose your main language</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.theme" approved="yes">
         <source>skip.database.goto.theme</source>
-        <target state="translated">Skip</target>
+        <target state="final">Skip</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="theme.summary.title" approved="yes">
                 <source>theme.summary.title</source>
-                <target state="translated">Theme setup summary</target>
+                <target state="final">Theme setup summary</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.version" approved="yes">
                 <source>check.version</source>
-                <target state="translated">Version</target>
+                <target state="final">Version</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.name" approved="yes">
                 <source>theme.name</source>
-                <target state="translated">Name</target>
+                <target state="final">Name</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.version" approved="yes">
                 <source>theme.version</source>
-                <target state="translated">Version</target>
+                <target state="final">Version</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.version" approved="yes">
                 <source>cms.version</source>
-                <target state="translated">CMS version</target>
+                <target state="final">CMS version</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.supportedLocale" approved="yes">
                 <source>theme.supportedLocale</source>
-                <target state="translated">Supported locale(s)</target>
-            <alt-trans><target>Impostazioni locali supportate</target></alt-trans></trans-unit>
+                <target state="final">Supported locale(s)</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="cms.locale" approved="yes">
                 <source>cms.locale</source>
-                <target state="translated">CMS locale</target>
+                <target state="final">CMS locale</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="name" approved="yes">
                 <source>name</source>
-                <target state="translated">Name</target>
+                <target state="final">Name</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="filename" approved="yes">
                 <source>filename</source>
-                <target state="translated">Filename</target>
+                <target state="final">Filename</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodetypes" approved="yes">
                 <source>nodetypes</source>
-                <target state="translated">Node-types</target>
+                <target state="final">Node-types</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodes" approved="yes">
                 <source>nodes</source>
-                <target state="translated">Nodes</target>
+                <target state="final">Nodes</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install.theme" approved="yes">
                 <source>install.theme</source>
-                <target state="translated">Perform theme install</target>
+                <target state="final">Perform theme install</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import.theme.content.title" approved="yes">
                 <source>import.theme.content.title</source>
-                <target state="translated">Import theme content</target>
+                <target state="final">Import theme content</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="step.name" approved="yes">
                 <source>step.name</source>
-                <target state="translated">Step</target>
+                <target state="final">Step</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="goto.done" approved="yes">
                 <source>goto.done</source>
-                <target state="translated">Done</target>
+                <target state="final">Done</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_roles" approved="yes">
                 <source>import_roles</source>
-                <target state="translated">Roles</target>
+                <target state="final">Roles</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_groups" approved="yes">
                 <source>import_groups</source>
-                <target state="translated">Roles groups</target>
+                <target state="final">Roles groups</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_settings" approved="yes">
                 <source>import_settings</source>
-                <target state="translated">Settings</target>
+                <target state="final">Settings</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.selector" approved="yes">
                 <source>theme.selector</source>
-                <target state="translated">Available themes</target>
+                <target state="final">Available themes</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.locale" approved="yes">
                 <source>check.locale</source>
-                <target state="translated">Locale</target>
+                <target state="final">Locale</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.import.files" approved="yes">
                 <source>check.import.files</source>
-                <target state="translated">Files to import</target>
+                <target state="final">Files to import</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password.must_match" approved="yes">
                 <source>password.must_match</source>
-                <target state="translated">Passwords must match</target>
+                <target state="final">Passwords must match</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="site_name" approved="yes">
                 <source>site_name</source>
-                <target state="translated">Your website name</target>
+                <target state="final">Your website name</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender" approved="yes">
                 <source>email_sender</source>
-                <target state="translated">Main email</target>
+                <target state="final">Main email</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender_name" approved="yes">
                 <source>email_sender_name</source>
-                <target state="translated">Main email account name</target>
+                <target state="final">Main email account name</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="meta_description" approved="yes">
                 <source>meta_description</source>
-                <target state="translated">SEO Description</target>
+                <target state="final">SEO Description</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="timezone" approved="yes">
                 <source>timezone</source>
-                <target state="translated">TImezone</target>
+                <target state="final">TImezone</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install_theme" approved="yes">
                 <source>install_theme</source>
-                <target state="translated">Install a theme?</target>
+                <target state="final">Install a theme?</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="driver" approved="yes">
                 <source>driver</source>
-                <target state="translated">Driver</target>
+                <target state="final">Driver</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="host" approved="yes">
                 <source>host</source>
-                <target state="translated">Host</target>
+                <target state="final">Host</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="port" approved="yes">
                 <source>port</source>
-                <target state="translated">Port</target>
+                <target state="final">Port</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="unix_socket" approved="yes">
                 <source>unix_socket</source>
-                <target state="translated">UNIX socket</target>
+                <target state="final">UNIX socket</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="path" approved="yes">
                 <source>path</source>
-                <target state="translated">Path</target>
+                <target state="final">Path</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="user" approved="yes">
                 <source>user</source>
-                <target state="translated">Username</target>
+                <target state="final">Username</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password" approved="yes">
                 <source>password</source>
-                <target state="translated">Password</target>
+                <target state="final">Password</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="dbname" approved="yes">
                 <source>dbname</source>
-                <target state="translated">Database name</target>
+                <target state="final">Database name</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.locale.message" approved="yes">
                 <source>error.locale.message</source>
-                <target state="translated">Theme locale does not exist on your system.</target>
+                <target state="final">Theme locale does not exist on your system.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.modal.title" approved="yes">
                 <source>error.modal.title</source>
-                <target state="translated">Please fix the following issues before installing theme.</target>
+                <target state="final">Please fix the following issues before installing theme.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.version.message" approved="yes">
                 <source>error.version.message</source>
-                <target state="translated">This theme needs a newer version of Roadiz.</target>
+                <target state="final">This theme needs a newer version of Roadiz.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="warning.theme.continue" approved="yes">
                 <source>warning.theme.continue</source>
-                <target state="translated">You can ignore theses messages and continue anyway.</target>
+                <target state="final">You can ignore theses messages and continue anyway.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz" approved="yes">
                 <source>now_you_can_delete_install_file_and_use_roadiz</source>
-                <target state="translated">Now Roadiz installation is completed you can remove the install.php script from Roadiz folder and access to your fresh website without it.</target>
+                <target state="final">Now Roadiz installation is completed you can remove the install.php script from Roadiz folder and access to your fresh website without it.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_attribute">
                 <source>import_attribute</source>
@@ -417,6 +417,22 @@
       <trans-unit xml:space="preserve" id="import_node">
                 <source>import_node</source>
                 <target state="translated">Node</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type">
+                <source>inheritance_type</source>
+                <target state="translated">Inheritance Mapping strategy</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type.joined">
+                <source>inheritance_type.joined</source>
+                <target state="translated">Joined Class Table inheritance</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type.single_table">
+                <source>inheritance_type.single_table</source>
+                <target state="translated">Single Table Inheritance</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type.help">
+                <source>inheritance_type.help</source>
+                <target state="translated">Choose strategy for storing your content across node-types. *Joined class tables* is Roadiz default strategy suited for fewer node-types using very different contents. *Single table* is better if you need a lot of node-types with similar fields. **Be careful: if you change strategy all your nodes content will be lost.**</target>
             </trans-unit>
     </body>
   </file>

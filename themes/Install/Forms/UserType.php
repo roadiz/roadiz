@@ -27,6 +27,9 @@ class UserType extends AbstractType
                     new NotNull(),
                     new NotBlank(),
                 ],
+                'attr' => [
+                    "autocomplete" => "off",
+                ]
             ])
             ->add('email', EmailType::class, [
                 'required' => true,
@@ -36,6 +39,9 @@ class UserType extends AbstractType
                     new Email(),
                     new NotBlank(),
                 ],
+                'attr' => [
+                    "autocomplete" => "off",
+                ]
             ])
             ->add('password', CreatePasswordType::class, [
                 'invalid_message' => 'password.must_match',
