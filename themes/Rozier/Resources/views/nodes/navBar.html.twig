@@ -1,7 +1,7 @@
 <nav class="node-navbar-navigation navbar-navigation uk-navbar has-translations">
     {% spaceless %}
     <ul class="uk-navbar-nav">
-        {% if node != app.user.chroot %}
+        {% if app.user and node != chroot_resolver.chroot(app.user) %}
             <li class="uk-navbar-item{% if current == 'source' %} uk-active{% endif %}">
                 {% if source and translation not in (node|handler).availableTranslations %}
                 {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId: source.translation.id }) %}

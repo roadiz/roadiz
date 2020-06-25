@@ -29,7 +29,9 @@ class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler i
                 'ipAddress' => $ipAddress
             ]);
         }
-        if (null !== $this->getLoginAttemptManager() && $exception instanceof BadCredentialsException) {
+        if (null !== $username &&
+            is_string($username) &&
+            null !== $this->getLoginAttemptManager() && $exception instanceof BadCredentialsException) {
             $this->getLoginAttemptManager()->onFailedLoginAttempt($username);
         }
 

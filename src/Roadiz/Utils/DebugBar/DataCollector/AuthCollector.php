@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\DebugBar\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use RZ\Roadiz\Core\Entities\User;
+use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -31,7 +32,22 @@ class AuthCollector extends DataCollector implements Renderable
     {
         if (null !== $this->tokenStorage->getToken()) {
             $user = $this->tokenStorage->getToken()->getUser();
-            if (null !== $user && $user instanceof User) {
+            if (null !== $user && $user instanceof OpenIdAccount) {
+                return [
+                    'name' => $user->getEmail(),
+                    'user' => [
+                        'Token' => get_class($this->tokenStorage->getToken()),
+                        'Roles' => $user->getRoles(),
+                        'Email' => $user->getEmail(),
+                        'Name' => $user->getName(),
+                        'Given name' => $user->getGivenName(),
+                        'Family name' => $user->getFamilyName(),
+                        'Phone number' => $user->getPhoneNumber(),
+                        'Profile' => $user->getProfile(),
+                        'Middle name' => $user->getMiddleName(),
+                    ]
+                ];
+            } elseif (null !== $user && $user instanceof User) {
                 return [
                     'name' => $user->getUsername(),
                     'user' => [

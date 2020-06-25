@@ -158,6 +158,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container['userProvider'] = function (Container $c) {
             return new UserProvider($c['em']);
         };
+
         $container['userChecker'] = function () {
             return new UserChecker();
         };

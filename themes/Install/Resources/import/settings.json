@@ -110,6 +110,72 @@
         "type": 5
     },
     {
+        "name": "oauth_client_id",
+        "description": "oauth_client_id.help",
+        "visible": true,
+        "encrypted": true,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
+        "name": "oauth_client_secret",
+        "description": "oauth_client_secret.help",
+        "visible": true,
+        "encrypted": true,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 2
+    },
+    {
+        "name": "openid_discovery",
+        "description": "openid_discovery.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
+        "name": "openid_default_roles",
+        "description": "openid_default_roles.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
+        "name": "openid_button_label",
+        "description": "openid_button_label.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
+        "name": "openid_hd",
+        "description": "openid_hd.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
         "name": "email_sender",
         "visible": true,
         "encrypted": false,

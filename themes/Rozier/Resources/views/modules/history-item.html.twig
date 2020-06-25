@@ -6,7 +6,7 @@
     {% set icon = 'uk-icon-info-circle' %}
 {% endif %}
 
-<div class="history-log-item {% if log.nodeSource %}has-source {% endif %}{% if log.user %}has-user{% endif %}">
+<div class="history-log-item {% if log.nodeSource %}has-source {% endif %}{% if log.user or log.username %}has-user{% endif %}">
     <div class="history-log-date">
         <div class="table">
             <div class="table-cell">{{ log.datetime|localizeddate('short') }}</div>
@@ -18,11 +18,19 @@
                 <img width="60"
                      height="60"
                      class="user-image uk-thumbnail"
-                     src="{{ log.user.getPictureUrl }}"
+                     src="{{ log.user.pictureUrl }}"
                      alt="{{ log.user.identifier }}"
                      title="{{ log.user.identifier }}"
                      data-uk-tooltip="{animation:true}"/>
             </a>
+        </div>
+    {% elseif log.username %}
+        <div class="history-log-user">
+            <span class="user-image uk-thumbnail"
+                  width="60"
+                  height="60"
+                  title="{{ log.username }}"
+                  data-uk-tooltip="{animation:true}" ><i class="uk-icon uk-icon-rz-user"></i></span>
         </div>
     {% endif %}
     <div class="history-log-message">
@@ -57,6 +65,8 @@
                 {% if is_granted('ROLE_SUPERADMIN') %}
                     <div class="history-log-message-details">
                         <dl>
+                            <dt>{{ 'username'|trans }}</dt>
+                            <dd>{{ log.username }}</dd>
                             {% for key, data in log.additionalData %}
                                 <dt>{{ key|trans }}</dt>
                                 <dd>{{ data }}</dd>
