@@ -5,6 +5,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
@@ -13,6 +14,7 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\EmailManager;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -122,6 +124,13 @@ abstract class Controller implements ContainerAwareInterface
      */
     public function generateUrl($route, $parameters = [], $referenceType = Router::ABSOLUTE_PATH)
     {
+        if ($route instanceof NodesSources) {
+            return $this->get('urlGenerator')->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $route]),
+                $referenceType
+            );
+        }
         return $this->get('urlGenerator')->generate($route, $parameters, $referenceType);
     }
 
