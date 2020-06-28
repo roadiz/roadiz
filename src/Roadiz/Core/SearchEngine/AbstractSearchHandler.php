@@ -96,6 +96,16 @@ abstract class AbstractSearchHandler
     }
 
     /**
+     * @param string $q
+     *
+     * @return bool
+     */
+    protected function isQuerySingleWord(string $q): bool
+    {
+        return preg_match('#[\s\-\'\"\–\—\’\”\‘\“\/\+\.\,]#', $q) !== 1;
+    }
+
+    /**
      * Default Solr query builder.
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
@@ -111,31 +121,47 @@ abstract class AbstractSearchHandler
         $q = null !== $q ? trim($q) : '';
         $qHelper = new Helper();
         $q = $qHelper->escapeTerm($q);
+        $singleWord = $this->isQuerySingleWord($q);
         $titleField = $this->getTitleField($args);
         /*
          * Search in node-sources tags name…
          */
         if ($searchTags) {
             /*
-             * @see http://www.solrtutorial.com/solr-query-syntax.html
+             * @see https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches
              */
-            return sprintf(
-                '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)',
-                $q,
-                $proximity,
-                $q,
-                $proximity,
-                $q,
-                $proximity
-            );
+            if ($singleWord) {
+                // Need to use Fuzzy Searches
+                return sprintf(
+                    '(' . $titleField . ':%s~1)^10 (collection_txt:%s~1) (tags_txt:%s~1)',
+                    $q,
+                    $q,
+                    $q
+                );
+            } else {
+                return sprintf(
+                    '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)',
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity
+                );
+            }
         } else {
-            return sprintf(
-                '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)',
-                $q,
-                $proximity,
-                $q,
-                $proximity
-            );
+            if ($singleWord) {
+                // Need to use Fuzzy Searches
+                return sprintf('(' . $titleField . ':%s~1)^10 (collection_txt:%s~1)', $q, $q);
+            } else {
+                return sprintf(
+                    '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)',
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity
+                );
+            }
         }
     }
 
