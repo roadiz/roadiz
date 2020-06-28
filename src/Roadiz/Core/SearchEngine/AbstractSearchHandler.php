@@ -96,16 +96,6 @@ abstract class AbstractSearchHandler
     }
 
     /**
-     * @param string $q
-     *
-     * @return bool
-     */
-    protected function isQuerySingleWord(string $q): bool
-    {
-        return preg_match('#[\s\-\'\"\–\—\’\”\‘\“\/\+\.\,]#', $q) !== 1;
-    }
-
-    /**
      * Default Solr query builder.
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
@@ -121,7 +111,6 @@ abstract class AbstractSearchHandler
         $q = null !== $q ? trim($q) : '';
         $qHelper = new Helper();
         $q = $qHelper->escapeTerm($q);
-        $singleWord = $this->isQuerySingleWord($q);
         $titleField = $this->getTitleField($args);
         /*
          * Search in node-sources tags name…
@@ -130,19 +119,23 @@ abstract class AbstractSearchHandler
             /*
              * @see http://www.solrtutorial.com/solr-query-syntax.html
              */
-            if ($singleWord) {
-                // Need to use wildcard BEFORE and AFTER
-                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*) (tags_txt:*%s*)', $q, $q, $q);
-            } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
-            }
+            return sprintf(
+                '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)',
+                $q,
+                $proximity,
+                $q,
+                $proximity,
+                $q,
+                $proximity
+            );
         } else {
-            if ($singleWord) {
-                // Need to use wildcard BEFORE and AFTER
-                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*)', $q, $q);
-            } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
-            }
+            return sprintf(
+                '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)',
+                $q,
+                $proximity,
+                $q,
+                $proximity
+            );
         }
     }
 
