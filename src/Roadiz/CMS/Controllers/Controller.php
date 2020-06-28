@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Controllers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
@@ -27,10 +27,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 
@@ -70,7 +73,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Alias for `$this->container['securityAuthorizationChecker']`.
      *
-     * @return \Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     * @return AuthorizationChecker
      */
     public function getAuthorizationChecker()
     {
@@ -80,7 +83,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Alias for `$this->container['securityTokenStorage']`.
      *
-     * @return \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+     * @return TokenStorageInterface
      */
     public function getTokenStorage()
     {
@@ -90,7 +93,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Alias for `$this->container['em']`.
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return EntityManager
      */
     public function em()
     {
@@ -98,7 +101,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * @return \Symfony\Component\Translation\Translator
+     * @return Translator
      */
     public function getTranslator()
     {
@@ -140,7 +143,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param  string $url
      * @param  integer $status
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function redirect($url, $status = Response::HTTP_FOUND)
     {
@@ -179,7 +182,7 @@ abstract class Controller implements ContainerAwareInterface
      *
      * @param  Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function removeTrailingSlashAction(Request $request)
     {
