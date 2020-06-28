@@ -108,10 +108,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
     {
         return $this->requiresAuthentication($request) &&
             $request->query->has('state') &&
-            $request->query->has('code') &&
-            $request->query->has('scope') &&
-            $request->query->has('authuser') &&
-            in_array('authorization_code', $this->discovery->get('grant_types_supported'));
+            $request->query->has('code');
     }
 
     /**

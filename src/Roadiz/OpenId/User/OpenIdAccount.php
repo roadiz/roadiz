@@ -64,6 +64,10 @@ class OpenIdAccount implements UserInterface
      * @var string|null
      */
     protected $profile;
+    /**
+     * @var Token
+     */
+    protected $jwtToken;
 
     /**
      * OpenIdAccount constructor.
@@ -228,5 +232,13 @@ class OpenIdAccount implements UserInterface
     public function getProfile(): ?string
     {
         return $this->profile;
+    }
+
+    /**
+     * @return Token
+     */
+    public function getJwtToken(): Token
+    {
+        return $this->jwtToken;
     }
 }

@@ -27,6 +27,10 @@ class Discovery extends ParameterBag
      * @var bool
      */
     private $ready;
+    /**
+     * @var array|null
+     */
+    private $jwksData;
 
     /**
      * Discovery constructor.
@@ -63,6 +67,30 @@ class Discovery extends ParameterBag
             $this->parameters[$key] = $parameter;
         }
         $this->ready = true;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getJwks(): ?array
+    {
+        if (null === $this->jwksData && $this->has('jwks_uri')) {
+            $cacheKey = md5($this->get('jwks_uri'));
+            if (null !== $this->cacheProvider && $this->cacheProvider->contains($cacheKey)) {
+                $this->jwksData = $this->cacheProvider->fetch($cacheKey);
+            } else {
+                $client = new Client([
+                    // You can set any number of default request options.
+                    'timeout'  => 2.0,
+                ]);
+                $response = $client->get($this->get('jwks_uri'));
+                $this->jwksData = json_decode($response->getBody()->getContents(), true);
+                if (null !== $this->cacheProvider) {
+                    $this->cacheProvider->save($cacheKey, $this->jwksData, 3600);
+                }
+            }
+        }
+        return $this->jwksData;
     }
 
     /**

@@ -10,6 +10,7 @@ use Lcobucci\JWT\ValidationData;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Discovery;
+use Lcobucci\JWT\Signer\Key;
 use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -80,14 +81,51 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
             throw new DiscoveryNotAvailableException();
         }
 
+        /*
+         * Verify JWT expiration datetime
+         */
         $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
-        $data = new ValidationData();
+            $data = new ValidationData();
         if (!$jwt->validate($data)) {
             throw new BadCredentialsException('Bad JWT.');
         }
 
-        if (null !== $this->discovery &&
-            !empty($this->discovery->get('userinfo_endpoint')) &&
+        /*
+         * Verify JWT iss (issuer)
+         */
+        if (!empty($this->discovery->get('issuer')) &&
+            in_array('iss', $this->discovery->get('claims_supported', []))) {
+            if ((string) $jwt->getClaim('iss') !== $this->discovery->get('issuer')) {
+                throw new BadCredentialsException('Bad JWT issuer.');
+            }
+        }
+
+        /*
+         * Verify JWT signature if asymmetric crypto is used
+         */
+        /*if (null !== $this->discovery->getJwks()) {
+            if (in_array(
+                (string) $jwt->getHeader('alg'),
+                $this->discovery->get('id_token_signing_alg_values_supported', [])
+            )) {
+                if ((string) $jwt->getHeader('alg') === 'RS256') {
+                    $signer = new \Lcobucci\JWT\Signer\Rsa\Sha256();
+                    $publicKey = new Key('');
+                } elseif ((string) $jwt->getHeader('alg') === 'HS256') {
+                    $signer = new \Lcobucci\JWT\Signer\Hmac\Sha256();
+                    $publicKey = new Key('');
+                }
+
+                if (!$jwt->verify($signer, $publicKey)) {
+                    throw new BadCredentialsException('Bad JWT signature.');
+                }
+            }
+        }*/
+
+        /*
+         * Verify User information endpoint
+         */
+        if (!empty($this->discovery->get('userinfo_endpoint')) &&
             $token instanceof JwtAccountToken &&
             null !== $token->getAccessToken()) {
             try {
