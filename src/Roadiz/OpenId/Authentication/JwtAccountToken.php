@@ -59,7 +59,7 @@ class JwtAccountToken extends AbstractToken
      */
     public function __serialize(): array
     {
-        return [$this->jwt, $this->providerKey, parent::__serialize()];
+        return [$this->jwt, $this->accessToken, $this->providerKey, parent::__serialize()];
     }
 
     /**
@@ -67,7 +67,7 @@ class JwtAccountToken extends AbstractToken
      */
     public function __unserialize(array $data): void
     {
-        [$this->jwt, $this->providerKey, $parentData] = $data;
+        [$this->jwt, $this->accessToken, $this->providerKey, $parentData] = $data;
         $parentData = \is_array($parentData) ? $parentData : unserialize($parentData);
         parent::__unserialize($parentData);
     }

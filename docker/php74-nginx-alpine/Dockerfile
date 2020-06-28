@@ -8,13 +8,14 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV ROADIZ_ENV=dev
 ENV USE_APP_CACHE=0
 
-RUN apk add --no-cache shadow make git \
+RUN apk add --no-cache shadow make git gmp-dev \
     && usermod -u ${USER_UID} www-data \
     && groupmod -g ${USER_UID} www-data
 
 # Install Composer
 # And use local user as www-data
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+RUN docker-php-ext-install gmp && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     composer --version && \
     ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
     "date"

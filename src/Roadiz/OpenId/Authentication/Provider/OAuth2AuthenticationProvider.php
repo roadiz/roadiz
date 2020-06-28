@@ -5,12 +5,15 @@ namespace RZ\Roadiz\OpenId\Authentication\Provider;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Jose\Component\Core\Util\RSAKey;
+use Jose\Component\Signature\Algorithm\RS256;
 use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Signer\Key;
+use Lcobucci\JWT\Token;
 use Lcobucci\JWT\ValidationData;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Discovery;
-use Lcobucci\JWT\Signer\Key;
 use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -68,24 +71,12 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
         $this->settingsBag = $settingsBag;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function authenticate(TokenInterface $token)
+    protected function validateJWT(Token $jwt, TokenInterface $token)
     {
-        if (!$this->supports($token)) {
-            throw new AuthenticationException('The token is not supported by this authentication provider.');
-        }
-
-        if (null === $this->discovery) {
-            throw new DiscoveryNotAvailableException();
-        }
-
         /*
          * Verify JWT expiration datetime
          */
-        $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
-            $data = new ValidationData();
+        $data = new ValidationData();
         if (!$jwt->validate($data)) {
             throw new BadCredentialsException('Bad JWT.');
         }
@@ -101,26 +92,30 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
         }
 
         /*
-         * Verify JWT signature if asymmetric crypto is used
+         * Verify JWT signature if asymmetric crypto is used and if PHP gmp extension is loaded.
          */
-        /*if (null !== $this->discovery->getJwks()) {
+        if ($this->discovery->canVerifySignature() && null !== $jwkSet = $this->discovery->getJWKSet()) {
             if (in_array(
                 (string) $jwt->getHeader('alg'),
                 $this->discovery->get('id_token_signing_alg_values_supported', [])
             )) {
                 if ((string) $jwt->getHeader('alg') === 'RS256') {
+                    // Select a RS256 signature key from jwk set provided by discovery.
+                    $jwk = $jwkSet->selectKey('sig', new RS256());
                     $signer = new \Lcobucci\JWT\Signer\Rsa\Sha256();
-                    $publicKey = new Key('');
+                    $publicKey = new Key(RSAKey::createFromJWK($jwk)->toPEM());
+                    if (!$jwt->verify($signer, $publicKey)) {
+                        throw new BadCredentialsException('Bad JWT signature.');
+                    }
                 } elseif ((string) $jwt->getHeader('alg') === 'HS256') {
-                    $signer = new \Lcobucci\JWT\Signer\Hmac\Sha256();
-                    $publicKey = new Key('');
-                }
-
-                if (!$jwt->verify($signer, $publicKey)) {
-                    throw new BadCredentialsException('Bad JWT signature.');
+                    throw new BadCredentialsException('HS256 JWT signature is not supported by Roadiz yet.');
+                } else {
+                    throw new BadCredentialsException(
+                        (string) $jwt->getHeader('alg') . ' JWT signature is not supported by Roadiz yet.'
+                    );
                 }
             }
-        }*/
+        }
 
         /*
          * Verify User information endpoint
@@ -140,12 +135,6 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
             }
         }
 
-        // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
-        $user = new OpenIdAccount(
-            (string) $jwt->getClaim('email'),
-            $this->getRoles($token),
-            $jwt
-        );
         /*
          * Check that Hosted Domain is the same as required by Roadiz
          */
@@ -156,11 +145,42 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
                 );
             }
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function authenticate(TokenInterface $token)
+    {
+        if (!$this->supports($token)) {
+            throw new AuthenticationException('The token is not supported by this authentication provider.');
+        }
+
+        if (null === $this->discovery) {
+            throw new DiscoveryNotAvailableException();
+        }
+
+        /** @var Token $jwt */
+        $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
+
+        $this->validateJWT($jwt, $token);
+
+        // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
+        $user = new OpenIdAccount(
+            (string) $jwt->getClaim('email'),
+            $this->getRoles($token),
+            $jwt
+        );
+
+        $accessToken = null;
+        if ($token instanceof JwtAccountToken) {
+            $accessToken = $token->getAccessToken();
+        }
 
         $authenticatedToken = new JwtAccountToken(
             $user,
             $token->getCredentials(),
-            null,
+            $accessToken,
             $this->providerKey,
             $this->getRoles($token)
         );

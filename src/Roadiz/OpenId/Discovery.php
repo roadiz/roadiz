@@ -5,6 +5,7 @@ namespace RZ\Roadiz\OpenId;
 
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client;
+use Jose\Component\Core\JWKSet;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -70,9 +71,29 @@ class Discovery extends ParameterBag
     }
 
     /**
+     * @return bool
+     */
+    public function canVerifySignature(): bool
+    {
+        return \extension_loaded('gmp') && $this->has('jwks_uri');
+    }
+
+    /**
+     * @return JWKSet|null
+     */
+    public function getJWKSet(): ?JWKSet
+    {
+        $jwksData = $this->getJWKData();
+        if (null !== $jwksData) {
+            return JWKSet::createFromKeyData($jwksData);
+        }
+        return null;
+    }
+
+    /**
      * @return array|null
      */
-    public function getJwks(): ?array
+    public function getJWKData(): ?array
     {
         if (null === $this->jwksData && $this->has('jwks_uri')) {
             $cacheKey = md5($this->get('jwks_uri'));

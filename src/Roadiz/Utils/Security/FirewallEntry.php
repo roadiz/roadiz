@@ -13,6 +13,7 @@ use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\OpenId\Discovery;
+use RZ\Roadiz\OpenId\Logout\OpenIdLogoutHandler;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
@@ -432,6 +433,11 @@ class FirewallEntry
             ]
         );
         $logoutListener->addHandler(new SessionLogoutHandler());
+        /** @var Discovery|null $discovery */
+        $discovery = $this->container[Discovery::class];
+        if (null !== $discovery) {
+            $logoutListener->addHandler(new OpenIdLogoutHandler($discovery));
+        }
         $logoutListener->addHandler($this->container['cookieClearingLogoutHandler']);
 
         return $logoutListener;
