@@ -20,14 +20,17 @@
             <h3>{{ "hello.%name%"|trans({'%name%': app.user.identifier}) }}</h3>
         {% endif %}
         {% if app.user and app.user.name %}
+            {% set displayName = app.user.nickname|default(app.user.givenName|default(app.user.name)) %}
             {% if app.user.picture %}
-                <img width="200"
-                     height="200"
-                     class="uk-thumbnail"
-                     src="{{ app.user.picture }}"
-                     alt="{{ app.user.givenName|default(app.user.name) }}" /></a>
+                <span id="user-picture">
+                    <img width="200"
+                         height="200"
+                         class="uk-thumbnail"
+                         src="{{ app.user.picture }}"
+                         alt="{{ displayName }}" />
+                </span>
             {% endif %}
-            <h3>{{ "hello.%name%"|trans({'%name%': app.user.givenName|default(app.user.name) }) }}</h3>
+            <h3>{{ "hello.%name%"|trans({'%name%': displayName }) }}</h3>
         {% endif %}
         <nav class="user-actions">
             <a class="uk-icon-button uk-icon-rz-earth" href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}" target="_blank"><span class="user-action-label">{% trans %}see.website{% endtrans %}</span></a>
