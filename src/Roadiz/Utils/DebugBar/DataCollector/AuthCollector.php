@@ -37,6 +37,7 @@ class AuthCollector extends DataCollector implements Renderable
                     'name' => $user->getEmail(),
                     'user' => [
                         'Token' => get_class($this->tokenStorage->getToken()),
+                        'Issuer' => $user->getIssuer(),
                         'Roles' => $user->getRoles(),
                         'Email' => $user->getEmail(),
                         'Name' => $user->getName(),

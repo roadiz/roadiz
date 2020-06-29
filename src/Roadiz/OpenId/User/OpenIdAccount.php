@@ -17,6 +17,10 @@ class OpenIdAccount implements UserInterface
      */
     protected $roles;
     /**
+     * @var string|null
+     */
+    protected $issuer;
+    /**
      * @var string
      */
     protected $email;
@@ -86,15 +90,16 @@ class OpenIdAccount implements UserInterface
         /*
          * https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
          */
-        $this->name = $jwtToken->hasClaim('name') ? $jwtToken->getClaim('name') : null;
-        $this->givenName = $jwtToken->hasClaim('given_name') ? $jwtToken->getClaim('given_name') : null;
-        $this->familyName = $jwtToken->hasClaim('family_name') ? $jwtToken->getClaim('family_name') : null;
-        $this->middleName = $jwtToken->hasClaim('middle_name') ? $jwtToken->getClaim('middle_name') : null;
-        $this->nickname = $jwtToken->hasClaim('nickname') ? $jwtToken->getClaim('nickname') : null;
-        $this->profile = $jwtToken->hasClaim('profile') ? $jwtToken->getClaim('profile') : null;
-        $this->picture = $jwtToken->hasClaim('picture') ? $jwtToken->getClaim('picture') : null;
-        $this->locale = $jwtToken->hasClaim('locale') ? $jwtToken->getClaim('locale') : null;
-        $this->phoneNumber = $jwtToken->hasClaim('phone_number') ? $jwtToken->getClaim('phone_number') : null;
+        $this->name = $jwtToken->hasClaim('name') ? (string) $jwtToken->getClaim('name') : null;
+        $this->issuer = $jwtToken->hasClaim('iss') ? (string) $jwtToken->getClaim('iss') : null;
+        $this->givenName = $jwtToken->hasClaim('given_name') ? (string) $jwtToken->getClaim('given_name') : null;
+        $this->familyName = $jwtToken->hasClaim('family_name') ? (string) $jwtToken->getClaim('family_name') : null;
+        $this->middleName = $jwtToken->hasClaim('middle_name') ? (string) $jwtToken->getClaim('middle_name') : null;
+        $this->nickname = $jwtToken->hasClaim('nickname') ? (string) $jwtToken->getClaim('nickname') : null;
+        $this->profile = $jwtToken->hasClaim('profile') ? (string) $jwtToken->getClaim('profile') : null;
+        $this->picture = $jwtToken->hasClaim('picture') ? (string) $jwtToken->getClaim('picture') : null;
+        $this->locale = $jwtToken->hasClaim('locale') ? (string) $jwtToken->getClaim('locale') : null;
+        $this->phoneNumber = $jwtToken->hasClaim('phone_number') ? (string) $jwtToken->getClaim('phone_number') : null;
         $this->address = $jwtToken->hasClaim('address') ? $jwtToken->getClaim('address') : null;
     }
 
@@ -240,5 +245,13 @@ class OpenIdAccount implements UserInterface
     public function getJwtToken(): Token
     {
         return $this->jwtToken;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getIssuer(): ?string
+    {
+        return $this->issuer;
     }
 }
