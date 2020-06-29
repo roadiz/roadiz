@@ -5,6 +5,7 @@ namespace RZ\Roadiz\OpenId\Authentication\Provider;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Jose\Component\Core\JWK;
 use Jose\Component\Core\Util\RSAKey;
 use Jose\Component\Signature\Algorithm\RS256;
 use Lcobucci\JWT\Parser;
@@ -101,11 +102,17 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
             )) {
                 if ((string) $jwt->getHeader('alg') === 'RS256') {
                     // Select a RS256 signature key from jwk set provided by discovery.
-                    $jwk = $jwkSet->selectKey('sig', new RS256());
                     $signer = new \Lcobucci\JWT\Signer\Rsa\Sha256();
-                    $publicKey = new Key(RSAKey::createFromJWK($jwk)->toPEM());
-                    if (!$jwt->verify($signer, $publicKey)) {
-                        throw new BadCredentialsException('Bad JWT signature.');
+                    $verifiedSig = false;
+                    /** @var JWK $jwk */
+                    foreach ($jwkSet->all() as $jwk) {
+                        $publicKey = new Key(RSAKey::createFromJWK($jwk)->toPEM());
+                        if (true === $jwt->verify($signer, $publicKey)) {
+                            $verifiedSig = true;
+                        }
+                    }
+                    if (false === $verifiedSig) {
+                        throw new BadCredentialsException('Bad JWT signature, none of jwks key could sign token.');
                     }
                 } elseif ((string) $jwt->getHeader('alg') === 'HS256') {
                     throw new BadCredentialsException('HS256 JWT signature is not supported by Roadiz yet.');
@@ -127,8 +134,8 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
                 $client = new Client();
                 $client->get($this->discovery->get('userinfo_endpoint'), [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $token->getAccessToken()
-                    ]
+                        'Authorization' => 'Bearer ' . $token->getAccessToken(),
+                    ],
                 ]);
             } catch (ClientException $e) {
                 throw new BadCredentialsException('Userinfo cannot be fetch from Identity provider');
