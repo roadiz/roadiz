@@ -1,7 +1,7 @@
 <nav class="node-navbar-navigation navbar-navigation uk-navbar has-translations">
     {% spaceless %}
     <ul class="uk-navbar-nav">
-        {% if app.user and node != chroot_resolver.chroot(app.user) %}
+        {% if app.user and node != chroot_resolver.chroot(app.user) and is_granted('ROLE_ACCESS_NODES') %}
             <li class="uk-navbar-item{% if current == 'source' %} uk-active{% endif %}">
                 {% if source and translation not in (node|handler).availableTranslations %}
                 {% set url = path('nodesEditSourcePage', { nodeId: node.id, translationId: source.translation.id }) %}
@@ -42,6 +42,7 @@
             {% endif %}
         {% endif %}
 
+        {% if is_granted('ROLE_ACCESS_NODES') %}
         <li class="uk-navbar-item{% if current == 'tree' %} uk-active{% endif %}">
             {% if source %}
                 {% set tree_url = path('nodesTreePage', { nodeId: node.id, translationId: source.translation.id }) %}
@@ -50,9 +51,13 @@
             {% endif %}
             <a data-uk-tooltip="{animation:true}" title="{% trans %}tree{% endtrans %}" class="uk-navbar-link" href="{{ tree_url }}"><i class="uk-icon-rz-node-tree"></i></a>
         </li>
-        <li class="uk-navbar-item{% if current == 'history' %} uk-active{% endif %}">
-            <a data-uk-tooltip="{animation:true}" title="{% trans %}history{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesHistoryPage', { nodeId: node.id}) }}"><i class="uk-icon uk-icon-clock-o"></i></a>
-        </li>
+        {% endif %}
+
+        {% if is_granted('ROLE_ACCESS_LOGS') %}
+            <li class="uk-navbar-item{% if current == 'history' %} uk-active{% endif %}">
+                <a data-uk-tooltip="{animation:true}" title="{% trans %}history{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesHistoryPage', { nodeId: node.id}) }}"><i class="uk-icon uk-icon-clock-o"></i></a>
+            </li>
+        {% endif %}
     </ul>
     {% endspaceless %}
 </nav>

@@ -14,17 +14,19 @@
     </header>
 
     <article class="content content-dashboard">
-        {% if latestLogs and is_granted('ROLE_ACCESS_NODES') %}
+        {% if latestLogs %}
         <div id="latest-sources">
             <h3>{% trans %}latest.node-sources.updates{% endtrans %}</h3>
             {% spaceless %}
                 {% for log in latestLogs %}
                     {% set source = log.nodeSource %}
                     <div class="latest-source">
+                        {% if is_granted('ROLE_ACCESS_NODES') %}
                         <a href="{{ path("nodesEditSourcePage", {
                             "nodeId": source.node.id,
                             "translationId": source.translation.id
                         }) }}">
+                        {% endif %}
                             {% set thumbnail = source.documentsByFields.first.document %}
                             <figure>
                                 {% if thumbnail and thumbnail.image %}
@@ -51,7 +53,9 @@
                             </figure>
                             <p class="source-title">{{ source.title }}</p>
                             <p class="source-update-date">{{ log.datetime|localizeddate('medium', 'short') }}</p>
+                        {% if is_granted('ROLE_ACCESS_NODES') %}
                         </a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% endspaceless %}

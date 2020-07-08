@@ -37,7 +37,7 @@ class HistoryController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_LOGS');
 
         /*
          * Manage get request to filter list
@@ -72,9 +72,9 @@ class HistoryController extends RozierApp
      */
     public function userAction(Request $request, $userId)
     {
-        $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
+        $this->denyAccessUnlessGranted(['ROLE_BACKEND_USER', 'ROLE_ACCESS_LOGS']);
 
-        if (!($this->isGranted('ROLE_ACCESS_USERS')
+        if (!($this->isGranted(['ROLE_ACCESS_USERS', 'ROLE_ACCESS_LOGS'])
             || ($this->getUser() instanceof User && $this->getUser()->getId() == $userId))) {
             throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }

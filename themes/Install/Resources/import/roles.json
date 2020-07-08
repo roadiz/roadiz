@@ -219,6 +219,14 @@
         ]
     },
     {
+        "name": "ROLE_ACCESS_LOGS",
+        "groups": [
+            {
+                "name": "Admin"
+            }
+        ]
+    },
+    {
         "name": "ROLE_USER",
         "groups": []
     }

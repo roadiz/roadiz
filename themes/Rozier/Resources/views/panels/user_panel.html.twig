@@ -18,8 +18,7 @@
                      alt="{{ app.user.identifier }}" />
             </a>
             <h3>{{ "hello.%name%"|trans({'%name%': app.user.identifier}) }}</h3>
-        {% endif %}
-        {% if app.user %}
+        {% elseif app.user %}
             {% set displayName = app.user.nickname|default(app.user.givenName|default(app.user.name)) %}
             {% if app.user.picture %}
                 <span id="user-picture">

@@ -14,7 +14,15 @@
     </div>
     {% if log.user %}
         <div class="history-log-user">
-            <a href="{{ path("usersEditPage", {"userId":log.user.id }) }}">
+            {% if is_granted('ROLE_ACCESS_USERS') %}
+                {% set userPath = path("usersEditPage", { userId: log.user.id }) %}
+            {% elseif is_granted('ROLE_ACCESS_LOGS') %}
+                {% set userPath = path('historyUserPage', { userId: log.user.id }) %}
+            {% else %}
+                {% set userPath = '#' %}
+            {% endif %}
+
+            <a href="{{ userPath }}">
                 <img width="60"
                      height="60"
                      class="user-image uk-thumbnail"
@@ -37,7 +45,14 @@
         <div class="table">
             {% if log.nodeSource %}
                 <div class="history-log-source table-cell">
-                    <a href="{{ path("nodesEditSourcePage", {"nodeId":log.nodeSource.node.id, "translationId":log.nodeSource.translation.id }) }}">
+                    {% if is_granted('ROLE_ACCESS_NODES') %}
+                        {% set nodePath = path("nodesEditSourcePage", {"nodeId":log.nodeSource.node.id, "translationId":log.nodeSource.translation.id }) %}
+                    {% elseif is_granted('ROLE_ACCESS_LOGS') %}
+                        {% set nodePath = path("nodesHistoryPage", {"nodeId":log.nodeSource.node.id }) %}
+                    {% else %}
+                        {% set nodePath = '#' %}
+                    {% endif %}
+                    <a href="{{ nodePath }}">
                         {% set thumbnail = log.nodeSource.getDocumentsByFields.first.getDocument %}
                         {% if thumbnail and thumbnail.image %}
                             <figure>
@@ -62,18 +77,16 @@
                     <span class="uk-badge{% if log.level >= 400 %} uk-badge-danger{% elseif log.level >= 300 %} uk-badge-warning{% endif %}">{{ levels[log.level]|trans }}</span>
                 {% endif %}
                 {{ log.message -}}
-                {% if is_granted('ROLE_SUPERADMIN') %}
-                    <div class="history-log-message-details">
-                        <dl>
-                            <dt>{{ 'username'|trans }}</dt>
-                            <dd>{{ log.username }}</dd>
-                            {% for key, data in log.additionalData %}
-                                <dt>{{ key|trans }}</dt>
-                                <dd>{{ data }}</dd>
-                            {% endfor %}
-                        </dl>
-                    </div>
-                {% endif %}
+                <div class="history-log-message-details">
+                    <dl>
+                        <dt>{{ 'username'|trans }}</dt>
+                        <dd>{{ log.username }}</dd>
+                        {% for key, data in log.additionalData %}
+                            <dt>{{ key|trans }}</dt>
+                            <dd>{{ data }}</dd>
+                        {% endfor %}
+                    </dl>
+                </div>
             </div>
         </div>
     </div>
