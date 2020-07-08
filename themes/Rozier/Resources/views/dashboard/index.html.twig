@@ -1,17 +1,10 @@
 {% extends '@Rozier/layout.html.twig' %}
 
 {% if app.user %}
-    {% if app.user.firstName %}
-        {% set displayName = app.user.firstName %}
-    {% elseif app.user.name %}
-        {% set displayName = app.user.name %}
-    {% else %}
-        {% set displayName = app.user.username %}
-    {% endif %}
+    {% set displayName = app.user.firstName|default(app.user.nickname|default(app.user.givenName|default(app.user.name|default(app.user.username)))) %}
 {% else %}
     {% set displayName = '' %}
 {% endif %}
-
 
 {% block content %}
 <section class="content-global">

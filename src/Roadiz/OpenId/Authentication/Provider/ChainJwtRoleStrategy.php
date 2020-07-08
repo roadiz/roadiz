@@ -40,12 +40,13 @@ final class ChainJwtRoleStrategy implements JwtRoleStrategy
 
     public function getRoles(JwtAccountToken $token): ?array
     {
+        $roles = [];
         /** @var JwtRoleStrategy $strategy */
         foreach ($this->strategies as $strategy) {
             if ($strategy->supports($token)) {
-                return $strategy->getRoles($token);
+                $roles = array_merge($roles, $strategy->getRoles($token));
             }
         }
-        return null;
+        return !empty($roles) ? array_unique($roles) : null;
     }
 }

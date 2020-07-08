@@ -14,6 +14,7 @@ use Lcobucci\JWT\Token;
 use Lcobucci\JWT\ValidationData;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
+use RZ\Roadiz\OpenId\Authentication\Validator\JwtValidator;
 use RZ\Roadiz\OpenId\Discovery;
 use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\OpenId\User\OpenIdAccount;
@@ -45,6 +46,10 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
      * @var Settings
      */
     protected $settingsBag;
+    /**
+     * @var JwtValidator[]
+     */
+    protected $validators;
 
     /**
      * AccountAuthenticationProvider constructor.
@@ -59,8 +64,8 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
     public function __construct(
         ?Discovery $discovery,
         JwtRoleStrategy $roleStrategy,
-        Settings $settingsBag,
         string $providerKey,
+        array $validators = [],
         array $defaultRoles = ['ROLE_USER'],
         bool $hideUserNotFoundExceptions = true
     ) {
@@ -69,89 +74,13 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
         $this->defaultRoles = $defaultRoles;
         $this->roleStrategy = $roleStrategy;
         $this->discovery = $discovery;
-        $this->settingsBag = $settingsBag;
-    }
 
-    protected function validateJWT(Token $jwt, TokenInterface $token)
-    {
-        /*
-         * Verify JWT expiration datetime
-         */
-        $data = new ValidationData();
-        if (!$jwt->validate($data)) {
-            throw new BadCredentialsException('Bad JWT.');
-        }
-
-        /*
-         * Verify JWT iss (issuer)
-         */
-        if (!empty($this->discovery->get('issuer')) &&
-            in_array('iss', $this->discovery->get('claims_supported', []))) {
-            if ((string) $jwt->getClaim('iss') !== $this->discovery->get('issuer')) {
-                throw new BadCredentialsException('Bad JWT issuer.');
+        foreach ($validators as $validator) {
+            if (!($validator instanceof JwtValidator)) {
+                throw new \RuntimeException('Validators must implement ' . JwtValidator::class);
             }
         }
-
-        /*
-         * Verify JWT signature if asymmetric crypto is used and if PHP gmp extension is loaded.
-         */
-        if ($this->discovery->canVerifySignature() && null !== $jwkSet = $this->discovery->getJWKSet()) {
-            if (in_array(
-                (string) $jwt->getHeader('alg'),
-                $this->discovery->get('id_token_signing_alg_values_supported', [])
-            )) {
-                if ((string) $jwt->getHeader('alg') === 'RS256') {
-                    // Select a RS256 signature key from jwk set provided by discovery.
-                    $signer = new \Lcobucci\JWT\Signer\Rsa\Sha256();
-                    $verifiedSig = false;
-                    /** @var JWK $jwk */
-                    foreach ($jwkSet->all() as $jwk) {
-                        $publicKey = new Key(RSAKey::createFromJWK($jwk)->toPEM());
-                        if (true === $jwt->verify($signer, $publicKey)) {
-                            $verifiedSig = true;
-                        }
-                    }
-                    if (false === $verifiedSig) {
-                        throw new BadCredentialsException('Bad JWT signature, none of jwks key could sign token.');
-                    }
-                } elseif ((string) $jwt->getHeader('alg') === 'HS256') {
-                    throw new BadCredentialsException('HS256 JWT signature is not supported by Roadiz yet.');
-                } else {
-                    throw new BadCredentialsException(
-                        (string) $jwt->getHeader('alg') . ' JWT signature is not supported by Roadiz yet.'
-                    );
-                }
-            }
-        }
-
-        /*
-         * Verify User information endpoint
-         */
-        if (!empty($this->discovery->get('userinfo_endpoint')) &&
-            $token instanceof JwtAccountToken &&
-            null !== $token->getAccessToken()) {
-            try {
-                $client = new Client();
-                $client->get($this->discovery->get('userinfo_endpoint'), [
-                    'headers' => [
-                        'Authorization' => 'Bearer ' . $token->getAccessToken(),
-                    ],
-                ]);
-            } catch (ClientException $e) {
-                throw new BadCredentialsException('Userinfo cannot be fetch from Identity provider');
-            }
-        }
-
-        /*
-         * Check that Hosted Domain is the same as required by Roadiz
-         */
-        if ($jwt->hasClaim('hd')) {
-            if ($jwt->getClaim('hd') !== trim((string) $this->settingsBag->get('openid_hd'))) {
-                throw new BadCredentialsException(
-                    'User ('.$jwt->getClaim('hd').') does not belong to Hosted Domain.'
-                );
-            }
-        }
+        $this->validators = $validators;
     }
 
     /**
@@ -167,10 +96,12 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
             throw new DiscoveryNotAvailableException();
         }
 
+        foreach ($this->validators as $validator) {
+            $validator($token);
+        }
+
         /** @var Token $jwt */
         $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
-
-        $this->validateJWT($jwt, $token);
 
         // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
         $user = new OpenIdAccount(
@@ -206,9 +137,11 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
 
     protected function getRoles(TokenInterface $token)
     {
+        $roles = $this->defaultRoles;
         if ($token instanceof JwtAccountToken && $this->roleStrategy->supports($token)) {
-            return $this->roleStrategy->getRoles($token);
+            $roles = array_merge($roles, $this->roleStrategy->getRoles($token));
         }
-        return $this->defaultRoles;
+
+        return array_unique($roles);
     }
 }

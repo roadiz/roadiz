@@ -13,6 +13,12 @@ use RZ\Roadiz\OpenId\Authentication\Provider\JwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\OAuth2AuthenticationProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\OpenIdAccountProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\SettingsRoleStrategy;
+use RZ\Roadiz\OpenId\Authentication\Validator\DebugValidator;
+use RZ\Roadiz\OpenId\Authentication\Validator\ExpirationValidator;
+use RZ\Roadiz\OpenId\Authentication\Validator\HostedDomainValidator;
+use RZ\Roadiz\OpenId\Authentication\Validator\IssuerValidator;
+use RZ\Roadiz\OpenId\Authentication\Validator\SignatureValidator;
+use RZ\Roadiz\OpenId\Authentication\Validator\UserInfoValidator;
 
 class OpenIdServiceProvider implements ServiceProviderInterface
 {
@@ -39,12 +45,22 @@ class OpenIdServiceProvider implements ServiceProviderInterface
             return new ChainJwtRoleStrategy($c['jwtRoleStrategies']);
         };
 
+        $container['oauth2AuthenticationProvider.validators'] = function (Container $c) {
+            return [
+                new ExpirationValidator(),
+                new IssuerValidator($c[Discovery::class]),
+                new SignatureValidator($c[Discovery::class]),
+                new UserInfoValidator($c[Discovery::class]),
+                new HostedDomainValidator($c['settingsBag']),
+            ];
+        };
+
         $container[OAuth2AuthenticationProvider::class] = function (Container $c) {
             return new OAuth2AuthenticationProvider(
                 $c[Discovery::class],
                 $c[JwtRoleStrategy::class],
-                $c['settingsBag'],
                 Kernel::SECURITY_DOMAIN,
+                $c['oauth2AuthenticationProvider.validators'],
                 [
                     Role::ROLE_DEFAULT
                 ]

@@ -87,6 +87,7 @@ class OpenIdAccount implements UserInterface
     ) {
         $this->roles = $roles;
         $this->email = $email;
+        $this->jwtToken = $jwtToken;
         /*
          * https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
          */
