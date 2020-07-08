@@ -176,6 +176,17 @@
         "type": 0
     },
     {
+        "name": "openid_scopes",
+        "description": "openid_scopes.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
         "name": "email_sender",
         "visible": true,
         "encrypted": false,
@@ -410,7 +421,6 @@
     },
     {
         "name": "main_color",
-        "value": "#00deab",
         "encrypted": false,
         "visible": true,
         "settingGroup": {

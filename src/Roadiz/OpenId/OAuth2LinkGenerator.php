@@ -65,6 +65,15 @@ class OAuth2LinkGenerator
     {
         if (null !== $this->discovery &&
             in_array($responseType, $this->discovery->get('response_types_supported'))) {
+            $customScopes = $this->settingsBag->get('openid_scopes', null);
+            if (null !== $customScopes && !empty($customScopes)) {
+                $customScopes = array_intersect(
+                    explode(' ', $customScopes),
+                    $this->discovery->get('scopes_supported')
+                );
+            } else {
+                $customScopes = $this->discovery->get('scopes_supported');
+            }
             $state = $this->csrfTokenManager->getToken(OAuth2AuthenticationListener::OAUTH_STATE_TOKEN);
             return $this->discovery->get('authorization_endpoint') . '?' . http_build_query([
                 'response_type' => 'code',
@@ -72,7 +81,7 @@ class OAuth2LinkGenerator
                 'state' => $state->getValue(),
                 'nonce' => (new TokenGenerator())->generateToken(),
                 'login_hint' => $request->get('email', null),
-                'scope' => implode(' ', $this->discovery->get('scopes_supported')),
+                'scope' => implode(' ', $customScopes),
                 'client_id' => $this->settingsBag->get('oauth_client_id', null),
                 'redirect_uri' => $redirectUri,
             ]);

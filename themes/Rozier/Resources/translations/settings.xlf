@@ -119,6 +119,17 @@
                 <target></target>
                 <note>Setting description</note>
             </trans-unit>
+
+            <trans-unit xml:space="preserve" id="openid_scopes">
+                <source>openid_scopes</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_scopes.help">
+                <source>openid_scopes.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>
