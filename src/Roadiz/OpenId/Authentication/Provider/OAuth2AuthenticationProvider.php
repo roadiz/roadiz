@@ -56,8 +56,8 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
      *
      * @param Discovery|null  $discovery
      * @param JwtRoleStrategy $roleStrategy
-     * @param Settings        $settingsBag
      * @param string          $providerKey
+     * @param JwtValidator[]  $validators
      * @param array           $defaultRoles
      * @param bool            $hideUserNotFoundExceptions
      */
