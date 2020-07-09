@@ -3,15 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId\Authentication\Provider;
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use Jose\Component\Core\JWK;
-use Jose\Component\Core\Util\RSAKey;
-use Jose\Component\Signature\Algorithm\RS256;
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Signer\Key;
 use Lcobucci\JWT\Token;
-use Lcobucci\JWT\ValidationData;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Authentication\Validator\JwtValidator;
@@ -21,7 +14,6 @@ use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
 {
@@ -105,7 +97,7 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
 
         // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
         $user = new OpenIdAccount(
-            (string) $jwt->getClaim('email'),
+            (string) $token->getUsername(),
             $this->getRoles($token),
             $jwt
         );

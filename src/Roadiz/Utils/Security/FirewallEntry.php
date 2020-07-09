@@ -241,6 +241,7 @@ class FirewallEntry
                         'check_path' => $this->firewallLoginCheck,
                         'oauth_client_id' => $settingsBag->get('oauth_client_id'),
                         'oauth_client_secret' => $settingsBag->get('oauth_client_secret'),
+                        'username_claim' => $settingsBag->get('openid_username_claim', 'email'),
                         'roles' => $roles
                     ],
                     $this->container['logger.security'],

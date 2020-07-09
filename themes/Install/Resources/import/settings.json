@@ -187,6 +187,17 @@
         "type": 0
     },
     {
+        "name": "openid_username_claim",
+        "description": "openid_username_claim.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "OpenId",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
         "name": "email_sender",
         "visible": true,
         "encrypted": false,

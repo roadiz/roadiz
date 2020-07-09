@@ -13,6 +13,8 @@ use RZ\Roadiz\OpenId\Authentication\Provider\JwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\OAuth2AuthenticationProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\OpenIdAccountProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\SettingsRoleStrategy;
+use RZ\Roadiz\OpenId\Authentication\Validator\AudienceValidator;
+use RZ\Roadiz\OpenId\Authentication\Validator\DebugValidator;
 use RZ\Roadiz\OpenId\Authentication\Validator\ExpirationValidator;
 use RZ\Roadiz\OpenId\Authentication\Validator\HostedDomainValidator;
 use RZ\Roadiz\OpenId\Authentication\Validator\IssuerValidator;
@@ -48,6 +50,7 @@ class OpenIdServiceProvider implements ServiceProviderInterface
             return [
                 new ExpirationValidator(),
                 new IssuerValidator($c[Discovery::class]),
+                new AudienceValidator($c['settingsBag']),
                 new SignatureValidator($c[Discovery::class]),
                 new UserInfoValidator($c[Discovery::class]),
                 new HostedDomainValidator($c['settingsBag']),

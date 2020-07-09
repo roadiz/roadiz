@@ -130,6 +130,17 @@
                 <target></target>
                 <note>Setting description</note>
             </trans-unit>
+
+            <trans-unit xml:space="preserve" id="openid_username_claim">
+                <source>openid_username_claim</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_username_claim.help">
+                <source>openid_username_claim.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -149,16 +149,27 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
 
         $jwt = (new Parser())->parse((string) $jsonResponse['id_token']);
 
-        if (!$jwt->hasClaim('email') || empty($jwt->getClaim('email'))) {
-            throw new AuthenticationException('JWT does not contain email claim.');
+        if (!$jwt->hasClaim($this->getUsernameClaimName()) || empty($jwt->getClaim($this->getUsernameClaimName()))) {
+            throw new AuthenticationException('JWT does not contain “' . $this->getUsernameClaimName() . '” claim.');
         }
 
         return $this->authenticationManager->authenticate(new JwtAccountToken(
-            (string) $jwt->getClaim('email'),
+            (string) $jwt->getClaim($this->getUsernameClaimName()),
             (string) $jwt,
             !empty($jsonResponse['access_token']) ? $jsonResponse['access_token'] : null,
             $this->providerKey,
             $this->options['roles']
         ));
+    }
+
+    /**
+     * @return string
+     */
+    protected function getUsernameClaimName(): string
+    {
+        if (!empty($this->options['username_claim'])) {
+            return (string) $this->options['username_claim'];
+        }
+        return 'email';
     }
 }
