@@ -70,6 +70,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\PimpleDumperCommand(),
                 new Console\DocumentClearFolderCommand(),
                 new Console\NodeClearTagCommand(),
+                new Console\NodesEmptyTrashCommand(),
             ];
         };
     }
