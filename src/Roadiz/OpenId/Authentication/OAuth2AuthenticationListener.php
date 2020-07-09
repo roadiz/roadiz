@@ -149,7 +149,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
 
         $jwt = (new Parser())->parse((string) $jsonResponse['id_token']);
 
-        if (empty($jwt->getClaim('email'))) {
+        if (!$jwt->hasClaim('email') || empty($jwt->getClaim('email'))) {
             throw new AuthenticationException('JWT does not contain email claim.');
         }
 
