@@ -13,7 +13,6 @@ use RZ\Roadiz\OpenId\Authentication\Provider\JwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\OAuth2AuthenticationProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\OpenIdAccountProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\SettingsRoleStrategy;
-use RZ\Roadiz\OpenId\Authentication\Validator\DebugValidator;
 use RZ\Roadiz\OpenId\Authentication\Validator\ExpirationValidator;
 use RZ\Roadiz\OpenId\Authentication\Validator\HostedDomainValidator;
 use RZ\Roadiz\OpenId\Authentication\Validator\IssuerValidator;

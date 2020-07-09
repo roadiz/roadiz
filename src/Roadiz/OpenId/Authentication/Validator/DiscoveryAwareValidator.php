@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId\Authentication\Validator;
 
-use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Discovery;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 abstract class DiscoveryAwareValidator implements JwtValidator
 {

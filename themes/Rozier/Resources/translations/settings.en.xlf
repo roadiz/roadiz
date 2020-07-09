@@ -119,6 +119,16 @@
                 <target state="translated">List user roles, comma separated, to be attributed to every authenticated user with OpenID.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_scopes">
+                <source>openid_scopes</source>
+                <target state="translated">Open ID / OAuth2 scopes</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_scopes.help">
+                <source>openid_scopes.help</source>
+                <target state="translated">Restrict your Open ID / OAuth2 scopes. Write scopes separated with spaces. If you leave it empty, OpenID connection will try to request all available scopes from Discovery document.</target>
+                <note>Setting description</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

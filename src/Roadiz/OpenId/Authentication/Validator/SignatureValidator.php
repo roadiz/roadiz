@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId\Authentication\Validator;
 
-use Jose\Component\Core\JWK;
 use Jose\Component\Core\Util\RSAKey;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Signer\Key;
-use Lcobucci\JWT\Token;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
@@ -18,9 +16,8 @@ class SignatureValidator extends DiscoveryAwareValidator
      */
     public function __invoke(JwtAccountToken $token): void
     {
-        /** @var Token $jwt */
         $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
-        
+
         /*
          * Verify JWT signature if asymmetric crypto is used and if PHP gmp extension is loaded.
          */
@@ -33,7 +30,6 @@ class SignatureValidator extends DiscoveryAwareValidator
                     // Select a RS256 signature key from jwk set provided by discovery.
                     $signer = new \Lcobucci\JWT\Signer\Rsa\Sha256();
                     $verifiedSig = false;
-                    /** @var JWK $jwk */
                     foreach ($jwkSet->all() as $jwk) {
                         $publicKey = new Key(RSAKey::createFromJWK($jwk)->toPEM());
                         if (true === $jwt->verify($signer, $publicKey)) {

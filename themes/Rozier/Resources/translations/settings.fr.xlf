@@ -119,6 +119,16 @@
                 <target state="translated">Lister les rôles, séparés par virgule, à attribuer automatiquement aux utilisateurs authentifiés via OpenID.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_scopes">
+                <source>openid_scopes</source>
+                <target state="translated">Scopes Open ID / OAuth2</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_scopes.help">
+                <source>openid_scopes.help</source>
+                <target state="translated">Réduit la liste des scopes demandés. Lister les scopes séparés par un espace. Si la liste est laissée vide, OpenID tentera de se connecter avec tous les scopes disponibles depuis le document d’auto-découverte.</target>
+                <note>Setting description</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

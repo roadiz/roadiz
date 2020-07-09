@@ -6,7 +6,6 @@ namespace RZ\Roadiz\OpenId\Authentication\Validator;
 use Lcobucci\JWT\Parser;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
-use RZ\Roadiz\OpenId\Authentication\Validator\JwtValidator;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class AudienceValidator implements JwtValidator

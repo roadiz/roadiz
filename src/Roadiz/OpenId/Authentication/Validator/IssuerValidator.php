@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\OpenId\Authentication\Validator;
 
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Token;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
-use RZ\Roadiz\OpenId\Discovery;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class IssuerValidator extends DiscoveryAwareValidator
@@ -16,9 +14,8 @@ class IssuerValidator extends DiscoveryAwareValidator
      */
     public function __invoke(JwtAccountToken $token): void
     {
-        /** @var Token $jwt */
         $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
-        
+
         /*
          * Verify JWT iss (issuer)
          */

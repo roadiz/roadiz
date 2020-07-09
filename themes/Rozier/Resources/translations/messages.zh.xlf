@@ -6972,6 +6972,16 @@
             <target state="translated">隐藏 Roadiz 版本</target>
             <note>Setting</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="exact_search">
+            <source>exact_search</source>
+            <target state="translated">精确搜索</target>
+            <note>Node search page, search exact query</note>
+        </trans-unit>
+      <trans-unit xml:space="preserve" id="login_with_openid">
+            <source>login_with_openid</source>
+            <target state="translated">使用 OpenID 登录</target>
+            <note>Default login button label for OpenID</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

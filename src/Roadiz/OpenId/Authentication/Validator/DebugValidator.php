@@ -4,16 +4,13 @@ declare(strict_types=1);
 namespace RZ\Roadiz\OpenId\Authentication\Validator;
 
 use Lcobucci\JWT\Parser;
-use Lcobucci\JWT\Token;
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 /**
  * Class DebugValidator
  *
  * @package RZ\Roadiz\OpenId\Authentication\Validator
- * @internal
+ * @internal Use this validator just to stop authentication process and debug your JWT
  */
 class DebugValidator implements JwtValidator
 {
@@ -22,7 +19,6 @@ class DebugValidator implements JwtValidator
      */
     public function __invoke(JwtAccountToken $token): void
     {
-        /** @var Token $jwt */
         $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
         dump($jwt);
         die;
