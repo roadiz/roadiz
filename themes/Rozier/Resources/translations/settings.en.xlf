@@ -129,6 +129,16 @@
                 <target state="translated">Restrict your Open ID / OAuth2 scopes. Write scopes separated with spaces. If you leave it empty, OpenID connection will try to request all available scopes from Discovery document.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_username_claim">
+                <source>openid_username_claim</source>
+                <target state="translated">Open ID username claim</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_username_claim.help">
+                <source>openid_username_claim.help</source>
+                <target state="translated">If empty, Roadiz will use standard “email” claim as user-name for every Open ID accounts.</target>
+                <note>Setting description</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>
