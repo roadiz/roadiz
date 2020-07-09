@@ -7,14 +7,9 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
-class NodeTypes extends ParameterBag
+class NodeTypes extends LazyParameterBag
 {
-    /**
-     * @var bool
-     */
-    private $ready;
     /**
      * @var EntityManager
      */
@@ -32,7 +27,6 @@ class NodeTypes extends ParameterBag
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-        $this->ready = false;
     }
 
     /**
@@ -60,38 +54,5 @@ class NodeTypes extends ParameterBag
             $this->parameters = [];
         }
         $this->ready = true;
-    }
-
-    /**
-     * @param string $key
-     * @param null $default
-     * @return bool|mixed
-     */
-    public function get($key, $default = null)
-    {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-
-        return parent::get($key, null);
-    }
-
-    /**
-     * @return array
-     */
-    public function all(): array
-    {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-
-        return parent::all();
-    }
-
-
-    public function reset(): void
-    {
-        $this->parameters = [];
-        $this->ready = false;
     }
 }

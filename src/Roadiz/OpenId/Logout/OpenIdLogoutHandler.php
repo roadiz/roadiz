@@ -52,9 +52,12 @@ class OpenIdLogoutHandler implements LogoutHandlerInterface
          * If a end_session_endpoint is available
          * just redirect user to it.
          */
-        if ($this->discovery->has('end_session_endpoint')) {
-            $response = new RedirectResponse($this->discovery->get('end_session_endpoint'));
-            return;
+        if ($this->discovery->has('end_session_endpoint') &&
+            $token instanceof JwtAccountToken &&
+            $response instanceof RedirectResponse) {
+            $response->setTargetUrl($this->discovery->get('end_session_endpoint'));
+            $response->setContent('Redirecting to ' . $this->discovery->get('end_session_endpoint'));
+            $response->headers->set('Location', $this->discovery->get('end_session_endpoint'));
         }
     }
 }

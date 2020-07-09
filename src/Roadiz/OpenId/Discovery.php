@@ -6,13 +6,13 @@ namespace RZ\Roadiz\OpenId;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client;
 use Jose\Component\Core\JWKSet;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use RZ\Roadiz\Core\Bags\LazyParameterBag;
 
 /**
  * @package RZ\Roadiz\OpenId
  * @see https://accounts.google.com/.well-known/openid-configuration
  */
-class Discovery extends ParameterBag
+class Discovery extends LazyParameterBag
 {
     const CACHE_KEY = Discovery::class . '_parameters';
 
@@ -24,10 +24,6 @@ class Discovery extends ParameterBag
      * @var CacheProvider|null
      */
     protected $cacheProvider;
-    /**
-     * @var bool
-     */
-    private $ready;
     /**
      * @var array|null
      */
@@ -112,37 +108,5 @@ class Discovery extends ParameterBag
             }
         }
         return $this->jwksData;
-    }
-
-    /**
-     * @param string $key
-     * @param mixed $default
-     * @return bool|mixed
-     */
-    public function get($key, $default = false)
-    {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-
-        return parent::get($key, $default);
-    }
-
-    /**
-     * @return array
-     */
-    public function all(): array
-    {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-
-        return parent::all();
-    }
-
-    public function reset(): void
-    {
-        $this->parameters = [];
-        $this->ready = false;
     }
 }
