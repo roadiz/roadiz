@@ -71,6 +71,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\VersionsPurgeCommand(),
                 new Console\GeneratePrivateKeyCommand(),
                 new Console\PimpleDumperCommand(),
+                new Console\NodesEmptyTrashCommand(),
             ];
         };
     }
