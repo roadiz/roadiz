@@ -6,6 +6,7 @@ namespace RZ\Roadiz\OpenId\Logout;
 use GuzzleHttp\Client;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Discovery;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -46,6 +47,14 @@ class OpenIdLogoutHandler implements LogoutHandlerInterface
                     'token' => $tokenToRevoke
                 ]
             ]);
+        }
+        /**
+         * If a end_session_endpoint is available
+         * just redirect user to it.
+         */
+        if ($this->discovery->has('end_session_endpoint')) {
+            $response = new RedirectResponse($this->discovery->get('end_session_endpoint'));
+            return;
         }
     }
 }
