@@ -193,14 +193,12 @@ class TagRepository extends EntityRepository
         array &$criteria,
         Translation $translation = null
     ) {
-        $qb = $this->getContextualQueryWithTranslation(
-            $criteria,
-            null,
-            null,
-            null,
-            $translation
-        );
-        return $qb->select($qb->expr()->countDistinct('tg.id'));
+        $qb = $this->createQueryBuilder(EntityRepository::TAG_ALIAS);
+        $this->filterByNodes($criteria, $qb);
+        $this->filterByTranslation($criteria, $qb, $translation);
+        $this->prepareComparisons($criteria, $qb, EntityRepository::TAG_ALIAS);
+
+        return $qb->select($qb->expr()->countDistinct(EntityRepository::TAG_ALIAS));
     }
 
     /**
