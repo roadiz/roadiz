@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
@@ -293,7 +292,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @return ArrayCollection
+     * @return array|Paginator
      */
     public function getNodes()
     {

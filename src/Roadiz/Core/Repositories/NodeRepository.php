@@ -59,43 +59,38 @@ class NodeRepository extends StatusAwareRepository
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array $criteria
+     * @param array            $criteria
      * @param Translation|null $translation
+     *
      * @return int
+     * @throws NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
      */
     public function countBy(
         $criteria,
         Translation $translation = null
     ) {
-        $query = $this->getCountContextualQueryWithTranslation(
-            $criteria,
-            $translation
-        );
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select($qb->expr()->countDistinct(static::NODE_ALIAS));
+        $qb->setMaxResults(1);
 
-        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $this->applyFilterByTag($criteria, $query);
-        $this->applyFilterByCriteria($criteria, $query);
-        $this->applyTranslationByTag($query, $translation);
+        if (null !== $translation) {
+            $this->filterByTranslation($criteria, $qb, $translation);
+        }
 
-        return (int) $query->getQuery()->getSingleScalarResult();
-    }
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
-    /**
-     * Create a secured count query with node.published = true if user is
-     * not a Backend user and if authorizationChecker is defined.
-     *
-     * This method allows to pre-filter Nodes with a given translation.
-     *
-     * @param array $criteria
-     * @param Translation|null $translation
-     * @return QueryBuilder
-     */
-    protected function getCountContextualQueryWithTranslation(
-        array &$criteria,
-        Translation $translation = null
-    ) {
-        $qb = $this->getContextualQueryWithTranslation($criteria, null, null, null, $translation);
-        return $qb->select($qb->expr()->countDistinct(static::NODE_ALIAS . '.id'));
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+        $this->applyFilterByTag($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
+        $this->applyTranslationByTag($qb, $translation);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
