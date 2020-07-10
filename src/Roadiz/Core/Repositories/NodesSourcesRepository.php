@@ -300,7 +300,7 @@ class NodesSourcesRepository extends StatusAwareRepository
     }
 
     /**
-     * Create a securized count query with node.published = true if user is
+     * Create a secured count query with node.published = true if user is
      * not a Backend user and if authorizationChecker is defined.
      *
      * This method allows to pre-filter Nodes with a given translation.
@@ -310,7 +310,14 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     protected function getCountContextualQuery(array &$criteria)
     {
-        $qb = $this->getContextualQuery($criteria);
+        $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
+        $this->alterQueryBuilderWithAuthorizationChecker($qb, static::NODESSOURCES_ALIAS);
+        /*
+         * Filtering by tag
+         */
+        $this->filterByTag($criteria, $qb);
+        $this->filterByCriteria($criteria, $qb);
+
         return $qb->select($qb->expr()->countDistinct(static::NODESSOURCES_ALIAS . '.id'));
     }
 
