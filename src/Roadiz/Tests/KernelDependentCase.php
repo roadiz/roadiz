@@ -32,8 +32,8 @@ namespace RZ\Roadiz\Tests;
 use Doctrine\ORM\Tools\ToolsException;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
-use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class KernelDependentCase for test which need a valid Kernel.

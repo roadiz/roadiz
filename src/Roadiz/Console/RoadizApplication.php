@@ -40,7 +40,6 @@ use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Console\Helper\AssetPackagesHelper;
 use RZ\Roadiz\Utils\Console\Helper\CacheProviderHelper;
@@ -57,6 +56,7 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Roadiz console application.
