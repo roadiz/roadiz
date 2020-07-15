@@ -158,7 +158,7 @@ class AjaxNodesController extends AbstractAjaxController
         /*
          * Dispatch event
          */
-        if (isset($oldPaths) && count($oldPaths) > 0) {
+        if (isset($oldPaths) && count($oldPaths) > 0 && !$node->isHome()) {
             $this->get('logger')->debug('NodesSources paths changed', ['paths' => $oldPaths]);
             $this->get('dispatcher')->dispatch(new NodePathChangedEvent($node, $oldPaths));
         } else {
