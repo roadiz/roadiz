@@ -108,7 +108,9 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
     {
         return $this->requiresAuthentication($request) &&
             $request->query->has('state') &&
-            $request->query->has('code');
+            $request->query->has('code') &&
+            isset($this->options['check_path']) &&
+            $this->httpUtils->checkRequestPath($request, $this->options['check_path']);
     }
 
     /**
@@ -130,7 +132,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
                     'code' => $request->query->get('code'),
                     'client_id' => $this->options['oauth_client_id'] ?? '',
                     'client_secret' => $this->options['oauth_client_secret'] ?? '',
-                    'redirect_uri' => $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $this->options['check_path'],
+                    'redirect_uri' => $request->getSchemeAndHttpHost() . $request->getBaseUrl() . $request->getPathInfo(),
                     'grant_type' => 'authorization_code'
                 ]
             ]);
