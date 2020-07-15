@@ -54,7 +54,7 @@ class AjaxNodesController extends AbstractAjaxController
 
     /**
      * Handle AJAX edition requests for Node
-     * such as comming from nodetree widgets.
+     * such as coming from node-tree widgets.
      *
      * @param Request $request
      * @param int     $nodeId
