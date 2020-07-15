@@ -69,8 +69,9 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
         /*
          * Index resource title
          */
-        $assoc['title'] = $nodeSource->getTitle();
-        $assoc['title_txt_' . $lang] = $nodeSource->getTitle();
+        $title = $event->getSolariumDocument()->cleanTextContent($nodeSource->getTitle(), false);
+        $assoc['title'] = $title;
+        $assoc['title_txt_' . $lang] = $title;
 
         $assoc['created_at_dt'] = $node->getCreatedAt()
             ->setTimezone(new \DateTimeZone('UTC'))
@@ -89,7 +90,7 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
          * Do not index locale and tags if this is a sub-resource
          */
         if (!$subResource) {
-            $collection[] = $nodeSource->getTitle();
+            $collection[] = $title;
             /*
              * Index parent node ID and name to filter on it
              */
@@ -102,10 +103,11 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
             /** @var NodesSourcesHandler $handler */
             $handler = $this->handlerFactory->getHandler($nodeSource);
             $out = array_map(
-                function (Tag $x) {
-                    return $x->getTranslatedTags()->first() ?
+                function (Tag $x) use ($event) {
+                    $tagName = $x->getTranslatedTags()->first() ?
                         $x->getTranslatedTags()->first()->getName() :
                         $x->getTagName();
+                    return $event->getSolariumDocument()->cleanTextContent($tagName, false);
                 },
                 $handler->getTags()
             );
