@@ -54,7 +54,7 @@ class AjaxNodesController extends AbstractAjaxController
 
     /**
      * Handle AJAX edition requests for Node
-     * such as comming from nodetree widgets.
+     * such as coming from node-tree widgets.
      *
      * @param Request $request
      * @param int     $nodeId
@@ -158,7 +158,7 @@ class AjaxNodesController extends AbstractAjaxController
         /*
          * Dispatch event
          */
-        if (isset($oldPaths) && count($oldPaths) > 0) {
+        if (isset($oldPaths) && count($oldPaths) > 0 && !$node->isHome()) {
             $this->get('logger')->debug('NodesSources paths changed', ['paths' => $oldPaths]);
             $this->get('dispatcher')->dispatch(new NodePathChangedEvent($node, $oldPaths));
         } else {
