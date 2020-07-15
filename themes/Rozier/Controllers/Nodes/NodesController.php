@@ -191,7 +191,7 @@ class NodesController extends RozierApp
                 'nodeName' => $node->getNodeName(),
             ]);
             try {
-                if ($node->getNodeType()->isReachable()) {
+                if ($node->getNodeType()->isReachable() && !$node->isHome()) {
                     $oldPaths = $this->get(NodeMover::class)->getNodeSourcesUrls($node);
                 }
             } catch (SameNodeUrlException $e) {
@@ -205,7 +205,7 @@ class NodesController extends RozierApp
                     /*
                      * Dispatch event
                      */
-                    if (isset($oldPaths) && count($oldPaths) > 0) {
+                    if (isset($oldPaths) && count($oldPaths) > 0 && !$node->isHome()) {
                         $this->get('dispatcher')->dispatch(new NodePathChangedEvent($node, $oldPaths));
                     }
                     $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
