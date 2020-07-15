@@ -292,15 +292,16 @@ abstract class AbstractSolarium
 
     /**
      * @param string $content
+     * @param bool   $stripMarkdown
      *
      * @return string
      */
-    public function cleanTextContent($content)
+    public function cleanTextContent($content, $stripMarkdown = true)
     {
         /*
          * Strip markdown syntax
          */
-        if (null !== $this->markdown) {
+        if (true === $stripMarkdown && null !== $this->markdown) {
             $content = strip_tags($this->markdown->textExtra($content));
         }
         /*
