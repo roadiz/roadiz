@@ -35,8 +35,9 @@ class HostedDomainValidator implements JwtValidator
         /*
          * Check that Hosted Domain is the same as required by Roadiz
          */
-        if ($jwt->hasClaim('hd')) {
-            if ($jwt->getClaim('hd') !== trim((string) $this->settingsBag->get('openid_hd'))) {
+        $hostedDomain = trim((string) $this->settingsBag->get('openid_hd'));
+        if ($jwt->hasClaim('hd') && !empty($hostedDomain)) {
+            if ($jwt->getClaim('hd') !== $hostedDomain) {
                 throw new BadCredentialsException(
                     'User ('.$jwt->getClaim('hd').') does not belong to Hosted Domain.'
                 );
