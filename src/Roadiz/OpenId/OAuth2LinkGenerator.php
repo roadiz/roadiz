@@ -57,11 +57,12 @@ class OAuth2LinkGenerator
     /**
      * @param Request $request
      * @param string  $redirectUri
+     * @param array   $state
      * @param string  $responseType
      *
      * @return string
      */
-    public function generate(Request $request, string $redirectUri, string $responseType = 'code'): string
+    public function generate(Request $request, string $redirectUri, array $state = [], string $responseType = 'code'): string
     {
         if (null !== $this->discovery &&
             in_array($responseType, $this->discovery->get('response_types_supported'))) {
@@ -74,11 +75,13 @@ class OAuth2LinkGenerator
             } else {
                 $customScopes = $this->discovery->get('scopes_supported');
             }
-            $state = $this->csrfTokenManager->getToken(OAuth2AuthenticationListener::OAUTH_STATE_TOKEN);
+            $stateToken = $this->csrfTokenManager->getToken(OAuth2AuthenticationListener::OAUTH_STATE_TOKEN);
             return $this->discovery->get('authorization_endpoint') . '?' . http_build_query([
                 'response_type' => 'code',
                 'hd' => $this->settingsBag->get('openid_hd', null),
-                'state' => $state->getValue(),
+                'state' => http_build_query(array_merge($state, [
+                    'token' => $stateToken->getValue()
+                ])),
                 'nonce' => (new TokenGenerator())->generateToken(),
                 'login_hint' => $request->get('email', null),
                 'scope' => implode(' ', $customScopes),

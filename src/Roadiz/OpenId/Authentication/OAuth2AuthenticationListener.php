@@ -19,6 +19,7 @@ use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function GuzzleHttp\Psr7\parse_query;
 
 class OAuth2AuthenticationListener extends AbstractAuthenticationListener
 {
@@ -119,13 +120,31 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
     protected function attemptAuthentication(Request $request)
     {
         /*
-         * Verify CSRF token passed to OAuth2 Service provider
+         * Verify CSRF token passed to OAuth2 Service provider,
+         * State is an url_encoded string containing the "token" and other
+         * optional data
          */
-        $state = $request->query->get('state');
+        $state = parse_query($request->query->get('state'));
         $stateToken = $this->csrfTokenManager->getToken(static::OAUTH_STATE_TOKEN);
-        if ($stateToken->getValue() !== $state || !$this->csrfTokenManager->isTokenValid($stateToken)) {
-            throw new AuthenticationException('State token is not valid');
+
+        if (is_array($state)) {
+            if (!isset($state['token']) ||
+                $stateToken->getValue() !== $state['token'] ||
+                !$this->csrfTokenManager->isTokenValid($stateToken)) {
+                throw new AuthenticationException('State token is not valid');
+            }
+        } else {
+            throw new AuthenticationException('State is not valid');
         }
+
+        /*
+         * Fetch _target_path parameter from OAuth2 state
+         */
+        if (isset($this->options['target_path_parameter']) &&
+            isset($state[$this->options['target_path_parameter']])) {
+            $request->query->set($this->options['target_path_parameter'], $state[$this->options['target_path_parameter']]);
+        }
+
         try {
             $response = $this->client->post($this->discovery->get('token_endpoint'), [
                 'form_params' => [
