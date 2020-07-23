@@ -14,7 +14,7 @@
             {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
         {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'edit'} %}
         {% include '@Rozier/nodes/translationBar.html.twig' with {"current": null} %}
     </header>
