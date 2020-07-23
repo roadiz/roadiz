@@ -17,7 +17,7 @@
         </h1>
 
         {% include '@Rozier/widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
-        {#{% include '@Rozier/nodes/navBack.html.twig' %}#}
+        {% include '@Rozier/nodes/navBack.html.twig' %}
         {% if node %}
             {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tree'} %}
             {% include '@Rozier/nodes/translationBar.html.twig' with {

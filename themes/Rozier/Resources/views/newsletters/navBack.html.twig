@@ -1,1 +1,7 @@
-<a class="content-header-nav-back uk-navbar-content" href="{{ path('newslettersIndexPage') }}" title="{% trans %}back_to.newsletter{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
+{% extends '@Rozier/widgets/backlink.html.twig' %}
+
+{%- block link -%}
+    {% set link = path('newslettersIndexPage') %}
+    {% set title = 'back_to.newsletter'|trans %}
+    {{- parent() -}}
+{%- endblock -%}
