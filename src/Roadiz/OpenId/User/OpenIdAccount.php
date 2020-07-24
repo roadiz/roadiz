@@ -263,10 +263,6 @@ class OpenIdAccount implements UserInterface, EquatableInterface
             return false;
         }
 
-        if ($this->username !== $user->getUsername()) {
-            return false;
-        }
-
         if ($this->email !== $user->getEmail()) {
             return false;
         }
