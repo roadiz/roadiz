@@ -39,24 +39,30 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $question = new ConfirmationQuestion('<question>Are you sure to migrate against this theme?</question> This can lead in data loss.', false);
+
+        $question = new ConfirmationQuestion(
+            '<question>Are you sure to migrate against this theme?</question> This can lead in data loss.',
+            !$input->isInteractive()
+        );
         if ($io->askQuestion($question) === false) {
             $io->note('Nothing was done…');
             return 0;
         }
 
+        $args = $input->isInteractive() ? '-v' : '-nq';
+
         if ($input->getOption('dry-run')) {
             $this->runCommand(sprintf('themes:install --data "%s" --dry-run -v', $input->getArgument('classname')));
         } else {
-            $this->runCommand(sprintf('themes:install --data "%s" -v', $input->getArgument('classname')));
-            $this->runCommand(sprintf('generate:nsentities -v'));
-            $this->runCommand(sprintf('orm:schema-tool:update --dump-sql --force -v'), 'dev', false);
-            $this->runCommand(sprintf('cache:clear -v'), 'dev', false);
-            $this->runCommand(sprintf('cache:clear -v'), 'dev', true);
-            $this->runCommand(sprintf('cache:clear -v'), 'prod', false);
-            $this->runCommand(sprintf('cache:clear -v'), 'prod', true);
-            $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', false);
-            $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', true);
+            $this->runCommand(sprintf('themes:install --data "%s" ' . $args, $input->getArgument('classname')));
+            $this->runCommand(sprintf('generate:nsentities ' . $args));
+            $this->runCommand(sprintf('orm:schema-tool:update --dump-sql --force ' . $args), 'dev', false);
+            $this->runCommand(sprintf('cache:clear ' . $args), 'dev', false);
+            $this->runCommand(sprintf('cache:clear ' . $args), 'dev', true);
+            $this->runCommand(sprintf('cache:clear ' . $args), 'prod', false);
+            $this->runCommand(sprintf('cache:clear ' . $args), 'prod', true);
+            $this->runCommand(sprintf('cache:clear-fpm ' . $args), 'prod', false);
+            $this->runCommand(sprintf('cache:clear-fpm ' . $args), 'prod', true);
         }
         return 0;
     }
