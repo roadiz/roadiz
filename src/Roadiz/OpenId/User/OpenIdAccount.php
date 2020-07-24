@@ -6,6 +6,7 @@ namespace RZ\Roadiz\OpenId\User;
 use Lcobucci\JWT\Token;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Authentication
@@ -15,58 +16,72 @@ class OpenIdAccount implements UserInterface, EquatableInterface
 {
     /**
      * @var array<string>
+     * @Serializer\Groups({"user"})
      */
     protected $roles;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $issuer;
     /**
      * @var string
+     * @Serializer\Groups({"user"})
      */
     protected $email;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $name;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $nickname;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $website;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $locale;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $phoneNumber;
     /**
      * @var array|null
+     * @Serializer\Groups({"user"})
      */
     protected $address;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $familyName;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $middleName;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $givenName;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $picture;
     /**
      * @var string|null
+     * @Serializer\Groups({"user"})
      */
     protected $profile;
     /**
