@@ -4,13 +4,14 @@ declare(strict_types=1);
 namespace RZ\Roadiz\OpenId\User;
 
 use Lcobucci\JWT\Token;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @package RZ\Roadiz\Core\Authentication
  * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
  */
-class OpenIdAccount implements UserInterface
+class OpenIdAccount implements UserInterface, EquatableInterface
 {
     /**
      * @var array<string>
@@ -254,5 +255,26 @@ class OpenIdAccount implements UserInterface
     public function getIssuer(): ?string
     {
         return $this->issuer;
+    }
+
+    public function isEqualTo(UserInterface $user)
+    {
+        if (!$user instanceof OpenIdAccount) {
+            return false;
+        }
+
+        if ($this->username !== $user->getUsername()) {
+            return false;
+        }
+
+        if ($this->email !== $user->getEmail()) {
+            return false;
+        }
+
+        if ($this->jwtToken !== $user->getJwtToken()) {
+            return false;
+        }
+
+        return true;
     }
 }

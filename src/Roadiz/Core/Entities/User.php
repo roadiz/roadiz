@@ -6,10 +6,12 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
 use RZ\Roadiz\Utils\Security\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
-use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Security\Core\User\EquatableInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * User Entity.
@@ -23,7 +25,7 @@ use JMS\Serializer\Annotation as Serializer;
  * })
  * @ORM\HasLifecycleCallbacks
  */
-class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
+class User extends AbstractHuman implements AdvancedUserInterface, \Serializable, EquatableInterface
 {
     /**
      * Email confirmation link TTL (in seconds) to change
@@ -919,5 +921,31 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     public function hasRole($role)
     {
         return in_array(strtoupper((string) $role), $this->getRoles(), true);
+    }
+
+    /**
+     * @param UserInterface $user
+     *
+     * @return bool
+     */
+    public function isEqualTo(UserInterface $user)
+    {
+        if (!$user instanceof User) {
+            return false;
+        }
+
+        if ($this->password !== $user->getPassword()) {
+            return false;
+        }
+
+        if ($this->salt !== $user->getSalt()) {
+            return false;
+        }
+
+        if ($this->username !== $user->getUsername()) {
+            return false;
+        }
+
+        return true;
     }
 }
