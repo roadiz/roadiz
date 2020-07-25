@@ -15,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -74,7 +75,7 @@ class ContactFormManager extends EmailManager
         'image/gif',
     ];
     /**
-     * @var int
+     * @var int 5MB
      */
     protected $maxFileSize = 5242880;
 /**
@@ -310,30 +311,41 @@ class ContactFormManager extends EmailManager
 
         if ($this->form->isSubmitted()) {
             if ($this->form->isSubmitted() && $this->form->isValid()) {
-                $this->handleFiles();
-                $this->handleFormData($this->form);
+                try {
+                    $this->handleFiles();
+                    $this->handleFormData($this->form);
 
-                if ($this->send() > 0) {
-                    if ($returnJson) {
-                        $responseArray = [
-                            'statusCode' => Response::HTTP_OK,
-                            'status' => 'success',
-                            'message' => $this->translator->trans($this->successMessage),
-                        ];
-                        return new JsonResponse($responseArray);
-                    } else {
-                        if ($this->request->hasPreviousSession()) {
-                            /** @var Session $session */
-                            $session = $this->request->getSession();
-                            $session->getFlashBag()
-                                ->add('confirm', $this->translator->trans($this->successMessage));
+                    if ($this->send() > 0) {
+                        if ($returnJson) {
+                            $responseArray = [
+                                'statusCode' => Response::HTTP_OK,
+                                'status' => 'success',
+                                'message' => $this->translator->trans($this->successMessage),
+                            ];
+                            return new JsonResponse($responseArray);
+                        } else {
+                            if ($this->request->hasPreviousSession()) {
+                                /** @var Session $session */
+                                $session = $this->request->getSession();
+                                $session->getFlashBag()
+                                    ->add('confirm', $this->translator->trans($this->successMessage));
+                            }
+
+                            $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
+                            return new RedirectResponse($this->redirectUrl);
                         }
-
-                        $this->redirectUrl = $this->redirectUrl !== null ? $this->redirectUrl : $this->request->getUri();
-                        return new RedirectResponse($this->redirectUrl);
+                    } else {
+                        $this->form->addError(new FormError('Contact form could not be sent.'));
+                    }
+                } catch (BadFormRequestException $e) {
+                    if (null !== $e->getFieldErrored() && $this->form->has($e->getFieldErrored())) {
+                        $this->form->get($e->getFieldErrored())->addError(new FormError($e->getMessage()));
+                    } else {
+                        $this->form->addError(new FormError($e->getMessage()));
                     }
                 }
-            } elseif ($returnJson) {
+            }
+            if ($returnJson) {
                 /*
                  * If form has errors during AJAX
                  * request we sent them.
@@ -356,7 +368,6 @@ class ContactFormManager extends EmailManager
                 return new JsonResponse($responseArray);
             }
         }
-
         return null;
     }
 
