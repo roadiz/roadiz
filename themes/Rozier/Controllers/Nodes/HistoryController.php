@@ -20,10 +20,9 @@ class HistoryController extends RozierApp
     /**
      * @param Request $request
      * @param int $nodeId
-     * @param int $page
      * @return Response
      */
-    public function historyAction(Request $request, $nodeId, $page = 1)
+    public function historyAction(Request $request, $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
         /** @var Node $node */
@@ -49,7 +48,6 @@ class HistoryController extends RozierApp
         $sessionListFilter = new SessionListFilters('user_history_item_per_page');
         $sessionListFilter->handleItemPerPage($request, $listManager);
         $listManager->handle();
-        $listManager->setPage($page);
 
         $this->assignation['node'] = $node;
         $this->assignation['translation'] = $this->get('defaultTranslation');
