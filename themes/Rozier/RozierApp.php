@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
+use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
