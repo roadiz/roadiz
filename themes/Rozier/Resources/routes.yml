@@ -250,14 +250,23 @@ newslettersRoutes:
     prefix: /rz-admin/newsletter
 
 
-# CSS to style with main color
-cssMainColor:
-    path : /rz-admin/css/main-color.css
-    defaults:
-        _controller: Themes\Rozier\RozierApp::cssAction
-
 aboutPage:
     path: /rz-admin/about
     defaults:
         _controller: Themes\Rozier\Controllers\AboutController::indexAction
+
+
+#
+# CSS to style with main color
+# NOT SECURED ROUTES
+#
+cssMainColor:
+    path : /css/main-color.css
+    defaults:
+        _controller: Themes\Rozier\RozierApp::cssAction
+
+loginImagePage:
+    path: /css/login/image
+    defaults:
+        _controller: Themes\Rozier\Controllers\LoginController::imageAction
 

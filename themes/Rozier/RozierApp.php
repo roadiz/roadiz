@@ -132,16 +132,18 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = $this->get('settingsBag')->get('main_color');
-        $this->assignation['nodeTypes'] = $this->get('em')->getRepository(NodeType::class)->findBy([]);
+        $this->assignation['nodeTypes'] = $this->get('nodeTypesBag')->all();
         $this->assignation['tags'] = $this->get('em')->getRepository(Tag::class)->findBy([
-                'color' => ['!=', '#000000'],
-            ]);
+            'color' => ['!=', '#000000'],
+        ]);
 
-        return new Response(
+        $response = new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),
             Response::HTTP_OK,
             ['content-type' => 'text/css']
         );
+
+        return $this->makeResponseCachable($request, $response, 5);
     }
 
     /**

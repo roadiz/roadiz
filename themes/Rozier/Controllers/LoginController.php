@@ -92,17 +92,20 @@ class LoginController extends RozierApp
         $response = new JsonResponse();
 
         if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
-            if ($document instanceof Document) {
+            if ($document instanceof Document && $document->isProcessable()) {
                 /** @var DocumentUrlGeneratorInterface $documentUrlGenerator */
                 $documentUrlGenerator = $this->get('document.url_generator');
                 $documentUrlGenerator->setDocument($document);
                 $documentUrlGenerator->setOptions([
-                    'noProcess' => true
+                    'width' => 1920,
+                    'height' => 1920,
+                    'quality' => 80,
+                    'sharpen' => 5,
                 ]);
                 $response->setData([
                     'url' => $documentUrlGenerator->getUrl()
                 ]);
-                return $response;
+                return $this->makeResponseCachable($request, $response, 60);
             }
         }
         $splash = new SplashbasePictureFinder();
@@ -111,7 +114,6 @@ class LoginController extends RozierApp
             throw new ResourceNotFoundException();
         }
         $response->setData($feed);
-
-        return $response;
+        return $this->makeResponseCachable($request, $response, 60);
     }
 }

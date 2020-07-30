@@ -20,10 +20,6 @@ loginResetPage:
     defaults:
         _controller: Themes\Rozier\Controllers\LoginResetController::resetAction
     requirements: { token : "[^\\/]+" }
-loginImagePage:
-    path:     /login/image
-    defaults:
-        _controller: Themes\Rozier\Controllers\LoginController::imageAction
 logoutPage:
     path:     /logout
     defaults:
