@@ -8,6 +8,7 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\MediaFinders\DailymotionEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\DeezerEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\MixcloudEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\PodcastFinder;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SpotifyEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\TedEmbedFinder;
@@ -41,6 +42,7 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
                 'mixcloud' => MixcloudEmbedFinder::class,
                 'spotify' => SpotifyEmbedFinder::class,
                 'ted' => TedEmbedFinder::class,
+                'podcast' => PodcastFinder::class,
                 'twitch' => TwitchEmbedFinder::class
             ];
         };

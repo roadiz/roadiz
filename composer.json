@@ -38,6 +38,7 @@
         "ext-json":                                "*",
         "ext-zip":                                 "*",
         "ext-pdo":                                 "*",
+        "ext-simplexml":                           "*",
         "roadiz/models":                           "~1.5.0 || dev-develop",
         "roadiz/documents":                        "~1.5.0 || dev-develop",
         "roadiz/markdown":                         "~1.5.0 || dev-develop",

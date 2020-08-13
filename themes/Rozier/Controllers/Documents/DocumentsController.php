@@ -15,6 +15,7 @@ use RZ\Roadiz\Core\Events\DocumentInFolderEvent;
 use RZ\Roadiz\Core\Events\DocumentOutFolderEvent;
 use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
+use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -220,7 +221,7 @@ class DocumentsController extends RozierApp
 
                 return new JsonResponse([
                     'message' => $msg,
-                    'path' => $this->get('assetPackages')->getUrl($document->getRelativePath(), Packages::DOCUMENTS) . '?' . random_int(10, 999)
+                    'path' => $this->get('assetPackages')->getUrl($document->getRelativePath(), Packages::DOCUMENTS) . '?' . random_int(10, 999),
                 ]);
             }
 
@@ -293,7 +294,7 @@ class DocumentsController extends RozierApp
 
                     if ($form->get('referer')->getData()) {
                         $routeParams = array_merge($routeParams, [
-                           'referer' => $form->get('referer')->getData()
+                           'referer' => $form->get('referer')->getData(),
                         ]);
                     }
 
@@ -344,21 +345,21 @@ class DocumentsController extends RozierApp
                     [
                         'format' => [
                             'width' => 480,
-                            'quality' => 80
+                            'quality' => 80,
                         ],
                         'rule' => '480w',
                     ],
                     [
                         'format' => [
                             'width' => 768,
-                            'quality' => 80
+                            'quality' => 80,
                         ],
                         'rule' => '768w',
                     ],
                     [
                         'format' => [
                             'width' => 1400,
-                            'quality' => 80
+                            'quality' => 80,
                         ],
                         'rule' => '1400w',
                     ],
@@ -544,7 +545,7 @@ class DocumentsController extends RozierApp
      * Embed external document page.
      *
      * @param Request $request
-     * @param int $folderId
+     * @param int|null $folderId
      *
      * @return Response
      */
@@ -572,14 +573,25 @@ class DocumentsController extends RozierApp
             try {
                 $document = $this->embedDocument($form->getData(), $folderId);
 
-                $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
-                    '%name%' => $document->getFilename(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                $this->get("dispatcher")->dispatch(
-                    new DocumentCreatedEvent($document)
-                );
+                if (is_iterable($document)) {
+                    foreach ($document as $singleDocument) {
+                        $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
+                            '%name%' => $singleDocument->getFilename(),
+                        ]);
+                        $this->publishConfirmMessage($request, $msg);
+                        $this->get("dispatcher")->dispatch(
+                            new DocumentCreatedEvent($singleDocument)
+                        );
+                    }
+                } else {
+                    $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
+                        '%name%' => $document->getFilename(),
+                    ]);
+                    $this->publishConfirmMessage($request, $msg);
+                    $this->get("dispatcher")->dispatch(
+                        new DocumentCreatedEvent($document)
+                    );
+                }
                 /*
                  * Force redirect to avoid resending form when refreshing page
                  */
@@ -805,7 +817,7 @@ class DocumentsController extends RozierApp
     private function buildBulkDeleteForm($documentsIds)
     {
         $defaults = [
-            'checksum' => md5(serialize($documentsIds))
+            'checksum' => md5(serialize($documentsIds)),
         ];
         $builder = $this->createFormBuilder($defaults, [
             'action' => '?' . http_build_query(['documents' => $documentsIds]),
@@ -828,7 +840,7 @@ class DocumentsController extends RozierApp
     private function buildBulkDownloadForm($documentsIds)
     {
         $defaults = [
-            'checksum' => md5(serialize($documentsIds))
+            'checksum' => md5(serialize($documentsIds)),
         ];
         $builder = $this->createFormBuilder($defaults, [
             'action' => '?' . http_build_query(['documents' => $documentsIds]),
@@ -857,7 +869,7 @@ class DocumentsController extends RozierApp
                 'label' => 'overwrite.document',
                 'required' => false,
                 'constraints' => [
-                    new File()
+                    new File(),
                 ],
             ]);
 
@@ -1079,12 +1091,12 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @param array $data
-     * @param int   $folderId
+     * @param array    $data
+     * @param int|null $folderId
      *
-     * @return DocumentInterface
+     * @return DocumentInterface|array<DocumentInterface>
      * @throws \Exception
-     * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
+     * @throws EntityAlreadyExistsException
      */
     private function embedDocument($data, $folderId = null)
     {
@@ -1110,14 +1122,20 @@ class DocumentsController extends RozierApp
             $finder->setEmbedId($data['embedId']);
 
             $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
-            if (null !== $document &&
-                null !== $folderId &&
-                $folderId > 0) {
+            if (null !== $document && null !== $folderId && $folderId > 0) {
                 /** @var Folder $folder */
                 $folder = $this->get('em')->find(Folder::class, (int) $folderId);
 
-                $document->addFolder($folder);
-                $folder->addDocument($document);
+                if (is_iterable($document)) {
+                    /** @var DocumentInterface $singleDocument */
+                    foreach ($document as $singleDocument) {
+                        $singleDocument->addFolder($folder);
+                        $folder->addDocument($singleDocument);
+                    }
+                } else {
+                    $document->addFolder($folder);
+                    $folder->addDocument($document);
+                }
             }
 
             $this->get('em')->flush();
@@ -1131,25 +1149,31 @@ class DocumentsController extends RozierApp
     /**
      * Download a random document.
      *
-     * @param int $folderId
+     * @param int|null $folderId
      *
      * @return DocumentInterface
      * @throws \Exception
-     * @throws \RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException
+     * @throws EntityAlreadyExistsException
      */
     public function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
         $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
 
-        if (null !== $document &&
-            null !== $folderId &&
-            $folderId > 0) {
+        if (null !== $document && null !== $folderId && $folderId > 0) {
             /** @var Folder $folder */
             $folder = $this->get('em')->find(Folder::class, (int) $folderId);
 
-            $document->addFolder($folder);
-            $folder->addDocument($document);
+            if (is_iterable($document)) {
+                /** @var DocumentInterface $singleDocument */
+                foreach ($document as $singleDocument) {
+                    $singleDocument->addFolder($folder);
+                    $folder->addDocument($singleDocument);
+                }
+            } else {
+                $document->addFolder($folder);
+                $folder->addDocument($document);
+            }
         }
         $this->get('em')->flush();
 
