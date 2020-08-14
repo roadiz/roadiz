@@ -24,7 +24,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
     use AttributeValueTranslationTrait;
 
     /**
-     * @var string|null
+     * @var string|float|int|bool|null
      * @ORM\Column(type="string", nullable=true, unique=false, length=255)
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("string")

@@ -13,7 +13,9 @@ use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Themes\Rozier\Models\DocumentModel;
 
 /**
- * {@inheritdoc}
+ * Class AjaxDocumentsExplorerController
+ *
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxDocumentsExplorerController extends AbstractAjaxController
 {

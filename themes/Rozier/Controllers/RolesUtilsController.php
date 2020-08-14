@@ -9,6 +9,7 @@ use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -144,7 +145,7 @@ class RolesUtilsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildImportJsonFileForm()
     {

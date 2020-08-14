@@ -3,15 +3,19 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\CustomForms;
 
+use Exception;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\CustomFormFieldType;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Class CustomFormFieldsController
@@ -26,8 +30,8 @@ class CustomFormFieldsController extends RozierApp
      * @param Request $request
      * @param int     $customFormId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function listAction(Request $request, $customFormId)
     {
@@ -54,7 +58,7 @@ class CustomFormFieldsController extends RozierApp
      * @param Request $request
      * @param int     $customFormFieldId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $customFormFieldId)
     {
@@ -105,7 +109,7 @@ class CustomFormFieldsController extends RozierApp
      * @param Request $request
      * @param int     $customFormId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addAction(Request $request, $customFormId)
     {
@@ -146,7 +150,7 @@ class CustomFormFieldsController extends RozierApp
                             'customFormId' => $customFormId,
                         ]
                     ));
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $msg = $e->getMessage();
                     $this->publishErrorMessage($request, $msg);
                     /*
@@ -173,7 +177,7 @@ class CustomFormFieldsController extends RozierApp
      * @param Request $request
      * @param int     $customFormFieldId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $customFormFieldId)
     {
@@ -226,7 +230,7 @@ class CustomFormFieldsController extends RozierApp
     /**
      * @param CustomFormField $field
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteForm(CustomFormField $field)
     {

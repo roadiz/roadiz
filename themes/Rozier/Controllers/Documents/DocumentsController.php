@@ -21,6 +21,7 @@ use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\EmbedFinderInterface;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
@@ -32,6 +33,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -791,7 +793,7 @@ class DocumentsController extends RozierApp
     /**
      * @param Document $doc
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     private function buildDeleteForm(Document $doc)
     {
@@ -812,7 +814,7 @@ class DocumentsController extends RozierApp
     /**
      * @param array $documentsIds
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     private function buildBulkDeleteForm($documentsIds)
     {
@@ -835,7 +837,7 @@ class DocumentsController extends RozierApp
     /**
      * @param array $documentsIds
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     private function buildBulkDownloadForm($documentsIds)
     {
@@ -856,7 +858,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     private function buildFileForm()
     {
@@ -879,7 +881,7 @@ class DocumentsController extends RozierApp
     /**
      * @param int $folderId
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     private function buildUploadForm($folderId = null)
     {
@@ -904,7 +906,7 @@ class DocumentsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     private function buildLinkFoldersForm()
     {
@@ -1120,27 +1122,7 @@ class DocumentsController extends RozierApp
                 $finder->setKey($this->get('settingsBag')->get('soundcloud_client_id'));
             }
             $finder->setEmbedId($data['embedId']);
-
-            $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
-            if (null !== $document && null !== $folderId && $folderId > 0) {
-                /** @var Folder $folder */
-                $folder = $this->get('em')->find(Folder::class, (int) $folderId);
-
-                if (is_iterable($document)) {
-                    /** @var DocumentInterface $singleDocument */
-                    foreach ($document as $singleDocument) {
-                        $singleDocument->addFolder($folder);
-                        $folder->addDocument($singleDocument);
-                    }
-                } else {
-                    $document->addFolder($folder);
-                    $folder->addDocument($document);
-                }
-            }
-
-            $this->get('em')->flush();
-
-            return $document;
+            return $this->createDocumentFromFinder($finder, $folderId);
         } else {
             throw new \RuntimeException("bad.request", 1);
         }
@@ -1155,9 +1137,20 @@ class DocumentsController extends RozierApp
      * @throws \Exception
      * @throws EntityAlreadyExistsException
      */
-    public function randomDocument($folderId = null)
+    private function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
+        return $this->createDocumentFromFinder($finder, $folderId);
+    }
+
+    /**
+     * @param AbstractEmbedFinder $finder
+     * @param int|null            $folderId
+     *
+     * @return array|DocumentInterface
+     */
+    private function createDocumentFromFinder(AbstractEmbedFinder $finder, ?int $folderId = null)
+    {
         $document = $finder->createDocumentFromFeed($this->get('em'), $this->get('document.factory'));
 
         if (null !== $document && null !== $folderId && $folderId > 0) {
@@ -1183,10 +1176,10 @@ class DocumentsController extends RozierApp
     /**
      * Handle upload form data to create a Document.
      *
-     * @param \Symfony\Component\Form\Form $data
-     * @param int                          $folderId
+     * @param FormInterface $data
+     * @param int|null      $folderId
      *
-     * @return bool|Document
+     * @return bool|DocumentInterface
      */
     private function uploadDocument($data, $folderId = null)
     {

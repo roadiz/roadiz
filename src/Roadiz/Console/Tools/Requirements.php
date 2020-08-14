@@ -245,7 +245,7 @@ class Requirements
     /**
      * @param integer $version
      *
-     * @return integer
+     * @return bool
      */
     public function testPHPVersion($version)
     {

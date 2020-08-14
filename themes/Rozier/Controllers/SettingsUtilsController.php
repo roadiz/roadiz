@@ -12,6 +12,7 @@ use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,6 +79,7 @@ class SettingsUtilsController extends RozierApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {
@@ -119,7 +121,7 @@ class SettingsUtilsController extends RozierApp
     }
 
     /**
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildImportJsonFileForm()
     {

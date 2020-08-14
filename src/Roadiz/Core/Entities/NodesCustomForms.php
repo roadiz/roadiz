@@ -20,7 +20,7 @@ class NodesCustomForms extends AbstractPositioned
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="customForms", fetch="EAGER")
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Node
+     * @var Node|null
      */
     protected $node;
 
@@ -41,9 +41,9 @@ class NodesCustomForms extends AbstractPositioned
     /**
      * Create a new relation between a Node, a CustomForm and a NodeTypeField.
      *
-     * @param \RZ\Roadiz\Core\Entities\Node $node
-     * @param \RZ\Roadiz\Core\Entities\CustomForm $customForm
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field NodeTypeField
+     * @param Node          $node
+     * @param CustomForm    $customForm
+     * @param NodeTypeField $field NodeTypeField
      */
     public function __construct(Node $node, CustomForm $customForm, NodeTypeField $field)
     {
@@ -63,9 +63,9 @@ class NodesCustomForms extends AbstractPositioned
     /**
      * Gets the value of node.
      *
-     * @return Node
+     * @return Node|null
      */
-    public function getNode(): Node
+    public function getNode(): ?Node
     {
         return $this->node;
     }

@@ -25,6 +25,7 @@ class NodeWorkflow extends Workflow
                 Node::DELETED
             ])
             ->addTransition(new Transition('review', Node::DRAFT, Node::PENDING))
+            ->addTransition(new Transition('review', Node::PUBLISHED, Node::PENDING))
             ->addTransition(new Transition('reject', Node::PENDING, Node::DRAFT))
             ->addTransition(new Transition('reject', Node::PUBLISHED, Node::DRAFT))
             ->addTransition(new Transition('publish', Node::DRAFT, Node::PUBLISHED))

@@ -474,7 +474,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Get a user from the tokenStorage.
      *
-     * @return UserInterface|string|null
+     * @return UserInterface|object|null
      *
      * @throws \LogicException If tokenStorage is not available
      *

@@ -165,7 +165,7 @@ class UrlAliasesController extends RozierApp
      * @param array $data
      * @param Node  $node
      *
-     * @return UrlAlias
+     * @return UrlAlias|null
      * @throws EntityAlreadyExistsException
      * @throws NoTranslationAvailableException
      */

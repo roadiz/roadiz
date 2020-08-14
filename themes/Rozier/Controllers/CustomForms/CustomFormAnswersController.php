@@ -6,11 +6,14 @@ namespace Themes\Rozier\Controllers\CustomForms;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Class CustomFormAnswersController
@@ -25,8 +28,8 @@ class CustomFormAnswersController extends RozierApp
      * @param Request $request
      * @param int     $customFormId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function listAction(Request $request, $customFormId)
     {
@@ -60,7 +63,7 @@ class CustomFormAnswersController extends RozierApp
      * @param Request $request
      * @param int $customFormAnswerId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $customFormAnswerId)
     {
@@ -103,7 +106,7 @@ class CustomFormAnswersController extends RozierApp
     /**
      * @param CustomFormAnswer $customFormAnswer
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteForm(CustomFormAnswer $customFormAnswer)
     {

@@ -617,7 +617,7 @@ class TagsController extends RozierApp
      * @param bool  $referer
      * @param array $tagsIds
      *
-     * @return Form
+     * @return FormInterface
      */
     private function buildBulkDeleteForm(
         $referer = false,

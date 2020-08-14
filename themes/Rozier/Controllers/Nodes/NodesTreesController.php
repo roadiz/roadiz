@@ -17,6 +17,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -36,7 +37,7 @@ class NodesTreesController extends RozierApp
      * @param int     $nodeId
      * @param int     $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function treeAction(Request $request, $nodeId = null, $translationId = null)
     {
@@ -144,7 +145,7 @@ class NodesTreesController extends RozierApp
 
     /**
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function bulkDeleteAction(Request $request)
     {
@@ -197,7 +198,8 @@ class NodesTreesController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function bulkStatusAction(Request $request)
     {
@@ -215,19 +217,17 @@ class NodesTreesController extends RozierApp
                           ->findBy([
                               'id' => $nodesIds,
                           ]);
-
             if (count($nodes) > 0) {
                 $form = $this->buildBulkStatusForm(
                     $request->get('statusForm')['referer'],
                     $nodesIds,
-                    (int) $request->get('statusForm')['status']
+                    (string) $request->get('statusForm')['status']
                 );
 
                 $form->handleRequest($request);
 
                 if ($form->isSubmitted() && $form->isValid()) {
                     $msg = $this->bulkStatusNodes($form->getData());
-
                     $this->publishConfirmMessage($request, $msg);
 
                     if (!empty($form->getData()['referer'])) {
@@ -255,7 +255,7 @@ class NodesTreesController extends RozierApp
      * @param bool  $referer
      * @param array $nodesIds
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildBulkDeleteForm(
         $referer = false,
@@ -330,13 +330,13 @@ class NodesTreesController extends RozierApp
 
             /** @var Node[] $nodes */
             $nodes = $this->get('em')
-                          ->getRepository(Node::class)
-                          ->setDisplayingNotPublishedNodes(true)
-                          ->findBy([
-                              'id' => $nodesIds,
-                          ]);
+                ->getRepository(Node::class)
+                ->setDisplayingNotPublishedNodes(true)
+                ->findBy([
+                    'id' => $nodesIds,
+                ])
+            ;
 
-            /** @var Node $node */
             foreach ($nodes as $node) {
                 /** @var Workflow $workflow */
                 $workflow = $this->get('workflow.registry')->get($node);
@@ -358,41 +358,42 @@ class NodesTreesController extends RozierApp
     {
         /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
-                        ->createNamedBuilder('tagForm')
-                        ->add('nodesIds', HiddenType::class, [
-                            'attr' => ['class' => 'nodes-id-bulk-tags'],
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('tagsPaths', TextType::class, [
-                            'label' => false,
-                            'attr' => [
-                                'class' => 'rz-tag-autocomplete',
-                                'placeholder' => 'list.tags.to_link.or_unlink',
-                            ],
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('submitTag', SubmitType::class, [
-                            'label' => 'link.tags',
-                            'attr' => [
-                                'class' => 'uk-button uk-button-primary',
-                                'title' => 'link.tags',
-                                'data-uk-tooltip' => "{animation:true}",
-                            ],
-                        ])
-                        ->add('submitUntag', SubmitType::class, [
-                            'label' => 'unlink.tags',
-                            'attr' => [
-                                'class' => 'uk-button',
-                                'title' => 'unlink.tags',
-                                'data-uk-tooltip' => "{animation:true}",
-                            ],
-                        ]);
+            ->createNamedBuilder('tagForm')
+            ->add('nodesIds', HiddenType::class, [
+                'attr' => ['class' => 'nodes-id-bulk-tags'],
+                'constraints' => [
+                    new NotNull(),
+                    new NotBlank(),
+                ],
+            ])
+            ->add('tagsPaths', TextType::class, [
+                'label' => false,
+                'attr' => [
+                    'class' => 'rz-tag-autocomplete',
+                    'placeholder' => 'list.tags.to_link.or_unlink',
+                ],
+                'constraints' => [
+                    new NotNull(),
+                    new NotBlank(),
+                ],
+            ])
+            ->add('submitTag', SubmitType::class, [
+                'label' => 'link.tags',
+                'attr' => [
+                    'class' => 'uk-button uk-button-primary',
+                    'title' => 'link.tags',
+                    'data-uk-tooltip' => "{animation:true}",
+                ],
+            ])
+            ->add('submitUntag', SubmitType::class, [
+                'label' => 'unlink.tags',
+                'attr' => [
+                    'class' => 'uk-button',
+                    'title' => 'unlink.tags',
+                    'data-uk-tooltip' => "{animation:true}",
+                ],
+            ])
+        ;
 
         return $builder->getForm();
     }
@@ -484,40 +485,41 @@ class NodesTreesController extends RozierApp
     /**
      * @param bool  $referer
      * @param array $nodesIds
-     * @param int   $status
+     * @param string $status
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildBulkStatusForm(
         $referer = false,
         $nodesIds = [],
-        $status = Node::DRAFT
+        $status = 'reject'
     ) {
         /** @var FormBuilder $builder */
         $builder = $this->get('formFactory')
-                        ->createNamedBuilder('statusForm')
-                        ->add('nodesIds', HiddenType::class, [
-                            'attr' => ['class' => 'nodes-id-bulk-status'],
-                            'data' => implode(',', $nodesIds),
-                            'constraints' => [
-                                new NotBlank(),
-                                new NotNull(),
-                            ],
-                        ])
-                        ->add('status', ChoiceType::class, [
-                            'label' => false,
-                            'data' => $status,
-                            'choices' => [
-                                Node::getStatusLabel(Node::DRAFT) => 'reject',
-                                Node::getStatusLabel(Node::PENDING) => 'review',
-                                Node::getStatusLabel(Node::PUBLISHED) => 'publish',
-                                Node::getStatusLabel(Node::ARCHIVED) => 'archive',
-                            ],
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ]);
+            ->createNamedBuilder('statusForm')
+            ->add('nodesIds', HiddenType::class, [
+                'attr' => ['class' => 'nodes-id-bulk-status'],
+                'data' => implode(',', $nodesIds),
+                'constraints' => [
+                    new NotBlank(),
+                    new NotNull(),
+                ],
+            ])
+            ->add('status', ChoiceType::class, [
+                'label' => false,
+                'data' => $status,
+                'choices' => [
+                    Node::getStatusLabel(Node::DRAFT) => 'reject',
+                    Node::getStatusLabel(Node::PENDING) => 'review',
+                    Node::getStatusLabel(Node::PUBLISHED) => 'publish',
+                    Node::getStatusLabel(Node::ARCHIVED) => 'archive',
+                ],
+                'constraints' => [
+                    new NotNull(),
+                    new NotBlank(),
+                ],
+            ])
+        ;
 
         if (false !== $referer) {
             $builder->add('referer', HiddenType::class, [

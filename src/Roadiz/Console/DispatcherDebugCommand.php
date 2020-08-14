@@ -52,7 +52,6 @@ EOF
         $dispatcher = $kernel->get('dispatcher');
 
         foreach ($dispatcher->getListeners() as $eventName => $listeners) {
-            /** @var EventSubscriberInterface $listener */
             foreach ($listeners as $priority => $listener) {
                 if ($listener instanceof \Closure) {
                     $listenerClass = '\Closure';

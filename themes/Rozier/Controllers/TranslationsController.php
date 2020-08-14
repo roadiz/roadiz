@@ -3,18 +3,22 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
+use Exception;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\Translation\TranslationCreatedEvent;
 use RZ\Roadiz\Core\Events\Translation\TranslationDeletedEvent;
 use RZ\Roadiz\Core\Events\Translation\TranslationUpdatedEvent;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\TranslationType;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Translation's controller
@@ -28,8 +32,8 @@ class TranslationsController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -87,7 +91,7 @@ class TranslationsController extends RozierApp
      * @param Request $request
      * @param integer $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $translationId)
     {
@@ -135,7 +139,7 @@ class TranslationsController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addAction(Request $request)
     {
@@ -172,9 +176,10 @@ class TranslationsController extends RozierApp
      * Return an deletion form for requested translation.
      *
      * @param Request $request
-     * @param int                                      $translationId
+     * @param int     $translationId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $translationId)
     {
@@ -200,7 +205,7 @@ class TranslationsController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
 
                     $this->get('dispatcher')->dispatch(new TranslationDeletedEvent($translation));
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
                 /*
@@ -221,7 +226,7 @@ class TranslationsController extends RozierApp
      * @param array       $data
      * @param Translation $translation
      *
-     * @throws \Exception
+     * @throws Exception
      */
     private function deleteTranslation($data, Translation $translation)
     {
@@ -230,7 +235,7 @@ class TranslationsController extends RozierApp
                 $this->get('em')->remove($translation);
                 $this->get('em')->flush();
             } else {
-                throw new \Exception(
+                throw new Exception(
                     $this->getTranslator()->trans(
                         'translation.%name%.cannot_delete_default_translation',
                         ['%name%' => $translation->getName()]
@@ -244,7 +249,7 @@ class TranslationsController extends RozierApp
     /**
      * @param Translation $translation
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteForm(Translation $translation)
     {
@@ -267,7 +272,7 @@ class TranslationsController extends RozierApp
     /**
      * @param Translation $translation
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildMakeDefaultForm(Translation $translation)
     {

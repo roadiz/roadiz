@@ -9,25 +9,17 @@
     {% for parent in source|parents(null, true)|reverse %}
         {% set title = parent.title|default(parent.node.nodeName) %}
 
-        {# Change URL if root node is a newsletter #}
-        {% if loop.first and parent.node.nodeType.NewsletterType and parent.node.newsletter %}
-            {% set url = path('newslettersEditPage', {
-                'newsletterId' : parent.node.newsletter.id,
-                'translationId': parent.translation.id
-            }) %}
-        {% else %}
-            {% if parent.node.isHidingChildren %}
-                {% if parent.translation %}
-                    {% set url = path('nodesTreePage', { nodeId: parent.node.id, translationId: parent.translation.id }) %}
-                {% else %}
-                    {% set url = path('nodesTreePage', { nodeId: parent.node.id }) %}
-                {% endif %}
+        {% if parent.node.isHidingChildren %}
+            {% if parent.translation %}
+                {% set url = path('nodesTreePage', { nodeId: parent.node.id, translationId: parent.translation.id }) %}
             {% else %}
-                {% set url = path('nodesEditSourcePage', {
-                    nodeId: parent.node.id,
-                    translationId: parent.translation.id
-                }) %}
+                {% set url = path('nodesTreePage', { nodeId: parent.node.id }) %}
             {% endif %}
+        {% else %}
+            {% set url = path('nodesEditSourcePage', {
+                nodeId: parent.node.id,
+                translationId: parent.translation.id
+            }) %}
         {% endif %}
 
         <li class="node-breadcrumb-item">

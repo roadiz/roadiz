@@ -28,7 +28,8 @@ ngrok:
 
 test:
 	php bin/phpcs --report=full --report-file=./report.txt -p ./
-	php bin/phpstan analyse -c phpstan.neon -l 2 src themes/Rozier themes/Install
+	php bin/phpstan analyse -c phpstan.neon -l 2 src
+	php bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install
 
 unit:
 	php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/

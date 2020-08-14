@@ -10,8 +10,8 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Documentation\Generators\DocumentationGenerator;
 use RZ\Roadiz\Documentation\Generators\NodeTypeGenerator;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -197,7 +197,7 @@ class NodeTypesUtilsController extends RozierApp
     }
 
     /**
-     * @return Form
+     * @return FormInterface
      */
     private function buildImportJsonFileForm()
     {
