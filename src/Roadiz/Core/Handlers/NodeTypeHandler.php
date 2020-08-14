@@ -282,7 +282,6 @@ class NodeTypeHandler extends AbstractHandler
              */
             $this->nodeType->setVisible($newNodeType->isVisible());
             $this->nodeType->setHidingNodes($newNodeType->isHidingNodes());
-            $this->nodeType->setNewsletterType($newNodeType->isNewsletterType());
             $this->nodeType->setPublishable($newNodeType->isPublishable());
             $this->nodeType->setReachable($newNodeType->isReachable());
 

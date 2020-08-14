@@ -19,7 +19,6 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Table(name="node_types", indexes={
  *     @ORM\Index(columns={"visible"}),
  *     @ORM\Index(columns={"publishable"}),
- *     @ORM\Index(columns={"newsletter_type"}),
  *     @ORM\Index(columns={"hiding_nodes"}),
  *     @ORM\Index(columns={"hiding_non_reachable_nodes"}),
  *     @ORM\Index(columns={"reachable"})
@@ -196,32 +195,6 @@ class NodeType extends AbstractEntity
         return $this;
     }
 
-    /**
-     * @var bool
-     * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups("node_type")
-     * @Serializer\Type("boolean")
-     */
-    private $newsletterType = false;
-
-    /**
-     * @return boolean
-     */
-    public function isNewsletterType(): bool
-    {
-        return $this->newsletterType;
-    }
-    /**
-     * @param boolean $newsletterType
-     *
-     * @return $this
-     */
-    public function setNewsletterType(bool $newsletterType): NodeType
-    {
-        $this->newsletterType = $newsletterType;
-
-        return $this;
-    }
     /**
      * @var bool
      * @ORM\Column(name="hiding_nodes",type="boolean", nullable=false, options={"default" = false})

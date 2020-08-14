@@ -118,7 +118,6 @@ class NodesController extends RozierApp
         $this->assignation['nodeTypes'] = $this->get('em')
             ->getRepository(NodeType::class)
             ->findBy([
-                'newsletterType' => false,
                 'visible' => true,
             ]);
 

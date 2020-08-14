@@ -15,7 +15,6 @@ use RZ\Roadiz\Core\Handlers\FolderHandler;
 use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Core\Handlers\GroupHandler;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
-use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
@@ -116,9 +115,6 @@ class FactoryServiceProvider implements ServiceProviderInterface
         });
         $container['group.handler'] = $container->factory(function (Container $c) {
             return new GroupHandler($c['em']);
-        });
-        $container['newsletter.handler'] = $container->factory(function (Container $c) {
-            return new NewsletterHandler($c['em']);
         });
         $container['tag.handler'] = $container->factory(function (Container $c) {
             return new TagHandler($c['em']);

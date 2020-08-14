@@ -78,10 +78,6 @@ class NodeTypeType extends AbstractType
                 'required' => false,
                 'help' => 'nodeType.hidingNonReachableNodes.help',
             ])
-            ->add('newsletterType', CheckboxType::class, [
-                'label' => 'nodeType.newsletterType',
-                'required' => false,
-            ])
             ->add('color', ColorType::class, [
                 'label' => 'nodeType.color',
                 'required' => false,

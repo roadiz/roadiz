@@ -11,7 +11,6 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Entities\Group;
-use RZ\Roadiz\Core\Entities\Newsletter;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -62,8 +61,6 @@ class HandlerFactory implements HandlerFactoryInterface
                 return $this->container['font.handler']->setFont($entity);
             case ($entity instanceof Group):
                 return $this->container['group.handler']->setGroup($entity);
-            case ($entity instanceof Newsletter):
-                return $this->container['newsletter.handler']->setNewsletter($entity);
             case ($entity instanceof Tag):
                 return $this->container['tag.handler']->setTag($entity);
             case ($entity instanceof Translation):

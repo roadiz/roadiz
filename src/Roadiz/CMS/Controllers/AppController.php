@@ -575,7 +575,7 @@ abstract class AppController extends Controller
 
     /**
      * Validate a request against a given ROLE_*
-     * and check chroot and newsletter type/access
+     * and check chroot
      * and throws an AccessDeniedException exception.
      *
      * @param string $role
@@ -612,22 +612,16 @@ abstract class AppController extends Controller
             if ($includeChroot) {
                 $parents[] = $node;
             }
-            $isNewsletterFriend = $nodeHandler->isRelatedToNewsletter();
         } else {
             $parents = [];
-            $isNewsletterFriend = false;
         }
 
-        if ($isNewsletterFriend && !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+        if (!$this->isGranted($role)) {
             throw new AccessDeniedException("You don't have access to this page");
-        } elseif (!$isNewsletterFriend) {
-            if (!$this->isGranted($role)) {
-                throw new AccessDeniedException("You don't have access to this page");
-            }
+        }
 
-            if (null !== $user && $chroot !== null && !in_array($chroot, $parents, true)) {
-                throw new AccessDeniedException("You don't have access to this page");
-            }
+        if (null !== $user && $chroot !== null && !in_array($chroot, $parents, true)) {
+            throw new AccessDeniedException("You don't have access to this page");
         }
     }
 

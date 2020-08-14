@@ -56,16 +56,14 @@
                     {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}
                     {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
                     {% for cnode in nodes %}
-                        {% if not cnode.nodetype.newsletterType %}
-                            {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
-                                "node":cnode,
-                                "parent":nodeTree.rootNode,
-                                "nodeTree":nodeTree,
-                                "request":request,
-                                "mainNodeTree":mainNodeTree,
-                                "nodeStatuses":nodeStatuses
-                            } only %}
-                        {% endif %}
+                        {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
+                            "node":cnode,
+                            "parent":nodeTree.rootNode,
+                            "nodeTree":nodeTree,
+                            "request":request,
+                            "mainNodeTree":mainNodeTree,
+                            "nodeStatuses":nodeStatuses
+                        } only %}
                     {% endfor %}
                 </ul>
             {% if mainNodeTree %}

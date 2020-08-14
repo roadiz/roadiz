@@ -445,20 +445,11 @@ class NodeHandler extends AbstractHandler
     /**
      * Return if is in Newsletter Node.
      *
+     * @deprecated Just here not to break themes.
      * @return bool
      */
     public function isRelatedToNewsletter()
     {
-        if ($this->node->getNodeType()->isNewsletterType()) {
-            return true;
-        }
-
-        $parents = $this->getParents();
-        foreach ($parents as $parent) {
-            if ($parent->getNodeType()->isNewsletterType()) {
-                return true;
-            }
-        }
         return false;
     }
 

@@ -23,20 +23,4 @@ class NodeTypeRepository extends EntityRepository
 
         return $qb->getQuery()->getResult();
     }
-
-    /**
-     * Get all newsletter node-types.
-     *
-     * @return array
-     */
-    public function findAllNewsletterType()
-    {
-        $qb = $this->createQueryBuilder('nt');
-        $qb->addSelect('ntf')
-            ->innerJoin('nt.fields', 'ntf')
-            ->andWhere($qb->expr()->eq('nt.newsletterType', true))
-            ->setCacheable(true);
-
-        return $qb->getQuery()->getResult();
-    }
 }

@@ -4,7 +4,6 @@
     "visible": true,
     "publishable": false,
     "reachable": true,
-    "newsletterType": false,
     "hidingNodes": false,
     "hidingNonReachableNodes": true,
     "color": "#000000",

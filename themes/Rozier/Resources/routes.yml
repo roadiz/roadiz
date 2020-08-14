@@ -240,16 +240,6 @@ searchNodeSourcePage:
         _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction
     requirements: { nodetypeId : "[0-9]+" }
 
-#NEWSLETTERS
-newslettersIndexPage:
-    path:     /rz-admin/newsletter
-    defaults:
-        _controller: Themes\Rozier\Controllers\NewslettersController::listAction
-newslettersRoutes:
-    resource: "routing/newsletters.yml"
-    prefix: /rz-admin/newsletter
-
-
 aboutPage:
     path: /rz-admin/about
     defaults:

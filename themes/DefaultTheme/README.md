@@ -3,7 +3,6 @@
 - Based on [*Bootstrap 3*](http://getbootstrap.com/)
 - Simple *Page* node-type with basic block support.
 - Static *Contact* page with a form
-- Basic newsletter example
 
 ## Customize styles with LESS
 
