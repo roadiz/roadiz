@@ -278,11 +278,15 @@ class OpenIdAccount implements UserInterface, EquatableInterface
             return false;
         }
 
-        if ($this->email !== $user->getEmail()) {
+        if ($this->getEmail() !== $user->getEmail()) {
             return false;
         }
 
-        if ($this->jwtToken !== $user->getJwtToken()) {
+        if ($this->getRoles() !== $user->getRoles()) {
+            return false;
+        }
+
+        if ($this->getJwtToken() !== $user->getJwtToken()) {
             return false;
         }
 

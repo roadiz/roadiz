@@ -865,6 +865,15 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
             $this->enabled,
             $this->id,
             $this->email,
+            // needed for token roles
+            $this->roles,
+            $this->groups,
+            // needed for advancedUserinterface
+            $this->expired,
+            $this->expiresAt,
+            $this->locked,
+            $this->credentialsExpired,
+            $this->credentialsExpiresAt,
         ]);
     }
     /**
@@ -875,23 +884,33 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     public function unserialize($serialized)
     {
         $data = unserialize($serialized);
-        if (13 === count($data)) {
-            // unserialize a User object from 1.3.x
-            unset($data[4], $data[5], $data[6], $data[9], $data[10]);
-            $data = array_values($data);
-        } elseif (11 === count($data)) {
-            // unserialize a User from a dev version somewhere between 2.0-alpha3 and 2.0-beta1
-            unset($data[4], $data[7], $data[8]);
-            $data = array_values($data);
+        if (count($data) === 6) {
+            // Compatibility with Roadiz <=1.4
+            [
+                $this->password,
+                $this->salt,
+                $this->username,
+                $this->enabled,
+                $this->id,
+                $this->email,
+            ] = $data;
+        } else {
+            [
+                $this->password,
+                $this->salt,
+                $this->username,
+                $this->enabled,
+                $this->id,
+                $this->email,
+                $this->roles,
+                $this->groups,
+                $this->expired,
+                $this->expiresAt,
+                $this->locked,
+                $this->credentialsExpired,
+                $this->credentialsExpiresAt,
+            ] = $data;
         }
-        [
-            $this->password,
-            $this->salt,
-            $this->username,
-            $this->enabled,
-            $this->id,
-            $this->email,
-        ] = $data;
     }
 
     /**
@@ -924,6 +943,8 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     }
 
     /**
+     * Every field tested in this methods must be serialized in token.
+     *
      * @param UserInterface $user
      *
      * @return bool
@@ -934,23 +955,43 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
             return false;
         }
 
+        if ($this->getId() !== $user->getId()) {
+            return false;
+        }
+
+        if ($this->getEmail() !== $user->getEmail()) {
+            return false;
+        }
+
+        if ($this->getPassword() !== $user->getPassword()) {
+            return false;
+        }
+
+        if ($this->getSalt() !== $user->getSalt()) {
+            return false;
+        }
+
+        if ($this->getUsername() !== $user->getUsername()) {
+            return false;
+        }
+
+        if ($this->isAccountNonExpired() !== $user->isAccountNonExpired()) {
+            return false;
+        }
+
+        if ($this->isAccountNonLocked() !== $user->isAccountNonLocked()) {
+            return false;
+        }
+
+        if ($this->isCredentialsNonExpired() !== $user->isCredentialsNonExpired()) {
+            return false;
+        }
+
+        if ($this->isEnabled() !== $user->isEnabled()) {
+            return false;
+        }
+
         if (array_diff($this->getRoles(), $user->getRoles())) {
-            return false;
-        }
-
-        if ($this->email !== $user->getEmail()) {
-            return false;
-        }
-
-        if ($this->password !== $user->getPassword()) {
-            return false;
-        }
-
-        if ($this->salt !== $user->getSalt()) {
-            return false;
-        }
-
-        if ($this->username !== $user->getUsername()) {
             return false;
         }
 

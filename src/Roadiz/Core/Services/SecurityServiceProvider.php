@@ -222,8 +222,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'path' => $request->getBasePath(),
                     'domain' => $request->getHost(),
                     'always_remember_me' => false,
-                    'secure' => false,
-                    'httponly' => false,
+                    'httponly' => $c['config']["security"]['session_cookie_httponly'],
                 ],
                 $c['logger.security']
             );

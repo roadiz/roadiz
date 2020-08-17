@@ -15,6 +15,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\OpenId\Discovery;
 use RZ\Roadiz\OpenId\Logout\OpenIdLogoutHandler;
 use Symfony\Component\HttpFoundation\RequestMatcher;
+use Symfony\Component\Security\Http\AccessMap;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\EntryPoint\FormAuthenticationEntryPoint;
@@ -22,6 +23,7 @@ use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener;
 use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 use Symfony\Component\Security\Http\Firewall\LogoutListener;
+use Symfony\Component\Security\Http\Firewall\RememberMeListener;
 use Symfony\Component\Security\Http\Firewall\UsernamePasswordFormAuthenticationListener;
 use Symfony\Component\Security\Http\Logout\DefaultLogoutSuccessHandler;
 use Symfony\Component\Security\Http\Logout\SessionLogoutHandler;
@@ -157,8 +159,10 @@ class FirewallEntry
          * Add an access map entry only if basePath pattern is valid and
          * not root level.
          */
+        /** @var AccessMap $accessMap */
+        $accessMap = $this->container['accessMap'];
         if (null !== $this->firewallBasePattern && "" !== $this->firewallBasePattern) {
-            $this->container['accessMap']->add($this->requestMatcher, $this->firewallBaseRole);
+            $accessMap->add($this->requestMatcher, $this->firewallBaseRole);
         }
 
         $this->listeners = [
@@ -434,6 +438,9 @@ class FirewallEntry
             ]
         );
         $logoutListener->addHandler(new SessionLogoutHandler());
+        // Cancel remember me token
+        $logoutListener->addHandler($this->container['tokenBasedRememberMeServices']);
+
         /** @var Discovery|null $discovery */
         $discovery = $this->container[Discovery::class];
         if (null !== $discovery) {
