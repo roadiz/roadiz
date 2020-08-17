@@ -934,6 +934,14 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
             return false;
         }
 
+        if (array_diff($this->getRoles(), $user->getRoles())) {
+            return false;
+        }
+
+        if ($this->email !== $user->getEmail()) {
+            return false;
+        }
+
         if ($this->password !== $user->getPassword()) {
             return false;
         }

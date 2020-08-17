@@ -71,6 +71,11 @@ class UserProvider implements UserProviderInterface
             $refreshUser = $this->em->find(User::class, (int) $user->getId());
 
             if ($refreshUser !== null) {
+                // If change important user fields
+                if(!$refreshUser->isEqualTo($user)){
+                    throw new UsernameNotFoundException('Authentication required again');
+                }
+
                 return $refreshUser;
             } else {
                 throw new UnsupportedUserException();
