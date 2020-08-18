@@ -65,7 +65,7 @@ class OAuth2LinkGenerator
     public function generate(Request $request, string $redirectUri, array $state = [], string $responseType = 'code'): string
     {
         if (null !== $this->discovery &&
-            in_array($responseType, $this->discovery->get('response_types_supported'))) {
+            in_array($responseType, $this->discovery->get('response_types_supported', []))) {
             $customScopes = $this->settingsBag->get('openid_scopes', null);
             if (null !== $customScopes && !empty($customScopes)) {
                 $customScopes = array_intersect(
@@ -90,7 +90,7 @@ class OAuth2LinkGenerator
             ]);
         }
         throw new DiscoveryNotAvailableException(
-            'OpenID discovery is not configured or response_type is not supported by your identity provider'
+            'OpenID discovery is not well configured or response_type is not supported by your identity provider'
         );
     }
 }
