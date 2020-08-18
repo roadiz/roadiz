@@ -282,7 +282,7 @@ class OpenIdAccount implements UserInterface, EquatableInterface
             return false;
         }
 
-        if ($this->getRoles() !== $user->getRoles()) {
+        if (array_diff($this->getRoles(), $user->getRoles())) {
             return false;
         }
 
