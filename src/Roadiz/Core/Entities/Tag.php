@@ -62,7 +62,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      *     orphanRemoval=true,
      *     cascade={"all"}
      * )
-     * @var ArrayCollection
+     * @var Collection
      * @Serializer\Groups({"tag", "node", "nodes_sources"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslation>")
      * @Serializer\Accessor(setter="setTranslatedTags", getter="getTranslatedTags")
@@ -217,7 +217,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getTranslatedTags(): Collection
     {

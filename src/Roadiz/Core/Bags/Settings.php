@@ -81,7 +81,9 @@ class Settings extends LazyParameterBag
         if (null !== $this->entityManager) {
             try {
                 $id = $this->getInt($key);
-                return $this->entityManager->find(Document::class, $id);
+                return $this->entityManager
+                            ->getRepository(Document::class)
+                            ->findOneById($id);
             } catch (\Exception $e) {
                 return null;
             }

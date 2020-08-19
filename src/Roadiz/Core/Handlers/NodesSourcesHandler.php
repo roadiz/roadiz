@@ -242,7 +242,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @param array|null $criteria Additionnal criteria
      * @param array|null $order Non default ordering
      *
-     * @return array<NodesSources>
+     * @return array<object|NodesSources>
      */
     public function getChildren(
         array $criteria = null,

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Serializers;
 
+use RuntimeException;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\NameConverter\CamelCaseToSnakeCaseNameConverter;
@@ -17,7 +19,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
     /**
      * Create a simple associative array with a NodeSource.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param NodesSources $nodeSource
      *
      * @return array
      */
@@ -45,7 +47,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodesSources $nodeSource
+     * @param NodesSources $nodeSource
      *
      * @return array
      */
@@ -72,7 +74,7 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
      */
     public function deserialize($string)
     {
-        throw new \RuntimeException(
+        throw new RuntimeException(
             "Cannot simply deserialize a NodesSources entity. " .
             "Use 'deserializeWithNodeType' method instead.",
             1
@@ -80,12 +82,10 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
     }
 
     /**
-     * {@inheritDoc}
+     * @param string   $string
+     * @param NodeType $type
      *
-     * @param string                          $string
-     * @param \RZ\Roadiz\Core\Entities\NodeType $type
-     *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
      */
     public function deserializeWithNodeType($string, NodeType $type)
     {
@@ -112,12 +112,14 @@ class NodeSourceJsonSerializer extends AbstractJsonSerializer
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
 
         $serializer = new Serializer([$normalizer], [$encoder]);
-        $node = $serializer->deserialize(
+
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $serializer->deserialize(
             $string,
             NodeType::getGeneratedEntitiesNamespace() . '\\' . $type->getSourceEntityClassName(),
             'json'
         );
 
-        return $node;
+        return $nodeSource;
     }
 }

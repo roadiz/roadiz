@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\Entities\Folder;
 
 /**
@@ -75,7 +76,7 @@ class FolderHandler extends AbstractHandler
      * Return every folder’s parents.
      *
      * @deprecated Use directly Folder::getParents method.
-     * @return \RZ\Roadiz\Core\Entities\Folder[]
+     * @return array<LeafInterface|Folder>
      */
     public function getParents()
     {

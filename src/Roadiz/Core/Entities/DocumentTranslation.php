@@ -131,7 +131,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
     protected $document;
 
     /**
-     * @return Document
+     * @return DocumentInterface
      */
     public function getDocument(): DocumentInterface
     {

@@ -247,7 +247,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Log", mappedBy="nodeSource")
      * @ORM\OrderBy({"datetime" = "DESC"})
-     * @var ArrayCollection
+     * @var Collection
      * @Serializer\Exclude
      */
     protected $logs;

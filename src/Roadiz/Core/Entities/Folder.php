@@ -70,7 +70,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     private $visible = true;
     /**
      * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true)
-     * @var ArrayCollection
+     * @var Collection
      * @Serializer\Groups({"folder", "document"})
      */
     private $translatedFolders;

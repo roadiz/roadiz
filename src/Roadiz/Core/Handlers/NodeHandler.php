@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ObjectManager;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
@@ -478,31 +479,30 @@ class NodeHandler extends AbstractHandler
     /**
      * Return every node’s parents
      * @param TokenStorageInterface|null $tokenStorage
-     * @return Node[]
+     * @return array<LeafInterface|Node>
      */
     public function getParents(TokenStorageInterface $tokenStorage = null)
     {
-        $parentsArray = [];
-        $parent = $this->node;
-        $user = null;
-        $chroot = null;
+        if (null !== $this->node) {
+            $parentsArray = [];
+            $parent = $this->node->getParent();
+            $user = null;
+            $chroot = null;
 
-        if ($tokenStorage !== null) {
-            $user = $tokenStorage->getToken()->getUser();
-            /** @var Node|null $chroot */
-            $chroot = $this->chrootResolver->getChroot($user);
-        }
+            if ($tokenStorage !== null) {
+                $user = $tokenStorage->getToken()->getUser();
+                /** @var Node|null $chroot */
+                $chroot = $this->chrootResolver->getChroot($user);
+            }
 
-        do {
-            $parent = $parent->getParent();
-            if ($parent !== null && $parent !== $chroot) {
+            while ($parent !== null && $parent !== $chroot) {
                 $parentsArray[] = $parent;
-            } else {
-                break;
-            };
-        } while ($parent !== null);
+                $parent = $parent->getParent();
+            }
 
-        return array_reverse($parentsArray);
+            return array_reverse($parentsArray);
+        }
+        return [];
     }
 
     /**

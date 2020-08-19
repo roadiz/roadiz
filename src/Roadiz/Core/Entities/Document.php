@@ -152,7 +152,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     private $filesize;
 
     /**
-     * @var ArrayCollection<Document>
+     * @var Collection<Document>
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", mappedBy="original")
      * @Serializer\Groups({"document_thumbnails"})
      * @Serializer\MaxDepth(2)
@@ -161,7 +161,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     private $thumbnails;
 
     /**
-     * @var Document|null
+     * @var HasThumbnailInterface|Document|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="thumbnails")
      * @ORM\JoinColumn(name="original", nullable=true, onDelete="SET NULL")
      * @Serializer\Groups({"document_original"})

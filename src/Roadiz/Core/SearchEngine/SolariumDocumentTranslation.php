@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\QueryType\Update\Query\Query;
@@ -21,18 +22,22 @@ class SolariumDocumentTranslation extends AbstractSolarium
     const DOCUMENT_TYPE = 'DocumentTranslation';
     const IDENTIFIER_KEY = 'document_translation_id_i';
 
-    /** @var Document */
+    /**
+     * @var DocumentInterface
+     */
     protected $rzDocument = null;
 
-    /** @var DocumentTranslation */
+    /**
+     * @var DocumentTranslation
+     */
     protected $documentTranslation = null;
 
     /**
      * Create a new SolariumDocument.
      *
      * @param DocumentTranslation    $documentTranslation
-     * @param Client                 $client
-     * @param LoggerInterface        $logger
+     * @param Client|null            $client
+     * @param LoggerInterface|null   $logger
      * @param MarkdownInterface|null $markdown
      */
     public function __construct(
@@ -66,7 +71,17 @@ class SolariumDocumentTranslation extends AbstractSolarium
         $assoc[static::TYPE_DISCRIMINATOR] = static::DOCUMENT_TYPE;
         // Need a nodeSourceId field
         $assoc[static::IDENTIFIER_KEY] = $this->documentTranslation->getId();
-        $assoc['document_id_i'] = $this->rzDocument->getId();
+        if ($this->rzDocument instanceof Document) {
+            $assoc['document_id_i'] = $this->rzDocument->getId();
+            $assoc['created_at_dt'] = $this->rzDocument->getCreatedAt()
+                ->setTimezone(new \DateTimeZone('UTC'))
+                ->format('Y-m-d\TH:i:s\Z');
+            ;
+            $assoc['updated_at_dt'] = $this->rzDocument->getUpdatedAt()
+                ->setTimezone(new \DateTimeZone('UTC'))
+                ->format('Y-m-d\TH:i:s\Z');
+            ;
+        }
         $assoc['filename_s'] = $this->rzDocument->getFilename();
         $assoc['mime_type_s'] = $this->rzDocument->getMimeType();
 
@@ -86,14 +101,6 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
         $assoc['title'] = $this->documentTranslation->getName();
         $assoc['title'.$suffix] = $this->documentTranslation->getName();
-        $assoc['created_at_dt'] = $this->rzDocument->getCreatedAt()
-            ->setTimezone(new \DateTimeZone('UTC'))
-            ->format('Y-m-d\TH:i:s\Z');
-        ;
-        $assoc['updated_at_dt'] = $this->rzDocument->getUpdatedAt()
-            ->setTimezone(new \DateTimeZone('UTC'))
-            ->format('Y-m-d\TH:i:s\Z');
-        ;
 
         /*
          * Remove ctrl characters
@@ -119,7 +126,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
         if ($this->logger !== null && count($folderNames) > 0) {
             $this->logger->debug('Indexed document.', [
-                'document' => $this->rzDocument->getId(),
+                'document' => $this->rzDocument->getFilename(),
                 'locale' => $this->documentTranslation->getTranslation()->getLocale(),
                 'folders' => $folderNames,
             ]);
