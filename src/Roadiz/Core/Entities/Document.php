@@ -30,7 +30,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="SET NULL")
      * @Serializer\Groups({"document"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      * @var Document|null
@@ -430,7 +430,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     public function setRawDocument(DocumentInterface $rawDocument = null)
     {
-        if ($rawDocument instanceof Document) {
+        if (null === $rawDocument || $rawDocument instanceof Document) {
             $this->rawDocument = $rawDocument;
         }
 
@@ -625,7 +625,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     public function setOriginal(?HasThumbnailInterface $original): Document
     {
-        if ($original !== $this && $original instanceof Document) {
+        if (null === $original || ($original !== $this && $original instanceof Document)) {
             $this->original = $original;
         }
 

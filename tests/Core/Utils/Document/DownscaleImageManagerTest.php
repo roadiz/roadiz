@@ -123,8 +123,8 @@ class DownscaleImageManagerTest extends SchemaDependentCase
 
             $this->assertEquals($originalHashes[$key], $afterHash, 'New document file should be the same the original one');
             $this->assertFalse($document->isRaw());
-//            $rawDocument = $document->getRawDocument();
-//            $this->assertNull($rawDocument, sprintf('Raw "%s" version is still present on the document. It should be NULL.', $document->getFilename()));
+            $rawDocument = $document->getRawDocument();
+            $this->assertNull($rawDocument, sprintf('Raw "%s" version is still present on the document. It should be NULL.', $document->getFilename()));
         }
     }
 

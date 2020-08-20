@@ -152,7 +152,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
      */
     public function setGroup(?AttributeGroupInterface $group)
     {
-        if ($group instanceof AttributeGroup) {
+        if (null === $group || $group instanceof AttributeGroup) {
             $this->group = $group;
         }
         return $this;

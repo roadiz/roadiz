@@ -79,7 +79,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
      */
     public function setAttributable(?AttributableInterface $attributable)
     {
-        if ($attributable instanceof Node) {
+        if (null === $attributable || $attributable instanceof Node) {
             $this->node = $attributable;
             return $this;
         }
