@@ -42,8 +42,8 @@ class Requirements
         $checks = [];
 
         $checks['php_version'] = [
-            'status' => $this->testPHPVersion('7.1.0'),
-            'version_minimum' => '7.1.0',
+            'status' => $this->testPHPVersion('7.2.0'),
+            'version_minimum' => '7.2.0',
             'found' => phpversion(),
             'message' => 'Your PHP version is outdated, you must update it.',
         ];
@@ -178,10 +178,34 @@ class Requirements
             'status' => $this->folderWritable($this->kernel->getPublicFilesPath()),
             'folder' => $this->kernel->getPublicFilesPath(),
             'mod' => fileperms($this->kernel->getPublicFilesPath()),
-            'message' => 'Storage folder is not writable by PHP, you must change its permissions.',
+            'message' => 'Public storage folder is not writable by PHP, you must change its permissions.',
         ];
 
         if ($checks['files_folder_writable']['status']) {
+            $this->successChecks++;
+        }
+        $this->totalChecks++;
+
+        $checks['private_files_folder_writable'] = [
+            'status' => $this->folderWritable($this->kernel->getPrivateFilesPath()),
+            'folder' => $this->kernel->getPrivateFilesPath(),
+            'mod' => fileperms($this->kernel->getPrivateFilesPath()),
+            'message' => 'Private storage folder is not writable by PHP, you must change its permissions.',
+        ];
+
+        if ($checks['private_files_folder_writable']['status']) {
+            $this->successChecks++;
+        }
+        $this->totalChecks++;
+
+        $checks['font_files_folder_writable'] = [
+            'status' => $this->folderWritable($this->kernel->getFontsFilesPath()),
+            'folder' => $this->kernel->getFontsFilesPath(),
+            'mod' => fileperms($this->kernel->getFontsFilesPath()),
+            'message' => 'Font storage folder is not writable by PHP, you must change its permissions.',
+        ];
+
+        if ($checks['font_files_folder_writable']['status']) {
             $this->successChecks++;
         }
         $this->totalChecks++;

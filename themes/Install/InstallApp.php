@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Themes\Install;
 
+use Exception;
+use Locale;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
@@ -17,11 +19,13 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Install\Forms\UserType;
+use Twig_Error_Runtime;
 
 /**
  * Installation application
@@ -41,7 +45,7 @@ class InstallApp extends AppController
     {
         $locale = $this->get('session')->get('_locale', 'en');
         $this->getRequest()->setLocale($locale);
-        \Locale::setDefault($locale);
+        Locale::setDefault($locale);
 
         $this->assignation = [
             'head' => [
@@ -64,8 +68,8 @@ class InstallApp extends AppController
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
+     * @return RedirectResponse|Response
+     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -151,7 +155,7 @@ class InstallApp extends AppController
                         'installUserSummaryPage',
                         ["userId" => $user->getId()]
                     ));
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->assignation['error'] = true;
                     $userForm->addError(new FormError($e->getMessage()));
                 }
@@ -229,7 +233,7 @@ class InstallApp extends AppController
                      * Force redirect to avoid resending form when refreshing page
                      */
                     return $this->redirect($this->generateUrl('installAfterDonePage'));
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $this->assignation['error'] = true;
                     $doneForm->addError(new FormError($e->getMessage() . PHP_EOL . $e->getTraceAsString()));
                 }
