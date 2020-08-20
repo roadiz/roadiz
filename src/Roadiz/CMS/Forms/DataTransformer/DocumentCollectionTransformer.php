@@ -34,7 +34,7 @@ class DocumentCollectionTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param ArrayCollection<Document>|Document[] $documents
+     * @param ArrayCollection<Document>|Document[]|null $documents
      * @return string|array
      */
     public function transform($documents)
@@ -54,7 +54,7 @@ class DocumentCollectionTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param string $documentIds
+     * @param string|array|null $documentIds
      * @return array|ArrayCollection
      */
     public function reverseTransform($documentIds)

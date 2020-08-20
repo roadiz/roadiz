@@ -22,7 +22,7 @@ class CustomForm extends AbstractDateTimed
 {
     /**
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)
-     * @var string
+     * @var string|null
      * @Serializer\Groups({"custom_form", "nodes_sources"})
      */
     protected $color = '#000000';
@@ -40,13 +40,13 @@ class CustomForm extends AbstractDateTimed
     private $displayName = 'Untitled';
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @var string
+     * @var string|null
      * @Serializer\Groups({"nodes_sources"})
      */
     private $description;
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @var string
+     * @var string|null
      * @Serializer\Groups({"custom_form"})
      */
     private $email;
@@ -65,7 +65,7 @@ class CustomForm extends AbstractDateTimed
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", mappedBy="customForm", cascade={"ALL"})
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection<CustomFormField>
      * @Serializer\Groups({"custom_form"})
      */
     private $fields;
@@ -75,16 +75,16 @@ class CustomForm extends AbstractDateTimed
      *    mappedBy="customForm",
      *    cascade={"ALL"}
      * )
-     * @var ArrayCollection
+     * @var Collection<CustomFormAnswer>
      * @Serializer\Exclude
      */
     private $customFormAnswers;
     /**
      * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="customForm", fetch="EXTRA_LAZY")
-     * @var ArrayCollection
+     * @var Collection<NodesCustomForms>
      * @Serializer\Exclude
      */
-    private $nodes = null;
+    private $nodes;
 
     /**
      * Create a new CustomForm.

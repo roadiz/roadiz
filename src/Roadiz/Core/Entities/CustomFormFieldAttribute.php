@@ -21,14 +21,14 @@ class CustomFormFieldAttribute extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer", inversedBy="answerFields")
      * @ORM\JoinColumn(name="custom_form_answer_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var CustomFormAnswer
+     * @var CustomFormAnswer|null
      */
     protected $customFormAnswer;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttributes")
      * @ORM\JoinColumn(name="custom_form_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var CustomFormField
+     * @var CustomFormField|null
      */
     protected $customFormField;
 

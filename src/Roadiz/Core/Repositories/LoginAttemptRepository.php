@@ -9,6 +9,7 @@ use RZ\Roadiz\Core\Entities\LoginAttempt;
  * Class LoginAttemptRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<LoginAttempt>
  */
 class LoginAttemptRepository extends EntityRepository
 {

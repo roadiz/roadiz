@@ -45,12 +45,12 @@ class NodeTypesCreationCommand extends Command
             throw new \InvalidArgumentException('Name must not be empty.');
         }
 
-        /** @var NodeType $nodetype */
-        $nodetype = $this->entityManager
+        /** @var NodeType|null $nodeType */
+        $nodeType = $this->entityManager
             ->getRepository(NodeType::class)
             ->findOneBy(['name' => $name]);
 
-        if ($nodetype !== null) {
+        if ($nodeType !== null) {
             $io->error('Node-type "' . $name . '" already exists.');
             return 1;
         } else {

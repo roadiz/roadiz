@@ -71,7 +71,7 @@ abstract class AbstractSearchHandler
      * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      * @param integer $page
      *
-     * @return array
+     * @return array|null
      */
     abstract protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
 
@@ -110,7 +110,7 @@ abstract class AbstractSearchHandler
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
      *
-     * @param string $q
+     * @param string|null $q
      * @param array $args
      * @param bool $searchTags
      * @param int $proximity

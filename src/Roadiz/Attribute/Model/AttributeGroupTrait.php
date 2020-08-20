@@ -15,7 +15,7 @@ use RZ\Roadiz\Utils\StringHandler;
 trait AttributeGroupTrait
 {
     /**
-     * @var string|null
+     * @var string
      */
     protected $canonicalName;
     /**
@@ -91,7 +91,7 @@ trait AttributeGroupTrait
     }
 
     /**
-     * @param Collection<AttributeGroupTranslationInterface> $attributeGroupTranslations
+     * @param Collection $attributeGroupTranslations
      *
      * @return $this
      */

@@ -41,7 +41,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
     protected $options = [];
 
     /**
-     * @var AttributeInterface
+     * @var Attribute|null
      * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeTranslations", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Exclude
@@ -49,7 +49,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
     protected $attribute;
 
     /**
-     * @var Translation
+     * @var Translation|null
      * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Translation")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
@@ -57,4 +57,17 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
      */
     protected $translation;
+
+    /**
+     * @param AttributeInterface $attribute
+     *
+     * @return $this|mixed
+     */
+    public function setAttribute(AttributeInterface $attribute)
+    {
+        if ($attribute instanceof Attribute) {
+            $this->attribute = $attribute;
+        }
+        return $this;
+    }
 }

@@ -86,9 +86,6 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
             // You can set any number of default request options.
             'timeout'  => 2.0,
         ]);
-        if (null === $discovery) {
-            throw new \InvalidArgumentException('Discovery cannot be null');
-        }
         if (empty($options['oauth_client_id'])) {
             throw new \InvalidArgumentException('oauth_client_id option must not be empty');
         }
@@ -124,17 +121,16 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
          * State is an url_encoded string containing the "token" and other
          * optional data
          */
+        if (null === $request->query->get('state')) {
+            throw new AuthenticationException('State is not valid');
+        }
         $state = parse_query($request->query->get('state'));
         $stateToken = $this->csrfTokenManager->getToken(static::OAUTH_STATE_TOKEN);
 
-        if (is_array($state)) {
-            if (!isset($state['token']) ||
-                $stateToken->getValue() !== $state['token'] ||
-                !$this->csrfTokenManager->isTokenValid($stateToken)) {
-                throw new AuthenticationException('State token is not valid');
-            }
-        } else {
-            throw new AuthenticationException('State is not valid');
+        if (!isset($state['token']) ||
+            $stateToken->getValue() !== $state['token'] ||
+            !$this->csrfTokenManager->isTokenValid($stateToken)) {
+            throw new AuthenticationException('State token is not valid');
         }
 
         /*

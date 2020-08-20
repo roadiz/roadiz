@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Viewers;
 use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Bags\Settings;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Utils\EmailManager;
 use Swift_TransportException;
@@ -63,7 +64,7 @@ class UserViewer
      * Send an email to reset user password.
      *
      * @param UrlGeneratorInterface $urlGenerator
-     * @param string                $route
+     * @param string|NodesSources   $route
      * @param string                $htmlTemplate
      * @param string                $txtTemplate
      *

@@ -21,6 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * NodeRepository
+ * @extends StatusAwareRepository<\RZ\Roadiz\Core\Entities\Node>
  */
 class NodeRepository extends StatusAwareRepository
 {

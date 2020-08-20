@@ -55,7 +55,7 @@ trait AttributableTrait
     }
 
     /**
-     * @param Collection<AttributeValueInterface> $attributes
+     * @param Collection $attributes
      *
      * @return mixed
      */

@@ -29,14 +29,14 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="nodesSourcesByFields", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Document
+     * @var Document|null
      */
     protected $document;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var NodeTypeField
+     * @var NodeTypeField|null
      */
     protected $field;
 

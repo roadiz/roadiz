@@ -27,14 +27,14 @@ class DocumentTranslation extends AbstractEntity implements Loggable
      */
     protected $name = null;
     /**
-     * @return string
+     * @return string|null
      */
     public function getName(): ?string
     {
         return $this->name;
     }
     /**
-     * @param string $name
+     * @param string|null $name
      *
      * @return $this
      */
@@ -51,6 +51,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
      * @Gedmo\Versioned
      */
     protected $description;
+
     /**
      * @return string
      */
@@ -58,8 +59,9 @@ class DocumentTranslation extends AbstractEntity implements Loggable
     {
         return $this->description;
     }
+
     /**
-     * @param string $description
+     * @param string|null $description
      *
      * @return $this
      */
@@ -74,17 +76,20 @@ class DocumentTranslation extends AbstractEntity implements Loggable
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Gedmo\Versioned
+     * @var string|null
      */
     private $copyright;
+
     /**
-     * @return string
+     * @return string|null
      */
     public function getCopyright(): ?string
     {
         return $this->copyright;
     }
+
     /**
-     * @param string $copyright
+     * @param string|null $copyright
      *
      * @return $this
      */
@@ -99,7 +104,7 @@ class DocumentTranslation extends AbstractEntity implements Loggable
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
-     * @var  Translation
+     * @var Translation|null
      */
     protected $translation;
 
@@ -125,24 +130,24 @@ class DocumentTranslation extends AbstractEntity implements Loggable
     /**
      * @ORM\ManyToOne(targetEntity="Document", inversedBy="documentTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var DocumentInterface
+     * @var Document|null
      * @Serializer\Exclude
      */
     protected $document;
 
     /**
-     * @return DocumentInterface
+     * @return Document
      */
-    public function getDocument(): DocumentInterface
+    public function getDocument(): Document
     {
         return $this->document;
     }
 
     /**
-     * @param DocumentInterface $document
+     * @param Document $document
      * @return $this
      */
-    public function setDocument(DocumentInterface $document)
+    public function setDocument(Document $document)
     {
         $this->document = $document;
 

@@ -3,6 +3,12 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Repositories;
 
+/**
+ * Class FontRepository
+ *
+ * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Font>
+ */
 class FontRepository extends EntityRepository
 {
     public function getLatestUpdateDate()

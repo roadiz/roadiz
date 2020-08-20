@@ -26,6 +26,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements a simple countBy method.
+ *
+ * @template T
+ * @extends \Doctrine\ORM\EntityRepository<T>
  */
 class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface
 {

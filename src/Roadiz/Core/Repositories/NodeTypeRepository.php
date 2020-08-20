@@ -7,6 +7,7 @@ namespace RZ\Roadiz\Core\Repositories;
  * Class NodeTypeRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\NodeType>
  */
 class NodeTypeRepository extends EntityRepository
 {

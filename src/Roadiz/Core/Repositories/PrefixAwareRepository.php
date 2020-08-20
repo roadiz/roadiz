@@ -12,6 +12,8 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
  * Class PrefixAwareRepository for defining join-qeuries prefixes.
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @template T
+ * @extends EntityRepository<T>
  */
 class PrefixAwareRepository extends EntityRepository
 {

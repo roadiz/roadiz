@@ -34,7 +34,7 @@ class AttributeGroupTranslation extends AbstractEntity implements AttributeGroup
     protected $name;
 
     /**
-     * @var AttributeGroupInterface
+     * @var AttributeGroup|null
      * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\AttributeGroup", inversedBy="attributeGroupTranslations", cascade={"persist"})
      * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id", name="attribute_group_id")
      * @Serializer\Exclude
@@ -50,4 +50,17 @@ class AttributeGroupTranslation extends AbstractEntity implements AttributeGroup
      * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
      */
     protected $translation;
+
+    /**
+     * @param AttributeGroupInterface $attributeGroup
+     *
+     * @return $this|mixed
+     */
+    public function setAttributeGroup(AttributeGroupInterface $attributeGroup)
+    {
+        if ($attributeGroup instanceof AttributeGroup) {
+            $this->attributeGroup = $attributeGroup;
+        }
+        return $this;
+    }
 }

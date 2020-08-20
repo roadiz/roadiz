@@ -235,9 +235,9 @@ class ContactFormManager extends EmailManager
             'required' => true,
             'constraints' => [
                 new NotBlank([
-                    'message' => 'contact_form.must_consent_to_send'
-                ])
-            ]
+                    'message' => 'contact_form.must_consent_to_send',
+                ]),
+            ],
         ]);
         return $this;
     }
@@ -381,13 +381,21 @@ class ContactFormManager extends EmailManager
         foreach ($this->request->files as $files) {
             /**
              * @var string $name
-             * @var UploadedFile $uploadedFile
+             * @var UploadedFile|array $uploadedFile
              */
             foreach ($files as $name => $uploadedFile) {
                 if (null !== $uploadedFile) {
                     if (is_array($uploadedFile)) {
+                        /**
+                         * @var string $singleName
+                         * @var UploadedFile|array $singleUploadedFile
+                         */
                         foreach ($uploadedFile as $singleName => $singleUploadedFile) {
                             if (is_array($singleUploadedFile)) {
+                                /**
+                                 * @var string $singleName2
+                                 * @var UploadedFile $singleUploadedFile2
+                                 */
                                 foreach ($singleUploadedFile as $singleName2 => $singleUploadedFile2) {
                                     $this->addUploadedFile($singleName2, $singleUploadedFile2);
                                 }

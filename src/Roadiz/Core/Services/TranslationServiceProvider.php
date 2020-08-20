@@ -50,11 +50,16 @@ class TranslationServiceProvider implements ServiceProviderInterface
             $requestStack = $c['requestStack'];
             $request = $requestStack->getMasterRequest();
 
+            if (null === $request) {
+                return null;
+            }
+            if ($request->hasPreviousSession() &&
+                null !== $request->getSession() &&
+                null !== $request->getSession()->get('_locale')) {
+                return $request->getSession()->get('_locale');
+            }
             if (null !== $request->getLocale()) {
                 return $request->getLocale();
-            } elseif (null !== $c['session']->get('_locale') &&
-                $c['session']->get('_locale') != "") {
-                return $c['session']->get('_locale');
             }
 
             return null;

@@ -14,7 +14,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -46,8 +45,11 @@ class NodeHandler extends AbstractHandler
      * @param Registry           $registry
      * @param NodeChrootResolver $chrootResolver
      */
-    public function __construct(ObjectManager $objectManager, Registry $registry, NodeChrootResolver $chrootResolver)
-    {
+    final public function __construct(
+        ObjectManager $objectManager,
+        Registry $registry,
+        NodeChrootResolver $chrootResolver
+    ) {
         parent::__construct($objectManager);
         $this->registry = $registry;
         $this->chrootResolver = $chrootResolver;
@@ -390,57 +392,6 @@ class NodeHandler extends AbstractHandler
         }
 
         return $this;
-    }
-
-    /**
-     * Alias for TranslationRepository::findAvailableTranslationsForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return Translation[]
-     */
-    public function getAvailableTranslations()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsForNode($this->node);
-    }
-    /**
-     * Alias for TranslationRepository::findAvailableTranslationsIdForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return array
-     */
-    public function getAvailableTranslationsId()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsIdForNode($this->node);
-    }
-
-    /**
-     * Alias for TranslationRepository::findUnavailableTranslationsForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return Translation[]
-     */
-    public function getUnavailableTranslations()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findUnavailableTranslationsForNode($this->node);
-    }
-
-    /**
-     * Alias for TranslationRepository::findUnavailableTranslationIdForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return array
-     */
-    public function findUnavailableTranslationIdForNode()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findUnavailableTranslationIdForNode($this->node);
     }
 
     /**

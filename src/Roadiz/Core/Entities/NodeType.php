@@ -79,7 +79,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups("node_type")
      * @Serializer\Type("string")
@@ -87,7 +87,7 @@ class NodeType extends AbstractEntity
     private $description;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDescription(): ?string
     {
@@ -95,7 +95,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      * @return $this
      */
     public function setDescription(string $description = null)
@@ -248,7 +248,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)
      * @Serializer\Groups({"node_type", "color"})
      * @Serializer\Type("string")
@@ -258,9 +258,9 @@ class NodeType extends AbstractEntity
     /**
      * Gets the value of color.
      *
-     * @return string
+     * @return string|null
      */
-    public function getColor(): string
+    public function getColor(): ?string
     {
         return $this->color;
     }
@@ -268,11 +268,11 @@ class NodeType extends AbstractEntity
     /**
      * Sets the value of color.
      *
-     * @param string $color
+     * @param string|null $color
      *
      * @return $this
      */
-    public function setColor(string $color): NodeType
+    public function setColor(?string $color): NodeType
     {
         $this->color = $color;
 

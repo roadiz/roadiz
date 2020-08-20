@@ -14,7 +14,10 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * {@inheritdoc}
+ * Class TagRepository
+ *
+ * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Tag>
  */
 class TagRepository extends EntityRepository
 {

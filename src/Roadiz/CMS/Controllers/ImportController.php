@@ -193,7 +193,7 @@ class ImportController extends AppController
      *
      * @param string $pathFile
      * @param string $classImporter
-     * @param int    $themeId
+     * @param int|null    $themeId
      *
      * @return Response
      */
@@ -207,7 +207,6 @@ class ImportController extends AppController
             if (null === $themeId) {
                 $path = $pathFile;
             } else {
-                /** @var Theme $theme */
                 $theme = $themeResolver->findById($themeId);
 
                 if ($theme === null) {

@@ -44,7 +44,7 @@ class FolderHandler extends AbstractHandler
     {
         /** @var Folder $folder */
         foreach ($this->folder->getChildren() as $folder) {
-            $handler = new static($this->objectManager);
+            $handler = new FolderHandler($this->objectManager);
             $handler->setFolder($folder);
             $handler->removeWithChildrenAndAssociations();
         }
@@ -124,7 +124,7 @@ class FolderHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->folder->getParent() !== null) {
-            $parentHandler = new static($this->objectManager);
+            $parentHandler = new FolderHandler($this->objectManager);
             $parentHandler->setFolder($this->folder->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {

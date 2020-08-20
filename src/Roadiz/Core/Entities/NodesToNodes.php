@@ -31,14 +31,14 @@ class NodesToNodes extends AbstractPositioned
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes", fetch="EAGER")
      * @ORM\JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Node
+     * @var Node|null
      */
     protected $nodeB;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var NodeTypeField
+     * @var NodeTypeField|null
      */
     protected $field;
 

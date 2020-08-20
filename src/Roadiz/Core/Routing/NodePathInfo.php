@@ -23,9 +23,9 @@ class NodePathInfo implements \Serializable
     protected $containsScheme = false;
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->path;
     }

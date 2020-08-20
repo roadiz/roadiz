@@ -25,7 +25,7 @@ class AttributeGroup extends AbstractEntity implements AttributeGroupInterface
     use AttributeGroupTrait;
 
     /**
-     * @var string|null
+     * @var string
      * @ORM\Column(type="string", name="canonical_name", nullable=false, unique=true)
      * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
      * @Serializer\Type("string")
@@ -41,7 +41,7 @@ class AttributeGroup extends AbstractEntity implements AttributeGroupInterface
     protected $attributes;
 
     /**
-     * @var ArrayCollection
+     * @var Collection<AttributeGroupTranslation>
      * @ORM\OneToMany(targetEntity="\RZ\Roadiz\Core\Entities\AttributeGroupTranslation", mappedBy="attributeGroup", cascade={"all"})
      * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\AttributeGroupTranslation>")
@@ -49,9 +49,6 @@ class AttributeGroup extends AbstractEntity implements AttributeGroupInterface
      */
     protected $attributeGroupTranslations;
 
-    /**
-     * AttributeGroup constructor.
-     */
     public function __construct()
     {
         $this->attributes = new ArrayCollection();

@@ -546,9 +546,9 @@ class NodesSourcesHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(Node::class)
-            ->findByReverseNodeAndFieldNameAndTranslation(
+            ->findByReverseNodeAndFieldAndTranslation(
                 $this->nodeSource->getNode(),
-                $fieldName,
+                $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName),
                 $this->nodeSource->getTranslation()
             );
     }

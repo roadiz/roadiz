@@ -12,6 +12,13 @@ use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
+/**
+ * Class StatusAwareRepository
+ *
+ * @package RZ\Roadiz\Core\Repositories
+ * @template T
+ * @extends EntityRepository<T>
+ */
 class StatusAwareRepository extends EntityRepository
 {
     /**
@@ -67,6 +74,7 @@ class StatusAwareRepository extends EntityRepository
      * view deleted and archived nodes.
      *
      * @param bool $displayAllNodesStatuses
+     *
      * @return StatusAwareRepository
      */
     public function setDisplayingAllNodesStatuses($displayAllNodesStatuses)

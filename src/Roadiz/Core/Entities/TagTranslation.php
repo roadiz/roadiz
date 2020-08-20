@@ -40,7 +40,7 @@ class TagTranslation extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
      * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Tag
+     * @var Tag|null
      * @Serializer\Exclude()
      */
     protected $tag = null;
@@ -60,17 +60,17 @@ class TagTranslation extends AbstractEntity
      *     cascade={"persist", "merge"}
      * )
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection|null
+     * @var Collection<TagTranslationDocuments>
      * @Serializer\Groups({"tag"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslationDocuments>")
      */
-    protected $tagTranslationDocuments = null;
+    protected $tagTranslationDocuments;
 
     /**
      * Create a new TagTranslation with its origin Tag and Translation.
      *
-     * @param Tag         $original
-     * @param Translation $translation
+     * @param Tag|null         $original
+     * @param Translation|null $translation
      */
     public function __construct(Tag $original = null, Translation $translation = null)
     {

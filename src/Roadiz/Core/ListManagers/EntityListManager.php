@@ -8,6 +8,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -189,11 +190,12 @@ class EntityListManager
         // transform the key chroot in parent
         if (array_key_exists('chroot', $this->filteringArray)) {
             if ($this->filteringArray["chroot"] instanceof Node) {
-                $ids = $this->entityManager
+                /** @var NodeRepository $nodeRepo */
+                $nodeRepo = $this->entityManager
                     ->getRepository(Node::class)
                     ->setDisplayingNotPublishedNodes($this->isDisplayingNotPublishedNodes())
-                    ->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses())
-                    ->findAllOffspringIdByNode($this->filteringArray["chroot"]); // get all offspringId
+                    ->setDisplayingAllNodesStatuses($this->isDisplayingAllNodesStatuses());
+                $ids = $nodeRepo->findAllOffspringIdByNode($this->filteringArray["chroot"]); // get all offspringId
                 if (array_key_exists('parent', $this->filteringArray)) {
                     // test if parent key exist
                     if (is_array($this->filteringArray["parent"])) {
@@ -205,7 +207,7 @@ class EntityListManager
                         }
                     } else {
                         if ($this->filteringArray["parent"] instanceof Node) {
-                            // make transforme all id in int
+                            // make transform all id in int
                             $parent = $this->filteringArray["parent"]->getId();
                         } else {
                             $parent = (int) $this->filteringArray["parent"];

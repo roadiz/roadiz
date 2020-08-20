@@ -41,14 +41,14 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="children", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="parent_tag_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Tag
+     * @var Tag|null
      * @Serializer\Exclude
      */
     protected $parent;
     /**
      * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection<Tag>
      * @Serializer\Groups({"tag"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Tag>")
      * @Serializer\Accessor(setter="setChildren", getter="getChildren")
@@ -62,7 +62,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      *     orphanRemoval=true,
      *     cascade={"all"}
      * )
-     * @var Collection
+     * @var Collection<TagTranslation>
      * @Serializer\Groups({"tag", "node", "nodes_sources"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslation>")
      * @Serializer\Accessor(setter="setTranslatedTags", getter="getTranslatedTags")
@@ -110,10 +110,10 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     /**
      * @ORM\ManyToMany(targetEntity="Node", mappedBy="tags")
      * @ORM\JoinTable(name="nodes_tags")
-     * @var ArrayCollection
+     * @var Collection<Node>
      * @Serializer\Exclude
      */
-    private $nodes = null;
+    private $nodes;
 
     /**
      * Create a new Tag.
@@ -168,7 +168,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<Node>
      */
     public function getNodes()
     {

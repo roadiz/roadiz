@@ -113,7 +113,7 @@ class CustomFormHelper
                         $this->em->persist($fieldAttr);
                     }
 
-                    if (is_array($data) && $data[0] instanceof UploadedFile) {
+                    if (is_array($data) && isset($data[0]) && $data[0] instanceof UploadedFile) {
                         /** @var UploadedFile $file */
                         foreach ($data as $file) {
                             $this->handleUploadedFile($file, $fieldAttr);

@@ -28,7 +28,6 @@ class AttributeChoiceType extends AbstractType
                 return null;
             },
             function ($formToData) use ($options) {
-                /** @var Attribute[] $attributes */
                 return $options['entityManager']->find(Attribute::class, $formToData);
             }
         ));

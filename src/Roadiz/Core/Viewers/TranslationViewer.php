@@ -123,7 +123,6 @@ class TranslationViewer
          */
         $absolute = $absolute ? Router::ABSOLUTE_URL : Router::ABSOLUTE_PATH;
 
-        /** @var Node $node */
         if (key_exists('node', $attr) && $attr['node'] instanceof Node) {
             $node = $attr["node"];
             $this->entityManager->refresh($node);

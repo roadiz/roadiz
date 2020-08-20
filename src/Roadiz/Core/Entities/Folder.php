@@ -40,14 +40,14 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="parent", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection<Folder>
      * @Serializer\Groups({"folder"})
      */
     protected $children;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="folders")
      * @ORM\JoinTable(name="documents_folders")
-     * @var ArrayCollection
+     * @var Collection<Document>
      * @Serializer\Groups({"folder"})
      */
     protected $documents;
@@ -70,7 +70,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     private $visible = true;
     /**
      * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="folder", orphanRemoval=true)
-     * @var Collection
+     * @var Collection<FolderTranslation>
      * @Serializer\Groups({"folder", "document"})
      */
     private $translatedFolders;
@@ -99,7 +99,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * @return ArrayCollection<DocumentInterface>
+     * @return Collection<Document>
      */
     public function getDocuments(): Collection
     {

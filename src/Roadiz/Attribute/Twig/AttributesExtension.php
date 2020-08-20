@@ -106,7 +106,7 @@ class AttributesExtension extends AbstractExtension
 
 
     /**
-     * @param AttributableInterface $attributable
+     * @param AttributableInterface|null $attributable
      * @param Translation $translation
      * @param bool $hideNotTranslated
      *
