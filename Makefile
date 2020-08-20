@@ -32,4 +32,4 @@ test:
 	php bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install themes/DefaultTheme
 
 unit:
-	php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/
+	php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src tests/

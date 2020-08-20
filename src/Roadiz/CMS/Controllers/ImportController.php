@@ -11,13 +11,12 @@ use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\CMS\Importers\RolesImporter;
 use RZ\Roadiz\CMS\Importers\SettingsImporter;
 use RZ\Roadiz\CMS\Importers\TagsImporter;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Themes\Install\InstallApp;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Themes\Install\InstallApp;
 
 /**
  * Generic importer class for themes fixtures.
@@ -30,12 +29,14 @@ class ImportController extends AppController
             throw $this->createAccessDeniedException('Import entry points are only available from install.');
         }
     }
+
     /**
-     * @param  string  $classImporter
-     * @param  Request $request
-     * @param  integer $themeId
+     * @param string  $classImporter
+     * @param Request $request
+     * @param int|null    $themeId
      *
      * @return Response
+     * @throws \ReflectionException
      */
     protected function genericImportAction($classImporter, Request $request, $themeId = null)
     {
@@ -73,9 +74,10 @@ class ImportController extends AppController
      * Import theme's Settings file.
      *
      * @param Request $request
-     * @param int     $themeId
+     * @param int|null    $themeId
      *
      * @return Response
+     * @throws \ReflectionException
      */
     public function importSettingsAction(Request $request, $themeId = null)
     {
@@ -90,7 +92,7 @@ class ImportController extends AppController
      * Import theme's Roles file.
      *
      * @param Request $request
-     * @param int     $themeId
+     * @param int|null     $themeId
      *
      * @return Response
      */
@@ -107,7 +109,7 @@ class ImportController extends AppController
      * Import theme's Groups file.
      *
      * @param Request $request
-     * @param int     $themeId
+     * @param int|null     $themeId
      *
      * @return Response
      */
@@ -124,7 +126,7 @@ class ImportController extends AppController
      * Import NodeTypes file.
      *
      * @param Request $request
-     * @param int     $themeId
+     * @param int|null     $themeId
      *
      * @return Response
      */
@@ -141,7 +143,7 @@ class ImportController extends AppController
      * Import Tags file.
      *
      * @param Request $request
-     * @param int     $themeId
+     * @param int|null     $themeId
      *
      * @return Response
      */
@@ -158,7 +160,7 @@ class ImportController extends AppController
      * Import Attributes file.
      *
      * @param Request $request
-     * @param int     $themeId
+     * @param int|null     $themeId
      *
      * @return Response
      */
@@ -175,7 +177,7 @@ class ImportController extends AppController
      * Import Nodes file.
      *
      * @param Request $request
-     * @param int     $themeId
+     * @param int|null     $themeId
      *
      * @return Response
      */

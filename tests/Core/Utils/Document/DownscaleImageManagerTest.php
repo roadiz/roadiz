@@ -28,6 +28,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Tests\SchemaDependentCase;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DownscaleImageManager;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\File\File;
@@ -58,11 +59,13 @@ class DownscaleImageManagerTest extends SchemaDependentCase
     {
         $originalHashes = [];
 
-        /** @var \RZ\Roadiz\Utils\Asset\Packages $packages */
+        /** @var Packages $packages */
         $packages =  $this->get('assetPackages');
+        /** @var \Doctrine\ORM\EntityManager $entityManager */
+        $entityManager = $this->get('em');
 
         $manager = new DownscaleImageManager(
-            $this->get('em'),
+            $entityManager,
             $packages,
             $this->get('logger'),
             'gd',
@@ -74,12 +77,13 @@ class DownscaleImageManagerTest extends SchemaDependentCase
          * @var Document $document
          */
         foreach (static::$documentCollection as $key => $document) {
+            $entityManager->refresh($document);
             $originalHashes[$key] = hash_file('md5', $packages->getDocumentFilePath($document));
 
             $manager->processAndOverrideDocument($document);
             $afterHash = hash_file('md5', $packages->getDocumentFilePath($document));
 
-            if ($document->getMimeType() == 'image/gif') {
+            if ($document->getMimeType() === 'image/gif') {
                 /*
                  * GIF must be untouched
                  */
@@ -87,10 +91,10 @@ class DownscaleImageManagerTest extends SchemaDependentCase
                 $this->assertNull($document->getRawDocument());
             } else {
                 /*
-                 * Other must be dowscaled
+                 * Other must be downscaled
                  * a raw image should be saved.
                  */
-                $this->assertNotEquals($originalHashes[$key], $afterHash);
+                $this->assertNotEquals($originalHashes[$key], $afterHash, sprintf('%s document file should have been downscaled', $document->getFilename()));
                 $this->assertNotNull($document->getRawDocument());
 
                 /*
@@ -106,7 +110,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
          * not more raw and no more difference
          */
         $manager = new DownscaleImageManager(
-            $this->get('em'),
+            $entityManager,
             $packages,
             $this->get('logger'),
             'gd',
@@ -117,8 +121,10 @@ class DownscaleImageManagerTest extends SchemaDependentCase
             $manager->processDocumentFromExistingRaw($document);
             $afterHash = hash_file('md5', $packages->getDocumentFilePath($document));
 
-            $this->assertEquals($originalHashes[$key], $afterHash);
-            $this->assertNull($document->getRawDocument());
+            $this->assertEquals($originalHashes[$key], $afterHash, 'New document file should be the same the original one');
+            $this->assertFalse($document->isRaw());
+//            $rawDocument = $document->getRawDocument();
+//            $this->assertNull($rawDocument, sprintf('Raw "%s" version is still present on the document. It should be NULL.', $document->getFilename()));
         }
     }
 
@@ -139,6 +145,7 @@ class DownscaleImageManagerTest extends SchemaDependentCase
         foreach (static::$files as $file) {
             $image = new File($file);
             $document = new Document();
+            $document->setFolder('phpunit_'.uniqid());
             $document->setFilename($image->getBasename());
             $document->setMimeType($image->getMimeType());
 

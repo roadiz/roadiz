@@ -260,13 +260,13 @@ abstract class Controller implements ContainerAwareInterface
      *
      * @see http://api.symfony.com/2.6/Symfony/Bundle/FrameworkBundle/Controller/Controller.html#method_render
      *
-     * @param string $view Template file path
-     * @param array $parameters Twig assignation array
-     * @param Response $response Optional Response object to customize response parameters
-     * @param string $namespace Twig loader namespace
+     * @param string        $view Template file path
+     * @param array         $parameters Twig assignation array
+     * @param Response|null $response Optional Response object to customize response parameters
+     * @param string        $namespace Twig loader namespace
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
