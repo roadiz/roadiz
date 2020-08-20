@@ -6,6 +6,8 @@ namespace RZ\Roadiz\Utils\Node;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\UrlAlias;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
+use RZ\Roadiz\Core\Repositories\UrlAliasRepository;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
@@ -65,19 +67,23 @@ class NodeNameChecker
      * Test if node’s name is already used as a name or an url-alias.
      *
      * @param string $nodeName
+     *
      * @return bool
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function isNodeNameAlreadyUsed(string $nodeName): bool
     {
         $nodeName = StringHandler::slugify($nodeName);
+        /** @var UrlAliasRepository $urlAliasRepo */
+        $urlAliasRepo = $this->entityManager->getRepository(UrlAlias::class);
+        /** @var NodeRepository $nodeRepo */
+        $nodeRepo = $this->entityManager
+            ->getRepository(Node::class)
+            ->setDisplayingNotPublishedNodes(true);
 
-        if (false === (boolean) $this->entityManager
-                ->getRepository(UrlAlias::class)
-                ->exists($nodeName) &&
-            false === (boolean) $this->entityManager
-                ->getRepository(Node::class)
-                ->setDisplayingNotPublishedNodes(true)
-                ->exists($nodeName)) {
+        if (false === (boolean) $urlAliasRepo->exists($nodeName) &&
+            false === (boolean) $nodeRepo->exists($nodeName)) {
             return false;
         }
         return true;

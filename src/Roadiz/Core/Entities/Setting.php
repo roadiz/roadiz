@@ -283,19 +283,19 @@ class Setting extends AbstractEntity
      * @Serializer\Type("RZ\Roadiz\Core\Entities\SettingGroup")
      * @Serializer\Accessor(getter="getSettingGroup", setter="setSettingGroup")
      * @Serializer\AccessType("public_method")
-     * @var SettingGroup
+     * @var SettingGroup|null
      */
     private $settingGroup;
 
     /**
-     * @return SettingGroup
+     * @return SettingGroup|null
      */
     public function getSettingGroup(): ?SettingGroup
     {
         return $this->settingGroup;
     }
     /**
-     * @param SettingGroup $settingGroup
+     * @param SettingGroup|null $settingGroup
      *
      * @return $this
      */
@@ -337,12 +337,12 @@ class Setting extends AbstractEntity
     /**
      * Available values for ENUM and MULTIPLE setting types.
      *
-     * @var string
+     * @var string|null
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"setting"})
      * @Serializer\Type("string")
      */
-    private $defaultValues = "";
+    private $defaultValues;
 
     /**
      * @return string|null

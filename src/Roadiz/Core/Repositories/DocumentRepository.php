@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -20,6 +19,7 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 /**
  * Class DocumentRepository
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<Document>
  */
 class DocumentRepository extends EntityRepository
 {

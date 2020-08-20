@@ -21,6 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements search engine query with Solr.
+ * @extends StatusAwareRepository<\RZ\Roadiz\Core\Entities\NodesSources>
  */
 class NodesSourcesRepository extends StatusAwareRepository
 {
@@ -29,7 +30,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderNodesSourcesBuildEvent
+     * @return object|QueryBuilderNodesSourcesBuildEvent
      */
     protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
     {
@@ -45,7 +46,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderNodesSourcesApplyEvent
+     * @return object|QueryBuilderNodesSourcesApplyEvent
      */
     protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
     {
@@ -59,7 +60,7 @@ class NodesSourcesRepository extends StatusAwareRepository
     /**
      * @param Query  $query
      *
-     * @return QueryNodesSourcesEvent
+     * @return object|QueryNodesSourcesEvent
      */
     protected function dispatchQueryEvent(Query $query)
     {

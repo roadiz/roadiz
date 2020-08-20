@@ -27,10 +27,10 @@ class EmailManager
     /** @var string|null  */
     protected $emailType = null;
 
-    /** @var string|null  */
+    /** @var string|array|null  */
     private $receiver = null;
 
-    /** @var string|null  */
+    /** @var string|array|null  */
     private $sender = null;
 
     /** @var string|null  */

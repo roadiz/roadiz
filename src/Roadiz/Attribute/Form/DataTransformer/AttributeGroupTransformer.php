@@ -26,7 +26,7 @@ class AttributeGroupTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param AttributeGroup $attributeGroup
+     * @param AttributeGroup|null $attributeGroup
      * @return int|string
      */
     public function transform($attributeGroup)

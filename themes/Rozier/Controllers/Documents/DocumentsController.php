@@ -616,7 +616,7 @@ class DocumentsController extends RozierApp
      * Get random external document page.
      *
      * @param Request $request
-     * @param int     $folderId
+     * @param int|null $folderId
      *
      * @return Response
      */
@@ -1122,7 +1122,7 @@ class DocumentsController extends RozierApp
                 $finder->setKey($this->get('settingsBag')->get('soundcloud_client_id'));
             }
             $finder->setEmbedId($data['embedId']);
-            return $this->createDocumentFromFinder($finder, $folderId);
+            return $this->createDocumentFromFinder($finder, (int) $folderId);
         } else {
             throw new \RuntimeException("bad.request", 1);
         }
@@ -1140,7 +1140,7 @@ class DocumentsController extends RozierApp
     private function randomDocument($folderId = null)
     {
         $finder = new SplashbasePictureFinder();
-        return $this->createDocumentFromFinder($finder, $folderId);
+        return $this->createDocumentFromFinder($finder, (int) $folderId);
     }
 
     /**

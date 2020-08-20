@@ -26,6 +26,9 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements a simple countBy method.
+ *
+ * @template T
+ * @extends \Doctrine\ORM\EntityRepository<T>
  */
 class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface
 {
@@ -108,7 +111,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderBuildEvent
+     * @return object|QueryBuilderBuildEvent
      */
     protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
     {
@@ -126,7 +129,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     /**
      * @param Query $query
      *
-     * @return QueryEvent
+     * @return object|QueryEvent
      */
     protected function dispatchQueryEvent(Query $query)
     {
@@ -143,7 +146,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderApplyEvent
+     * @return object|QueryBuilderApplyEvent
      */
     protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
     {

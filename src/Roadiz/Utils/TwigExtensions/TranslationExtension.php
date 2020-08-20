@@ -54,7 +54,7 @@ class TranslationExtension extends AbstractExtension
     }
 
     /**
-     * @param string|Translation $mixed
+     * @param mixed $mixed
      *
      * @return bool
      */

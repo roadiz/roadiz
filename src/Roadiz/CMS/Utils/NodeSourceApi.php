@@ -19,7 +19,7 @@ class NodeSourceApi extends AbstractApi
     protected $repository = NodesSources::class;
 
     /**
-     * @param array $criteria
+     * @param array|null $criteria
      * @return string
      */
     protected function getRepositoryName(array $criteria = null)
@@ -40,9 +40,6 @@ class NodeSourceApi extends AbstractApi
         return $this->repository;
     }
 
-    /**
-     * @return NodesSourcesRepository
-     */
     public function getRepository()
     {
         return $this->container['em']->getRepository($this->repository);

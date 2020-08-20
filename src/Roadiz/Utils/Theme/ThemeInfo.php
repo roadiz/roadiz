@@ -252,15 +252,13 @@ final class ThemeInfo
     public function isValid(): bool
     {
         try {
-            if (null === $this->getClassname()) {
-                return false;
-            }
+            $className = $this->getClassname();
         } catch (\InvalidArgumentException $exception) {
             return false;
         }
 
         try {
-            $reflection = new ReflectionClass($this->getClassname());
+            $reflection = new ReflectionClass($className);
             if ($reflection->isSubclassOf(AppController::class)) {
                 return true;
             }

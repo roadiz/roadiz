@@ -6,13 +6,13 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTrait;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
-use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Entities
@@ -27,7 +27,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     use AttributeValueTrait;
 
     /**
-     * @var AttributeInterface
+     * @var Attribute|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Attribute", inversedBy="attributeValues", fetch="EAGER")
      * @ORM\JoinColumn(name="attribute_id", onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
@@ -36,7 +36,7 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
     protected $attribute;
 
     /**
-     * @var Collection<AttributeValueTranslationInterface>
+     * @var Collection<AttributeValueTranslation>
      * @ORM\OneToMany(
      *     targetEntity="RZ\Roadiz\Core\Entities\AttributeValueTranslation",
      *     mappedBy="attributeValue",
@@ -84,6 +84,17 @@ class AttributeValue extends AbstractPositioned implements AttributeValueInterfa
             return $this;
         }
         throw new \InvalidArgumentException('Attributable have to be an instance of Node.');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setAttribute(AttributeInterface $attribute)
+    {
+        if ($attribute instanceof Attribute) {
+            $this->attribute = $attribute;
+        }
+        return $this;
     }
 
     /**

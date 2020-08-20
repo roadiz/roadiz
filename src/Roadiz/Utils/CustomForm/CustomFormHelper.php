@@ -11,7 +11,6 @@ use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Utils\Document\AbstractDocumentFactory;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\FormFactory;
@@ -30,10 +29,14 @@ class CustomFormHelper
      */
     protected $documentFactory;
 
-    /** @var EntityManager */
+    /**
+     * @var EntityManager
+     */
     private $em;
 
-    /** @var CustomForm */
+    /**
+     * @var CustomForm
+     */
     private $customForm;
 
     /**
@@ -110,7 +113,7 @@ class CustomFormHelper
                         $this->em->persist($fieldAttr);
                     }
 
-                    if (is_array($data) && $data[0] instanceof UploadedFile) {
+                    if (is_array($data) && isset($data[0]) && $data[0] instanceof UploadedFile) {
                         /** @var UploadedFile $file */
                         foreach ($data as $file) {
                             $this->handleUploadedFile($file, $fieldAttr);
@@ -164,10 +167,10 @@ class CustomFormHelper
     }
 
     /**
-     * @param FormFactory      $formFactory
-     * @param CustomFormAnswer $answer
-     * @param bool             $forceExpanded
-     * @param array            $options Options passed to final form
+     * @param FormFactory           $formFactory
+     * @param CustomFormAnswer|null $answer
+     * @param bool                  $forceExpanded
+     * @param array                 $options Options passed to final form
      *
      * @return \Symfony\Component\Form\FormInterface
      * @throws \Exception
@@ -236,11 +239,11 @@ class CustomFormHelper
      */
     private function getAttribute(CustomFormAnswer $answer, CustomFormField $field): ?CustomFormFieldAttribute
     {
-        /** @var EntityRepository $repo */
-        $repo = $this->em->getRepository(CustomFormFieldAttribute::class);
-        return $repo->findOneBy([
+        /** @var CustomFormFieldAttribute|null $attribute */
+        $attribute = $this->em->getRepository(CustomFormFieldAttribute::class)->findOneBy([
             'customFormAnswer' => $answer,
             'customFormField' => $field,
         ]);
+        return $attribute;
     }
 }

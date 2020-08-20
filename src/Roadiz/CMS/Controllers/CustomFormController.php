@@ -98,7 +98,7 @@ class CustomFormController extends CmsController
      * Send an answer form by Email.
      *
      * @param array $assignation
-     * @param string|array $receiver
+     * @param string|array|null $receiver
      * @return bool
      * @throws Exception
      */

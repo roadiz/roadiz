@@ -5,6 +5,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\OpenId\OAuth2LinkGenerator;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
@@ -47,14 +48,18 @@ class LoginController extends RozierApp
         $this->assignation['last_username'] = $helper->getLastUsername();
         $this->assignation['error'] = $helper->getLastAuthenticationError();
 
-        /** @var OAuth2LinkGenerator $oauth2LinkGenerator */
-        $oauth2LinkGenerator = $this->get(OAuth2LinkGenerator::class);
-        if ($oauth2LinkGenerator->isSupported($request)) {
-            $this->assignation['openid_button_label'] = $this->get('settingsBag')->get('openid_button_label');
-            $this->assignation['openid'] = $oauth2LinkGenerator->generate(
-                $request,
-                $this->generateUrl('loginCheckPage', [], UrlGeneratorInterface::ABSOLUTE_URL)
-            );
+        try {
+            /** @var OAuth2LinkGenerator $oauth2LinkGenerator */
+            $oauth2LinkGenerator = $this->get(OAuth2LinkGenerator::class);
+            if ($oauth2LinkGenerator->isSupported($request)) {
+                $this->assignation['openid_button_label'] = $this->get('settingsBag')->get('openid_button_label');
+                $this->assignation['openid'] = $oauth2LinkGenerator->generate(
+                    $request,
+                    $this->generateUrl('loginCheckPage', [], UrlGeneratorInterface::ABSOLUTE_URL)
+                );
+            }
+        } catch (DiscoveryNotAvailableException $exception) {
+            $this->get('logger')->error($exception->getMessage());
         }
 
         return $this->render('login/login.html.twig', $this->assignation);

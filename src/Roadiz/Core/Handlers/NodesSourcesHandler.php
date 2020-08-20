@@ -242,7 +242,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @param array|null $criteria Additionnal criteria
      * @param array|null $order Non default ordering
      *
-     * @return array<NodesSources>
+     * @return array<object|NodesSources>
      */
     public function getChildren(
         array $criteria = null,
@@ -546,9 +546,9 @@ class NodesSourcesHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(Node::class)
-            ->findByReverseNodeAndFieldNameAndTranslation(
+            ->findByReverseNodeAndFieldAndTranslation(
                 $this->nodeSource->getNode(),
-                $fieldName,
+                $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName),
                 $this->nodeSource->getTranslation()
             );
     }

@@ -22,7 +22,7 @@ class TranslationTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param Translation $translation
+     * @param Translation|null $translation
      * @return int|string
      */
     public function transform($translation)

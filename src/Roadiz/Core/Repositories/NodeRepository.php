@@ -21,6 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * NodeRepository
+ * @extends StatusAwareRepository<\RZ\Roadiz\Core\Entities\Node>
  */
 class NodeRepository extends StatusAwareRepository
 {
@@ -29,7 +30,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderBuildEvent
+     * @return object|QueryBuilderBuildEvent
      */
     protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
     {
@@ -45,7 +46,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderApplyEvent
+     * @return object|QueryBuilderApplyEvent
      */
     protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
     {

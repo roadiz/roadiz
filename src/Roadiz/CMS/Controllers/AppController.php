@@ -406,8 +406,7 @@ abstract class AppController extends Controller
     public function getSession()
     {
         $request = $this->getRequest();
-
-        return $request && $request->hasPreviousSession() ? $request->getSession() : null;
+        return null !== $request && $request->hasPreviousSession() ? $request->getSession() : null;
     }
 
     /**
@@ -599,7 +598,7 @@ abstract class AppController extends Controller
             return;
         }
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {

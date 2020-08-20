@@ -32,22 +32,22 @@ class NodeTypesAddFieldCommand extends NodeTypesCreationCommand
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $name = $input->getArgument('name');
 
-        /** @var NodeType $nodetype */
-        $nodetype = $this->entityManager
+        /** @var NodeType|null $nodeType */
+        $nodeType = $this->entityManager
             ->getRepository(NodeType::class)
             ->findOneBy(['name' => $name]);
 
-        if ($nodetype !== null) {
+        if ($nodeType !== null) {
             $latestPosition = $this->entityManager
                 ->getRepository(NodeTypeField::class)
-                ->findLatestPositionInNodeType($nodetype);
-            $this->addNodeTypeField($nodetype, $latestPosition + 1, $io);
+                ->findLatestPositionInNodeType($nodeType);
+            $this->addNodeTypeField($nodeType, $latestPosition + 1, $io);
             $this->entityManager->flush();
 
-            $handler = $this->getHelper('handlerFactory')->getHandler($nodetype);
+            $handler = $this->getHelper('handlerFactory')->getHandler($nodeType);
             $handler->regenerateEntityClass();
 
-            $io->success('Node type ' . $nodetype->getName() . ' has been updated.' . PHP_EOL .
+            $io->success('Node type ' . $nodeType->getName() . ' has been updated.' . PHP_EOL .
                 'Do not forget to update database schema!' . PHP_EOL .
                 'bin/roadiz orm:schema-tool:update --dump-sql --force');
             return 0;

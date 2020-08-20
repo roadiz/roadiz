@@ -24,7 +24,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
     use AttributeValueTranslationTrait;
 
     /**
-     * @var string|float|int|bool|null
+     * @var string|null
      * @ORM\Column(type="string", nullable=true, unique=false, length=255)
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("string")
@@ -32,7 +32,7 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
     protected $value;
 
     /**
-     * @var Translation
+     * @var Translation|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation")
      * @ORM\JoinColumn(name="translation_id", onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
@@ -42,10 +42,21 @@ class AttributeValueTranslation extends AbstractEntity implements AttributeValue
     protected $translation;
 
     /**
-     * @var AttributeValueInterface
+     * @var AttributeValue|null
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", inversedBy="attributeValueTranslations", cascade={"persist"})
      * @ORM\JoinColumn(name="attribute_value", onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Exclude
      */
     protected $attributeValue;
+
+    /**
+     * @inheritDoc
+     */
+    public function setAttributeValue(AttributeValueInterface $attributeValue)
+    {
+        if ($attributeValue instanceof AttributeValue) {
+            $this->attributeValue = $attributeValue;
+        }
+        return $this;
+    }
 }

@@ -47,7 +47,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Get current request.
      *
-     * @return Request
+     * @return Request|null
      */
     public function getRequest()
     {
@@ -217,7 +217,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * @param null $_locale
+     * @param string|null $_locale
      *
      * @return Translation
      */
@@ -486,8 +486,9 @@ abstract class Controller implements ContainerAwareInterface
             throw new \LogicException('No TokenStorage has been registered in your application.');
         }
 
-        /** @var TokenInterface $token */
-        if (!$token = $this->container['securityTokenStorage']->getToken()) {
+        /** @var TokenInterface|null $token */
+        $token = $this->container['securityTokenStorage']->getToken();
+        if (null === $token) {
             return null;
         }
 

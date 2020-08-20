@@ -106,20 +106,24 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     protected function makeNodeRec($data)
     {
-        /** @var NodeType $nodetype */
+        /** @var NodeType|null $nodetype */
         $nodetype = $this->em->getRepository(NodeType::class)->findOneByName($data["node_type"]);
 
         /*
          * Check if node-type exists before importing nodes
          */
         if (null === $nodetype) {
-            throw new EntityNotFoundException('NodeType "' . $data["node_type"] . '" is not found on your website. Please import it before.');
+            throw new EntityNotFoundException(
+                'NodeType "' . $data["node_type"] . '" is not found on your website. Please import it before.'
+            );
         }
         /*
          * Check if home already exists
          */
         if ($data['home'] === true && $this->hasHome()) {
-            throw new EntityAlreadyExistsException('Node "' . $data["node_name"] . '" cannot be imported, your website already defines a home node.');
+            throw new EntityAlreadyExistsException(
+                'Node "' . $data["node_name"] . '" cannot be imported, your website already defines a home node.'
+            );
         }
 
         $node = new Node($nodetype);

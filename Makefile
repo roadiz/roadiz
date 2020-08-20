@@ -28,7 +28,7 @@ ngrok:
 
 test:
 	php bin/phpcs --report=full --report-file=./report.txt -p ./
-	php bin/phpstan analyse -c phpstan.neon -l 2 src
+	php bin/phpstan analyse -c phpstan.neon -l 4 src
 	php bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install themes/DefaultTheme
 
 unit:

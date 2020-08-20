@@ -39,27 +39,27 @@ class NodeTypesDeleteCommand extends Command
             throw new \InvalidArgumentException('Name must not be empty.');
         }
 
-        /** @var NodeType $nodetype */
-        $nodetype = $this->entityManager
+        /** @var NodeType|null $nodeType */
+        $nodeType = $this->entityManager
             ->getRepository(NodeType::class)
             ->findOneByName($name);
 
-        if ($nodetype !== null) {
+        if ($nodeType !== null) {
             $io->note('///////////////////////////////' . PHP_EOL .
                 '/////////// WARNING ///////////' . PHP_EOL .
                 '///////////////////////////////' . PHP_EOL .
                 'This operation cannot be undone.' . PHP_EOL .
                 'Deleting a node-type, you will automatically delete every nodes of this type.');
             $question = new ConfirmationQuestion(
-                '<question>Are you sure to delete ' . $nodetype->getName() . ' node-type?</question>',
+                '<question>Are you sure to delete ' . $nodeType->getName() . ' node-type?</question>',
                 false
             );
             if ($io->askQuestion(
                 $question
             )) {
-                $handler = $this->getHelper('handlerFactory')->getHandler($nodetype);
+                $handler = $this->getHelper('handlerFactory')->getHandler($nodeType);
                 $handler->removeSourceEntityClass();
-                $this->entityManager->remove($nodetype);
+                $this->entityManager->remove($nodeType);
                 $this->entityManager->flush();
                 $io->success('Node-type deleted.' . PHP_EOL .
                     'Do not forget to update database schema! ' . PHP_EOL .

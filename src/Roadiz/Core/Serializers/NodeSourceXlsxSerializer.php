@@ -51,7 +51,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     /**
      * Create a simple associative array with a NodeSource.
      *
-     * @param NodesSources|Collection|array $nodeSource
+     * @param NodesSources|Collection|array|null $nodeSource
      * @return array
      */
     public function toArray($nodeSource)

@@ -43,12 +43,10 @@ class UniversalDataDuplicator
          * Non-default translation source should not contain universal fields.
          */
         if ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source)) {
-            /** @var NodeTypeFieldRepository<NodeTypeField> $nodeTypeFieldRepository */
             $nodeTypeFieldRepository = $this->em->getRepository(NodeTypeField::class);
             $universalFields = $nodeTypeFieldRepository->findAllUniversal($source->getNode()->getNodeType());
 
             if (count($universalFields) > 0) {
-                /** @var NodesSourcesRepository<NodesSources> $repository */
                 $repository = $this->em->getRepository(NodesSources::class);
                 $repository->setDisplayingAllNodesStatuses(true)
                     ->setDisplayingNotPublishedNodes(true)
@@ -86,16 +84,19 @@ class UniversalDataDuplicator
 
     /**
      * @param NodesSources $source
+     *
      * @return bool
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     private function hasDefaultTranslation(NodesSources $source)
     {
-        /** @var TranslationRepository<Translation> $translationRepository */
+        /** @var TranslationRepository $translationRepository */
         $translationRepository = $this->em->getRepository(Translation::class);
         /** @var Translation $defaultTranslation */
         $defaultTranslation = $translationRepository->findDefault();
 
-        /** @var NodesSourcesRepository<NodesSources> $repository */
+        /** @var NodesSourcesRepository $repository */
         $repository = $this->em->getRepository(NodesSources::class);
         $sourceCount = $repository->setDisplayingAllNodesStatuses(true)
             ->setDisplayingNotPublishedNodes(true)
@@ -145,8 +146,8 @@ class UniversalDataDuplicator
         }
         /* Add new documents */
         if (count($newDocuments) > 0) {
-            /** @var NodesSourcesDocuments $newDocument */
             $position = 1;
+            /** @var NodesSourcesDocuments $newDocument */
             foreach ($newDocuments as $newDocument) {
                 $nsDoc = new NodesSourcesDocuments($destSource, $newDocument->getDocument(), $field);
                 $nsDoc->setPosition($position);

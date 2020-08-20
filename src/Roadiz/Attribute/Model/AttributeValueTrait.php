@@ -44,7 +44,7 @@ trait AttributeValueTrait
     }
 
     /**
-     * @param Collection<AttributeValueTranslationInterface> $attributeValueTranslations
+     * @param Collection $attributeValueTranslations
      *
      * @return mixed
      */

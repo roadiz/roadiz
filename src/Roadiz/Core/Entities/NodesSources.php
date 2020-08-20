@@ -55,7 +55,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @var Node
+     * @var Node|null
      * @ORM\ManyToOne(targetEntity="Node", inversedBy="nodeSources", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "log_sources"})
@@ -96,7 +96,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @var Translation
+     * @var Translation|null
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"nodes_sources", "log_sources"})
@@ -123,13 +123,13 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource", cascade={"remove"})
-     * @var ArrayCollection
+     * @var Collection<UrlAlias>
      * @Serializer\Groups({"nodes_sources"})
      */
     private $urlAliases;
 
     /**
-     * @return Collection
+     * @return Collection<UrlAlias>
      */
     public function getUrlAliases(): Collection
     {
@@ -158,13 +158,13 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      *     cascade={"persist"},
      *     fetch="LAZY"
      * )
-     * @var ArrayCollection
+     * @var Collection<NodesSourcesDocuments>
      * @Serializer\Exclude
      */
     private $documentsByFields;
 
     /**
-     * @return Collection|ArrayCollection
+     * @return Collection<NodesSourcesDocuments>
      */
     public function getDocumentsByFields(): Collection
     {
@@ -247,7 +247,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Log", mappedBy="nodeSource")
      * @ORM\OrderBy({"datetime" = "DESC"})
-     * @var ArrayCollection
+     * @var Collection<Log>
      * @Serializer\Exclude
      */
     protected $logs;
@@ -255,7 +255,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     /**
      * Logs related to this node-source.
      *
-     * @return Collection
+     * @return Collection<Log>
      */
     public function getLogs(): Collection
     {
@@ -301,7 +301,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     }
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base"})
      * @Gedmo\Versioned

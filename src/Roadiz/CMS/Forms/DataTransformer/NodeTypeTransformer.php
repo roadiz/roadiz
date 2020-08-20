@@ -26,7 +26,7 @@ class NodeTypeTransformer implements DataTransformerInterface
     }
 
     /**
-     * @param NodeType $nodeType
+     * @param NodeType|null $nodeType
      * @return int|string
      */
     public function transform($nodeType)

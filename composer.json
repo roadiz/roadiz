@@ -90,8 +90,8 @@
         "guzzlehttp/psr7": "^1.6",
         "php-coveralls/php-coveralls": "^2.1",
         "php-http/guzzle6-adapter": "^2.0",
-        "phpstan/phpstan": "^0.11.19",
-        "phpstan/phpstan-doctrine": "^0.11.6",
+        "phpstan/phpstan": "^0.12.33",
+        "phpstan/phpstan-doctrine": "^0.12.19",
         "phpunit/phpunit": "^5.7.27",
         "sentry/sentry": "^2.2",
         "squizlabs/php_codesniffer": "@stable"

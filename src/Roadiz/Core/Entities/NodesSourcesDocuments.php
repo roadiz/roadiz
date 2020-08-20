@@ -22,21 +22,21 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources", inversedBy="documentsByFields", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="ns_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var NodesSources
+     * @var NodesSources|null
      */
     protected $nodeSource;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="nodesSourcesByFields", fetch="EAGER", cascade={"persist"})
      * @ORM\JoinColumn(name="document_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Document
+     * @var Document|null
      */
     protected $document;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var NodeTypeField
+     * @var NodeTypeField|null
      */
     protected $field;
 
@@ -65,9 +65,9 @@ class NodesSourcesDocuments extends AbstractPositioned
     /**
      * Gets the value of nodeSource.
      *
-     * @return NodesSources
+     * @return NodesSources|null
      */
-    public function getNodeSource(): NodesSources
+    public function getNodeSource(): ?NodesSources
     {
         return $this->nodeSource;
     }

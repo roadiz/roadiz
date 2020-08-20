@@ -422,7 +422,6 @@ class UrlAliasesController extends RozierApp
 
         /** @var FormFactory $formFactory */
         $formFactory = $this->get('formFactory');
-        /** @var FormInterface $editForm */
         $addForm = $formFactory->createNamedBuilder(
             'add_redirection',
             RedirectionType::class,

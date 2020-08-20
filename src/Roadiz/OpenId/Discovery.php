@@ -5,6 +5,7 @@ namespace RZ\Roadiz\OpenId;
 
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 use Jose\Component\Core\JWKSet;
 use RZ\Roadiz\Core\Bags\LazyParameterBag;
 
@@ -48,14 +49,18 @@ class Discovery extends LazyParameterBag
         if (null !== $this->cacheProvider && $this->cacheProvider->contains(static::CACHE_KEY)) {
             $parameters = $this->cacheProvider->fetch(static::CACHE_KEY);
         } else {
-            $client = new Client([
-                // You can set any number of default request options.
-                'timeout'  => 2.0,
-            ]);
-            $response = $client->get($this->discoveryUri);
-            $parameters = json_decode($response->getBody()->getContents(), true);
-            if (null !== $this->cacheProvider) {
-                $this->cacheProvider->save(static::CACHE_KEY, $parameters);
+            try {
+                $client = new Client([
+                    // You can set any number of default request options.
+                    'timeout'  => 2.0,
+                ]);
+                $response = $client->get($this->discoveryUri);
+                $parameters = json_decode($response->getBody()->getContents(), true);
+                if (null !== $this->cacheProvider) {
+                    $this->cacheProvider->save(static::CACHE_KEY, $parameters);
+                }
+            } catch (RequestException $exception) {
+                return;
             }
         }
 

@@ -52,5 +52,6 @@ class DefaultThemeCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
         $io->note('This is a custom example command defined from DefaultTheme.');
+        return 0;
     }
 }

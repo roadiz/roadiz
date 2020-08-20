@@ -90,11 +90,10 @@ class RedirectionMatcher extends UrlMatcher
 
     /**
      * @param string $decodedUrl
-     * @return Redirection
+     * @return Redirection|null
      */
     protected function matchRedirection(string $decodedUrl): ?Redirection
     {
-        /** @var Redirection|null $redirection */
         return $this->repository->findOneByQuery($decodedUrl);
     }
 }

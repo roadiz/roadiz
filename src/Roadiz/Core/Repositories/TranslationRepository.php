@@ -12,6 +12,7 @@ use RZ\Roadiz\Core\Entities\Translation;
  * Class TranslationRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Translation>
  */
 class TranslationRepository extends EntityRepository
 {

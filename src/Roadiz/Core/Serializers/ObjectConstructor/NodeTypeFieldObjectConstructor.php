@@ -23,10 +23,10 @@ class NodeTypeFieldObjectConstructor extends AbstractTypedObjectConstructor
      */
     protected function findObject($data, DeserializationContext $context): ?object
     {
-        if (null === $data['name'] || $data['name'] === '') {
+        if (empty($data['name'])) {
             throw new ObjectConstructionException('NodeTypeField name can not be empty');
         }
-        if (empty($data['nodeTypeName']) || null === $data['nodeTypeName'] || $data['nodeTypeName'] === '') {
+        if (empty($data['nodeTypeName'])) {
             throw new ObjectConstructionException('nodeTypeName is missing to check duplication.');
         }
 

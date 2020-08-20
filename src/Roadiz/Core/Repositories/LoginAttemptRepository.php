@@ -5,6 +5,12 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use RZ\Roadiz\Core\Entities\LoginAttempt;
 
+/**
+ * Class LoginAttemptRepository
+ *
+ * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<LoginAttempt>
+ */
 class LoginAttemptRepository extends EntityRepository
 {
     /**
@@ -25,7 +31,7 @@ class LoginAttemptRepository extends EntityRepository
                 'now' =>  new \DateTime('now'),
                 'username' => $username,
             ])
-            ->getSingleScalarResult() > 0 ? true : false
+            ->getSingleScalarResult() > 0
         ;
     }
 
@@ -34,10 +40,12 @@ class LoginAttemptRepository extends EntityRepository
      * in the last 5 minutes.
      *
      * @param string $ipAddress
-     * @param int $seconds
-     * @param int $count
+     * @param int    $seconds
+     * @param int    $count
      *
      * @return bool
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function isIpAddressBlocked(string $ipAddress, int $seconds = 1200, int $count = 10): bool
     {
@@ -57,9 +65,13 @@ class LoginAttemptRepository extends EntityRepository
     /**
      * @param string $ipAddress
      * @param string $username
+     *
+     * @return LoginAttempt
+     * @throws \Doctrine\ORM\ORMException
      */
     public function findOrCreateOneByIpAddressAndUsername(string $ipAddress, string $username): LoginAttempt
     {
+        /** @var LoginAttempt|null $loginAttempt */
         $loginAttempt = $this->findOneBy([
             'ipAddress' => $ipAddress,
             'username' => $username,

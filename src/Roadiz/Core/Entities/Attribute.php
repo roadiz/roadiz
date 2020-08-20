@@ -6,13 +6,11 @@ namespace RZ\Roadiz\Core\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeTrait;
-use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
-use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Entities
@@ -62,7 +60,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
     protected $color = null;
 
     /**
-     * @var AttributeGroupInterface|null
+     * @var AttributeGroup|null
      * @ORM\ManyToOne(
      *     targetEntity="RZ\Roadiz\Core\Entities\AttributeGroup",
      *     inversedBy="attributes",
@@ -76,7 +74,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
     protected $group = null;
 
     /**
-     * @var Collection<AttributeTranslationInterface>
+     * @var Collection<AttributeTranslation>
      * @ORM\OneToMany(
      *     targetEntity="RZ\Roadiz\Core\Entities\AttributeTranslation",
      *     mappedBy="attribute",
@@ -91,7 +89,7 @@ class Attribute extends AbstractEntity implements AttributeInterface
     protected $attributeTranslations;
 
     /**
-     * @var Collection<AttributeValueInterface>
+     * @var Collection<AttributeValue>
      * @ORM\OneToMany(
      *     targetEntity="RZ\Roadiz\Core\Entities\AttributeValue",
      *     mappedBy="attribute",
@@ -111,11 +109,11 @@ class Attribute extends AbstractEntity implements AttributeInterface
      *     cascade={"persist", "merge"}
      * )
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var Collection<AttributeDocuments>|null
+     * @var Collection<AttributeDocuments>
      * @Serializer\Exclude
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\AttributeDocuments>")
      */
-    protected $attributeDocuments = null;
+    protected $attributeDocuments;
 
     /**
      * Attribute constructor.
@@ -128,19 +126,19 @@ class Attribute extends AbstractEntity implements AttributeInterface
     }
 
     /**
-     * @return ArrayCollection|null
+     * @return Collection<AttributeDocuments>
      */
-    public function getAttributeDocuments(): ?Collection
+    public function getAttributeDocuments(): Collection
     {
         return $this->attributeDocuments;
     }
 
     /**
-     * @param Collection|null $attributeDocuments
+     * @param Collection $attributeDocuments
      *
      * @return Attribute
      */
-    public function setAttributeDocuments(?Collection $attributeDocuments): Attribute
+    public function setAttributeDocuments(Collection $attributeDocuments): Attribute
     {
         $this->attributeDocuments = $attributeDocuments;
 
@@ -148,7 +146,20 @@ class Attribute extends AbstractEntity implements AttributeInterface
     }
 
     /**
-     * @return Collection
+     * @param AttributeGroupInterface|null $group
+     *
+     * @return $this
+     */
+    public function setGroup(?AttributeGroupInterface $group)
+    {
+        if ($group instanceof AttributeGroup) {
+            $this->group = $group;
+        }
+        return $this;
+    }
+
+    /**
+     * @return Collection<Document>
      * @Serializer\SerializedName("documents")
      * @Serializer\VirtualProperty()
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})

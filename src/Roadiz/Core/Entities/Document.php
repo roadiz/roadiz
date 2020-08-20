@@ -33,7 +33,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"document"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
-     * @var DocumentInterface|null
+     * @var Document|null
      */
     protected $rawDocument = null;
     /**
@@ -56,38 +56,39 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     protected $embedPlatform = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\NodesSourcesDocuments", mappedBy="document")
-     * @var ArrayCollection
+     * @var Collection<NodesSourcesDocuments>
      * @Serializer\Exclude
      */
-    protected $nodesSourcesByFields = null;
+    protected $nodesSourcesByFields;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\TagTranslationDocuments", mappedBy="document")
-     * @var ArrayCollection
+     * @var Collection<TagTranslationDocuments>
      * @Serializer\Exclude
      */
-    protected $tagTranslations = null;
+    protected $tagTranslations;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeDocuments", mappedBy="document")
-     * @var ArrayCollection
+     * @var Collection<AttributeDocuments>
      * @Serializer\Exclude
      */
-    protected $attributeDocuments = null;
+    protected $attributeDocuments;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="documents")
-     * @var ArrayCollection
+     * @var Collection<CustomFormFieldAttribute>
      * @Serializer\Exclude
      */
-    protected $customFormFieldAttributes = null;
+    protected $customFormFieldAttributes;
     /**
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Folder", mappedBy="documents")
      * @ORM\JoinTable(name="documents_folders")
      * @Serializer\Groups({"document"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Folder>")
+     * @var Collection<Folder>
      */
     protected $folders;
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="document", orphanRemoval=true, fetch="EAGER")
-     * @var ArrayCollection
+     * @var Collection<DocumentTranslation>
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\DocumentTranslation>")
      */
@@ -96,30 +97,34 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @ORM\Column(type="string", nullable=true)
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
+     * @var string|null
      */
     private $filename;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
+     * @var string|null
      */
     private $mimeType;
     /**
      * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
      * @Serializer\Exclude
-     * @var DocumentInterface|null
+     * @var Document|null
      */
     private $downscaledDocument = null;
     /**
      * @ORM\Column(type="string")
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
+     * @var string
      */
     private $folder;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("bool")
+     * @var bool
      */
     private $private = false;
     /**
@@ -128,14 +133,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $imageWidth = 0;
+    private $imageWidth;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $imageHeight = 0;
+    private $imageHeight;
     /**
      * @var string|null
      * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
@@ -152,7 +157,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     private $filesize;
 
     /**
-     * @var ArrayCollection<Document>
+     * @var Collection<Document>
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", mappedBy="original")
      * @Serializer\Groups({"document_thumbnails"})
      * @Serializer\MaxDepth(2)
@@ -308,7 +313,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<NodesSourcesDocuments>
      */
     public function getNodesSourcesByFields()
     {
@@ -316,7 +321,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<TagTranslationDocuments>
      */
     public function getTagTranslations()
     {
@@ -324,7 +329,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<AttributeDocuments>
      */
     public function getAttributeDocuments(): Collection
     {
@@ -345,7 +350,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<Folder>
      */
     public function getFolders()
     {
@@ -391,7 +396,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<DocumentTranslation>
      */
     public function getDocumentTranslations()
     {
@@ -425,7 +430,9 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     public function setRawDocument(DocumentInterface $rawDocument = null)
     {
-        $this->rawDocument = $rawDocument;
+        if ($rawDocument instanceof Document) {
+            $this->rawDocument = $rawDocument;
+        }
 
         return $this;
     }
@@ -618,7 +625,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     public function setOriginal(?HasThumbnailInterface $original): Document
     {
-        if ($original !== $this) {
+        if ($original !== $this && $original instanceof Document) {
             $this->original = $original;
         }
 

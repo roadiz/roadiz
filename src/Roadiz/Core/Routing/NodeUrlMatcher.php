@@ -163,10 +163,11 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         );
                     if (null !== $array) {
                         $fqcn = NodeType::getGeneratedEntitiesNamespace() . '\\NS' . ucwords($array['name']);
-                        /** @var NodesSources $nodeSource */
-                        return $this->em->getRepository($fqcn)->findOneBy([
+                        /** @var NodesSources|null $nodeSource */
+                        $nodeSource = $this->em->getRepository($fqcn)->findOneBy([
                             'id' => $array['id']
                         ]);
+                        return $nodeSource;
                     }
                 }
             }

@@ -53,7 +53,7 @@ class CustomFormField extends AbstractField
     private $customForm = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
-     * @var ArrayCollection
+     * @var Collection<CustomFormFieldAttribute>
      */
     private $customFormFieldAttributes;
     /**

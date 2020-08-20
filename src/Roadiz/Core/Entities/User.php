@@ -42,14 +42,14 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     protected $sendCreationConfirmationEmail;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="string", name="facebook_name", unique=false, nullable=true)
      * @Serializer\Groups({"user"})
      */
     protected $facebookName = null;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="text", name="picture_url", nullable=true)
      * @Serializer\Groups({"user"})
      */
@@ -63,13 +63,13 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(name="confirmation_token", type="string", unique=true, nullable=true)
      * @Serializer\Groups({"user"})
-     * @var string
+     * @var string|null
      */
     protected $confirmationToken;
     /**
      * @ORM\Column(name="password_requested_at", type="datetime", nullable=true)
      * @Serializer\Groups({"user"})
-     * @var \DateTime
+     * @var \DateTime|null
      */
     protected $passwordRequestedAt;
     /**
@@ -103,13 +103,13 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      */
     private $plainPassword = null;
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      * @ORM\Column(name="last_login", type="datetime", nullable=true)
      * @Serializer\Groups({"user"})
      */
     private $lastLogin;
     /**
-     * @var ArrayCollection
+     * @var Collection<Role>
      * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Role")
      * @Serializer\Groups({"user_role"})
      * @Serializer\Accessor(getter="getRolesEntities",setter="setRolesEntities")
@@ -123,7 +123,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      * Names of current User roles
      * to be compatible with symfony security scheme
      *
-     * @var array
+     * @var array<string>
      * @Serializer\Groups({"user"})
      */
     private $rolesNames = null;
@@ -133,7 +133,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
      * )
-     * @var ArrayCollection<Group>
+     * @var Collection<Group>
      * @Serializer\Groups({"user_group"})
      */
     private $groups;
@@ -152,7 +152,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(name="credentials_expires_at", type="datetime", nullable=true)
      * @Serializer\Groups({"user"})
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $credentialsExpiresAt;
     /**
@@ -164,14 +164,14 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
     /**
      * @ORM\Column(name="expires_at", type="datetime", nullable=true)
      * @Serializer\Groups({"user"})
-     * @var \DateTime
+     * @var \DateTime|null
      */
     private $expiresAt;
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
      * @ORM\JoinColumn(name="chroot_id", referencedColumnName="id", onDelete="SET NULL")
      * @Serializer\Groups({"user"})
-     * @var Node
+     * @var Node|null
      */
     private $chroot;
 

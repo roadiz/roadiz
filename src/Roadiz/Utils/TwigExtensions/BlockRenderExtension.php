@@ -39,7 +39,7 @@ class BlockRenderExtension extends AbstractExtension
     }
 
     /**
-     * @param NodesSources $nodeSource
+     * @param NodesSources|null $nodeSource
      * @param string $themeName
      * @param array $assignation
      *
@@ -50,10 +50,7 @@ class BlockRenderExtension extends AbstractExtension
     {
         if (null !== $nodeSource) {
             if (!empty($themeName)) {
-                $class = '\\Themes\\' . $themeName .
-                '\\Controllers\\Blocks\\' .
-                $nodeSource->getNode()->getNodeType()->getName() .
-                'Controller';
+                $class = $this->getNodeSourceControllerName($nodeSource, $themeName);
                 if (class_exists($class) && method_exists($class, 'blockAction')) {
                     $controllerReference = new ControllerReference($class. '::blockAction', [
                         'source' => $nodeSource,
@@ -74,5 +71,17 @@ class BlockRenderExtension extends AbstractExtension
             }
         }
         throw new RuntimeError("Invalid NodesSources.");
+    }
+
+    /**
+     * @param NodesSources $nodeSource
+     * @param string       $themeName
+     *
+     * @return string
+     */
+    protected function getNodeSourceControllerName(NodesSources $nodeSource, string $themeName): string
+    {
+        return '\\Themes\\' . $themeName . '\\Controllers\\Blocks\\' .
+                $nodeSource->getNode()->getNodeType()->getName() . 'Controller';
     }
 }

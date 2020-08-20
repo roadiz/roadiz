@@ -5,7 +5,6 @@ namespace RZ\Roadiz\Utils\Security;
 
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Repositories\RoleRepository;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 /**
@@ -21,7 +20,6 @@ class DoctrineRoleHierarchy extends RoleHierarchy
     public function __construct(EntityManager $em = null)
     {
         if (null !== $em) {
-            /** @var RoleRepository<Role> $roleRepository */
             $roleRepository = $em->getRepository(Role::class);
             $hierarchy = [
                 Role::ROLE_SUPERADMIN => $roleRepository->getAllBasicRoleName(),

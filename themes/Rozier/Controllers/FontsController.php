@@ -109,7 +109,6 @@ class FontsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
 
-        /** @var Font $font */
         $font = $this->get('em')->find(Font::class, (int) $fontId);
 
         if (null !== $font) {

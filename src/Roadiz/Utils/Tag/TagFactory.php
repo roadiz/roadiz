@@ -48,7 +48,6 @@ final class TagFactory implements ContainerAwareInterface
 
         /** @var EntityManager $entityManager */
         $entityManager = $this->get('em');
-        /** @var TagRepository $repository */
         $repository = $entityManager->getRepository(Tag::class);
 
         if (null !== $tag = $repository->findOneByTagName($tagName)) {
