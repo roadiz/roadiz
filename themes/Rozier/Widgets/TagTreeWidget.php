@@ -71,11 +71,11 @@ class TagTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param Tag $parent
+     * @param Tag|null $parent
      *
      * @return ArrayCollection|null
      */
-    public function getChildrenTags(Tag $parent)
+    public function getChildrenTags(?Tag $parent)
     {
         if ($parent !== null) {
             $ordering = [

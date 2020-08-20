@@ -198,7 +198,6 @@ class SearchController extends RozierApp
      */
     public function searchNodeAction(Request $request)
     {
-        /** @var Form $form */
         $builder = $this->buildSimpleForm('');
         $form = $this->addButtons($builder)->getForm();
         $form->handleRequest($request);

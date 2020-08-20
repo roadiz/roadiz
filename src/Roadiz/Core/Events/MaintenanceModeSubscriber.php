@@ -75,7 +75,6 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
                 if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
                     /** @var ThemeResolverInterface $themeResolver */
                     $themeResolver = $this->container['themeResolver'];
-                    /** @var Theme $theme */
                     $theme = $themeResolver->findTheme(null);
                     if (null !== $theme) {
                         throw new MaintenanceModeException($this->getControllerForTheme($theme, $event->getRequest()));

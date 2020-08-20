@@ -56,7 +56,7 @@ class NodeTypeField extends AbstractField
     private $nodeType;
 
     /**
-     * @return NodeType
+     * @return NodeType|null
      */
     public function getNodeType()
     {

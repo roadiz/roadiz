@@ -217,7 +217,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * @param null $_locale
+     * @param string|null $_locale
      *
      * @return Translation
      */

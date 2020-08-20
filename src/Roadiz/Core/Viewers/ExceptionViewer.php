@@ -77,8 +77,7 @@ class ExceptionViewer
         } elseif ($exception instanceof MaintenanceModeException) {
             return Response::HTTP_SERVICE_UNAVAILABLE;
         } elseif ($exception instanceof AccessDeniedException ||
-            $exception instanceof AccessDeniedHttpException ||
-            $exception instanceof PreviewNotAllowedException) {
+            $exception instanceof AccessDeniedHttpException) {
             return Response::HTTP_FORBIDDEN;
         }
 
@@ -91,12 +90,12 @@ class ExceptionViewer
      */
     public function getHumanExceptionTitle(\Exception $e): string
     {
-        if ($e instanceof InvalidConfigurationException) {
-            return "Roadiz configuration is not valid.";
-        }
-
         if ($e instanceof NoConfigurationFoundException) {
             return "No configuration file has been found. Did you run composer install before using Roadiz?";
+        }
+
+        if ($e instanceof InvalidConfigurationException) {
+            return "Roadiz configuration is not valid.";
         }
 
         if ($e instanceof ResourceNotFoundException ||
@@ -114,8 +113,7 @@ class ExceptionViewer
         }
 
         if ($e instanceof AccessDeniedException ||
-            $e instanceof AccessDeniedHttpException ||
-            $e instanceof PreviewNotAllowedException) {
+            $e instanceof AccessDeniedHttpException) {
             return "Oups! Wrong way, you are not supposed to be here.";
         }
 
@@ -128,12 +126,12 @@ class ExceptionViewer
      */
     public function getJsonError(\Exception $e): string
     {
-        if ($e instanceof InvalidConfigurationException) {
-            return "invalid_configuration";
-        }
-
         if ($e instanceof NoConfigurationFoundException) {
             return "no_configuration_file";
+        }
+
+        if ($e instanceof InvalidConfigurationException) {
+            return "invalid_configuration";
         }
 
         if ($e instanceof ResourceNotFoundException ||
@@ -151,8 +149,7 @@ class ExceptionViewer
         }
 
         if ($e instanceof AccessDeniedException ||
-            $e instanceof AccessDeniedHttpException ||
-            $e instanceof PreviewNotAllowedException) {
+            $e instanceof AccessDeniedHttpException) {
             return "access_denied";
         }
 

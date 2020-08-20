@@ -131,13 +131,10 @@ class CustomFormsType extends AbstractType
             case AbstractField::ENUM_T:
             case AbstractField::MULTIPLE_T:
                 return ChoiceType::class;
-                break;
             case AbstractField::DOCUMENTS_T:
                 return FileType::class;
-                break;
             case AbstractField::MARKDOWN_T:
                 return MarkdownType::class;
-                break;
             default:
                 return NodeSourceType::getFormTypeFromFieldType($field);
         }
