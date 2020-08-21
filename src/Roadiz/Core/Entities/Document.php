@@ -53,7 +53,7 @@ class Document extends AbstractDocument
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="CASCADE")
+     * @ORM\JoinColumn(name="raw_document", referencedColumnName="id", onDelete="SET NULL")
      * @Serializer\Groups({"document"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      * @var DocumentInterface|null
