@@ -7,6 +7,7 @@ namespace RZ\Roadiz\Core\Repositories;
  * Class NodeTypeRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\NodeType>
  */
 class NodeTypeRepository extends EntityRepository
 {
@@ -19,22 +20,6 @@ class NodeTypeRepository extends EntityRepository
         $qb->addSelect('ntf')
             ->leftJoin('nt.fields', 'ntf')
             ->addOrderBy('nt.name', 'ASC')
-            ->setCacheable(true);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Get all newsletter node-types.
-     *
-     * @return array
-     */
-    public function findAllNewsletterType()
-    {
-        $qb = $this->createQueryBuilder('nt');
-        $qb->addSelect('ntf')
-            ->innerJoin('nt.fields', 'ntf')
-            ->andWhere($qb->expr()->eq('nt.newsletterType', true))
             ->setCacheable(true);
 
         return $qb->getQuery()->getResult();

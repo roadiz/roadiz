@@ -27,11 +27,14 @@
                         <thead>
                         <tr>
                             <th class="mobile-hidden">
-                                {% trans %}ip{% endtrans %}
+                                {% trans %}ip.address{% endtrans %}
                                 {% include 'includes/column_ordering.html.twig' with {
                                     'field': 'ip',
                                     'filters': filters,
                                 } only %}
+                            </th>
+                            <th class="mobile-hidden">
+                                {% trans %}email{% endtrans %}
                             </th>
                             <th>
                                 {% trans %}submitted.date{% endtrans %}
@@ -47,6 +50,7 @@
                         {% for type in custom_form_answers %}
                             <tr>
                                 <td class="mobile-hidden">{{ type.ip }}</td>
+                                <td class="mobile-hidden">{{ type.email }}</td>
                                 <td>{{ type.submittedAt|localizeddate('short') }}</td>
                                 <td class="table-actions-row table-actions-row-2">
                                     {% spaceless %}

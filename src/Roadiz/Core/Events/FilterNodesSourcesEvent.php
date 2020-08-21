@@ -4,15 +4,14 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class FilterNodesSourcesEvent
  *
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
-class FilterNodesSourcesEvent extends Event
+abstract class FilterNodesSourcesEvent extends Event
 {
     /**
      * @var NodesSources

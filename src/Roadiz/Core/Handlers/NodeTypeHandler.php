@@ -7,12 +7,14 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Pimple\Container;
+use RuntimeException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use RZ\Roadiz\Utils\Doctrine\Generators\AbstractFieldGenerator;
 use RZ\Roadiz\Utils\Doctrine\Generators\EntityGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -108,7 +110,11 @@ class NodeTypeHandler extends AbstractHandler
         }
 
         if (!$fileSystem->exists($file)) {
-            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag']);
+            $options = [
+                AbstractFieldGenerator::USE_NATIVE_JSON => $this->container['settingsBag']
+                    ->get(AbstractFieldGenerator::USE_NATIVE_JSON, false)
+            ];
+            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag'], $options);
             $content = $classGenerator->getClassContent();
 
             if (false === @file_put_contents($file, $content)) {
@@ -246,88 +252,83 @@ class NodeTypeHandler extends AbstractHandler
      *
      * This method does not flush ORM. You'll need to manually call it.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeType $newNodeType
+     * @param NodeType $newNodeType
      * @deprecated Use deserialization and denormalization.
      *
-     * @throws \RuntimeException If newNodeType param is null
+     * @throws RuntimeException If newNodeType param is null
      */
     public function diff(NodeType $newNodeType)
     {
-        if (null !== $newNodeType) {
-            /*
-             * Override display name
-             */
-            if ("" != $newNodeType->getDisplayName()) {
-                $this->nodeType->setDisplayName($newNodeType->getDisplayName());
-            }
-            /*
-             * Override description
-             */
-            if ("" != $newNodeType->getDescription()) {
-                $this->nodeType->setDescription($newNodeType->getDescription());
-            }
-            /*
-             * Override color
-             */
-            if ("" != $newNodeType->getColor()) {
-                $this->nodeType->setColor($newNodeType->getColor());
-            }
-            /*
-             * Override booleans
-             */
-            $this->nodeType->setVisible($newNodeType->isVisible());
-            $this->nodeType->setHidingNodes($newNodeType->isHidingNodes());
-            $this->nodeType->setNewsletterType($newNodeType->isNewsletterType());
-            $this->nodeType->setPublishable($newNodeType->isPublishable());
-            $this->nodeType->setReachable($newNodeType->isReachable());
+        /*
+         * Override display name
+         */
+        if ("" != $newNodeType->getDisplayName()) {
+            $this->nodeType->setDisplayName($newNodeType->getDisplayName());
+        }
+        /*
+         * Override description
+         */
+        if ("" != $newNodeType->getDescription()) {
+            $this->nodeType->setDescription($newNodeType->getDescription());
+        }
+        /*
+         * Override color
+         */
+        if ("" != $newNodeType->getColor()) {
+            $this->nodeType->setColor($newNodeType->getColor());
+        }
+        /*
+         * Override booleans
+         */
+        $this->nodeType->setVisible($newNodeType->isVisible());
+        $this->nodeType->setHidingNodes($newNodeType->isHidingNodes());
+        $this->nodeType->setPublishable($newNodeType->isPublishable());
+        $this->nodeType->setReachable($newNodeType->isReachable());
 
-            /*
-             * make fields diff
-             */
-            $existingFieldsNames = $this->nodeType->getFieldsNames();
-            $position = 1;
-            /** @var NodeTypeField $newField */
-            foreach ($newNodeType->getFields() as $newField) {
-                if (false === in_array($newField->getName(), $existingFieldsNames)) {
-                    /*
-                     * Field does not exist in type,
-                     * creating it.
-                     */
-                    $newField->setNodeType($this->nodeType);
-                    $newField->setPosition($position);
-                    $this->objectManager->persist($newField);
-                } else {
-                    /*
-                     * Field already exists.
-                     * Updating it.
-                     */
-                    /** @var NodeTypeField $oldField */
-                    $oldField = $this->objectManager
-                        ->getRepository(NodeTypeField::class)
-                        ->findOneBy([
-                            'nodeType' => $this->nodeType,
-                            'name' => $newField->getName(),
-                        ]);
-                    if (null !== $oldField) {
-                        $oldField->setVisible($newField->isVisible());
-                        $oldField->setIndexed($newField->isIndexed());
-                        $oldField->setUniversal($newField->isUniversal());
-                        $oldField->setDefaultValues($newField->getDefaultValues());
-                        $oldField->setDescription($newField->getDescription());
-                        $oldField->setLabel($newField->getLabel());
-                        $oldField->setGroupName($newField->getGroupName());
-                        $oldField->setMinLength($newField->getMinLength());
-                        $oldField->setMaxLength($newField->getMaxLength());
-                        $oldField->setExpanded($newField->isExpanded());
-                        $oldField->setPlaceholder($newField->getPlaceholder());
-                        $oldField->setPosition($position);
-                    }
+        /*
+         * make fields diff
+         */
+        $existingFieldsNames = $this->nodeType->getFieldsNames();
+        $position = 1;
+        /** @var NodeTypeField $newField */
+        foreach ($newNodeType->getFields() as $newField) {
+            if (false === in_array($newField->getName(), $existingFieldsNames)) {
+                /*
+                 * Field does not exist in type,
+                 * creating it.
+                 */
+                $newField->setNodeType($this->nodeType);
+                $newField->setPosition($position);
+                $this->objectManager->persist($newField);
+            } else {
+                /*
+                 * Field already exists.
+                 * Updating it.
+                 */
+                /** @var NodeTypeField $oldField */
+                $oldField = $this->objectManager
+                    ->getRepository(NodeTypeField::class)
+                    ->findOneBy([
+                        'nodeType' => $this->nodeType,
+                        'name' => $newField->getName(),
+                    ]);
+                if (null !== $oldField) {
+                    $oldField->setVisible($newField->isVisible());
+                    $oldField->setIndexed($newField->isIndexed());
+                    $oldField->setUniversal($newField->isUniversal());
+                    $oldField->setDefaultValues($newField->getDefaultValues());
+                    $oldField->setDescription($newField->getDescription());
+                    $oldField->setLabel($newField->getLabel());
+                    $oldField->setGroupName($newField->getGroupName());
+                    $oldField->setMinLength($newField->getMinLength());
+                    $oldField->setMaxLength($newField->getMaxLength());
+                    $oldField->setExpanded($newField->isExpanded());
+                    $oldField->setPlaceholder($newField->getPlaceholder());
+                    $oldField->setPosition($position);
                 }
-
-                $position++;
             }
-        } else {
-            throw new \RuntimeException("New node-type is null", 1);
+
+            $position++;
         }
     }
 

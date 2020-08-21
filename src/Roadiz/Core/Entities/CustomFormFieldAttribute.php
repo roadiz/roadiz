@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
@@ -19,16 +21,23 @@ class CustomFormFieldAttribute extends AbstractEntity
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormAnswer", inversedBy="answerFields")
      * @ORM\JoinColumn(name="custom_form_answer_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var CustomFormAnswer
+     * @var CustomFormAnswer|null
      */
     protected $customFormAnswer;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomFormField", inversedBy="customFormFieldAttributes")
      * @ORM\JoinColumn(name="custom_form_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var CustomFormField
+     * @var CustomFormField|null
      */
     protected $customFormField;
+
+    /**
+     * @var Collection<Document>
+     * @ORM\ManyToMany(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="customFormFieldAttributes")
+     * @ORM\JoinTable(name="custom_form_answers_documents")
+     */
+    protected $documents;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -37,10 +46,23 @@ class CustomFormFieldAttribute extends AbstractEntity
     protected $value = null;
 
     /**
+     * CustomFormFieldAttribute constructor.
+     */
+    public function __construct()
+    {
+        $this->documents = new ArrayCollection();
+    }
+
+    /**
      * @return string $value
      */
     public function getValue(): ?string
     {
+        if ($this->getCustomFormField()->isDocuments()) {
+            return implode(', ', $this->getDocuments()->map(function (Document $document) {
+                return $document->getRelativePath();
+            })->toArray());
+        }
         return $this->value;
     }
 
@@ -100,6 +122,26 @@ class CustomFormFieldAttribute extends AbstractEntity
     public function setCustomFormField(CustomFormField $customFormField)
     {
         $this->customFormField = $customFormField;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getDocuments(): Collection
+    {
+        return $this->documents;
+    }
+
+    /**
+     * @param Collection $documents
+     *
+     * @return CustomFormFieldAttribute
+     */
+    public function setDocuments(Collection $documents): CustomFormFieldAttribute
+    {
+        $this->documents = $documents;
 
         return $this;
     }

@@ -6,11 +6,11 @@ namespace Themes\Rozier;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGenerator;
@@ -64,12 +64,11 @@ class RozierApp extends BackendController
         $this->assignation['head']['ajaxToken'] = $this->get('csrfTokenManager')->getToken(static::AJAX_TOKEN_INTENTION);
 
         $this->themeContainer['nodeTree'] = function () {
-            if (null !== $this->getUser() && $this->getUser() instanceof User) {
-                $parent = $this->getUser()->getChroot();
-            } else {
-                $parent = null;
-            }
-            return new NodeTreeWidget($this->getRequest(), $this, $parent);
+            return new NodeTreeWidget(
+                $this->getRequest(),
+                $this,
+                $this->get(NodeChrootResolver::class)->getChroot($this->getUser())
+            );
         };
         $this->themeContainer['tagTree'] = function () {
             return new TagTreeWidget($this->getRequest(), $this);
@@ -133,16 +132,18 @@ class RozierApp extends BackendController
     public function cssAction(Request $request)
     {
         $this->assignation['mainColor'] = $this->get('settingsBag')->get('main_color');
-        $this->assignation['nodeTypes'] = $this->get('em')->getRepository(NodeType::class)->findBy([]);
+        $this->assignation['nodeTypes'] = $this->get('nodeTypesBag')->all();
         $this->assignation['tags'] = $this->get('em')->getRepository(Tag::class)->findBy([
-                'color' => ['!=', '#000000'],
-            ]);
+            'color' => ['!=', '#000000'],
+        ]);
 
-        return new Response(
+        $response = new Response(
             $this->getTwig()->render('css/mainColor.css.twig', $this->assignation),
             Response::HTTP_OK,
             ['content-type' => 'text/css']
         );
+
+        return $this->makeResponseCachable($request, $response, 5);
     }
 
     /**
@@ -326,7 +327,6 @@ class RozierApp extends BackendController
                 'icon' => 'uk-icon-rz-interactions',
                 'roles' => [
                     'ROLE_ACCESS_CUSTOMFORMS',
-                    'ROLE_ACCESS_NEWSLETTERS',
                     'ROLE_ACCESS_MANAGE_SUBSCRIBERS',
                     'ROLE_ACCESS_COMMENTS',
                 ],
@@ -337,16 +337,6 @@ class RozierApp extends BackendController
                         'icon' => 'uk-icon-rz-surveys',
                         'roles' => ['ROLE_ACCESS_CUSTOMFORMS'],
                     ],
-                    /*
-                     * Newsletter is not maintained anymore
-                     * because never used…
-                     */
-                    /*'manage.newsletters' => [
-                        'name' => 'manage.newsletters',
-                        'path' => $urlGenerator->generate('newslettersIndexPage'),
-                        'icon' => 'uk-icon-rz-newsletters',
-                        'roles' => ['ROLE_ACCESS_NEWSLETTERS'],
-                    ],*/
                 ],
             ];
 

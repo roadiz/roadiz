@@ -52,6 +52,7 @@ use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
+use RZ\Roadiz\OpenId\OpenIdServiceProvider;
 use RZ\Roadiz\Utils\Clearer\EventListener\AnnotationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
@@ -105,7 +106,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
     public static $cmsBuild = null;
-    public static $cmsVersion = "1.4.23";
+    public static $cmsVersion = "1.5.0";
 
     protected $environment;
     protected $debug;
@@ -402,6 +403,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new CryptoServiceProvider());
         $container->register(new NodeServiceProvider());
         $container->register(new MarkdownServiceProvider());
+        $container->register(new OpenIdServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

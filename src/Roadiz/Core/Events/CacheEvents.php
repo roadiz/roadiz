@@ -6,6 +6,12 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 
+/**
+ * Class CacheEvents
+ *
+ * @package RZ\Roadiz\Core\Events
+ * @deprecated
+ */
 final class CacheEvents
 {
     /**

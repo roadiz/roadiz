@@ -11,9 +11,8 @@ use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
  * Class FilterNodesSourcesQueryBuilderCriteriaEvent
  *
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
-class FilterNodesSourcesQueryBuilderCriteriaEvent extends QueryBuilderBuildEvent
+abstract class FilterNodesSourcesQueryBuilderCriteriaEvent extends QueryBuilderBuildEvent
 {
     /**
      * @inheritDoc

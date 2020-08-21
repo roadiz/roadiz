@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\User;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class FilterUserEvent

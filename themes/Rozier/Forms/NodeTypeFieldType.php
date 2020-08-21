@@ -8,6 +8,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField as NodeTypeFieldConstraint;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
+use RZ\Roadiz\Config\Configuration;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
@@ -83,6 +84,7 @@ class NodeTypeFieldType extends AbstractType
             'label' => 'indexed',
             'required' => false,
             'help' => 'field_should_be_indexed_if_you_plan_to_query_or_order_by_it',
+            'disabled' => $options['inheritance_type'] === Configuration::INHERITANCE_TYPE_SINGLE_TABLE,
         ])
         ->add('universal', CheckboxType::class, [
             'label' => 'universal',
@@ -140,8 +142,10 @@ class NodeTypeFieldType extends AbstractType
         $resolver->setRequired([
             'nodeType',
             'em',
+            'inheritance_type'
         ]);
         $resolver->setAllowedTypes('em', ObjectManager::class);
+        $resolver->setAllowedTypes('inheritance_type', 'string');
         $resolver->setAllowedTypes('fieldName', 'string');
         $resolver->setAllowedTypes('nodeType', NodeType::class);
     }

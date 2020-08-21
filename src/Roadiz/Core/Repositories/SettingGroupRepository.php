@@ -7,6 +7,7 @@ namespace RZ\Roadiz\Core\Repositories;
  * Class SettingGroupRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\SettingGroup>
  */
 class SettingGroupRepository extends EntityRepository
 {

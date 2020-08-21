@@ -7,9 +7,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
@@ -112,13 +114,15 @@ class TranslationViewer
         $query = $request->query->all();
         $name = '';
         $forceLocale = (boolean) $this->settingsBag->get('force_locale');
+        $useStaticRouting = !empty($attr['_route']) &&
+            is_string($attr['_route']) &&
+            $attr['_route'] !== RouteObjectInterface::OBJECT_BASED_ROUTE_NAME;
 
         /*
          * Fix absolute boolean to Int constant.
          */
         $absolute = $absolute ? Router::ABSOLUTE_URL : Router::ABSOLUTE_PATH;
 
-        /** @var Node $node */
         if (key_exists('node', $attr) && $attr['node'] instanceof Node) {
             $node = $attr["node"];
             $this->entityManager->refresh($node);
@@ -128,7 +132,7 @@ class TranslationViewer
         /*
          * If using a static route (routes.yml)…
          */
-        if (!empty($attr['_route']) && is_string($attr['_route'])) {
+        if ($useStaticRouting) {
             $translations = $this->getRepository()->findAllAvailable();
             /*
              * Search for a route without Locale suffix
@@ -171,7 +175,7 @@ class TranslationViewer
                 unset($query['page']);
             }
 
-            if (!empty($attr['_route']) && is_string($attr['_route'])) {
+            if ($useStaticRouting) {
                 $name = $attr['_route'];
                 /*
                  * Use suffixed route if locales are forced or
@@ -202,17 +206,29 @@ class TranslationViewer
                     unset($attr['_route_params']['page']);
                 }
 
-                $url = $this->router->generate(
-                    $name,
-                    array_merge($attr['_route_params'], $query),
-                    $absolute
-                );
-            } elseif ($node) {
-                $nodesSources = $node->getNodeSourcesByTranslation($translation)->first();
-                if (null !== $nodesSources && false !== $nodesSources) {
+                if (is_string($name)) {
                     $url = $this->router->generate(
-                        $nodesSources,
-                        $query,
+                        $name,
+                        array_merge($attr['_route_params'], $query),
+                        $absolute
+                    );
+                } else {
+                    $url = $this->router->generate(
+                        RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                        array_merge($attr['_route_params'], $query, [
+                            RouteObjectInterface::ROUTE_OBJECT => $name
+                        ]),
+                        $absolute
+                    );
+                }
+            } elseif ($node) {
+                $nodesSources = $node->getNodeSourcesByTranslation($translation)->first() ?: null;
+                if (null !== $nodesSources && $nodesSources instanceof NodesSources) {
+                    $url = $this->router->generate(
+                        RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                        array_merge($query, [
+                            RouteObjectInterface::ROUTE_OBJECT => $nodesSources
+                        ]),
                         $absolute
                     );
                 }

@@ -9,6 +9,7 @@ use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessHandler;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
@@ -52,9 +53,11 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler i
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $token->getUser();
-        if (null !== $user && $user instanceof User) {
+        if (null !== $user && $user instanceof UserInterface) {
             $this->getLoginAttemptManager()->onSuccessLoginAttempt($user->getUsername());
-            $user->setLastLogin(new \DateTime('now'));
+            if ($user instanceof User) {
+                $user->setLastLogin(new \DateTime('now'));
+            }
             $this->em->flush();
         }
 

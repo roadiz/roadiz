@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Config;
 
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -10,6 +11,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    const INHERITANCE_TYPE_JOINED = 'joined';
+    const INHERITANCE_TYPE_SINGLE_TABLE = 'single_table';
+
     public function getConfigTreeBuilder()
     {
         $builder = new TreeBuilder('roadiz');
@@ -107,10 +111,10 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->scalarNode('session_name')
                         ->info(
-                            <<<EOF
+                            <<<EOD
 Name of the session (used as cookie name).
 http://php.net/session.name
-EOF
+EOD
                         )
                         ->defaultValue('roadiz_token')
                         ->cannotBeEmpty()
@@ -123,19 +127,19 @@ EOF
                     ->end()
                     ->booleanNode('session_cookie_secure')
                         ->info(
-                            <<<EOF
+                            <<<EOD
 Enable session cookie_secure ONLY if your website is served with HTTPS only
 http://php.net/session.cookie-secure
-EOF
+EOD
                         )
                         ->defaultValue(false)
                     ->end()
                     ->booleanNode('session_cookie_httponly')
                         ->info(
-                            <<<EOF
+                            <<<EOD
 Whether or not to add the httpOnly flag to the cookie, which makes it inaccessible to browser scripting languages such as JavaScript.
 http://php.net/session.cookie-httponly
-EOF
+EOD
                         )
                         ->defaultValue(true)
                     ->end()
@@ -168,8 +172,39 @@ EOF
             ->append($this->addSolrNode())
             ->append($this->addReverseProxyCacheNode())
             ->append($this->addThemesNode())
+            ->append($this->addInheritanceNode())
         ;
         return $builder;
+    }
+
+    /**
+     * @return ArrayNodeDefinition|NodeDefinition
+     */
+    protected function addInheritanceNode()
+    {
+        $builder = new TreeBuilder('inheritance');
+        $node = $builder->getRootNode();
+        $node->addDefaultsIfNotSet()
+            ->children()
+                ->scalarNode('type')
+                    ->defaultValue(static::INHERITANCE_TYPE_JOINED)
+                    ->info(<<<EOD
+Doctrine inheritance strategy for creating NodesSources
+classes table(s). BE CAREFUL, if you change this
+setting after filling content in your website, all
+node-sources data will be lost.
+EOD
+                    )
+                    ->validate()
+                    ->ifNotInArray([
+                        static::INHERITANCE_TYPE_JOINED,
+                        static::INHERITANCE_TYPE_SINGLE_TABLE
+                    ])
+                    ->thenInvalid('The %s inheritance type is not supported ("joined", "single_table" are accepted).')
+                ->end()
+            ->end()
+        ;
+        return $node;
     }
 
     /**

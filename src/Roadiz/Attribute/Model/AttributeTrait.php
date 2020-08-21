@@ -155,7 +155,7 @@ trait AttributeTrait
     }
 
     /**
-     * @param Collection<AttributeTranslationInterface> $attributeTranslations
+     * @param Collection $attributeTranslations
      *
      * @return $this
      */

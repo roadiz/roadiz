@@ -12,7 +12,11 @@
     .content {
         max-width: 720px;
         margin: 2em auto;
-        padding: 0 1em;
+        padding: 0 1em 5em;
+
+        & > * {
+            padding: initial;
+        }
     }
 
     .content-title,
@@ -46,18 +50,40 @@
         color: #555555;
     }
 
-    textarea{
-        font-weight: normal;
+    textarea {
         min-height: 120px;
     }
 
+    input[type=text],
+    input[type=email],
+    textarea {
+        width: 100%;
+        font-weight: normal;
+    }
+
+    .uk-form legend,
+    .uk-form-row > label,
     .uk-form-label {
-         font-size: 16px;
+        display: block;
+        font-size: 16px;
+        margin-bottom: 5px;
+        padding: 0;
+    }
+
+    div[data-group-wrapper] {
+        &:before {
+            content: '';
+            display: block;
+            height: 1px;
+            background-color: rgba(0,0,0,0.1);
+            margin-bottom: 10px;
+        }
     }
 
     .uk-form-description {
         font-size: 12px;
         line-height: 16px;
+        margin-bottom: 5px;
 
         p {
             margin:5px 0;

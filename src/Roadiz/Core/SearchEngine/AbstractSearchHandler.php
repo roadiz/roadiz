@@ -71,7 +71,7 @@ abstract class AbstractSearchHandler
      * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      * @param integer $page
      *
-     * @return array
+     * @return array|null
      */
     abstract protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
 
@@ -110,7 +110,7 @@ abstract class AbstractSearchHandler
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
      *
-     * @param string $q
+     * @param string|null $q
      * @param array $args
      * @param bool $searchTags
      * @param int $proximity
@@ -128,20 +128,39 @@ abstract class AbstractSearchHandler
          */
         if ($searchTags) {
             /*
-             * @see http://www.solrtutorial.com/solr-query-syntax.html
+             * @see https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches
              */
             if ($singleWord) {
-                // Need to use wildcard BEFORE and AFTER
-                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*) (tags_txt:*%s*)', $q, $q, $q);
+                // Need to use Fuzzy Searches
+                return sprintf(
+                    '(' . $titleField . ':%s~1)^10 (collection_txt:%s~1) (tags_txt:%s~1)',
+                    $q,
+                    $q,
+                    $q
+                );
             } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)', $q, $proximity, $q, $proximity, $q, $proximity);
+                return sprintf(
+                    '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)',
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity
+                );
             }
         } else {
             if ($singleWord) {
-                // Need to use wildcard BEFORE and AFTER
-                return sprintf('(' . $titleField . ':*%s*)^10 (collection_txt:*%s*)', $q, $q);
+                // Need to use Fuzzy Searches
+                return sprintf('(' . $titleField . ':%s~1)^10 (collection_txt:%s~1)', $q, $q);
             } else {
-                return sprintf('(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)', $q, $proximity, $q, $proximity);
+                return sprintf(
+                    '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)',
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity
+                );
             }
         }
     }

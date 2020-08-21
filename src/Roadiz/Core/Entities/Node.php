@@ -509,12 +509,12 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @ORM\ManyToOne(targetEntity="NodeType")
      * @ORM\JoinColumn(onDelete="CASCADE")
      * @Serializer\Groups({"nodes_sources", "node"})
-     * @var NodeType
+     * @var NodeType|null
      */
     private $nodeType;
 
     /**
-     * @return NodeType
+     * @return NodeType|null
      */
     public function getNodeType()
     {
@@ -522,7 +522,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param NodeType $nodeType
+     * @param NodeType|null $nodeType
      *
      * @return $this
      */
@@ -536,7 +536,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="children", fetch="EAGER")
      * @ORM\JoinColumn(name="parent_node_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Node
+     * @var Node|null
      * @Serializer\Exclude
      */
     protected $parent;
@@ -555,7 +555,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Collection<Tag>
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node"})
      */
-    private $tags = null;
+    private $tags;
 
     /**
      * @return Collection<Tag>
@@ -606,13 +606,13 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\OneToMany(targetEntity="NodesCustomForms", mappedBy="node", fetch="EXTRA_LAZY")
-     * @var ArrayCollection
+     * @var Collection<NodesCustomForms>
      * @Serializer\Exclude()
      */
-    private $customForms = null;
+    private $customForms;
 
     /**
-     * @return ArrayCollection
+     * @return Collection<NodesCustomForms>
      */
     public function getCustomForms()
     {
@@ -622,13 +622,13 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\ManyToMany(targetEntity="NodeType")
      * @ORM\JoinTable(name="stack_types")
-     * @var ArrayCollection
+     * @var Collection<NodeType>
      * @Serializer\Groups({"node"})
      */
-    private $stackTypes = null;
+    private $stackTypes;
 
     /**
-     * @return ArrayCollection
+     * @return Collection<NodeType>
      */
     public function getStackTypes()
     {
@@ -666,11 +666,12 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="node", orphanRemoval=true, fetch="EXTRA_LAZY")
      * @Serializer\Groups({"node"})
+     * @var Collection<NodesSources>
      */
     private $nodeSources;
 
     /**
-     * @return ArrayCollection
+     * @return Collection<NodesSources>
      */
     public function getNodeSources()
     {
@@ -721,7 +722,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeA")
      * @ORM\OrderBy({"position" = "ASC"})
-     * @var ArrayCollection
+     * @var Collection<NodesToNodes>
      * @Serializer\Exclude()
      */
     protected $bNodes;
@@ -729,7 +730,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * Return nodes related to this (B nodes).
      *
-     * @return ArrayCollection
+     * @return Collection<NodesToNodes>
      */
     public function getBNodes()
     {
@@ -751,7 +752,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\OneToMany(targetEntity="NodesToNodes", mappedBy="nodeB")
-     * @var ArrayCollection
+     * @var Collection<NodesToNodes>
      * @Serializer\Exclude()
      */
     protected $aNodes;
@@ -759,7 +760,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * Return nodes which own a relation with this (A nodes).
      *
-     * @return ArrayCollection
+     * @return Collection<NodesToNodes>
      */
     public function getANodes()
     {
@@ -767,7 +768,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @var Collection<AttributeValueInterface>
+     * @var Collection<AttributeValue>
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", mappedBy="node", orphanRemoval=true)
      * @ORM\OrderBy({"position" = "ASC"})
      * @Serializer\Groups({"nodes_sources", "node"})
@@ -777,7 +778,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * Create a new empty Node according to given node-type.
      *
-     * @param NodeType $nodeType
+     * @param NodeType|null $nodeType
      */
     public function __construct(NodeType $nodeType = null)
     {

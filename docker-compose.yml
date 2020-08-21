@@ -4,6 +4,7 @@ services:
         image: mysql:5.7
         volumes:
             - "./.data/db:/var/lib/mysql:delegated"
+            - "./docker/mysql/performances.cnf:/etc/mysql/conf.d/performances.cnf"
         networks:
             - default
         environment:
@@ -28,6 +29,7 @@ services:
             #context: ./docker/php72-nginx-alpine
             #context: ./docker/php73-nginx-alpine
             context: ./docker/php74-nginx-alpine
+            #context: ./docker/php80-nginx-alpine
             args:
                 USER_UID: ${USER_UID}
         ports:
@@ -43,8 +45,11 @@ services:
         networks:
             # Use your docker reverse-proxy service network to
             # serve app on your defined HOSTNAME (Traefik)
-            - frontproxynet
-            - default
+            frontproxynet:
+            default:
+                aliases:
+                    - app
+                    - app_roadiz
         labels:
             # Replace example by your service name
             - "traefik.enable=true"
@@ -55,6 +60,33 @@ services:
             - "traefik.http.routers.roadiz.entrypoints=http"
             - "traefik.http.routers.roadiz.rule=Host(${HOSTNAME})"
             - "traefik.http.routers.roadiz.service=roadiz"
+
+    varnish:
+        build:
+            context: ./docker/varnish
+        tmpfs: /usr/local/var/varnish:exec
+        depends_on:
+            - app
+        links:
+            - app:app
+        ports:
+            - ${VARNISH_PORT}:80/tcp
+        networks:
+            frontproxynet:
+            default:
+                aliases:
+                    - varnish
+                    - varnish_roadiz
+        labels:
+            # Replace example by your service name
+            - "traefik.enable=true"
+            - "traefik.http.services.varnish_roadiz.loadbalancer.server.scheme=http"
+            - "traefik.http.services.varnish_roadiz.loadbalancer.server.port=80"
+            - "traefik.http.services.varnish_roadiz.loadbalancer.passhostheader=true"
+            # Listen HTTP
+            - "traefik.http.routers.varnish_roadiz.entrypoints=http"
+            - "traefik.http.routers.varnish_roadiz.rule=Host(${HOSTNAME_VARNISH})"
+            - "traefik.http.routers.varnish_roadiz.service=varnish_roadiz"
 
     solr:
         build:
@@ -82,6 +114,7 @@ services:
             - default
         ports:
             - ${MAILER_PORT}:8025/tcp
+
 networks:
     frontproxynet:
         external: true

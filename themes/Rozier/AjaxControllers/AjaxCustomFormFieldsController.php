@@ -8,7 +8,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * {@inheritdoc}
+ * Class AjaxCustomFormFieldsController
+ *
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
 {

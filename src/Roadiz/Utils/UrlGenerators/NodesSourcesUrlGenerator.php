@@ -13,7 +13,7 @@ use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
  *
  * @package RZ\Roadiz\Utils\UrlGenerators
  */
-final class NodesSourcesUrlGenerator implements UrlGeneratorInterface
+final class NodesSourcesUrlGenerator
 {
     /**
      * @var Request|null

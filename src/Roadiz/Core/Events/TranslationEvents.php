@@ -16,7 +16,7 @@ final class TranslationEvents
      * Event translation.created is triggered each time a translation
      * is created.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterTranslationEvent instance
      *
      * @var string
@@ -28,7 +28,7 @@ final class TranslationEvents
      * Event translation.updated is triggered each time a translation
      * is updated.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterTranslationEvent instance
      *
      * @var string
@@ -40,7 +40,7 @@ final class TranslationEvents
      * Event translation.deleted is triggered each time a translation
      * is deleted.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterTranslationEvent instance
      *
      * @var string

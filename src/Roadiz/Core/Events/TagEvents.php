@@ -16,7 +16,7 @@ final class TagEvents
      * Event tag.created is triggered each time a node-source
      * is created.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterTagEvent instance
      *
      * @var string
@@ -28,7 +28,7 @@ final class TagEvents
      * Event tag.updated is triggered each time a node-source
      * is updated.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterTagEvent instance
      *
      * @var string
@@ -40,7 +40,7 @@ final class TagEvents
      * Event tag.deleted is triggered each time a node-source
      * is deleted.
      *
-     * Evetn listener will be given a:
+     * Event listener will be given a:
      * RZ\Roadiz\Core\Events\FilterTagEvent instance
      *
      * @var string

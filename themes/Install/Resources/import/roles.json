@@ -84,22 +84,6 @@
         "groups": []
     },
     {
-        "name": "ROLE_ACCESS_NEWSLETTERS",
-        "groups": [
-            {
-                "name": "Editors"
-            }
-        ]
-    },
-    {
-        "name": "ROLE_ACCESS_NEWSLETTERS_SEND",
-        "groups": [
-            {
-                "name": "Editors"
-            }
-        ]
-    },
-    {
         "name": "ROLE_ACCESS_NODE_ATTRIBUTES",
         "groups": [
             {
@@ -212,6 +196,14 @@
     },
     {
         "name": "ROLE_SUPERADMIN",
+        "groups": [
+            {
+                "name": "Admin"
+            }
+        ]
+    },
+    {
+        "name": "ROLE_ACCESS_LOGS",
         "groups": [
             {
                 "name": "Admin"

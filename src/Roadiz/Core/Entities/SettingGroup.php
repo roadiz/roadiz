@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
@@ -71,7 +72,7 @@ class SettingGroup extends AbstractEntity
 
     /**
      * @ORM\OneToMany(targetEntity="Setting", mappedBy="settingGroup")
-     * @var ArrayCollection
+     * @var Collection<Setting>
      * @Serializer\Groups({"setting_group"})
      */
     private $settings;
@@ -83,14 +84,14 @@ class SettingGroup extends AbstractEntity
         $this->settings = new ArrayCollection();
     }
     /**
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getSettings()
     {
         return $this->settings;
     }
     /**
-     * @param \RZ\Roadiz\Core\Entities\Setting $setting
+     * @param Setting $setting
      * @return SettingGroup
      */
     public function addSetting($setting)

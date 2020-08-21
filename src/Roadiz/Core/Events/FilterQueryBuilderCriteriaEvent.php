@@ -4,15 +4,14 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class FilterQueryBuilderCriteriaEvent
  *
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
-class FilterQueryBuilderCriteriaEvent extends Event
+abstract class FilterQueryBuilderCriteriaEvent extends Event
 {
     /**
      * @var string

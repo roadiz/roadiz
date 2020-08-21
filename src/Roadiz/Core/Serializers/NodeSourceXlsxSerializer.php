@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -50,7 +51,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     /**
      * Create a simple associative array with a NodeSource.
      *
-     * @param NodesSources|Collection|array $nodeSource
+     * @param NodesSources|Collection|array|null $nodeSource
      * @return array
      */
     public function toArray($nodeSource)
@@ -59,7 +60,13 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 
         if ($nodeSource instanceof NodesSources) {
             if ($this->addUrls === true) {
-                $data['_url'] = $this->urlGenerator->generate($nodeSource, [], UrlGeneratorInterface::ABSOLUTE_URL);
+                $data['_url'] = $this->urlGenerator->generate(
+                    RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                    [
+                        RouteObjectInterface::ROUTE_OBJECT => $nodeSource
+                    ],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                );
             }
 
             $data['translation'] = $nodeSource->getTranslation()->getLocale();

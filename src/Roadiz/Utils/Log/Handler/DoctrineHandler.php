@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * A log system which store message in database.
@@ -134,10 +135,16 @@ class DoctrineHandler extends AbstractProcessingHandler
                  * Use available securityAuthorizationChecker to provide a valid user
                  */
                 if (null !== $this->getTokenStorage() &&
-                    null !== $this->getTokenStorage()->getToken() &&
-                    null !== $user = $this->getTokenStorage()->getToken()->getUser()) {
-                    if ($user instanceof User) {
-                        $log->setUser($user);
+                    null !== $token = $this->getTokenStorage()->getToken()) {
+                    $user = $token->getUser();
+                    if (null !== $user && $user instanceof UserInterface) {
+                        if ($user instanceof User) {
+                            $log->setUser($user);
+                        } else {
+                            $log->setUsername($user->getUsername());
+                        }
+                    } else {
+                        $log->setUsername($token->getUsername());
                     }
                 }
                 /*

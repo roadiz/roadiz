@@ -9,6 +9,7 @@ use RZ\Roadiz\Core\Entities\Role;
  * Class RoleRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Role>
  */
 class RoleRepository extends EntityRepository
 {

@@ -88,12 +88,6 @@ strong {
   background: #fafafa;
 }
 /*
- * Emphasize
- */
-em {
-  color: #dd0055;
-}
-/*
  * Insert
  */
 ins {
@@ -332,7 +326,7 @@ pre {
   border: 1px solid #dddddd;
   border-radius: 3px;
 }
-/* Selection pseudo-element 
+/* Selection pseudo-element
  ========================================================================== */
 ::-moz-selection {
   background: #3399ff;

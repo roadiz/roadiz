@@ -50,7 +50,7 @@
          # Here is the real power of Roadiz!
          #}
         {% set blocks = nodeSource|children({
-            'node.nodeType' : ['!=', bags.nodeTypes.get('Page')]
+            'node.nodeType.reachable': false
         }) %}
         {% for singleBlock in blocks %}
             {#{{ singleBlock|render('DefaultTheme') }}#}

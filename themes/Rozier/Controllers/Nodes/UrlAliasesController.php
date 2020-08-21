@@ -165,7 +165,7 @@ class UrlAliasesController extends RozierApp
      * @param array $data
      * @param Node  $node
      *
-     * @return UrlAlias
+     * @return UrlAlias|null
      * @throws EntityAlreadyExistsException
      * @throws NoTranslationAvailableException
      */
@@ -422,7 +422,6 @@ class UrlAliasesController extends RozierApp
 
         /** @var FormFactory $formFactory */
         $formFactory = $this->get('formFactory');
-        /** @var FormInterface $editForm */
         $addForm = $formFactory->createNamedBuilder(
             'add_redirection',
             RedirectionType::class,

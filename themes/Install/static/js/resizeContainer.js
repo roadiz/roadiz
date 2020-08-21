@@ -33,12 +33,11 @@ resizeContainer.prototype.init = function() {
     _this.windowHeightLimit = _this.windowHeight-(_this.margin*2);
 
     // Check if we have enough size to center container
-    if((_this.mainContainerHeight + _this.margin) < _this.windowHeightLimit) {
+    if (window.innerWidth >= 768 && (_this.mainContainerHeight + _this.margin) < _this.windowHeightLimit) {
         $('body').css('height', _this.windowHeight);
         _this.$mainContainer[0].className = 'absolute';
         _this.$mainContainer[0].style.marginTop = -_this.mainContainerHeight/2 +'px';
-    }
-    else {
+    } else {
         $('body').css('position', 'relative');
         _this.$mainContainer[0].className = 'relative';
         _this.$mainContainer[0].style.marginTop = '';

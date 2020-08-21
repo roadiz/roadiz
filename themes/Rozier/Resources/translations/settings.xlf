@@ -49,6 +49,98 @@
                 <target></target>
                 <note>Setting description</note>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="use_native_json">
+                <source>use_native_json</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="use_native_json.help">
+                <source>Use MySQL 5.7+ JSON field type.</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_id">
+                <source>oauth_client_id</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_id.help">
+                <source>oauth_client_id.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_secret">
+                <source>oauth_client_secret</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="oauth_client_secret.help">
+                <source>oauth_client_secret.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_hd">
+                <source>openid_hd</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_hd.help">
+                <source>openid_hd.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_button_label">
+                <source>openid_button_label</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_button_label.help">
+                <source>openid_button_label.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_discovery">
+                <source>openid_discovery</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_discovery.help">
+                <source>openid_discovery.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_default_roles">
+                <source>openid_default_roles</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_default_roles.help">
+                <source>openid_default_roles.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="openid_scopes">
+                <source>openid_scopes</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_scopes.help">
+                <source>openid_scopes.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="openid_username_claim">
+                <source>openid_username_claim</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="openid_username_claim.help">
+                <source>openid_username_claim.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>

@@ -40,7 +40,7 @@ class BasicBlockController extends DefaultThemeApp
     /**
      * @param Request $request
      * @param NodesSources $source
-     * @param $assignation
+     * @param array $assignation
      *
      * @return Response
      */

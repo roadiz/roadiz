@@ -27,6 +27,7 @@ class AssetsController extends CmsController
      */
     public function prepareBaseAssignation()
     {
+        return $this;
     }
 
     /**

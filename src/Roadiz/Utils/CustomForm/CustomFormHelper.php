@@ -10,10 +10,12 @@ use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
-use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Utils\Document\AbstractDocumentFactory;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class CustomFormHelper
@@ -22,34 +24,48 @@ use Symfony\Component\Form\FormInterface;
 class CustomFormHelper
 {
     const ARRAY_SEPARATOR = ', ';
+    /**
+     * @var AbstractDocumentFactory
+     */
+    protected $documentFactory;
 
-    /** @var EntityManager */
+    /**
+     * @var EntityManager
+     */
     private $em;
 
-    /** @var CustomForm */
+    /**
+     * @var CustomForm
+     */
     private $customForm;
 
     /**
      * CustomFormHelper constructor.
-     * @param EntityManager $em
-     * @param CustomForm $customForm
+     *
+     * @param EntityManager   $em
+     * @param CustomForm      $customForm
+     * @param AbstractDocumentFactory $documentFactory
      */
-    public function __construct(EntityManager $em, CustomForm $customForm)
+    public function __construct(EntityManager $em, CustomForm $customForm, AbstractDocumentFactory $documentFactory)
     {
         $this->em = $em;
         $this->customForm = $customForm;
+        $this->documentFactory = $documentFactory;
     }
 
     /**
      * Create or update custom-form answer and its attributes from
      * a submitted form data.
      *
-     * @param FormInterface $form
+     * @param FormInterface         $form
      * @param CustomFormAnswer|null $answer
-     * @param string $ipAddress
+     * @param string                $ipAddress
+     *
      * @return CustomFormAnswer
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function parseAnswerFormData(FormInterface $form, CustomFormAnswer $answer = null, $ipAddress = "")
+    public function parseAnswerFormData(FormInterface $form, CustomFormAnswer $answer = null, string $ipAddress = "")
     {
         if ($form->isSubmitted() && $form->isValid()) {
             /*
@@ -86,6 +102,7 @@ class CustomFormHelper
                 }
 
                 if (null !== $formField) {
+                    $data = $formField->getData();
                     /*
                     * Create attribute if null.
                     */
@@ -96,7 +113,16 @@ class CustomFormHelper
                         $this->em->persist($fieldAttr);
                     }
 
-                    $fieldAttr->setValue($this->formValueToString($formField->getData()));
+                    if (is_array($data) && isset($data[0]) && $data[0] instanceof UploadedFile) {
+                        /** @var UploadedFile $file */
+                        foreach ($data as $file) {
+                            $this->handleUploadedFile($file, $fieldAttr);
+                        }
+                    } elseif ($data instanceof UploadedFile) {
+                        $this->handleUploadedFile($data, $fieldAttr);
+                    } else {
+                        $fieldAttr->setValue($this->formValueToString($data));
+                    }
                 }
             }
 
@@ -110,11 +136,44 @@ class CustomFormHelper
     }
 
     /**
-     * @param FormFactory $formFactory
-     * @param CustomFormAnswer $answer
-     * @param bool $forceExpanded
-     * @param array $options Options passed to final form
+     * @param UploadedFile             $file
+     * @param CustomFormFieldAttribute $fieldAttr
+     *
+     * @return CustomFormFieldAttribute
+     */
+    protected function handleUploadedFile(
+        UploadedFile $file,
+        CustomFormFieldAttribute $fieldAttr
+    ): CustomFormFieldAttribute {
+        $this->documentFactory->setFile($file);
+        $this->documentFactory->setFolder($this->getDocumentFolderForCustomForm());
+        $document = $this->documentFactory->getDocument();
+        $fieldAttr->getDocuments()->add($document);
+        $fieldAttr->setValue($fieldAttr->getValue() . ', ' . $file->getPathname());
+        return $fieldAttr;
+    }
+
+    /**
+     * @return Folder|null
+     */
+    protected function getDocumentFolderForCustomForm(): ?Folder
+    {
+        return $this->em->getRepository(Folder::class)
+            ->findOrCreateByPath(
+                'custom_forms/' .
+                $this->customForm->getCreatedAt()->format('Ymd') . '_' .
+                substr($this->customForm->getDisplayName(), 0, 30)
+            );
+    }
+
+    /**
+     * @param FormFactory           $formFactory
+     * @param CustomFormAnswer|null $answer
+     * @param bool                  $forceExpanded
+     * @param array                 $options Options passed to final form
+     *
      * @return \Symfony\Component\Form\FormInterface
+     * @throws \Exception
      */
     public function getFormFromAnswer(
         FormFactory $formFactory,
@@ -159,7 +218,7 @@ class CustomFormHelper
      * @param mixed $rawValue
      * @return string
      */
-    private function formValueToString($rawValue)
+    private function formValueToString($rawValue): string
     {
         if ($rawValue instanceof \DateTime) {
             return $rawValue->format('Y-m-d H:i:s');
@@ -178,13 +237,13 @@ class CustomFormHelper
      * @param CustomFormField $field
      * @return CustomFormFieldAttribute|null
      */
-    private function getAttribute(CustomFormAnswer $answer, CustomFormField $field)
+    private function getAttribute(CustomFormAnswer $answer, CustomFormField $field): ?CustomFormFieldAttribute
     {
-        /** @var EntityRepository $repo */
-        $repo = $this->em->getRepository(CustomFormFieldAttribute::class);
-        return $repo->findOneBy([
+        /** @var CustomFormFieldAttribute|null $attribute */
+        $attribute = $this->em->getRepository(CustomFormFieldAttribute::class)->findOneBy([
             'customFormAnswer' => $answer,
             'customFormField' => $field,
         ]);
+        return $attribute;
     }
 }

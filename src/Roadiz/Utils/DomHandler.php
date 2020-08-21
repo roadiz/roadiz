@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils;
 
+use DOMNode;
+
 /**
  * Description.
  */
@@ -22,7 +24,7 @@ class DomHandler
         $elements = $doc->getElementsByTagName('link');
 
         $fileNames = [];
-
+        /** @var DOMNode $node */
         foreach ($elements as $node) {
             $href = $node->attributes->getNamedItem('href');
             $rel = $node->attributes->getNamedItem('rel');
@@ -30,7 +32,9 @@ class DomHandler
             if ($node->hasAttributes() &&
                 null !== $href &&
                 null !== $rel) {
-                if ($rel->value == "stylesheet") {
+                if (isset($rel->value) &&
+                    isset($href->value) &&
+                    $rel->value == "stylesheet") {
                     $fileNames[] = $href->value;
                 }
             }
@@ -46,7 +50,7 @@ class DomHandler
      *
      * @param string $dom
      *
-     * @return string Concatained CSS code
+     * @return string
      */
     public static function getExternalStyles($dom)
     {
@@ -89,7 +93,7 @@ class DomHandler
                 if ($node->hasAttributes() &&
                     null !== $href &&
                     null !== $rel) {
-                    if ($rel->value == "stylesheet") {
+                    if (isset($rel->value) && $rel->value == "stylesheet") {
                         $node->parentNode->removeChild($node);
                     }
                 }

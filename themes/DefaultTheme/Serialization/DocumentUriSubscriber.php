@@ -11,7 +11,7 @@ use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 
 class DocumentUriSubscriber implements EventSubscriberInterface, ContainerAwareInterface
 {
@@ -47,7 +47,7 @@ class DocumentUriSubscriber implements EventSubscriberInterface, ContainerAwareI
 
         if ($context->hasAttribute('groups') &&
             in_array('urls', $context->getAttribute('groups'))) {
-            /** @var DocumentUrlGenerator $urlGenerator */
+            /** @var DocumentUrlGeneratorInterface $urlGenerator */
             $urlGenerator = $this->get('document.url_generator')->setDocument($document);
 
             if ($document instanceof Document) {

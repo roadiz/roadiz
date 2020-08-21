@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\Translation;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * @deprecated
+ * Class FilterTranslationEvent
+ *
+ * @package RZ\Roadiz\Core\Events
  */
-class FilterTranslationEvent extends Event
+abstract class FilterTranslationEvent extends Event
 {
     protected $translation;
 

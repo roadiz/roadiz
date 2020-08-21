@@ -200,14 +200,13 @@ class AjaxNodesExplorerController extends AbstractAjaxController
     /**
      * Normalize response Node list result.
      *
-     * @param array|\Traversable $nodes
+     * @param array<Node|NodesSources>|\Traversable<Node|NodesSources> $nodes
      * @return array
      */
     private function normalizeNodes($nodes)
     {
         $nodesArray = [];
 
-        /** @var Node|NodesSources $doc */
         foreach ($nodes as $node) {
             if (null !== $node) {
                 if ($node instanceof NodesSources) {

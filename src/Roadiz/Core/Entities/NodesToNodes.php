@@ -24,21 +24,21 @@ class NodesToNodes extends AbstractPositioned
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="bNodes", fetch="EAGER")
      * @ORM\JoinColumn(name="node_a_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Node
+     * @var Node|null
      */
     protected $nodeA;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node", inversedBy="aNodes", fetch="EAGER")
      * @ORM\JoinColumn(name="node_b_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var Node
+     * @var Node|null
      */
     protected $nodeB;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodeTypeField")
      * @ORM\JoinColumn(name="node_type_field_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var NodeTypeField
+     * @var NodeTypeField|null
      */
     protected $field;
 
@@ -67,9 +67,9 @@ class NodesToNodes extends AbstractPositioned
     /**
      * Gets the value of nodeA.
      *
-     * @return Node
+     * @return Node|null
      */
-    public function getNodeA(): Node
+    public function getNodeA(): ?Node
     {
         return $this->nodeA;
     }

@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
+use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
  * Class NonVirtualFieldGenerator.
- *
  *
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
@@ -28,6 +28,18 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     }
 
     /**
+     * @return mixed
+     */
+    protected function getDoctrineType()
+    {
+        if ($this->field->getType() === NodeTypeField::MULTI_PROVIDER_T &&
+            $this->options[AbstractFieldGenerator::USE_NATIVE_JSON] === true) {
+            return 'json';
+        }
+        return NodeTypeField::$typeToDoctrine[$this->field->getType()];
+    }
+
+    /**
      * @inheritDoc
      */
     public function getFieldAnnotation(): string
@@ -37,7 +49,7 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
             '@Serializer\Exclude()' :
             '@Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})';
         $ormParams = [
-            'type' => '"' . NodeTypeField::$typeToDoctrine[$this->field->getType()] . '"',
+            'type' => '"' . $this->getDoctrineType() . '"',
             'nullable' => 'true',
             'name' => '"' . $this->field->getName() . '"',
         ];

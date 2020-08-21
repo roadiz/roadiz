@@ -17,6 +17,7 @@ use RZ\Roadiz\Utils\StringHandler;
  * Class FolderRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<Folder>
  */
 class FolderRepository extends EntityRepository
 {

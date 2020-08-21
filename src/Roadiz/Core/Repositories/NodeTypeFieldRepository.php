@@ -5,6 +5,12 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use RZ\Roadiz\Core\Entities\NodeType;
 
+/**
+ * Class NodeTypeFieldRepository
+ *
+ * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\NodeTypeField>
+ */
 class NodeTypeFieldRepository extends EntityRepository
 {
     /**

@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
+use RuntimeException;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -27,7 +30,7 @@ class RolesController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function indexAction(Request $request)
     {
@@ -57,7 +60,7 @@ class RolesController extends RozierApp
      *
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function addAction(Request $request)
     {
@@ -76,7 +79,7 @@ class RolesController extends RozierApp
                 $this->publishConfirmMessage($request, $msg);
             } catch (EntityAlreadyExistsException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
-            } catch (\RuntimeException $e) {
+            } catch (RuntimeException $e) {
                 $this->publishErrorMessage($request, $e->getMessage());
             }
 
@@ -94,7 +97,7 @@ class RolesController extends RozierApp
      * @param Request $request
      * @param int     $roleId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function deleteAction(Request $request, $roleId)
     {
@@ -122,7 +125,7 @@ class RolesController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityRequiredException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
-                } catch (\RuntimeException $e) {
+                } catch (RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
@@ -143,7 +146,7 @@ class RolesController extends RozierApp
      * @param Request $request
      * @param int     $roleId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function editAction(Request $request, $roleId)
     {
@@ -173,7 +176,7 @@ class RolesController extends RozierApp
                     $this->publishConfirmMessage($request, $msg);
                 } catch (EntityAlreadyExistsException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
-                } catch (\RuntimeException $e) {
+                } catch (RuntimeException $e) {
                     $this->publishErrorMessage($request, $e->getMessage());
                 }
 
@@ -192,7 +195,7 @@ class RolesController extends RozierApp
     /**
      * Build add role form with name constraint.
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildAddForm()
     {
@@ -217,7 +220,7 @@ class RolesController extends RozierApp
      *
      * @param Role $role
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildDeleteForm(Role $role)
     {
@@ -238,7 +241,7 @@ class RolesController extends RozierApp
      *
      * @param Role $role
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     protected function buildEditForm(Role $role)
     {
@@ -295,7 +298,7 @@ class RolesController extends RozierApp
 
             return $role;
         } else {
-            throw new \RuntimeException("Role name is not defined", 1);
+            throw new RuntimeException("Role name is not defined", 1);
         }
     }
 
@@ -333,7 +336,7 @@ class RolesController extends RozierApp
 
             return $role;
         } else {
-            throw new \RuntimeException("Role name is not defined", 1);
+            throw new RuntimeException("Role name is not defined", 1);
         }
     }
 

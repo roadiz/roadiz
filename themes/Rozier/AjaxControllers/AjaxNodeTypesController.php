@@ -95,14 +95,14 @@ class AjaxNodeTypesController extends AjaxAbstractFieldsController
     /**
      * Normalize response NodeType list result.
      *
-     * @param array|\Traversable $nodeTypes
+     * @param array<NodeType>|\Traversable<NodeType> $nodeTypes
      * @return array
      */
     private function normalizeNodeType($nodeTypes)
     {
         $nodeTypesArray = [];
 
-        /** @var NodeType $doc */
+        /** @var NodeType $nodeType */
         foreach ($nodeTypes as $nodeType) {
             $nodeModel = new NodeTypeModel($nodeType, $this->getContainer());
             $nodeTypesArray[] = $nodeModel->toArray();

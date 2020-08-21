@@ -5,7 +5,8 @@ namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ObjectManager;
-use Doctrine\Persistence\ObjectRepository;
+use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesCustomForms;
@@ -13,7 +14,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -26,23 +26,33 @@ use Symfony\Component\Workflow\Workflow;
 class NodeHandler extends AbstractHandler
 {
     /**
+     * @var NodeChrootResolver
+     */
+    protected $chrootResolver;
+    /**
      * @var Registry
      */
     private $registry;
-
-    /** @var null|Node  */
+    /**
+     * @var null|Node
+     */
     private $node;
 
     /**
      * NodeHandler constructor.
      *
-     * @param ObjectManager $objectManager
-     * @param Registry      $registry
+     * @param ObjectManager      $objectManager
+     * @param Registry           $registry
+     * @param NodeChrootResolver $chrootResolver
      */
-    public function __construct(ObjectManager $objectManager, Registry $registry)
-    {
+    final public function __construct(
+        ObjectManager $objectManager,
+        Registry $registry,
+        NodeChrootResolver $chrootResolver
+    ) {
         parent::__construct($objectManager);
         $this->registry = $registry;
+        $this->chrootResolver = $chrootResolver;
     }
 
     /**
@@ -243,7 +253,7 @@ class NodeHandler extends AbstractHandler
     {
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->removeWithChildrenAndAssociations();
         }
@@ -305,7 +315,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->softRemoveWithChildren();
         }
@@ -329,7 +339,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->softUnremoveWithChildren();
         }
@@ -353,7 +363,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->publishWithChildren();
         }
@@ -376,7 +386,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->node->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry);
+            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->archiveWithChildren();
         }
@@ -385,73 +395,13 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * Alias for TranslationRepository::findAvailableTranslationsForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return Translation[]
-     */
-    public function getAvailableTranslations()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsForNode($this->node);
-    }
-    /**
-     * Alias for TranslationRepository::findAvailableTranslationsIdForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return array
-     */
-    public function getAvailableTranslationsId()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsIdForNode($this->node);
-    }
-
-    /**
-     * Alias for TranslationRepository::findUnavailableTranslationsForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return Translation[]
-     */
-    public function getUnavailableTranslations()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findUnavailableTranslationsForNode($this->node);
-    }
-
-    /**
-     * Alias for TranslationRepository::findUnavailableTranslationIdForNode.
-     *
-     * @deprecated This method has no purpose here.
-     * @return array
-     */
-    public function findUnavailableTranslationIdForNode()
-    {
-        return $this->objectManager
-            ->getRepository(Translation::class)
-            ->findUnavailableTranslationIdForNode($this->node);
-    }
-
-    /**
      * Return if is in Newsletter Node.
      *
+     * @deprecated Just here not to break themes.
      * @return bool
      */
     public function isRelatedToNewsletter()
     {
-        if ($this->node->getNodeType()->isNewsletterType()) {
-            return true;
-        }
-
-        $parents = $this->getParents();
-        foreach ($parents as $parent) {
-            if ($parent->getNodeType()->isNewsletterType()) {
-                return true;
-            }
-        }
         return false;
     }
 
@@ -480,28 +430,30 @@ class NodeHandler extends AbstractHandler
     /**
      * Return every node’s parents
      * @param TokenStorageInterface|null $tokenStorage
-     * @return Node[]
+     * @return array<LeafInterface|Node>
      */
     public function getParents(TokenStorageInterface $tokenStorage = null)
     {
-        $parentsArray = [];
-        $parent = $this->node;
-        $user = null;
+        if (null !== $this->node) {
+            $parentsArray = [];
+            $parent = $this->node->getParent();
+            $user = null;
+            $chroot = null;
 
-        if ($tokenStorage !== null) {
-            $user = $tokenStorage->getToken()->getUser();
-        }
+            if ($tokenStorage !== null) {
+                $user = $tokenStorage->getToken()->getUser();
+                /** @var Node|null $chroot */
+                $chroot = $this->chrootResolver->getChroot($user);
+            }
 
-        do {
-            $parent = $parent->getParent();
-            if ($parent !== null && !($user !== null && $user instanceof User && $parent === $user->getChroot())) {
+            while ($parent !== null && $parent !== $chroot) {
                 $parentsArray[] = $parent;
-            } else {
-                break;
-            };
-        } while ($parent !== null);
+                $parent = $parent->getParent();
+            }
 
-        return array_reverse($parentsArray);
+            return array_reverse($parentsArray);
+        }
+        return [];
     }
 
     /**
@@ -515,7 +467,7 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions($setPositions = true)
     {
         if ($this->node->getParent() !== null) {
-            $parentHandler = new static($this->objectManager, $this->registry);
+            $parentHandler = new static($this->objectManager, $this->registry, $this->chrootResolver);
             $parentHandler->setNode($this->node->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {

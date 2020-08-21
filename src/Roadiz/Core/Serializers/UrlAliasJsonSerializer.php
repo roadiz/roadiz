@@ -24,7 +24,6 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
     public function toArray($urlAlias)
     {
         $data = [];
-
         $data['alias'] = $urlAlias->getAlias();
 
         return $data;
@@ -48,9 +47,10 @@ class UrlAliasJsonSerializer extends AbstractJsonSerializer
             'alias',
         ]);
         $normalizer = new GetSetMethodNormalizer(null, $nameConverter);
-
         $serializer = new Serializer([$normalizer], [$encoder]);
 
-        return $serializer->deserialize($jsonString, UrlAlias::class, 'json');
+        /** @var UrlAlias $urlAlias */
+        $urlAlias = $serializer->deserialize($jsonString, UrlAlias::class, 'json');
+        return $urlAlias;
     }
 }

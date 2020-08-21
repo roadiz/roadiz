@@ -1,0 +1,16 @@
+{%- block link -%}
+    {%- if app.request and app.request.get('referer') -%}
+        {% set link = app.request.get('referer') %}
+        {% set title = 'back'|trans %}
+    {%- endif -%}
+    {%- if link -%}
+        {%- if title is not defined -%}
+            {% set title = 'back'|trans %}
+        {%- endif -%}
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{- link -}}"
+           title="{{- title|escape('html_attr') -}}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    {%- endif -%}
+{%- endblock -%}
+

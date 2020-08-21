@@ -9,6 +9,7 @@ use Doctrine\ORM\Query\Expr\From;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
+use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
 
 class SimpleQueryBuilder
 {
@@ -118,6 +119,9 @@ class SimpleQueryBuilder
                         );
                     case 'NOT IN':
                         return $this->queryBuilder->expr()->notIn($prefix . $key, ':' . $baseKey);
+                    case JsonContains::FUNCTION_NAME:
+                        // Json flat array/object contains a given value
+                        return JsonContains::FUNCTION_NAME . '(' . $prefix . $key . ', :' . $baseKey . ', \'$\') = 1';
                     case 'INSTANCE OF':
                         return $this->queryBuilder->expr()->isInstanceOf($prefix . $key, ':' . $baseKey);
                 }
@@ -168,6 +172,9 @@ class SimpleQueryBuilder
                     case 'BETWEEN':
                         return $this->queryBuilder->setParameter($key . '_1', $value[1])
                                                   ->setParameter($key . '_2', $value[2]);
+                    case JsonContains::FUNCTION_NAME:
+                        // Need to quote Json value
+                        return $this->queryBuilder->setParameter($key, '"' . $value[1] . '"');
                     case 'LIKE':
                         // param is set in filterBy
                         return $this->queryBuilder;

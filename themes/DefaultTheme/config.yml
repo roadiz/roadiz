@@ -17,7 +17,6 @@ importFiles:
         - Resources/import/attributes.json
     nodetypes:
         - Resources/import/nodetype/BasicBlock.json
-        #- Resources/import/nodetype/BasicNewsletter.json
         - Resources/import/nodetype/Link.json
         - Resources/import/nodetype/Neutral.json
         - Resources/import/nodetype/Page.json

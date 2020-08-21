@@ -51,6 +51,12 @@ assetsProcessing:
     maxPixelSize: 2500
     jpegoptimPath: ~
     pngquantPath: ~
+# Choose a Doctrine strategy for NodesSources
+# inheritance classes. BE CAREFUL, if you change this
+# setting after creating content in your website, all
+# node-sources data will be lost.
+inheritance:
+    type: single_table
 #solr:
 #    endpoint:
 #        localhost:
@@ -71,6 +77,6 @@ assetsProcessing:
 #            host: localhost
 #            domainName: roadiz.test
 #
-#        external:
-#            host: 127.0.0.1
+#        varnish:
+#            host: varnish_roadiz
 #            domainName: roadiz.test

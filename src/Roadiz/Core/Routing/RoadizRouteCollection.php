@@ -14,6 +14,8 @@ use Symfony\Component\Stopwatch\Stopwatch;
  * Class RoadizRouteCollection.
  *
  * @package RZ\Roadiz\Core\Routing
+ * TODO: Convert logic into Symfony\Cmf\Component\Routing\RouteProviderInterface
+ * @deprecated Convert logic into Symfony\Cmf\Component\Routing\RouteProviderInterface
  */
 class RoadizRouteCollection extends DeferredRouteCollection
 {
@@ -124,36 +126,32 @@ class RoadizRouteCollection extends DeferredRouteCollection
     {
         $frontendThemes = $this->themeResolver->getFrontendThemes();
         foreach ($frontendThemes as $theme) {
-            if ($theme instanceof Theme) {
-                $feClass = $theme->getClassName();
-                /** @var RouteCollection $feCollection */
-                $feCollection = call_user_func([$feClass, 'getRoutes']);
-                /** @var RouteCollection $feBackendCollection */
-                $feBackendCollection = call_user_func([$feClass, 'getBackendRoutes']);
+            $feClass = $theme->getClassName();
+            /** @var RouteCollection $feCollection */
+            $feCollection = call_user_func([$feClass, 'getRoutes']);
+            /** @var RouteCollection $feBackendCollection */
+            $feBackendCollection = call_user_func([$feClass, 'getBackendRoutes']);
 
-                if ($feCollection !== null) {
-                    // set host pattern if defined
-                    if ($theme->getHostname() != '*' &&
-                        $theme->getHostname() != '') {
-                        $feCollection->setHost($theme->getHostname());
-                    }
-                    /*
-                     * Add a global prefix on theme static routes
-                     */
-                    if ($theme->getRoutePrefix() != '') {
-                        $feCollection->addPrefix($theme->getRoutePrefix());
-                    }
-                    $this->addCollection($feCollection);
+            if ($feCollection !== null) {
+                // set host pattern if defined
+                if ($theme->getHostname() != '*' &&
+                    $theme->getHostname() != '') {
+                    $feCollection->setHost($theme->getHostname());
                 }
+                /*
+                 * Add a global prefix on theme static routes
+                 */
+                if ($theme->getRoutePrefix() != '') {
+                    $feCollection->addPrefix($theme->getRoutePrefix());
+                }
+                $this->addCollection($feCollection);
+            }
 
-                if ($feBackendCollection !== null) {
-                    /*
-                     * Do not prefix or hostname admin routes.
-                     */
-                    $this->addCollection($feBackendCollection);
-                }
-            } else {
-                throw new \RuntimeException("Object of type “" . get_class($theme) . "” does not extend RZ\\Roadiz\\Core\\Entities\\Theme class.", 1);
+            if ($feBackendCollection !== null) {
+                /*
+                 * Do not prefix or hostname admin routes.
+                 */
+                $this->addCollection($feBackendCollection);
             }
         }
     }

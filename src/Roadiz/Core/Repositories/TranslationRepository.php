@@ -12,6 +12,7 @@ use RZ\Roadiz\Core\Entities\Translation;
  * Class TranslationRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Translation>
  */
 class TranslationRepository extends EntityRepository
 {
@@ -201,18 +202,21 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
-     * Get one translation by locale or override locqle.
+     * Get one translation by locale or override locale.
      *
      * @param string $locale
+     * @param string $alias
      *
      * @return Translation|null
      */
-    public function findOneByLocaleOrOverrideLocale($locale)
-    {
-        $qb = $this->createQueryBuilder(static::TRANSLATION_ALIAS);
+    public function findOneByLocaleOrOverrideLocale(
+        $locale,
+        string $alias = TranslationRepository::TRANSLATION_ALIAS
+    ): ?Translation {
+        $qb = $this->createQueryBuilder($alias);
         $qb->andWhere($qb->expr()->orX(
-            $qb->expr()->eq(static::TRANSLATION_ALIAS . '.locale', ':locale'),
-            $qb->expr()->eq(static::TRANSLATION_ALIAS . '.overrideLocale', ':locale')
+            $qb->expr()->eq($alias . '.locale', ':locale'),
+            $qb->expr()->eq($alias . '.overrideLocale', ':locale')
         ))
             ->setParameter('locale', $locale)
             ->setMaxResults(1)

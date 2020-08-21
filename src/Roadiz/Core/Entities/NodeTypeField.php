@@ -48,7 +48,7 @@ class NodeTypeField extends AbstractField
     private $excludeFromSearch = false;
 
     /**
-     * @var NodeType
+     * @var NodeType|null
      * @ORM\ManyToOne(targetEntity="NodeType", inversedBy="fields")
      * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
      * @Serializer\Exclude()
@@ -56,7 +56,7 @@ class NodeTypeField extends AbstractField
     private $nodeType;
 
     /**
-     * @return \RZ\Roadiz\Core\Entities\NodeType
+     * @return NodeType|null
      */
     public function getNodeType()
     {
@@ -64,7 +64,7 @@ class NodeTypeField extends AbstractField
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodeType $nodeType
+     * @param NodeType $nodeType
      *
      * @return $this
      */

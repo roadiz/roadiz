@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\Expr;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
@@ -20,6 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * NodeRepository
+ * @extends StatusAwareRepository<\RZ\Roadiz\Core\Entities\Node>
  */
 class NodeRepository extends StatusAwareRepository
 {
@@ -28,7 +30,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderBuildEvent
+     * @return object|QueryBuilderBuildEvent
      */
     protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
     {
@@ -44,7 +46,7 @@ class NodeRepository extends StatusAwareRepository
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderApplyEvent
+     * @return object|QueryBuilderApplyEvent
      */
     protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
     {
@@ -297,7 +299,7 @@ class NodeRepository extends StatusAwareRepository
         $offset = null,
         Translation $translation = null
     ) {
-        $query = $this->getContextualQueryWithTranslation(
+        $qb = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
             $limit,
@@ -305,11 +307,13 @@ class NodeRepository extends StatusAwareRepository
             $translation
         );
 
-        $query->setCacheable(true);
-        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $this->applyFilterByTag($criteria, $query);
-        $this->applyFilterByCriteria($criteria, $query);
-        $this->applyTranslationByTag($query, $translation);
+        $qb->setCacheable(true);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+        $this->applyFilterByTag($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
+        $this->applyTranslationByTag($qb, $translation);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -319,7 +323,7 @@ class NodeRepository extends StatusAwareRepository
              */
             return new Paginator($query);
         } else {
-            return $query->getQuery()->getResult();
+            return $query->getResult();
         }
     }
 
@@ -414,7 +418,7 @@ class NodeRepository extends StatusAwareRepository
         array $orderBy = null,
         Translation $translation = null
     ) {
-        $query = $this->getContextualQueryWithTranslation(
+        $qb = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
             1,
@@ -422,13 +426,15 @@ class NodeRepository extends StatusAwareRepository
             $translation
         );
 
-        $query->setCacheable(true);
-        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $this->applyFilterByTag($criteria, $query);
-        $this->applyFilterByCriteria($criteria, $query);
-        $this->applyTranslationByTag($query, $translation);
+        $qb->setCacheable(true);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+        $this->applyFilterByTag($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
+        $this->applyTranslationByTag($qb, $translation);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
-        return $query->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -485,9 +491,12 @@ class NodeRepository extends StatusAwareRepository
     /**
      * Find one Node with its nodeName and a given translation.
      *
-     * @param string $nodeName
+     * @param string      $nodeName
      * @param Translation $translation
+     *
      * @return null|Node
+     * @throws NonUniqueResultException
+     * @deprecated Use findOneByIdentifier
      */
     public function findByNodeNameWithTranslation(
         $nodeName,
@@ -509,10 +518,57 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
+     * Find one node using its nodeName and a translation, or a unique URL alias.
+     *
+     * @param string           $identifier
+     * @param Translation|null $translation
+     * @param bool             $availableTranslation
+     *
+     * @return array|null Array with node-type "name" and node-source "id"
+     */
+    public function findNodeTypeNameAndSourceIdByIdentifier(
+        string $identifier,
+        ?Translation $translation,
+        bool $availableTranslation = false
+    ): ?array {
+        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
+        $qb->select('nt.name, ns.id')
+            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
+            ->innerJoin('n.nodeType', static::NODETYPE_ALIAS)
+            ->innerJoin('ns.translation', static::TRANSLATION_ALIAS)
+            ->leftJoin('ns.urlAliases', 'uas')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->eq('uas.alias', ':identifier'),
+                $qb->expr()->andX(
+                    $qb->expr()->eq('n.nodeName', ':identifier'),
+                    $qb->expr()->eq('t.id', ':translation')
+                )
+            ))
+            ->setParameter('identifier', $identifier)
+            ->setParameter('translation', $translation)
+            ->setMaxResults(1)
+            ->setCacheable(true);
+
+        if ($availableTranslation) {
+            $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+                ->setParameter('available', true);
+        }
+
+        $this->alterQueryBuilderWithAuthorizationChecker($qb);
+        $query = $qb->getQuery();
+        $query->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true);
+        $query->setHydrationMode(Query::HYDRATE_ARRAY);
+        return $query->getOneOrNullResult();
+    }
+
+    /**
      * Find one Node with its nodeName and the default translation.
      *
      * @param string $nodeName
+     *
      * @return null|Node
+     * @throws NonUniqueResultException
+     * @deprecated Use findOneByIdentifier
      */
     public function findByNodeNameWithDefaultTranslation(
         $nodeName
@@ -582,19 +638,6 @@ class NodeRepository extends StatusAwareRepository
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
         return $qb->getQuery()->getOneOrNullResult();
-    }
-
-    /**
-     * @param Node $node
-     * @param Translation $translation
-     * @return array
-     * @deprecated Use findByParentWithTranslation instead
-     */
-    public function getChildrenWithTranslation(
-        Node $node,
-        Translation $translation
-    ) {
-        return $this->findByParentWithTranslation($translation, $node);
     }
 
     /**
@@ -766,36 +809,6 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
-     * Be careful, this methods could return other nodes if you created many fields
-     * with the same name on different node-types.
-     *
-     * @deprecated Use findByNodeAndField instead because **filtering on field name is not safe**.
-     * @param Node $node
-     * @param string $fieldName
-     * @return Node[]
-     */
-    public function findByNodeAndFieldName(
-        Node $node,
-        $fieldName
-    ) {
-        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select(static::NODE_ALIAS)
-            ->innerJoin('n.aNodes', 'ntn')
-            ->innerJoin('ntn.field', 'f')
-            ->andWhere($qb->expr()->eq('f.name', ':name'))
-            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
-            ->addOrderBy('ntn.position', 'ASC')
-            ->setCacheable(true);
-
-        $this->alterQueryBuilderWithAuthorizationChecker($qb);
-
-        $qb->setParameter('name', $fieldName)
-            ->setParameter('nodeA', $node);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * @param Node $node
      * @param NodeTypeField $field
      * @param Translation $translation
@@ -819,41 +832,6 @@ class NodeRepository extends StatusAwareRepository
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
         $qb->setParameter('field', $field)
-            ->setParameter('nodeA', $node)
-            ->setParameter('translation', $translation);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * Be careful, this methods could return other nodes if you created many fields
-     * with the same name on different node-types.
-     *
-     * @deprecated Use findByNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
-     * @param Node $node
-     * @param string $fieldName
-     * @param Translation $translation
-     * @return array|null
-     */
-    public function findByNodeAndFieldNameAndTranslation(
-        Node $node,
-        $fieldName,
-        Translation $translation
-    ) {
-        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select('n, ns')
-            ->innerJoin('n.aNodes', 'ntn')
-            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
-            ->innerJoin('ntn.field', 'f')
-            ->andWhere($qb->expr()->eq('f.name', ':name'))
-            ->andWhere($qb->expr()->eq('ntn.nodeA', ':nodeA'))
-            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
-            ->addOrderBy('ntn.position', 'ASC')
-            ->setCacheable(true);
-
-        $this->alterQueryBuilderWithAuthorizationChecker($qb);
-
-        $qb->setParameter('name', $fieldName)
             ->setParameter('nodeA', $node)
             ->setParameter('translation', $translation);
 
@@ -886,36 +864,6 @@ class NodeRepository extends StatusAwareRepository
     }
 
     /**
-     * Be careful, this methods could return other nodes if you created many fields
-     * with the same name on different node-types.
-     *
-     * @deprecated Use findByReverseNodeAndField instead because **filtering on field name is not safe**.
-     * @param Node $node
-     * @param string $fieldName
-     * @return array
-     */
-    public function findByReverseNodeAndFieldName(
-        Node $node,
-        $fieldName
-    ) {
-        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select(static::NODE_ALIAS)
-            ->innerJoin('n.bNodes', 'ntn')
-            ->innerJoin('ntn.field', 'f')
-            ->andWhere($qb->expr()->eq('f.name', ':name'))
-            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
-            ->addOrderBy('ntn.position', 'ASC')
-            ->setCacheable(true);
-
-        $this->alterQueryBuilderWithAuthorizationChecker($qb);
-
-        $qb->setParameter('name', $fieldName)
-            ->setParameter('nodeB', $node);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
      * @param Node $node
      * @param NodeTypeField $field
      * @param Translation $translation
@@ -939,38 +887,6 @@ class NodeRepository extends StatusAwareRepository
         $this->alterQueryBuilderWithAuthorizationChecker($qb);
 
         $qb->setParameter('field', $field)
-            ->setParameter('translation', $translation)
-            ->setParameter('nodeB', $node);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @deprecated Use findByReverseNodeAndFieldAndTranslation instead because **filtering on field name is not safe**.
-     * @param Node $node
-     * @param string $fieldName
-     * @param Translation $translation
-     * @return array|null
-     */
-    public function findByReverseNodeAndFieldNameAndTranslation(
-        Node $node,
-        $fieldName,
-        Translation $translation
-    ) {
-        $qb = $this->createQueryBuilder(static::NODE_ALIAS);
-        $qb->select('n, ns')
-            ->innerJoin('n.bNodes', 'ntn')
-            ->innerJoin('n.nodeSources', static::NODESSOURCES_ALIAS)
-            ->innerJoin('ntn.field', 'f')
-            ->andWhere($qb->expr()->eq('f.name', ':name'))
-            ->andWhere($qb->expr()->eq('ns.translation', ':translation'))
-            ->andWhere($qb->expr()->eq('ntn.nodeB', ':nodeB'))
-            ->addOrderBy('ntn.position', 'ASC')
-            ->setCacheable(true);
-
-        $this->alterQueryBuilderWithAuthorizationChecker($qb);
-
-        $qb->setParameter('name', $fieldName)
             ->setParameter('translation', $translation)
             ->setParameter('nodeB', $node);
 
@@ -1055,78 +971,6 @@ class NodeRepository extends StatusAwareRepository
         }
 
         return $theParents;
-    }
-
-    /**
-     * @param Node $node
-     * @deprecated This method should be called from Translation repository.
-     * @return array
-     */
-    public function findAvailableTranslationForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select(static::TRANSLATION_ALIAS)
-            ->from(Translation::class, static::TRANSLATION_ALIAS)
-            ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
-            ->innerJoin('ns.node', static::NODE_ALIAS)
-            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
-            ->setParameter('nodeId', $node->getId())
-            ->setCacheable(true);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Node $node
-     * @deprecated This method should be called from Translation repository.
-     * @return array
-     */
-    public function findUnavailableTranslationForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select(static::TRANSLATION_ALIAS)
-            ->from(Translation::class, static::TRANSLATION_ALIAS)
-            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
-            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
-            ->setCacheable(true);
-
-        return $qb->getQuery()->getResult();
-    }
-
-    /**
-     * @param Node $node
-     * @deprecated This method should be called from Translation repository.
-     * @return array
-     */
-    public function findAvailableTranslationIdForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('t.id')
-            ->from(Translation::class, static::TRANSLATION_ALIAS)
-            ->innerJoin('t.nodeSources', static::NODESSOURCES_ALIAS)
-            ->innerJoin('ns.node', static::NODE_ALIAS)
-            ->andWhere($qb->expr()->eq('n.id', ':nodeId'))
-            ->setParameter('nodeId', $node->getId())
-            ->setCacheable(true);
-
-        return array_map('current', $qb->getQuery()->getScalarResult());
-    }
-
-    /**
-     * @param Node $node
-     * @deprecated This method should be called from Translation repository.
-     * @return array
-     */
-    public function findUnavailableTranslationIdForNode(Node $node)
-    {
-        $qb = $this->_em->createQueryBuilder();
-        $qb->select('t.id')
-            ->from(Translation::class, static::TRANSLATION_ALIAS)
-            ->andWhere($qb->expr()->notIn('t.id', ':translationsId'))
-            ->setParameter('translationsId', $this->findAvailableTranslationIdForNode($node))
-            ->setCacheable(true);
-
-        return array_map('current', $qb->getQuery()->getScalarResult());
     }
 
     /**

@@ -42,15 +42,6 @@ trait AttributeValueTranslationTrait
                 }
                 $this->value = $value;
                 return $this;
-            case AttributeInterface::DECIMAL_T:
-                $this->value = (float) $value;
-                return $this;
-            case AttributeInterface::INTEGER_T:
-                $this->value = (int) $value;
-                return $this;
-            case AttributeInterface::BOOLEAN_T:
-                $this->value = (bool) $value;
-                return $this;
             case AttributeInterface::DATETIME_T:
             case AttributeInterface::DATE_T:
                 if ($value instanceof \DateTime) {

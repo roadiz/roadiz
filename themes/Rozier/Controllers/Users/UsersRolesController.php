@@ -131,7 +131,7 @@ class UsersRolesController extends RozierApp
      * @param array $data
      * @param User  $user
      *
-     * @return Role
+     * @return Role|null
      */
     private function addUserRole($data, User $user)
     {

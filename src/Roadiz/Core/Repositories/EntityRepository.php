@@ -20,11 +20,15 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
+use RZ\Roadiz\Core\Events\QueryEvent;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements a simple countBy method.
+ *
+ * @template T
+ * @extends \Doctrine\ORM\EntityRepository<T>
  */
 class EntityRepository extends \Doctrine\ORM\EntityRepository implements ContainerAwareInterface
 {
@@ -107,7 +111,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderBuildEvent
+     * @return object|QueryBuilderBuildEvent
      */
     protected function dispatchQueryBuilderBuildEvent(QueryBuilder $qb, $property, $value)
     {
@@ -123,11 +127,26 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
+     * @param Query $query
+     *
+     * @return object|QueryEvent
+     */
+    protected function dispatchQueryEvent(Query $query)
+    {
+        /** @var EventDispatcher $eventDispatcher */
+        $eventDispatcher = $this->container['dispatcher'];
+        return $eventDispatcher->dispatch(new QueryEvent(
+            $query,
+            $this->getEntityName()
+        ));
+    }
+
+    /**
      * @param QueryBuilder $qb
      * @param string $property
      * @param mixed $value
      *
-     * @return QueryBuilderApplyEvent
+     * @return object|QueryBuilderApplyEvent
      */
     protected function dispatchQueryBuilderApplyEvent(QueryBuilder $qb, $property, $value)
     {
@@ -140,55 +159,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
             $value,
             $this->getEntityName()
         ));
-    }
-
-    /**
-     * Build a query comparison.
-     *
-     * @param mixed $value
-     * @param string $prefix The prefix should always end with a dot
-     * @param string $key
-     * @param string $baseKey
-     * @param QueryBuilder $qb
-     *
-     * @return string
-     * @deprecated Use SimpleQueryBuilder::buildExpressionWithoutBinding
-     */
-    protected function buildComparison($value, $prefix, $key, $baseKey, QueryBuilder $qb)
-    {
-        trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated. Use SimpleQueryBuilder::buildExpressionWithoutBinding',
-            E_USER_DEPRECATED
-        );
-
-        $simpleQB = new SimpleQueryBuilder($qb);
-        $baseKey = $simpleQB->getParameterKey($baseKey);
-        return $simpleQB->buildExpressionWithoutBinding($value, $prefix, $key, $baseKey);
-    }
-
-    /**
-     * Direct bind parameters without preparation.
-     *
-     * @param array $criteria
-     * @param QueryBuilder $qb
-     * @param string $prefix Property prefix including DOT
-     *
-     * @return QueryBuilder
-     * @deprecated Use findBy or manual QueryBuilder methods
-     */
-    protected function directComparison(array &$criteria, QueryBuilder $qb, $prefix)
-    {
-        trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated. Use findBy or manual QueryBuilder methods.',
-            E_USER_DEPRECATED
-        );
-
-        $simpleQB = new SimpleQueryBuilder($qb);
-        foreach ($criteria as $key => $value) {
-            $qb = $simpleQB->buildExpressionWithBinding($value, $prefix, $key);
-        }
-
-        return $qb;
     }
 
     /**
@@ -232,108 +202,6 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
-     * @param array $criteria
-     * @param Query $finalQuery
-     * @deprecated
-     */
-    protected function applyComparisons(array &$criteria, Query $finalQuery)
-    {
-        trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated.',
-            E_USER_DEPRECATED
-        );
-
-        foreach ($criteria as $key => $value) {
-            $this->applyComparison($key, $value, $finalQuery);
-        }
-    }
-
-    /**
-     * Direct bind one single parameter without preparation.
-     *
-     * @param string       $key
-     * @param mixed        $value
-     * @param QueryBuilder $qb
-     * @param string       $alias
-     *
-     * @return QueryBuilder
-     * @deprecated Use SimpleQueryBuilder::buildExpressionWithBinding
-     */
-    protected function singleDirectComparison($key, &$value, QueryBuilder $qb, $alias)
-    {
-        trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated. Use SimpleQueryBuilder::buildExpressionWithBinding',
-            E_USER_DEPRECATED
-        );
-        if ($value instanceof PersistableInterface) {
-            $res = $qb->expr()->eq($alias . '.' . $key, $value->getId());
-        } elseif (is_array($value)) {
-            /*
-             * array
-             *
-             * ['<=', $value]
-             * ['<', $value]
-             * ['>=', $value]
-             * ['>', $value]
-             * ['BETWEEN', $value, $value]
-             * ['LIKE', $value]
-             * in [$value, $value]
-             */
-            if (count($value) > 1) {
-                switch ($value[0]) {
-                    case '!=':
-                        # neq
-                        $res = $qb->expr()->neq($alias . '.' . $key, $value[1]);
-                        break;
-                    case '<=':
-                        # lte
-                        $res = $qb->expr()->lte($alias . '.' . $key, $value[1]);
-                        break;
-                    case '<':
-                        # lt
-                        $res = $qb->expr()->lt($alias . '.' . $key, $value[1]);
-                        break;
-                    case '>=':
-                        # gte
-                        $res = $qb->expr()->gte($alias . '.' . $key, $value[1]);
-                        break;
-                    case '>':
-                        # gt
-                        $res = $qb->expr()->gt($alias . '.' . $key, $value[1]);
-                        break;
-                    case 'BETWEEN':
-                        $res = $qb->expr()->between(
-                            $alias . '.' . $key,
-                            $value[1],
-                            $value[2]
-                        );
-                        break;
-                    case 'LIKE':
-                        $fullKey = sprintf('LOWER(%s)', $alias . '.' . $key);
-                        $res = $qb->expr()->like($fullKey, $qb->expr()->literal($value[1]));
-                        break;
-                    case 'INSTANCE OF':
-                        $res = $qb->expr()->isInstanceOf($alias . '.' . $key, $value[1]);
-                        break;
-                    default:
-                        $res = $this->directExprIn($qb, $alias . '.' . $key, $key, $value);
-                        break;
-                }
-            } else {
-                $res = $this->directExprIn($qb, $alias . '.' . $key, $key, $value);
-            }
-        } elseif (is_bool($value)) {
-            $res = $qb->expr()->eq($alias . '.' . $key, (boolean) $value);
-        } else {
-            $res = $qb->expr()->eq($alias . '.' . $key, $value);
-        }
-
-        $qb->andWhere($res);
-
-        return $qb;
-    }
-
-    /**
      * @param QueryBuilder $qb
      * @param string $name
      * @param string $key
@@ -359,65 +227,12 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     }
 
     /**
-     * Bind classic parameters to your query.
-     *
-     * @param string $key
-     * @param mixed  $value
-     * @param Query  $finalQuery
-     * @deprecated Use SimpleQueryBuilder::bindValue
-     */
-    protected function applyComparison($key, $value, Query $finalQuery)
-    {
-        trigger_error(
-            'Method ' . __METHOD__ . ' is deprecated. Use SimpleQueryBuilder::bindValue',
-            E_USER_DEPRECATED
-        );
-
-        $key = str_replace('.', '_', $key);
-
-        if ($value instanceof PersistableInterface) {
-            $finalQuery->setParameter($key, $value->getId());
-        } elseif (is_array($value)) {
-            if (count($value) > 1) {
-                switch ($value[0]) {
-                    case '!=':
-                    case '<=':
-                    case '<':
-                    case '>=':
-                    case '>':
-                    case 'INSTANCE OF':
-                    case 'NOT IN':
-                        $finalQuery->setParameter($key, $value[1]);
-                        break;
-                    case 'BETWEEN':
-                        $finalQuery->setParameter($key . '_1', $value[1]);
-                        $finalQuery->setParameter($key . '_2', $value[2]);
-                        break;
-                    case 'LIKE':
-                        // param is setted in filterBy
-                        break;
-                    default:
-                        $finalQuery->setParameter($key, $value);
-                        break;
-                }
-            } else {
-                $finalQuery->setParameter($key, $value);
-            }
-        } elseif (is_bool($value)) {
-            $finalQuery->setParameter($key, $value);
-        } elseif ('NOT NULL' == $value) {
-            // param is not needed
-        } elseif (isset($value)) {
-            $finalQuery->setParameter($key, $value);
-        }
-    }
-
-    /**
      * Count entities using a Criteria object or a simple filter array.
      *
      * @param Criteria|mixed|array $criteria or array
      *
      * @return integer
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy($criteria)
     {
@@ -538,6 +353,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -545,9 +362,9 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($qb);
+            return new Paginator($query);
         } else {
-            return $qb->getQuery()->getResult();
+            return $query->getResult();
         }
     }
 

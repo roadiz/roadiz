@@ -213,7 +213,7 @@ historyUserPage:
 customFormsHomePage:
     path:     /rz-admin/custom-forms
     defaults:
-        _controller: Themes\Rozier\Controllers\CustomFormsController::indexAction
+        _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::indexAction
 customFormsRoutes:
     resource: "routing/custom-forms.yml"
     prefix: /rz-admin/custom-forms
@@ -240,24 +240,23 @@ searchNodeSourcePage:
         _controller: Themes\Rozier\Controllers\SearchController::searchNodeSourceAction
     requirements: { nodetypeId : "[0-9]+" }
 
-#NEWSLETTERS
-newslettersIndexPage:
-    path:     /rz-admin/newsletter
-    defaults:
-        _controller: Themes\Rozier\Controllers\NewslettersController::listAction
-newslettersRoutes:
-    resource: "routing/newsletters.yml"
-    prefix: /rz-admin/newsletter
-
-
-# CSS to style with main color
-cssMainColor:
-    path : /rz-admin/css/main-color.css
-    defaults:
-        _controller: Themes\Rozier\RozierApp::cssAction
-
 aboutPage:
     path: /rz-admin/about
     defaults:
         _controller: Themes\Rozier\Controllers\AboutController::indexAction
+
+
+#
+# CSS to style with main color
+# NOT SECURED ROUTES
+#
+cssMainColor:
+    path : /css/main-color.css
+    defaults:
+        _controller: Themes\Rozier\RozierApp::cssAction
+
+loginImagePage:
+    path: /css/login/image
+    defaults:
+        _controller: Themes\Rozier\Controllers\LoginController::imageAction
 

@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Pimple\Container;
 use ReflectionClass;
 use ReflectionException;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -405,8 +406,7 @@ abstract class AppController extends Controller
     public function getSession()
     {
         $request = $this->getRequest();
-
-        return $request && $request->hasPreviousSession() ? $request->getSession() : null;
+        return null !== $request && $request->hasPreviousSession() ? $request->getSession() : null;
     }
 
     /**
@@ -574,7 +574,7 @@ abstract class AppController extends Controller
 
     /**
      * Validate a request against a given ROLE_*
-     * and check chroot and newsletter type/access
+     * and check chroot
      * and throws an AccessDeniedException exception.
      *
      * @param string $role
@@ -587,15 +587,18 @@ abstract class AppController extends Controller
     {
         /** @var User $user */
         $user = $this->getUser();
+        /** @var NodeChrootResolver $chrootResolver */
+        $chrootResolver = $this->get(NodeChrootResolver::class);
+        $chroot = $chrootResolver->getChroot($user);
 
-        if ($this->isGranted($role) && null !== $user && $user->getChroot() === null) {
+        if ($this->isGranted($role) && $chroot === null) {
             /*
              * Already grant access if user is not chrooted.
              */
             return;
         }
 
-        /** @var Node $node */
+        /** @var Node|null $node */
         $node = $this->get('em')->find(Node::class, (int) $nodeId);
 
         if (null !== $node) {
@@ -608,24 +611,16 @@ abstract class AppController extends Controller
             if ($includeChroot) {
                 $parents[] = $node;
             }
-            $isNewsletterFriend = $nodeHandler->isRelatedToNewsletter();
         } else {
             $parents = [];
-            $isNewsletterFriend = false;
         }
 
-        if ($isNewsletterFriend && !$this->isGranted('ROLE_ACCESS_NEWSLETTERS')) {
+        if (!$this->isGranted($role)) {
             throw new AccessDeniedException("You don't have access to this page");
-        } elseif (!$isNewsletterFriend) {
-            if (!$this->isGranted($role)) {
-                throw new AccessDeniedException("You don't have access to this page");
-            }
+        }
 
-            if (null !== $user &&
-                $user->getChroot() !== null &&
-                !in_array($user->getChroot(), $parents, true)) {
-                throw new AccessDeniedException("You don't have access to this page");
-            }
+        if (null !== $user && $chroot !== null && !in_array($chroot, $parents, true)) {
+            throw new AccessDeniedException("You don't have access to this page");
         }
     }
 

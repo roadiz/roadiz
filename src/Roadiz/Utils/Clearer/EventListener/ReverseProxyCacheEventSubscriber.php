@@ -9,6 +9,7 @@ use GuzzleHttp\Exception\ConnectException;
 use Pimple\Container;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -84,6 +85,8 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 
     /**
      * @param NodesSourcesUpdatedEvent $event
+     *
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function onPurgeRequest(NodesSourcesUpdatedEvent $event)
     {
@@ -101,7 +104,14 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
                     return;
                 }
             }
-            foreach ($this->createPurgeRequests($urlGenerator->generate($nodeSource)) as $request) {
+
+            $purgeRequests = $this->createPurgeRequests($urlGenerator->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                [
+                    RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
+                ]
+            ));
+            foreach ($purgeRequests as $request) {
                 (new Client())->send($request, ['debug' => false]);
             }
         } catch (ClientException $e) {

@@ -69,11 +69,14 @@ class UserProvider implements UserProviderInterface
         if ($user instanceof User) {
             /** @var User|null $refreshUser */
             $refreshUser = $this->em->find(User::class, (int) $user->getId());
-
-            if ($refreshUser !== null) {
+            if ($refreshUser !== null &&
+                $refreshUser->isEnabled() &&
+                $refreshUser->isAccountNonExpired() &&
+                $refreshUser->isAccountNonLocked()) {
+                // Always refresh User from database: too much related entities to rely only on token.
                 return $refreshUser;
             } else {
-                throw new UnsupportedUserException();
+                throw new UsernameNotFoundException('Token user does not exist anymore, authenticate again…');
             }
         }
         throw new UnsupportedUserException();

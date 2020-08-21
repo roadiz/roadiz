@@ -7,6 +7,7 @@ namespace RZ\Roadiz\Core\Repositories;
  * Class UrlAliasRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\UrlAlias>
  */
 class UrlAliasRepository extends EntityRepository
 {

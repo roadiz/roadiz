@@ -49,6 +49,96 @@
                 <target state="translated">La locale sera toujours affichée dans le chemin généré pour une source de nœud même si elle possède un alias d’URL dans la langue demandée.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="use_native_json">
+                <source>use_native_json</source>
+                <target state="translated">Utiliser le format JSON natif</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="use_native_json.help">
+                <source>Use MySQL 5.7+ JSON field type.</source>
+                <target state="translated">Utiliser le type de champ JSON MySQL disponible à partir de la version 5.7.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_id">
+                <source>oauth_client_id</source>
+                <target state="translated">OAuth2 Client ID</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_id.help">
+                <source>oauth_client_id.help</source>
+                <target state="translated">Identifiant à récupérer depuis votre fournisseur d’identité OpenID (OAuth2).</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_secret">
+                <source>oauth_client_secret</source>
+                <target state="translated">OAuth2 Client secret</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_secret.help">
+                <source>oauth_client_secret.help</source>
+                <target state="translated">Secret à récupérer depuis votre fournisseur d’identité OpenID (OAuth2).</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_hd">
+                <source>openid_hd</source>
+                <target state="translated">Restreindre au nom de domaine</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_hd.help">
+                <source>openid_hd.help</source>
+                <target state="translated">Autorise seulement les emails du nom de domaine à s’authentifier avec OpenID.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_button_label">
+                <source>openid_button_label</source>
+                <target state="translated">Label du bouton de connexion OpenID</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_button_label.help">
+                <source>openid_button_label.help</source>
+                <target state="translated">Personnaliser le label du bouton sur la page de connexion au back-office.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_discovery">
+                <source>openid_discovery</source>
+                <target state="translated">URL d’auto-découverte OpenID</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_discovery.help">
+                <source>openid_discovery.help</source>
+                <target state="translated">Lien standard d’auto-découverte OpenID, nécessaire à l’activation de la fonctionnalité OpenID dans Roadiz.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_default_roles">
+                <source>openid_default_roles</source>
+                <target state="translated">Rôles attribués automatiquement au domaine OpenID</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_default_roles.help">
+                <source>openid_default_roles.help</source>
+                <target state="translated">Lister les rôles, séparés par virgule, à attribuer automatiquement aux utilisateurs authentifiés via OpenID.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_scopes">
+                <source>openid_scopes</source>
+                <target state="translated">Scopes Open ID / OAuth2</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_scopes.help">
+                <source>openid_scopes.help</source>
+                <target state="translated">Réduit la liste des scopes demandés. Lister les scopes séparés par un espace. Si la liste est laissée vide, OpenID tentera de se connecter avec tous les scopes disponibles depuis le document d’auto-découverte.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_username_claim">
+                <source>openid_username_claim</source>
+                <target state="translated">Claim du nom d’utilisateur Open ID</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_username_claim.help">
+                <source>openid_username_claim.help</source>
+                <target state="translated">Si vide, Roadiz utilisera le claim “email” comme nom d’utilisateur Open ID</target>
+                <note>Setting description</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

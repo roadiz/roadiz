@@ -15,7 +15,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class NodesDetailsCommand extends Command
 {
-    /** @var  EntityManager */
+    /**
+     * @var EntityManager
+     */
     private $entityManager;
 
     protected function configure()
@@ -35,7 +37,7 @@ class NodesDetailsCommand extends Command
         $translation = $this->entityManager->getRepository(Translation::class)
                                            ->findOneBy(['locale' => $input->getArgument('locale')]);
 
-        /** @var NodesSources $source */
+        /** @var NodesSources|null $source */
         $source = $this->entityManager->getRepository(NodesSources::class)
                                     ->setDisplayingNotPublishedNodes(true)
                                     ->findOneBy([

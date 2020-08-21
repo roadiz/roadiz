@@ -1,9 +1,9 @@
 {% extends '@Rozier/layout.html.twig' %}
 
-{% if app.user.getFirstName %}
-{% set displayName = app.user.getFirstName %}
+{% if app.user %}
+    {% set displayName = app.user.firstName|default(app.user.nickname|default(app.user.givenName|default(app.user.name|default(app.user.username)))) %}
 {% else %}
-{% set displayName = app.user.getUsername %}
+    {% set displayName = '' %}
 {% endif %}
 
 {% block content %}
@@ -14,14 +14,19 @@
     </header>
 
     <article class="content content-dashboard">
-        {% if latestLogs and is_granted('ROLE_ACCESS_NODES') %}
+        {% if latestLogs %}
         <div id="latest-sources">
             <h3>{% trans %}latest.node-sources.updates{% endtrans %}</h3>
             {% spaceless %}
                 {% for log in latestLogs %}
                     {% set source = log.nodeSource %}
                     <div class="latest-source">
-                        <a href="{{ path("nodesEditSourcePage", {"nodeId":source.node.id, "translationId":source.translation.id }) }}">
+                        {% if is_granted('ROLE_ACCESS_NODES') %}
+                        <a href="{{ path("nodesEditSourcePage", {
+                            "nodeId": source.node.id,
+                            "translationId": source.translation.id
+                        }) }}">
+                        {% endif %}
                             {% set thumbnail = source.documentsByFields.first.document %}
                             <figure>
                                 {% if thumbnail and thumbnail.image %}
@@ -33,18 +38,24 @@
                                 <span class="no-thumb"></span>
                                 {% endif %}
                                 {% if log.user %}
-                                <img width="60"
-                                     height="60"
-                                     class="user-image"
-                                     src="{{ log.user.pictureUrl }}"
-                                     alt="{{ log.user.identifier }}"
-                                     title="{{ log.user.identifier }}"
-                                     data-uk-tooltip="{animation:true}" />
+                                    <img width="60"
+                                         height="60"
+                                         class="user-image"
+                                         src="{{ log.user.pictureUrl }}"
+                                         alt="{{ log.user.identifier }}"
+                                         title="{{ log.user.identifier }}"
+                                         data-uk-tooltip="{animation:true}" />
+                                {% elseif log.username %}
+                                    <span class="user-image"
+                                          title="{{ log.username }}"
+                                          data-uk-tooltip="{animation:true}" ><i class="uk-icon uk-icon-rz-user"></i></span>
                                 {% endif %}
                             </figure>
                             <p class="source-title">{{ source.title }}</p>
                             <p class="source-update-date">{{ log.datetime|localizeddate('medium', 'short') }}</p>
+                        {% if is_granted('ROLE_ACCESS_NODES') %}
                         </a>
+                        {% endif %}
                     </div>
                 {% endfor %}
             {% endspaceless %}

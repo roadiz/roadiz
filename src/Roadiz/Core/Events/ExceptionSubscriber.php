@@ -201,7 +201,6 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
          * Create a new controller for serving
          * 404 response
          */
-        /** @var string $ctrl */
         $ctrlClass = $theme->getClassName();
         $controller = new $ctrlClass();
 

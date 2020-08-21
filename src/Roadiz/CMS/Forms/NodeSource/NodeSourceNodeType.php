@@ -8,6 +8,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
@@ -77,13 +78,14 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
         /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
-        $event->setData($entityManager
+        /** @var NodeRepository $nodeRepo */
+        $nodeRepo = $entityManager
             ->getRepository(Node::class)
-            ->setDisplayingNotPublishedNodes(true)
-            ->findByNodeAndField(
-                $nodeSource->getNode(),
-                $nodeTypeField
-            ));
+            ->setDisplayingNotPublishedNodes(true);
+        $event->setData($nodeRepo->findByNodeAndField(
+            $nodeSource->getNode(),
+            $nodeTypeField
+        ));
     }
 
     /**

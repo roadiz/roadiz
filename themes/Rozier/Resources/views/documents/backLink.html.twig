@@ -1,10 +1,7 @@
-{% if request %}
-    {% set link = path('documentsHomePage') %}
-    {% set titleLink = 'back_to.documents'|trans %}
+{% extends '@Rozier/widgets/backlink.html.twig' %}
 
-    {% if request.get('referer') %}
-        {% set link = request.get('referer') %}
-        {% set titleLink = 'back'|trans %}
-    {% endif %}
-    <a class="content-header-nav-back uk-navbar-content" href="{{ link }}" title="{{ titleLink }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-{% endif %}
+{%- block link -%}
+    {% set link = path('documentsHomePage') %}
+    {% set title = 'back_to.documents'|trans %}
+    {{- parent() -}}
+{%- endblock -%}

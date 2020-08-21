@@ -103,7 +103,7 @@ class NodeSourceType extends AbstractType
      * @param NodesSources $source
      * @param EntityManager $entityManager
      * @param NodeType $nodeType
-     * @return array|null
+     * @return array
      */
     private function getFieldsForSource(NodesSources $source, EntityManager $entityManager, NodeType $nodeType)
     {

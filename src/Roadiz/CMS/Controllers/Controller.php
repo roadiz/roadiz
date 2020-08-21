@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Controllers;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -13,6 +14,7 @@ use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\EmailManager;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,10 +27,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 
@@ -42,7 +47,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Get current request.
      *
-     * @return Request
+     * @return Request|null
      */
     public function getRequest()
     {
@@ -68,7 +73,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Alias for `$this->container['securityAuthorizationChecker']`.
      *
-     * @return \Symfony\Component\Security\Core\Authorization\AuthorizationChecker
+     * @return AuthorizationChecker
      */
     public function getAuthorizationChecker()
     {
@@ -78,7 +83,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Alias for `$this->container['securityTokenStorage']`.
      *
-     * @return \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
+     * @return TokenStorageInterface
      */
     public function getTokenStorage()
     {
@@ -88,7 +93,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Alias for `$this->container['em']`.
      *
-     * @return \Doctrine\ORM\EntityManager
+     * @return EntityManager
      */
     public function em()
     {
@@ -96,7 +101,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * @return \Symfony\Component\Translation\Translator
+     * @return Translator
      */
     public function getTranslator()
     {
@@ -122,6 +127,13 @@ abstract class Controller implements ContainerAwareInterface
      */
     public function generateUrl($route, $parameters = [], $referenceType = Router::ABSOLUTE_PATH)
     {
+        if ($route instanceof NodesSources) {
+            return $this->get('urlGenerator')->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $route]),
+                $referenceType
+            );
+        }
         return $this->get('urlGenerator')->generate($route, $parameters, $referenceType);
     }
 
@@ -131,7 +143,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param  string $url
      * @param  integer $status
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function redirect($url, $status = Response::HTTP_FOUND)
     {
@@ -170,7 +182,7 @@ abstract class Controller implements ContainerAwareInterface
      *
      * @param  Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function removeTrailingSlashAction(Request $request)
     {
@@ -205,7 +217,7 @@ abstract class Controller implements ContainerAwareInterface
     }
 
     /**
-     * @param null $_locale
+     * @param string|null $_locale
      *
      * @return Translation
      */
@@ -248,13 +260,13 @@ abstract class Controller implements ContainerAwareInterface
      *
      * @see http://api.symfony.com/2.6/Symfony/Bundle/FrameworkBundle/Controller/Controller.html#method_render
      *
-     * @param string $view Template file path
-     * @param array $parameters Twig assignation array
-     * @param Response $response Optional Response object to customize response parameters
-     * @param string $namespace Twig loader namespace
+     * @param string        $view Template file path
+     * @param array         $parameters Twig assignation array
+     * @param Response|null $response Optional Response object to customize response parameters
+     * @param string        $namespace Twig loader namespace
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws RuntimeError
      */
     public function render($view, array $parameters = [], Response $response = null, $namespace = "")
     {
@@ -462,7 +474,7 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * Get a user from the tokenStorage.
      *
-     * @return UserInterface|string|null
+     * @return UserInterface|object|null
      *
      * @throws \LogicException If tokenStorage is not available
      *
@@ -474,8 +486,9 @@ abstract class Controller implements ContainerAwareInterface
             throw new \LogicException('No TokenStorage has been registered in your application.');
         }
 
-        /** @var TokenInterface $token */
-        if (!$token = $this->container['securityTokenStorage']->getToken()) {
+        /** @var TokenInterface|null $token */
+        $token = $this->container['securityTokenStorage']->getToken();
+        if (null === $token) {
             return null;
         }
 

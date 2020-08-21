@@ -21,7 +21,8 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"created_at"}),
  *     @ORM\Index(columns={"updated_at"}),
  *     @ORM\Index(columns={"available", "default_translation"}),
- *     @ORM\Index(columns={"available", "locale"})
+ *     @ORM\Index(columns={"available", "locale"}),
+ *     @ORM\Index(columns={"available", "override_locale"})
  * })
  */
 class Translation extends AbstractDateTimed
@@ -501,13 +502,13 @@ class Translation extends AbstractDateTimed
     ];
     /**
      * @ORM\OneToMany(targetEntity="DocumentTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var Collection
+     * @var Collection<DocumentTranslation>
      * @Serializer\Exclude
      */
     protected $documentTranslations;
     /**
      * @ORM\OneToMany(targetEntity="FolderTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var Collection
+     * @var Collection<FolderTranslation>
      * @Serializer\Exclude
      */
     protected $folderTranslations;
@@ -552,13 +553,13 @@ class Translation extends AbstractDateTimed
     private $available = true;
     /**
      * @ORM\OneToMany(targetEntity="NodesSources", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var Collection
+     * @var Collection<NodesSources>
      * @Serializer\Exclude
      */
     private $nodeSources;
     /**
      * @ORM\OneToMany(targetEntity="TagTranslation", mappedBy="translation", orphanRemoval=true, fetch="EXTRA_LAZY")
-     * @var Collection
+     * @var Collection<TagTranslation>
      * @Serializer\Exclude
      */
     private $tagTranslations;

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Entities;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
@@ -25,21 +26,21 @@ class CustomFormAnswer extends AbstractEntity
     private $ip = '';
     /**
      * @ORM\Column(type="datetime", name="submitted_at")
-     * @var \DateTime|null
+     * @var \DateTime
      */
-    private $submittedAt = null;
+    private $submittedAt;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute",
      *            mappedBy="customFormAnswer",
      *            cascade={"ALL"})
-     * @var ArrayCollection
+     * @var Collection<CustomFormFieldAttribute>
      */
     private $answerFields;
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm",
      *           inversedBy="customFormAnswers")
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
-     * @var CustomForm
+     * @var CustomForm|null
      **/
     private $customForm;
 
@@ -49,6 +50,7 @@ class CustomFormAnswer extends AbstractEntity
     public function __construct()
     {
         $this->answerFields = new ArrayCollection();
+        $this->submittedAt = new \DateTime();
     }
 
     /**
@@ -65,7 +67,7 @@ class CustomFormAnswer extends AbstractEntity
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<CustomFormFieldAttribute>
      */
     public function getAnswers()
     {
@@ -145,15 +147,27 @@ class CustomFormAnswer extends AbstractEntity
      *
      * @return $this
      */
-    public function setSubmittedAt(\DateTime $submittedAt = null): CustomFormAnswer
+    public function setSubmittedAt(\DateTime $submittedAt): CustomFormAnswer
     {
         $this->submittedAt = $submittedAt;
         return $this;
     }
 
     /**
+     * @return string|null
+     */
+    public function getEmail(): ?string
+    {
+        $attribute = $this->getAnswers()->filter(function (CustomFormFieldAttribute $attribute) {
+            return $attribute->getCustomFormField()->isEmail();
+        })->first();
+        return $attribute ? (string) $attribute->getValue() : null;
+    }
+
+    /**
      * @param bool $namesAsKeys Use fields name as key. Default: true
      * @return array
+     * @deprecated Use CustomFormAnswerSerializer instead
      */
     public function toArray($namesAsKeys = true): array
     {

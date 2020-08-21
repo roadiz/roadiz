@@ -30,9 +30,7 @@ class NodeTypesType extends AbstractType
         $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
         $resolver->setAllowedTypes('showInvisible', ['boolean']);
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
-            $criteria = [
-                'newsletterType' => false,
-            ];
+            $criteria = [];
             if ($options['showInvisible'] === false) {
                 $criteria['visible'] = true;
             }

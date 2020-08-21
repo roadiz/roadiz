@@ -8,7 +8,7 @@ use RZ\Roadiz\CMS\Forms\HoneypotType;
 use RZ\Roadiz\CMS\Forms\RecaptchaType;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Exceptions\BadFormRequestException;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -89,13 +89,13 @@ class ContactFormManager extends EmailManager
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'contactFormManager' Factory Service
      *
-     * @param Request              $request
-     * @param FormFactoryInterface $formFactory
-     * @param TranslatorInterface  $translator
-     * @param Environment          $templating
-     * @param \Swift_Mailer        $mailer
-     * @param Settings             $settingsBag
-     * @param DocumentUrlGenerator $documentUrlGenerator
+     * @param Request                       $request
+     * @param FormFactoryInterface          $formFactory
+     * @param TranslatorInterface           $translator
+     * @param Environment                   $templating
+     * @param \Swift_Mailer                 $mailer
+     * @param Settings                      $settingsBag
+     * @param DocumentUrlGeneratorInterface $documentUrlGenerator
      *
      * @throws \ReflectionException
      */
@@ -106,7 +106,7 @@ class ContactFormManager extends EmailManager
         Environment $templating,
         \Swift_Mailer $mailer,
         Settings $settingsBag,
-        DocumentUrlGenerator $documentUrlGenerator
+        DocumentUrlGeneratorInterface $documentUrlGenerator
     ) {
         parent::__construct($request, $translator, $templating, $mailer, $settingsBag, $documentUrlGenerator);
 
@@ -235,9 +235,9 @@ class ContactFormManager extends EmailManager
             'required' => true,
             'constraints' => [
                 new NotBlank([
-                    'message' => 'contact_form.must_consent_to_send'
-                ])
-            ]
+                    'message' => 'contact_form.must_consent_to_send',
+                ]),
+            ],
         ]);
         return $this;
     }
@@ -381,13 +381,21 @@ class ContactFormManager extends EmailManager
         foreach ($this->request->files as $files) {
             /**
              * @var string $name
-             * @var UploadedFile $uploadedFile
+             * @var UploadedFile|array $uploadedFile
              */
             foreach ($files as $name => $uploadedFile) {
                 if (null !== $uploadedFile) {
                     if (is_array($uploadedFile)) {
+                        /**
+                         * @var string $singleName
+                         * @var UploadedFile|array $singleUploadedFile
+                         */
                         foreach ($uploadedFile as $singleName => $singleUploadedFile) {
                             if (is_array($singleUploadedFile)) {
+                                /**
+                                 * @var string $singleName2
+                                 * @var UploadedFile $singleUploadedFile2
+                                 */
                                 foreach ($singleUploadedFile as $singleName2 => $singleUploadedFile2) {
                                     $this->addUploadedFile($singleName2, $singleUploadedFile2);
                                 }

@@ -33,7 +33,7 @@ class CryptoServiceProvider implements ServiceProviderInterface
         };
 
         $container[UniqueKeyEncoderInterface::class] = function (Container $c) {
-            /** @var EncryptionKey|null $key */
+            /** @var EncryptionSecretKey|EncryptionKey|null $key */
             $key = $c['crypto.private_key'];
             if (null === $key) {
                 return $key;

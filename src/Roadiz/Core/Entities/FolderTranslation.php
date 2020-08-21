@@ -48,7 +48,7 @@ class FolderTranslation extends AbstractEntity
      * @ORM\ManyToOne(targetEntity="Folder", inversedBy="translatedFolders")
      * @ORM\JoinColumn(name="folder_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Exclude
-     * @var Folder
+     * @var Folder|null
      */
     protected $folder = null;
 
@@ -56,7 +56,7 @@ class FolderTranslation extends AbstractEntity
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="folderTranslations", fetch="EXTRA_LAZY")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"folder", "document"})
-     * @var Translation
+     * @var Translation|null
      */
     protected $translation = null;
 

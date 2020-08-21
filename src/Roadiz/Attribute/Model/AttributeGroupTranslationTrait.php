@@ -18,7 +18,7 @@ trait AttributeGroupTranslationTrait
     protected $translation;
 
     /**
-     * @var AttributeGroupInterface
+     * @var AttributeGroupInterface|null
      */
     protected $attributeGroup;
 

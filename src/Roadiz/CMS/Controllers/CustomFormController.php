@@ -3,17 +3,26 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Controllers;
 
-use Doctrine\ORM\EntityManager;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Exception;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormAnswer;
 use RZ\Roadiz\Core\Entities\CustomFormFieldAttribute;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Utils\CustomForm\CustomFormHelper;
+use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
+use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Twig_Error_Runtime;
 
 class CustomFormController extends CmsController
 {
@@ -22,14 +31,15 @@ class CustomFormController extends CmsController
      */
     public function getStaticResourcesUrl()
     {
-        return $this->get('assetPackages')->getUrl('/themes/Rozier/static/');
+        return $this->get('assetPackages')->getUrl('themes/Rozier/static/');
     }
 
     /**
      * @param Request $request
      * @param int     $customFormId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function addAction(Request $request, $customFormId)
     {
@@ -67,7 +77,8 @@ class CustomFormController extends CmsController
      * @param Request $request
      * @param int     $customFormId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function sentAction(Request $request, $customFormId)
     {
@@ -87,9 +98,9 @@ class CustomFormController extends CmsController
      * Send an answer form by Email.
      *
      * @param array $assignation
-     * @param string|array $receiver
+     * @param string|array|null $receiver
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function sendAnswer(
         $assignation,
@@ -117,17 +128,18 @@ class CustomFormController extends CmsController
     /**
      * Add a custom form answer into database.
      *
-     * @param array                       $data Data array from POST form
-     * @param CustomForm                  $customForm
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param array         $data Data array from POST form
+     * @param CustomForm    $customForm
+     * @param EntityManagerInterface $em
      *
      * @return array $fieldsData
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      * @deprecated Use \RZ\Roadiz\Utils\CustomForm\CustomFormHelper to transform Form to CustomFormAnswer.
      */
-    public function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManager $em)
+    public function addCustomFormAnswer(array $data, CustomForm $customForm, EntityManagerInterface $em)
     {
-        $now = new \DateTime('NOW');
+        $now = new DateTime('NOW');
         $answer = new CustomFormAnswer();
         $answer->setIp($data["ip"]);
         $answer->setSubmittedAt($now);
@@ -147,7 +159,7 @@ class CustomFormController extends CmsController
 
             if (isset($data[$field->getName()])) {
                 $fieldValue = $data[$field->getName()];
-                if ($fieldValue instanceof \DateTime) {
+                if ($fieldValue instanceof DateTime) {
                     $strDate = $fieldValue->format('Y-m-d H:i:s');
 
                     $fieldAttr->setValue($strDate);
@@ -178,7 +190,7 @@ class CustomFormController extends CmsController
      * @param CustomForm $customForm
      * @param boolean    $forceExpanded
      *
-     * @return \Symfony\Component\Form\FormInterface
+     * @return FormInterface
      */
     public function buildForm(
         Request $request,
@@ -211,7 +223,7 @@ class CustomFormController extends CmsController
      * @param string|null      $emailSender
      *
      * @return array|RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function prepareAndHandleCustomFormAssignation(
         Request $request,
@@ -223,18 +235,20 @@ class CustomFormController extends CmsController
         $assignation = [];
         $assignation['customForm'] = $customFormsEntity;
         $assignation['fields'] = $customFormsEntity->getFields();
-
+        $helper = new CustomFormHelper(
+            $this->get('em'),
+            $customFormsEntity,
+            $this->get(PrivateDocumentFactory::class)
+        );
         $form = $this->buildForm(
             $request,
             $customFormsEntity,
             $forceExpanded
         );
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $helper = new CustomFormHelper($this->get('em'), $customFormsEntity);
                 /*
                  * Parse form data and create answer.
                  */
@@ -289,8 +303,7 @@ class CustomFormController extends CmsController
 
                 return $redirection;
             } catch (EntityAlreadyExistsException $e) {
-                $this->publishMessage($request, $e->getMessage(), 'error');
-                return $redirection;
+                $form->addError(new FormError($e->getMessage()));
             }
         }
 

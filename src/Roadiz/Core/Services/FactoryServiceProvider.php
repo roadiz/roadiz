@@ -7,6 +7,7 @@ use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Handlers\CustomFormFieldHandler;
 use RZ\Roadiz\Core\Handlers\CustomFormHandler;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
@@ -14,14 +15,12 @@ use RZ\Roadiz\Core\Handlers\FolderHandler;
 use RZ\Roadiz\Core\Handlers\FontHandler;
 use RZ\Roadiz\Core\Handlers\GroupHandler;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
-use RZ\Roadiz\Core\Handlers\NewsletterHandler;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeFieldHandler;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Handlers\TranslationHandler;
-use RZ\Roadiz\Core\Viewers\DocumentViewer;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Document\DocumentFinder;
@@ -39,6 +38,7 @@ use RZ\Roadiz\Document\Renderer\ThumbnailRenderer;
 use RZ\Roadiz\Document\Renderer\VideoRenderer;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
+use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\Node\NodeFactory;
@@ -87,7 +87,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
         };
 
         $container['node.handler'] = $container->factory(function (Container $c) {
-            return new NodeHandler($c['em'], $c['workflow.registry']);
+            return new NodeHandler($c['em'], $c['workflow.registry'], $c[NodeChrootResolver::class]);
         });
         $container['nodes_sources.handler'] = $container->factory(function (Container $c) {
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);
@@ -115,9 +115,6 @@ class FactoryServiceProvider implements ServiceProviderInterface
         });
         $container['group.handler'] = $container->factory(function (Container $c) {
             return new GroupHandler($c['em']);
-        });
-        $container['newsletter.handler'] = $container->factory(function (Container $c) {
-            return new NewsletterHandler($c['em']);
         });
         $container['tag.handler'] = $container->factory(function (Container $c) {
             return new TagHandler($c['em']);
@@ -176,18 +173,6 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new DocumentFinder($c['em']);
         };
 
-        /** @deprecated */
-        $container['document.viewer'] = $container->factory(function (Container $c) {
-            return new DocumentViewer(
-                $c['requestStack'],
-                $c['twig.environment'],
-                $c['em'],
-                $c['urlGenerator'],
-                $c['document.url_generator'],
-                $c['assetPackages'],
-                $c['document.platforms']
-            );
-        });
         $container['translation.viewer'] = $container->factory(function (Container $c) {
             return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
         });
@@ -209,14 +194,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             if ($cacheProvider instanceof ArrayCache) {
                 $cacheProvider = null;
             }
-            return new DocumentUrlGenerator(
-                $c['requestStack'],
-                $c['assetPackages'],
-                $c['urlGenerator'],
-                null,
-                [],
-                $cacheProvider
-            );
+            return new DocumentUrlGenerator($c['assetPackages'], $c['urlGenerator'], $cacheProvider);
         });
 
         /*
@@ -224,6 +202,12 @@ class FactoryServiceProvider implements ServiceProviderInterface
          */
         $container['document.factory'] = $container->factory(function (Container $c) {
             return new DocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
+        });
+        $container[DocumentFactory::class] = $container->factory(function (Container $c) {
+            return $c['document.factory'];
+        });
+        $container[PrivateDocumentFactory::class] = $container->factory(function (Container $c) {
+            return new PrivateDocumentFactory($c['em'], $c['dispatcher'], $c['assetPackages'], $c['logger']);
         });
 
         return $container;

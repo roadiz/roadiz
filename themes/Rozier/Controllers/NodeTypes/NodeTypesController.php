@@ -7,6 +7,7 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\NodeTypeHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -217,7 +218,7 @@ class NodeTypesController extends RozierApp
     /**
      * @param NodeType $nodeType
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildDeleteForm(NodeType $nodeType)
     {

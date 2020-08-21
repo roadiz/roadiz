@@ -24,13 +24,14 @@ class PimpleDumperCommand extends Command implements ThemeAwareCommandInterface
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
+     *
      * @return int|null
+     * @throws \JBZoo\PimpleDumper\Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var Kernel $kernel */
         $kernel = $this->getHelper('kernel')->getKernel();
         $io = new SymfonyStyle($input, $output);
         $dumper = new PimpleDumper();

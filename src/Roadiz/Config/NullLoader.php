@@ -37,7 +37,7 @@ final class NullLoader implements LoaderInterface
     /**
      * Gets the loader resolver.
      *
-     * @return LoaderResolverInterface A LoaderResolverInterface instance
+     * @return LoaderResolverInterface|null A LoaderResolverInterface instance
      */
     public function getResolver()
     {

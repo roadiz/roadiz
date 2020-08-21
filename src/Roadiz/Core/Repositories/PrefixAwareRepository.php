@@ -12,6 +12,8 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
  * Class PrefixAwareRepository for defining join-qeuries prefixes.
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @template T
+ * @extends EntityRepository<T>
  */
 class PrefixAwareRepository extends EntityRepository
 {
@@ -180,6 +182,8 @@ class PrefixAwareRepository extends EntityRepository
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -187,18 +191,20 @@ class PrefixAwareRepository extends EntityRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($qb);
+            return new Paginator($query);
         } else {
-            return $qb->getQuery()->getResult();
+            return $query->getResult();
         }
     }
 
     /**
      * Count entities using a Criteria object or a simple filter array.
      *
-     * @param array $criteria
+     * @param array      $criteria
      * @param array|null $order
+     *
      * @return Entity
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneBy(
         array $criteria,
@@ -219,8 +225,10 @@ class PrefixAwareRepository extends EntityRepository
         $qb->setMaxResults(1);
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -262,6 +270,8 @@ class PrefixAwareRepository extends EntityRepository
 
         $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
         $this->applyFilterByCriteria($criteria, $qb);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -269,9 +279,9 @@ class PrefixAwareRepository extends EntityRepository
              * We need to use Doctrine paginator
              * if a limit is set because of the default inner join
              */
-            return new Paginator($qb);
+            return new Paginator($query);
         } else {
-            return $qb->getQuery()->getResult();
+            return $query->getResult();
         }
     }
 

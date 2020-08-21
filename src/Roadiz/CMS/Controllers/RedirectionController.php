@@ -19,7 +19,7 @@ class RedirectionController extends AppController
     /**
      * @param Request $request
      * @param Redirection $redirection
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @return RedirectResponse
      */
     public function redirectAction(Request $request, Redirection $redirection)
     {

@@ -10,14 +10,10 @@ ENV USE_APP_CACHE=0
 
 RUN apk add --no-cache shadow make git \
     && usermod -u ${USER_UID} www-data \
-    && groupmod -g ${USER_UID} www-data
-
-# Install Composer
-# And use local user as www-data
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer --version && \
-    ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime && \
-    "date"
+    && groupmod -g ${USER_UID} www-data \
+    && composer --version \
+    && ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime \
+    && "date"
 
 # Display errors
 ADD php.ini /usr/local/etc/php/php.ini
@@ -28,7 +24,6 @@ VOLUME /var/www/html
 WORKDIR /var/www/html
 
 RUN ln -s /usr/share/nginx/html/bin/roadiz /usr/local/bin/roadiz \
-    && usermod -u ${USER_UID} www-data \
     && chown -R www-data:www-data /var/www/html/
 
 ENTRYPOINT exec /usr/bin/supervisord -n -c /etc/supervisord.conf

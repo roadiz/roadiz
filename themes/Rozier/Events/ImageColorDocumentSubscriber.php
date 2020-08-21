@@ -31,9 +31,9 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     private $entityManager;
 
     /**
-     * @param EntityManager $entityManager
-     * @param Packages $packages
-     * @param LoggerInterface $logger
+     * @param EntityManager        $entityManager
+     * @param Packages             $packages
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         EntityManager $entityManager,
@@ -72,7 +72,7 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
     public function onImageUploaded(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
-        if ($this->supports($document)) {
+        if ($this->supports($document) && $document instanceof Document) {
             $documentPath = $this->packages->getDocumentFilePath($document);
             try {
                 $manager = new ImageManager();

@@ -18,24 +18,30 @@ use Twig\TwigFilter;
  */
 class UrlExtension extends AbstractExtension
 {
+    /**
+     * @var bool
+     */
     protected $forceLocale;
+    /**
+     * @var CacheProvider|null
+     */
     protected $cacheProvider;
+    /**
+     * @var DocumentUrlGeneratorInterface
+     */
+    protected $documentUrlGenerator;
     /**
      * @var bool
      */
     private $throwExceptions;
-    /**
-     * @var DocumentUrlGeneratorInterface
-     */
-    private $documentUrlGenerator;
 
     /**
      * UrlExtension constructor.
      *
      * @param DocumentUrlGeneratorInterface $documentUrlGenerator
-     * @param CacheProvider|null $cacheProvider
-     * @param bool $forceLocale
-     * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
+     * @param CacheProvider|null            $cacheProvider
+     * @param bool                          $forceLocale
+     * @param bool                          $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
     public function __construct(
         DocumentUrlGeneratorInterface $documentUrlGenerator,

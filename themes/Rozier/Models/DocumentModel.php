@@ -7,7 +7,7 @@ use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Models\HasThumbnailInterface;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
-use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 
 /**
  * Class DocumentModel.
@@ -52,7 +52,7 @@ class DocumentModel implements ModelInterface
         /** @var RendererInterface $renderer */
         $renderer = $this->container->offsetGet(RendererInterface::class);
 
-        /** @var DocumentUrlGenerator $documentUrlGenerator */
+        /** @var DocumentUrlGeneratorInterface $documentUrlGenerator */
         $documentUrlGenerator = $this->container->offsetGet('document.url_generator');
         $documentUrlGenerator->setDocument($this->document);
         $hasThumbnail = false;

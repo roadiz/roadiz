@@ -7,9 +7,8 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Repositories\RoleRepository;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
-class Roles extends ParameterBag
+class Roles extends LazyParameterBag
 {
     /**
      * @var EntityManager
@@ -20,10 +19,6 @@ class Roles extends ParameterBag
      * @var RoleRepository
      */
     private $repository;
-    /**
-     * @var bool
-     */
-    private $ready;
 
     /**
      * SettingsBag constructor.
@@ -33,7 +28,6 @@ class Roles extends ParameterBag
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-        $this->ready = false;
     }
 
     /**
@@ -74,10 +68,7 @@ class Roles extends ParameterBag
      */
     public function get($key, $default = null): Role
     {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-        $role = parent::get($key, null);
+        $role = parent::get($key, $default);
 
         if (null === $role) {
             $role = new Role($key);
@@ -86,23 +77,5 @@ class Roles extends ParameterBag
         }
 
         return $role;
-    }
-
-    /**
-     * @return array
-     */
-    public function all(): array
-    {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-
-        return parent::all();
-    }
-
-    public function reset(): void
-    {
-        $this->parameters = [];
-        $this->ready = false;
     }
 }

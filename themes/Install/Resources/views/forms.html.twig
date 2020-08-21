@@ -13,19 +13,29 @@
     {%- endif -%}
 {%- endblock form_start %}
 
-
 {% block form_label -%}
     {% if label is not same as(false) -%}
         {% if not compound -%}
             {% set label_attr = label_attr|merge({'for': id}) %}
         {%- endif %}
         {% if required -%}
-            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('uk-form-label') ~ ' required')|trim}) %}
+        {%- else %}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('uk-form-label'))|trim}) %}
         {%- endif %}
         {% if label is empty -%}
             {% set label = name|humanize %}
         {%- endif -%}
-        <label class="uk-form-label"{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        <label {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
+            <span class="uk-form-label-title">{{- label|trans -}}</span>
+            {% if attr['data-universal'] %} <i data-uk-tooltip="{animation:true}"
+                                               title="{% trans %}universal{% endtrans %}"
+                                               class="uk-icon uk-icon-flag universal-indicator"></i>{% endif %}
+            {%- if form.vars.help ?? false -%}
+                <br><small id="{{ form.vars.id }}_help"
+                       class="form-row-desc uk-form-label-description">{{ form.vars.help|trans|inlineMarkdown }}</small>
+            {%- endif -%}
+        </label>
     {%- endif %}
 {%- endblock form_label %}
 
@@ -88,7 +98,7 @@
 
 
 {% block form_row -%}
-    <div class="form-col form-col-{{ form.vars.block_prefixes[1] }}">
+    <div class="form-col form-col-{{ form.vars.block_prefixes[1] }} form{{ form.vars.block_prefixes[2]|replace({'_':'-'}) }}">
         {% if form.vars.block_prefixes[1] != 'separator' %}
            {{- form_label(form) -}}
         {% endif %}

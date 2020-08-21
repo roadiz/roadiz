@@ -195,8 +195,10 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get every nodeSources parents from direct parent to farest ancestor.
      *
-     * @param  array $criteria
+     * @param array $criteria
+     *
      * @return array<NodesSources>
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getParents(
         array $criteria = null
@@ -240,7 +242,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @param array|null $criteria Additionnal criteria
      * @param array|null $order Non default ordering
      *
-     * @return array<NodesSources>
+     * @return array<object|NodesSources>
      */
     public function getChildren(
         array $criteria = null,
@@ -276,8 +278,6 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get first node-source among current node-source children.
      *
-     * Get non-newsletter nodes-sources by default.
-     *
      * @param array|null $criteria
      * @param array|null $order
      *
@@ -289,8 +289,7 @@ class NodesSourcesHandler extends AbstractHandler
     ) {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
-            'translation' => $this->nodeSource->getTranslation(),
-            'node.nodeType.newsletterType' => false,
+            'translation' => $this->nodeSource->getTranslation()
         ];
 
         if (null !== $order) {
@@ -313,8 +312,6 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get last node-source among current node-source children.
      *
-     * Get non-newsletter nodes-sources by default.
-     *
      * @param  array|null $criteria
      * @param  array|null $order
      *
@@ -327,7 +324,6 @@ class NodesSourcesHandler extends AbstractHandler
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
             'translation' => $this->nodeSource->getTranslation(),
-            'node.nodeType.newsletterType' => false,
         ];
 
         if (null !== $order) {
@@ -373,8 +369,6 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get last node-source in the same parent as current node-source.
      *
-     * Get non-newsletter nodes-sources by default.
-     *
      * @param array|null $criteria
      * @param array|null $order
      *
@@ -397,8 +391,6 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get previous node-source from hierarchy.
      *
-     * Get non-newsletter nodes-sources by default.
-     *
      * @param array|null $criteria
      * @param array|null $order
      *
@@ -413,7 +405,6 @@ class NodesSourcesHandler extends AbstractHandler
         }
 
         $defaultCriteria = [
-            'node.nodeType.newsletterType' => false,
             /*
              * Use < operator to get first next nodeSource
              * even if it’s not the next position index
@@ -450,8 +441,6 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get next node-source from hierarchy.
      *
-     * Get non-newsletter nodes-sources by default.
-     *
      * @param array|null $criteria
      * @param array|null $order
      *
@@ -462,7 +451,6 @@ class NodesSourcesHandler extends AbstractHandler
         array $order = null
     ) {
         $defaultCrit = [
-            'node.nodeType.newsletterType' => false,
             /*
              * Use > operator to get first next nodeSource
              * even if it’s not the next position index
@@ -558,9 +546,9 @@ class NodesSourcesHandler extends AbstractHandler
     {
         return $this->objectManager
             ->getRepository(Node::class)
-            ->findByReverseNodeAndFieldNameAndTranslation(
+            ->findByReverseNodeAndFieldAndTranslation(
                 $this->nodeSource->getNode(),
-                $fieldName,
+                $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName),
                 $this->nodeSource->getTranslation()
             );
     }

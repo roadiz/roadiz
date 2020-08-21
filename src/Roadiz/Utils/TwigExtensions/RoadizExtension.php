@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Bridge\Twig\AppVariable;
@@ -53,7 +54,8 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
                 'roles' => $this->kernel->get('rolesBag'),
                 'nodeTypes' => $this->kernel->get('nodeTypesBag'),
             ],
-            'app' => $appVariable
+            'app' => $appVariable,
+            'chroot_resolver' => $this->kernel->get(NodeChrootResolver::class)
         ];
     }
 }

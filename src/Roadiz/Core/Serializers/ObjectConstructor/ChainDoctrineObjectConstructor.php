@@ -61,7 +61,7 @@ class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
         array $type,
         DeserializationContext $context
     ): ?object {
-        if (!$this->entityManager) {
+        if (null === $this->entityManager) {
             // No ObjectManager found, proceed with normal deserialization
             return $this->fallbackConstructor->construct($visitor, $metadata, $data, $type, $context);
         }

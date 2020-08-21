@@ -10,6 +10,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
  * Class NodesSourcesDocumentsRepository
  *
  * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\NodesSourcesDocuments>
  */
 class NodesSourcesDocumentsRepository extends EntityRepository
 {

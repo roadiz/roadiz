@@ -8,6 +8,7 @@ use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Pimple\Container;
+use RZ\Roadiz\Config\Configuration;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 
@@ -64,6 +65,16 @@ class NodesSourcesInheritanceSubscriber implements EventSubscriber
                 }
 
                 $metadata->setDiscriminatorMap($map);
+
+                /*
+                 * change here your inheritance type according to configuration
+                 */
+                $inheritanceType = $this->container['config']['inheritance']['type'];
+                if ($inheritanceType === Configuration::INHERITANCE_TYPE_JOINED) {
+                    $metadata->setInheritanceType(ClassMetadataInfo::INHERITANCE_TYPE_JOINED);
+                } elseif ($inheritanceType === Configuration::INHERITANCE_TYPE_SINGLE_TABLE) {
+                    $metadata->setInheritanceType(ClassMetadataInfo::INHERITANCE_TYPE_SINGLE_TABLE);
+                }
             } catch (\Exception $e) {
                 /*
                  * Database tables don't exist yet

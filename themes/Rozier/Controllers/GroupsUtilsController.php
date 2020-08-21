@@ -24,7 +24,7 @@ use Themes\Rozier\RozierApp;
 class GroupsUtilsController extends RozierApp
 {
     /**
-     * Export all Group datas and roles in a Json file (.rzt).
+     * Export all Group data and roles in a Json file (.json).
      *
      * @param Request $request
      *
@@ -56,7 +56,7 @@ class GroupsUtilsController extends RozierApp
     }
 
     /**
-     * Export a Group in a Json file (.rzt).
+     * Export a Group in a Json file (.json).
      *
      * @param Request $request
      * @param int     $groupId

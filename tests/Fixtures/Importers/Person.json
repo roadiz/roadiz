@@ -3,7 +3,6 @@
     "displayName": "Personne",
     "description": null,
     "visible": true,
-    "newsletterType": false,
     "hidingNodes": false,
     "color": "#7553db",
     "defaultTtl": 0,

@@ -14,6 +14,7 @@ use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Core\Routing\NodeRouter;
 use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -124,7 +125,12 @@ final class NodeMover
         $lastUrl = null;
         /** @var NodesSources $nodeSource */
         foreach ($node->getNodeSources() as $nodeSource) {
-            $url = $this->urlGenerator->generate($nodeSource);
+            $url = $this->urlGenerator->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                [
+                    RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
+                ]
+            );
             if (null !== $lastUrl && $url === $lastUrl) {
                 throw new SameNodeUrlException('NodeSource URL are the same between translations.');
             }
@@ -167,9 +173,15 @@ final class NodeMover
             $this->logger->warning('Cannot redirect empty or root path: ' . $nodeSource->getTitle());
             return $nodeSource;
         }
-        $newPath = $this->urlGenerator->generate($nodeSource, [
-            NodeRouter::NO_CACHE_PARAMETER => true // do not use nodeSourceUrl cache provider
-        ]);
+
+        $newPath = $this->urlGenerator->generate(
+            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+            [
+                RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
+                NodeRouter::NO_CACHE_PARAMETER => true // do not use nodeSourceUrl cache provider
+            ]
+        );
+
         /*
          * Only creates redirection if path changed
          */

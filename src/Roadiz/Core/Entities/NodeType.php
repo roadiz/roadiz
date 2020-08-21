@@ -19,7 +19,6 @@ use RZ\Roadiz\Utils\StringHandler;
  * @ORM\Table(name="node_types", indexes={
  *     @ORM\Index(columns={"visible"}),
  *     @ORM\Index(columns={"publishable"}),
- *     @ORM\Index(columns={"newsletter_type"}),
  *     @ORM\Index(columns={"hiding_nodes"}),
  *     @ORM\Index(columns={"hiding_non_reachable_nodes"}),
  *     @ORM\Index(columns={"reachable"})
@@ -80,7 +79,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups("node_type")
      * @Serializer\Type("string")
@@ -88,7 +87,7 @@ class NodeType extends AbstractEntity
     private $description;
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDescription(): ?string
     {
@@ -96,7 +95,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      * @return $this
      */
     public function setDescription(string $description = null)
@@ -198,32 +197,6 @@ class NodeType extends AbstractEntity
 
     /**
      * @var bool
-     * @ORM\Column(name="newsletter_type", type="boolean", nullable=false, options={"default" = false})
-     * @Serializer\Groups("node_type")
-     * @Serializer\Type("boolean")
-     */
-    private $newsletterType = false;
-
-    /**
-     * @return boolean
-     */
-    public function isNewsletterType(): bool
-    {
-        return $this->newsletterType;
-    }
-    /**
-     * @param boolean $newsletterType
-     *
-     * @return $this
-     */
-    public function setNewsletterType(bool $newsletterType): NodeType
-    {
-        $this->newsletterType = $newsletterType;
-
-        return $this;
-    }
-    /**
-     * @var bool
      * @ORM\Column(name="hiding_nodes",type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups("node_type")
      * @Serializer\Type("boolean")
@@ -275,7 +248,7 @@ class NodeType extends AbstractEntity
     }
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="string", name="color", unique=false, nullable=true)
      * @Serializer\Groups({"node_type", "color"})
      * @Serializer\Type("string")
@@ -285,9 +258,9 @@ class NodeType extends AbstractEntity
     /**
      * Gets the value of color.
      *
-     * @return string
+     * @return string|null
      */
-    public function getColor(): string
+    public function getColor(): ?string
     {
         return $this->color;
     }
@@ -295,11 +268,11 @@ class NodeType extends AbstractEntity
     /**
      * Sets the value of color.
      *
-     * @param string $color
+     * @param string|null $color
      *
      * @return $this
      */
-    public function setColor(string $color): NodeType
+    public function setColor(?string $color): NodeType
     {
         $this->color = $color;
 

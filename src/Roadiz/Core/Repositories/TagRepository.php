@@ -14,7 +14,10 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * {@inheritdoc}
+ * Class TagRepository
+ *
+ * @package RZ\Roadiz\Core\Repositories
+ * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Tag>
  */
 class TagRepository extends EntityRepository
 {
@@ -219,7 +222,7 @@ class TagRepository extends EntityRepository
         $offset = null,
         Translation $translation = null
     ) {
-        $query = $this->getContextualQueryWithTranslation(
+        $qb = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
             $limit,
@@ -227,10 +230,12 @@ class TagRepository extends EntityRepository
             $translation
         );
 
-        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $this->applyFilterByNodes($criteria, $query);
-        $this->applyFilterByCriteria($criteria, $query);
-        $this->applyTranslationByTag($query, $translation);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+        $this->applyFilterByNodes($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
+        $this->applyTranslationByTag($qb, $translation);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
         if (null !== $limit &&
             null !== $offset) {
@@ -240,7 +245,7 @@ class TagRepository extends EntityRepository
              */
             return new Paginator($query);
         } else {
-            return $query->getQuery()->getResult();
+            return $query->getResult();
         }
     }
     /**
@@ -257,7 +262,7 @@ class TagRepository extends EntityRepository
         array $orderBy = null,
         Translation $translation = null
     ) {
-        $query = $this->getContextualQueryWithTranslation(
+        $qb = $this->getContextualQueryWithTranslation(
             $criteria,
             $orderBy,
             1,
@@ -265,12 +270,14 @@ class TagRepository extends EntityRepository
             $translation
         );
 
-        $this->dispatchQueryBuilderEvent($query, $this->getEntityName());
-        $this->applyFilterByNodes($criteria, $query);
-        $this->applyFilterByCriteria($criteria, $query);
-        $this->applyTranslationByTag($query, $translation);
+        $this->dispatchQueryBuilderEvent($qb, $this->getEntityName());
+        $this->applyFilterByNodes($criteria, $qb);
+        $this->applyFilterByCriteria($criteria, $qb);
+        $this->applyTranslationByTag($qb, $translation);
+        $query = $qb->getQuery();
+        $this->dispatchQueryEvent($query);
 
-        return $query->getQuery()->getOneOrNullResult();
+        return $query->getOneOrNullResult();
     }
     /**
      * Just like the countBy method but with relational criteria.

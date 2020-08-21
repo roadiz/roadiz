@@ -61,9 +61,10 @@ class UsersController extends RozierApp
      * Return an edition form for requested user.
      *
      * @param Request $request
-     * @param int $userId
+     * @param int     $userId
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $userId)
     {
@@ -75,9 +76,7 @@ class UsersController extends RozierApp
         )) {
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
-        /** @var User $user */
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
             if (!$this->isGranted(Role::ROLE_SUPERADMIN) && $user->isSuperAdmin()) {
@@ -137,7 +136,6 @@ class UsersController extends RozierApp
         )) {
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
-        /** @var User $user */
         $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {
@@ -187,6 +185,7 @@ class UsersController extends RozierApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -194,33 +193,28 @@ class UsersController extends RozierApp
 
         $user = new User();
         $user->sendCreationConfirmationEmail(true);
+        $this->assignation['user'] = $user;
 
-        if ($user !== null) {
-            $this->assignation['user'] = $user;
+        $form = $this->createForm(AddUserType::class, $user, [
+            'em' => $this->get('em'),
+            'authorizationChecker' => $this->get('securityAuthorizationChecker')
+        ]);
 
-            $form = $this->createForm(AddUserType::class, $user, [
-                'em' => $this->get('em'),
-                'authorizationChecker' => $this->get('securityAuthorizationChecker')
-            ]);
+        $form->handleRequest($request);
 
-            $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->get('em')->persist($user);
+            $this->get('em')->flush();
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->get('em')->persist($user);
-                $this->get('em')->flush();
+            $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%' => $user->getUsername()]);
+            $this->publishConfirmMessage($request, $msg);
 
-                $msg = $this->getTranslator()->trans('user.%name%.created', ['%name%' => $user->getUsername()]);
-                $this->publishConfirmMessage($request, $msg);
-
-                return $this->redirect($this->generateUrl('usersHomePage'));
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('users/add.html.twig', $this->assignation);
+            return $this->redirect($this->generateUrl('usersHomePage'));
         }
 
-        throw new ResourceNotFoundException();
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('users/add.html.twig', $this->assignation);
     }
 
     /**
@@ -234,8 +228,6 @@ class UsersController extends RozierApp
     public function deleteAction(Request $request, $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS_DELETE');
-
-        /** @var User $user */
         $user = $this->get('em')->find(User::class, (int) $userId);
 
         if ($user !== null) {

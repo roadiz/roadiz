@@ -8,13 +8,12 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class Settings
  * @package RZ\Roadiz\Core\Bags
  */
-class Settings extends ParameterBag
+class Settings extends LazyParameterBag
 {
     /**
      * @var EntityManager
@@ -24,10 +23,6 @@ class Settings extends ParameterBag
      * @var SettingRepository
      */
     private $repository;
-    /**
-     * @var bool
-     */
-    private $ready;
 
     /**
      * SettingsBag constructor.
@@ -37,7 +32,6 @@ class Settings extends ParameterBag
     {
         parent::__construct();
         $this->entityManager = $entityManager;
-        $this->ready = false;
     }
 
     /**
@@ -73,10 +67,6 @@ class Settings extends ParameterBag
      */
     public function get($key, $default = false)
     {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-
         return parent::get($key, $default);
     }
 
@@ -91,30 +81,14 @@ class Settings extends ParameterBag
         if (null !== $this->entityManager) {
             try {
                 $id = $this->getInt($key);
-                return $this->entityManager->find(Document::class, $id);
+                return $this->entityManager
+                            ->getRepository(Document::class)
+                            ->findOneById($id);
             } catch (\Exception $e) {
                 return null;
             }
         }
 
         return null;
-    }
-
-    /**
-     * @return array
-     */
-    public function all(): array
-    {
-        if (!$this->ready) {
-            $this->populateParameters();
-        }
-
-        return parent::all();
-    }
-
-    public function reset(): void
-    {
-        $this->parameters = [];
-        $this->ready = false;
     }
 }

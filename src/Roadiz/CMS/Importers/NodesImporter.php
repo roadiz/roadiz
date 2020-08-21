@@ -13,6 +13,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 
 /**
@@ -108,9 +109,10 @@ class NodesImporter implements ImporterInterface, EntityImporterInterface, Conta
         /*
          * Test if node already exists against its nodeName
          */
-        $existing = $em->getRepository(Node::class)
-                       ->setDisplayingNotPublishedNodes(true)
-                       ->findOneByNodeName($node->getNodeName());
+        /** @var NodeRepository $nodeRepo */
+        $nodeRepo = $em->getRepository(Node::class)
+            ->setDisplayingNotPublishedNodes(true);
+        $existing = $nodeRepo->findOneByNodeName($node->getNodeName());
         if (null !== $existing) {
             throw new EntityAlreadyExistsException('"' . $node->getNodeName() . '" already exists.');
         }

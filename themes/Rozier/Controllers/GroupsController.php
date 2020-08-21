@@ -640,13 +640,12 @@ class GroupsController extends RozierApp
      * @param array $data
      * @param Group $group
      *
-     * @return Role
+     * @return Role|null
      */
     private function addRole($data, Group $group)
     {
         if ($data['groupId'] == $group->getId()) {
-            $role = $this->get('em')
-                         ->find(Role::class, (int) $data['roleId']);
+            $role = $this->get('em')->find(Role::class, (int) $data['roleId']);
             if ($role !== null) {
                 $group->addRole($role);
                 $this->get('em')->flush();
@@ -654,6 +653,7 @@ class GroupsController extends RozierApp
                 return $role;
             }
         }
+        return null;
     }
 
     /**
@@ -661,7 +661,7 @@ class GroupsController extends RozierApp
      * @param Group $group
      * @param Role  $role
      *
-     * @return Role
+     * @return Role|null
      */
     private function removeRole($data, Group $group, Role $role)
     {
@@ -674,13 +674,14 @@ class GroupsController extends RozierApp
 
             return $role;
         }
+        return null;
     }
 
     /**
      * @param array $data
      * @param Group $group
      *
-     * @return User
+     * @return User|null
      */
     private function addUser($data, Group $group)
     {
@@ -696,6 +697,7 @@ class GroupsController extends RozierApp
                 return $user;
             }
         }
+        return null;
     }
 
     /**
@@ -703,7 +705,7 @@ class GroupsController extends RozierApp
      * @param Group $group
      * @param User  $user
      *
-     * @return User
+     * @return User|null
      */
     private function removeUser($data, Group $group, User $user)
     {
@@ -716,5 +718,6 @@ class GroupsController extends RozierApp
 
             return $user;
         }
+        return null;
     }
 }

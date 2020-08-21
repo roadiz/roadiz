@@ -10,7 +10,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * {@inheritdoc}
+ * Class AjaxAbstractFieldsController
+ *
+ * @package Themes\Rozier\AjaxControllers
  */
 class AjaxAbstractFieldsController extends AbstractAjaxController
 {
@@ -18,7 +20,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
      * Handle actions for any abstract fields.
      *
      * @param Request       $request
-     * @param AbstractField $field
+     * @param AbstractField|null $field
      *
      * @return null|Response
      */
@@ -62,7 +64,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
 
     /**
      * @param array         $parameters
-     * @param AbstractField $field
+     * @param AbstractField|null $field
      *
      * @return array
      */

@@ -7,11 +7,15 @@ use RZ\Roadiz\CMS\Forms\GroupsType;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
+use Twig_Error_Runtime;
 
 /**
  * Class UsersGroupsController
@@ -24,8 +28,8 @@ class UsersGroupsController extends RozierApp
      * @param Request $request
      * @param int     $userId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @return Response
+     * @throws Twig_Error_Runtime
      */
     public function editGroupsAction(Request $request, $userId)
     {
@@ -73,7 +77,7 @@ class UsersGroupsController extends RozierApp
      * @param int     $userId
      * @param int     $groupId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function removeGroupAction(Request $request, $userId, $groupId)
     {
@@ -123,7 +127,7 @@ class UsersGroupsController extends RozierApp
      * @param array $data
      * @param User  $user
      *
-     * @return Group
+     * @return Group|null
      */
     private function addUserGroup($data, User $user)
     {
@@ -146,7 +150,7 @@ class UsersGroupsController extends RozierApp
      * @param array $data
      * @param User  $user
      *
-     * @return Group
+     * @return Group|null
      */
     private function removeUserGroup($data, User $user)
     {
@@ -168,7 +172,7 @@ class UsersGroupsController extends RozierApp
     /**
      * @param User $user
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildEditGroupsForm(User $user)
     {
@@ -176,26 +180,27 @@ class UsersGroupsController extends RozierApp
             'userId' => $user->getId(),
         ];
         $builder = $this->createFormBuilder($defaults)
-                        ->add(
-                            'userId',
-                            HiddenType::class,
-                            [
-                                'data' => $user->getId(),
-                                'constraints' => [
-                                    new NotNull(),
-                                    new NotBlank(),
-                                ],
-                            ]
-                        )
-                        ->add(
-                            'group',
-                            GroupsType::class,
-                            [
-                                'label' => 'Group',
-                                'entityManager' => $this->get('em'),
-                                'authorizationChecker' => $this->get('securityAuthorizationChecker'),
-                            ]
-                        );
+            ->add(
+                'userId',
+                HiddenType::class,
+                [
+                    'data' => $user->getId(),
+                    'constraints' => [
+                        new NotNull(),
+                        new NotBlank(),
+                    ],
+                ]
+            )
+            ->add(
+                'group',
+                GroupsType::class,
+                [
+                    'label' => 'Group',
+                    'entityManager' => $this->get('em'),
+                    'authorizationChecker' => $this->get('securityAuthorizationChecker'),
+                ]
+            )
+        ;
 
         return $builder->getForm();
     }
@@ -204,7 +209,7 @@ class UsersGroupsController extends RozierApp
      * @param User  $user
      * @param Group $group
      *
-     * @return \Symfony\Component\Form\Form
+     * @return FormInterface
      */
     private function buildRemoveGroupForm(User $user, Group $group)
     {

@@ -39,24 +39,43 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $question = new ConfirmationQuestion('<question>Are you sure to migrate against this theme?</question> This can lead in data loss.', false);
+
+        $question = new ConfirmationQuestion(
+            '<question>Are you sure to migrate against this theme?</question> This can lead in data loss.',
+            !$input->isInteractive()
+        );
         if ($io->askQuestion($question) === false) {
             $io->note('Nothing was done…');
             return 0;
         }
 
         if ($input->getOption('dry-run')) {
-            $this->runCommand(sprintf('themes:install --data "%s" --dry-run -v', $input->getArgument('classname')));
+            $this->runCommand(
+                sprintf('themes:install --data "%s" --dry-run', $input->getArgument('classname')),
+                'dev',
+                false,
+                $input->isInteractive()
+            );
         } else {
-            $this->runCommand(sprintf('themes:install --data "%s" -v', $input->getArgument('classname')));
-            $this->runCommand(sprintf('generate:nsentities -v'));
-            $this->runCommand(sprintf('orm:schema-tool:update --dump-sql --force -v'), 'dev', false);
-            $this->runCommand(sprintf('cache:clear -v'), 'dev', false);
-            $this->runCommand(sprintf('cache:clear -v'), 'dev', true);
-            $this->runCommand(sprintf('cache:clear -v'), 'prod', false);
-            $this->runCommand(sprintf('cache:clear -v'), 'prod', true);
-            $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', false);
-            $this->runCommand(sprintf('cache:clear-fpm -v'), 'prod', true);
+            $this->runCommand(
+                sprintf('themes:install --data "%s"', $input->getArgument('classname')),
+                'dev',
+                false,
+                $input->isInteractive()
+            );
+            $this->runCommand(sprintf('generate:nsentities'), 'dev', false, $input->isInteractive());
+            $this->runCommand(
+                sprintf('orm:schema-tool:update --dump-sql --force'),
+                'dev',
+                false,
+                $input->isInteractive()
+            );
+            $this->runCommand(sprintf('cache:clear'), 'dev', false, $input->isInteractive());
+            $this->runCommand(sprintf('cache:clear'), 'dev', true, $input->isInteractive());
+            $this->runCommand(sprintf('cache:clear'), 'prod', false, $input->isInteractive());
+            $this->runCommand(sprintf('cache:clear'), 'prod', true, $input->isInteractive());
+            $this->runCommand(sprintf('cache:clear-fpm'), 'prod', false, $input->isInteractive());
+            $this->runCommand(sprintf('cache:clear-fpm'), 'prod', true, $input->isInteractive());
         }
         return 0;
     }
@@ -68,15 +87,16 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
      *
      * @return int
      */
-    protected function runCommand(string $command, $environment = 'dev', $preview = false)
+    protected function runCommand(string $command, string $environment = 'dev', bool $preview = false, bool $interactive = true)
     {
         /** @var Kernel $existingKernel */
         $existingKernel = $this->getHelper('kernel')->getKernel();
+        $args = $interactive ? ' -v ' : ' -nq ';
         $process = Process::fromShellCommandline(
-            'php bin/roadiz ' . $command . ' -e ' . $environment . ($preview ? ' --preview' : '')
+            'php bin/roadiz ' . $args . $command . ' --env ' . $environment . ($preview ? ' --preview' : '')
         );
         $process->setWorkingDirectory($existingKernel->getProjectDir());
-        $process->setTty(true);
+        $process->setTty($interactive);
         $process->run();
         return $process->wait();
     }

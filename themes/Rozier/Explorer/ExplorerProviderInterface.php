@@ -9,7 +9,7 @@ interface ExplorerProviderInterface extends ContainerAwareInterface
 {
     /**
      * @param mixed $item
-     * @return ExplorerItemInterface
+     * @return ExplorerItemInterface|null
      */
     public function toExplorerItem($item);
 

@@ -3,18 +3,24 @@
 {% import _self as macro %}
 
 {% macro column(type, request) %}
-    <dl>
-        <dt>{{ type.customFormField.label|trans }}</dt>
-        {% if type.customFormField.isCountry  %}
-            <dd>{{ type.value|country_iso(request.locale) }}</dd>
-        {% elseif type.customFormField.isDate %}
-            <dd>{{ type.value|localizeddate('full', 'none') }}</dd>
-        {% elseif type.customFormField.isDateTime %}
-            <dd>{{ type.value|localizeddate('full', 'medium') }}</dd>
-        {% else %}
-            <dd>{{ type.value|trans }}</dd>
-        {% endif %}
-    </dl>
+<tr>
+    <td class="uk-text-bold">{{ type.customFormField.label|trans }}</td>
+    {% if type.customFormField.isCountry  %}
+        <td>{{ type.value|country_iso(request.locale) }}</td>
+    {% elseif type.customFormField.isDate %}
+        <td>{{ type.value|localizeddate('full', 'none') }}</td>
+    {% elseif type.customFormField.isDateTime %}
+        <td>{{ type.value|localizeddate('full', 'medium') }}</td>
+    {% elseif type.customFormField.isDocuments %}
+        <td>
+            {% for document in type.documents %}
+                <a href="{{ path('documentsDownloadPage', { documentId: document.id}) }}" class="rz-no-ajax-link" download>{{ document.filename }}</a><br>
+            {% endfor %}
+        </td>
+    {% else %}
+        <td>{{ type.value|trans }}</td>
+    {% endif %}
+</tr>
 {% endmacro %}
 
 {% block content %}
@@ -26,33 +32,32 @@
 
     <article class="content content-no-action-menu content-node-types-list">
         <div class="data-uk-margin">
-            {% spaceless %}
-            {% for groupName, answers in fields %}
-                {% if answers is iterable %}
-                    </div>
-                    <hr>
-                    <div class="data-uk-margin">
-                    <h2>{{ groupName|trans }}</h2>
-
-                    {% for type in answers %}
-                        {{ macro.column(type, request) }}
-                    {% endfor %}
-                {% else %}
-                    {{ macro.column(answers, request) }}
-                {% endif %}
-            {% endfor %}
-            </div>
-            <hr>
-            <div class="data-uk-margin">
-                <dl>
-                    <dt>{{ 'ip'|trans }}</dt>
-                    <dd>{{ answer.ip }}</dd>
-                </dl>
-                <dl>
-                    <dt>{{ 'submitted.date'|trans }}</dt>
-                    <dd>{{ answer.submittedAt|localizeddate('full', 'medium') }}</dd>
-                </dl>
-            {% endspaceless %}
+            <table class="uk-table-condensed uk-table">
+                {% for groupName, answers in fields %}
+                    {% if answers is iterable %}
+                        </table>
+                        <div class="data-uk-margin">
+                            <h3>{{ groupName|trans }}</h3>
+                            <table class="uk-table uk-table-condensed">
+                                {% for type in answers %}
+                                    {{ macro.column(type, request) }}
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <table class="uk-table-condensed uk-table">
+                    {% else %}
+                        {{ macro.column(answers, request) }}
+                    {% endif %}
+                {% endfor %}
+                <tr>
+                    <td class="uk-text-bold">{{ 'ip.address'|trans }}</td>
+                    <td>{{ answer.ip }}</td>
+                </tr>
+                <tr>
+                    <td class="uk-text-bold">{{ 'submitted.date'|trans }}</td>
+                    <td>{{ answer.submittedAt|localizeddate('full', 'medium') }}</td>
+                </tr>
+            </table>
         </div>
     </article>
 </section>

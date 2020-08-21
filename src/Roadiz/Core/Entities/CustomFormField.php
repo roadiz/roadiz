@@ -44,6 +44,7 @@ class CustomFormField extends AbstractField
         AbstractField::ENUM_T => 'single-choice.type',
         AbstractField::MULTIPLE_T => 'multiple-choice.type',
         AbstractField::COUNTRY_T => 'country.type',
+        AbstractField::DOCUMENTS_T => 'documents.type',
     ];
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\CustomForm", inversedBy="fields")
@@ -52,7 +53,7 @@ class CustomFormField extends AbstractField
     private $customForm = null;
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\CustomFormFieldAttribute", mappedBy="customFormField")
-     * @var ArrayCollection
+     * @var Collection<CustomFormFieldAttribute>
      */
     private $customFormFieldAttributes;
     /**

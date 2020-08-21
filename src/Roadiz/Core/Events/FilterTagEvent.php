@@ -4,14 +4,13 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use RZ\Roadiz\Core\Entities\Tag;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Class FilterTagEvent
  * @package RZ\Roadiz\Core\Events
- * @deprecated
  */
-class FilterTagEvent extends Event
+abstract class FilterTagEvent extends Event
 {
     /**
      * @var Tag

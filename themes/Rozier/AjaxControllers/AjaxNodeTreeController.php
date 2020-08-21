@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\AjaxControllers;
 
+use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -55,8 +56,8 @@ class AjaxNodeTreeController extends AbstractAjaxController
                                     Node::class,
                                     (int) $request->get('parentNodeId')
                                 );
-                } elseif (null !== $this->getUser() && $this->getUser() instanceof User) {
-                    $node = $this->getUser()->getChroot();
+                } elseif (null !== $this->getUser()) {
+                    $node = $this->get(NodeChrootResolver::class)->getChroot($this->getUser());
                 } else {
                     $node = null;
                 }
@@ -104,8 +105,8 @@ class AjaxNodeTreeController extends AbstractAjaxController
              */
             case 'requestMainNodeTree':
                 $parent = null;
-                if (null !== $this->getUser() && $this->getUser() instanceof User) {
-                    $parent = $this->getUser()->getChroot();
+                if (null !== $this->getUser()) {
+                    $parent = $this->get(NodeChrootResolver::class)->getChroot($this->getUser());
                 }
 
                 $nodeTree = new NodeTreeWidget(
