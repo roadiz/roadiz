@@ -81,7 +81,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     public function '.$this->field->getGetterName().'()
     {
         trigger_error(
-            \'Method \' . __METHOD__ . \' is deprecated and will be removed in Roadiz v1.4. Use '.$this->field->getGetterName().'Sources instead to deal with NodesSources.\',
+            \'Method \' . __METHOD__ . \' is deprecated and will be removed in Roadiz v1.6. Use '.$this->field->getGetterName().'Sources instead to deal with NodesSources.\',
             E_USER_DEPRECATED
         );
 
