@@ -177,7 +177,7 @@ class Requirements
         $checks['files_folder_writable'] = [
             'status' => $this->folderWritable($this->kernel->getPublicFilesPath()),
             'folder' => $this->kernel->getPublicFilesPath(),
-            'mod' => fileperms($this->kernel->getPublicFilesPath()),
+            'mod' => $this->filePerms($this->kernel->getPublicFilesPath()),
             'message' => 'Public storage folder is not writable by PHP, you must change its permissions.',
         ];
 
@@ -189,7 +189,7 @@ class Requirements
         $checks['private_files_folder_writable'] = [
             'status' => $this->folderWritable($this->kernel->getPrivateFilesPath()),
             'folder' => $this->kernel->getPrivateFilesPath(),
-            'mod' => fileperms($this->kernel->getPrivateFilesPath()),
+            'mod' => $this->filePerms($this->kernel->getPrivateFilesPath()),
             'message' => 'Private storage folder is not writable by PHP, you must change its permissions.',
         ];
 
@@ -201,7 +201,7 @@ class Requirements
         $checks['font_files_folder_writable'] = [
             'status' => $this->folderWritable($this->kernel->getFontsFilesPath()),
             'folder' => $this->kernel->getFontsFilesPath(),
-            'mod' => fileperms($this->kernel->getFontsFilesPath()),
+            'mod' => $this->filePerms($this->kernel->getFontsFilesPath()),
             'message' => 'Font storage folder is not writable by PHP, you must change its permissions.',
         ];
 
@@ -253,7 +253,17 @@ class Requirements
      */
     public function folderWritable($filename)
     {
-        return is_writable($filename) === true ? true : false;
+        return file_exists($filename) && is_writable($filename) === true;
+    }
+
+    /**
+     * @param string $filename
+     *
+     * @return int|null
+     */
+    public function filePerms($filename)
+    {
+        return file_exists($filename) ? fileperms($filename) : null;
     }
 
     /**
