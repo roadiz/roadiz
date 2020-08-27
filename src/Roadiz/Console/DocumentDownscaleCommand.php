@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Console;
 
+use Intervention\Image\Exception\NotReadableException;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -56,6 +57,7 @@ class DocumentDownscaleCommand extends Command
             if ($io->askQuestion(
                 $confirmation
             )) {
+                /** @var Document[] $documents */
                 $documents = $this->entityManager
                     ->getRepository(Document::class)
                     ->findBy([
@@ -70,7 +72,11 @@ class DocumentDownscaleCommand extends Command
                 $io->progressStart(count($documents));
 
                 foreach ($documents as $document) {
-                    $this->downscaler->processDocumentFromExistingRaw($document);
+                    try {
+                        $this->downscaler->processDocumentFromExistingRaw($document);
+                    } catch (NotReadableException $exception) {
+                        $io->error($exception->getMessage() . ' - ' . $document->getFilename());
+                    }
                     $io->progressAdvance();
                 }
 
