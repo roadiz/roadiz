@@ -22,7 +22,7 @@ class RawDocumentsSubscriber implements EventSubscriberInterface
     /**
      * @param EntityManager $em
      * @param Packages $packages
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      * @param EntityManager|string $imageDriver
      * @param integer $maxPixelSize
      * @param string $rawImageSuffix
