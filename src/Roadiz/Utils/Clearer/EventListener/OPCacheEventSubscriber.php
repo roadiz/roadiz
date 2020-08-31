@@ -26,10 +26,11 @@ class OPCacheEventSubscriber implements EventSubscriberInterface
     {
         try {
             $clearer = new OPCacheClearer();
-            $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'phpOPCodeCache');
+            if (false !== $clearer->clear()) {
+                $event->addMessage($clearer->getOutput(), static::class, 'OPCode cache');
+            }
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'phpOPCodeCache');
+            $event->addError($e->getMessage(), static::class, 'OPCode cache');
         }
     }
 }

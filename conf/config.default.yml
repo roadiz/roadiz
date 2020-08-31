@@ -72,11 +72,13 @@ inheritance:
 # Reverse proxy invalidation
 #
 #reverseProxyCache:
-#    frontend:
-#        localhost:
-#            host: localhost
-#            domainName: roadiz.test
+#    cloudflare:
+#        zone: cloudflare-zone
+#        bearer: ~
+#        email: ~
+#        key: ~
 #
+#    frontend:
 #        varnish:
 #            host: varnish_roadiz
 #            domainName: roadiz.test

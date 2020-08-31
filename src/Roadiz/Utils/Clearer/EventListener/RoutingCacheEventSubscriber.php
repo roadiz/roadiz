@@ -26,10 +26,11 @@ class RoutingCacheEventSubscriber implements EventSubscriberInterface
     {
         try {
             $clearer = new RoutingCacheClearer($event->getKernel()->getCacheDir());
-            $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'routingCache');
+            if (false !== $clearer->clear()) {
+                $event->addMessage($clearer->getOutput(), static::class, 'Routes collection cache');
+            }
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'routingCache');
+            $event->addError($e->getMessage(), static::class, 'Routes collection cache');
         }
     }
 }

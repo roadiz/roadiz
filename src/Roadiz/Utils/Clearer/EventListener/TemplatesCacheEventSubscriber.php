@@ -27,9 +27,9 @@ class TemplatesCacheEventSubscriber implements EventSubscriberInterface
         try {
             $clearer = new TemplatesCacheClearer($event->getKernel()->getCacheDir());
             $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'templatesCache');
+            $event->addMessage($clearer->getOutput(), static::class, 'Templates cache');
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'templatesCache');
+            $event->addError($e->getMessage(), static::class, 'Templates cache');
         }
     }
 }

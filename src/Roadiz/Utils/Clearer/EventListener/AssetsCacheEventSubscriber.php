@@ -27,9 +27,9 @@ class AssetsCacheEventSubscriber implements EventSubscriberInterface
         try {
             $clearer = new AssetsClearer($event->getKernel()->getPublicCachePath());
             $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'assetsCache');
+            $event->addMessage($clearer->getOutput(), static::class, 'Assets cache');
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'assetsCache');
+            $event->addError($e->getMessage(), static::class, 'Assets cache');
         }
     }
 }

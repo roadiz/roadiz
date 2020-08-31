@@ -26,10 +26,11 @@ class AppCacheEventSubscriber implements EventSubscriberInterface
     {
         try {
             $clearer = new AppCacheClearer($event->getKernel()->getCacheDir());
-            $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'httpAppCache');
+            if (false !== $clearer->clear()) {
+                $event->addMessage($clearer->getOutput(), static::class, 'Symfony App cache');
+            }
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'httpAppCache');
+            $event->addError($e->getMessage(), static::class, 'Symfony App cache');
         }
     }
 }

@@ -27,9 +27,9 @@ class ConfigurationCacheEventSubscriber implements EventSubscriberInterface
         try {
             $clearer = new ConfigurationCacheClearer($event->getKernel()->getCacheDir());
             $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'configurationCache');
+            $event->addMessage($clearer->getOutput(), static::class, 'Configuration cache');
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'configurationCache');
+            $event->addError($e->getMessage(), static::class, 'Configuration cache');
         }
     }
 }
