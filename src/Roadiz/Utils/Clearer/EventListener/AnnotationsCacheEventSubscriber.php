@@ -26,10 +26,19 @@ class AnnotationsCacheEventSubscriber implements EventSubscriberInterface
     {
         try {
             $clearer = new AnnotationsCacheClearer($event->getKernel()->getCacheDir());
-            $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'annotationsCache');
+            if (false !== $clearer->clear()) {
+                $event->addMessage(
+                    $clearer->getOutput(),
+                    static::class,
+                    'PHP annotations cache'
+                );
+            }
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'annotationsCache');
+            $event->addError(
+                $e->getMessage(),
+                static::class,
+                'PHP annotations cache'
+            );
         }
     }
 }

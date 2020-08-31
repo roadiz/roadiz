@@ -26,10 +26,11 @@ class TranslationsCacheEventSubscriber implements EventSubscriberInterface
     {
         try {
             $clearer = new TranslationsCacheClearer($event->getKernel()->getCacheDir());
-            $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'translationMessagesCache');
+            if (false !== $clearer->clear()) {
+                $event->addMessage($clearer->getOutput(), static::class, 'Translations cache');
+            }
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'translationMessagesCache');
+            $event->addError($e->getMessage(), static::class, 'Translations cache');
         }
     }
 }

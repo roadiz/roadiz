@@ -61,24 +61,26 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 
         try {
             foreach ($this->createBanRequests() as $name => $request) {
-                (new Client())->send($request, ['debug' => $event->getKernel()->isDebug()]);
+                (new Client())->send($request, [
+                    'debug' => $event->getKernel()->isDebug()
+                ]);
                 $event->addMessage(
                     'Reverse proxy cache cleared.',
                     static::class,
-                    'reverseProxyCache ['.$name.']'
+                    'Reverse proxy cache ['.$name.']'
                 );
             }
         } catch (ClientException $e) {
             $event->addError(
                 $e->getMessage(),
                 static::class,
-                'reverseProxyCache'
+                'Reverse proxy cache'
             );
         } catch (ConnectException $e) {
             $event->addError(
                 $e->getMessage(),
                 static::class,
-                'reverseProxyCache'
+                'Reverse proxy cache'
             );
         }
     }
@@ -112,7 +114,9 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
                 ]
             ));
             foreach ($purgeRequests as $request) {
-                (new Client())->send($request, ['debug' => false]);
+                (new Client())->send($request, [
+                    'debug' => false
+                ]);
             }
         } catch (ClientException $e) {
             // do nothing
@@ -130,7 +134,7 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
                 'BAN',
                 'http://' . $frontend['host'],
                 [
-                    'Host' => $frontend['domainName'],
+                    'Host' => $frontend['domainName']
                 ]
             );
         }
@@ -150,7 +154,7 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
                 Request::METHOD_PURGE,
                 'http://' . $frontend['host'] . $path,
                 [
-                    'Host' => $frontend['domainName'],
+                    'Host' => $frontend['domainName']
                 ]
             );
         }

@@ -103,6 +103,7 @@ class CacheController extends RozierApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig\Error\RuntimeError
      */
     public function deleteAssetsCache(Request $request)
     {

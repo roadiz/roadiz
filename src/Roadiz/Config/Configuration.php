@@ -342,6 +342,23 @@ EOD
                         ->end()
                     ->end()
                 ->end()
+                ->arrayNode('cloudflare')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('version')
+                            ->defaultValue('v4')
+                        ->end()
+                        ->scalarNode('zone')
+                            ->isRequired()
+                        ->end()
+                        ->scalarNode('bearer')->end()
+                        ->scalarNode('email')->end()
+                        ->scalarNode('key')->end()
+                        ->scalarNode('timeout')
+                            ->defaultValue(3)
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $node;

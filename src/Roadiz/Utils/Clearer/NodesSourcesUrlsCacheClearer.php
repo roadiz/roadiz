@@ -20,16 +20,17 @@ class NodesSourcesUrlsCacheClearer extends Clearer
 
     public function clear()
     {
-        $this->output .= 'Node-sources URLs cache: ' . $this->cacheProvider->getNamespace() . ' — ';
+        $this->output .= 'Node-sources URLs cache ' . $this->cacheProvider->getNamespace() . ': ';
 
         if (!$this->cacheProvider->flushAll()) {
             if (!$this->cacheProvider->deleteAll()) {
-                $this->output .= '<error>FAIL</error>';
+                $this->output .= 'failed';
+                return false;
             } else {
-                $this->output .= '<info>OK</info>: DELETED';
+                $this->output .= 'deleted';
             }
         } else {
-            $this->output .= '<info>OK</info>: FLUSHED';
+            $this->output .= 'flushed';
         }
 
         return true;
