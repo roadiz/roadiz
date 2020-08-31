@@ -26,10 +26,11 @@ class NodesSourcesUrlsCacheEventSubscriber implements EventSubscriberInterface
     {
         try {
             $clearer = new NodesSourcesUrlsCacheClearer($event->getKernel()->get('nodesSourcesUrlCacheProvider'));
-            $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'nodeSourcesUrlsCache');
+            if (false !== $clearer->clear()) {
+                $event->addMessage($clearer->getOutput(), static::class, 'NodesSources URL cache');
+            }
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'nodeSourcesUrlsCache');
+            $event->addError($e->getMessage(), static::class, 'NodesSources URL cache');
         }
     }
 }

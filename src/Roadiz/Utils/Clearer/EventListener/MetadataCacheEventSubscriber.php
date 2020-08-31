@@ -26,10 +26,11 @@ class MetadataCacheEventSubscriber implements EventSubscriberInterface
     {
         try {
             $clearer = new MetadataCacheClearer($event->getKernel()->getCacheDir());
-            $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'metadataCache');
+            if (false !== $clearer->clear()) {
+                $event->addMessage($clearer->getOutput(), static::class, 'Doctrine metadata cache');
+            }
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'metadataCache');
+            $event->addError($e->getMessage(), static::class, 'Doctrine metadata cache');
         }
     }
 }

@@ -56,6 +56,7 @@ use RZ\Roadiz\OpenId\OpenIdServiceProvider;
 use RZ\Roadiz\Utils\Clearer\EventListener\AnnotationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
+use RZ\Roadiz\Utils\Clearer\EventListener\CloudflareCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\MetadataCacheEventSubscriber;
@@ -258,6 +259,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
             $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
             $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
+            $dispatcher->addSubscriber(new CloudflareCacheEventSubscriber($c));
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));

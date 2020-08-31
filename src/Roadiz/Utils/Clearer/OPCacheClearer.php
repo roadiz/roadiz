@@ -12,6 +12,7 @@ class OPCacheClearer implements ClearerInterface
         if (function_exists('opcache_reset') &&
             true === opcache_reset()) {
             $this->output = 'PHP OPCache has been reset.';
+            return true;
         } else {
             $this->output = 'PHP OPCache is disabled.';
         }

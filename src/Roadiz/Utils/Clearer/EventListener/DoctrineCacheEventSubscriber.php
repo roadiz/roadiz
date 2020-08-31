@@ -27,9 +27,9 @@ class DoctrineCacheEventSubscriber implements EventSubscriberInterface
         try {
             $clearer = new DoctrineCacheClearer($event->getKernel()->get('em'), $event->getKernel());
             $clearer->clear();
-            $event->addMessage($clearer->getOutput(), static::class, 'doctrineCache');
+            $event->addMessage($clearer->getOutput(), static::class, 'Doctrine cache');
         } catch (\Exception $e) {
-            $event->addError($e->getMessage(), static::class, 'doctrineCache');
+            $event->addError($e->getMessage(), static::class, 'Doctrine cache');
         }
     }
 }
