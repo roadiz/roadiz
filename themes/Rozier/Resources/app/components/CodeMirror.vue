@@ -3,7 +3,6 @@
 </template>
 <script>
     import CodeMirror from 'codemirror'
-
     import 'codemirror/lib/codemirror.css'
     import 'codemirror/mode/yaml/yaml.js'
 
@@ -24,7 +23,9 @@
                         mode: 'yaml',
                         lineNumbers: true,
                         theme: 'mbo',
-                        tabSize: 2,
+                        tabSize: 4,
+                        indentUnit: 4,
+                        indentWithTabs: false,
                         lineWrapping: true,
                         dragDrop: false,
                         readOnly: false
