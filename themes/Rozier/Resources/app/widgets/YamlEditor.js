@@ -14,14 +14,34 @@ export default class YamlEditor {
         this.textarea = this.$textarea[0]
         this.$cont = this.$textarea.parents('.uk-form-row').eq(0)
         this.$settingRow = this.$textarea.parents('.setting-row').eq(0)
+        this.tabSize = 4
+
+        let rulers = []
+        for (let i = 1; i < 19; i++) {
+            rulers.push({
+                column: this.tabSize * i,
+                lineStyle: 'dashed',
+                width: '1px',
+                color: 'rgba(0,255,255,0.1)'
+            })
+        }
 
         let options = {
             lineNumbers: true,
             mode: 'yaml',
             theme: 'mbo',
-            tabSize: 2,
+            tabSize: this.tabSize,
+            indentUnit: this.tabSize,
+            indentWithTabs: false,
             lineWrapping: true,
-            dragDrop: false
+            rulers: rulers,
+            smartIndent: true,
+            dragDrop: false,
+            readOnly: (this.textarea.hasAttribute('disabled') && this.textarea.getAttribute('disabled') === 'disabled'),
+            extraKeys: {
+                Tab: 'indentMore',
+                'Shift-Tab': 'indentLess'
+            }
         }
 
         if (this.$settingRow.length) {

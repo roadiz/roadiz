@@ -9,14 +9,22 @@ export default class JsonEditor {
         this.textarea = this.$textarea[0]
         this.$cont = this.$textarea.parents('.uk-form-row').eq(0)
         this.$settingRow = this.$textarea.parents('.setting-row').eq(0)
+        this.tabSize = 4
 
         let options = {
             lineNumbers: true,
             mode: {name: 'javascript', json: true},
             theme: 'mbo',
-            tabSize: 2,
+            tabSize: this.tabSize,
+            indentUnit: this.tabSize,
+            indentWithTabs: false,
             lineWrapping: true,
-            dragDrop: false
+            dragDrop: false,
+            readOnly: (this.textarea.hasAttribute('disabled') && this.textarea.getAttribute('disabled') === 'disabled'),
+            extraKeys: {
+                Tab: 'indentMore',
+                'Shift-Tab': 'indentLess'
+            }
         }
 
         if (this.$settingRow.length) {
