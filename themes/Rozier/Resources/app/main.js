@@ -29,6 +29,7 @@ import 'codemirror/addon/mode/overlay.js'
 import 'codemirror/mode/xml/xml.js'
 import 'codemirror/mode/yaml/yaml.js'
 import 'codemirror/mode/gfm/gfm.js'
+import 'codemirror/addon/display/rulers.js'
 
 import 'jquery-ui'
 import 'jquery-ui/ui/widgets/autocomplete'
