@@ -127,14 +127,14 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
 
         $node = new Node($nodetype);
-        $node->setNodeName($data['node_name']);
-        $node->setHome($data['home']);
-        $node->setVisible($data['visible']);
+        $node->setNodeName((string) $data['node_name']);
+        $node->setHome((boolean) $data['home']);
+        $node->setVisible((boolean) $data['visible']);
         $node->setStatus($data['status']);
-        $node->setLocked($data['locked']);
+        $node->setLocked((boolean) $data['locked']);
         $node->setPriority($data['priority']);
-        $node->setHidingChildren($data['hiding_children']);
-        $node->setSterile($data['sterile']);
+        $node->setHidingChildren((boolean) $data['hiding_children']);
+        $node->setSterile((boolean) $data['sterile']);
         $node->setChildrenOrder($data['children_order']);
         $node->setChildrenOrderDirection($data['children_order_direction']);
         if (isset($data['position'])) {
@@ -158,30 +158,26 @@ class NodeJsonSerializer extends AbstractJsonSerializer
 
         foreach ($data["nodes_sources"] as $source) {
             $trans = new Translation();
-            $trans->setLocale($source['translation']);
+            $trans->setLocale((string) $source['translation']);
             $trans->setName(Translation::$availableLocales[$source['translation']]);
-
-            $namespace = NodeType::getGeneratedEntitiesNamespace();
-            $classname = $nodetype->getSourceEntityClassName();
-            $class = $namespace . "\\" . $classname;
+            $class = $nodetype->getSourceEntityFullQualifiedClassName();
 
             /** @var NodesSources $nodeSource */
             $nodeSource = new $class($node, $trans);
-            $nodeSource->setTitle($source["title"]);
+            $nodeSource->setTitle((string) $source["title"]);
             if (isset($source["published_at"]) && $source["published_at"] instanceof \DateTime) {
                 $nodeSource->setPublishedAt($source["published_at"]);
             }
-            $nodeSource->setMetaTitle($source["meta_title"]);
-            $nodeSource->setMetaKeywords($source["meta_keywords"]);
-            $nodeSource->setMetaDescription($source["meta_description"]);
+            $nodeSource->setMetaTitle((string) $source["meta_title"]);
+            $nodeSource->setMetaKeywords((string) $source["meta_keywords"]);
+            $nodeSource->setMetaDescription((string) $source["meta_description"]);
 
             $fields = $nodetype->getFields();
 
             /** @var NodeTypeField $field */
             foreach ($fields as $field) {
                 if (!$field->isVirtual() && isset($source[$field->getName()])) {
-                    if ($field->getType() == NodeTypeField::DATETIME_T
-                        || $field->getType() == NodeTypeField::DATE_T) {
+                    if ($field->getType() == NodeTypeField::DATETIME_T || $field->getType() == NodeTypeField::DATE_T) {
                         $date = new \DateTime(
                             $source[$field->getName()]['date'],
                             new \DateTimeZone($source[$field->getName()]['timezone'])
@@ -197,7 +193,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
             if (!empty($source['url_aliases'])) {
                 foreach ($source['url_aliases'] as $url) {
                     $alias = new UrlAlias($nodeSource);
-                    $alias->setAlias($url['alias']);
+                    $alias->setAlias((string) $url['alias']);
                     $nodeSource->addUrlAlias($alias);
                 }
             }
@@ -205,8 +201,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
         }
         if (!empty($data['tags'])) {
             foreach ($data["tags"] as $tag) {
-                $tmp = $this->em->getRepository(Tag::class)
-                            ->findOneBy(["tagName" => $tag]);
+                $tmp = $this->em->getRepository(Tag::class)->findOneBy(["tagName" => $tag]);
 
                 if (null === $tmp) {
                     throw new EntityNotFoundException('Tag "' . $tag . '" is not found on your website. Please import it before.');
@@ -230,6 +225,7 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      * @param string $string
      *
      * @return Node[]
+     * @throws EntityNotFoundException
      */
     public function deserialize($string)
     {
