@@ -1,7 +1,6 @@
 FROM roadiz/php80-nginx-alpine
 MAINTAINER Ambroise Maupate <ambroise@rezo-zero.com>
 
-ENV USER_UID=1000
 ARG USER_UID=1000
 ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV ROADIZ_ENV=dev
