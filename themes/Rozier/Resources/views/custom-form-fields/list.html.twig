@@ -30,15 +30,15 @@
                     {% for field in fields %}
                         <tr data-position="{{ field.position }}" data-field-id="{{ field.getId }}" class="custom-form-field-row">
                             <td class="custom-form-field-col custom-form-field-col-1">
-                                <a class="custom-form-field-edit-button edit-button-chevron rz-no-ajax-link" href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">
-                                    <i class="uk-icon-chevron-right"></i>{{ field.label }}
+                                <a class="custom-form-field-edit-button edit-button-chevron" href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}" data-index="{{ loop.index0 }}">
+                                    {{- field.label -}}
                                 </a>
                             </td>
                             <td class="mobile-hidden">{{ field.typeName|trans }}</td>
                             <td class="mobile-hidden">{{ field.groupName|trans }}</td>
                             <td class="table-actions-row table-actions-row-2">
                                 {% spaceless %}
-                                    <a class="uk-button uk-button-content uk-button-small custom-form-field-edit-button rz-no-ajax-link" href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>
+                                    <a class="uk-button uk-button-content uk-button-small custom-form-field-edit-button" href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>
                                     <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormFieldsDeletePage', { customFormFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
                                         <i class="uk-icon-rz-trash-o"></i>
                                     </a>

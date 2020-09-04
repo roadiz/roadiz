@@ -36,7 +36,6 @@ import NodeTypeFieldsPosition from './components/node-type-fields/NodeTypeFields
 import AttributeValuePosition from './components/attribute-values/AttributeValuePosition'
 import NodeTypeFieldEdit from './components/node-type-fields/NodeTypeFieldEdit'
 import CustomFormFieldsPosition from './components/custom-form-fields/CustomFormFieldsPosition'
-import CustomFormFieldEdit from './components/custom-form-fields/CustomFormFieldEdit'
 import NodeTreeContextActions from './components/trees/NodeTreeContextActions'
 import Import from './components/import/Import'
 import NodeEditSource from './components/node/NodeEditSource'
@@ -85,7 +84,6 @@ export default class Lazyload {
         this.nodeTypeFieldEdit = null
         this.nodeEditSource = null
         this.tagEdit = null
-        this.customFormFieldEdit = null
         this.markdownEditors = []
         this.jsonEditors = []
         this.cssEditors = []
@@ -322,8 +320,7 @@ export default class Lazyload {
             this.nodeTypeFieldEdit,
             this.nodeEditSource,
             this.tagEdit,
-            this.nodeTree,
-            this.customFormFieldEdit
+            this.nodeTree
         ])
         this.bindAjaxLink()
         this.markdownEditors = []
@@ -358,7 +355,6 @@ export default class Lazyload {
         this.nodeEditSource = new NodeEditSource()
         this.tagEdit = new TagEdit()
         this.nodeTree = new NodeTree()
-        this.customFormFieldEdit = new CustomFormFieldEdit()
 
         // Codemirror
         this.initMarkdownEditors()
