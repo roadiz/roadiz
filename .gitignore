@@ -95,7 +95,7 @@ node_modules
 .vagrant/
 
 ### Docker ###
-/docker-compose.yml
+#/docker-compose.yml
 /docker-compose.*.yml
 
 ### grunt ###

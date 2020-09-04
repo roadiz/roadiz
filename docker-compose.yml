@@ -1,0 +1,125 @@
+version: '3'
+services:
+    db:
+        image: mysql:5.7
+        volumes:
+            - "./.data/db:/var/lib/mysql:delegated"
+            - "./docker/mysql/performances.cnf:/etc/mysql/conf.d/performances.cnf"
+        networks:
+            - default
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    pma:
+        image: phpmyadmin/phpmyadmin
+        ports:
+            - ${PMA_PORT}:80/tcp
+        networks:
+            - default
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_DATABASE: ${MYSQL_DATABASE}
+            MYSQL_USER: ${MYSQL_USER}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+    app:
+        build:
+            #context: ./docker/php72-nginx-alpine
+            #context: ./docker/php73-nginx-alpine
+            context: ./docker/php74-nginx-alpine
+            #context: ./docker/php80-nginx-alpine
+            args:
+                USER_UID: ${USER_UID}
+        ports:
+            - ${APP_PORT}:80/tcp
+        depends_on:
+            - db
+            - solr
+        volumes:
+            - ./:/var/www/html:cached
+        environment:
+            USE_APP_CACHE: ${USE_APP_CACHE}
+            USER_UID: ${USER_UID}
+        networks:
+            # Use your docker reverse-proxy service network to
+            # serve app on your defined HOSTNAME (Traefik)
+            frontproxynet:
+            default:
+                aliases:
+                    - app
+                    - app_roadiz
+        labels:
+            # Replace example by your service name
+            - "traefik.enable=true"
+            - "traefik.http.services.roadiz.loadbalancer.server.scheme=http"
+            - "traefik.http.services.roadiz.loadbalancer.server.port=80"
+            - "traefik.http.services.roadiz.loadbalancer.passhostheader=true"
+            # Listen HTTP
+            - "traefik.http.routers.roadiz.entrypoints=http"
+            - "traefik.http.routers.roadiz.rule=Host(${HOSTNAME})"
+            - "traefik.http.routers.roadiz.service=roadiz"
+
+    varnish:
+        build:
+            context: ./docker/varnish
+        tmpfs: /usr/local/var/varnish:exec
+        depends_on:
+            - app
+        links:
+            - app:app
+        ports:
+            - ${VARNISH_PORT}:80/tcp
+        networks:
+            frontproxynet:
+            default:
+                aliases:
+                    - varnish
+                    - varnish_roadiz
+        labels:
+            # Replace example by your service name
+            - "traefik.enable=true"
+            - "traefik.http.services.varnish_roadiz.loadbalancer.server.scheme=http"
+            - "traefik.http.services.varnish_roadiz.loadbalancer.server.port=80"
+            - "traefik.http.services.varnish_roadiz.loadbalancer.passhostheader=true"
+            # Listen HTTP
+            - "traefik.http.routers.varnish_roadiz.entrypoints=http"
+            - "traefik.http.routers.varnish_roadiz.rule=Host(${HOSTNAME_VARNISH})"
+            - "traefik.http.routers.varnish_roadiz.service=varnish_roadiz"
+
+    solr:
+        build:
+            # Custom image for file permissions
+            context: ./docker/solr
+            args:
+                USER_UID: ${USER_UID}
+        image: solr:8
+        ports:
+            - "${SOLR_PORT}:8983/tcp"
+        volumes:
+            - "./.data/solr:/var/solr:delegated"
+        command:
+            - solr-precreate
+            - roadiz
+        environment:
+            SOLR_UID: ${USER_UID}
+            SOLR_GID: ${USER_UID}
+        networks:
+            - default
+
+    mailer:
+        image: mailhog/mailhog
+        networks:
+            - default
+        ports:
+            - ${MAILER_PORT}:8025/tcp
+
+networks:
+    frontproxynet:
+        external: true
+    default:
+        ipam:
+            driver: default
+            config:
+                -   subnet: ${DEFAULT_GATEWAY}/16
