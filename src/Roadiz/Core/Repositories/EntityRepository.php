@@ -413,10 +413,16 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
                     // we need to filter against each tag id
                     // and to inner join with a different alias for each tag
                     // with AND operator
+                    /**
+                     * @var int $index
+                     * @var Tag|null $tag Tag can be null if not found
+                     */
                     foreach ($criteria['tags'] as $index => $tag) {
-                        $alias = static::TAG_ALIAS . $index;
-                        $qb->innerJoin($nodeAlias . '.tags', $alias);
-                        $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+                        if (null !== $tag && $tag instanceof Tag) {
+                            $alias = static::TAG_ALIAS . $index;
+                            $qb->innerJoin($nodeAlias . '.tags', $alias);
+                            $qb->andWhere($qb->expr()->eq($alias . '.id', $tag->getId()));
+                        }
                     }
                     unset($criteria["tagExclusive"]);
                     unset($criteria['tags']);
@@ -448,7 +454,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     protected function applyFilterByTag(array &$criteria, QueryBuilder $qb)
     {
         if (key_exists('tags', $criteria)) {
-            if ($criteria['tags'] instanceof Tag) {
+            if (null !== $criteria['tags'] && $criteria['tags'] instanceof Tag) {
                 $qb->setParameter('tags', $criteria['tags']->getId());
             } elseif (is_array($criteria['tags']) || $criteria['tags'] instanceof Collection) {
                 if (count($criteria['tags']) > 0) {
