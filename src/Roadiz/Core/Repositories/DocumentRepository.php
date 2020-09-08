@@ -72,9 +72,11 @@ class DocumentRepository extends EntityRepository
                     // and to inner join with a different alias for each folder
                     // with AND operator
                     foreach ($criteria['folders'] as $index => $folder) {
-                        $alias = 'fd' . $index;
-                        $qb->innerJoin($prefix . '.folders', $alias);
-                        $qb->andWhere($qb->expr()->eq($alias . '.id', $folder->getId()));
+                        if (null !== $folder && $folder instanceof Folder) {
+                            $alias = 'fd' . $index;
+                            $qb->innerJoin($prefix . '.folders', $alias);
+                            $qb->andWhere($qb->expr()->eq($alias . '.id', $folder->getId()));
+                        }
                     }
                     unset($criteria["folderExclusive"]);
                     unset($criteria['folders']);
