@@ -315,8 +315,8 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
      * @param string  $pattern  Search pattern
      * @param array   $criteria Additional criteria
      * @param array   $orders
-     * @param integer $limit
-     * @param integer $offset
+     * @param int|null $limit
+     * @param int|null $offset
      * @param string $alias
      *
      * @return array|Paginator
