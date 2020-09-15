@@ -37,6 +37,8 @@ services:
         depends_on:
             - db
             - solr
+        links:
+            - solr:solr
         volumes:
             - ./:/var/www/html:cached
         environment:
@@ -94,7 +96,6 @@ services:
             context: ./docker/solr
             args:
                 USER_UID: ${USER_UID}
-        image: solr:8
         ports:
             - "${SOLR_PORT}:8983/tcp"
         volumes:
