@@ -100,19 +100,20 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
                 $assoc['node_parent_s'] = $parent->getNodeName();
             }
 
-            /** @var NodesSourcesHandler $handler */
-            $handler = $this->handlerFactory->getHandler($nodeSource);
             $out = array_map(
-                function (Tag $x) use ($event) {
-                    $tagName = $x->getTranslatedTags()->first() ?
-                        $x->getTranslatedTags()->first()->getName() :
-                        $x->getTagName();
+                function (Tag $tag) use ($event, $nodeSource) {
+                    $translatedTag = $tag->getTranslatedTagsByTranslation($nodeSource->getTranslation())->first();
+                    $tagName = $translatedTag ?
+                        $translatedTag->getName() :
+                        $tag->getTagName();
                     return $event->getSolariumDocument()->cleanTextContent($tagName, false);
                 },
-                $handler->getTags()
+                $nodeSource->getNode()->getTags()->toArray()
             );
             // Use tags_txt to be compatible with other data types
             $assoc['tags_txt'] = $out;
+            // Compile all tags names into a single localized text field.
+            $assoc['tags_txt_'.$lang] = implode(' ', $out);
         }
 
         $criteria = new Criteria();
@@ -155,6 +156,8 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
          * for global search
          */
         $assoc['collection_txt'] = $collection;
+        // Compile all text content into a single localized text field.
+        $assoc['collection_txt_'.$lang] = implode(PHP_EOL, $collection);
         $event->setAssociations($assoc);
     }
 }

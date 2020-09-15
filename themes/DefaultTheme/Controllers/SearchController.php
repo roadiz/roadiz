@@ -82,14 +82,15 @@ class SearchController extends DefaultThemeApp
              * Use Apache Solr when available
              */
             $searchHandler->boostByPublicationDate();
-            $nodeSources = $searchHandler->search(
+            $searchResponse = $searchHandler->search(
                 $request->query->get('query'), # Use ?query query parameter to search with
                 [
                     'translation' => $translation,
                 ], # a simple criteria array to filter search results
                 10, # result count
                 true # Search in tags too
-            )->getResultItems();
+            );
+            $nodeSources = $searchResponse->getResultItems();
         } else {
             /*
              * Use simple search over title and meta fields.

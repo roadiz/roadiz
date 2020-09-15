@@ -60,8 +60,10 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
                                 $event->getNodeSource()->getTranslation()->getLocale(),
                                 AbstractSolarium::$availableLocalizedTextFields
                             )) {
-                                $fieldName .= '_txt_' . $event->getNodeSource()->getTranslation()->getLocale();
+                                $lang = $event->getNodeSource()->getTranslation()->getLocale();
+                                $fieldName .= '_txt_' . $lang;
                             } else {
+                                $lang = null;
                                 $fieldName .= '_t';
                             }
                             /*
@@ -72,6 +74,10 @@ class AttributeValueIndexingSubscriber implements EventSubscriberInterface
                                 $data;
                             $associations[$fieldName] = $content;
                             $associations['collection_txt'][] = $content;
+                            if (null !== $lang) {
+                                // Compile all text content into a single localized text field.
+                                $associations['collection_txt_'.$lang] = implode(PHP_EOL, $associations['collection_txt']);
+                            }
                             break;
                     }
                 }

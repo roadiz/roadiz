@@ -46,176 +46,6 @@ abstract class AbstractSearchHandler
     }
 
     /**
-     * @return string
-     */
-    abstract protected function getDocumentType();
-
-    /**
-     * @param array|null $response
-     * @return array
-     * @deprecated Use SolrSearchResults DTO
-     */
-    abstract protected function parseSolrResponse($response);
-
-    /**
-     * @param array $args
-     * @return mixed
-     */
-    abstract protected function argFqProcess(&$args);
-
-    /**
-     * @param string  $q
-     * @param array   $args
-     * @param integer $rows
-     * @param boolean $searchTags
-     * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
-     * @param integer $page
-     *
-     * @return array|null
-     */
-    abstract protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
-
-    /**
-     * @param array $args
-     *
-     * @return string
-     */
-    protected function getTitleField(array &$args): string
-    {
-        /*
-         * Use title_txt_LOCALE when search
-         * is filtered by translation.
-         */
-        if (isset($args['locale']) && is_string($args['locale'])) {
-            return 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
-        }
-        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
-            return 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
-        }
-        return 'title';
-    }
-
-    /**
-     * @param string $q
-     *
-     * @return bool
-     */
-    protected function isQuerySingleWord(string $q): bool
-    {
-        return preg_match('#[\s\-\'\"\–\—\’\”\‘\“\/\+\.\,]#', $q) !== 1;
-    }
-
-    /**
-     * Default Solr query builder.
-     *
-     * Extends this method to customize your Solr queries. Eg. to boost custom fields.
-     *
-     * @param string|null $q
-     * @param array $args
-     * @param bool $searchTags
-     * @param int $proximity
-     * @return string
-     */
-    protected function buildQuery($q, array &$args, $searchTags, $proximity)
-    {
-        $q = null !== $q ? trim($q) : '';
-        $qHelper = new Helper();
-        $q = $qHelper->escapeTerm($q);
-        $singleWord = $this->isQuerySingleWord($q);
-        $titleField = $this->getTitleField($args);
-        /*
-         * Search in node-sources tags name…
-         */
-        if ($searchTags) {
-            /*
-             * @see https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches
-             */
-            if ($singleWord) {
-                // Need to use Fuzzy Searches
-                return sprintf(
-                    '(' . $titleField . ':%s~1)^10 (collection_txt:%s~1) (tags_txt:%s~1)',
-                    $q,
-                    $q,
-                    $q
-                );
-            } else {
-                return sprintf(
-                    '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d) (tags_txt:"%s"~%d)',
-                    $q,
-                    $proximity,
-                    $q,
-                    $proximity,
-                    $q,
-                    $proximity
-                );
-            }
-        } else {
-            if ($singleWord) {
-                // Need to use Fuzzy Searches
-                return sprintf('(' . $titleField . ':%s~1)^10 (collection_txt:%s~1)', $q, $q);
-            } else {
-                return sprintf(
-                    '(' . $titleField . ':"%s"~%d)^10 (collection_txt:"%s"~%d)',
-                    $q,
-                    $proximity,
-                    $q,
-                    $proximity
-                );
-            }
-        }
-    }
-
-    /**
-     * Create Solr Select query. Override it to add DisMax fields and rules.
-     *
-     * @param array $args
-     * @param int $rows
-     * @param int $page
-     * @return Query
-     */
-    protected function createSolrQuery(array &$args = [], $rows = 20, $page = 1)
-    {
-        $query = $this->client->createSelect();
-
-        foreach ($args as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $k => $v) {
-                    $query->addFilterQuery([
-                        "key" => "fq" . $k,
-                        "query" => $v,
-                    ]);
-                }
-            } else {
-                $query->addParam($key, $value);
-            }
-        }
-        /**
-         * Add start if not first page.
-         */
-        if ($page > 1) {
-            $query->setStart(($page - 1) * $rows);
-        }
-        $query->addSort('score', $query::SORT_DESC);
-        $query->setRows($rows);
-
-        return $query;
-    }
-
-    /**
-     * @param array $response
-     * @return int
-     * @deprecated Use SolrSearchResults DTO
-     */
-    protected function parseResultCount($response)
-    {
-        if (null !== $response && isset($response['response']['numFound'])) {
-            return (int) $response['response']['numFound'];
-        }
-
-        return 0;
-    }
-
-    /**
      * Search on Solr with pre-filled argument for highlighting
      *
      * * $q is the search criteria.
@@ -249,19 +79,83 @@ abstract class AbstractSearchHandler
     }
 
     /**
+     * @param array $args
+     * @return mixed
+     */
+    abstract protected function argFqProcess(&$args);
+
+    /**
+     * @return string
+     */
+    abstract protected function getDocumentType();
+
+    /**
      * @return array
      */
     protected function getHighlightingOptions(): array
     {
+        $args = [];
         $tmp = [];
         $tmp["hl"] = true;
-        $tmp["hl.fl"] = "collection_txt";
+        $tmp["hl.fl"] = $this->getCollectionField($args);
         $tmp["hl.fragsize"] = $this->getHighlightingFragmentSize();
         $tmp["hl.simple.pre"] = '<span class="solr-highlight">';
         $tmp["hl.simple.post"] = '</span>';
 
         return $tmp;
     }
+
+    /**
+     * @param array $args
+     *
+     * @return string
+     */
+    protected function getCollectionField(array &$args): string
+    {
+        /*
+         * Use collection_txt_LOCALE when search
+         * is filtered by translation.
+         */
+        if (isset($args['locale']) && is_string($args['locale'])) {
+            return 'collection_txt_' . \Locale::getPrimaryLanguage($args['locale']);
+        }
+        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
+            return 'collection_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        }
+        return 'collection_txt';
+    }
+
+    /**
+     * @return int
+     */
+    public function getHighlightingFragmentSize(): int
+    {
+        return $this->highlightingFragmentSize;
+    }
+
+    /**
+     * @param int $highlightingFragmentSize
+     *
+     * @return AbstractSearchHandler
+     */
+    public function setHighlightingFragmentSize(int $highlightingFragmentSize): AbstractSearchHandler
+    {
+        $this->highlightingFragmentSize = $highlightingFragmentSize;
+
+        return $this;
+    }
+
+    /**
+     * @param string  $q
+     * @param array   $args
+     * @param integer $rows
+     * @param boolean $searchTags
+     * @param integer $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
+     * @param integer $page
+     *
+     * @return array|null
+     */
+    abstract protected function nativeSearch($q, $args = [], $rows = 20, $searchTags = false, $proximity = 10000000, $page = 1);
 
     /**
      * ## Search on Solr.
@@ -334,22 +228,173 @@ abstract class AbstractSearchHandler
     }
 
     /**
+     * @param array $response
      * @return int
+     * @deprecated Use SolrSearchResults DTO
      */
-    public function getHighlightingFragmentSize(): int
+    protected function parseResultCount($response)
     {
-        return $this->highlightingFragmentSize;
+        if (null !== $response && isset($response['response']['numFound'])) {
+            return (int) $response['response']['numFound'];
+        }
+
+        return 0;
     }
 
     /**
-     * @param int $highlightingFragmentSize
-     *
-     * @return AbstractSearchHandler
+     * @param array|null $response
+     * @return array
+     * @deprecated Use SolrSearchResults DTO
      */
-    public function setHighlightingFragmentSize(int $highlightingFragmentSize): AbstractSearchHandler
-    {
-        $this->highlightingFragmentSize = $highlightingFragmentSize;
+    abstract protected function parseSolrResponse($response);
 
-        return $this;
+    /**
+     * Default Solr query builder.
+     *
+     * Extends this method to customize your Solr queries. Eg. to boost custom fields.
+     *
+     * @param string|null $q
+     * @param array $args
+     * @param bool $searchTags
+     * @param int $proximity
+     * @return string
+     */
+    protected function buildQuery($q, array &$args, $searchTags = false, $proximity = 10000000)
+    {
+        $q = null !== $q ? trim($q) : '';
+        $qHelper = new Helper();
+        $q = $qHelper->escapeTerm($q);
+        $singleWord = $this->isQuerySingleWord($q);
+        $titleField = $this->getTitleField($args);
+        $collectionField = $this->getCollectionField($args);
+        $tagsField = $this->getTagsField($args);
+        /*
+         * Search in node-sources tags name…
+         */
+        if ($searchTags) {
+            /*
+             * @see https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches
+             */
+            if ($singleWord) {
+                // Need to use Fuzzy Searches
+                // But not on tags search
+                return sprintf(
+                    '(' . $titleField . ':%s~1)^10 (' . $collectionField . ':%s~1) (' . $tagsField . ':%s~%d)',
+                    $q,
+                    $q,
+                    $q,
+                    $proximity
+                );
+            } else {
+                return sprintf(
+                    '(' . $titleField . ':"%s"~%d)^10 (' . $collectionField . ':"%s"~%d) (' . $tagsField . ':"%s"~%d)',
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity
+                );
+            }
+        } else {
+            if ($singleWord) {
+                // Need to use Fuzzy Searches
+                return sprintf('(' . $titleField . ':%s~1)^10 (' . $collectionField . ':%s~1)', $q, $q);
+            } else {
+                return sprintf(
+                    '(' . $titleField . ':"%s"~%d)^10 (' . $collectionField . ':"%s"~%d)',
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity
+                );
+            }
+        }
+    }
+
+    /**
+     * @param string $q
+     *
+     * @return bool
+     */
+    protected function isQuerySingleWord(string $q): bool
+    {
+        return preg_match('#[\s\-\'\"\–\—\’\”\‘\“\/\+\.\,]#', $q) !== 1;
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return string
+     */
+    protected function getTitleField(array &$args): string
+    {
+        /*
+         * Use title_txt_LOCALE when search
+         * is filtered by translation.
+         */
+        if (isset($args['locale']) && is_string($args['locale'])) {
+            return 'title_txt_' . \Locale::getPrimaryLanguage($args['locale']);
+        }
+        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
+            return 'title_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        }
+        return 'title';
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return string
+     */
+    protected function getTagsField(array &$args): string
+    {
+        /*
+         * Use tags_txt_LOCALE when search
+         * is filtered by translation.
+         */
+        if (isset($args['locale']) && is_string($args['locale'])) {
+            return 'tags_txt_' . \Locale::getPrimaryLanguage($args['locale']);
+        }
+        if (isset($args['translation']) && $args['translation'] instanceof Translation) {
+            return 'tags_txt_' . \Locale::getPrimaryLanguage($args['translation']->getLocale());
+        }
+        return 'tags_txt';
+    }
+
+    /**
+     * Create Solr Select query. Override it to add DisMax fields and rules.
+     *
+     * @param array $args
+     * @param int $rows
+     * @param int $page
+     * @return Query
+     */
+    protected function createSolrQuery(array &$args = [], $rows = 20, $page = 1)
+    {
+        $query = $this->client->createSelect();
+
+        foreach ($args as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $k => $v) {
+                    $query->addFilterQuery([
+                        "key" => "fq" . $k,
+                        "query" => $v,
+                    ]);
+                }
+            } else {
+                $query->addParam($key, $value);
+            }
+        }
+        /**
+         * Add start if not first page.
+         */
+        if ($page > 1) {
+            $query->setStart(($page - 1) * $rows);
+        }
+        $query->addSort('score', $query::SORT_DESC);
+        $query->setRows($rows);
+
+        return $query;
     }
 }
