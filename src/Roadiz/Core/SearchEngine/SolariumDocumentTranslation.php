@@ -114,7 +114,6 @@ class SolariumDocumentTranslation extends AbstractSolarium
         $collection[] = $assoc['description' . $suffix];
         $collection[] = $assoc['copyright' . $suffix];
 
-
         $folders = $this->rzDocument->getFolders();
         $folderNames = [];
         /** @var Folder $folder */
@@ -134,12 +133,16 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
         // Use tags_txt to be compatible with other data types
         $assoc['tags_txt'] = $folderNames;
+        // Compile all tags names into a single localized text field.
+        $assoc['tags_txt_'.$lang] = implode(' ', $folderNames);
 
         /*
          * Collect data in a single field
          * for global search
          */
         $assoc['collection_txt'] = $collection;
+        // Compile all text content into a single localized text field.
+        $assoc['collection_txt_'.$lang] = implode(PHP_EOL, $collection);
 
         return $assoc;
     }

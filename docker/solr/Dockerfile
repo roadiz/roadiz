@@ -1,7 +1,6 @@
 FROM solr:8-slim
 MAINTAINER Ambroise Maupate <ambroise@rezo-zero.com>
 
-ENV USER_UID=1000
 ARG USER_UID=1000
 
 USER root
