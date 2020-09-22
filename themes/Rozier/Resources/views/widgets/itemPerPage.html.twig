@@ -1,6 +1,6 @@
 {% if filters.itemPerPage and filters.itemCount > 10 %}
 {% set enabledCounts = [10,20,50,100,200] %}
-{% spaceless %}
+{% apply spaceless %}
 <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
     {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
     {% if filters.currentPage %}<input type="hidden" name="page" value="{{ filters.currentPage }}" />{% endif %}
@@ -16,5 +16,5 @@
         </select>
     </div>
 </form>
-{% endspaceless %}
+{% endapply %}
 {% endif %}

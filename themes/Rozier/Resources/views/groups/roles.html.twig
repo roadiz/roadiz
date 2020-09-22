@@ -4,7 +4,7 @@
 <section class="content-global edit-group">
 
     <header class="content-header header-group header-group-roles">
-        <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName})|u.truncate(25, '[…]', true) }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
         {% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'roles'} %}
     </header>
@@ -23,11 +23,11 @@
                     <tr>
                         <td>{{ role.name }}</td>
                         <td>
-                        {% spaceless %}
+                        {% apply spaceless %}
                             {% if is_granted(role.role) %}
                                 <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}" title="{% trans %}unlink.role{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                             {% endif %}
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

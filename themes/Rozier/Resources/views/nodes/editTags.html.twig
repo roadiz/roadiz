@@ -1,5 +1,5 @@
 {% set currentTitle = node.nodeSources.first.title|default(node.nodeName) %}
-{% set pageTitle = "edit.node.%name%.tags"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') %}
+{% set pageTitle = "edit.node.%name%.tags"|trans({'%name%': currentTitle})|u.truncate(25, '[…]', true) %}
 
 {% extends '@Rozier/layout.html.twig' %}
 
@@ -23,12 +23,12 @@
         {{ form_start(form, { attr: {id: 'edit-node-tags-form'}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                {% spaceless %}
+                {% apply spaceless %}
                 <button data-action-save="#edit-node-tags-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
-                {% endspaceless %}
+                {% endapply %}
             </fieldset>
         {{ form_end(form) }}
     </article>

@@ -12,7 +12,7 @@
     {% endif %}
 {% endfor %}
 
-{% spaceless %}
+{% apply spaceless %}
     <drawer-container data-vuejs inline-template>
         <div class="uk-form-row drawer-widget entity-{{ entity }} form-col-{{ name }}"
              :class="{ 'uk-active' : isActive, 'uk-alert-danger': drawer.errorMessage }"
@@ -128,4 +128,4 @@
             {% endif %}
         </div>
     </drawer-container>
-{% endspaceless %}
+{% endapply %}

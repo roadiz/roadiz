@@ -70,14 +70,14 @@
 
             </div>
 
-            {% spaceless %}
+            {% apply spaceless %}
             <div class="content-buttons">
                 <a class="content-button uk-button" href="{{ path('installHomePage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.welcome{% endtrans %}</a>
                 {% if totalSuccess %}
                 <a class="content-button uk-button uk-button-primary" href="{{ path('installDatabasePage') }}">{% trans %}goto.database{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right"></i></a>
                 {% endif %}
             </div>
-            {% endspaceless %}
+            {% endapply %}
 
         </div>
 

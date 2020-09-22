@@ -58,7 +58,7 @@
                         </td>
                         <td>{{ redirection.typeAsString|trans }}</td>
                         <td class="table-actions-row">
-                        {% spaceless %}
+                        {% apply spaceless %}
                             <a class="uk-button uk-button-content uk-button-small"
                                href="{{ url }}"
                                title="{% trans %}edit{% endtrans %}"
@@ -67,7 +67,7 @@
                                href="{{ path('redirectionsDeletePage', { redirectionId: redirection.getId }) }}"
                                title="{% trans %}delete{% endtrans %}"
                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

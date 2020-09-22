@@ -40,7 +40,7 @@
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditTranslatedPage', { tagId: tag.getId, translationId: ttag.getTranslation.getId }) }}">{{ ttag.getName }}</a></td>
                             <td>
-                                {% spaceless %}
+                                {% apply spaceless %}
                                     {% if is_granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
                                     <div class="tagtree-bulk-selection">
                                         <input class="tag-checkbox" type="checkbox" name="bulk-selection[]" value="{{ tag.getId }}" />
@@ -52,7 +52,7 @@
                                             <i class="uk-icon-rz-trash-o"></i>
                                         </a>
                                     {% endif %}
-                                {% endspaceless %}
+                                {% endapply %}
                             </td>
                         </tr>
                         {% else %}
@@ -60,7 +60,7 @@
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">{{ tag.getId }}</a></td>
                             <td><a href="{{ path('tagsEditPage', { tagId: tag.getId }) }}">tag_{{ tag.getId }} <span class="uk-badge uk-badge-warning">{% trans %}notranslation_available.tag{% endtrans %}</span></a></td>
                             <td class="table-actions-row">
-                            {% spaceless %}
+                            {% apply spaceless %}
                                 {% if is_granted('ROLE_ACCESS_TAGS_DELETE') and not tag.locked %}
                                 <div class="tagtree-bulk-selection">
                                     <input class="tag-checkbox" type="checkbox" name="bulk-selection[]" value="{{ tag.getId }}" />
@@ -73,7 +73,7 @@
                                         <i class="uk-icon-rz-trash-o"></i>
                                     </a>
                                 {% endif %}
-                            {% endspaceless %}
+                            {% endapply %}
                             </td>
                         </tr>
                         {% endif %}

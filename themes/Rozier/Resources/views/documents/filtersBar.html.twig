@@ -42,7 +42,7 @@
                 <h3 class="bulk-actions-title documents-bulk-actions-title">{% trans %}bulk.actions{% endtrans %}</h3>
             </div>
 
-            {% spaceless %}
+            {% apply spaceless %}
                 <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-documents" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
                 <a class="uk-button uk-button-bulk uk-button-bulk-download uk-button-bulk-download-documents" href="#" title="{% trans %}bulk.download.documents{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
                 {% if joinFolderForm %}
@@ -57,7 +57,7 @@
                     {{ form_end(joinFolderForm) }}
                 </div>
                 {% endif %}
-            {% endspaceless %}
+            {% endapply %}
 
         </nav>
 

@@ -47,11 +47,11 @@
                         {% if theme.isStaticTheme %}<div class="uk-badge uk-badge-table"><span class="uk-icon-road"></span> {% trans %}theme.is_static{% endtrans %}</div>{% endif %}
                         </td>
                         <td class="table-actions-row">
-                        {% spaceless %}
+                        {% apply spaceless %}
                             {% if not theme.isBackendTheme %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('themesSummaryPage', { classname: theme.classname }) }}" title="{% trans %}import{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-download"></i></a>
                             {% endif %}
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

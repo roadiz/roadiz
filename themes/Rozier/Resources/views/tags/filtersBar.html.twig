@@ -37,7 +37,7 @@
             <div class="bulk-actions-title-cont">
                 <h3 class="bulk-actions-title tags-bulk-actions-title">{% trans %}bulk.actions{% endtrans %}</h3>
             </div>
-            {% spaceless %}
+            {% apply spaceless %}
                 <a class="uk-button uk-button-bulk uk-button-bulk-deselect uk-button-bulk-deselect-tags" href="#" title="{% trans %}deselect.all{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-square-o"></i></a>
                 {# Links #}
                 {% if deleteTagsForm %}
@@ -50,7 +50,7 @@
                         data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i> </button>
                 </form>
                 {% endif %}
-            {% endspaceless %}
+            {% endapply %}
         </nav>
 
     </div>

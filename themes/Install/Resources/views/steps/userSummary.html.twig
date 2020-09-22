@@ -33,7 +33,7 @@
                 </table>
             </div>
 
-            {% spaceless %}
+            {% apply spaceless %}
             <div class="content-buttons">
 
                 <a class="content-button uk-button" href="{{ path('installThemesPage') }}"><i class="uk-icon-arrow-circle-left"></i> {% trans %}goto.theme{% endtrans %}</a>
@@ -41,7 +41,7 @@
                 <a class="content-button uk-button uk-button-primary" href="{{ path('installDonePage') }}"><i class="uk-icon-arrow-circle-right"></i> {% trans %}goto.done{% endtrans %}</a>
 
             </div>
-            {% endspaceless %}
+            {% endapply %}
 
         </div>
 

@@ -23,7 +23,7 @@
 {%- endblock date_widget -%}
 
 {% block markdown_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="markdown-editor-wrapper">
             {# just let the textarea widget render the select tag #}
             <textarea {{ block('widget_attributes') }} data-rz-markdowneditor>{{- value -}}</textarea>
@@ -108,35 +108,35 @@
             </nav>
             <div class="markdown-editor-count"><span class="count-current"></span>/<span class="count-limit"></span></div>
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock markdown_widget %}
 
 
 {% block json_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <textarea {{ block('widget_attributes') }} data-rz-jsoneditor>{{ value }}</textarea>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock json_widget %}
 
 
 {% block css_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <textarea {{ block('widget_attributes') }} data-rz-csseditor>{{ value }}</textarea>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock css_widget %}
 
 
 {% block yaml_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <textarea {{ block('widget_attributes') }} data-rz-yamleditor>{{ value }}</textarea>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock yaml_widget %}
 
 {% block dynamic_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <component
             :is="currentView"
@@ -145,11 +145,11 @@
             {{ block('widget_attributes') }}
             initial-value="{{ value }}">
         </component>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock dynamic_widget %}
 
 {%- block collection_widget -%}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if prototype is defined %}
             {% set attr = attr|merge({'data-prototype': form_row(prototype)}) %}
             {% set attr = attr|merge({'data-prototype-name': prototype.vars.name}) %}
@@ -158,7 +158,7 @@
         {% set attr = attr|merge({'data-allow-remove': allow_delete ? 1 : 0 }) %}
         {% set attr = attr|merge({'data-name-prefix': full_name}) %}
         {{ block('form_widget') }}
-    {% endspaceless %}
+    {% endapply %}
 {%- endblock collection_widget -%}
 
 {% block tags_widget %}
@@ -245,10 +245,10 @@
 {%- endblock number_widget %}
 
 {% block separator_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <p {{ block('widget_attributes') }}>{{ label|trans }}</p>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock separator_widget %}
 
 {% block time_widget -%}
@@ -275,7 +275,7 @@
 
 {# Children node tree field #}
 {% block childrennodes_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         <div class="uk-form-row children-nodes-widget" data-children-nodes-widget {{ block('widget_attributes') }}>
             {% if label is empty -%}
                 {% set label = name|humanize %}
@@ -316,7 +316,7 @@
                 } only %}
             </div>
         </div>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock childrennodes_widget %}
 {#
  # Override default form rendering

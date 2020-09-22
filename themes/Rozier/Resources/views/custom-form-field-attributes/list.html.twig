@@ -8,9 +8,9 @@
     {% if type.customFormField.isCountry  %}
         <td>{{ type.value|country_iso(request.locale) }}</td>
     {% elseif type.customFormField.isDate %}
-        <td>{{ type.value|localizeddate('full', 'none') }}</td>
+        <td>{{ type.value|format_datetime('full', 'none', locale=app.request.locale) }}</td>
     {% elseif type.customFormField.isDateTime %}
-        <td>{{ type.value|localizeddate('full', 'medium') }}</td>
+        <td>{{ type.value|format_datetime('full', 'medium', locale=app.request.locale) }}</td>
     {% elseif type.customFormField.isDocuments %}
         <td>
             {% for document in type.documents %}
@@ -55,7 +55,7 @@
                 </tr>
                 <tr>
                     <td class="uk-text-bold">{{ 'submitted.date'|trans }}</td>
-                    <td>{{ answer.submittedAt|localizeddate('full', 'medium') }}</td>
+                    <td>{{ answer.submittedAt|format_datetime('full', 'medium', locale=app.request.locale) }}</td>
                 </tr>
             </table>
         </div>

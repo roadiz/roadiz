@@ -40,6 +40,8 @@ use Twig\Extensions\ArrayExtension;
 use Twig\Extensions\DateExtension;
 use Twig\Extensions\IntlExtension;
 use Twig\Extensions\TextExtension;
+use Twig\Extra\Html\HtmlExtension;
+use Twig\Extra\String\StringExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Profiler\Profile;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -186,14 +188,19 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions = new ArrayCollection();
 
             $extensions->add(new FormExtension());
+            $extensions->add(new \Twig\Extra\Intl\IntlExtension());
+            $extensions->add(new StringExtension());
+            $extensions->add(new HtmlExtension());
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
             $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add(new TranslationExtension($c['translator']));
             $extensions->add(new AssetExtension($c['assetPackages']));
+            /** @deprecated Use new Intl Extension */
             $extensions->add(new IntlExtension());
             $extensions->add($c['twig.routingExtension']);
+            /** @deprecated Use new String Extension */
             $extensions->add(new TextExtension());
             $extensions->add(new ArrayExtension());
             $extensions->add(new DateExtension());

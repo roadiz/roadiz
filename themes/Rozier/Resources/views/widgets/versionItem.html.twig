@@ -1,5 +1,5 @@
 <a class="uk-button{% if currentVersion.id == version.id %} uk-active{% endif %}" href="{{ url }}">
-    <time>{{- version.loggedAt|localizeddate('short', 'short') -}}</time><br />
+    <time>{{- version.loggedAt|format_datetime('short', 'short', locale=app.request.locale) -}}</time><br />
     {% if version.user %}
         <img width="30" height="30"
              data-uk-tooltip="{animation:true}"

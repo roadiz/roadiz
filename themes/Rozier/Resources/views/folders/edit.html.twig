@@ -6,7 +6,7 @@
 
     <header class="content-header header-folder header-folder-add">
         <h1 class="content-title folder-add-title">
-            {{ "edit.folder.%name%"|trans({'%name%': folderName})|truncate(25, true, '[…]') }}
+            {{ "edit.folder.%name%"|trans({'%name%': folderName})|u.truncate(25, '[…]', true) }}
             {% if translation and available_translations %}
                 ({{ translation.locale }})
             {% endif %}

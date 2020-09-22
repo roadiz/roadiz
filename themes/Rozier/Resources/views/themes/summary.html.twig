@@ -100,7 +100,7 @@
 
             </div>
 
-            {% spaceless %}
+            {% apply spaceless %}
             <div class="content-buttons">
                 <a class="content-button uk-button" href="{{ path('themesHomePage') }}"><i class="uk-icon-rz-back-parent"></i> {% trans %}back_to.themes{% endtrans %}</a>
                 {% if not status.version or not status.locale or false in status.import %}
@@ -109,7 +109,7 @@
                     <a class="content-button uk-button uk-button-primary" href="{{ path('themesSettingPage') ~ '?classname=' ~ classname|url_encode }}">{% trans %}install.theme{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right" ></i></a>
                 {% endif %}
             </div>
-            {% endspaceless %}
+            {% endapply %}
 
         </div>
 

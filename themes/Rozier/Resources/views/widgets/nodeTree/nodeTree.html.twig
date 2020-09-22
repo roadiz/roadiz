@@ -20,7 +20,7 @@
             {% endif %}
                 {% if nodeTree.availableTranslations and nodeTree.availableTranslations|length > 1 %}
                 <ul class="nodetree-langs{% if nodeTree.availableTranslations|length <= 5 %} few-langs{% endif %}">
-                    {% spaceless %}
+                    {% apply spaceless %}
                     {% for lang in nodeTree.availableTranslations %}
                     <li class="{% if lang.id == nodeTree.translation.id %}active{% endif %}">
                         <a href="#"
@@ -30,7 +30,7 @@
                            data-translation-id="{{ lang.id }}">{{ lang.preferredLocale|capitalize }}</a>
                     </li>
                     {% endfor %}
-                    {% endspaceless %}
+                    {% endapply %}
                 </ul>
                 {% endif %}
 

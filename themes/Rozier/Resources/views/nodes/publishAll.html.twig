@@ -4,7 +4,7 @@
 <section class="content-global">
 
     <header class="content-header header-node header-node-publish-all">
-        <h1 class="content-title node-publish-all-title">{{ "publish.node.%name%.offspring"|trans({'%name%': node.getNodeName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title node-publish-all-title">{{ "publish.node.%name%.offspring"|trans({'%name%': node.getNodeName})|u.truncate(25, '[…]', true) }}</h1>
         {% include '@Rozier/nodes/navBack.html.twig' %}
     </header>
 

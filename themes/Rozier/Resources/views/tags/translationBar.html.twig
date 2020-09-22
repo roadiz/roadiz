@@ -1,5 +1,5 @@
 <nav class="tag-translation-bar translation-bar uk-navbar">
-    {% spaceless %}
+    {% apply spaceless %}
     <ul class="uk-navbar-nav">
         {% for translation in available_translations %}
             {% set liClasses = [] %}
@@ -17,5 +17,5 @@
             </li>
         {% endfor %}
     </ul>
-    {% endspaceless %}
+    {% endapply %}
 </nav>

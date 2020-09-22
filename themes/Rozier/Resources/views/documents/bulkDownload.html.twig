@@ -4,7 +4,7 @@
 {% block content %}
 <section class="content-global download-document">
 	<header class="content-header header-document header-document-preview">
-        <h1 class="content-title document-download-title">{{ "download.documents"|trans()|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title document-download-title">{{ "download.documents"|trans()|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-download content-no-action-menu">
@@ -21,7 +21,7 @@
             </fieldset>
         {{ form_end(form) }}
 
-        {% spaceless %}
+        {% apply spaceless %}
         <ul class="documents-list">
         {% for document in documents %}
         {% include '@Rozier/documents/singleDocumentThumbnail.html.twig' with {
@@ -31,7 +31,7 @@
         } only %}
         {% endfor %}
         </ul>
-        {% endspaceless %}
+        {% endapply %}
 	</article>
 </section>
 {% endblock %}

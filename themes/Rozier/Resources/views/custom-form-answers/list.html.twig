@@ -3,7 +3,7 @@
 {% block content %}
     <section class="content-global content-nav-and-filters">
         <header class="content-header header-node-types header-node-types-list">
-            <h1 class="content-title nodes-node-types-title">{{ customForm.displayName|truncate(25, true, '[…]') }}</h1>
+            <h1 class="content-title nodes-node-types-title">{{ customForm.displayName|u.truncate(25, '[…]', true) }}</h1>
             {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
             <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
             {% include '@Rozier/custom-forms/navBar.html.twig' with {
@@ -22,7 +22,7 @@
         {% include '@Rozier/widgets/filtersBar.html.twig' %}
         <article class="content content-no-action-menu content-node-types-list">
             <div class="content-table-cont">
-                {% spaceless %}
+                {% apply spaceless %}
                     <table class="node-types content-table uk-table">
                         <thead>
                         <tr>
@@ -51,20 +51,20 @@
                             <tr>
                                 <td class="mobile-hidden">{{ type.ip }}</td>
                                 <td class="mobile-hidden">{{ type.email }}</td>
-                                <td>{{ type.submittedAt|localizeddate('short') }}</td>
+                                <td>{{ type.submittedAt|format_date('short', locale=app.request.locale) }}</td>
                                 <td class="table-actions-row table-actions-row-2">
-                                    {% spaceless %}
+                                    {% apply spaceless %}
                                         <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldAttributesHomePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}customFormAnswer.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
                                         <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormAnswersDeletePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
                                             <i class="uk-icon-rz-trash-o"></i>
                                         </a>
-                                    {% endspaceless %}
+                                    {% endapply %}
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                {% endspaceless %}
+                {% endapply %}
             </div>
         </article>
     </section>

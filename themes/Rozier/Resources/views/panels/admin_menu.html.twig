@@ -19,7 +19,7 @@
         </div>
         {% endif %}
     </header>
-    {% spaceless %}
+    {% apply spaceless %}
     <ul class="uk-nav uk-nav-parent-icon">
 
         {% if themeServices['backoffice.entries'] %}
@@ -62,5 +62,5 @@
             {% endfor %}
         {% endif %}
     </ul>
-    {% endspaceless %}
+    {% endapply %}
 </nav>

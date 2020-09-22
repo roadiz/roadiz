@@ -4,7 +4,7 @@
 <section class="content-global content-node-remove-tag">
 
     <header class="content-header header-node header-node-remove-tag">
-         <h1 class="content-title node-remove-tag-title">{{ "unlink.tag.%name%"|trans({'%name%': tag.getTranslatedTags.first.getName})|truncate(25, true, '[…]') }}</h1>
+         <h1 class="content-title node-remove-tag-title">{{ "unlink.tag.%name%"|trans({'%name%': tag.getTranslatedTags.first.getName})|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-delete content-remove-tag">

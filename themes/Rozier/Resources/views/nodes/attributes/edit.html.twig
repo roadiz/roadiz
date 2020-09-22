@@ -10,7 +10,7 @@
                 "source": source,
             } only %}
             <h1 class="content-title node-edit-source-title"{% if source.translation.locale is rtl %} dir="rtl"{% endif %}>
-                {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|truncate(30, false, '[…]') }}
+                {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|u.truncate(30, '[…]', false) }}
                 {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
             </h1>
             {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'attributes'} %}
@@ -47,16 +47,16 @@
                                         }
                                     }) }}
                                     {{ form_widget(attribute_value_translation_form) }}
-                                    {% spaceless %}
+                                    {% apply spaceless %}
                                         <button data-uk-tooltip="{animation:true}"
                                                 title="{% trans %}edit{% endtrans %}"
                                                 class="uk-button uk-button-settings-submit uk-button-small"
                                                 type="submit"><i class="uk-icon-rz-save-mini"></i></button>
-                                    {% endspaceless %}
+                                    {% endapply %}
                                     {{ form_end(attribute_value_translation_form) }}
                                 </td>
                                 <td class="table-actions-row">
-                                    {% spaceless %}
+                                    {% apply spaceless %}
                                         <a class="uk-button uk-button-content uk-button-small uk-button-settings-save no-ajax-link uk-button-table-save"
                                            href="#{{ attribute_value_translation_form.vars.id }}"
                                            title="{% trans %}save{% endtrans %}"
@@ -83,7 +83,7 @@
                                                title="{% trans %}attributes.delete_value{% endtrans %}"
                                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                                         {% endif %}
-                                    {% endspaceless %}
+                                    {% endapply %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -100,12 +100,12 @@
                                     'class': 'uk-form uk-form-stacked'
                                 }
                             }) }}{{ form_widget(addAttributeForm) }}
-                            {% spaceless %}
+                            {% apply spaceless %}
                                 <button class="uk-button uk-button-primary" type="submit">
                                     <span class="icon-container"><i class="uk-icon-rz-plus"></i></span>
                                     <span class="label"><span class="label-text">{% trans %}add.a.node.attribute{% endtrans %}</span></span>
                                 </button>
-                            {% endspaceless %}
+                            {% endapply %}
                             {{ form_end(addAttributeForm) }}
                         </td>
                     </tr>

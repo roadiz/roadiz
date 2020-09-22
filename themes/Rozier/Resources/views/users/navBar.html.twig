@@ -1,5 +1,5 @@
 <nav class="user-edit-navigation navbar-navigation uk-navbar">
-    {% spaceless %}
+    {% apply spaceless %}
     <ul class="uk-navbar-nav">
         {% if is_granted('ROLE_ACCESS_USERS') or app.user.id == user.id %}
             <li class="{% if current == 'edit' %}uk-active{% endif %}" >
@@ -28,5 +28,5 @@
             </li>
         {% endif %}
     </ul>
-    {% endspaceless %}
+    {% endapply %}
 </nav>

@@ -1,5 +1,5 @@
 <nav class="navbar-navigation dashboard-navigation uk-navbar">
-    {% spaceless %}
+    {% apply spaceless %}
     <ul class="uk-navbar-nav">
         <li class="uk-navbar-item{% if current == 'dashboard' %} uk-active{% endif %}">
             <a class="uk-navbar-link" href="{{ path('adminHomePage') }}">{% trans %}dashboard{% endtrans %}</a>
@@ -10,5 +10,5 @@
             </li>
         {% endif %}
     </ul>
-    {% endspaceless %}
+    {% endapply %}
 </nav>

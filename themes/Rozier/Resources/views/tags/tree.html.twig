@@ -4,7 +4,7 @@
 <section class="content-global">
 
     <header class="content-header header-tags header-tags-tree">
-        <h1 class="content-title tags-tree-title">{{ "tag.%name%.tree"|trans({'%name%': tag.getTagName })|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title tags-tree-title">{{ "tag.%name%.tree"|trans({'%name%': tag.getTagName })|u.truncate(25, '[…]', true) }}</h1>
         {% include '@Rozier/tags/navBack.html.twig' with {} only %}
         {% include '@Rozier/tags/navBar.html.twig' with {"current": 'tree', "tag":tag} only %}
     </header>

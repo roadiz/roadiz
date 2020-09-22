@@ -4,7 +4,7 @@
 <section class="content-global">
 
     <header class="content-header header-setting header-setting-delete">
-       <h1 class="content-title setting-delete-title">{{ "delete.setting.%name%"|trans({'%name%': setting.getName })|truncate(25, true, '[…]') }}</h1>
+       <h1 class="content-title setting-delete-title">{{ "delete.setting.%name%"|trans({'%name%': setting.getName })|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">

@@ -2,7 +2,7 @@
     {% if not route %}
         {% set route = 'nodesEditSourcePage' %}
     {% endif %}
-    {% spaceless %}
+    {% apply spaceless %}
     <ul class="uk-navbar-nav">
         {% for translation in available_translations %}
             <li class="node-translation-bar-item uk-navbar-item{% if current == translation.getId %} uk-active{% endif %}">
@@ -16,5 +16,5 @@
                data-uk-tooltip="{animation:true}"><i class="uk-icon uk-icon-rz-plus"></i></a>
         </li>
     </ul>
-    {% endspaceless %}
+    {% endapply %}
 </nav>
