@@ -74,10 +74,10 @@
 {%- endblock choice_widget_collapsed %}
 
 {% block separator_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <p {{ block('widget_attributes') }}>{{ label|trans }}</p>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock separator_widget %}
 
 {# Override default error block #}

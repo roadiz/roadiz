@@ -44,10 +44,9 @@ class NodesController extends RozierApp
      * List every nodes.
      *
      * @param Request $request
-     * @param string  $filter
+     * @param string|null  $filter
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $filter = null)
     {
@@ -129,10 +128,9 @@ class NodesController extends RozierApp
      *
      * @param Request $request
      * @param int     $nodeId
-     * @param int     $translationId
+     * @param int|null $translationId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $nodeId, $translationId = null)
     {
@@ -272,12 +270,11 @@ class NodesController extends RozierApp
      *
      * @param Request $request
      * @param int     $nodeTypeId
-     * @param int     $translationId
+     * @param int|null $translationId
      *
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request, $nodeTypeId, $translationId = null)
     {

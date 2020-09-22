@@ -1,5 +1,5 @@
 <nav class="node-navbar-navigation navbar-navigation uk-navbar">
-    {% spaceless %}
+    {% apply spaceless %}
     <ul class="uk-navbar-nav">
         <li class="uk-navbar-item{% if current == 'customForm' %} uk-active{% endif %}" >
             <a class="uk-navbar-link" href="{{ path('customFormsEditPage', { customFormId: type.id }) }}">{% trans %}custom-form.parameters{% endtrans %}</a>
@@ -17,5 +17,5 @@
                target="_blank" href="{{ path('customFormSendAction', { customFormId: type.id }) }}"><i class="uk-icon-rz-visibility"></i></a>
         </li>
     </ul>
-    {% endspaceless %}
+    {% endapply %}
 </nav>

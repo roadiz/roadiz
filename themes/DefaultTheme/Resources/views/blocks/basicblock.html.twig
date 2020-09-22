@@ -14,9 +14,9 @@
             <li>
                 <strong>{{ attributeValueTranslation|attribute_label }}:</strong>
                 {% if attributeValueTranslation is datetime %}
-                    {{ attributeValueTranslation.value|localizeddate('medium', 'short') }}
+                    {{ attributeValueTranslation.value|format_datetime('medium', 'short') }}
                 {% elseif attributeValueTranslation is date %}
-                    {{ attributeValueTranslation.value|localizeddate('medium') }}
+                    {{ attributeValueTranslation.value|format_date('medium') }}
                 {% elseif attributeValueTranslation is country %}
                     {{ attributeValueTranslation.value|country_iso(request.locale) }}
                 {% else %}

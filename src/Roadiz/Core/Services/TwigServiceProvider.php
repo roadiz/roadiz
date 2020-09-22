@@ -3,15 +3,13 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
-use Asm89\Twig\CacheExtension\CacheProvider\DoctrineCacheAdapter;
-use Asm89\Twig\CacheExtension\CacheStrategy\LifetimeCacheStrategy;
-use Asm89\Twig\CacheExtension\Extension as CacheExtension;
 use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
+use RZ\Roadiz\Utils\TwigExtensions\CentralTruncateExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
@@ -30,16 +28,14 @@ use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Bridge\Twig\Form\TwigRendererEngine;
 use Symfony\Component\Form\FormRenderer;
 use Symfony\Component\HttpFoundation\UrlHelper;
-use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\HttpKernel\Fragment\InlineFragmentRenderer;
+use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ProfilerExtension;
-use Twig\Extensions\ArrayExtension;
-use Twig\Extensions\DateExtension;
-use Twig\Extensions\IntlExtension;
-use Twig\Extensions\TextExtension;
+use Twig\Extra\Intl\IntlExtension;
+use Twig\Extra\String\StringExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Profiler\Profile;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -116,7 +112,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 if ($extension instanceof AbstractExtension) {
                     $twig->addExtension($extension);
                 } else {
-                    throw new \RuntimeException('Try to add Twig extension which does not extends Twig_Extension.');
+                    throw new \RuntimeException('Try to add Twig extension which does not extends AbstractExtension.');
                 }
             }
 
@@ -124,7 +120,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 if ($filter instanceof TwigFilter) {
                     $twig->addFilter($filter);
                 } else {
-                    throw new \RuntimeException('Try to add Twig filter which does not extends Twig_SimpleFilter.');
+                    throw new \RuntimeException('Try to add Twig filter which does not extends TwigFilter.');
                 }
             }
 
@@ -149,14 +145,10 @@ class TwigServiceProvider implements ServiceProviderInterface
          * We separate filters from environment to be able to
          * extend them without waking up Twig.
          *
-         * @param Container $c
          * @return ArrayCollection
          */
-        $container['twig.filters'] = function (Container $c) {
-            $filters = new ArrayCollection();
-            $filters->add($c['twig.centralTruncateExtension']);
-
-            return $filters;
+        $container['twig.filters'] = function () {
+            return new ArrayCollection();
         };
 
         $container['twig.fragmentHandler'] = function (Container $c) {
@@ -186,6 +178,8 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions = new ArrayCollection();
 
             $extensions->add(new FormExtension());
+            $extensions->add(new StringExtension());
+            $extensions->add(new CentralTruncateExtension());
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
@@ -194,9 +188,6 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new AssetExtension($c['assetPackages']));
             $extensions->add(new IntlExtension());
             $extensions->add($c['twig.routingExtension']);
-            $extensions->add(new TextExtension());
-            $extensions->add(new ArrayExtension());
-            $extensions->add(new DateExtension());
             $extensions->add(new BlockRenderExtension($c['twig.fragmentHandler']));
             $extensions->add(new HttpKernelExtension($c['twig.fragmentHandler']));
             $extensions->add(new UrlExtension(
@@ -205,10 +196,6 @@ class TwigServiceProvider implements ServiceProviderInterface
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
             $extensions->add(new RoadizTranslationExtension($c['requestStack'], $c['translation.viewer']));
-
-            if (null !== $c['twig.cacheExtension']) {
-                $extensions->add($c['twig.cacheExtension']);
-            }
             /*
              * These extension need a valid Database connection
              * with EntityManager not null.
@@ -242,41 +229,6 @@ class TwigServiceProvider implements ServiceProviderInterface
          */
         $container['twig.routingExtension'] = function (Container $c) {
             return new RoutingExtension($c['router']);
-        };
-
-        /*
-         * Central Truncate extension
-         */
-        $container['twig.centralTruncateExtension'] = function () {
-            return new TwigFilter(
-                'centralTruncate',
-                function ($object, $length, $offset = 0, $ellipsis = "[…]") {
-                    if (null !== $object && strlen($object) > $length + strlen($ellipsis)) {
-                        $str1 = substr($object, 0, (int) (floor($length / 2) + floor($offset / 2)));
-                        $str2 = substr($object, (int) ((floor($length / 2) * -1) + floor($offset / 2)));
-
-                        return $str1 . $ellipsis . $str2;
-                    } else {
-                        return $object;
-                    }
-                }
-            );
-        };
-        /*
-         * Twig cache extension
-         * see https://github.com/asm89/twig-cache-extension
-         */
-        $container['twig.cacheExtension'] = function (Container $c) {
-            $resultCacheDriver = $c['em']->getConfiguration()->getResultCacheImpl();
-            if ($resultCacheDriver !== null) {
-                $cacheProvider = new DoctrineCacheAdapter($resultCacheDriver);
-                $cacheStrategy = new LifetimeCacheStrategy($cacheProvider);
-                $cacheExtension = new CacheExtension($cacheStrategy);
-
-                return $cacheExtension;
-            } else {
-                return null;
-            }
         };
 
         return $container;

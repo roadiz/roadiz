@@ -19,7 +19,6 @@ class LoginRequestController extends RozierApp
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -54,7 +53,6 @@ class LoginRequestController extends RozierApp
 
     /**
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function confirmAction()
     {

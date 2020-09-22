@@ -18,7 +18,6 @@ class DashboardController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response $response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {

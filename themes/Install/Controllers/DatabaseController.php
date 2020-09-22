@@ -50,7 +50,6 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function databaseAction(Request $request)
     {
@@ -122,7 +121,6 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -172,7 +170,6 @@ class DatabaseController extends InstallApp
      *
      * @return Response
      * @throws \ReflectionException
-     * @throws \Twig_Error_Runtime
      */
     public function databaseFixturesAction(Request $request)
     {

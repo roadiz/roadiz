@@ -30,7 +30,6 @@ use Themes\Rozier\Forms\TagType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\VersionedControllerTrait;
 use Themes\Rozier\Widgets\TagTreeWidget;
-use Twig_Error_Runtime;
 
 /**
  * Class TagsController
@@ -47,7 +46,6 @@ class TagsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -84,7 +82,6 @@ class TagsController extends RozierApp
      * @param integer | null $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function editTranslatedAction(Request $request, $tagId, $translationId = null)
     {
@@ -210,7 +207,6 @@ class TagsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function bulkDeleteAction(Request $request)
     {
@@ -266,7 +262,6 @@ class TagsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -328,7 +323,6 @@ class TagsController extends RozierApp
      * @param int     $tagId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function editSettingsAction(Request $request, $tagId)
     {
@@ -396,7 +390,6 @@ class TagsController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function treeAction(Request $request, $tagId, $translationId = null)
     {
@@ -431,7 +424,6 @@ class TagsController extends RozierApp
      * @param int     $tagId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $tagId)
     {
@@ -484,7 +476,6 @@ class TagsController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function addChildAction(Request $request, $tagId, $translationId = null)
     {
@@ -558,7 +549,6 @@ class TagsController extends RozierApp
      * @param int     $tagId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function editNodesAction(Request $request, $tagId)
     {

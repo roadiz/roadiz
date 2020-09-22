@@ -26,7 +26,6 @@ class NodesAttributesController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $nodeId, $translationId)
     {
@@ -176,7 +175,6 @@ class NodesAttributesController extends RozierApp
      * @param int     $attributeValueId
      *
      * @return RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
     {

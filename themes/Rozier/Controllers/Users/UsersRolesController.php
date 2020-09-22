@@ -27,7 +27,6 @@ class UsersRolesController extends RozierApp
      * @param int     $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function editRolesAction(Request $request, $userId)
     {

@@ -22,7 +22,7 @@ class RedirectionsController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function indexAction(Request $request)
     {

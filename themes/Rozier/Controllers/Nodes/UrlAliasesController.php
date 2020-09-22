@@ -41,10 +41,9 @@ class UrlAliasesController extends RozierApp
      *
      * @param Request $request
      * @param int     $nodeId
-     * @param int     $translationId
+     * @param int|null  $translationId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editAliasesAction(Request $request, $nodeId, $translationId = null)
     {

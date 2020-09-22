@@ -14,7 +14,7 @@
                             <time>{{ nodeSource.publishedAt|date('Y-m-d H:i:s') }}</time>
                         </p>
                     {% endif %}
-                    <div class="list-group-item-text">{{ nodeSource.content|truncate(50)|inlineMarkdown }}</div>
+                    <div class="list-group-item-text">{{ nodeSource.content|u.truncate(50)|inlineMarkdown }}</div>
                 </a>
             {% endfor %}
         </div>

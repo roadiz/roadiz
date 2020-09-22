@@ -18,7 +18,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\TranslationType;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
  * Translation's controller
@@ -33,7 +32,6 @@ class TranslationsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -179,7 +177,6 @@ class TranslationsController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $translationId)
     {

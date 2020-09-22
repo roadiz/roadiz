@@ -11,7 +11,7 @@
     <header class="content-header header-node header-node-edit">
         {% include '@Rozier/nodes/breadcrumb.html.twig' with {"node": node} only %}
         <h1 class="content-title node-edit-title">
-            {{ "edit.node.%name%"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
+            {{ "edit.node.%name%"|trans({'%name%': currentTitle})|u.truncate(25, '[…]', true) }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
         {% include '@Rozier/nodes/navBack.html.twig' %}
@@ -24,12 +24,12 @@
         {{ form_start(form, { attr: {id: 'edit-node-form'}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                {% spaceless %}
+                {% apply spaceless %}
                 <button data-action-save="#edit-node-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
-                {% endspaceless %}
+                {% endapply %}
             </fieldset>
         {{ form_end(form) }}
 

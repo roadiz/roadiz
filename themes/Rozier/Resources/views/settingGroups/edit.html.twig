@@ -4,7 +4,7 @@
 <section class="content-global">
 
     <header class="content-header header-settingGroup header-settingGroup-add">
-       <h1 class="content-title settingGroup-list-title">{{ "edit.settingGroup.%name%"|trans({'%name%': settingGroup.getName })|truncate(25, true, '[…]') }}</h1>
+       <h1 class="content-title settingGroup-list-title">{{ "edit.settingGroup.%name%"|trans({'%name%': settingGroup.getName })|u.truncate(25, '[…]', true) }}</h1>
        <a class="content-header-nav-back uk-navbar-content" href="{{ path('settingGroupsHomePage') }}" title="{% trans %}back_to.settingGroups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 

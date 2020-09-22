@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
  * Settings controller
@@ -31,7 +30,6 @@ class SettingsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -49,7 +47,6 @@ class SettingsController extends RozierApp
      * @param int     $settingGroupId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function byGroupAction(Request $request, $settingGroupId)
     {
@@ -174,7 +171,6 @@ class SettingsController extends RozierApp
      * @param int     $settingId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function editAction(Request $request, $settingId)
     {
@@ -241,7 +237,6 @@ class SettingsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -293,7 +288,6 @@ class SettingsController extends RozierApp
      * @param int     $settingId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $settingId)
     {

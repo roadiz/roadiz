@@ -5,7 +5,7 @@
 <section class="content-global manage-document">
 
     <header class="content-header header-document header-document-edit">
-        <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.filename|default(document.documentTranslations.first.name)})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document.filename|default(document.documentTranslations.first.name)})|u.truncate(25, '[…]', true) }}</h1>
         {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'metas'} %}
         {% include '@Rozier/document-translations/translationBar.html.twig' with {"current": translation.getId} %}
         {% include '@Rozier/documents/backLink.html.twig' %}
@@ -19,12 +19,12 @@
                     translationId: translation.id
                 }) }}" class="uk-alert-close uk-close"></a>
                 <h4>{% trans %}versions.viewing_a_previous_version{% endtrans %}</h4>
-                <p>{{ currentVersion.loggedAt|localizeddate('full', 'short') }} - {{ currentVersion.username }}</p>
+                <p>{{ currentVersion.loggedAt|format_datetime('full', 'short') }} - {{ currentVersion.username }}</p>
 
                 {% if revertForm %}
                     {{ form_start(revertForm, { attr: {id: 'revert-node-source-form'}}) }}
                     {{ form_widget(revertForm) }}
-                    {% spaceless %}
+                    {% apply spaceless %}
                         <div class="uk-button-group">
                             <button class="uk-button uk-button-warning" type="submit">
                                 <span class="icon-container"><i class="uk-icon-rz-back-parent"></i></span>
@@ -35,7 +35,7 @@
                                 translationId: translation.id
                             }) }}"><i class="uk-icon-rz-home"></i> {% trans %}versions.back_to_working_copy{% endtrans %}</a>
                         </div>
-                    {% endspaceless %}
+                    {% endapply %}
                     {{ form_end(revertForm) }}
                 {% endif %}
             </div>
@@ -45,12 +45,12 @@
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% if not readOnly %}
-                    {% spaceless %}
+                    {% apply spaceless %}
                         <button data-action-save="#edit-document-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                             <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                             <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                         </button>
-                    {% endspaceless %}
+                    {% endapply %}
                 {% endif %}
             </fieldset>
         {{ form_end(form) }}

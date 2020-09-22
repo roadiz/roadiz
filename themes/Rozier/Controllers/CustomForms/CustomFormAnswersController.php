@@ -13,7 +13,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
  * Class CustomFormAnswersController
@@ -29,7 +28,6 @@ class CustomFormAnswersController extends RozierApp
      * @param int     $customFormId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function listAction(Request $request, $customFormId)
     {

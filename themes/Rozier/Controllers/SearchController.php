@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
  * Class SearchController
@@ -194,7 +193,6 @@ class SearchController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function searchNodeAction(Request $request)
     {
@@ -251,7 +249,6 @@ class SearchController extends RozierApp
      * @param int $nodetypeId
      *
      * @return null|RedirectResponse|Response
-     * @throws Twig_Error_Runtime
      */
     public function searchNodeSourceAction(Request $request, int $nodetypeId)
     {

@@ -199,7 +199,6 @@ class NodesTreesController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function bulkStatusAction(Request $request)
     {

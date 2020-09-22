@@ -37,11 +37,11 @@
                         <td><a href="{{ path('settingGroupsEditPage', { settingGroupId: settingGroup.getId }) }}">{{ settingGroup.getName }}</a></td>
                         <td class="mobile-hidden">{% if settingGroup.isInMenu %}<div class="uk-badge uk-badge-table uk-badge-notification"><i class="uk-icon-rz-statuses"></i></div>{% endif %}</td>
                         <td class="table-actions-row">
-                        {% spaceless %}
+                        {% apply spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('settingGroupsEditPage', { settingGroupId: settingGroup.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('settingGroupsSettingsPage', { settingGroupId: settingGroup.getId }) }}" title="{% trans %}see.settings{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-settings-general"></i></a>
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('settingGroupsDeletePage', { settingGroupId: settingGroup.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

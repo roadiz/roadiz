@@ -22,7 +22,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Twig_Error_Runtime;
 
 class CustomFormController extends CmsController
 {
@@ -36,10 +35,10 @@ class CustomFormController extends CmsController
 
     /**
      * @param Request $request
-     * @param int     $customFormId
+     * @param int $customFormId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function addAction(Request $request, $customFormId)
     {
@@ -78,7 +77,6 @@ class CustomFormController extends CmsController
      * @param int     $customFormId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function sentAction(Request $request, $customFormId)
     {

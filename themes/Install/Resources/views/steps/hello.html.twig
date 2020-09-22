@@ -50,13 +50,13 @@
                 {{ form_end(form) }}
             </div>
 
-            {% spaceless %}
+            {% apply spaceless %}
             <div class="content-buttons">
 
                 <a class="content-button uk-button uk-button-primary" href="{{ path('installCheckPage') }}">{% trans %}goto.requirements{% endtrans %} <i class="uk-icon-arrow-circle-right icon-right"></i></a>
 
             </div>
-            {% endspaceless %}
+            {% endapply %}
 
         </div>
 

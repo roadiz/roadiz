@@ -15,7 +15,7 @@
 
         <article class="content content-no-action-menu content-custom-forms-list">
             <div class="content-table-cont">
-                {% spaceless %}
+                {% apply spaceless %}
                     <table class="custom-forms content-table uk-table">
                         <thead>
                         <tr>
@@ -50,11 +50,11 @@
                                 <td class="name">
                                     <a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}"><span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.displayName }}</a>
                                 </td>
-                                <td class="mobile-hidden">{{ type.createdAt|localizeddate('medium', 'short') }}</td>
-                                <td class="mobile-hidden">{{ type.closeDate|localizeddate('medium', 'short') }}</td>
+                                <td class="mobile-hidden">{{ type.createdAt|format_datetime('medium', 'short') }}</td>
+                                <td class="mobile-hidden">{{ type.closeDate|format_datetime('medium', 'short') }}</td>
                                 <td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
                                 <td class="table-actions-row table-actions-row-6">
-                                    {% spaceless %}
+                                    {% apply spaceless %}
                                         <a class="uk-button uk-button-content uk-button-small"
                                            href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}"
                                            title="{% trans %}edit{% endtrans %}"
@@ -93,13 +93,13 @@
                                            data-uk-tooltip="{animation:true}">
                                             <i class="uk-icon-rz-trash-o"></i>
                                         </a>
-                                    {% endspaceless %}
+                                    {% endapply %}
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
-                {% endspaceless %}
+                {% endapply %}
             </div>
         </article>
 

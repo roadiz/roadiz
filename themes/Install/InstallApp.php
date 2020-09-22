@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Install\Forms\UserType;
-use Twig_Error_Runtime;
 
 /**
  * Installation application
@@ -69,7 +68,6 @@ class InstallApp extends AppController
      * @param Request $request
      *
      * @return RedirectResponse|Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {

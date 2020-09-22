@@ -18,7 +18,7 @@
     {% set editRouteParams = editRouteParams|merge({ referer: refererPath }) %}
 {% endif %}
 
-{% spaceless %}
+{% apply spaceless %}
 <li class="{{ classes|join(' ') }}"
     data-document-id="{{ document.getId }}"
     title="{{ document.getFilename }}"
@@ -52,7 +52,7 @@
             <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
             <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
         {% else %}
-            <div class="document-mime-type">{{ document.getShortMimeType|truncate(13, false, '…') }}</div>
+            <div class="document-mime-type">{{ document.getShortMimeType|u.truncate(13, '…', false) }}</div>
         {% endif %}
 
         <a data-document-widget-link-document href="#" class="uk-button uk-button-mini link-button">
@@ -64,4 +64,4 @@
     </div>
     <div class="document-name">{{ document.getFilename|centralTruncate(12, -4)}}</div>
 </li>
-{% endspaceless %}
+{% endapply %}

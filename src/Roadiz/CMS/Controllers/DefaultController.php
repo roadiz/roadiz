@@ -16,14 +16,14 @@ use Twig\Error\LoaderError;
 final class DefaultController extends FrontendController
 {
     /**
-     * @param Request          $request
-     * @param Node|null        $node
+     * @param Request $request
+     * @param Node|null $node
      * @param Translation|null $translation
-     * @param string           $_format
-     * @param Theme|null       $theme
+     * @param string $_format
+     * @param Theme|null $theme
      *
      * @return JsonResponse|Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function indexAction(
         Request $request,

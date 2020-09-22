@@ -12,7 +12,7 @@
     {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
     <article class="content content-no-action-menu content-manage-history">
-        {% spaceless %}
+        {% apply spaceless %}
         <div class="history-logs">
             {% for log in entries %}
                 {% include 'modules/history-item.html.twig' with {
@@ -21,7 +21,7 @@
                 } only %}
             {% endfor %}
         </div>
-        {% endspaceless %}
+        {% endapply %}
     </article>
     {% include '@Rozier/nodes/actionsMenu.html.twig' %}
 </section>

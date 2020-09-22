@@ -15,7 +15,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
  * Class UsersGroupsController
@@ -29,7 +28,6 @@ class UsersGroupsController extends RozierApp
      * @param int     $userId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function editGroupsAction(Request $request, $userId)
     {

@@ -32,7 +32,6 @@ class NodesTagsController extends RozierApp
      * @param int     $nodeId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function editTagsAction(Request $request, $nodeId)
     {

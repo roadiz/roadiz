@@ -20,7 +20,6 @@ class LoginResetController extends RozierApp
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Twig_Error_Runtime
      */
     public function resetAction(Request $request, $token)
     {

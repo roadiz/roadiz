@@ -5,7 +5,7 @@
     </td>
     <td class="mobile-hidden">{{ node.nodeType.displayName }}</td>
     <td class="mobile-hidden uk-visible-large">
-        {% spaceless %}
+        {% apply spaceless %}
             {% if node.isDraft == true %}
                 <div class="uk-button-status uk-button-draft" title="{% trans %}node.draft{% endtrans %}" data-uk-tooltip="{animation:true}">
                     <i class="uk-icon-rz-draft-nodes"></i>
@@ -36,11 +36,11 @@
                     <i class="uk-icon-rz-archive-mini"></i>
                 </div><!-- uk-badge-notification -->
             {% endif %}
-        {% endspaceless %}
+        {% endapply %}
     </td>
-    <td class="mobile-hidden uk-visible-xlarge">{{ node.updatedAt|localizeddate('short', 'none') }}</td>
+    <td class="mobile-hidden uk-visible-xlarge">{{ node.updatedAt|format_datetime('short', 'none') }}</td>
     <td class="table-actions-row">
-        {% spaceless %}
+        {% apply spaceless %}
             <a class="uk-button uk-button-content uk-button-small"
                href="{{ path('nodesEditPage', { nodeId: node.id }) }}"
                title="{% trans %}edit.node{% endtrans %}"
@@ -61,6 +61,6 @@
                    data-uk-tooltip="{animation:true}"
                    title="{% trans %}undelete{% endtrans %}"><i class="uk-icon-rz-untrash"></i></a>
             {% endif %}
-        {% endspaceless %}
+        {% endapply %}
     </td>
 </tr>

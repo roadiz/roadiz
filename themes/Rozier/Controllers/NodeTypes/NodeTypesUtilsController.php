@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 use ZipArchive;
 
 /**
@@ -158,7 +157,6 @@ class NodeTypesUtilsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {

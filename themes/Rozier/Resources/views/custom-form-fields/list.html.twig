@@ -3,7 +3,7 @@
 {% block content %}
     <section class="content-global content-nav-and-filters">
         <header class="content-header header-custom-form-fields header-custom-form-fields-list">
-            <h1 class="content-title">{{ customForm.displayName|truncate(25, true, '[…]') }}</h1>
+            <h1 class="content-title">{{ customForm.displayName|u.truncate(25, '[…]', true) }}</h1>
             <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i> </a>
             <div class="content-header-action-menu">
                 <nav>
@@ -39,12 +39,12 @@
                             <td class="mobile-hidden">{{ field.typeName|trans }}</td>
                             <td class="mobile-hidden">{{ field.groupName|trans }}</td>
                             <td class="table-actions-row table-actions-row-2">
-                                {% spaceless %}
+                                {% apply spaceless %}
                                     <a class="uk-button uk-button-content uk-button-small custom-form-field-edit-button rz-no-ajax-link" href="{{ path('customFormFieldsEditPage', { customFormFieldId: field.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}" data-index="{{ loop.index0 }}"><i class="uk-icon-rz-pencil"></i></a>
                                     <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormFieldsDeletePage', { customFormFieldId: field.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
                                         <i class="uk-icon-rz-trash-o"></i>
                                     </a>
-                                {% endspaceless %}
+                                {% endapply %}
                             </td>
                         </tr>
                     {% endfor %}

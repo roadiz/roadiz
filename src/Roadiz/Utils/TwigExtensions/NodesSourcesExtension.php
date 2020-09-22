@@ -43,10 +43,11 @@ class NodesSourcesExtension extends AbstractExtension
      * NodesSourcesExtension constructor.
      *
      * @param AuthorizationChecker $securityAuthorizationChecker
-     * @param HandlerFactory       $handlerFactory
-     * @param NodeSourceApi        $nodeSourceApi
-     * @param bool                 $preview
-     * @param bool                 $throwExceptions
+     * @param HandlerFactory $handlerFactory
+     * @param NodeSourceApi $nodeSourceApi
+     * @param NodeTypes $nodeTypesBag
+     * @param bool $preview
+     * @param bool $throwExceptions
      */
     public function __construct(
         AuthorizationChecker $securityAuthorizationChecker,

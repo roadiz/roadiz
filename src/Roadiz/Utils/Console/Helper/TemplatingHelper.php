@@ -27,7 +27,7 @@ class TemplatingHelper extends Helper
     }
 
     /**
-     * Wraps Twig_Environment render method.
+     * Wraps Twig Environment render method.
      *
      * @param  string $templatePath
      * @param  array  $assignation

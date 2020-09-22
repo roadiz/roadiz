@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
  * Class TranstypeController
@@ -28,7 +27,6 @@ class TranstypeController extends RozierApp
      * @param int $nodeId
      *
      * @return RedirectResponse|Response
-     * @throws Twig_Error_Runtime
      */
     public function transtypeAction(Request $request, $nodeId)
     {

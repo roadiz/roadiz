@@ -19,7 +19,6 @@ class UsersSecurityController extends RozierApp
      * @param int     $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function securityAction(Request $request, $userId)
     {

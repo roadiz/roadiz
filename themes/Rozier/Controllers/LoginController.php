@@ -16,7 +16,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
  * Class LoginController
@@ -29,7 +28,6 @@ class LoginController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -69,7 +67,6 @@ class LoginController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function checkAction(Request $request)
     {
@@ -80,7 +77,6 @@ class LoginController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function logoutAction(Request $request)
     {

@@ -23,7 +23,6 @@ class CacheController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteDoctrineCache(Request $request)
     {

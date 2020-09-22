@@ -21,7 +21,6 @@ use Themes\Rozier\Widgets\TagTreeWidget;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig_Error_Runtime;
 
 /**
  * Rozier main theme application
@@ -114,7 +113,6 @@ class RozierApp extends BackendController
      * @param Request $request
      *
      * @return Response $response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {

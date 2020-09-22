@@ -48,7 +48,6 @@ class SearchController extends DefaultThemeApp
      * @param string  $_locale
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function defaultAction(
         Request $request,

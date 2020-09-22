@@ -29,7 +29,6 @@ class UsersController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -64,7 +63,6 @@ class UsersController extends RozierApp
      * @param int     $userId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $userId)
     {
@@ -185,7 +183,6 @@ class UsersController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {

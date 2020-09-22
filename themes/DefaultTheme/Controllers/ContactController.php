@@ -54,7 +54,6 @@ class ContactController extends DefaultThemeApp
      * @param null             $_route
      *
      * @return null|\Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(
         Request $request,

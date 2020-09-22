@@ -4,7 +4,7 @@
 <section class="content-global edit-user">
 
     <header class="content-header header-user header-user-edit">
-        <h1 class="content-title user-add-title">{{ "edit.user.%name%.groups"|trans({'%name%': user.username })|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title user-add-title">{{ "edit.user.%name%.groups"|trans({'%name%': user.username })|u.truncate(25, '[…]', true) }}</h1>
         {% include '@Rozier/users/navBar.html.twig' with {'user':user, current:'groups'} %}
     </header>
 
@@ -22,12 +22,12 @@
                     <tr>
                         <td><a href="{{ path('groupsEditPage', {'groupId':group.getId}) }}">{{ group.getName }}</a></td>
                         <td>
-                        {% spaceless %}
+                        {% apply spaceless %}
                             {% if is_granted(group) %}
                                 <a class="uk-button uk-button-content uk-button-small" href="{{ path('groupsEditRolesPage', { groupId: group.getId }) }}" title="{% trans %}roles{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-star"></i></a>
                                 <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('usersRemoveGroupsPage', { userId: user.getId, groupId: group.getId }) }}" title="{% trans %}unlink{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                             {% endif %}
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

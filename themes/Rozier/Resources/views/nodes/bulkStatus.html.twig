@@ -4,11 +4,11 @@
 {% block content %}
 <section class="content-global change-status-node">
     <header class="content-header header-node header-node-preview">
-        <h1 class="content-title node-change-status-title">{{ "change.nodes.status"|trans()|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title node-change-status-title">{{ "change.nodes.status"|trans()|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">
-        {% spaceless %}
+        {% apply spaceless %}
         <ul class="nodes-list">
         {% for node in nodes %}
             {% set source = node.nodeSources.first %}
@@ -20,7 +20,7 @@
             </li>
         {% endfor %}
         </ul>
-        {% endspaceless %}
+        {% endapply %}
 
         {% if referer %}
             {% set returnPath = referer %}

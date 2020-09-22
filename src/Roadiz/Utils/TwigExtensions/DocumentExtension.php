@@ -183,7 +183,7 @@ class DocumentExtension extends AbstractExtension
     }
 
     /**
-     * @param Document $document
+     * @param Document|null $document
      * @return float
      * @throws RuntimeError
      */

@@ -55,11 +55,11 @@
                         </td>
                         <td class="mobile-hidden"><code>{{ font.getHash }}</code></td>
                         <td class="table-actions-row">
-                        {% spaceless %}
+                        {% apply spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsEditPage', { fontId: font.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}" title="{% trans %}download{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

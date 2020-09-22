@@ -10,7 +10,7 @@
             "source": source,
         } only %}
         <h1 class="content-title node-edit-source-title"{% if source.translation.locale is rtl %} dir="rtl"{% endif %}>
-            {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|truncate(30, false, '[…]') }}
+            {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|u.truncate(30, '[…]', false) }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
         {% include '@Rozier/nodes/navBack.html.twig' %}
@@ -26,12 +26,12 @@
                     translationId: translation.id
                 }) }}" class="uk-alert-close uk-close"></a>
                 <h4>{% trans %}versions.viewing_a_previous_version{% endtrans %}</h4>
-                <p>{{ currentVersion.loggedAt|localizeddate('full', 'short') }} - {{ currentVersion.username }}</p>
+                <p>{{ currentVersion.loggedAt|format_datetime('full', 'short') }} - {{ currentVersion.username }}</p>
 
                 {% if revertForm %}
                     {{ form_start(revertForm, { attr: {id: 'revert-node-source-form'}}) }}
                     {{ form_widget(revertForm) }}
-                    {% spaceless %}
+                    {% apply spaceless %}
                         <div class="uk-button-group">
                             <button class="uk-button uk-button-warning" type="submit">
                                 <span class="icon-container"><i class="uk-icon-rz-back-parent"></i></span>
@@ -42,7 +42,7 @@
                                 translationId: translation.id
                             }) }}"><i class="uk-icon-rz-home"></i> {% trans %}versions.back_to_working_copy{% endtrans %}</a>
                         </div>
-                    {% endspaceless %}
+                    {% endapply %}
                     {{ form_end(revertForm) }}
                 {% endif %}
             </div>
@@ -50,14 +50,14 @@
         {% form_theme form '@Rozier/forms.html.twig' %}
         {{ form_start(form, { attr: {id: 'edit-node-source-form'}}) }}
             {{ form_widget(form) }}
-            {% spaceless %}
+            {% apply spaceless %}
                 {% if not readOnly %}
                     <button data-action-save="#edit-node-source-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                         <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                         <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                     </button>
                 {% endif %}
-            {% endspaceless %}
+            {% endapply %}
         {{ form_end(form) }}
     </article>
 

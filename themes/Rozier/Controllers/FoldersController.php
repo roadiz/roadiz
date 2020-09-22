@@ -34,7 +34,6 @@ class FoldersController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -232,7 +231,6 @@ class FoldersController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editTranslationAction(Request $request, $folderId, $translationId)
     {

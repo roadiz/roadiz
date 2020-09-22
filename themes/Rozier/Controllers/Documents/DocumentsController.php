@@ -70,7 +70,6 @@ class DocumentsController extends RozierApp
      * @param null    $folderId
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request, $folderId = null)
     {
@@ -241,7 +240,6 @@ class DocumentsController extends RozierApp
      * @param int     $documentId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $documentId)
     {

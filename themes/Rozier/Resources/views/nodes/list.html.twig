@@ -6,7 +6,7 @@
     <header class="content-header header-node header-nodes-list">
         <h1 class="content-title">
             {% set mainTitle = mainFilter ~ '.nodes' %}
-            {{ mainTitle|trans()|truncate(25, true, '[…]') }}
+            {{ mainTitle|trans()|u.truncate(25, '[…]', true) }}
         </h1>
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         {# Add node control #}

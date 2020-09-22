@@ -39,7 +39,7 @@
                             </a>
                         </td>
                         <td class="table-actions-row">
-                        {% spaceless %}
+                        {% apply spaceless %}
                             <a class="uk-button uk-button-content uk-button-small"
                                href="{{ path('attributeGroupsEditPage', { id: item.id }) }}"
                                title="{% trans %}edit{% endtrans %}"
@@ -50,7 +50,7 @@
                                    title="{% trans %}delete{% endtrans %}"
                                    data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
                             {% endif %}
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

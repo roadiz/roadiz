@@ -52,12 +52,12 @@
                                 {{- item.group.name -}}
                             {%- endif -%}</td>
                         <td class="table-actions-row">
-                        {% spaceless %}
+                        {% apply spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" href="{{ path('attributesEditPage', { id: item.id }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             {% if is_granted('ROLE_ACCESS_ATTRIBUTES_DELETE') %}
                                 <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('attributesDeletePage', { id: item.id }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
                             {% endif %}
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

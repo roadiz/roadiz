@@ -14,9 +14,9 @@
         {{ form_start(form, { attr: {id: 'add-tag-form'}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                {% spaceless %}
+                {% apply spaceless %}
                 <button data-action-save="#add-tag-form" class="uk-button uk-button-primary " type="submit"><i class="uk-icon-rz-plus"></i> {% trans %}add_all{% endtrans %}</button>
-                {% endspaceless %}
+                {% endapply %}
             </fieldset>
         {{ form_end(form) }}
     </article>

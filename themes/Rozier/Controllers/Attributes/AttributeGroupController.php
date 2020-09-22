@@ -20,7 +20,6 @@ class AttributeGroupController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function listAction(Request $request)
     {
@@ -43,7 +42,6 @@ class AttributeGroupController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -89,7 +87,6 @@ class AttributeGroupController extends RozierApp
      * @param int     $id
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function editAction(Request $request, $id)
     {
@@ -131,7 +128,6 @@ class AttributeGroupController extends RozierApp
      * @param int     $id
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $id)
     {

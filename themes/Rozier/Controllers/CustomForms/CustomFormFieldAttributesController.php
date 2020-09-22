@@ -23,7 +23,6 @@ class CustomFormFieldAttributesController extends RozierApp
      * @param int     $customFormAnswerId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function listAction(Request $request, $customFormAnswerId)
     {
