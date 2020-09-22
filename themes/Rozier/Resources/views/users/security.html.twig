@@ -36,12 +36,12 @@
                 {% endif %}
                 <tr>
                     <td><strong>{% trans %}user.last-login{% endtrans %}</strong></td>
-                    <td>{{ user.lastLogin|format_datetime('full', 'medium') }}</td>
+                    <td>{{ user.lastLogin|format_datetime('full', 'medium', locale=app.request.locale) }}</td>
                 </tr>
                 <tr>
                     <td><strong>{% trans %}user.password-requested-at{% endtrans %}</strong></td>
                     {% if user.passwordRequestedAt %}
-                    <td>{{ user.passwordRequestedAt|format_datetime('full', 'medium') }}</td>
+                    <td>{{ user.passwordRequestedAt|format_datetime('full', 'medium', locale=app.request.locale) }}</td>
                     {% else %}
                     <td>{% trans %}never.requested{% endtrans %}</td>
                     {% endif %}

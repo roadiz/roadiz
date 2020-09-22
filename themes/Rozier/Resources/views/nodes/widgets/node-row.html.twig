@@ -38,7 +38,7 @@
             {% endif %}
         {% endapply %}
     </td>
-    <td class="mobile-hidden uk-visible-xlarge">{{ node.updatedAt|format_datetime('short', 'none') }}</td>
+    <td class="mobile-hidden uk-visible-xlarge">{{ node.updatedAt|format_date('short', locale=app.request.locale) }}</td>
     <td class="table-actions-row">
         {% apply spaceless %}
             <a class="uk-button uk-button-content uk-button-small"

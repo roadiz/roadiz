@@ -52,7 +52,7 @@
                                 {% endif %}
                             </figure>
                             <p class="source-title">{{ source.title }}</p>
-                            <p class="source-update-date">{{ log.datetime|format_datetime('medium', 'short') }}</p>
+                            <p class="source-update-date">{{ log.datetime|format_datetime('medium', 'short', locale=app.request.locale) }}</p>
                         {% if is_granted('ROLE_ACCESS_NODES') %}
                         </a>
                         {% endif %}

@@ -9,7 +9,7 @@
 <div class="history-log-item {% if log.nodeSource %}has-source {% endif %}{% if log.user or log.username %}has-user{% endif %}">
     <div class="history-log-date">
         <div class="table">
-            <div class="table-cell">{{ log.datetime|format_datetime('short') }}</div>
+            <div class="table-cell">{{ log.datetime|format_date('short', locale=app.request.locale) }}</div>
         </div>
     </div>
     {% if log.user %}

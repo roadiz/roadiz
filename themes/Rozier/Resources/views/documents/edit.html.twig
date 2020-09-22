@@ -26,9 +26,9 @@
 
         <dl class="document-paths">
             <dt>{% trans %}updatedAt{% endtrans %}</dt>
-            <dd>{{ document.updatedAt|format_datetime('medium', 'short') }}</dd>
+            <dd>{{ document.updatedAt|format_datetime('medium', 'short', locale=app.request.locale) }}</dd>
             <dt>{% trans %}createdAt{% endtrans %}</dt>
-            <dd>{{ document.createdAt|format_datetime('medium', 'short') }}</dd>
+            <dd>{{ document.createdAt|format_datetime('medium', 'short', locale=app.request.locale) }}</dd>
             {% if document.original %}
                 <dt>{% trans %}original.document{% endtrans %}</dt>
                 <dd>

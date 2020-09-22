@@ -23,7 +23,7 @@
                             {% for field in fields %}
                             <tr>
                                 <td width="25%" class="paddingright"><strong>{{ field.label|default(field.name|trans) }}</strong></td>
-                                <td width="75%" class="alignleft">{% if field.name == "submittedAt" %}{{ field.value|format_datetime("medium", "short") }}{% else  %}{{ field.value }}{% endif %}</td>
+                                <td width="75%" class="alignleft">{% if field.name == "submittedAt" %}{{ field.value|format_datetime("medium", "short", locale=app.request.locale) }}{% else  %}{{ field.value }}{% endif %}</td>
                             </tr>
                             {% endfor %}
                         </table>

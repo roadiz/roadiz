@@ -50,8 +50,8 @@
                                 <td class="name">
                                     <a href="{{ path('customFormsEditPage', { customFormId: type.getId }) }}"><span class="color" style="background-color:{{ type.getColor }};"></span>{{ type.displayName }}</a>
                                 </td>
-                                <td class="mobile-hidden">{{ type.createdAt|format_datetime('medium', 'short') }}</td>
-                                <td class="mobile-hidden">{{ type.closeDate|format_datetime('medium', 'short') }}</td>
+                                <td class="mobile-hidden">{{ type.createdAt|format_datetime('medium', 'short', locale=app.request.locale) }}</td>
+                                <td class="mobile-hidden">{{ type.closeDate|format_datetime('medium', 'short', locale=app.request.locale) }}</td>
                                 <td class="mobile-hidden"><div class="uk-badge uk-badge-table">{% transchoice type.getFields|length %}{0} no.customFormField|{1} 1.customFormField|]1,Inf] %count%.customFormFields{% endtranschoice %}</div></td>
                                 <td class="table-actions-row table-actions-row-6">
                                     {% apply spaceless %}

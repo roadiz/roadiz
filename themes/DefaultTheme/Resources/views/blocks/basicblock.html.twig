@@ -14,11 +14,11 @@
             <li>
                 <strong>{{ attributeValueTranslation|attribute_label }}:</strong>
                 {% if attributeValueTranslation is datetime %}
-                    {{ attributeValueTranslation.value|format_datetime('medium', 'short') }}
+                    {{ attributeValueTranslation.value|format_datetime('medium', 'short', locale=app.request.locale) }}
                 {% elseif attributeValueTranslation is date %}
-                    {{ attributeValueTranslation.value|format_date('medium') }}
+                    {{ attributeValueTranslation.value|format_datetime('medium', locale=app.request.locale) }}
                 {% elseif attributeValueTranslation is country %}
-                    {{ attributeValueTranslation.value|country_iso(request.locale) }}
+                    {{ attributeValueTranslation.value|country_iso(app.request.locale) }}
                 {% else %}
                     {{ attributeValueTranslation.value }}
                 {% endif%}

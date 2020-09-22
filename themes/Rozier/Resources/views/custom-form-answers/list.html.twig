@@ -51,7 +51,7 @@
                             <tr>
                                 <td class="mobile-hidden">{{ type.ip }}</td>
                                 <td class="mobile-hidden">{{ type.email }}</td>
-                                <td>{{ type.submittedAt|format_datetime('short') }}</td>
+                                <td>{{ type.submittedAt|format_date('short', locale=app.request.locale) }}</td>
                                 <td class="table-actions-row table-actions-row-2">
                                     {% apply spaceless %}
                                         <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldAttributesHomePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}customFormAnswer.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>

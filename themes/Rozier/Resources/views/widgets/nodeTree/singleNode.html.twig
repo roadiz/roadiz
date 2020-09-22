@@ -85,7 +85,7 @@ type|lower,
                 <i class="uk-icon-rz-building"></i>
             {% endif %}
             {% if nodeTree.isStackTree and node.nodeType.isPublishable and source.publishedAt %}
-                <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|format_datetime('short', 'none') }}</div>
+                <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|format_date('short', locale=app.request.locale) }}</div>
             {% endif %}
         </div>
 

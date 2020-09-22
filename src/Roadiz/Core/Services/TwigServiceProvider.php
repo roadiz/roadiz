@@ -35,6 +35,7 @@ use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\ProfilerExtension;
 use Twig\Extra\Intl\IntlExtension;
+use Twig\Extra\Html\HtmlExtension;
 use Twig\Extra\String\StringExtension;
 use Twig\Loader\FilesystemLoader;
 use Twig\Profiler\Profile;
@@ -180,6 +181,7 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new FormExtension());
             $extensions->add(new StringExtension());
             $extensions->add(new CentralTruncateExtension());
+            $extensions->add(new HtmlExtension());
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
