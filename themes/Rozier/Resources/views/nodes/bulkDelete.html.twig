@@ -4,7 +4,7 @@
 {% block content %}
 <section class="content-global delete-node">
     <header class="content-header header-node header-node-preview">
-        <h1 class="content-title node-delete-title">{{ "delete.nodes"|trans()|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title node-delete-title">{{ "delete.nodes"|trans()|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">
@@ -24,7 +24,7 @@
             </fieldset>
         </form>
 
-        {% spaceless %}
+        {% apply spaceless %}
         <ul class="nodes-list">
         {% for node in nodes %}
             {% set source = node.nodeSources.first %}
@@ -36,7 +36,7 @@
             </li>
         {% endfor %}
         </ul>
-        {% endspaceless %}
+        {% endapply %}
 
     </article>
 </section>

@@ -11,7 +11,7 @@
             "source": source,
         } only %}
         <h1 class="content-title node-edit-seo-title">
-            {{ "edit.node.%name%.seo"|trans({'%name%': currentTitle})|truncate(25, true, '[…]') }}
+            {{ "edit.node.%name%.seo"|trans({'%name%': currentTitle})|u.truncate(25, '[…]', true) }}
            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
         {% include '@Rozier/nodes/navBack.html.twig' %}
@@ -25,12 +25,12 @@
         <form id="edit-seo-form" class="uk-form uk-form-stacked" action="#" method="post">
             {{ form_widget(seoForm) }}
             <fieldset data-uk-margin>
-                {% spaceless %}
+                {% apply spaceless %}
                 <button data-action-save="#edit-seo-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
-                {% endspaceless %}
+                {% endapply %}
             </fieldset>
         </form>
         <hr />

@@ -5,7 +5,7 @@
 	<header class="content-header header-document header-document-list">
         {% if folder %}
             {% set folderName = folder.translatedFolders.first.name|default(folder.folderName) %}
-            <h1 class="content-title">{{ folderName|truncate(25, true, '[…]') }}</h1>
+            <h1 class="content-title">{{ folderName|u.truncate(25, '[…]', true) }}</h1>
             {% include '@Rozier/folders/navBar.html.twig' with {'folder':folder, current:'list'} %}
         {% elseif orphans %}
         <h1 class="content-title">{% trans %}unused_documents{% endtrans %}</h1>
@@ -27,7 +27,7 @@
 
     <article class="content content-no-action-menu">
 
-        {% spaceless %}
+        {% apply spaceless %}
         <ul class="documents-list">
         {% for document in documents %}
         {% include '@Rozier/documents/singleDocumentThumbnail.html.twig' with {
@@ -37,7 +37,7 @@
         } only %}
         {% endfor %}
         </ul>
-        {% endspaceless %}
+        {% endapply %}
 
 	</article>
 </section>

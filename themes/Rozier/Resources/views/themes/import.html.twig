@@ -128,7 +128,7 @@
                 {% endif %}
             </div>
 
-            {% spaceless %}
+            {% apply spaceless %}
             <div class="content-buttons">
                 <a id="next-step-button"
                    class="content-button uk-button uk-button-primary uk-button-disabled rz-no-ajax-link"
@@ -137,7 +137,7 @@
                     <span class="icon-container"><i class="uk-icon-arrow-circle-right icon-right"></i></span>
                 </a>
             </div>
-            {% endspaceless %}
+            {% endapply %}
         </div>
     </article>
 {% endblock %}

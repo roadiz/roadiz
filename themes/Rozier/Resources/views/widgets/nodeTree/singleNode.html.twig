@@ -85,7 +85,7 @@ type|lower,
                 <i class="uk-icon-rz-building"></i>
             {% endif %}
             {% if nodeTree.isStackTree and node.nodeType.isPublishable and source.publishedAt %}
-                <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|localizeddate('short', 'none') }}</div>
+                <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|format_date('short', locale=app.request.locale) }}</div>
             {% endif %}
         </div>
 
@@ -137,7 +137,7 @@ type|lower,
         node.getChildren.count == 0 %}
         {% set subListClasses = subListClasses|merge(['empty']) %}
     {% endif %}
-    {% spaceless %}
+    {% apply spaceless %}
         {% if children %}
         <ul class="{{ subListClasses|join(' ') }}" data-parent-node-id="{{ node.getId }}">
             {#
@@ -156,5 +156,5 @@ type|lower,
                 {% endfor %}
         </ul>
         {% endif %}
-    {% endspaceless %}
+    {% endapply %}
 </li>

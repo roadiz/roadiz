@@ -5,7 +5,7 @@
 <section class="content-global edit-group">
 
     <header class="content-header header-group header-group-edit">
-        <h1 class="content-title group-add-title">{{ "edit.group.%name%"|trans({'%name%': group.getName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%"|trans({'%name%': group.getName})|u.truncate(25, '[…]', true) }}</h1>
         <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
         {% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'edit'} %}
     </header>
@@ -15,12 +15,12 @@
         {{ form_start(form, { attr: { id: "edit-group-form" }}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                {% spaceless %}
+                {% apply spaceless %}
                 <button data-action-save="#edit-group-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
-                {% endspaceless %}
+                {% endapply %}
             </fieldset>
         {{ form_end(form) }}
     </article>

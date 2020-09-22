@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 <nav data-action-menu class="actions-menu uk-navbar">
     {# Delete current node #}
     {% if (is_granted('ROLE_ACCESS_TRANSLATIONS')) %}
@@ -10,4 +10,4 @@
     {% endif %}
     {% endif %}
 </nav>
-{% endspaceless %}
+{% endapply %}

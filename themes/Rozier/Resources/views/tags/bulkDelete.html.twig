@@ -4,7 +4,7 @@
 {% block content %}
 <section class="content-global delete-tag">
     <header class="content-header header-tag header-tag-preview">
-        <h1 class="content-title tag-delete-title">{{ "delete.tags"|trans()|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title tag-delete-title">{{ "delete.tags"|trans()|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">
@@ -25,7 +25,7 @@
             </fieldset>
         </form>
 
-        {% spaceless %}
+        {% apply spaceless %}
         <ul class="tags-list">
         {% for tag in tags %}
             {% set source = tag.translatedTags.first %}
@@ -34,7 +34,7 @@
             </li>
         {% endfor %}
         </ul>
-        {% endspaceless %}
+        {% endapply %}
     </article>
 </section>
 {% endblock %}

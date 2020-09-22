@@ -4,7 +4,7 @@
 
 {% set currentTitle = source.title|default(node.nodeName) %}
 
-{% spaceless %}
+{% apply spaceless %}
 <ul class="uk-breadcrumb content-breadcrumb node-breadcrumb">
     {% for parent in source|parents(null, true)|reverse %}
         {% set title = parent.title|default(parent.node.nodeName) %}
@@ -27,11 +27,11 @@
                 {% if parent.node.isHome %}
                     <i class="uk-icon-rz-breadcrumb-home"></i>
                 {% else %}
-                    {{ title|truncate(25, true, '[…]') }}
+                    {{ title|u.truncate(25, '[…]', true) }}
                 {% endif %}
             </a>
         </li>
     {% endfor %}
-    <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle|truncate(25, true, '[…]') }}</span></li>
+    <li class="node-breadcrumb-item uk-active"><span>{{ currentTitle|u.truncate(25, '[…]', true) }}</span></li>
 </ul>
-{% endspaceless %}
+{% endapply %}

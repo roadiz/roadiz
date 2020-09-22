@@ -4,7 +4,7 @@
 <section class="content-global manage-node-types">
 
     <header class="content-header header-node-types header-node-types-edit">
-        <h1 class="content-title node-types-edit-title">{{ "edit.nodeType.%name%"|trans({'%name%': nodeType.displayName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title node-types-edit-title">{{ "edit.nodeType.%name%"|trans({'%name%': nodeType.displayName})|u.truncate(25, '[…]', true) }}</h1>
         <a class="content-header-nav-back uk-navbar-content"
            href="{{ path('nodeTypesHomePage') }}"
            title="{% trans %}back_to.nodeTypes{% endtrans %}"
@@ -21,12 +21,12 @@
         {{ form_start(form, { attr: {id: "edit-node-type-form"}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                {% spaceless %}
+                {% apply spaceless %}
                 <button data-action-save="#edit-node-type-form" class="uk-button uk-button-primary rz-action-save" type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>
-                {% endspaceless %}
+                {% endapply %}
             </fieldset>
         {{ form_end(form) }}
     </article>

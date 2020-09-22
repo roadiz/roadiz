@@ -13,14 +13,14 @@
     class="uk-nestable-item uk-nestable-list-item-tag tagtree-element{% if tag.getChildren.count > 0 %} has-children{% endif %}">
 
     <div class="tagtree-element-inner uk-nestable-panel uk-nestable-item-tag {% if not tag.isVisible %} hidden-tag{% endif %}">
-        {% spaceless %}
+        {% apply spaceless %}
         <div class="{% if canReorder %}uk-nestable-handle {% endif %}uk-nestable-handle-tag">
             <i class="{% if tag.getChildren.count > 0 %}uk-icon-rz-tags{% else %}uk-icon-rz-tag-tree{% endif %}"></i>
         </div>
         <div class="tree-element-name tagtree-element-name"{% if tagTree.translation is rtl %} dir="rtl"{% endif %}>
             <a href="{{ path('tagsEditNodesPage', { tagId:tag.id }) }}">{{- name -}}</a>
         </div>
-        {% endspaceless %}
+        {% endapply %}
         <div class="tree-contextualmenu tagtree-contextualmenu uk-button-dropdown" data-uk-dropdown="{mode:'click'}">
             <button tabindex="-1" class="tree-contextualmenu-button uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></button>
             <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">

@@ -3,7 +3,7 @@
 {% block content %}
 <section class="content-global delete-document">
     <header class="content-header header-document header-document-preview">
-        <h1 class="content-title document-delete-title">{{ "delete.document.translation.%name%"|trans({'%name%': documentTr.getName})|truncate(25, true, '[…]') }}</h1>
+        <h1 class="content-title document-delete-title">{{ "delete.document.translation.%name%"|trans({'%name%': documentTr.getName})|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">

@@ -9,7 +9,7 @@
         {% endif %}
         <h1 class="content-title node-edit-title">
             {% if node %}
-                {{ source.title|truncate(25, true, '[…]') }}{% if specificNodeTree.tag %} ({{ specificNodeTree.tag.translatedTags.first.name }}){% endif %}
+                {{ source.title|u.truncate(25, '[…]', true) }}{% if specificNodeTree.tag %} ({{ specificNodeTree.tag.translatedTags.first.name }}){% endif %}
                 {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
             {% else %}
                 {{ 'tree'|trans }}

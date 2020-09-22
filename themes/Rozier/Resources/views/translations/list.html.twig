@@ -54,7 +54,7 @@
                         {% endif %}
                         </td>
                         <td class="table-actions-row">
-                        {% spaceless %}
+                        {% apply spaceless %}
                             <a class="uk-button uk-button-content uk-button-small" title="{% trans %}edit{% endtrans %}" href="{{ path('translationsEditPage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             {% if t.translation.isDefaultTranslation == false %}
                                 {% form_theme t.defaultForm 'forms.html.twig' %}
@@ -64,7 +64,7 @@
                                 </form>
                                 <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" title="{% trans %}delete{% endtrans %}" href="{{ path('translationsDeletePage', { translationId: t.translation.getId }) }}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                             {% endif %}
-                        {% endspaceless %}
+                        {% endapply %}
                         </td>
                     </tr>
                     {% endfor %}

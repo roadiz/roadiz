@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 <nav data-action-menu class="actions-menu uk-navbar">
     {% if font.getId %}
     <a class="uk-button rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}">
@@ -12,4 +12,4 @@
     </a>
     {% endif %}
 </nav>
-{% endspaceless %}
+{% endapply %}

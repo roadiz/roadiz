@@ -7,7 +7,7 @@
 {% set subparent = parent|parent %}
 {% endif %}
 
-{% spaceless %}
+{% apply spaceless %}
 <li class="uk-sortable-list-item nodes-widget-sortable-list-item{% if not node.isPublished %} not-published{% endif %}" data-node-id="{{ node.getId }}">
 	<div class="uk-sortable-handle"></div>
     <div class="node-border" style="background-color:{{ node.nodeType.color }};"></div>
@@ -42,4 +42,4 @@
         </div>
     </a>
 </li>
-{% endspaceless %}
+{% endapply %}

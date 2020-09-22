@@ -8,17 +8,17 @@
  #
  #}
 {% block markdown_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <textarea {{ block('widget_attributes') }} data-uk-rz-htmleditor{# data-uk-htmleditor #}>{{ value }}</textarea>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock markdown_widget %}
 
 {% block separator_widget %}
-    {% spaceless %}
+    {% apply spaceless %}
         {# just let the textarea widget render the select tag #}
         <p {{ block('widget_attributes') }}>{{label}}</p>
-    {% endspaceless %}
+    {% endapply %}
 {% endblock separator_widget %}
 
 {% block time_widget -%}
