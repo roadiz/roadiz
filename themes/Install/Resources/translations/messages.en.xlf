@@ -2,13 +2,13 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="en">
     <body>
-      <trans-unit id="1" approved="yes">
+      <trans-unit id="1">
         <source>Node name</source>
-        <target state="final">Node name</target>
+        <target state="translated">Node name</target>
       </trans-unit>
-      <trans-unit id="2" approved="yes">
+      <trans-unit id="2">
         <source>See tree</source>
-        <target state="final">See tree</target>
+        <target state="translated">See tree</target>
       </trans-unit>
       <trans-unit id="3" approved="yes">
         <source>_username</source>
