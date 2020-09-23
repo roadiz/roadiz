@@ -179,9 +179,6 @@
       <trans-unit id="import_tags">
         <source>import_tags</source>
         <target state="translated">Etichette</target>
-        <alt-trans>
-          <target>etichette</target>
-        </alt-trans>
       </trans-unit>
       <!-- Success -->
       <trans-unit id="success.title">
@@ -224,22 +221,10 @@
       <trans-unit id="goto.informations">
         <source>goto.informations</source>
         <target state="translated">Informazioni</target>
-        <alt-trans>
-          <target>informazioni</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="skip.user.goto.theme">
         <source>skip.user.goto.theme</source>
         <target state="translated">Salta</target>
-        <alt-trans>
-          <target>avanti</target>
-        </alt-trans>
-        <alt-trans>
-          <target>continuare</target>
-        </alt-trans>
-        <alt-trans>
-          <target>passa avanti</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="skip.user.goto.done">
         <source>skip.user.goto.done</source>
@@ -280,7 +265,7 @@
       <trans-unit xml:space="preserve" id="cms.version">
                 <source>cms.version</source>
                 <target state="translated">Versione del CMS</target>
-            <alt-trans><target>versione del Cms</target></alt-trans></trans-unit>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="theme.supportedLocale">
                 <source>theme.supportedLocale</source>
                 <target state="translated">Impostazioni locali supportate</target>
@@ -392,7 +377,7 @@
       <trans-unit xml:space="preserve" id="path">
                 <source>path</source>
                 <target state="translated">Path</target>
-            <alt-trans><target>Cammino</target></alt-trans></trans-unit>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="user">
                 <source>user</source>
                 <target state="translated">Nome utente</target>

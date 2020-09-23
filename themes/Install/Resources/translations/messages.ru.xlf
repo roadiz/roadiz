@@ -1,412 +1,414 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="none" target-language="ru">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="ru">
     <body>
       <trans-unit id="1">
         <source>Node name</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Имя узла</target>
       </trans-unit>
       <trans-unit id="2">
         <source>See tree</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x43E;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x435;&#x442;&#x44C; &#x434;&#x435;&#x440;&#x435;&#x432;&#x43E;</target>
+        <target state="translated">Посмотреть дерево</target>
       </trans-unit>
       <trans-unit id="3">
         <source>_username</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
+        <target state="translated">Имя пользователя</target>
       </trans-unit>
       <trans-unit id="4">
         <source>_password</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
+        <target state="translated">Пароль</target>
       </trans-unit>
       <trans-unit id="password.verify">
         <source>password.verify</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C; &#x43F;&#x43E;&#x432;&#x442;&#x43E;&#x440;&#x43D;&#x43E;</target>
+        <target state="translated">Пароль повторно</target>
       </trans-unit>
       <trans-unit id="delete">
         <source>delete</source>
-        <target xml:lang="ru" state="translated">&#x423;&#x434;&#x430;&#x43B;&#x438;&#x442;&#x44C;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x443;&#x434;&#x430;&#x43B;&#x438;&#x442;&#x44C;</target>
-        </alt-trans>
+        <target state="translated">Удалить</target>
       </trans-unit>
       <trans-unit id="status">
         <source>status</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;</target>
+        <target state="translated">Статус</target>
       </trans-unit>
       <!-- Welcome -->
       <trans-unit id="welcome.title">
         <source>welcome.title</source>
-        <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x430; Roadiz</target>
+        <target state="translated">Установка Roadiz</target>
       </trans-unit>
       <trans-unit id="welcome.subtitle">
         <source>welcome.subtitle</source>
-        <target xml:lang="ru" state="translated">&#x414;&#x43E;&#x431;&#x440;&#x43E; &#x43F;&#x43E;&#x436;&#x430;&#x43B;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x432; Roadiz CMS!</target>
+        <target state="translated">Добро пожаловать в Roadiz CMS!</target>
       </trans-unit>
       <trans-unit id="welcome.message">
         <source>welcome.message</source>
-        <target xml:lang="ru" state="translated">&#x414;&#x432;&#x438;&#x433;&#x430;&#x442;&#x435;&#x43B;&#x438; &#x43D;&#x430; &#x441;&#x442;&#x430;&#x440;&#x442;! &#x41E;&#x441;&#x442;&#x430;&#x43B;&#x43E;&#x441;&#x44C; &#x441;&#x43A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x447;&#x443;&#x442;&#x44C;-&#x447;&#x443;&#x442;&#x44C; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x43E;&#x432;.</target>
+        <target state="translated">Двигатели на старт! Осталось сконфигурировать чуть-чуть параметров.</target>
       </trans-unit>
       <!-- Requirements -->
       <trans-unit id="requirements.title">
         <source>requirements.title</source>
-        <target xml:lang="ru" state="translated">&#x422;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x43A; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x435;</target>
+        <target state="translated">Требования к системе</target>
       </trans-unit>
       <trans-unit id="requirements.message">
         <source>requirements.message</source>
-        <target xml:lang="ru" state="translated">&#x414;&#x43B;&#x44F; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; Roadiz &#x432;&#x430;&#x448; &#x441;&#x435;&#x440;&#x432;&#x435;&#x440; &#x434;&#x43E;&#x43B;&#x436;&#x435;&#x43D; &#x443;&#x434;&#x43E;&#x432;&#x43B;&#x435;&#x442;&#x432;&#x43E;&#x440;&#x44F;&#x442;&#x44C; &#x43D;&#x435;&#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x43C; &#x442;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;&#x43C;, &#x432; &#x43E;&#x441;&#x43E;&#x431;&#x435;&#x43D;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x43A;&#x430;&#x441;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E; PHP. &#x415;&#x441;&#x43B;&#x438; &#x443; &#x432;&#x430;&#x441; &#x435;&#x441;&#x442;&#x44C; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F; &#x43A; &#x444;&#x430;&#x439;&#x43B;&#x443; &#x43A;&#x43E;&#x43D;&#x444;&#x438;&#x433;&#x443;&#x440;&#x430;&#x446;&#x438;&#x438; (php.ini), &#x432;&#x44B; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x43E;&#x442;&#x440;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43D;&#x435;&#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x435; &#x438;&#x437; &#x43D;&#x438;&#x445;.</target>
+        <target state="translated">Для использования Roadiz ваш сервер должен удовлетворять некоторым требованиям, в особенности касательно PHP. Если у вас есть доступ к файлу конфигурации (php.ini), вы можете отредактировать некоторые из них.</target>
       </trans-unit>
       <trans-unit id="requirements.spec">
         <source>requirements.spec</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;</target>
+        <target state="translated">Параметр</target>
       </trans-unit>
       <trans-unit id="requirements.requirement">
         <source>requirements.requirement</source>
-        <target xml:lang="ru" state="translated">&#x422;&#x440;&#x435;&#x431;&#x443;&#x435;&#x442;&#x441;&#x44F;</target>
+        <target state="translated">Требуется</target>
       </trans-unit>
       <trans-unit id="requirements.actual_value">
         <source>requirements.actual_value</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x435;&#x439;&#x447;&#x430;&#x441;</target>
+        <target state="translated">Сейчас</target>
       </trans-unit>
       <!-- Database -->
       <trans-unit id="database.title">
         <source>database.title</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x44B; &#x431;&#x430;&#x437;&#x44B; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+        <target state="translated">Параметры базы данных</target>
       </trans-unit>
       <trans-unit id="database.message">
         <source>database.message</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x435; Roadiz &#x442;&#x440;&#x435;&#x431;&#x443;&#x435;&#x442;&#x441;&#x44F; &#x431;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x434;&#x43B;&#x44F; &#x445;&#x440;&#x430;&#x43D;&#x435;&#x43D;&#x438;&#x44F; &#x432;&#x430;&#x448;&#x435;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x435;&#x43D;&#x442;&#x430;. &#x412;&#x44B;&#x431;&#x435;&#x440;&#x438;&#x442;&#x435; &#x431;&#x430;&#x437;&#x443; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x430;&#x44F; &#x432;&#x430;&#x43C; &#x43D;&#x440;&#x430;&#x432;&#x438;&#x442;&#x441;&#x44F; &#x438; &#x443;&#x43A;&#x430;&#x436;&#x438;&#x442;&#x435; &#x43D;&#x443;&#x436;&#x43D;&#x44B;&#x435; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x44B;.</target>
+        <target state="translated">Системе Roadiz требуется база данных для хранения вашего контента. Выберите базу данных, которая вам нравится и укажите нужные параметры.</target>
       </trans-unit>
       <trans-unit id="database.cannot_connect">
         <source>database.cannot_connect</source>
-        <target xml:lang="ru" state="translated">&#x41D;&#x435; &#x443;&#x434;&#x430;&#x43B;&#x43E;&#x441;&#x44C; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x441;&#x43E;&#x435;&#x434;&#x438;&#x43D;&#x435;&#x43D;&#x438;&#x435; &#x441; &#x431;&#x430;&#x437;&#x43E;&#x439; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;!</target>
+        <target state="translated">Не удалось установить соединение с базой данных!</target>
       </trans-unit>
       <trans-unit id="database.build">
         <source>database.build</source>
-        <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x435;</target>
+        <target state="translated">Установить данные</target>
       </trans-unit>
       <!-- Database done -->
       <trans-unit id="database_done.title">
         <source>database_done.title</source>
-        <target xml:lang="ru" state="translated">&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x437;&#x430;&#x433;&#x440;&#x443;&#x436;&#x435;&#x43D;&#x44B;</target>
+        <target state="translated">Данные загружены</target>
       </trans-unit>
       <trans-unit id="database_done.message">
         <source>database_done.message</source>
-        <target xml:lang="ru" state="translated">&#x420;&#x430;&#x431;&#x43E;&#x442;&#x44B; &#x43D;&#x430;&#x434; &#x432;&#x430;&#x448;&#x435;&#x439; &#x431;&#x430;&#x437;&#x43E;&#x439; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x443;&#x441;&#x43F;&#x435;&#x448;&#x43D;&#x43E; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x44B;. &#x41F;&#x435;&#x440;&#x435;&#x439;&#x434;&#x435;&#x43C; &#x43A; &#x438;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44E; &#x441;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x433;&#x43E; &#x438; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x435; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x43E;&#x432; &#x432;&#x430;&#x448;&#x435;&#x433;&#x43E; &#x441;&#x430;&#x439;&#x442;&#x430;.</target>
+        <target state="translated">Работы над вашей базой данных успешно завершены. Перейдем к импортированию содержимого и установке параметров вашего сайта.</target>
       </trans-unit>
       <!-- Database fail -->
       <trans-unit id="database_fail.title">
         <source>database_fail.title</source>
-        <target xml:lang="ru" state="translated">&#x41D;&#x435; &#x43F;&#x43E;&#x43B;&#x443;&#x447;&#x438;&#x43B;&#x43E;&#x441;&#x44C; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x435;</target>
+        <target state="translated">Не получилось установить данные</target>
       </trans-unit>
       <trans-unit id="database_fail.message">
         <source>database_fail.message</source>
-        <target xml:lang="ru" state="translated">&#x414;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x43D;&#x435; &#x43F;&#x43E;&#x43B;&#x443;&#x447;&#x430;&#x435;&#x442;&#x441;&#x44F; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x438;&#x437;-&#x437;&#x430; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x438; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x43E;&#x439; &#x43D;&#x438;&#x436;&#x435;. &#x412;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x431;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x43D;&#x435; &#x43F;&#x443;&#x441;&#x442;&#x430; &#x438;&#x43B;&#x438; &#x440;&#x435;&#x43A;&#x432;&#x438;&#x437;&#x438;&#x442;&#x44B; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x430; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x44B; &#x43D;&#x435; &#x432;&#x435;&#x440;&#x43D;&#x43E;.</target>
+        <target state="translated">Данные не получается установить из-за ошибки указаной ниже. Возможно база данных не пуста или реквизиты доступа указаны не верно.</target>
       </trans-unit>
       <!-- Import -->
       <trans-unit id="import.title">
         <source>import.title</source>
-        <target xml:lang="ru" state="translated">&#x437;&#x430;&#x433;&#x43E;&#x43B;&#x43E;&#x432;&#x43E;&#x43A;.&#x438;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x430;</target>
+        <target state="translated">заголовок.импорта</target>
       </trans-unit>
       <trans-unit id="import.message">
         <source>import.message</source>
-        <target xml:lang="ru" state="needs-translation">import.message</target>
+        <target state="translated">Импортировать сообщения</target>
       </trans-unit>
       <trans-unit id="import.step_name">
         <source>import.step_name</source>
-        <target xml:lang="ru" state="needs-translation">import.step_name</target>
+        <target state="translated">Шаг</target>
       </trans-unit>
       <!-- User -->
       <trans-unit id="user.title">
         <source>user.title</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x43E;&#x437;&#x434;&#x430;&#x442;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
+        <target state="translated">Создать пользователя</target>
       </trans-unit>
       <trans-unit id="user.message">
         <source>user.message</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x43E;&#x437;&#x434;&#x430;&#x442;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F; &#x441; &#x43F;&#x440;&#x430;&#x432;&#x430;&#x43C;&#x438; &#x430;&#x434;&#x43C;&#x438;&#x43D;&#x438;&#x441;&#x442;&#x440;&#x430;&#x442;&#x43E;&#x440;&#x430;</target>
+        <target state="translated">Создать пользователя с правами администратора</target>
       </trans-unit>
       <trans-unit id="user.create">
         <source>user.create</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x43E;&#x437;&#x434;&#x430;&#x442;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
+        <target state="translated">Создать пользователя</target>
       </trans-unit>
       <trans-unit id="user.name">
         <source>user.name</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
+        <target state="translated">Имя пользователя</target>
       </trans-unit>
       <trans-unit id="user.email">
         <source>user.email</source>
-        <target xml:lang="ru" state="translated">&#x410;&#x434;&#x440;&#x435;&#x441; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x447;&#x442;&#x44B;</target>
+        <target state="translated">Адрес электронной почты</target>
       </trans-unit>
       <trans-unit id="user.create_another">
         <source>user.create_another</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x43E;&#x437;&#x434;&#x430;&#x442;&#x44C; &#x434;&#x440;&#x443;&#x433;&#x43E;&#x433;&#x43E; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
+        <target state="translated">Создать другого пользователя</target>
       </trans-unit>
       <!-- User summary -->
       <trans-unit id="user_summary.title">
         <source>user_summary.title</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;</target>
+        <target state="translated">Пользователь создан</target>
       </trans-unit>
       <!-- Themes -->
       <trans-unit id="themes.title">
         <source>themes.title</source>
-        <target xml:lang="ru" state="translated">&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x430;&#x44F; &#x438;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x418;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;</target>
-        </alt-trans>
+        <target state="translated">Основная информация</target>
       </trans-unit>
       <trans-unit id="themes.message">
         <source>themes.message</source>
-        <target xml:lang="ru" state="translated">&#x412;&#x432;&#x435;&#x434;&#x438;&#x442;&#x435; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x443;&#x44E; &#x438;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44E; &#x43E; &#x441;&#x432;&#x43E;&#x435;&#x43C; &#x441;&#x430;&#x439;&#x442;&#x435;</target>
+        <target state="translated">Введите основную информацию о своем сайте</target>
       </trans-unit>
       <trans-unit id="themes.save_informations">
         <source>themes.save_informations</source>
-        <target xml:lang="ru" state="translated">&#x421;&#x43E;&#x445;&#x440;&#x430;&#x43D;&#x438;&#x442;&#x44C; &#x438;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44E;</target>
+        <target state="translated">Сохранить информацию</target>
       </trans-unit>
       <trans-unit id="themes.frontend.description">
         <source>themes.frontend.description</source>
-        <target xml:lang="ru" state="translated">&#x412;&#x44B; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x434;&#x435;&#x43C;&#x43E;&#x43D;&#x441;&#x442;&#x440;&#x430;&#x446;&#x438;&#x43E;&#x43D;&#x43D;&#x44B;&#x435; &#x442;&#x435;&#x43C;&#x44B; &#x438; &#x43A;&#x43E;&#x43D;&#x442;&#x435;&#x43D;&#x442; &#x434;&#x43B;&#x44F; &#x432;&#x430;&#x448;&#x435;&#x433;&#x43E; &#x441;&#x430;&#x439;&#x442;&#x430;</target>
+        <target state="translated">Вы можете установить демонстрационные темы и контент для вашего сайта</target>
       </trans-unit>
       <!-- Import node type -->
       <trans-unit id="import_node_type.title">
         <source>import_node_type.title</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x438;&#x43F; &#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Импортировать тип узла</target>
       </trans-unit>
       <trans-unit id="import_node_type.message">
         <source>import_node_type.message</source>
-        <target xml:lang="ru" state="translated">&#x422;&#x438;&#x43F; &#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Тип узла</target>
       </trans-unit>
       <trans-unit id="import_node_type.node_type">
         <source>import_node_type.node_type</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x438;&#x43F; &#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Импортировать тип узла</target>
       </trans-unit>
       <trans-unit id="import_node_type.node">
         <source>import_node_type.node</source>
-        <target xml:lang="ru" state="translated">&#x422;&#x438;&#x43F; &#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Тип узла</target>
+      </trans-unit>
+      <trans-unit id="import_tags">
+        <source>import_tags</source>
+        <target state="translated">Установите название темы раздела о импорте файла определений тегов.</target>
       </trans-unit>
       <!-- Success -->
       <trans-unit id="success.title">
         <source>success.title</source>
-        <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x430; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x430; &#x443;&#x441;&#x43F;&#x435;&#x448;&#x43D;&#x43E;!</target>
+        <target state="translated">Установка завершена успешно!</target>
       </trans-unit>
       <trans-unit id="success.message">
         <source>success.message</source>
-        <target xml:lang="ru" state="translated">Roadiz &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D; &#x443;&#x441;&#x43F;&#x435;&#x448;&#x43D;&#x43E;</target>
+        <target state="translated">Roadiz установлен успешно</target>
       </trans-unit>
       <trans-unit id="success.quit_install">
         <source>success.quit_install</source>
-        <target xml:lang="ru" state="translated">&#x412;&#x44B;&#x439;&#x442;&#x438; &#x438;&#x437; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x438;</target>
+        <target state="translated">Выйти из установки</target>
       </trans-unit>
       <!-- Goto -->
       <trans-unit id="goto.requirements">
         <source>goto.requirements</source>
-        <target xml:lang="ru" state="translated">&#x422;&#x440;&#x435;&#x431;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F;</target>
+        <target state="translated">Требования</target>
       </trans-unit>
       <trans-unit id="goto.welcome">
         <source>goto.welcome</source>
-        <target xml:lang="ru" state="translated">&#x41D;&#x430;&#x437;&#x430;&#x434; &#x43D;&#x430; &#x433;&#x43B;&#x430;&#x432;&#x43D;&#x443;&#x44E;</target>
+        <target state="translated">Назад на главную</target>
       </trans-unit>
       <trans-unit id="goto.database">
         <source>goto.database</source>
-        <target xml:lang="ru" state="translated">&#x411;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+        <target state="translated">База данных</target>
       </trans-unit>
       <trans-unit id="goto.import">
         <source>goto.import</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442;</target>
+        <target state="translated">Импорт</target>
       </trans-unit>
       <trans-unit id="goto.user">
         <source>goto.user</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;</target>
+        <target state="translated">Пользователь</target>
       </trans-unit>
       <trans-unit id="goto.theme">
         <source>goto.theme</source>
-        <target xml:lang="ru" state="translated">&#x422;&#x435;&#x43C;&#x44B;</target>
+        <target state="translated">Темы</target>
       </trans-unit>
       <trans-unit id="goto.informations">
         <source>goto.informations</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;</target>
+        <target state="translated">Информация</target>
       </trans-unit>
       <trans-unit id="skip.user.goto.theme">
         <source>skip.user.goto.theme</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x440;&#x43E;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x44C;</target>
+        <target state="translated">Пропустить</target>
       </trans-unit>
       <trans-unit id="skip.user.goto.done">
         <source>skip.user.goto.done</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x442;&#x43E;&#x433;&#x43E;</target>
+        <target state="translated">Итого</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.import">
         <source>skip.database.goto.import</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x440;&#x43E;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x44C;</target>
+        <target state="translated">Пропустить</target>
       </trans-unit>
       <trans-unit id="choose.language">
         <source>choose.language</source>
-        <target xml:lang="ru" state="translated">&#x412;&#x44B;&#x431;&#x435;&#x440;&#x438;&#x442;&#x435; &#x44F;&#x437;&#x44B;&#x43A;</target>
+        <target state="translated">Выберите язык</target>
       </trans-unit>
       <trans-unit id="choose.a.language">
         <source>choose.a.language</source>
-        <target xml:lang="ru" state="translated">&#x412;&#x44B;&#x431;&#x435;&#x440;&#x438;&#x442;&#x435; &#x432;&#x430;&#x448; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x43E;&#x439; &#x44F;&#x437;&#x44B;&#x43A;</target>
+        <target state="translated">Выберите ваш основной язык</target>
       </trans-unit>
       <trans-unit id="skip.database.goto.theme">
         <source>skip.database.goto.theme</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x440;&#x43E;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x44C;</target>
+        <target state="translated">Пропустить</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="theme.summary.title">
                 <source>theme.summary.title</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x442;&#x43E;&#x433;&#x43E;&#x432;&#x44B;&#x435; &#x43D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438; &#x442;&#x435;&#x43C;&#x44B;</target>
+                <target state="translated">Итоговые настройки темы</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.version">
                 <source>check.version</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x435;&#x440;&#x441;&#x438;&#x44F;</target>
+                <target state="translated">Версия</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.name">
                 <source>theme.name</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F;</target>
+                <target state="translated">Имя</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.version">
                 <source>theme.version</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x435;&#x440;&#x441;&#x438;&#x44F;</target>
+                <target state="translated">Версия</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.version">
                 <source>cms.version</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x435;&#x440;&#x441;&#x438;&#x44F; CMS</target>
+                <target state="translated">Версия CMS</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.supportedLocale">
                 <source>theme.supportedLocale</source>
-                <target xml:lang="ru" state="translated">&#x41F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x438;&#x432;&#x430;&#x435;&#x43C;&#x44B;&#x435; &#x44F;&#x437;&#x44B;&#x43A;&#x438;</target>
+                <target state="translated">Поддерживаемые языки</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="cms.locale">
                 <source>cms.locale</source>
-                <target xml:lang="ru" state="translated">&#x42F;&#x437;&#x44B;&#x43A; CMS</target>
+                <target state="translated">Язык CMS</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="name">
                 <source>name</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F;</target>
+                <target state="translated">Имя</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="filename">
                 <source>filename</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x444;&#x430;&#x439;&#x43B;&#x430;</target>
+                <target state="translated">Имя файла</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodetypes">
                 <source>nodetypes</source>
-                <target xml:lang="ru" state="translated">&#x422;&#x438;&#x43F;&#x44B; &#x443;&#x437;&#x43B;&#x43E;&#x432;</target>
+                <target state="translated">Типы узлов</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="nodes">
                 <source>nodes</source>
-                <target xml:lang="ru" state="translated">&#x423;&#x437;&#x43B;&#x44B;</target>
+                <target state="translated">Узлы</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install.theme">
                 <source>install.theme</source>
-                <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x442;&#x435;&#x43C;&#x443;</target>
+                <target state="translated">Установить тему</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import.theme.content.title">
                 <source>import.theme.content.title</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x43C;&#x43E;&#x435; &#x442;&#x435;&#x43C;&#x44B;</target>
+                <target state="translated">Импортировать содержимое темы</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="step.name">
                 <source>step.name</source>
-                <target xml:lang="ru" state="translated">&#x428;&#x430;&#x433;</target>
+                <target state="translated">Шаг</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="goto.done">
                 <source>goto.done</source>
-                <target xml:lang="ru" state="translated">&#x413;&#x43E;&#x442;&#x43E;&#x432;&#x43E;</target>
+                <target state="translated">Готово</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_roles">
                 <source>import_roles</source>
-                <target xml:lang="ru" state="translated">&#x420;&#x43E;&#x43B;&#x438;</target>
+                <target state="translated">Роли</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_groups">
                 <source>import_groups</source>
-                <target xml:lang="ru" state="translated">&#x413;&#x440;&#x443;&#x43F;&#x43F;&#x44B; &#x440;&#x43E;&#x43B;&#x435;&#x439;</target>
+                <target state="translated">Группы ролей</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="import_settings">
                 <source>import_settings</source>
-                <target xml:lang="ru" state="translated">&#x41D;&#x430;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x43A;&#x438;</target>
+                <target state="translated">Настройки</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="theme.selector">
                 <source>theme.selector</source>
-                <target xml:lang="ru" state="translated">&#x414;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x44B;&#x435; &#x442;&#x435;&#x43C;&#x44B;</target>
+                <target state="translated">Доступные темы</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.locale">
                 <source>check.locale</source>
-                <target xml:lang="ru" state="translated">&#x42F;&#x437;&#x44B;&#x43A;</target>
+                <target state="translated">Язык</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="check.import.files">
                 <source>check.import.files</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x43F;&#x43E;&#x440;&#x442; &#x444;&#x430;&#x439;&#x43B;&#x43E;&#x432;</target>
+                <target state="translated">Импорт файлов</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password.must_match">
                 <source>password.must_match</source>
-                <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x438; &#x434;&#x43E;&#x43B;&#x436;&#x43D;&#x44B; &#x441;&#x43E;&#x432;&#x43F;&#x430;&#x434;&#x430;&#x442;&#x44C;</target>
+                <target state="translated">Пароли должны совпадать</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="site_name">
                 <source>site_name</source>
-                <target xml:lang="ru" state="translated">&#x41D;&#x430;&#x438;&#x43C;&#x435;&#x43D;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x432;&#x430;&#x448;&#x435;&#x433;&#x43E; &#x441;&#x430;&#x439;&#x442;&#x430;</target>
+                <target state="translated">Наименование вашего сайта</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender">
                 <source>email_sender</source>
-                <target xml:lang="ru" state="translated">&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x43E;&#x439; &#x430;&#x434;&#x440;&#x435;&#x441; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x447;&#x442;&#x44B;</target>
+                <target state="translated">Основной адрес электронной почты</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="email_sender_name">
                 <source>email_sender_name</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x438;&#x442;&#x435;&#x43B;&#x44F; &#x441; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x43E;&#x433;&#x43E; &#x430;&#x434;&#x440;&#x435;&#x441;&#x430; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x447;&#x442;&#x44B;</target>
+                <target state="translated">Имя отправителя с основного адреса электронной почты</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="meta_description">
                 <source>meta_description</source>
-                <target xml:lang="ru" state="translated">SEO &#x43C;&#x435;&#x442;&#x430;-&#x43E;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x438;&#x435;</target>
+                <target state="translated">SEO мета-описание</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="timezone">
                 <source>timezone</source>
-                <target xml:lang="ru" state="translated">&#x427;&#x430;&#x441;&#x43E;&#x432;&#x43E;&#x439; &#x43F;&#x43E;&#x44F;&#x441;</target>
+                <target state="translated">Часовой пояс</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="install_theme">
                 <source>install_theme</source>
-                <target xml:lang="ru" state="translated">&#x423;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; &#x442;&#x435;&#x43C;&#x443;?</target>
+                <target state="translated">Установить тему?</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="driver">
                 <source>driver</source>
-                <target xml:lang="ru" state="translated">&#x414;&#x440;&#x430;&#x439;&#x432;&#x435;&#x440;</target>
+                <target state="translated">Драйвер</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="host">
                 <source>host</source>
-                <target xml:lang="ru" state="translated">&#x425;&#x43E;&#x441;&#x442;</target>
+                <target state="translated">Хост</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="port">
                 <source>port</source>
-                <target xml:lang="ru" state="translated">&#x41F;&#x43E;&#x440;&#x442;</target>
+                <target state="translated">Порт</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="unix_socket">
                 <source>unix_socket</source>
-                <target xml:lang="ru" state="translated">UNIX &#x441;&#x43E;&#x43A;&#x435;&#x442;</target>
+                <target state="translated">UNIX сокет</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="path">
                 <source>path</source>
-                <target xml:lang="ru" state="translated">&#x41F;&#x443;&#x442;&#x44C;</target>
+                <target state="translated">Путь</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="user">
                 <source>user</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
+                <target state="translated">Имя пользователя</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="password">
                 <source>password</source>
-                <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
+                <target state="translated">Пароль</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="dbname">
                 <source>dbname</source>
-                <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x431;&#x430;&#x437;&#x44B; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;</target>
+                <target state="translated">Имя базы данных</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.locale.message">
                 <source>error.locale.message</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x44B;&#x431;&#x440;&#x430;&#x43D;&#x43D;&#x44B;&#x439; &#x44F;&#x437;&#x44B;&#x43A; &#x43D;&#x435; &#x441;&#x443;&#x449;&#x435;&#x441;&#x442;&#x432;&#x443;&#x435;&#x442; &#x432; &#x432;&#x430;&#x448;&#x435;&#x439; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x435;</target>
+                <target state="translated">Выбранный язык не существует в вашей системе</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.modal.title">
                 <source>error.modal.title</source>
-                <target xml:lang="ru" state="translated">&#x41F;&#x43E;&#x436;&#x430;&#x43B;&#x443;&#x439;&#x441;&#x442;&#x430; &#x438;&#x441;&#x43F;&#x440;&#x430;&#x432;&#x44C;&#x442;&#x435; &#x441;&#x43B;&#x435;&#x434;&#x443;&#x44E;&#x449;&#x438;&#x435; &#x43F;&#x440;&#x43E;&#x431;&#x43B;&#x435;&#x43C;&#x44B;, &#x43F;&#x440;&#x435;&#x436;&#x434;&#x435; &#x447;&#x435;&#x43C; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x430;&#x432;&#x43B;&#x438;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x435;&#x43C;&#x443;.</target>
+                <target state="translated">Пожалуйста исправьте следующие проблемы, прежде чем устанавливать тему.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="error.version.message">
                 <source>error.version.message</source>
-                <target xml:lang="ru" state="translated">&#x414;&#x43B;&#x44F; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43A;&#x438; &#x44D;&#x442;&#x43E;&#x439; &#x442;&#x435;&#x43C;&#x44B; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x44C; Roadiz.</target>
+                <target state="translated">Для установки этой темы необходимо обновить Roadiz.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="warning.theme.continue">
                 <source>warning.theme.continue</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x44B; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x438;&#x433;&#x43D;&#x43E;&#x440;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x44D;&#x442;&#x438; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x44F; &#x438; &#x43F;&#x440;&#x43E;&#x434;&#x43E;&#x43B;&#x436;&#x438;&#x442;&#x44C;.</target>
+                <target state="translated">Вы можете игнорировать эти сообщения и продолжить.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz">
+                <source>now_you_can_delete_install_file_and_use_roadiz</source>
+                <target state="translated">Это сообщение появляется в конце процесса установки, удалите файл install.php из папки Roadiz.</target>
             </trans-unit>
     </body>
   </file>

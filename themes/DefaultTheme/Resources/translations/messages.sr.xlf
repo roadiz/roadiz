@@ -9,9 +9,6 @@
       <trans-unit id="nodeName">
         <source>node.name.is.%name%</source>
         <target state="translated">Ово је чвор чији је назив “%name%”</target>
-        <alt-trans>
-          <target>Ово је “%name%” чвор</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="translationName">
         <source>translation.is.%name%</source>
@@ -28,9 +25,6 @@
       <trans-unit id="your.email">
         <source>your.email</source>
         <target state="translated">Ваша email адреса</target>
-        <alt-trans>
-          <target>Ваша електронска пошта</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="your.name">
         <source>your.name</source>
@@ -51,16 +45,10 @@
       <trans-unit id="document">
         <source><![CDATA[document]]></source>
         <target state="translated"><![CDATA[Закачите слику или PDF фајл (<5 MB)]]></target>
-        <alt-trans>
-          <target><![CDATA[Документ]]></target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="cookie_choice.consent_message">
         <source>cookie_choice.consent_message</source>
         <target state="translated">Како бисмо Ваш утисак о сајту учинили бољим, користимо кексиће (cookies). Молимо Вас да нам дате свој пристанак за коришћење кексића.</target>
-        <alt-trans>
-          <target>Како бисмо ваш утисак о сајту учинили бољим, користимо кексиће. Молимо Вас да нам дате свој пристанак за коришћење кексића.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="cookie_choice.close_message">
         <source>cookie_choice.close_message</source>

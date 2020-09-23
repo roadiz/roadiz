@@ -47,9 +47,6 @@
       <trans-unit id="requirements.title">
         <source>requirements.title</source>
         <target state="translated">Шта је неопходно</target>
-        <alt-trans>
-          <target>Неопходно</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="requirements.message">
         <source>requirements.message</source>
@@ -187,9 +184,6 @@
       <trans-unit id="success.title">
         <source>success.title</source>
         <target state="translated">Успели сте</target>
-        <alt-trans>
-          <target>Успешно</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="success.message">
         <source>success.message</source>

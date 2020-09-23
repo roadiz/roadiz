@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="id">
+    <body>
+      <!-- welcome.user.email -->
+      <trans-unit id="welcome.user.email.%site%">
+        <source>welcome.user.email.%site%</source>
+        <target state="translated">selamat datang pengguna email.%site%</target>
+      </trans-unit>
+      <trans-unit id="your.user.account">
+        <source>your.user.account</source>
+        <target state="translated">akun pengguna anda</target>
+      </trans-unit>
+      <trans-unit id="username">
+        <source>username</source>
+        <target state="translated">nama pengguna</target>
+      </trans-unit>
+      <trans-unit id="email">
+        <source>email</source>
+        <target state="translated">Email</target>
+      </trans-unit>
+      <trans-unit id="password">
+        <source>password</source>
+        <target state="translated">kata sandi</target>
+      </trans-unit>
+      <trans-unit id="for.questions.email">
+        <source>for.questions.email</source>
+        <target state="translated">Email untuk pertanyaan</target>
+      </trans-unit>
+      <!-- Contact forms -->
+      <trans-unit id="contact.form">
+        <source>contact.form</source>
+        <target state="translated">formulir kontak</target>
+      </trans-unit>
+      <trans-unit id="new.contact.form.%site%">
+        <source>new.contact.form.%site%</source>
+        <target state="translated">formulir kontak baru.%site%</target>
+      </trans-unit>
+      <trans-unit id="form.successfully.sent">
+        <source>form.successfully.sent</source>
+        <target state="translated">formulir.berhasil.dikirim</target>
+      </trans-unit>
+      <trans-unit id="form.has.errors">
+        <source>form.has.errors</source>
+        <target state="translated">bentuk memiliki kesalahan</target>
+      </trans-unit>
+      <trans-unit id="%field%.is.mandatory">
+        <source>%field%.is.mandatory</source>
+        <target state="translated">%field%.adalah wajib</target>
+      </trans-unit>
+      <trans-unit id="email.not.valid">
+        <source>email.not.valid</source>
+        <target state="translated">email tidak valid</target>
+      </trans-unit>
+      <trans-unit id="date">
+        <source>date</source>
+        <target state="translated">tanggal</target>
+      </trans-unit>
+      <trans-unit id="ip.address">
+        <source>ip.address</source>
+        <target state="translated">alamat Ip</target>
+      </trans-unit>
+      <trans-unit id="submittedAt">
+        <source>submittedAt</source>
+        <target state="translated">disampaikan pada</target>
+      </trans-unit>
+      <trans-unit id="form.submit">
+        <source>form.submit</source>
+        <target state="translated">formulir kirim</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="answer.form">
+                <source>answer.form</source>
+                <target state="translated">bentuk jawaban</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.send">
+                <source>customForm.%name%.send</source>
+                <target state="translated">kirim bentuk kustom.%name%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+                <source>new.answer.form.%site%</source>
+                <target state="translated">bentuk jawaban baru.%site%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="file.not.accepted">
+                <source>file.not.accepted</source>
+                <target state="translated">file tidak diterima</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.answer.sent">
+                <source>customForm.answer.sent</source>
+                <target state="translated">kirm bentuk kustom menjawab</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target state="translated">tidak ada</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.password.request">
+              <source>reset.password.request</source>
+              <target state="translated">permintaan reset kata sandi</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+                <source>you.asked.for.a.password.reset.on.%site%</source>
+                <target state="translated">kamu tanya untuk menghidupkan ulang kata sandi.%site%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+                <source>you.need.to.choose.a.new.password.using.following.link</source>
+                <target state="translated">kamu perlu untuk memilih kata sandi baru menggunakan tautan berikut</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+                <source>as.a.reminder.here.are.your.credentials</source>
+                <target state="translated">sebagai peringatan di sini kamu adalah kredensial</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+                <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+                <target state="translated">jika kamu tidak meminta perubahan kata sandi abaikan surel ini</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target state="translated">reset kata sandi anda</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target state="translated">anda harus mengisi kolom ini</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target state="translated">*.bidang wajib</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance">
+                <source>website.is.under.maintenance</source>
+                <target state="translated">situs web sedang dalam pemeliharaan</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon">
+                <source>website.is.under.maintenance.we.will.be.back.soon</source>
+                <target state="translated">situs web sedang dalam pemeliharaan kita akan segera kembali</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target state="translated">yaml tidak sah.{{ error }}</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target state="translated">nolai sudah digunakan</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

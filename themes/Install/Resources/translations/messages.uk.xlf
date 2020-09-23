@@ -1,409 +1,414 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-  <file source-language="en" datatype="plaintext" original="none" target-language="uk">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="uk">
     <body>
-      <trans-unit id="1" approved="yes">
+      <trans-unit id="1">
         <source>Node name</source>
-        <target xml:lang="uk">&#x41D;&#x430;&#x437;&#x432;&#x430; &#x432;&#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Назва вузла</target>
       </trans-unit>
-      <trans-unit id="2" approved="yes">
+      <trans-unit id="2">
         <source>See tree</source>
-        <target xml:lang="uk">&#x41F;&#x43E;&#x434;&#x438;&#x432;&#x438;&#x442;&#x438;&#x441;&#x44C; &#x434;&#x435;&#x440;&#x435;&#x432;&#x43E;</target>
+        <target state="translated">Подивитись дерево</target>
       </trans-unit>
-      <trans-unit id="3" approved="yes">
+      <trans-unit id="3">
         <source>_username</source>
-        <target xml:lang="uk">&#x406;&#x43C;'&#x44F; &#x43A;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430;</target>
+        <target state="translated">Ім'я кристувача</target>
       </trans-unit>
-      <trans-unit id="4" approved="yes">
+      <trans-unit id="4">
         <source>_password</source>
-        <target xml:lang="uk">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
+        <target state="translated">Пароль</target>
       </trans-unit>
-      <trans-unit id="password.verify" approved="yes">
+      <trans-unit id="password.verify">
         <source>password.verify</source>
-        <target xml:lang="uk">&#x41F;&#x456;&#x434;&#x442;&#x432;&#x435;&#x440;&#x434;&#x456;&#x442;&#x44C; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
+        <target state="translated">Підтвердіть пароль</target>
       </trans-unit>
-      <trans-unit id="delete" approved="yes">
+      <trans-unit id="delete">
         <source>delete</source>
-        <target xml:lang="uk">&#x412;&#x438;&#x434;&#x430;&#x43B;&#x438;&#x442;&#x438;</target>
+        <target state="translated">Видалити</target>
       </trans-unit>
-      <trans-unit id="status" approved="yes">
+      <trans-unit id="status">
         <source>status</source>
-        <target xml:lang="uk">&#x421;&#x442;&#x430;&#x442;&#x443;&#x441;</target>
+        <target state="translated">Статус</target>
       </trans-unit>
       <!-- Welcome -->
-      <trans-unit id="welcome.title" approved="yes">
+      <trans-unit id="welcome.title">
         <source>welcome.title</source>
-        <target xml:lang="uk">&#x412;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x43D;&#x44F; Roadiz</target>
+        <target state="translated">Встановлення Roadiz</target>
       </trans-unit>
-      <trans-unit id="welcome.subtitle" approved="yes">
+      <trans-unit id="welcome.subtitle">
         <source>welcome.subtitle</source>
-        <target xml:lang="uk">&#x41B;&#x430;&#x441;&#x43A;&#x430;&#x432;&#x43E; &#x43F;&#x440;&#x43E;&#x441;&#x438;&#x43C;&#x43E; &#x443; Roadiz CMS!</target>
+        <target state="translated">Ласкаво просимо у Roadiz CMS!</target>
       </trans-unit>
-      <trans-unit id="welcome.message" approved="yes">
+      <trans-unit id="welcome.message">
         <source>welcome.message</source>
-        <target xml:lang="uk">&lt;p&gt;&#x417;&#x430;&#x43B;&#x438;&#x448;&#x438;&#x43B;&#x43E;&#x441;&#x44C; &#x43B;&#x438;&#x448; &#x442;&#x440;&#x456;&#x448;&#x43A;&#x438; &#x43F;&#x456;&#x434;&#x43B;&#x430;&#x448;&#x442;&#x443;&#x432;&#x430;&#x442;&#x438; &#x442;&#x430; &#x434;&#x432;&#x438;&#x433;&#x443;&#x43D;&#x438; &#x43D;&#x430; &#x441;&#x442;&#x430;&#x440;&#x442;!&lt;/p&gt;</target>
+        <target state="translated">&lt;p&gt;Залишилось лиш трішки підлаштувати та двигуни на старт!&lt;/p&gt;</target>
       </trans-unit>
       <!-- Requirements -->
-      <trans-unit id="requirements.title" approved="yes">
+      <trans-unit id="requirements.title">
         <source>requirements.title</source>
-        <target xml:lang="uk">&#x412;&#x438;&#x43C;&#x43E;&#x433;&#x438;</target>
+        <target state="translated">Вимоги</target>
       </trans-unit>
-      <trans-unit id="requirements.message" approved="yes">
+      <trans-unit id="requirements.message">
         <source>requirements.message</source>
-        <target xml:lang="uk">&#x414;&#x43B;&#x44F; &#x432;&#x438;&#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x430;&#x43D;&#x43D;&#x44F; Roadiz &#x432;&#x430;&#x448; &#x441;&#x435;&#x440;&#x432;&#x435;&#x440; &#x43F;&#x43E;&#x432;&#x438;&#x43D;&#x435;&#x43D; &#x437;&#x430;&#x434;&#x43E;&#x432;&#x43E;&#x43B;&#x44C;&#x43D;&#x44F;&#x442;&#x438; &#x434;&#x435;&#x44F;&#x43A;&#x438;&#x43C; &#x432;&#x438;&#x43C;&#x43E;&#x433;&#x430;&#x43C;, &#x43E;&#x441;&#x43E;&#x431;&#x43B;&#x438;&#x432;&#x43E;, &#x449;&#x43E; &#x441;&#x442;&#x43E;&#x441;&#x443;&#x454;&#x442;&#x44C;&#x441;&#x44F; PHP. &#x42F;&#x43A;&#x449;&#x43E; &#x432;&#x438; &#x43C;&#x430;&#x454;&#x442;&#x435; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F; &#x434;&#x43E; &#x444;&#x430;&#x439;&#x43B;&#x443; &#x43A;&#x43E;&#x43D;&#x444;&#x456;&#x433;&#x443;&#x440;&#x430;&#x446;&#x456;&#x457; (php.ini), &#x432;&#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x432;&#x456;&#x434;&#x440;&#x435;&#x434;&#x430;&#x433;&#x443;&#x432;&#x430;&#x442;&#x438; &#x434;&#x435;&#x44F;&#x43A;&#x456; &#x437; &#x43D;&#x438;&#x445;.</target>
+        <target state="translated">Для використання Roadiz ваш сервер повинен задовольняти деяким вимогам, особливо, що стосується PHP. Якщо ви маєте доступ до файлу конфігурації (php.ini), ви можете відредагувати деякі з них.</target>
       </trans-unit>
-      <trans-unit id="requirements.spec" approved="yes">
+      <trans-unit id="requirements.spec">
         <source>requirements.spec</source>
-        <target xml:lang="uk">&#x41E;&#x43F;&#x446;&#x456;&#x44F;</target>
+        <target state="translated">Опція</target>
       </trans-unit>
-      <trans-unit id="requirements.requirement" approved="yes">
+      <trans-unit id="requirements.requirement">
         <source>requirements.requirement</source>
-        <target xml:lang="uk">&#x41F;&#x43E;&#x442;&#x440;&#x456;&#x431;&#x43D;&#x43E;</target>
+        <target state="translated">Потрібно</target>
       </trans-unit>
-      <trans-unit id="requirements.actual_value" approved="yes">
+      <trans-unit id="requirements.actual_value">
         <source>requirements.actual_value</source>
-        <target xml:lang="uk">&#x417;&#x430;&#x440;&#x430;&#x437;</target>
+        <target state="translated">Зараз</target>
       </trans-unit>
       <!-- Database -->
-      <trans-unit id="database.title" approved="yes">
+      <trans-unit id="database.title">
         <source>database.title</source>
-        <target xml:lang="uk">&#x411;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x438;&#x445;</target>
+        <target state="translated">База даних</target>
       </trans-unit>
-      <trans-unit id="database.message" approved="yes">
+      <trans-unit id="database.message">
         <source>database.message</source>
-        <target xml:lang="uk">&#x421;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x456; Roadiz &#x43F;&#x43E;&#x442;&#x440;&#x456;&#x431;&#x43D;&#x430; &#x431;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x438;&#x445; &#x434;&#x43B;&#x44F; &#x437;&#x431;&#x435;&#x440;&#x456;&#x433;&#x430;&#x43D;&#x43D;&#x44F; &#x432;&#x430;&#x448;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43D;&#x442;&#x435;&#x43D;&#x442;&#x443;. &#x412;&#x438;&#x431;&#x435;&#x440;&#x456;&#x442;&#x44C; &#x432;&#x430;&#x448;&#x443; &#x443;&#x43B;&#x44E;&#x431;&#x43B;&#x435;&#x43D;&#x443; &#x431;&#x430;&#x437;&#x443; &#x434;&#x430;&#x43D;&#x438;&#x445; &#x442;&#x430; &#x432;&#x43A;&#x430;&#x436;&#x456;&#x442;&#x44C; &#x43F;&#x43E;&#x442;&#x440;&#x456;&#x431;&#x43D;&#x456; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x438;.</target>
+        <target state="translated">Системі Roadiz потрібна база даних для зберігання вашого контенту. Виберіть вашу улюблену базу даних та вкажіть потрібні параметри.</target>
       </trans-unit>
-      <trans-unit id="database.cannot_connect" approved="yes">
+      <trans-unit id="database.cannot_connect">
         <source>database.cannot_connect</source>
-        <target xml:lang="uk">&#x41D;&#x435; &#x432;&#x434;&#x430;&#x43B;&#x43E;&#x441;&#x44F; &#x437;'&#x454;&#x434;&#x43D;&#x430;&#x442;&#x438;&#x441;&#x44C; &#x437; &#x431;&#x430;&#x437;&#x43E;&#x44E; &#x434;&#x430;&#x43D;&#x438;&#x445;</target>
+        <target state="translated">Не вдалося з'єднатись з базою даних</target>
       </trans-unit>
-      <trans-unit id="database.build" approved="yes">
+      <trans-unit id="database.build">
         <source>database.build</source>
-        <target xml:lang="uk">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x435;&#x43D;&#x43D;&#x44F; &#x431;&#x430;&#x437;&#x438; &#x434;&#x430;&#x43D;&#x438;&#x445;</target>
+        <target state="translated">Створення бази даних</target>
       </trans-unit>
       <!-- Database done -->
-      <trans-unit id="database_done.title" approved="yes">
+      <trans-unit id="database_done.title">
         <source>database_done.title</source>
-        <target xml:lang="uk">&#x411;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x438;&#x445; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x430;</target>
+        <target state="translated">База даних встановлена</target>
       </trans-unit>
-      <trans-unit id="database_done.message" approved="yes">
+      <trans-unit id="database_done.message">
         <source>database_done.message</source>
-        <target xml:lang="uk">&#x412;&#x430;&#x448;&#x430; &#x431;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x438;&#x445; &#x443;&#x441;&#x43F;&#x456;&#x448;&#x43D;&#x43E; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x430;. &#x41F;&#x435;&#x440;&#x435;&#x439;&#x434;&#x435;&#x43C;&#x43E; &#x434;&#x43E; &#x456;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x44F; &#x432;&#x43C;&#x456;&#x441;&#x442;&#x443; &#x442;&#x430; &#x43F;&#x430;&#x440;&#x430;&#x43C;&#x435;&#x442;&#x440;&#x456;&#x432; &#x432;&#x430;&#x448;&#x43E;&#x433;&#x43E; &#x441;&#x430;&#x439;&#x442;&#x443;.</target>
+        <target state="translated">Ваша база даних успішно встановлена. Перейдемо до імпортування вмісту та параметрів вашого сайту.</target>
       </trans-unit>
       <!-- Database fail -->
-      <trans-unit id="database_fail.title" approved="yes">
+      <trans-unit id="database_fail.title">
         <source>database_fail.title</source>
-        <target xml:lang="uk">&#x41D;&#x435; &#x432;&#x434;&#x430;&#x43B;&#x43E;&#x441;&#x44F; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x438; &#x43E;&#x442;&#x440;&#x438;&#x43C;&#x430;&#x43D;&#x456; &#x434;&#x430;&#x43D;&#x456;</target>
+        <target state="translated">Не вдалося встановити отримані дані</target>
       </trans-unit>
-      <trans-unit id="database_fail.message" approved="yes">
+      <trans-unit id="database_fail.message">
         <source>database_fail.message</source>
-        <target xml:lang="uk">&#x411;&#x430;&#x437;&#x443; &#x434;&#x430;&#x43D;&#x438;&#x445; &#x43D;&#x435; &#x432;&#x434;&#x430;&#x454;&#x442;&#x44C;&#x441;&#x44F; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x438; &#x447;&#x435;&#x440;&#x435;&#x437; &#x43F;&#x43E;&#x43C;&#x438;&#x43B;&#x43A;&#x438; &#x432;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x456; &#x43D;&#x438;&#x436;&#x447;&#x435;. &#x41C;&#x43E;&#x436;&#x43B;&#x438;&#x432;&#x43E;, &#x432;&#x43E;&#x43D;&#x430; &#x43D;&#x435; &#x43F;&#x43E;&#x440;&#x43E;&#x436;&#x43D;&#x44F; &#x430;&#x431;&#x43E; &#x440;&#x435;&#x43A;&#x432;&#x456;&#x437;&#x438;&#x442;&#x438; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x443; &#x432;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x456; &#x43D;&#x435;&#x432;&#x456;&#x440;&#x43D;&#x43E;.</target>
+        <target state="translated">Базу даних не вдається встановити через помилки вказані нижче. Можливо, вона не порожня або реквізити доступу вказані невірно.</target>
       </trans-unit>
       <!-- Import -->
-      <trans-unit id="import.title" approved="yes">
+      <trans-unit id="import.title">
         <source>import.title</source>
-        <target xml:lang="uk">&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x438;&#x445; &#x434;&#x430;&#x43D;&#x438;&#x445;</target>
-        <alt-trans>
-          <target xml:lang="uk">&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x430;&#x446;&#x456;&#x44F;</target>
-        </alt-trans>
+        <target state="translated">Імпорт основних даних</target>
       </trans-unit>
-      <trans-unit id="import.message" approved="yes">
+      <trans-unit id="import.message">
         <source>import.message</source>
-        <target xml:lang="uk">&lt;p&gt;&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x438;&#x445; &#x434;&#x430;&#x43D;&#x438;&#x445; &#x434;&#x43B;&#x44F; &#x43D;&#x430;&#x43B;&#x430;&#x448;&#x442;&#x443;&#x432;&#x430;&#x43D;&#x44C;, &#x440;&#x43E;&#x43B;&#x435;&#x439; &#x442;&#x430; &#x433;&#x440;&#x443;&#x43F;&lt;/p&gt;</target>
+        <target state="translated">&lt;p&gt;Імпорт основних даних для налаштувань, ролей та груп&lt;/p&gt;</target>
       </trans-unit>
-      <trans-unit id="import.step_name" approved="yes">
+      <trans-unit id="import.step_name">
         <source>import.step_name</source>
-        <target xml:lang="uk">&#x41A;&#x440;&#x43E;&#x43A;</target>
+        <target state="translated">Крок</target>
       </trans-unit>
       <!-- User -->
-      <trans-unit id="user.title" approved="yes">
+      <trans-unit id="user.title">
         <source>user.title</source>
-        <target xml:lang="uk">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x438;&#x442;&#x438; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430;</target>
+        <target state="translated">Створити користувача</target>
       </trans-unit>
-      <trans-unit id="user.message" approved="yes">
+      <trans-unit id="user.message">
         <source>user.message</source>
-        <target xml:lang="uk">&lt;p&gt;&#x421;&#x442;&#x432;&#x43E;&#x440;&#x438;&#x442;&#x438; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430; &#x437; &#x43F;&#x440;&#x430;&#x432;&#x430;&#x43C;&#x438; &#x430;&#x434;&#x43C;&#x456;&#x43D;&#x456;&#x441;&#x442;&#x440;&#x430;&#x442;&#x43E;&#x440;&#x430;.&lt;/p&gt;</target>
+        <target state="translated">&lt;p&gt;Створити користувача з правами адміністратора.&lt;/p&gt;</target>
       </trans-unit>
-      <trans-unit id="user.create" approved="yes">
+      <trans-unit id="user.create">
         <source>user.create</source>
-        <target xml:lang="uk">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x438;&#x442;&#x438; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430;</target>
+        <target state="translated">Створити користувача</target>
       </trans-unit>
-      <trans-unit id="user.name" approved="yes">
+      <trans-unit id="user.name">
         <source>user.name</source>
-        <target xml:lang="uk">&#x406;&#x43C;'&#x44F; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430;</target>
+        <target state="translated">Ім'я користувача</target>
       </trans-unit>
-      <trans-unit id="user.email" approved="yes">
+      <trans-unit id="user.email">
         <source>user.email</source>
-        <target xml:lang="uk">&#x410;&#x434;&#x440;&#x435;&#x441;&#x430; &#x435;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x457; &#x43F;&#x43E;&#x448;&#x442;&#x438;</target>
+        <target state="translated">Адреса електронної пошти</target>
       </trans-unit>
-      <trans-unit id="user.create_another" approved="yes">
+      <trans-unit id="user.create_another">
         <source>user.create_another</source>
-        <target xml:lang="uk">&#x421;&#x442;&#x432;&#x43E;&#x440;&#x438;&#x442;&#x438; &#x456;&#x43D;&#x448;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430;</target>
+        <target state="translated">Створити іншого користувача</target>
       </trans-unit>
       <!-- User summary -->
-      <trans-unit id="user_summary.title" approved="yes">
+      <trans-unit id="user_summary.title">
         <source>user_summary.title</source>
-        <target xml:lang="uk">&#x41A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447; &#x441;&#x442;&#x432;&#x43E;&#x440;&#x435;&#x43D;&#x438;&#x439;</target>
+        <target state="translated">Користувач створений</target>
       </trans-unit>
       <!-- Themes -->
-      <trans-unit id="themes.title" approved="yes">
+      <trans-unit id="themes.title">
         <source>themes.title</source>
-        <target xml:lang="uk">&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x430; &#x456;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x456;&#x44F;</target>
+        <target state="translated">Основна інформація</target>
       </trans-unit>
-      <trans-unit id="themes.message" approved="yes">
+      <trans-unit id="themes.message">
         <source>themes.message</source>
-        <target xml:lang="uk">&#x412;&#x432;&#x435;&#x434;&#x456;&#x442;&#x44C; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x443; &#x456;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x456;&#x44E; &#x43F;&#x440;&#x43E; &#x432;&#x430;&#x448; &#x441;&#x430;&#x439;&#x442;</target>
+        <target state="translated">Введіть основну інформацію про ваш сайт</target>
       </trans-unit>
-      <trans-unit id="themes.save_informations" approved="yes">
+      <trans-unit id="themes.save_informations">
         <source>themes.save_informations</source>
-        <target xml:lang="uk">&#x417;&#x431;&#x435;&#x440;&#x435;&#x433;&#x442;&#x438; &#x456;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x456;&#x44E;</target>
+        <target state="translated">Зберегти інформацію</target>
       </trans-unit>
-      <trans-unit id="themes.frontend.description" approved="yes">
+      <trans-unit id="themes.frontend.description">
         <source>themes.frontend.description</source>
-        <target xml:lang="uk">&#x412;&#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x438; &#x434;&#x435;&#x43C;&#x43E;&#x43D;&#x441;&#x442;&#x440;&#x430;&#x446;&#x456;&#x439;&#x43D;&#x456; &#x442;&#x435;&#x43C;&#x438; &#x442;&#x430; &#x43A;&#x43E;&#x43D;&#x442;&#x435;&#x43D;&#x442; &#x434;&#x43B;&#x44F; &#x432;&#x430;&#x448;&#x43E;&#x433;&#x43E; &#x441;&#x430;&#x439;&#x442;&#x443;</target>
+        <target state="translated">Ви можете встановити демонстраційні теми та контент для вашого сайту</target>
       </trans-unit>
       <!-- Import node type -->
-      <trans-unit id="import_node_type.title" approved="yes">
+      <trans-unit id="import_node_type.title">
         <source>import_node_type.title</source>
-        <target xml:lang="uk">&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x443;&#x432;&#x430;&#x442;&#x438; &#x442;&#x438;&#x43F; &#x432;&#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Імпортувати тип вузла</target>
       </trans-unit>
-      <trans-unit id="import_node_type.message" approved="yes">
+      <trans-unit id="import_node_type.message">
         <source>import_node_type.message</source>
-        <target xml:lang="uk">&#x422;&#x438;&#x43F; &#x432;&#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Тип вузла</target>
       </trans-unit>
-      <trans-unit id="import_node_type.node_type" approved="yes">
+      <trans-unit id="import_node_type.node_type">
         <source>import_node_type.node_type</source>
-        <target xml:lang="uk">&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x443;&#x432;&#x430;&#x442;&#x438; &#x442;&#x438;&#x43F; &#x432;&#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Імпортувати тип вузла</target>
       </trans-unit>
-      <trans-unit id="import_node_type.node" approved="yes">
+      <trans-unit id="import_node_type.node">
         <source>import_node_type.node</source>
-        <target xml:lang="uk">&#x422;&#x438;&#x43F; &#x432;&#x443;&#x437;&#x43B;&#x430;</target>
+        <target state="translated">Тип вузла</target>
+      </trans-unit>
+      <trans-unit id="import_tags">
+        <source>import_tags</source>
+        <target state="translated">Теги</target>
       </trans-unit>
       <!-- Success -->
-      <trans-unit id="success.title" approved="yes">
+      <trans-unit id="success.title">
         <source>success.title</source>
-        <target xml:lang="uk">&#x423;&#x441;&#x43F;&#x456;&#x445;!</target>
+        <target state="translated">Успіх!</target>
       </trans-unit>
-      <trans-unit id="success.message" approved="yes">
+      <trans-unit id="success.message">
         <source>success.message</source>
-        <target xml:lang="uk">Roadiz &#x443;&#x441;&#x43F;&#x456;&#x448;&#x43D;&#x43E; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x439;</target>
+        <target state="translated">Roadiz успішно встановлений</target>
       </trans-unit>
-      <trans-unit id="success.quit_install" approved="yes">
+      <trans-unit id="success.quit_install">
         <source>success.quit_install</source>
-        <target xml:lang="uk">&#x417;&#x430;&#x432;&#x435;&#x440;&#x448;&#x438;&#x442;&#x438; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x43D;&#x44F;</target>
+        <target state="translated">Завершити встановлення</target>
       </trans-unit>
       <!-- Goto -->
-      <trans-unit id="goto.requirements" approved="yes">
+      <trans-unit id="goto.requirements">
         <source>goto.requirements</source>
-        <target xml:lang="uk">&#x41F;&#x43E;&#x442;&#x440;&#x435;&#x431;&#x438;</target>
+        <target state="translated">Потреби</target>
       </trans-unit>
-      <trans-unit id="goto.welcome" approved="yes">
+      <trans-unit id="goto.welcome">
         <source>goto.welcome</source>
-        <target xml:lang="uk">&#x414;&#x43E;&#x434;&#x43E;&#x43C;&#x443;</target>
+        <target state="translated">Додому</target>
       </trans-unit>
-      <trans-unit id="goto.database" approved="yes">
+      <trans-unit id="goto.database">
         <source>goto.database</source>
-        <target xml:lang="uk">&#x411;&#x430;&#x437;&#x430; &#x434;&#x430;&#x43D;&#x438;&#x445;</target>
+        <target state="translated">База даних</target>
       </trans-unit>
-      <trans-unit id="goto.import" approved="yes">
+      <trans-unit id="goto.import">
         <source>goto.import</source>
-        <target xml:lang="uk">&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x44F;</target>
+        <target state="translated">Імпортування</target>
       </trans-unit>
-      <trans-unit id="goto.user" approved="yes">
+      <trans-unit id="goto.user">
         <source>goto.user</source>
-        <target xml:lang="uk">&#x41A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;</target>
+        <target state="translated">Користувач</target>
       </trans-unit>
-      <trans-unit id="goto.theme" approved="yes">
+      <trans-unit id="goto.theme">
         <source>goto.theme</source>
-        <target xml:lang="uk">&#x422;&#x435;&#x43C;&#x430; &#x441;&#x430;&#x439;&#x442;&#x443;</target>
+        <target state="translated">Тема сайту</target>
       </trans-unit>
-      <trans-unit id="goto.informations" approved="yes">
+      <trans-unit id="goto.informations">
         <source>goto.informations</source>
-        <target xml:lang="uk">&#x406;&#x43C;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x456;&#x44F;</target>
+        <target state="translated">Імформація</target>
       </trans-unit>
-      <trans-unit id="skip.user.goto.theme" approved="yes">
+      <trans-unit id="skip.user.goto.theme">
         <source>skip.user.goto.theme</source>
-        <target xml:lang="uk">&#x41F;&#x440;&#x43E;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x438;</target>
+        <target state="translated">Пропустити</target>
       </trans-unit>
-      <trans-unit id="skip.user.goto.done" approved="yes">
+      <trans-unit id="skip.user.goto.done">
         <source>skip.user.goto.done</source>
-        <target xml:lang="uk">&#x412;&#x441;&#x44C;&#x43E;&#x433;&#x43E;</target>
+        <target state="translated">Всього</target>
       </trans-unit>
-      <trans-unit id="skip.database.goto.import" approved="yes">
+      <trans-unit id="skip.database.goto.import">
         <source>skip.database.goto.import</source>
-        <target xml:lang="uk">&#x41F;&#x440;&#x43E;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x438;</target>
+        <target state="translated">Пропустити</target>
       </trans-unit>
-      <trans-unit id="choose.language" approved="yes">
+      <trans-unit id="choose.language">
         <source>choose.language</source>
-        <target xml:lang="uk">&#x412;&#x438;&#x431;&#x435;&#x440;&#x456;&#x442;&#x44C; &#x43C;&#x43E;&#x432;&#x443;</target>
+        <target state="translated">Виберіть мову</target>
       </trans-unit>
-      <trans-unit id="choose.a.language" approved="yes">
+      <trans-unit id="choose.a.language">
         <source>choose.a.language</source>
-        <target xml:lang="uk">&#x412;&#x438;&#x431;&#x435;&#x440;&#x456;&#x442;&#x44C; &#x432;&#x430;&#x448;&#x443; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x443; &#x43C;&#x43E;&#x432;&#x443;</target>
+        <target state="translated">Виберіть вашу основну мову</target>
       </trans-unit>
-      <trans-unit id="skip.database.goto.theme" approved="yes">
+      <trans-unit id="skip.database.goto.theme">
         <source>skip.database.goto.theme</source>
-        <target xml:lang="uk">&#x41F;&#x440;&#x43E;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x438;</target>
+        <target state="translated">Пропустити</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="theme.summary.title" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.summary.title">
                 <source>theme.summary.title</source>
-                <target xml:lang="uk">&#x420;&#x435;&#x437;&#x44E;&#x43C;&#x435; &#x43D;&#x430;&#x43B;&#x430;&#x448;&#x442;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x44F; &#x442;&#x435;&#x43C;&#x438;</target>
+                <target state="translated">Резюме налаштування теми</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="check.version" approved="yes">
+      <trans-unit xml:space="preserve" id="check.version">
                 <source>check.version</source>
-                <target xml:lang="uk">&#x412;&#x435;&#x440;&#x441;&#x456;&#x44F;</target>
+                <target state="translated">Версія</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="theme.name" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.name">
                 <source>theme.name</source>
-                <target xml:lang="uk">&#x41D;&#x430;&#x437;&#x432;&#x430;</target>
+                <target state="translated">Назва</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="theme.version" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.version">
                 <source>theme.version</source>
-                <target xml:lang="uk">&#x412;&#x435;&#x440;&#x441;&#x456;&#x44F;</target>
+                <target state="translated">Версія</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="cms.version" approved="yes">
+      <trans-unit xml:space="preserve" id="cms.version">
                 <source>cms.version</source>
-                <target xml:lang="uk">&#x412;&#x435;&#x440;&#x441;&#x456;&#x44F; CMS</target>
+                <target state="translated">Версія CMS</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="theme.supportedLocale" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.supportedLocale">
                 <source>theme.supportedLocale</source>
-                <target xml:lang="uk">&#x41C;&#x43E;&#x432;&#x438;, &#x44F;&#x43A;&#x456; &#x43F;&#x456;&#x434;&#x442;&#x440;&#x438;&#x43C;&#x443;&#x44E;&#x442;&#x44C;&#x441;&#x44F;</target>
+                <target state="translated">Мови, які підтримуються</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="cms.locale" approved="yes">
+      <trans-unit xml:space="preserve" id="cms.locale">
                 <source>cms.locale</source>
-                <target xml:lang="uk">&#x41C;&#x43E;&#x432;&#x430; CMS</target>
+                <target state="translated">Мова CMS</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="name" approved="yes">
+      <trans-unit xml:space="preserve" id="name">
                 <source>name</source>
-                <target xml:lang="uk">&#x406;&#x43C;'&#x44F;</target>
+                <target state="translated">Ім'я</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="filename" approved="yes">
+      <trans-unit xml:space="preserve" id="filename">
                 <source>filename</source>
-                <target xml:lang="uk">&#x406;&#x43C;'&#x44F; &#x444;&#x430;&#x439;&#x43B;&#x443;</target>
+                <target state="translated">Ім'я файлу</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="nodetypes" approved="yes">
+      <trans-unit xml:space="preserve" id="nodetypes">
                 <source>nodetypes</source>
-                <target xml:lang="uk">&#x422;&#x438;&#x43F;&#x438; &#x432;&#x443;&#x437;&#x43B;&#x456;&#x432;</target>
+                <target state="translated">Типи вузлів</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="nodes" approved="yes">
+      <trans-unit xml:space="preserve" id="nodes">
                 <source>nodes</source>
-                <target xml:lang="uk">&#x412;&#x443;&#x437;&#x43B;&#x438;</target>
+                <target state="translated">Вузли</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="install.theme" approved="yes">
+      <trans-unit xml:space="preserve" id="install.theme">
                 <source>install.theme</source>
-                <target xml:lang="uk">&#x412;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x438; &#x442;&#x435;&#x43C;&#x443;</target>
+                <target state="translated">Встановити тему</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="import.theme.content.title" approved="yes">
+      <trans-unit xml:space="preserve" id="import.theme.content.title">
                 <source>import.theme.content.title</source>
-                <target xml:lang="uk">&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442;&#x443;&#x432;&#x430;&#x442;&#x438; &#x432;&#x43C;&#x456;&#x441;&#x442; &#x442;&#x435;&#x43C;&#x438;</target>
+                <target state="translated">Імпортувати вміст теми</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="step.name" approved="yes">
+      <trans-unit xml:space="preserve" id="step.name">
                 <source>step.name</source>
-                <target xml:lang="uk">&#x41A;&#x440;&#x43E;&#x43A;</target>
+                <target state="translated">Крок</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="goto.done" approved="yes">
+      <trans-unit xml:space="preserve" id="goto.done">
                 <source>goto.done</source>
-                <target xml:lang="uk">&#x417;&#x440;&#x43E;&#x431;&#x43B;&#x435;&#x43D;&#x43E;</target>
+                <target state="translated">Зроблено</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="import_roles" approved="yes">
+      <trans-unit xml:space="preserve" id="import_roles">
                 <source>import_roles</source>
-                <target xml:lang="uk">&#x420;&#x43E;&#x43B;&#x456;</target>
+                <target state="translated">Ролі</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="import_groups" approved="yes">
+      <trans-unit xml:space="preserve" id="import_groups">
                 <source>import_groups</source>
-                <target xml:lang="uk">&#x413;&#x440;&#x443;&#x43F;&#x438; &#x440;&#x43E;&#x43B;&#x435;&#x439;</target>
+                <target state="translated">Групи ролей</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="import_settings" approved="yes">
+      <trans-unit xml:space="preserve" id="import_settings">
                 <source>import_settings</source>
-                <target xml:lang="uk">&#x41D;&#x430;&#x43B;&#x430;&#x448;&#x442;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x44F;</target>
+                <target state="translated">Налаштування</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="theme.selector" approved="yes">
+      <trans-unit xml:space="preserve" id="theme.selector">
                 <source>theme.selector</source>
-                <target xml:lang="uk">&#x414;&#x43E;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x456; &#x442;&#x435;&#x43C;&#x438;</target>
+                <target state="translated">Доступні теми</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="check.locale" approved="yes">
+      <trans-unit xml:space="preserve" id="check.locale">
                 <source>check.locale</source>
-                <target xml:lang="uk">&#x41C;&#x43E;&#x432;&#x430;</target>
+                <target state="translated">Мова</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="check.import.files" approved="yes">
+      <trans-unit xml:space="preserve" id="check.import.files">
                 <source>check.import.files</source>
-                <target xml:lang="uk">&#x406;&#x43C;&#x43F;&#x43E;&#x440;&#x442; &#x444;&#x430;&#x439;&#x43B;&#x456;&#x432;</target>
+                <target state="translated">Імпорт файлів</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="password.must_match" approved="yes">
+      <trans-unit xml:space="preserve" id="password.must_match">
                 <source>password.must_match</source>
-                <target xml:lang="uk">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x456; &#x43F;&#x43E;&#x432;&#x438;&#x43D;&#x43D;&#x456; &#x441;&#x43F;&#x456;&#x432;&#x43F;&#x430;&#x434;&#x430;&#x442;&#x438;</target>
+                <target state="translated">Паролі повинні співпадати</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="site_name" approved="yes">
+      <trans-unit xml:space="preserve" id="site_name">
                 <source>site_name</source>
-                <target xml:lang="uk">&#x41D;&#x430;&#x437;&#x432;&#x430; &#x441;&#x430;&#x439;&#x442;&#x443;</target>
+                <target state="translated">Назва сайту</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="email_sender" approved="yes">
+      <trans-unit xml:space="preserve" id="email_sender">
                 <source>email_sender</source>
-                <target xml:lang="uk">&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x430; email-&#x430;&#x434;&#x440;&#x435;&#x441;&#x430;</target>
+                <target state="translated">Основна email-адреса</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="email_sender_name" approved="yes">
+      <trans-unit xml:space="preserve" id="email_sender_name">
                 <source>email_sender_name</source>
-                <target xml:lang="uk">&#x406;&#x43C;'&#x44F; &#x432;&#x456;&#x434;&#x43F;&#x440;&#x430;&#x432;&#x43D;&#x438;&#x43A;&#x430; &#x437; &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x43D;&#x43E;&#x457; email-&#x430;&#x434;&#x440;&#x435;&#x441;&#x438;</target>
+                <target state="translated">Ім'я відправника з основної email-адреси</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="meta_description" approved="yes">
+      <trans-unit xml:space="preserve" id="meta_description">
                 <source>meta_description</source>
-                <target xml:lang="uk">SEO &#x43C;&#x435;&#x442;&#x430;-&#x43E;&#x43F;&#x438;&#x441;</target>
+                <target state="translated">SEO мета-опис</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="timezone" approved="yes">
+      <trans-unit xml:space="preserve" id="timezone">
                 <source>timezone</source>
-                <target xml:lang="uk">&#x427;&#x430;&#x441;&#x43E;&#x432;&#x438;&#x439; &#x43F;&#x43E;&#x44F;&#x441;</target>
+                <target state="translated">Часовий пояс</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="install_theme" approved="yes">
+      <trans-unit xml:space="preserve" id="install_theme">
                 <source>install_theme</source>
-                <target xml:lang="uk">&#x412;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x438; &#x442;&#x435;&#x43C;&#x443;?</target>
+                <target state="translated">Встановити тему?</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="driver" approved="yes">
+      <trans-unit xml:space="preserve" id="driver">
                 <source>driver</source>
-                <target xml:lang="uk">&#x414;&#x440;&#x430;&#x439;&#x432;&#x435;&#x440;</target>
+                <target state="translated">Драйвер</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="host" approved="yes">
+      <trans-unit xml:space="preserve" id="host">
                 <source>host</source>
-                <target xml:lang="uk">&#x425;&#x43E;&#x441;&#x442;</target>
+                <target state="translated">Хост</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="port" approved="yes">
+      <trans-unit xml:space="preserve" id="port">
                 <source>port</source>
-                <target xml:lang="uk">&#x41F;&#x43E;&#x440;&#x442;</target>
+                <target state="translated">Порт</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="unix_socket" approved="yes">
+      <trans-unit xml:space="preserve" id="unix_socket">
                 <source>unix_socket</source>
-                <target xml:lang="uk">UNIX &#x441;&#x43E;&#x43A;&#x435;&#x442;</target>
+                <target state="translated">UNIX сокет</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="path" approved="yes">
+      <trans-unit xml:space="preserve" id="path">
                 <source>path</source>
-                <target xml:lang="uk">&#x428;&#x43B;&#x44F;&#x445;</target>
+                <target state="translated">Шлях</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="user" approved="yes">
+      <trans-unit xml:space="preserve" id="user">
                 <source>user</source>
-                <target xml:lang="uk">&#x406;&#x43C;'&#x44F; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430;</target>
+                <target state="translated">Ім'я користувача</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="password" approved="yes">
+      <trans-unit xml:space="preserve" id="password">
                 <source>password</source>
-                <target xml:lang="uk">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
+                <target state="translated">Пароль</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="dbname" approved="yes">
+      <trans-unit xml:space="preserve" id="dbname">
                 <source>dbname</source>
-                <target xml:lang="uk">&#x41D;&#x430;&#x437;&#x432;&#x430; &#x431;&#x430;&#x437;&#x438; &#x434;&#x430;&#x43D;&#x438;&#x445;</target>
+                <target state="translated">Назва бази даних</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="error.locale.message" approved="yes">
+      <trans-unit xml:space="preserve" id="error.locale.message">
                 <source>error.locale.message</source>
-                <target xml:lang="uk">&#x412;&#x438;&#x431;&#x440;&#x430;&#x43D;&#x430; &#x43C;&#x43E;&#x432;&#x430; &#x43D;&#x435; &#x456;&#x441;&#x43D;&#x443;&#x454; &#x443; &#x432;&#x430;&#x448;&#x456;&#x439; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x456;</target>
+                <target state="translated">Вибрана мова не існує у вашій системі</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="error.modal.title" approved="yes">
+      <trans-unit xml:space="preserve" id="error.modal.title">
                 <source>error.modal.title</source>
-                <target xml:lang="uk">&#x411;&#x443;&#x434;&#x44C; &#x43B;&#x430;&#x441;&#x43A;&#x430; &#x432;&#x438;&#x43F;&#x440;&#x430;&#x432;&#x442;&#x435; &#x43D;&#x430;&#x441;&#x442;&#x443;&#x43F;&#x43D;&#x456; &#x43F;&#x440;&#x43E;&#x431;&#x43B;&#x435;&#x43C;&#x438; &#x43F;&#x435;&#x440;&#x448; &#x43D;&#x456;&#x436; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x435; &#x442;&#x435;&#x43C;&#x443;</target>
+                <target state="translated">Будь ласка виправте наступні проблеми перш ніж встановите тему</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="error.version.message" approved="yes">
+      <trans-unit xml:space="preserve" id="error.version.message">
                 <source>error.version.message</source>
-                <target xml:lang="uk">&#x414;&#x43B;&#x44F; &#x432;&#x441;&#x442;&#x430;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x43D;&#x44F; &#x446;&#x456;&#x454;&#x457; &#x442;&#x435;&#x43C;&#x438; &#x412;&#x430;&#x43C; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x456;&#x434;&#x43D;&#x43E; &#x43E;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x438; Roadiz.</target>
+                <target state="translated">Для встановлення цієї теми Вам необхідно оновити Roadiz.</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="warning.theme.continue" approved="yes">
+      <trans-unit xml:space="preserve" id="warning.theme.continue">
                 <source>warning.theme.continue</source>
-                <target xml:lang="uk">&#x412;&#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x456;&#x433;&#x43D;&#x43E;&#x440;&#x443;&#x432;&#x430;&#x442;&#x438; &#x446;&#x456; &#x43F;&#x43E;&#x432;&#x456;&#x434;&#x43E;&#x43C;&#x43B;&#x435;&#x43D;&#x43D;&#x44F; &#x442;&#x430; &#x43F;&#x440;&#x43E;&#x434;&#x43E;&#x432;&#x436;&#x438;&#x442;&#x438; &#x43F;&#x43E;&#x43F;&#x440;&#x438; &#x432;&#x441;&#x435;</target>
+                <target state="translated">Ви можете ігнорувати ці повідомлення та продовжити попри все</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz">
+                <source>now_you_can_delete_install_file_and_use_roadiz</source>
+                <target state="translated">Встановлення Roadiz завершено. Ви можете видалити install.php з папки Roadiz.</target>
             </trans-unit>
     </body>
   </file>

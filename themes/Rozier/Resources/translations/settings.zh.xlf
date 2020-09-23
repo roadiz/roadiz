@@ -39,16 +39,6 @@
                 <target state="translated">在回应头及主题变量中隐藏 Roadiz 版本和名称。</target>
                 <note>Setting</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="force_locale_with_urlaliases">
-                <source>force_locale_with_urlaliases</source>
-                <target state="needs-translation">force_locale_with_urlaliases</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="force_locale_with_urlaliases.help">
-                <source>force_locale_with_urlaliases.help</source>
-                <target state="needs-translation">force_locale_with_urlaliases.help</target>
-                <note>Setting description</note>
-            </trans-unit>
       <trans-unit xml:space="preserve" id="use_native_json">
                 <source>use_native_json</source>
                 <target state="translated">使用原生 JSON 字段类型</target>
@@ -64,70 +54,10 @@
                 <target state="translated">OAuth2 Client ID</target>
                 <note>Setting name</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="oauth_client_id.help">
-                <source>oauth_client_id.help</source>
-                <target state="needs-translation">oauth_client_id.help</target>
-                <note>Setting description</note>
-            </trans-unit>
       <trans-unit xml:space="preserve" id="oauth_client_secret">
                 <source>oauth_client_secret</source>
                 <target state="translated">OAuth2 Client secret</target>
                 <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="oauth_client_secret.help">
-                <source>oauth_client_secret.help</source>
-                <target state="needs-translation">oauth_client_secret.help</target>
-                <note>Setting description</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_hd">
-                <source>openid_hd</source>
-                <target state="needs-translation">openid_hd</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_hd.help">
-                <source>openid_hd.help</source>
-                <target state="needs-translation">openid_hd.help</target>
-                <note>Setting description</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_button_label">
-                <source>openid_button_label</source>
-                <target state="needs-translation">openid_button_label</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_button_label.help">
-                <source>openid_button_label.help</source>
-                <target state="needs-translation">openid_button_label.help</target>
-                <note>Setting description</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_discovery">
-                <source>openid_discovery</source>
-                <target state="needs-translation">openid_discovery</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_discovery.help">
-                <source>openid_discovery.help</source>
-                <target state="needs-translation">openid_discovery.help</target>
-                <note>Setting description</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_default_roles">
-                <source>openid_default_roles</source>
-                <target state="needs-translation">openid_default_roles</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_default_roles.help">
-                <source>openid_default_roles.help</source>
-                <target state="needs-translation">openid_default_roles.help</target>
-                <note>Setting description</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_scopes">
-                <source>openid_scopes</source>
-                <target state="needs-translation">openid_scopes</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_scopes.help">
-                <source>openid_scopes.help</source>
-                <target state="needs-translation">openid_scopes.help</target>
-                <note>Setting description</note>
             </trans-unit>
     </body>
   </file>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="none" source-language="en" datatype="plaintext" target-language="id">
+    <body>
+      <trans-unit id="hello.world">
+        <source>hello.world</source>
+        <target state="translated">hallo dunia</target>
+      </trans-unit>
+      <trans-unit id="nodeName">
+        <source>node.name.is.%name%</source>
+        <target state="translated">nama node.%name%</target>
+      </trans-unit>
+      <trans-unit id="translationName">
+        <source>translation.is.%name%</source>
+        <target state="translated">terjemahan adalah.%name%</target>
+      </trans-unit>
+      <trans-unit id="contact">
+        <source>contact</source>
+        <target state="translated">kontak</target>
+      </trans-unit>
+      <trans-unit id="contact.us">
+        <source>contact.us</source>
+        <target state="translated">kontak kami</target>
+      </trans-unit>
+      <trans-unit id="your.email">
+        <source>your.email</source>
+        <target state="translated">surel anda</target>
+      </trans-unit>
+      <trans-unit id="your.name">
+        <source>your.name</source>
+        <target state="translated">nama anda</target>
+      </trans-unit>
+      <trans-unit id="your.message">
+        <source>your.message</source>
+        <target state="translated">pesan anda</target>
+      </trans-unit>
+      <trans-unit id="call.me.back">
+        <source>call.me.back</source>
+        <target state="translated">hubungi saya kembali</target>
+      </trans-unit>
+      <trans-unit id="send.contact.form">
+        <source>send.contact.form</source>
+        <target state="translated">kirim bentuk kontak</target>
+      </trans-unit>
+      <trans-unit id="document">
+        <source><![CDATA[document]]></source>
+        <target state="translated"><![CDATA[dokumen]]></target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.consent_message">
+        <source>cookie_choice.consent_message</source>
+        <target state="translated">pesan izin pilihan cookie</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.close_message">
+        <source>cookie_choice.close_message</source>
+        <target state="translated">tutup pesan pilihan cookie</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.find_out_more_message">
+        <source>cookie_choice.find_out_more_message</source>
+        <target state="translated">mencari pesan pilihan cookie lebih banyak</target>
+      </trans-unit>
+      <trans-unit id="no_javascript_message">
+        <source>no_javascript_message</source>
+        <target state="translated">tidak ada pesan javascript</target>
+      </trans-unit>
+      <trans-unit id="browser_update.message">
+        <source>browser_update.message</source>
+        <target state="translated">pesan pembaruan peramban</target>
+      </trans-unit>
+      <trans-unit id="browser_update.link">
+        <source>browser_update.link</source>
+        <target state="translated">tautan pembaruan peramban</target>
+      </trans-unit>
+      <trans-unit id="error404.title">
+        <source>error404.title</source>
+        <target state="translated">judul.kesalahan404</target>
+      </trans-unit>
+      <trans-unit id="error404.message">
+        <source>error404.message</source>
+        <target state="translated">pesan.kesalahan404</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
