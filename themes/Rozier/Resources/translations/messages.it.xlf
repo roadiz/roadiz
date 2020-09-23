@@ -91,11 +91,6 @@
 
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="14">
-        <source>copyright</source>
-        <target state="translated">copyright</target>
-
-      </trans-unit>
       <trans-unit xml:space="preserve" id="15">
         <source>private</source>
         <target state="translated">privato</target>
@@ -252,21 +247,10 @@
         <target state="translated">l'utente Facebook %name% non esiste</target>
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="48">
-        <source>email</source>
-        <target state="translated">email</target>
-
-
-      </trans-unit>
       <trans-unit xml:space="preserve" id="49">
         <source>username</source>
         <target state="translated">nome utente</target>
 
-
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="50">
-        <source>password</source>
-        <target state="translated">password</target>
 
       </trans-unit>
       <trans-unit xml:space="preserve" id="51">
@@ -525,10 +509,6 @@
       <trans-unit xml:space="preserve" id="98">
         <source>type</source>
         <target state="translated">Tipo</target>
-
-
-
-
       </trans-unit>
       <trans-unit xml:space="preserve" id="99">
         <source>indexed</source>
@@ -809,11 +789,6 @@
         <target state="translated">traduzione %name% non può essere cancellata, essa è la traduzione predefinita</target>
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="158">
-        <source>locale</source>
-        <target state="translated">locale</target>
-
-      </trans-unit>
       <trans-unit xml:space="preserve" id="159">
         <source>add.tag</source>
         <target state="translated">aggiungi tag</target>
@@ -834,12 +809,6 @@
         <target state="translated">tag</target>
 
 
-
-
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="162">
-        <source>id</source>
-        <target state="translated">id</target>
 
 
       </trans-unit>
@@ -1341,11 +1310,6 @@
       <trans-unit xml:space="preserve" id="243">
         <source>add.node</source>
         <target state="translated">aggiungi nodo</target>
-
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="244">
-        <source>In</source>
-        <target state="translated">In</target>
 
       </trans-unit>
       <trans-unit xml:space="preserve" id="245">
@@ -2539,11 +2503,6 @@
         <target state="translated">Url Instagram</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="instagram_user_id">
-        <source>instagram_user_id</source>
-            <target state="translated">instagram_user_id</target>
-            <note>Setting name for social page account name.</note>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url">
         <source>twitter_url</source>
         <target state="translated">Url Twitter</target>
@@ -2557,11 +2516,6 @@
       <trans-unit xml:space="preserve" id="youtube_url">
         <source>youtube_url</source>
         <target state="translated">URL di YouTube</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="googleplus_url">
-        <source>googleplus_url</source>
-        <target state="translated">googleplus_url</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account">
@@ -2952,10 +2906,6 @@
       <trans-unit xml:space="preserve" id="blockquote">
           <source>blockquote</source>
           <target state="translated">Blockquote</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="link">
-          <source>link</source>
-          <target state="translated">link</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="image">
           <source>image</source>
