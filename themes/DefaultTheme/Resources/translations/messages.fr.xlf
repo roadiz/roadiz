@@ -78,6 +78,10 @@
         <source>error404.message</source>
         <target state="translated">Page introuvable.</target>
       </trans-unit>
+      <trans-unit id=" email.successfully.sent">
+        <source>email.successfully.sent</source>
+        <target state="translated">L’email a été envoyé avec succès.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
