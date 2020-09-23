@@ -4,7 +4,7 @@
     <body>
       <trans-unit xml:space="preserve" id="2" approved="yes">
         <source>node.%name%.updated</source>
-        <target state="translated">El nodo %name% ha sido actualizado.</target>
+        <target state="final">El nodo %name% ha sido actualizado.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/AjaxControllers/AjaxNodesController.php</context>
           <context context-type="linenumber">74</context>
@@ -13,7 +13,7 @@
           <context context-type="sourcefile">themes/Rozier/Controllers/NodesController.php</context>
           <context context-type="linenumber">195</context>
         </context-group>
-      <alt-trans><target>La fuente %name% ha sido actualizada.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="3">
         <source>node.%nodeId%.not_exists</source>
         <target state="translated">El nodo %nodeId% no existe.</target>
@@ -4193,10 +4193,6 @@
         <source>country.type</source>
         <target state="translated">País (ISO 3166-1 alpha-2)</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="collection.type">
-        <source>collection.type</source>
-        <target state="needs-translation">collection.type</target>
-      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
         <source>add.a.%nodeType%</source>
@@ -4362,29 +4358,9 @@
         <target state="translated">Dirección web de Instagram</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="instagram_user_id">
-        <source>instagram_user_id</source>
-            <target state="needs-translation">instagram_user_id</target>
-            <note>Setting name for social page account name.</note>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url">
         <source>twitter_url</source>
         <target state="translated">Dirección web de Twitter</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="linkedin_url">
-        <source>linkedin_url</source>
-        <target state="needs-translation">linkedin_url</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="youtube_url">
-        <source>youtube_url</source>
-        <target state="needs-translation">youtube_url</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="googleplus_url">
-        <source>googleplus_url</source>
-        <target state="needs-translation">googleplus_url</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account">
@@ -5256,14 +5232,6 @@
           <source>more.nodes</source>
           <target state="translated">Más nodos</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="more.node_types">
-          <source>more.node_types</source>
-          <target state="needs-translation">more.node_types</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="more.tags">
-          <source>more.tags</source>
-          <target state="needs-translation">more.tags</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>
           <target state="translated">Más formularios personalizados</target>
@@ -5903,54 +5871,6 @@
           <source>font_variant.light.italic</source>
           <target state="translated">Cursivas light</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.thin">
-          <source>font_variant.thin</source>
-          <target state="needs-translation">font_variant.thin</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
-          <source>font_variant.thin.italic</source>
-          <target state="needs-translation">font_variant.thin.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_light">
-          <source>font_variant.extra_light</source>
-          <target state="needs-translation">font_variant.extra_light</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
-          <source>font_variant.extra_light.italic</source>
-          <target state="needs-translation">font_variant.extra_light.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
-          <source>font_variant.extra_bold</source>
-          <target state="needs-translation">font_variant.extra_bold</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
-          <source>font_variant.extra_bold.italic</source>
-          <target state="needs-translation">font_variant.extra_bold.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
-          <source>font_variant.semi_bold</source>
-          <target state="needs-translation">font_variant.semi_bold</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
-          <source>font_variant.semi_bold.italic</source>
-          <target state="needs-translation">font_variant.semi_bold.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.medium">
-          <source>font_variant.medium</source>
-          <target state="needs-translation">font_variant.medium</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
-          <source>font_variant.medium.italic</source>
-          <target state="needs-translation">font_variant.medium.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.black">
-          <source>font_variant.black</source>
-          <target state="needs-translation">font_variant.black</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.black.italic">
-          <source>font_variant.black.italic</source>
-          <target state="needs-translation">font_variant.black.italic</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
           <target state="translated">Actualizar Roadiz</target>
@@ -6051,14 +5971,6 @@
           <source>node.childrenOrderDirection</source>
           <target state="translated">Dirección de orden de sub-nodos.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.ttl">
-          <source>node.ttl</source>
-            <target state="needs-translation">node.ttl</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="node_time_to_live_cache_on_front_controller">
-          <source>node_time_to_live_cache_on_front_controller</source>
-            <target state="needs-translation">node_time_to_live_cache_on_front_controller</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="createdAt">
           <source>createdAt</source>
           <target state="translated">Fecha de creación</target>
@@ -6086,10 +5998,6 @@
       <trans-unit xml:space="preserve" id="tagName.alreadyExists">
           <source>tagName.alreadyExists</source>
           <target state="translated">El nombre de etiqueta ya está en uso</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="tagName.%name%.alreadyExists">
-          <source>tagName.%name%.alreadyExists</source>
-          <target state="needs-translation">tagName.%name%.alreadyExists</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
           <source>nodeTypeField.name.alreadyExists</source>
@@ -6637,11 +6545,6 @@
             <target state="translated">La clase PHP "%classname%" debe extenderse a clase AbstractEntity.</target>
             <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
-            <source>classname_%classname%_must_extend_abstract_type_class</source>
-            <target state="needs-translation">classname_%classname%_must_extend_abstract_type_class</target>
-            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
-        </trans-unit>
       <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
             <source>classname_%classname%_does_not_declare_%method%_method</source>
             <target state="translated">La clase PHP "%classname%" no implementa para el método "%method%"</target>
@@ -6816,76 +6719,6 @@
             <source>use.website.default_language</source>
             <target state="translated">-- Usar el idioma predeterminado del sitio web --</target>
             <note>User detail form field choice for using website default language.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="sort_asc">
-            <source>sort_asc</source>
-            <target state="needs-translation">sort_asc</target>
-            <note>Table column link to sort data ascendently</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="sort_desc">
-            <source>sort_desc</source>
-            <target state="needs-translation">sort_desc</target>
-            <note>Table column link to sort data descendently</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="preview">
-            <source>preview</source>
-            <target state="needs-translation">preview</target>
-            <note>Preview mode label on warning sign.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="current.document.file.does.not.exist">
-            <source>current.document.file.does.not.exist</source>
-            <target state="needs-translation">current.document.file.does.not.exist</target>
-            <note>When a document does not have any file attached.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="google_tag_manager_id">
-            <source>google_tag_manager_id</source>
-            <target state="needs-translation">google_tag_manager_id</target>
-            <note>Google Tag Manager setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="leaflet_map_tile_url">
-            <source>leaflet_map_tile_url</source>
-            <target state="needs-translation">leaflet_map_tile_url</target>
-            <note>Leaflet Map tile URL setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_access_token">
-            <source>twitter_access_token</source>
-            <target state="needs-translation">twitter_access_token</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_access_token_secret">
-            <source>twitter_access_token_secret</source>
-            <target state="needs-translation">twitter_access_token_secret</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="instagram_access_token">
-            <source>instagram_access_token</source>
-            <target state="needs-translation">instagram_access_token</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_consumer_key">
-            <source>twitter_consumer_key</source>
-            <target state="needs-translation">twitter_consumer_key</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_consumer_secret">
-            <source>twitter_consumer_secret</source>
-            <target state="needs-translation">twitter_consumer_secret</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="document.mimeType">
-            <source>document.mimeType</source>
-            <target state="needs-translation">document.mimeType</target>
-            <note>Document form</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="document.embed">
-            <source>document.embed</source>
-            <target state="needs-translation">document.embed</target>
-            <note>Document form</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="document.no_embed_platform">
-            <source>document.no_embed_platform</source>
-            <target state="needs-translation">document.no_embed_platform</target>
-            <note>Document form</note>
         </trans-unit>
     </body>
   </file>
