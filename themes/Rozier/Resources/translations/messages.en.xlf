@@ -525,10 +525,6 @@
       <trans-unit xml:space="preserve" id="98" approved="yes">
         <source>type</source>
         <target state="final">Type</target>
-
-
-
-
       </trans-unit>
       <trans-unit xml:space="preserve" id="99" approved="yes">
         <source>indexed</source>
@@ -1034,9 +1030,9 @@
         <target state="final">%name%</target>
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="186" approved="yes">
+      <trans-unit xml:space="preserve" id="186">
         <source>Welcome</source>
-        <target state="final">Welcome</target>
+        <target state="translated">Welcome</target>
 
       </trans-unit>
       <trans-unit xml:space="preserve" id="187" approved="yes">
@@ -1347,9 +1343,9 @@
         <target state="final">Add node</target>
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="244" approved="yes">
+      <trans-unit xml:space="preserve" id="244">
         <source>In</source>
-        <target state="final">In</target>
+        <target state="translated">In</target>
 
       </trans-unit>
       <trans-unit xml:space="preserve" id="245" approved="yes">
@@ -1488,9 +1484,9 @@
 
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="270" approved="yes">
+      <trans-unit xml:space="preserve" id="270">
         <source>Delete</source>
-        <target state="final">Delete</target>
+        <target state="translated">Delete</target>
 
       </trans-unit>
       <trans-unit xml:space="preserve" id="271" approved="yes">
@@ -1921,9 +1917,9 @@
         <target state="final">Site settings</target>
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="352" approved="yes">
+      <trans-unit xml:space="preserve" id="352">
         <source>Translate</source>
-        <target state="final">Translate</target>
+        <target state="translated">Translate</target>
 
       </trans-unit>
       <trans-unit xml:space="preserve" id="353" approved="yes">
@@ -3552,21 +3548,21 @@
           <source>Too many login attemps, wait before trying again.</source>
           <target state="translated">Too many login attemps, wait before trying again.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
+      <trans-unit xml:space="preserve" id="User account has expired.">
           <source>User account has expired.</source>
-          <target state="final">User account has expired.</target>
+          <target state="translated">User account has expired.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="User account is locked." approved="yes">
+      <trans-unit xml:space="preserve" id="User account is locked.">
           <source>User account is locked.</source>
-          <target state="final">User account is locked.</target>
+          <target state="translated">User account is locked.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="User credentials have expired." approved="yes">
+      <trans-unit xml:space="preserve" id="User credentials have expired.">
           <source>User credentials have expired.</source>
-          <target state="final">User credentials have expired.</target>
+          <target state="translated">User credentials have expired.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="User account is disabled." approved="yes">
+      <trans-unit xml:space="preserve" id="User account is disabled.">
           <source>User account is disabled.</source>
-          <target state="final">User account is disabled.</target>
+          <target state="translated">User account is disabled.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
           <source>change.nodes.status</source>
@@ -4070,9 +4066,9 @@
           <source>This value should not be blank.</source>
           <target state="final">This value should not be blank</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="This value is not valid." approved="yes">
+      <trans-unit xml:space="preserve" id="This value is not valid.">
           <source>This value is not valid.</source>
-          <target state="final">This value is not valid.</target>
+          <target state="translated">This value is not valid.</target>
       </trans-unit>
       <!-- Font variantes -->
       <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
@@ -4407,9 +4403,9 @@
           <source>embedId.does_not_exist</source>
           <target state="final">Embed media ID does not exist.</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="youtube_needs_a_key" approved="yes">
+      <trans-unit xml:space="preserve" id="youtube_needs_a_key">
           <source>YoutubeEmbedFinder needs a Google server key.</source>
-          <target state="final">YoutubeEmbedFinder needs a Google server key.</target>
+          <target state="translated">YoutubeEmbedFinder needs a Google server key.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="edit.user_details.%name%" approved="yes">
           <source>edit.user_details.%name%</source>
