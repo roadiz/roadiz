@@ -2,38 +2,6 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="" source-language="en" datatype="plaintext" target-language="en">
     <body>
-      <trans-unit xml:space="preserve" id="force_locale.description">
-                <source>Force displaying translation locale in every node’ paths. This should be ON if you redirect users based on their language on homepage.</source>
-                <target state="translated">Force displaying translation locale in every node’ paths. This should be ON if you redirect users based on their language on homepage.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="email_sender.description">
-                <source>Default sender email, used as origin for every system email sent. This email **must be allowed by your SMTP server.**</source>
-                <target state="translated">Default sender email, used as origin for every system email sent. This email **must be allowed by your SMTP server.**</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="leaflet_map_tile_url.description">
-                <source>Default maps tiles layout when using *Leaflet*.</source>
-                <target state="translated">Default maps tiles layout when using *Leaflet*.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="login_image.description">
-                <source>Replace random *Splashbase* login images with your own.</source>
-                <target state="translated">Replace random *Splashbase* login images with your own.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="maintenance_mode.description">
-                <source>Switch maintenance mode. Only login page will be available for public requests.</source>
-                <target state="translated">Switch maintenance mode. Only login page will be available for public requests.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="maps_default_location.description">
-                <source>Default maps marker location.</source>
-                <target state="translated">Default maps marker location.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="maps_style.description">
-                <source>Default maps tiles layout when using *Google Maps*.</source>
-                <target state="translated">Default maps tiles layout when using *Google Maps*.</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="max_versions_showed.description">
-                <source>Maximum versions count showed in actions menu.</source>
-                <target state="translated">Maximum versions count showed in actions menu.</target>
-            </trans-unit>
       <trans-unit xml:space="preserve" id="hide_roadiz_version.help">
                 <source>hide_roadiz_version.help</source>
                 <target state="translated">Hide Roadiz version and name from any response headers and theme variables.</target>
