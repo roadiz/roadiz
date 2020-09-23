@@ -2042,14 +2042,6 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="186" approved="yes">
-        <source>Welcome</source>
-        <target state="final">Welcome</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">cache/Rozier/twig_cache/d1/24/7dfccc179fbdf301fda956115b9b9654f38664ee9ab500f47e7377f2f5ae.php</context>
-          <context context-type="linenumber">267</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="187" approved="yes">
         <source>edit.user.%name%</source>
         <target state="final">%name%</target>
@@ -2598,14 +2590,6 @@
           <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="244" approved="yes">
-        <source>In</source>
-        <target state="final">In</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">cache/Rozier/twig_cache/d0/1c/cb3e853d70e54609fb3b8db23652857ea4c1d558543cb965db5f03542c80.php</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="245" approved="yes">
         <source>back_to.nodes</source>
         <target state="final">Back to nodes</target>
@@ -2848,14 +2832,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/51/0d/b3162fc2c3e1faedb7c5b3e62ec8c4bcaf5aa2ef000daf4c91620f298463.php</context>
           <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="270" approved="yes">
-        <source>Delete</source>
-        <target state="final">Delete</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">cache/Rozier/twig_cache/ce/02/ce8034af268b1588a98cd9aecac209ea73483d7ec3bed9b51ce03d0bce85.php</context>
-          <context context-type="linenumber">116</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="271" approved="yes">
@@ -3569,14 +3545,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/22/15/39876a0e3c465921bc9613dc874f4ffe11abe4ccbbd17e162789d0f1cea8.php</context>
           <context context-type="linenumber">361</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="352" approved="yes">
-        <source>Translate</source>
-        <target state="final">Translate</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">cache/Rozier/twig_cache/ec/c8/56f05d076f53397d7ba4dd6371ccfedb248b1940d918b76ab66efcc8c831.php</context>
-          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="353" approved="yes">
@@ -5372,26 +5340,6 @@
           <source>Bad credentials.</source>
           <target state="final">Bad credentials</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="Too many login attemps">
-          <source>Too many login attemps, wait before trying again.</source>
-          <target state="translated">Too many login attemps, wait before trying again.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="User account has expired." approved="yes">
-          <source>User account has expired.</source>
-          <target state="final">User account has expired.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="User account is locked." approved="yes">
-          <source>User account is locked.</source>
-          <target state="final">User account is locked.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="User credentials have expired." approved="yes">
-          <source>User credentials have expired.</source>
-          <target state="final">User credentials have expired.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="User account is disabled." approved="yes">
-          <source>User account is disabled.</source>
-          <target state="final">User account is disabled.</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="change.nodes.status" approved="yes">
           <source>change.nodes.status</source>
           <target state="final">Change selected nodes status</target>
@@ -5894,10 +5842,6 @@
           <source>This value should not be blank.</source>
           <target state="final">This value should not be blank</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="This value is not valid." approved="yes">
-          <source>This value is not valid.</source>
-          <target state="final">This value is not valid.</target>
-      </trans-unit>
       <!-- Font variantes -->
       <trans-unit xml:space="preserve" id="font_variant.regular" approved="yes">
           <source>font_variant.regular</source>
@@ -6230,10 +6174,6 @@
       <trans-unit xml:space="preserve" id="embedId.does_not_exist" approved="yes">
           <source>embedId.does_not_exist</source>
           <target state="final">Embed media ID does not exist.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="youtube_needs_a_key" approved="yes">
-          <source>YoutubeEmbedFinder needs a Google server key.</source>
-          <target state="final">YoutubeEmbedFinder needs a Google server key.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="edit.user_details.%name%" approved="yes">
           <source>edit.user_details.%name%</source>
