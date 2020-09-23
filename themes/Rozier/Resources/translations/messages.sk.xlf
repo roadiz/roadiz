@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="sk">
+    <body>
+      <!-- Count translations -->
+      <!-- Node type fields datatypes -->
+      <!-- Dynamic button in nodeTree add.a.%nodeType% -->
+      <!-- Setting groups -->
+      <!-- Default settings names -->
+      <!-- document usage -->
+      <!-- node statuses -->
+      <!-- are_you_sure.undelete.node.and.data -->
+      <!-- undelete.node.%name% -->
+      <!-- embed documents -->
+      <!-- stacks -->
+      <!-- Node tree contextual menu commands -->
+      <!-- Some constraints messages -->
+      <!-- Font variantes -->
+      <!-- Tag multiple children creation -->
+      <!-- Raw documents -->
+      <!-- Bulk tags -->
+      <!-- Custom form nav bar -->
+      <!-- Node form help messages -->
+      <!-- Font form help messages -->
+      <!-- Node type field form help messages -->
+      <!-- Explorer and Widget translation -->
+      <!-- New Join node-type-field type -->
+    </body>
+  </file>
+</xliff>
