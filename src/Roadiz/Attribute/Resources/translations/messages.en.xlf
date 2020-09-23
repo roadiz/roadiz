@@ -141,7 +141,7 @@
       <trans-unit xml:space="preserve" id="attribute_value_translation.%name%.updated_from_node.%nodeName%">
                 <source>attribute_value_translation.%name%.updated_from_node.%nodeName%</source>
                 <target state="translated">Attribute %name%'s value has been updated for node-source %nodeName%.</target>
-            <alt-trans><target>Attribute %name% value has been updated for node-source %nodeName%.</target></alt-trans></trans-unit>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="attribute_code.must_contain_alpha_underscore">
                 <source>attribute_code.must_contain_alpha_underscore</source>
                 <target state="translated">Attribute code must only contain alphabetical characters including underscore.</target>
@@ -308,9 +308,10 @@
                 <note/>
             </trans-unit>
       <trans-unit xml:space="preserve" id="attribute_value.%attributeValueId%.not_exists">
-          <source>attribute_value.%attributeValueId%.not_exists</source>
-          <target state="translated">Attribute %attributeValueId% value does not exist</target>
-      </trans-unit>
+                <source>attribute_value.%attributeValueId%.not_exists</source>
+                <target state="translated">Attribute %attributeValueId% value does not exist</target>
+                <note/>
+            </trans-unit>
     </body>
   </file>
 </xliff>
