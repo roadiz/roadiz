@@ -4,107 +4,79 @@
     <body>
       <trans-unit id="hello.world">
         <source>hello.world</source>
-        <target xml:lang="tr" state="translated">Merhaba dünya!</target>
-        <alt-trans>
-          <target xml:lang="tr">Merhaba Dünya!</target>
-        </alt-trans>
+        <target state="translated">Merhaba dünya!</target>
       </trans-unit>
       <trans-unit id="nodeName">
         <source>node.name.is.%name%</source>
-        <target xml:lang="tr" state="translated">“%name%” isimli düğüm</target>
-        <alt-trans>
-          <target xml:lang="tr">Düğüm adı “%name%”</target>
-        </alt-trans>
-        <alt-trans>
-          <target xml:lang="tr">Node adı “%name%”</target>
-        </alt-trans>
+        <target state="translated">“%name%” isimli düğüm</target>
       </trans-unit>
       <trans-unit id="translationName">
         <source>translation.is.%name%</source>
-        <target xml:lang="tr" state="translated">Bu “%name%” çevirisidir</target>
-        <alt-trans>
-          <target xml:lang="tr">Bu “%name%” çevirisi</target>
-        </alt-trans>
+        <target state="translated">Bu “%name%” çevirisidir</target>
       </trans-unit>
       <trans-unit id="contact">
         <source>contact</source>
-        <target xml:lang="tr" state="translated">İletişim</target>
+        <target state="translated">İletişim</target>
       </trans-unit>
       <trans-unit id="contact.us">
         <source>contact.us</source>
-        <target xml:lang="tr" state="translated">Bize ulaşın</target>
-        <alt-trans>
-          <target xml:lang="tr">Bize Ulaşın</target>
-        </alt-trans>
+        <target state="translated">Bize ulaşın</target>
       </trans-unit>
       <trans-unit id="your.email">
         <source>your.email</source>
-        <target xml:lang="tr" state="translated">E-posta adresiniz</target>
-        <alt-trans>
-          <target xml:lang="tr">Email adresiniz</target>
-        </alt-trans>
+        <target state="translated">E-posta adresiniz</target>
       </trans-unit>
       <trans-unit id="your.name">
         <source>your.name</source>
-        <target xml:lang="tr" state="translated">Adınız</target>
+        <target state="translated">Adınız</target>
       </trans-unit>
       <trans-unit id="your.message">
         <source>your.message</source>
-        <target xml:lang="tr" state="translated">Mesajınız</target>
+        <target state="translated">Mesajınız</target>
       </trans-unit>
       <trans-unit id="call.me.back">
         <source>call.me.back</source>
-        <target xml:lang="tr" state="translated">Bana geri dönün</target>
+        <target state="translated">Bana geri dönün</target>
       </trans-unit>
       <trans-unit id="send.contact.form">
         <source>send.contact.form</source>
-        <target xml:lang="tr" state="translated">Şuradan gönderildi:</target>
-        <alt-trans>
-          <target xml:lang="tr">%!!!% from x'ten Gönderildi
-Its need more definition</target>
-        </alt-trans>
-        <alt-trans>
-          <target xml:lang="tr">Gönder</target>
-        </alt-trans>
+        <target state="translated">Şuradan gönderildi:</target>
       </trans-unit>
       <trans-unit id="document">
         <source><![CDATA[document]]></source>
-        <target xml:lang="tr" state="translated"><![CDATA[Bir göresl ya da PDF dosyası ekleyin  (< 5 MB)]]></target>
-        <alt-trans>
-          <target xml:lang="tr"><![CDATA[Bir resim ya da PDF dosyası ekleyin  (< 5 MB)]]></target>
-        </alt-trans>
+        <target state="translated"><![CDATA[Bir göresl ya da PDF dosyası ekleyin  (< 5 MB)]]></target>
       </trans-unit>
       <trans-unit id="cookie_choice.consent_message">
         <source>cookie_choice.consent_message</source>
-        <target xml:lang="tr" state="translated">Websitemizi kullanım deneyiminizi daha da iyileştirmek için çerezleri kullanırız. Kullanmaya devam ederek çerezleri kullanmamızı kabul etmiş olursunuz.</target>
+        <target state="translated">Websitemizi kullanım deneyiminizi daha da iyileştirmek için çerezleri kullanırız. Kullanmaya devam ederek çerezleri kullanmamızı kabul etmiş olursunuz.</target>
       </trans-unit>
       <trans-unit id="cookie_choice.close_message">
         <source>cookie_choice.close_message</source>
-        <target xml:lang="tr" state="translated">Tamamdır</target>
+        <target state="translated">Tamamdır</target>
       </trans-unit>
       <trans-unit id="cookie_choice.find_out_more_message">
         <source>cookie_choice.find_out_more_message</source>
-        <target xml:lang="tr" state="translated">Daha fazlasını öğren</target>
+        <target state="translated">Daha fazlasını öğren</target>
       </trans-unit>
       <trans-unit id="no_javascript_message">
         <source>no_javascript_message</source>
-        <target xml:lang="tr" state="translated">JavaScript devre dışı bırakılmış veya tarayıcınız bu teknolojiyi desteklemiyor. Lütfen devreye alın veya daha iyi bir web deneyimi için tarayıcınızı güncelleyin.</target>
+        <target state="translated">JavaScript devre dışı bırakılmış veya tarayıcınız bu teknolojiyi desteklemiyor. Lütfen devreye alın veya daha iyi bir web deneyimi için tarayıcınızı güncelleyin.</target>
       </trans-unit>
       <trans-unit id="browser_update.message">
         <source>browser_update.message</source>
-        <target xml:lang="tr" state="translated">Tarayıcınız güncel değil. Bazı güvenlik problemleri sebebiyle bu websitenin bazı özellikleri düzgünce gösterilemeyebilir.</target>
+        <target state="translated">Tarayıcınız güncel değil. Bazı güvenlik problemleri sebebiyle bu websitenin bazı özellikleri düzgünce gösterilemeyebilir.</target>
       </trans-unit>
       <trans-unit id="browser_update.link">
         <source>browser_update.link</source>
-        <target xml:lang="tr" state="translated">Tarayıcınızı nasıl güncelleyebileceğinizi görün</target>
+        <target state="translated">Tarayıcınızı nasıl güncelleyebileceğinizi görün</target>
       </trans-unit>
       <trans-unit id="error404.title">
         <source>error404.title</source>
-        <target xml:lang="tr" state="translated">404 Hatası</target>
+        <target state="translated">404 Hatası</target>
       </trans-unit>
       <trans-unit id="error404.message">
         <source>error404.message</source>
-        <target xml:lang="tr" state="translated">İstenilen sayfa bulunamadı.</target>
+        <target state="translated">İstenilen sayfa bulunamadı.</target>
       </trans-unit>
     </body>
   </file>
