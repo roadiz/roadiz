@@ -214,14 +214,6 @@
           <context context-type="linenumber">374</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="14">
-        <source>copyright</source>
-        <target state="translated">copyright</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/DocumentsController.php</context>
-          <context context-type="linenumber">292</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="15">
         <source>private</source>
         <target state="translated">privato</target>
@@ -486,18 +478,6 @@
           <context context-type="linenumber">569</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="48">
-        <source>email</source>
-        <target state="translated">email</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">689</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">796</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="49">
         <source>username</source>
         <target state="translated">nome utente</target>
@@ -508,14 +488,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
           <context context-type="linenumber">806</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="50">
-        <source>password</source>
-        <target state="translated">password</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/UsersController.php</context>
-          <context context-type="linenumber">704</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="51">
@@ -1490,14 +1462,6 @@
           <context context-type="linenumber">340</context>
         </context-group>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="158">
-        <source>locale</source>
-        <target state="translated">locale</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">themes/Rozier/Controllers/TranslationsController.php</context>
-          <context context-type="linenumber">377</context>
-        </context-group>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="159">
         <source>add.tag</source>
         <target state="translated">aggiungi tag</target>
@@ -1552,18 +1516,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/f3/09/8d88fd0c6586dfeba8654bccecbb2f7fda5277d58aa166b55ba824f8b5aa.php</context>
           <context context-type="linenumber">61</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="162">
-        <source>id</source>
-        <target state="translated">id</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">cache/Rozier/twig_cache/aa/f2/79f53164c3f3a0659abc770f8123e0e8c2538a8e92f65313a1cf4fa558c2.php</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">cache/Rozier/twig_cache/bf/e6/52ec52a76e8b766d78e11bf71d172ad4c728c1989a505cca16baf4f411f4.php</context>
-          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="163">
@@ -2209,7 +2161,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/da/96/4ae2408ff04a9c1e39b4e869dc078cfbada1a90f4a7441f5093d1c2662e2.php</context>
           <context context-type="linenumber">34</context>
         </context-group>
-      <alt-trans><target>modifica ruoli del gruppo %name%</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="203">
         <source>role</source>
         <target state="translated">Ruolo</target>
@@ -2545,7 +2497,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/65/2e/2d3225173e0599a088a6c7a764d6f6ec5a09340710de2ebc80895bf024f8.php</context>
           <context context-type="linenumber">34</context>
         </context-group>
-      <alt-trans><target>Rimuovi il ruolo %role% dal utente %name%</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="239">
         <source>are_you_sure.remove.user.role</source>
         <target state="translated">Sei sicuro di voler rimuovere questo ruolo dell'utente?</target>
@@ -2592,14 +2544,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">cache/Rozier/twig_cache/d0/1c/cb3e853d70e54609fb3b8db23652857ea4c1d558543cb965db5f03542c80.php</context>
           <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="244">
-        <source>In</source>
-        <target state="translated">In</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">cache/Rozier/twig_cache/d0/1c/cb3e853d70e54609fb3b8db23652857ea4c1d558543cb965db5f03542c80.php</context>
-          <context context-type="linenumber">47</context>
         </context-group>
       </trans-unit>
       <trans-unit xml:space="preserve" id="245">
@@ -2773,7 +2717,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/d3/76/ee2a6ed99f32f59623e18fc18315039215caa548252209422c5a13d8e943.php</context>
           <context context-type="linenumber">117</context>
         </context-group>
-      <alt-trans><target>richiesto ruolo</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="262">
         <source>welcome</source>
         <target state="translated">Benvenuto</target>
@@ -2781,7 +2725,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/8b/af/872df959f2b24db5d590b7ea36d45b92c6ae25968bb4d8d52a3b046f9130.php</context>
           <context context-type="linenumber">96</context>
         </context-group>
-      <alt-trans><target>benvenuto</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="263">
         <source>back_to.roles</source>
         <target state="translated">Indietro a ruoli</target>
@@ -3218,7 +3162,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/10/c9/5520ef94a8a83979550e01ee8e9bb86735c57b1d158652d46cc4a934ce09.php</context>
           <context context-type="linenumber">148</context>
         </context-group>
-      <alt-trans><target>aggiungi figlio del nodo %name%</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="310">
         <source>add.child.node</source>
         <target state="translated">aggiungi nodo figlio</target>
@@ -3650,7 +3594,7 @@
           <context context-type="sourcefile">cache/Rozier/twig_cache/f8/55/f7e4d2b3a324727b48ea24ed367b98e8434ff7f73c61aa46fd6231f61922.php</context>
           <context context-type="linenumber">34</context>
         </context-group>
-      <alt-trans><target>backstage</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="361">
         <source>login</source>
         <target state="translated">Login</target>
@@ -4048,7 +3992,7 @@
       <trans-unit xml:space="preserve" id="412">
         <source>{0} no.role|{1} 1.role|]1,Inf] %count%.roles</source>
         <target state="translated">{0} Nessun ruolo|{1} 1 ruolo|]1,Inf] %count% ruoli</target>
-      <alt-trans><target>{0} nessun ruolo|{1} 1.ruoli|]1,Inf] %conteggio%.ruoli</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="413">
         <source>1.role</source>
         <target state="translated">1 ruolo</target>
@@ -4363,11 +4307,6 @@
         <target state="translated">Url Instagram</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="instagram_user_id">
-        <source>instagram_user_id</source>
-            <target state="translated">instagram_user_id</target>
-            <note>Setting name for social page account name.</note>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url">
         <source>twitter_url</source>
         <target state="translated">Url Twitter</target>
@@ -4381,11 +4320,6 @@
       <trans-unit xml:space="preserve" id="youtube_url">
         <source>youtube_url</source>
         <target state="translated">URL di YouTube</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="googleplus_url">
-        <source>googleplus_url</source>
-        <target state="translated">googleplus_url</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account">
@@ -4646,7 +4580,7 @@
       <trans-unit xml:space="preserve" id="delete.folder">
         <source>delete.folder</source>
         <target state="translated">Cancella cartella</target>
-      <alt-trans><target>cancella cartella</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="back_to.folders">
         <source>back_to.folders</source>
         <target state="translated">Ritorna all'elenco dei file</target>
@@ -4776,10 +4710,6 @@
       <trans-unit xml:space="preserve" id="blockquote">
           <source>blockquote</source>
           <target state="translated">Blockquote</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="link">
-          <source>link</source>
-          <target state="translated">link</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="image">
           <source>image</source>
@@ -5012,7 +4942,7 @@
       <trans-unit xml:space="preserve" id="add.a.role">
           <source>add.a.role</source>
           <target state="translated">Aggiungi un ruolo</target>
-      <alt-trans><target>aggiungi un ruolo</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="add.a.setting">
           <source>add.a.setting</source>
           <target state="translated">Aggiungi un'impostazione </target>
@@ -5212,7 +5142,7 @@
       <trans-unit xml:space="preserve" id="geographic.coordinates.type">
           <source>geographic.coordinates.type</source>
           <target state="translated">Coordinate geografiche singole</target>
-      <alt-trans><target>Coordinate geografiche</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="multiple.geographic.coordinates.type">
           <source>multiple.geographic.coordinates.type</source>
           <target state="translated">Coordinate geografiche multiple</target>
@@ -5220,7 +5150,7 @@
       <trans-unit xml:space="preserve" id="link.folders">
           <source>link.folders</source>
           <target state="translated">Unisci a cartella/e</target>
-      <alt-trans><target>unisci a cartella/e</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="unlink.folders">
           <source>unlink.folders</source>
           <target state="translated">Separa da cartella/e</target>
@@ -5304,7 +5234,7 @@
       <trans-unit xml:space="preserve" id="node.name">
           <source>node.name</source>
           <target state="translated">Nome nodo</target>
-      <alt-trans><target>nome nodo</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.id.parent">
           <source>node.id.parent</source>
           <target state="translated">Identificatore del nodo genitore</target>
@@ -5312,11 +5242,11 @@
       <trans-unit xml:space="preserve" id="node.datetime.operator">
           <source>node.datetime.operator</source>
           <target state="translated">Operatore</target>
-      <alt-trans><target>operatore</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.datetime.value">
           <source>node.datetime.value</source>
           <target state="translated">Data di creazione</target>
-      <alt-trans><target>data di creazione</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.limit.result">
           <source>node.limit.result</source>
           <target state="translated">Limite di risultati</target>
@@ -5324,7 +5254,7 @@
       <trans-unit xml:space="preserve" id="node.tags">
           <source>node.tags</source>
           <target state="translated">Etichette </target>
-      <alt-trans><target>etichette </target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="node.tag.exclusive">
           <source>node.tag.exclusive</source>
           <target state="translated">Selezione di etichette esclusive</target>
@@ -5440,7 +5370,7 @@
       <trans-unit xml:space="preserve" id="newsletter.nodeType">
           <source>newsletter.nodeType</source>
           <target state="translated"> Riservato per le newsletter</target>
-      <alt-trans><target>Tipo riservato per le newsletter</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
           <source>nodeType.hiding_nodes</source>
           <target state="translated">Digita il suo albero nascosto</target>
@@ -5488,7 +5418,7 @@
       <trans-unit xml:space="preserve" id="create.a.newsletter">
           <source>create.a.newsletter</source>
           <target state="translated">Crea una newsletter</target>
-      <alt-trans><target>crea una newsletter</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="export.html">
           <source>export.html</source>
           <target state="translated">Esporta in HTML</target>
@@ -5512,7 +5442,7 @@
       <trans-unit xml:space="preserve" id="document.file.%name%.updated">
           <source>document.file.%name%.updated</source>
           <target state="translated">Documento "%name%" aggiornato</target>
-      <alt-trans><target>documento "%name%" aggiornato</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.nodeSource">
           <source>are_you_sure.delete.nodeSource</source>
           <target state="translated">Sei sicuro di voler eliminare questa traduzione di nodo?</target>
@@ -5596,7 +5526,7 @@
       <trans-unit xml:space="preserve" id="user.status">
           <source>user.status</source>
           <target state="translated">Stato</target>
-      <alt-trans><target>stato</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="user.enabled">
           <source>user.enabled</source>
           <target state="translated">Account attivato</target>
@@ -5608,7 +5538,7 @@
       <trans-unit xml:space="preserve" id="user.locked">
           <source>user.locked</source>
           <target state="translated">Account bloccato</target>
-      <alt-trans><target>account bloccato</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="user.expired">
           <source>user.expired</source>
           <target state="translated">Account scaduto</target>
@@ -5720,7 +5650,7 @@
       <trans-unit xml:space="preserve" id="save.new.password">
           <source>save.new.password</source>
           <target state="translated">Salva una nuova password</target>
-      <alt-trans><target>salva una nuova password</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="your.new.password.has.been.saved">
           <source>your.new.password.has.been.saved</source>
           <target state="translated">La tua nuova password è stata salvata.</target>
@@ -5756,7 +5686,7 @@
       <trans-unit xml:space="preserve" id="no.cache.available">
           <source>no.cache.available</source>
           <target state="translated">Nessuna cache trovata.</target>
-      <alt-trans><target>nessuna cache avviabile</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="homeNode.limited.one">
           <source>homeNode.limited.one</source>
           <target state="translated">Puoi scegliere solo un nodo principale</target>
@@ -5861,7 +5791,7 @@
       <trans-unit xml:space="preserve" id="node.duplicate">
           <source>node.duplicate</source>
           <target state="translated">Duplicato</target>
-      <alt-trans><target>duplicato</target></alt-trans></trans-unit>
+      </trans-unit>
       <!-- Some constraints messages -->
       <trans-unit xml:space="preserve" id="string.should.only.contain.latin.characters">
           <source>string.should.only.contain.latin.characters</source>
@@ -5887,7 +5817,7 @@
       <trans-unit xml:space="preserve" id="font_variant.italic">
           <source>font_variant.italic</source>
           <target state="translated">Corsivo</target>
-      <alt-trans><target>Italic</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="font_variant.bold">
           <source>font_variant.bold</source>
           <target state="translated">Grassetto</target>
@@ -5899,7 +5829,7 @@
       <trans-unit xml:space="preserve" id="font_variant.light">
           <source>font_variant.light</source>
           <target state="translated">Poco calcato</target>
-      <alt-trans><target>Luce</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="font_variant.light.italic">
           <source>font_variant.light.italic</source>
           <target state="translated">Poco calcato corsivo</target>
@@ -6051,14 +5981,6 @@
       <trans-unit xml:space="preserve" id="node.childrenOrderDirection">
           <source>node.childrenOrderDirection</source>
           <target state="translated">Direzione dell'ordine dei sotto nodi </target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="node.ttl">
-          <source>node.ttl</source>
-            <target state="needs-translation">node.ttl</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="node_time_to_live_cache_on_front_controller">
-          <source>node_time_to_live_cache_on_front_controller</source>
-            <target state="needs-translation">node_time_to_live_cache_on_front_controller</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="createdAt">
           <source>createdAt</source>
@@ -6338,7 +6260,7 @@
       <trans-unit xml:space="preserve" id="stack_type.%type%.has_been_removed.%name%">
           <source>stack_type.%type%.has_been_removed.%name%</source>
           <target state="translated">Lo stack "%type%" del nodo "%name%" è stato rimosso.</target>
-      <alt-trans><target>La pila "%type%" del nodo "%name%" è stata rimossa.</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="form_has_errors.check_you_fields">
           <source>form_has_errors.check_you_fields</source>
           <target state="translated">Il tuo formulario ha errori, controlla i campi sottolineati.</target>
@@ -6442,32 +6364,32 @@
         <source>manage.redirections</source>
         <target state="translated">Reindirizzamenti </target>
         <note>Redirection section button label</note>
-      <alt-trans><target>Reindirizzamenti</target></alt-trans><alt-trans><target>Redirezioni</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="delete.redirection">
         <source>delete.redirection</source>
         <target state="translated">Elimina reindirizzamento</target>
         <note>Delete redirection page title</note>
-      <alt-trans><target>Elimina redirezione</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.redirection">
         <source>are_you_sure.delete.redirection</source>
         <target state="translated">Sei sicuro di voler eliminare questo reindirizzamento?</target>
         <note>Delete redirection page confirmation message</note>
-      <alt-trans><target>Sei sicuro di voler eliminare questa redirezione?</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="add.a.redirection">
         <source>add.a.redirection</source>
         <target state="translated">Aggiungi reindirizzamento</target>
         <note>Add redirection page title</note>
-      <alt-trans><target>Aggiungi redirezione</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="back_to.redirections">
         <source>back_to.redirections</source>
         <target state="translated">Indietro a reindirizzamenti</target>
         <note>Back button label for redirections</note>
-      <alt-trans><target>Indietro a redirezioni</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="edit.redirection">
         <source>edit.redirection</source>
         <target state="translated">Modifica reindirizzamento</target>
         <note>Edit redirection page title</note>
-      <alt-trans><target>Modifica redirezioni</target></alt-trans></trans-unit>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="redirection.query">
         <source>redirection.query</source>
         <target state="translated">Domanda</target>
@@ -6818,75 +6740,10 @@
             <target state="translated">-- Usa lingua default del sito --</target>
             <note>User detail form field choice for using website default language.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="sort_asc">
-            <source>sort_asc</source>
-            <target state="needs-translation">sort_asc</target>
-            <note>Table column link to sort data ascendently</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="sort_desc">
-            <source>sort_desc</source>
-            <target state="needs-translation">sort_desc</target>
-            <note>Table column link to sort data descendently</note>
-        </trans-unit>
       <trans-unit xml:space="preserve" id="preview">
             <source>preview</source>
             <target state="translated">anteprima</target>
             <note>Preview mode label on warning sign.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="current.document.file.does.not.exist">
-            <source>current.document.file.does.not.exist</source>
-            <target state="needs-translation">current.document.file.does.not.exist</target>
-            <note>When a document does not have any file attached.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="google_tag_manager_id">
-            <source>google_tag_manager_id</source>
-            <target state="needs-translation">google_tag_manager_id</target>
-            <note>Google Tag Manager setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="leaflet_map_tile_url">
-            <source>leaflet_map_tile_url</source>
-            <target state="needs-translation">leaflet_map_tile_url</target>
-            <note>Leaflet Map tile URL setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_access_token">
-            <source>twitter_access_token</source>
-            <target state="needs-translation">twitter_access_token</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_access_token_secret">
-            <source>twitter_access_token_secret</source>
-            <target state="needs-translation">twitter_access_token_secret</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="instagram_access_token">
-            <source>instagram_access_token</source>
-            <target state="needs-translation">instagram_access_token</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_consumer_key">
-            <source>twitter_consumer_key</source>
-            <target state="needs-translation">twitter_consumer_key</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="twitter_consumer_secret">
-            <source>twitter_consumer_secret</source>
-            <target state="needs-translation">twitter_consumer_secret</target>
-            <note>Setting name.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="document.mimeType">
-            <source>document.mimeType</source>
-            <target state="needs-translation">document.mimeType</target>
-            <note>Document form</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="document.embed">
-            <source>document.embed</source>
-            <target state="needs-translation">document.embed</target>
-            <note>Document form</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="document.no_embed_platform">
-            <source>document.no_embed_platform</source>
-            <target state="needs-translation">document.no_embed_platform</target>
-            <note>Document form</note>
         </trans-unit>
     </body>
   </file>
