@@ -4,79 +4,83 @@
     <body>
       <trans-unit id="hello.world" approved="yes">
         <source>hello.world</source>
-        <target xml:lang="en">Hello world!</target>
+        <target state="final">Hello world!</target>
       </trans-unit>
       <trans-unit id="nodeName" approved="yes">
         <source>node.name.is.%name%</source>
-        <target xml:lang="en">This is “%name%” node</target>
+        <target state="final">This is “%name%” node</target>
       </trans-unit>
       <trans-unit id="translationName" approved="yes">
         <source>translation.is.%name%</source>
-        <target xml:lang="en">This is “%name%” translation</target>
+        <target state="final">This is “%name%” translation</target>
       </trans-unit>
       <trans-unit id="contact" approved="yes">
         <source>contact</source>
-        <target xml:lang="en">Contact</target>
+        <target state="final">Contact</target>
       </trans-unit>
       <trans-unit id="contact.us" approved="yes">
         <source>contact.us</source>
-        <target xml:lang="en">Contact us</target>
+        <target state="final">Contact us</target>
       </trans-unit>
       <trans-unit id="your.email" approved="yes">
         <source>your.email</source>
-        <target xml:lang="en">Your email</target>
+        <target state="final">Your email</target>
       </trans-unit>
       <trans-unit id="your.name" approved="yes">
         <source>your.name</source>
-        <target xml:lang="en">Your name</target>
+        <target state="final">Your name</target>
       </trans-unit>
       <trans-unit id="your.message" approved="yes">
         <source>your.message</source>
-        <target xml:lang="en">Your message</target>
+        <target state="final">Your message</target>
       </trans-unit>
       <trans-unit id="call.me.back" approved="yes">
         <source>call.me.back</source>
-        <target xml:lang="en">Call me back</target>
+        <target state="final">Call me back</target>
       </trans-unit>
       <trans-unit id="send.contact.form" approved="yes">
         <source>send.contact.form</source>
-        <target xml:lang="en">Send form</target>
+        <target state="final">Send form</target>
       </trans-unit>
       <trans-unit id="document" approved="yes">
         <source><![CDATA[document]]></source>
-        <target xml:lang="en"><![CDATA[Attach an image or a PDF (< 5 MB)]]></target>
+        <target state="final"><![CDATA[Attach an image or a PDF (< 5 MB)]]></target>
       </trans-unit>
       <trans-unit id="cookie_choice.consent_message">
         <source>cookie_choice.consent_message</source>
-        <target xml:lang="en" state="translated">We use cookies to make your experience of our website better. Continuing on our website, you give us your consent to set these cookies.</target>
+        <target state="translated">We use cookies to make your experience of our website better. Continuing on our website, you give us your consent to set these cookies.</target>
       </trans-unit>
       <trans-unit id="cookie_choice.close_message">
         <source>cookie_choice.close_message</source>
-        <target xml:lang="en" state="translated">That’s OK</target>
+        <target state="translated">That’s OK</target>
       </trans-unit>
       <trans-unit id="cookie_choice.find_out_more_message">
         <source>cookie_choice.find_out_more_message</source>
-        <target xml:lang="en" state="translated">Find out more</target>
+        <target state="translated">Find out more</target>
       </trans-unit>
       <trans-unit id="no_javascript_message">
         <source>no_javascript_message</source>
-        <target xml:lang="en" state="translated">JavaScript is disabled on your browser or it does not support this technology. Please enable or update your browser to get a better browsing experience.</target>
+        <target state="translated">JavaScript is disabled on your browser or it does not support this technology. Please enable or update your browser to get a better browsing experience.</target>
       </trans-unit>
       <trans-unit id="browser_update.message">
         <source>browser_update.message</source>
-        <target xml:lang="en" state="translated">Your browser is out of date. It has some security failures et could not show properly some features of this website.</target>
+        <target state="translated">Your browser is out of date. It has some security failures et could not show properly some features of this website.</target>
       </trans-unit>
       <trans-unit id="browser_update.link">
         <source>browser_update.link</source>
-        <target xml:lang="en" state="translated">See how to update your browser</target>
+        <target state="translated">See how to update your browser</target>
       </trans-unit>
       <trans-unit id="error404.title">
         <source>error404.title</source>
-        <target xml:lang="en" state="translated">404 Error</target>
+        <target state="translated">404 Error</target>
       </trans-unit>
       <trans-unit id="error404.message">
         <source>error404.message</source>
-        <target xml:lang="en" state="translated">Requested page cannot be found.</target>
+        <target state="translated">Requested page cannot be found.</target>
+      </trans-unit>
+      <trans-unit id=" email.successfully.sent">
+        <source>email.successfully.sent</source>
+        <target state="translated">Email successfully sent</target>
       </trans-unit>
     </body>
   </file>
