@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Install\Forms\UserType;
+use Themes\Rozier\RozierApp;
 
 /**
  * Installation application
@@ -301,16 +302,7 @@ class InstallApp extends AppController
     {
         $builder = $this->createFormBuilder()
             ->add('language', ChoiceType::class, [
-                'choices' => [
-                    'English' => 'en',
-                    'Español' => 'es',
-                    'Français' => 'fr',
-                    'Русский язык' => 'ru',
-                    'Türkçe' => 'tr',
-                    'Italiano' => 'it',
-                    'српска ћирилица' => 'sr_Cyrl',
-                    '中文' => 'zh',
-                ],
+                'choices' => RozierApp::$backendLanguages,
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),

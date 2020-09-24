@@ -11,6 +11,7 @@ use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AccessMapCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AuthCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\DispatcherCollector;
+use RZ\Roadiz\Utils\DebugBar\DataCollector\LocaleCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\ThemesCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\VersionsCollector;
 
@@ -38,6 +39,7 @@ class RoadizDebugBar extends DebugBar
         $this->addCollector(new AuthCollector($container['securityTokenStorage']));
         $this->addCollector(new DispatcherCollector($container['dispatcher']));
         $this->addCollector(new AccessMapCollector($container['accessMap'], $container['requestStack']));
+        $this->addCollector(new LocaleCollector($container['requestStack']));
     }
 
     /**

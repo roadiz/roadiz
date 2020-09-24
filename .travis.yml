@@ -8,6 +8,11 @@ php:
   - 7.3
   - 7.4
 
+# blocklist
+branches:
+    except:
+        - l10n_develop
+
 jobs:
     include:
         - stage: "Default theme assets tests"

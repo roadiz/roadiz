@@ -8,7 +8,6 @@ use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +35,19 @@ class RozierApp extends BackendController
     protected $themeContainer = null;
 
     const DEFAULT_ITEM_PER_PAGE = 50;
+
+    public static $backendLanguages = [
+        'Arabic' => 'ar',
+        'English' => 'en',
+        'Español' => 'es',
+        'Français' => 'fr',
+        'Indonesian' => 'id',
+        'Italiano' => 'it',
+        'Türkçe' => 'tr',
+        'Русский язык' => 'ru',
+        'српска ћирилица' => 'sr',
+        '中文' => 'zh',
+    ];
 
     /**
      * @return $this

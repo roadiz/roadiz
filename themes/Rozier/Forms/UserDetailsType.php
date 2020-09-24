@@ -12,6 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Themes\Rozier\RozierApp;
 
 /**
  *
@@ -100,16 +101,7 @@ class UserDetailsType extends AbstractType
             ->add('locale', ChoiceType::class, [
                 'label' => 'user.backoffice.language',
                 'required' => false,
-                'choices' => [
-                    'English' => 'en',
-                    'Español' => 'es',
-                    'Français' => 'fr',
-                    'Русский язык' => 'ru',
-                    'Türkçe' => 'tr',
-                    'Italiano' => 'it',
-                    'српска ћирилица' => 'sr_Cyrl',
-                    '中文' => 'zh',
-                ],
+                'choices' => RozierApp::$backendLanguages,
                 'placeholder' => 'use.website.default_language'
             ])
         ;
