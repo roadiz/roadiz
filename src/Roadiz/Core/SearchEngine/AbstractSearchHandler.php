@@ -277,11 +277,12 @@ abstract class AbstractSearchHandler
              */
             if ($singleWord) {
                 // Need to use Fuzzy Searches
-                // But not on tags search
                 return sprintf(
-                    '(' . $titleField . ':%s~1)^10 (' . $collectionField . ':%s~1) (' . $tagsField . ':%s~%d)',
+                    '(' . $titleField . ':%s~%d)^10 (' . $collectionField . ':%s~%d) (' . $tagsField . ':%s~%d)',
                     $q,
+                    $proximity,
                     $q,
+                    $proximity,
                     $q,
                     $proximity
                 );
@@ -299,7 +300,13 @@ abstract class AbstractSearchHandler
         } else {
             if ($singleWord) {
                 // Need to use Fuzzy Searches
-                return sprintf('(' . $titleField . ':%s~1)^10 (' . $collectionField . ':%s~1)', $q, $q);
+                return sprintf(
+                    '(' . $titleField . ':%s~%d)^10 (' . $collectionField . ':%s~%d)',
+                    $q,
+                    $proximity,
+                    $q,
+                    $proximity
+                );
             } else {
                 return sprintf(
                     '(' . $titleField . ':"%s"~%d)^10 (' . $collectionField . ':"%s"~%d)',
