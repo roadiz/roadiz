@@ -139,6 +139,37 @@
                 <target state="translated">If empty, Roadiz will use standard “email” claim as user-name for every Open ID accounts.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <!-- Setting groups names -->
+      <trans-unit xml:space="preserve" id="APIs">
+                <source>APIs</source>
+                <target state="translated">APIs</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Development">
+                <source>Development</source>
+                <target state="translated">Development</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Emailings">
+                <source>Emailings</source>
+                <target state="translated">Emailings</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="OpenId">
+                <source>OpenId</source>
+                <target state="translated">OpenId</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Site informations">
+                <source>Site informations</source>
+                <target state="translated">Site information</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Social networks">
+                <source>Social networks</source>
+                <target state="translated">Social networks</target>
+                <note>Setting group name</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>
