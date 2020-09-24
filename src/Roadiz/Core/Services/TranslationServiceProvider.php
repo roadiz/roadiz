@@ -107,7 +107,6 @@ class TranslationServiceProvider implements ServiceProviderInterface
                     $this->addResourcesForLocale($c['translator.locale'], $translator, $classes, $c['kernel']);
                 }
             } catch (Exception $e) {
-
             }
 
             $c['stopwatch']->stop('initTranslator');

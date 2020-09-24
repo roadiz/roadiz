@@ -221,7 +221,6 @@ class TwigServiceProvider implements ServiceProviderInterface
                     }
                 }
             } catch (Exception $e) {
-
             }
 
             return $extensions;
