@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\DBAL\Exception;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
@@ -202,21 +203,25 @@ class TwigServiceProvider implements ServiceProviderInterface
              * These extension need a valid Database connection
              * with EntityManager not null.
              */
-            if (true !== $kernel->isInstallMode()) {
-                $extensions->add(new DocumentExtension($c));
-                $extensions->add(new FontExtension($c));
-                $extensions->add(new NodesSourcesExtension(
-                    $c['securityAuthorizationChecker'],
-                    $c['factory.handler'],
-                    $c['nodeSourceApi'],
-                    $c['nodeTypesBag'],
-                    $kernel->isPreview()
-                ));
+            try {
+                if (true !== $kernel->isInstallMode()) {
+                    $extensions->add(new DocumentExtension($c));
+                    $extensions->add(new FontExtension($c));
+                    $extensions->add(new NodesSourcesExtension(
+                        $c['securityAuthorizationChecker'],
+                        $c['factory.handler'],
+                        $c['nodeSourceApi'],
+                        $c['nodeTypesBag'],
+                        $kernel->isPreview()
+                    ));
 
-                $extensions->add(new DumpExtension($c));
-                if ($kernel->isDebug()) {
-                    $extensions->add(new ProfilerExtension($c['twig.profile']));
+                    $extensions->add(new DumpExtension($c));
+                    if ($kernel->isDebug()) {
+                        $extensions->add(new ProfilerExtension($c['twig.profile']));
+                    }
                 }
+            } catch (Exception $e) {
+
             }
 
             return $extensions;

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use Doctrine\DBAL\Exception;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
@@ -89,21 +90,26 @@ class TranslationServiceProvider implements ServiceProviderInterface
             /*
              * DO NOT wake up entity manager in Install
              */
-            if (!$kernel->isInstallMode()) {
-                /** @var TranslationRepository $translationRepository */
-                $translationRepository = $c['em']->getRepository(Translation::class);
-                if ($kernel->isPreview()) {
-                    $availableTranslations = $translationRepository->findAll();
+            try {
+                if (!$kernel->isInstallMode()) {
+                    /** @var TranslationRepository $translationRepository */
+                    $translationRepository = $c['em']->getRepository(Translation::class);
+                    if ($kernel->isPreview()) {
+                        $availableTranslations = $translationRepository->findAll();
+                    } else {
+                        $availableTranslations = $translationRepository->findAllAvailable();
+                    }
+                    /** @var Translation $availableTranslation */
+                    foreach ($availableTranslations as $availableTranslation) {
+                        $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);
+                    }
                 } else {
-                    $availableTranslations = $translationRepository->findAllAvailable();
+                    $this->addResourcesForLocale($c['translator.locale'], $translator, $classes, $c['kernel']);
                 }
-                /** @var Translation $availableTranslation */
-                foreach ($availableTranslations as $availableTranslation) {
-                    $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);
-                }
-            } else {
-                $this->addResourcesForLocale($c['translator.locale'], $translator, $classes, $c['kernel']);
+            } catch (Exception $e) {
+
             }
+
             $c['stopwatch']->stop('initTranslator');
 
             return $translator;
