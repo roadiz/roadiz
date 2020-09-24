@@ -525,10 +525,6 @@
       <trans-unit xml:space="preserve" id="98">
         <source>type</source>
         <target state="translated">Tip</target>
-
-
-
-
       </trans-unit>
       <trans-unit xml:space="preserve" id="99">
         <source>indexed</source>
@@ -641,10 +637,6 @@
         <target state="translated">Düğüm tipi bağlı düğüm tiplerini gizliyor</target>
 
 
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes">
-        <source>nodeType.hidingNonReachableNodes</source>
-        <target state="translated">nodeType.hidingNonReachableNodes</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="125">
         <source>role.imported</source>
@@ -1648,11 +1640,6 @@
         <target state="translated">Geliştirici modu AÇIK</target>
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="maintenance_mode.activated">
-          <source>maintenance_mode.activated</source>
-          <target state="translated">maintenance_mode.activated</target>
-          <note>Message to notify that site is under maintenance.</note>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="300">
         <source>help</source>
         <target state="translated">Yardım</target>
@@ -2373,10 +2360,6 @@
         <source>country.type</source>
         <target state="translated">Ülke (ISO 3166-1 alpha-2)</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="collection.type">
-        <source>collection.type</source>
-        <target state="translated">collection.type</target>
-      </trans-unit>
       <!-- Dynamic button in nodeTree add.a.%nodeType% -->
       <trans-unit xml:space="preserve" id="445">
         <source>add.a.%nodeType%</source>
@@ -2542,29 +2525,9 @@
         <target state="translated">Instagram URL’si</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="instagram_user_id">
-        <source>instagram_user_id</source>
-            <target state="translated">instagram_user_id</target>
-            <note>Setting name for social page account name.</note>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_url">
         <source>twitter_url</source>
         <target state="translated">Twitter URL’si</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="linkedin_url">
-        <source>linkedin_url</source>
-        <target state="translated">linkedin_url</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="youtube_url">
-        <source>youtube_url</source>
-        <target state="translated">youtube_url</target>
-        <note>Setting name for social page url.</note>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="googleplus_url">
-        <source>googleplus_url</source>
-        <target state="translated">googleplus_url</target>
         <note>Setting name for social page url.</note>
       </trans-unit>
       <trans-unit xml:space="preserve" id="twitter_account">
@@ -2777,10 +2740,6 @@
       <trans-unit xml:space="preserve" id="embed.document.already_exists">
         <source>embed.document.already_exists</source>
         <target state="translated">Yerleştirilecek doküman zaten bulunuyor.</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="embedId.is_not_valid">
-        <source>embedId.is_not_valid</source>
-        <target state="translated">embedId.is_not_valid</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="document.metas">
         <source>document.metas</source>
@@ -3011,14 +2970,6 @@
       <trans-unit xml:space="preserve" id="nodeType.color">
           <source>nodeType.color</source>
           <target state="translated">Renk</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType.defaultTtl">
-          <source>nodeType.defaultTtl</source>
-            <target state="translated">nodeType.defaultTtl</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="nodeType_default_ttl_when_creating_nodes">
-          <source>nodeType_default_ttl_when_creating_nodes</source>
-            <target state="translated">nodeType_default_ttl_when_creating_nodes</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.numberFields">
           <source>nodeType.numberFields</source>
@@ -3444,14 +3395,6 @@
           <source>more.nodes</source>
           <target state="translated">Daha fazla düğüm</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="more.node_types">
-          <source>more.node_types</source>
-          <target state="translated">more.node_types</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="more.tags">
-          <source>more.tags</source>
-          <target state="translated">more.tags</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="more.custom_forms">
           <source>more.custom_forms</source>
           <target state="translated">Daha fazla özel form</target>
@@ -3547,10 +3490,6 @@
       <trans-unit xml:space="preserve" id="Bad credentials">
           <source>Bad credentials.</source>
           <target state="translated">Kötü kişisel veriler</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="Too many login attemps">
-          <source>Too many login attemps, wait before trying again.</source>
-          <target state="translated">Too many login attemps, wait before trying again.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="User account has expired.">
           <source>User account has expired.</source>
@@ -4012,10 +3951,6 @@
           <source>document.filepath</source>
           <target state="translated">Kesin dosya yolu</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="document.imageAverageColor">
-          <source>document.imageAverageColor</source>
-          <target state="translated">document.imageAverageColor</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="download.document">
           <source>download.document</source>
           <target state="translated">Dokümanı indir</target>
@@ -4098,54 +4033,6 @@
       <trans-unit xml:space="preserve" id="font_variant.light.italic">
           <source>font_variant.light.italic</source>
           <target state="translated">Açık italik</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.thin">
-          <source>font_variant.thin</source>
-          <target state="translated">font_variant.thin</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.thin.italic">
-          <source>font_variant.thin.italic</source>
-          <target state="translated">font_variant.thin.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_light">
-          <source>font_variant.extra_light</source>
-          <target state="translated">font_variant.extra_light</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_light.italic">
-          <source>font_variant.extra_light.italic</source>
-          <target state="translated">font_variant.extra_light.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_bold">
-          <source>font_variant.extra_bold</source>
-          <target state="translated">font_variant.extra_bold</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.extra_bold.italic">
-          <source>font_variant.extra_bold.italic</source>
-          <target state="translated">font_variant.extra_bold.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.semi_bold">
-          <source>font_variant.semi_bold</source>
-          <target state="translated">font_variant.semi_bold</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.semi_bold.italic">
-          <source>font_variant.semi_bold.italic</source>
-          <target state="translated">font_variant.semi_bold.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.medium">
-          <source>font_variant.medium</source>
-          <target state="translated">font_variant.medium</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.medium.italic">
-          <source>font_variant.medium.italic</source>
-          <target state="translated">font_variant.medium.italic</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.black">
-          <source>font_variant.black</source>
-          <target state="translated">font_variant.black</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="font_variant.black.italic">
-          <source>font_variant.black.italic</source>
-          <target state="translated">font_variant.black.italic</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="update.roadiz">
           <source>update.roadiz</source>
@@ -4247,14 +4134,6 @@
           <source>node.childrenOrderDirection</source>
           <target state="translated">Alt düğümlerin sıralanma yönü</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="node.ttl">
-          <source>node.ttl</source>
-            <target state="translated">node.ttl</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="node_time_to_live_cache_on_front_controller">
-          <source>node_time_to_live_cache_on_front_controller</source>
-            <target state="translated">node_time_to_live_cache_on_front_controller</target>
-      </trans-unit>
       <trans-unit xml:space="preserve" id="createdAt">
           <source>createdAt</source>
           <target state="translated">Oluşturulma tarihi</target>
@@ -4282,10 +4161,6 @@
       <trans-unit xml:space="preserve" id="tagName.alreadyExists">
           <source>tagName.alreadyExists</source>
           <target state="translated">Bu etiket ismi zaten kulanımda</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="tagName.%name%.alreadyExists">
-          <source>tagName.%name%.alreadyExists</source>
-          <target state="translated">tagName.%name%.alreadyExists</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeTypeField.name.alreadyExists">
           <source>nodeTypeField.name.alreadyExists</source>
@@ -4793,110 +4668,15 @@
         <note>Items label in explorer panel.</note>
       </trans-unit>
       <!-- New Join node-type-field type -->
-      <trans-unit xml:space="preserve" id="join.toggle-explorer">
-            <source>join.toggle-explorer</source>
-            <target state="translated">join.toggle-explorer</target>
-            <note>Button label for join type explorer</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="many-to-many.type">
-            <source>many-to-many.type</source>
-            <target state="translated">many-to-many.type</target>
-            <note>Node-type field type for Doctrine Many-to-many relationship</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="many-to-one.type">
-            <source>many-to-one.type</source>
-            <target state="translated">many-to-one.type</target>
-            <note>Node-type field type for Doctrine Many-to-one relationship</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="default_values_do_not_match_field_type">
-            <source>default_values_do_not_match_field_type</source>
-            <target state="translated">default_values_do_not_match_field_type</target>
-            <note>Validator message: when default value is not correct for choosen type</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="default_values_should_not_be_empty_for_this_type">
-            <source>default_values_should_not_be_empty_for_this_type</source>
-            <target state="translated">default_values_should_not_be_empty_for_this_type</target>
-            <note>Validator message: when default value is empty and it should not</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="default_values_should_be_a_yaml_configuration_for_this_type">
-            <source>default_values_should_be_a_yaml_configuration_for_this_type</source>
-            <target state="translated">default_values_should_be_a_yaml_configuration_for_this_type</target>
-            <note>Validator message: when default value is not a valid YAML text</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_does_not_exist">
-            <source>classname_%classname%_does_not_exist</source>
-            <target state="translated">classname_%classname%_does_not_exist</target>
-            <note>Validator message: when provided classname does not exist.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_entity_class">
-            <source>classname_%classname%_must_extend_abstract_entity_class</source>
-            <target state="translated">classname_%classname%_must_extend_abstract_entity_class</target>
-            <note>Validator message: when provided classname does not extend AbstractEntity base class.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_must_extend_abstract_type_class">
-            <source>classname_%classname%_must_extend_abstract_type_class</source>
-            <target state="translated">classname_%classname%_must_extend_abstract_type_class</target>
-            <note>Validator message: when provided classname does not extend Symfony Form AbstractType base class.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="classname_does_not_declare_method">
-            <source>classname_%classname%_does_not_declare_%method%_method</source>
-            <target state="translated">classname_%classname%_does_not_declare_%method%_method</target>
-            <note>Validator message: when provided classname does not declare provided method.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="more.entities">
-            <source>more.entities</source>
-            <target state="translated">more.entities</target>
-            <note>Explorer more button label for entities.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="drawer.sortable-not-enable">
-            <source>drawer.sortable-not-enable</source>
-            <target state="translated">drawer.sortable-not-enable</target>
-            <note>Message info when the sortable drawer option is disable.</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="explorer.create_tag">
-            <source>explorer.create_tag</source>
-            <target state="translated">explorer.create_tag</target>
-            <note>Message info to create a tag when tag explorer is open and tag creation widget is available.</note>
-        </trans-unit>
       <trans-unit xml:space="preserve" id="min">
             <source>min</source>
             <target state="translated">dk</target>
             <note>Drawer message: when a minimum length is provided.</note>
         </trans-unit>
-      <trans-unit xml:space="preserve" id="document.adjust">
-            <source>document.adjust</source>
-            <target state="translated">document.adjust</target>
-            <note>Document navbar link text for document adjust page.</note>
-        </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor">
             <source>blanchetteEditor</source>
             <target state="translated">Blanchette Editör</target>
             <note>Blanchette Editorpage title</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="blanchetteEditor.free">
-            <source>blanchetteEditor.free</source>
-            <target state="translated">blanchetteEditor.free</target>
-            <note>Blanchette Editor message button label: free aspect ratio</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="blanchetteEditor.move">
-            <source>blanchetteEditor.move</source>
-            <target state="translated">blanchetteEditor.move</target>
-            <note>Blanchette Editor message button label</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="blanchetteEditor.crop">
-            <source>blanchetteEditor.crop</source>
-            <target state="translated">blanchetteEditor.crop</target>
-            <note>Blanchette Editor message button label</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomIn">
-            <source>blanchetteEditor.zoomIn</source>
-            <target state="translated">blanchetteEditor.zoomIn</target>
-            <note>Blanchette Editor message button label</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="blanchetteEditor.zoomOut">
-            <source>blanchetteEditor.zoomOut</source>
-            <target state="translated">blanchetteEditor.zoomOut</target>
-            <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.rotateLeft">
             <source>blanchetteEditor.rotateLeft</source>
@@ -4906,16 +4686,6 @@
       <trans-unit xml:space="preserve" id="blanchetteEditor.rotateRight">
             <source>blanchetteEditor.rotateRight</source>
             <target state="translated">Sağadön</target>
-            <note>Blanchette Editor message button label</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="blanchetteEditor.flipHorizontal">
-            <source>blanchetteEditor.flipHorizontal</source>
-            <target state="translated">blanchetteEditor.flipHorizontal</target>
-            <note>Blanchette Editor message button label</note>
-        </trans-unit>
-      <trans-unit xml:space="preserve" id="blanchetteEditor.flipVertical">
-            <source>blanchetteEditor.flipVertical</source>
-            <target state="translated">blanchetteEditor.flipVertical</target>
             <note>Blanchette Editor message button label</note>
         </trans-unit>
       <trans-unit xml:space="preserve" id="blanchetteEditor.undo">

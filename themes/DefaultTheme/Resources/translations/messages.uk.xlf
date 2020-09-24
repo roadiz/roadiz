@@ -2,45 +2,45 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="none" source-language="en" datatype="plaintext" target-language="uk">
     <body>
-      <trans-unit id="hello.world">
+      <trans-unit id="hello.world" approved="yes">
         <source>hello.world</source>
-        <target state="translated">Привіт світ!</target>
+        <target state="final">Привіт світ!</target>
       </trans-unit>
-      <trans-unit id="nodeName">
+      <trans-unit id="nodeName" approved="yes">
         <source>node.name.is.%name%</source>
-        <target state="translated">Це вузол %name%</target>
+        <target state="final">Це вузол %name%</target>
       </trans-unit>
-      <trans-unit id="translationName">
+      <trans-unit id="translationName" approved="yes">
         <source>translation.is.%name%</source>
-        <target state="translated">Це переклад "%name%"</target>
+        <target state="final">Це переклад "%name%"</target>
       </trans-unit>
-      <trans-unit id="contact">
+      <trans-unit id="contact" approved="yes">
         <source>contact</source>
-        <target state="translated">Контакти</target>
+        <target state="final">Контакти</target>
       </trans-unit>
-      <trans-unit id="contact.us">
+      <trans-unit id="contact.us" approved="yes">
         <source>contact.us</source>
-        <target state="translated">Повідомте нас</target>
+        <target state="final">Повідомте нас</target>
       </trans-unit>
-      <trans-unit id="your.email">
+      <trans-unit id="your.email" approved="yes">
         <source>your.email</source>
-        <target state="translated">Адреса вашої електронної пошти</target>
+        <target state="final">Адреса вашої електронної пошти</target>
       </trans-unit>
-      <trans-unit id="your.name">
+      <trans-unit id="your.name" approved="yes">
         <source>your.name</source>
-        <target state="translated">Ваше ім'я</target>
+        <target state="final">Ваше ім'я</target>
       </trans-unit>
-      <trans-unit id="your.message">
+      <trans-unit id="your.message" approved="yes">
         <source>your.message</source>
-        <target state="translated">Ваше повідомлення</target>
+        <target state="final">Ваше повідомлення</target>
       </trans-unit>
-      <trans-unit id="call.me.back">
+      <trans-unit id="call.me.back" approved="yes">
         <source>call.me.back</source>
-        <target state="translated">Передзвоніть мені</target>
+        <target state="final">Передзвоніть мені</target>
       </trans-unit>
-      <trans-unit id="send.contact.form">
+      <trans-unit id="send.contact.form" approved="yes">
         <source>send.contact.form</source>
-        <target state="translated">Надіслати форму</target>
+        <target state="final">Відправити форму</target>
       </trans-unit>
       <trans-unit id="document" approved="yes">
         <source><![CDATA[document]]></source>

@@ -525,10 +525,6 @@
       <trans-unit xml:space="preserve" id="98">
         <source>type</source>
         <target state="translated">Tipo</target>
-
-
-
-
       </trans-unit>
       <trans-unit xml:space="preserve" id="99">
         <source>indexed</source>

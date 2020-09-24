@@ -195,12 +195,6 @@
 
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="34">
-        <source>hostname</source>
-        <target state="translated">hostname</target>
-
-
-      </trans-unit>
       <trans-unit xml:space="preserve" id="35">
         <source>backendTheme</source>
         <target state="translated">Backend теме</target>
@@ -525,10 +519,6 @@
       <trans-unit xml:space="preserve" id="98">
         <source>type</source>
         <target state="translated">Тип</target>
-
-
-
-
       </trans-unit>
       <trans-unit xml:space="preserve" id="99">
         <source>indexed</source>

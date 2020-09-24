@@ -525,10 +525,6 @@
       <trans-unit xml:space="preserve" id="98">
         <source>type</source>
         <target state="translated">Tipe</target>
-
-
-
-
       </trans-unit>
       <trans-unit xml:space="preserve" id="99">
         <source>indexed</source>
@@ -834,12 +830,6 @@
         <target state="translated">penandaan</target>
 
 
-
-
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="162">
-        <source>id</source>
-        <target state="translated">id</target>
 
 
       </trans-unit>
@@ -1937,11 +1927,6 @@
         <target state="translated">parameter node</target>
 
       </trans-unit>
-      <trans-unit xml:space="preserve" id="356">
-        <source>seo</source>
-        <target state="translated">seo</target>
-
-      </trans-unit>
       <trans-unit xml:space="preserve" id="357">
         <source>tree</source>
         <target state="translated">pokok</target>
@@ -2283,10 +2268,6 @@
       <trans-unit xml:space="preserve" id="427">
         <source>{0} no.node|{1} 1.node|]1,Inf] %count%.nodes</source>
         <target state="translated">{0} no.node|{1} 1.node|]1,Inf] %count% node</target>
-      </trans-unit>
-      <trans-unit xml:space="preserve" id="428">
-        <source>1.node</source>
-        <target state="translated">1.node</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="429">
         <source>%count%.nodes</source>

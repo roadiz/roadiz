@@ -366,10 +366,6 @@
                 <source>host</source>
                 <target state="translated">tuan rumah</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="port">
-                <source>port</source>
-                <target state="translated">port</target>
-            </trans-unit>
       <trans-unit xml:space="preserve" id="unix_socket">
                 <source>unix_socket</source>
                 <target state="translated">soket unix</target>

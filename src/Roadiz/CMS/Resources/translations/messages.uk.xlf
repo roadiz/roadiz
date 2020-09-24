@@ -3,134 +3,134 @@
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="uk">
     <body>
       <!-- welcome.user.email -->
-      <trans-unit id="welcome.user.email.%site%">
+      <trans-unit id="welcome.user.email.%site%" approved="yes">
         <source>welcome.user.email.%site%</source>
-        <target state="translated">Обліковий запис був створений для вас на сайті %site%</target>
+        <target state="final">Обліковий запис був створений для вас на сайті %site%</target>
       </trans-unit>
-      <trans-unit id="your.user.account">
+      <trans-unit id="your.user.account" approved="yes">
         <source>your.user.account</source>
-        <target state="translated">Ваш обліковий запис</target>
+        <target state="final">Ваш обліковий запис</target>
       </trans-unit>
-      <trans-unit id="username">
+      <trans-unit id="username" approved="yes">
         <source>username</source>
-        <target state="translated">Ім'я користувача</target>
+        <target state="final">Ім'я користувача</target>
       </trans-unit>
-      <trans-unit id="email">
+      <trans-unit id="email" approved="yes">
         <source>email</source>
-        <target state="translated">Електронна пошта</target>
+        <target state="final">Електронна пошта</target>
       </trans-unit>
-      <trans-unit id="password">
+      <trans-unit id="password" approved="yes">
         <source>password</source>
-        <target state="translated">Пароль</target>
+        <target state="final">Пароль</target>
       </trans-unit>
-      <trans-unit id="for.questions.email">
+      <trans-unit id="for.questions.email" approved="yes">
         <source>for.questions.email</source>
-        <target state="translated">Якісь питання? Напишіть нам лист:</target>
+        <target state="final">Якісь питання? Напишіть нам лист:</target>
       </trans-unit>
       <!-- Contact forms -->
-      <trans-unit id="contact.form">
+      <trans-unit id="contact.form" approved="yes">
         <source>contact.form</source>
-        <target state="translated">Контактна інформація</target>
+        <target state="final">Контактна інформація</target>
       </trans-unit>
-      <trans-unit id="new.contact.form.%site%">
+      <trans-unit id="new.contact.form.%site%" approved="yes">
         <source>new.contact.form.%site%</source>
-        <target state="translated">Запитується новий контакт на сайті %site%</target>
+        <target state="final">Запитується новий контакт на сайті %site%</target>
       </trans-unit>
-      <trans-unit id="form.successfully.sent">
+      <trans-unit id="form.successfully.sent" approved="yes">
         <source>form.successfully.sent</source>
-        <target state="translated">Ваш запит був успішно надісланий</target>
+        <target state="final">Ваш запит був успішно надісланий</target>
       </trans-unit>
       <trans-unit id="form.has.errors">
         <source>form.has.errors</source>
         <target state="translated">В формі допущено помилки</target>
       </trans-unit>
-      <trans-unit id="%field%.is.mandatory">
+      <trans-unit id="%field%.is.mandatory" approved="yes">
         <source>%field%.is.mandatory</source>
-        <target state="translated">Поле %field% не заповнено</target>
+        <target state="final">Поле %field% не заповнено</target>
       </trans-unit>
-      <trans-unit id="email.not.valid">
+      <trans-unit id="email.not.valid" approved="yes">
         <source>email.not.valid</source>
-        <target state="translated">Адреса електронної пошти невірно вказана</target>
+        <target state="final">Адреса електронної пошти невірно вказана</target>
       </trans-unit>
-      <trans-unit id="date">
+      <trans-unit id="date" approved="yes">
         <source>date</source>
-        <target state="translated">Дата</target>
+        <target state="final">Дата</target>
       </trans-unit>
-      <trans-unit id="ip.address">
+      <trans-unit id="ip.address" approved="yes">
         <source>ip.address</source>
-        <target state="translated">IP адреса</target>
+        <target state="final">IP адреса</target>
       </trans-unit>
-      <trans-unit id="submittedAt">
+      <trans-unit id="submittedAt" approved="yes">
         <source>submittedAt</source>
-        <target state="translated">Відправлено до</target>
+        <target state="final">Відправлено до</target>
       </trans-unit>
-      <trans-unit id="form.submit">
+      <trans-unit id="form.submit" approved="yes">
         <source>form.submit</source>
-        <target state="translated">Відправити</target>
+        <target state="final">Відправити</target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="answer.form">
+      <trans-unit xml:space="preserve" id="answer.form" approved="yes">
                 <source>answer.form</source>
-                <target state="translated">Форма для запитань</target>
+                <target state="final">Форма для запитань</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.%name%.send">
+      <trans-unit xml:space="preserve" id="customForm.%name%.send" approved="yes">
                 <source>customForm.%name%.send</source>
-                <target state="translated">Запитання %name% відправлено</target>
+                <target state="final">Запитання %name% відправлено</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%" approved="yes">
                 <source>new.answer.form.%site%</source>
-                <target state="translated">Нове запитання від %site%</target>
+                <target state="final">Нове запитання від %site%</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="file.not.accepted">
+      <trans-unit xml:space="preserve" id="file.not.accepted" approved="yes">
                 <source>file.not.accepted</source>
-                <target state="translated">Прикріплений файл не може бути прийнятим</target>
+                <target state="final">Прикріплений файл не може бути прийнятим</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="customForm.answer.sent">
+      <trans-unit xml:space="preserve" id="customForm.answer.sent" approved="yes">
                 <source>customForm.answer.sent</source>
-                <target state="translated">Ваше запитання успішно відправлено</target>
+                <target state="final">Ваше запитання успішно відправлено</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="none">
+      <trans-unit xml:space="preserve" id="none" approved="yes">
                 <source>none</source>
-                <target state="translated">немає</target>
+                <target state="final">немає</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="reset.password.request">
+      <trans-unit xml:space="preserve" id="reset.password.request" approved="yes">
               <source>reset.password.request</source>
-              <target state="translated">Запит на скидання пароля</target>
+              <target state="final">Запит на скидання пароля</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+      <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%" approved="yes">
                 <source>you.asked.for.a.password.reset.on.%site%</source>
-                <target state="translated">Ви запитували скидання паролю на %site%</target>
+                <target state="final">Ви запитували скидання паролю на %site%</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+      <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link" approved="yes">
                 <source>you.need.to.choose.a.new.password.using.following.link</source>
-                <target state="translated">Вам потрібно створити новий пароль до вашого облікового запису, використовуючи посилання, що нижче</target>
+                <target state="final">Вам потрібно створити новий пароль до вашого облікового запису, використовуючи посилання, що нижче</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+      <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials" approved="yes">
                 <source>as.a.reminder.here.are.your.credentials</source>
-                <target state="translated">Як нагадування, ось воші облікові дані</target>
+                <target state="final">Як нагадування, ось воші облікові дані</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+      <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
-                <target state="translated">Якщо ви не запитували зміну пароля, просто ігноруйте цей лист</target>
+                <target state="final">Якщо ви не запитували зміну пароля, просто ігноруйте цей лист</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="reset_your_password">
                 <source>reset_your_password</source>
                 <target state="translated">Скинути пароль</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+      <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
                 <source>you.need.to.fill.this.required.field</source>
-                <target state="translated">Це поле необхідно заповнити</target>
+                <target state="final">Це поле необхідно заповнити</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="*.required.fields">
+      <trans-unit xml:space="preserve" id="*.required.fields" approved="yes">
                 <source>*.required.fields</source>
-                <target state="translated">* Обов'язкове поле</target>
+                <target state="final">* Обов'язкове поле</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="website.is.under.maintenance">
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance" approved="yes">
                 <source>website.is.under.maintenance</source>
-                <target state="translated">Сайт знаходиться на обслуговуванні</target>
+                <target state="final">Сайт знаходиться на обслуговуванні</target>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon">
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon" approved="yes">
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
-                <target state="translated">Сайт знаходиться на обслуговуванні та скоро повернеться!</target>
+                <target state="final">Сайт знаходиться на обслуговуванні та скоро повернеться!</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="yaml.is.not.valid">
                 <source>yaml.is.not.valid.{{ error }}</source>

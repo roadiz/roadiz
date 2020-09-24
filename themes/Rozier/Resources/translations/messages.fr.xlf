@@ -525,10 +525,6 @@
       <trans-unit xml:space="preserve" id="98" approved="yes">
         <source>type</source>
         <target state="final">Type</target>
-
-
-
-
       </trans-unit>
       <trans-unit xml:space="preserve" id="99" approved="yes">
         <source>indexed</source>
