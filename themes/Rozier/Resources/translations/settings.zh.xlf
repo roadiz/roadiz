@@ -59,6 +59,7 @@
                 <target state="translated">OAuth2 Client secret</target>
                 <note>Setting name</note>
             </trans-unit>
+      <!-- Setting groups names -->
     </body>
   </file>
 </xliff>
