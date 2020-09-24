@@ -6,12 +6,14 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Console as Console;
+use Symfony\Bridge\Twig\Command\DebugCommand;
+use Symfony\Bridge\Twig\Command\LintCommand;
 
 class ConsoleServiceProvider implements ServiceProviderInterface
 {
     public function register(Container $container)
     {
-        $container['console.commands'] = function () {
+        $container['console.commands'] = function (Container $c) {
             return [
                 new Console\DispatcherDebugCommand(),
                 new Console\ConfigurationDebugCommand(),
@@ -72,6 +74,9 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\DocumentClearFolderCommand(),
                 new Console\NodeClearTagCommand(),
                 new Console\NodesEmptyTrashCommand(),
+
+                new LintCommand($c['twig.environment']),
+                new DebugCommand($c['twig.environment'])
             ];
         };
     }
