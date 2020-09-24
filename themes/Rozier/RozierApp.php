@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier;
 
 use Pimple\Container;
+use Pimple\Exception\FrozenServiceException;
 use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
@@ -165,25 +166,6 @@ class RozierApp extends BackendController
     {
         parent::setupDependencyInjection($container);
 
-        $container->extend('translator', function (Translator $translator, $c) {
-            $settingPath = __DIR__ . '/Resources/translations/settings.' . $c['translator.locale'] .  '.xlf';
-            if (file_exists($settingPath)) {
-                $translator->addResource(
-                    'xlf',
-                    $settingPath,
-                    $c['translator.locale']
-                );
-            }
-            $helpPath = __DIR__ . '/Resources/translations/helps.' . $c['translator.locale'] .  '.xlf';
-            if (file_exists($helpPath)) {
-                $translator->addResource(
-                    'xlf',
-                    $helpPath,
-                    $c['translator.locale']
-                );
-            }
-            return $translator;
-        });
         $container->extend('backoffice.entries', function (array $entries, $c) {
             /** @var UrlGenerator $urlGenerator */
             $urlGenerator = $c['urlGenerator'];

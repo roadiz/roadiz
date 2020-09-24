@@ -17,6 +17,7 @@ use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 use Themes\Install\InstallApp;
+use Themes\Rozier\RozierApp;
 
 /**
  * Register Embed documents services for dependency injection container.
@@ -181,6 +182,25 @@ class TranslationServiceProvider implements ServiceProviderInterface
             InstallApp::getTranslationsFolder(),
             'xlf',
             $locale
+        );
+        /*
+         * Add backoffice theme additional translations
+         */
+        $this->addTranslatorResource(
+            $translator,
+            RozierApp::getTranslationsFolder(),
+            'xlf',
+            $locale,
+            null,
+            'helps'
+        );
+        $this->addTranslatorResource(
+            $translator,
+            RozierApp::getTranslationsFolder(),
+            'xlf',
+            $locale,
+            null,
+            'settings'
         );
 
         /** @var Theme $theme */
