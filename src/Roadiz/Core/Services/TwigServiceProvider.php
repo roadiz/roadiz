@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
+use PDOException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
@@ -204,6 +205,10 @@ class TwigServiceProvider implements ServiceProviderInterface
              * with EntityManager not null.
              */
             try {
+                $extensions->add(new DumpExtension($c));
+                if ($kernel->isDebug()) {
+                    $extensions->add(new ProfilerExtension($c['twig.profile']));
+                }
                 if (true !== $kernel->isInstallMode()) {
                     $extensions->add(new DocumentExtension($c));
                     $extensions->add(new FontExtension($c));
@@ -214,13 +219,11 @@ class TwigServiceProvider implements ServiceProviderInterface
                         $c['nodeTypesBag'],
                         $kernel->isPreview()
                     ));
-
-                    $extensions->add(new DumpExtension($c));
-                    if ($kernel->isDebug()) {
-                        $extensions->add(new ProfilerExtension($c['twig.profile']));
-                    }
                 }
             } catch (Exception $e) {
+            } catch (PDOException $e) {
+                // Trying to use translator without DB
+                // in CI or CLI environments
             }
 
             return $extensions;

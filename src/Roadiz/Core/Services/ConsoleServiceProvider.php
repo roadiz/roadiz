@@ -8,6 +8,7 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Console as Console;
 use Symfony\Bridge\Twig\Command\DebugCommand;
 use Symfony\Bridge\Twig\Command\LintCommand;
+use Symfony\Component\Translation\Command\XliffLintCommand;
 
 class ConsoleServiceProvider implements ServiceProviderInterface
 {
@@ -76,7 +77,8 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\NodesEmptyTrashCommand(),
 
                 new LintCommand($c['twig.environment']),
-                new DebugCommand($c['twig.environment'])
+                new XliffLintCommand(),
+                new DebugCommand($c['twig.environment']),
             ];
         };
     }
