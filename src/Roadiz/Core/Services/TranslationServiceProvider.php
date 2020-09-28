@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Services;
 
 use Doctrine\DBAL\Exception;
+use PDOException;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
@@ -108,6 +109,9 @@ class TranslationServiceProvider implements ServiceProviderInterface
                     $this->addResourcesForLocale($c['translator.locale'], $translator, $classes, $c['kernel']);
                 }
             } catch (Exception $e) {
+            } catch (PDOException $e) {
+                // Trying to use translator without DB
+                // in CI or CLI environments
             }
 
             $c['stopwatch']->stop('initTranslator');
@@ -123,6 +127,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
      * @param Translator $translator
      * @param Theme[] $classes
      * @param Kernel $kernel
+     * @throws \ReflectionException
      */
     protected function addResourcesForLocale(string $locale, Translator $translator, array &$classes, Kernel $kernel)
     {
