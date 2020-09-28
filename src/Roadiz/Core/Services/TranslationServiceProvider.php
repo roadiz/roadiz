@@ -89,9 +89,30 @@ class TranslationServiceProvider implements ServiceProviderInterface
                 $themeResolver->getFrontendThemes()
             );
 
-            /*
-             * DO NOT wake up entity manager in Install
-             */
+            /** @var string $locale */
+            foreach ($c['translator.locales'] as $locale) {
+                $this->addResourcesForLocale($locale, $translator, $classes, $c['kernel']);
+            }
+
+            $c['stopwatch']->stop('initTranslator');
+
+            return $translator;
+        };
+
+        /**
+         * Get available Roadiz locales for translation.
+         *
+         * @param Container $c
+         * @return string[]
+         */
+        $container['translator.locales'] = function (Container $c) {
+            // Add Rozier backend languages
+            $locales = array_values(RozierApp::$backendLanguages);
+            // Add default translation
+            $locales[] = $c['translator.locale'];
+
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
             try {
                 if (!$kernel->isInstallMode()) {
                     /** @var TranslationRepository $translationRepository */
@@ -103,10 +124,8 @@ class TranslationServiceProvider implements ServiceProviderInterface
                     }
                     /** @var Translation $availableTranslation */
                     foreach ($availableTranslations as $availableTranslation) {
-                        $this->addResourcesForLocale($availableTranslation->getLocale(), $translator, $classes, $c['kernel']);
+                        $locales[] = $availableTranslation->getLocale();
                     }
-                } else {
-                    $this->addResourcesForLocale($c['translator.locale'], $translator, $classes, $c['kernel']);
                 }
             } catch (Exception $e) {
             } catch (PDOException $e) {
@@ -114,9 +133,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
                 // in CI or CLI environments
             }
 
-            $c['stopwatch']->stop('initTranslator');
-
-            return $translator;
+            return array_unique($locales);
         };
 
         return $container;
@@ -208,7 +225,6 @@ class TranslationServiceProvider implements ServiceProviderInterface
             'settings'
         );
 
-        /** @var Theme $theme */
         foreach ($classes as $theme) {
             if (null !== $theme) {
                 $resourcesFolder = call_user_func([$theme->getClassName(), 'getResourcesFolder']);
