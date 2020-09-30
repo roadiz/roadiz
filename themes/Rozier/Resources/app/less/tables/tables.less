@@ -51,7 +51,8 @@
         vertical-align: middle;
         position: relative;
         color:@form-head-color;
-        border-left:1px solid @form-head-border-color;
+        background-color: rgba(255, 255, 255, 0.75);
+        //border-left:1px solid @form-head-border-color;
         .box-sizing();
 
         a {
@@ -62,20 +63,23 @@
             }
         }
     }
-
+    td {
+        border-top: 1px solid white;
+        border-bottom: 1px solid @form-row-border-color;
+        .transition(0.7s background-color @easeOutExpo);
+        vertical-align: middle;
+        color:@grey-medium;
+    }
     tr {
-        td {
-            background-color:white;
-            border-top:1px solid white;
-            border-bottom:1px solid @form-row-border-color;
-            .transition(0.7s background-color @easeOutExpo);
-            vertical-align: middle;
-            color:@grey-medium;
+        &:first-child {
+            td, th {
+                border-top: 1px solid @form-row-border-color;
+            }
         }
 
         &:nth-of-type(2n){
             td {
-                background-color: #f8f8f8;
+                background-color: rgba(255, 255, 255, 0.75);
             }
         }
     }
@@ -140,4 +144,40 @@
 
 .table-actions-row-6{
     width:220px;
+}
+
+.metadata-list {
+    margin-top: 1em;
+
+    tr {
+        &:first-child {
+            td {
+                &:not(:first-child) {
+                    @media (max-width: @screen-sm-max) {
+                        border-top: 0 none;
+                    }
+                }
+
+                @media (max-width: @screen-sm-max) {
+                    border-top: 1px solid @form-row-border-color;
+                }
+            }
+        }
+
+        td {
+            &:first-child {
+                font-weight: bold;
+
+                @media (max-width: @screen-sm-max) {
+                    border-bottom: 0 none;
+                    padding-bottom: 0;
+                }
+            }
+
+            @media (max-width: @screen-sm-max) {
+                display: block;
+                border-top: 0 none;
+            }
+        }
+    }
 }
