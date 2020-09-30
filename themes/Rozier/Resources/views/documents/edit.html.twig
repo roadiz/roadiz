@@ -24,35 +24,49 @@
             </fieldset>
         {{ form_end(form) }}
 
-        <dl class="document-paths">
-            <dt>{% trans %}updatedAt{% endtrans %}</dt>
-            <dd>{{ document.updatedAt|format_datetime('medium', 'short', locale=app.request.locale) }}</dd>
-            <dt>{% trans %}createdAt{% endtrans %}</dt>
-            <dd>{{ document.createdAt|format_datetime('medium', 'short', locale=app.request.locale) }}</dd>
-            {% if document.original %}
-                <dt>{% trans %}original.document{% endtrans %}</dt>
-                <dd>
-                    <p>{{ document.original.filename }}</p>
-                    <p><a
-                        href="{{ path('documentsEditPage', { documentId: document.original.id}) }}"
-                        class="uk-button uk-button-small rz-no-ajax-link">
-                            <i class="uk-icon-rz-link"></i>
-                            {% trans %}see.original.document{%- endtrans -%}
-                        </a>
-                    </p>
-                </dd>
-            {% endif %}
-            {% if not document.private %}
-            <dt>{% trans %}document.public_url{% endtrans %}</dt>
-            <dd>{{ document|url({noProcess: true}) }}</dd>
-            {% endif %}
-            <dt>{% trans %}document.filepath{% endtrans %}</dt>
-            <dd>{{ document|path }}</dd>
-            {% if rawDocument %}
-            <dt>{% trans %}document.raw_document{% endtrans %}</dt>
-            <dd><p>{{ rawDocument|path }}</p><p><a href="{{ path('documentsDownloadPage', { documentId: rawDocument.id}) }}" class="uk-button uk-button-small rz-no-ajax-link"><i class="uk-icon-cloud-download"></i> {% trans %}download.raw.document{% endtrans %}</a></p></dd>
-            {% endif %}
-        </dl>
+        <div class="content-table-cont metadata-list">
+            <table class="uk-table content-table">
+                <tr>
+                    <td>{% trans %}created.at{% endtrans %}</td>
+                    <td>{{ document.createdAt|format_datetime('long', locale=app.request.locale) }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}updated.at{% endtrans %}</td>
+                    <td>{{ document.updatedAt|format_datetime('long', locale=app.request.locale) }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}document.filepath{% endtrans %}</td>
+                    <td>{{ document|path }}</td>
+                </tr>
+                {% if not document.private %}
+                    <tr>
+                        <td>{% trans %}document.public_url{% endtrans %}</td>
+                        <td>{{ document|url({noProcess: true}) }}</td>
+                    </tr>
+                {% endif %}
+                {% if rawDocument %}
+                    <tr>
+                        <td>{% trans %}document.raw_document{% endtrans %}</td>
+                        <td><p>{{ rawDocument|path }}</p><p><a href="{{ path('documentsDownloadPage', { documentId: rawDocument.id}) }}" class="uk-button uk-button-small rz-no-ajax-link"><i class="uk-icon-cloud-download"></i> {% trans %}download.raw.document{% endtrans %}</a></p></td>
+                    </tr>
+                {% endif %}
+                {% if document.original %}
+                    <tr>
+                        <td>{% trans %}original.document{% endtrans %}</td>
+                        <td>
+                            <p>{{ document.original.filename }}</p>
+                            <p><a
+                                    href="{{ path('documentsEditPage', { documentId: document.original.id}) }}"
+                                    class="uk-button uk-button-small rz-no-ajax-link">
+                                    <i class="uk-icon-rz-link"></i>
+                                    {% trans %}see.original.document{%- endtrans -%}
+                                </a>
+                            </p>
+                        </td>
+                    </tr>
+                {% endif %}
+            </table>
+        </div>
     </article>
 
     {% include '@Rozier/documents/actionsMenu.html.twig' %}

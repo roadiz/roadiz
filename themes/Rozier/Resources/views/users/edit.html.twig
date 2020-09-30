@@ -23,6 +23,19 @@
                 {% endapply %}
             </fieldset>
         {{ form_end(form) }}
+
+        <div class="content-table-cont metadata-list">
+            <table class="uk-table content-table">
+                <tr>
+                    <td>{% trans %}created.at{% endtrans %}</td>
+                    <td>{{ user.createdAt|format_datetime('long', locale=app.request.locale) }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}updated.at{% endtrans %}</td>
+                    <td>{{ user.updatedAt|format_datetime('long', locale=app.request.locale) }}</td>
+                </tr>
+            </table>
+        </div>
     </article>
 
     {% include '@Rozier/users/actionsMenu.html.twig' %}

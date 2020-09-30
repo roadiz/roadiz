@@ -22,6 +22,23 @@
                 {% endapply %}
             </fieldset>
         {{ form_end(form) }}
+
+        <div class="content-table-cont metadata-list">
+            <table class="uk-table content-table">
+                <tr>
+                    <td>{% trans %}created.at{% endtrans %}</td>
+                    <td>{{ tag.createdAt|format_datetime('long', locale=app.request.locale) }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}updated.at{% endtrans %}</td>
+                    <td>{{ tag.updatedAt|format_datetime('long', locale=app.request.locale) }}</td>
+                </tr>
+                <tr>
+                    <td>{% trans %}position{% endtrans %}</td>
+                    <td>{{ tag.position }}</td>
+                </tr>
+            </table>
+        </div>
     </article>
     {% include '@Rozier/tags/actionsMenu.html.twig' %}
 
