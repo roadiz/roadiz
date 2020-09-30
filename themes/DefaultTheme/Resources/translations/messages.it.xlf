@@ -4,15 +4,15 @@
     <body>
       <trans-unit id="hello.world">
         <source>hello.world</source>
-        <target state="translated">Ciao mondo!</target>
+        <target state="translated">hello.world</target>
       </trans-unit>
       <trans-unit id="nodeName">
         <source>node.name.is.%name%</source>
-        <target state="translated">Il nome del nodo è %name%</target>
+        <target state="translated">node.name.is.%name%</target>
       </trans-unit>
       <trans-unit id="translationName">
         <source>translation.is.%name%</source>
-        <target state="translated">Questa è la traduzione di "%name%"</target>
+        <target state="translated">translation.is.%name%</target>
       </trans-unit>
       <trans-unit id="contact">
         <source>contact</source>
@@ -20,19 +20,19 @@
       </trans-unit>
       <trans-unit id="contact.us">
         <source>contact.us</source>
-        <target state="translated">Contattaci</target>
+        <target state="translated">contact.us</target>
       </trans-unit>
       <trans-unit id="your.email">
         <source>your.email</source>
-        <target state="translated">La tua email</target>
+        <target state="translated">your.email</target>
       </trans-unit>
       <trans-unit id="your.name">
         <source>your.name</source>
-        <target state="translated">Il tuo nome</target>
+        <target state="translated">your.name</target>
       </trans-unit>
       <trans-unit id="your.message">
         <source>your.message</source>
-        <target state="translated">Il tuo messaggio</target>
+        <target state="translated">your.message</target>
       </trans-unit>
       <trans-unit id="call.me.back">
         <source>call.me.back</source>
@@ -77,6 +77,10 @@
       <trans-unit id="error404.message">
         <source>error404.message</source>
         <target state="translated">La pagina richiesta non può essere trovata.</target>
+      </trans-unit>
+      <trans-unit id=" email.successfully.sent">
+        <source>email.successfully.sent</source>
+        <target state="translated">email.successfully.sent</target>
       </trans-unit>
     </body>
   </file>
