@@ -77,11 +77,18 @@ EOD);
 
     /**
      * Empty Solr index.
+     *
+     * @param string|null $documentType
      */
-    protected function emptySolr(): void
+    protected function emptySolr(?string $documentType = null): void
     {
         $update = $this->solr->createUpdate();
-        $update->addDeleteQuery('*:*');
+        if (null !== $documentType) {
+            $update->addDeleteQuery('document_type_s:' . trim($documentType));
+        } else {
+            // Delete ALL index
+            $update->addDeleteQuery('*:*');
+        }
         $update->addCommit();
         $this->solr->update($update);
     }
