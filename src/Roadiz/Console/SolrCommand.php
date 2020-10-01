@@ -54,9 +54,11 @@ class SolrCommand extends Command
 
     protected function displayBasicConfig()
     {
-        $text = '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
-        $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
-        $text .= '
+        if (null !== $this->io) {
+            $this->io->error('No Solr search engine server has been configured…');
+            $this->io->note(<<<EOD
+Edit your app/config.yml file to enable Solr (example):
+
 solr:
     endpoint:
         localhost:
@@ -67,9 +69,10 @@ solr:
             timeout: 3
             username: ""
             password: ""
-            ';
+EOD);
+        }
 
-        return $text;
+        return;
     }
 
     /**
