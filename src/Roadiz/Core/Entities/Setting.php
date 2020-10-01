@@ -170,7 +170,7 @@ class Setting extends AbstractEntity
     /**
      * Getter for setting value OR clear value, if encrypted.
      *
-     * @return bool|\DateTime|int
+     * @return bool|\DateTime|int|null
      * @throws \Exception
      */
     public function getValue()
@@ -184,11 +184,14 @@ class Setting extends AbstractEntity
         if ($this->getType() == NodeTypeField::BOOLEAN_T) {
             return (boolean) $value;
         }
-        if ($this->getType() == NodeTypeField::DATETIME_T) {
-            return new \DateTime($value);
-        }
-        if ($this->getType() == NodeTypeField::DOCUMENTS_T) {
-            return (int) $value;
+
+        if (null !== $value) {
+            if ($this->getType() == NodeTypeField::DATETIME_T) {
+                return new \DateTime($value);
+            }
+            if ($this->getType() == NodeTypeField::DOCUMENTS_T) {
+                return (int) $value;
+            }
         }
 
         return $value;
@@ -202,7 +205,7 @@ class Setting extends AbstractEntity
     {
         if (($this->getType() === NodeTypeField::DATETIME_T || $this->getType() === NodeTypeField::DATE_T) &&
             $value instanceof \DateTime) {
-            $this->value = $value->format('Y-m-d H:i:s'); // $value is instance of \DateTime
+            $this->value = $value->format('c'); // $value is instance of \DateTime
         } else {
             $this->value = $value;
         }

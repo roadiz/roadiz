@@ -25,13 +25,15 @@ class SettingDocumentType extends AbstractType
     {
         $builder->addModelTransformer(new CallbackTransformer(
             function ($value) use ($options) {
-                /** @var Packages $packages */
-                $packages = $options['assetPackages'];
-                /** @var Document|null $document */
-                $document = $options['entityManager']->find(Document::class, $value);
-                if (null !== $document) {
-                    // transform the array to a string
-                    return new File($packages->getDocumentFilePath($document), false);
+                if (null !== $value) {
+                    /** @var Packages $packages */
+                    $packages = $options['assetPackages'];
+                    /** @var Document|null $document */
+                    $document = $options['entityManager']->find(Document::class, $value);
+                    if (null !== $document) {
+                        // transform the array to a string
+                        return new File($packages->getDocumentFilePath($document), false);
+                    }
                 }
                 return null;
             },
