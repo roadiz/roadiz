@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -54,11 +55,14 @@ class RoutingExtension extends AbstractExtension
                 $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH
             );
         }
-        return $this->generator->generate(
-            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
-            array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $name]),
-            $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH
-        );
+        if (null !== $name) {
+            return $this->generator->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $name]),
+                $relative ? UrlGeneratorInterface::RELATIVE_PATH : UrlGeneratorInterface::ABSOLUTE_PATH
+            );
+        }
+        throw new RuntimeError('Cannot generate url with NULL route name');
     }
 
     /**
@@ -77,11 +81,14 @@ class RoutingExtension extends AbstractExtension
                 $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL
             );
         }
-        return $this->generator->generate(
-            RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
-            array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $name]),
-            $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL
-        );
+        if (null !== $name) {
+            return $this->generator->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                array_merge($parameters, [RouteObjectInterface::ROUTE_OBJECT => $name]),
+                $schemeRelative ? UrlGeneratorInterface::NETWORK_PATH : UrlGeneratorInterface::ABSOLUTE_URL
+            );
+        }
+        throw new RuntimeError('Cannot generate url with NULL route name');
     }
 
     /**
