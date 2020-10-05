@@ -379,6 +379,26 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * @return Tag[]
+     */
+    public function findAllColored()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb
+            ->andWhere($qb->expr()->isNotNull('t.color'))
+            ->andWhere($qb->expr()->notIn('t.color', ':colored'))
+            ->addOrderBy('t.position', 'DESC')
+            ->setParameter(':colored', [
+                '#000000',
+                '#000',
+                '#fff',
+                '#ffffff',
+            ])
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @param Node             $parentNode
      * @param Translation|null $translation
      *
