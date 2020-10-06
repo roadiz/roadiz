@@ -64,8 +64,8 @@ solr:
         localhost:
             host: "localhost"
             port: "8983"
-            path: "/solr"
-            core: "mycore"
+            path: "/"
+            core: "roadiz"
             timeout: 3
             username: ""
             password: ""
