@@ -88,16 +88,8 @@ class DocumentTranslationsController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->get('em')->flush();
-                $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
-                    '%name%' => $document->getFilename(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                $this->get("dispatcher")->dispatch(
-                    new DocumentTranslationUpdatedEvent($document)
-                );
-
+                $this->onPostUpdate($documentTr, $request);
+                
                 $routeParams = [
                     'documentId' => $document->getId(),
                     'translationId' => $translationId,
@@ -246,7 +238,7 @@ class DocumentTranslationsController extends RozierApp
             $this->publishConfirmMessage($request, $msg);
 
             $this->get("dispatcher")->dispatch(
-                new DocumentTranslationUpdatedEvent($entity->getDocument())
+                new DocumentTranslationUpdatedEvent($entity->getDocument(), $entity)
             );
         }
     }
