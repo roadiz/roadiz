@@ -65,6 +65,10 @@ class ContactFormManager extends EmailManager
      */
     protected $method = Request::METHOD_POST;
     /**
+     * @var bool
+     */
+    protected $emailStrictMode = false;
+    /**
      * @var array
      */
     protected $allowedMimeTypes = [
@@ -142,8 +146,9 @@ class ContactFormManager extends EmailManager
     }
 
     /**
-     * @param string $formName
+     * Use this method BEFORE withDefaultFields()
      *
+     * @param string $formName
      * @return ContactFormManager
      */
     public function setFormName(string $formName): ContactFormManager
@@ -153,6 +158,8 @@ class ContactFormManager extends EmailManager
     }
 
     /**
+     * Use this method BEFORE withDefaultFields()
+     *
      * @return $this
      */
     public function disableCsrfProtection()
@@ -171,10 +178,32 @@ class ContactFormManager extends EmailManager
     }
 
     /**
+     * Using the strict mode requires the "egulias/email-validator" library.
+     *
+     * Use this method BEFORE withDefaultFields()
+     *
+     * @param bool $emailStrictMode
+     * @see https://symfony.com/doc/4.4/reference/constraints/Email.html#strict
+     * @return $this
+     */
+    public function setEmailStrictMode(bool $emailStrictMode = true)
+    {
+        $this->emailStrictMode = $emailStrictMode;
+
+        return $this;
+    }
+    /**
+     * @return bool
+     */
+    public function isEmailStrictMode(): bool
+    {
+        return $this->emailStrictMode;
+    }
+
+    /**
      * Adds a email, name and message fields with their constraints.
      *
      * @param bool $useHoneypot
-     *
      * @return ContactFormManager $this
      */
     public function withDefaultFields($useHoneypot = true)
@@ -186,6 +215,7 @@ class ContactFormManager extends EmailManager
                     new NotBlank(),
                     new Email([
                         'message' => 'email.not.valid',
+                        'mode' => $this->isEmailStrictMode() ? Email::VALIDATION_MODE_STRICT : Email::VALIDATION_MODE_LOOSE
                     ]),
                 ],
             ])
@@ -213,8 +243,9 @@ class ContactFormManager extends EmailManager
     }
 
     /**
-     * @param string $honeypotName
+     * Use this method AFTER withDefaultFields()
      *
+     * @param string $honeypotName
      * @return $this
      */
     public function withHoneypot($honeypotName = 'eml')
@@ -224,8 +255,9 @@ class ContactFormManager extends EmailManager
     }
 
     /**
-     * @param string $consentDescription
+     * Use this method AFTER withDefaultFields()
      *
+     * @param string $consentDescription
      * @return $this
      */
     public function withUserConsent($consentDescription = 'contact_form.user_consent')
