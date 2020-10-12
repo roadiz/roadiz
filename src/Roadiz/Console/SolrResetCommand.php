@@ -41,7 +41,7 @@ class SolrResetCommand extends SolrCommand
                 return 1;
             }
         } else {
-            $this->io->note($this->displayBasicConfig());
+            $this->displayBasicConfig();
         }
         return 0;
     }

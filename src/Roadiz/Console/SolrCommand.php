@@ -47,12 +47,12 @@ class SolrCommand extends Command
                 return 1;
             }
         } else {
-            $this->io->note($this->displayBasicConfig());
+            $this->displayBasicConfig();
         }
         return 0;
     }
 
-    protected function displayBasicConfig()
+    protected function displayBasicConfig(): void
     {
         if (null !== $this->io) {
             $this->io->error('No Solr search engine server has been configured…');
@@ -71,8 +71,6 @@ solr:
             password: ""
 EOD);
         }
-
-        return;
     }
 
     /**

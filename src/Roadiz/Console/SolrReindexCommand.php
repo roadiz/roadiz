@@ -80,7 +80,7 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
                 return 1;
             }
         } else {
-            $this->io->note($this->displayBasicConfig());
+            $this->displayBasicConfig();
         }
         return 0;
     }
