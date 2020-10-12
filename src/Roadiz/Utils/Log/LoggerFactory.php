@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\Log;
 use Gelf\Publisher;
 use Gelf\Transport\HttpTransport;
 use Monolog\Handler\RavenHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
@@ -70,6 +71,18 @@ class LoggerFactory
                             }
                             $handlers[] = new StreamHandler(
                                 $config['path'],
+                                constant('\Monolog\Logger::'.$config['level'])
+                            );
+                            break;
+                        case 'rotating_file':
+                            if (empty($config['path'])) {
+                                throw new InvalidConfigurationException(
+                                    'A monolog StreamHandler must define a log "path".'
+                                );
+                            }
+                            $handlers[] = new RotatingFileHandler(
+                                $config['path'],
+                                $config['max_files'],
                                 constant('\Monolog\Logger::'.$config['level'])
                             );
                             break;

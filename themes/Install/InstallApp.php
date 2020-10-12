@@ -6,6 +6,7 @@ namespace Themes\Install;
 use Exception;
 use Locale;
 use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\Config\Configuration;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
@@ -345,6 +346,7 @@ class InstallApp extends AppController
         $kernel = $this->get('kernel');
         return new Fixtures(
             $this->get('em'),
+            $this->get(Configuration::class),
             $kernel->getCacheDir(),
             $kernel->getRootDir() . '/conf/config.yml',
             $kernel->getRootDir(),

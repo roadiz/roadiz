@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Config\Configuration;
 use RZ\Roadiz\Config\YamlConfigurationHandler;
 use RZ\Roadiz\Core\Kernel;
 
@@ -19,9 +20,9 @@ class YamlConfigurationServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
-        $container['config.path'] = function (Container $container) {
+        $container['config.path'] = function (Container $c) {
             /** @var Kernel $kernel */
-            $kernel = $container['kernel'];
+            $kernel = $c['kernel'];
             $configDir = $kernel->getRootDir() . '/conf';
             if ($kernel->getEnvironment() != 'prod') {
                 $configName = 'config_' . $kernel->getEnvironment() . '.yml';
@@ -33,25 +34,32 @@ class YamlConfigurationServiceProvider implements ServiceProviderInterface
             return $configDir . '/config.yml';
         };
 
+        $container[Configuration::class] = function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return new Configuration($kernel);
+        };
+
         /*
          * Inject app config
          */
-        $container['config.handler'] = function (Container $container) {
+        $container['config.handler'] = function (Container $c) {
             /** @var Kernel $kernel */
-            $kernel = $container['kernel'];
+            $kernel = $c['kernel'];
             return new YamlConfigurationHandler(
+                $c[Configuration::class],
                 $kernel->getCacheDir(),
                 $kernel->isDebug(),
-                $container['config.path']
+                $c['config.path']
             );
         };
 
         /*
          * Inject app config
          */
-        $container['config'] = function (Container $container) {
+        $container['config'] = function (Container $c) {
             /** @var YamlConfigurationHandler $configuration */
-            $configuration = $container['config.handler'];
+            $configuration = $c['config.handler'];
             return $configuration->load();
         };
 

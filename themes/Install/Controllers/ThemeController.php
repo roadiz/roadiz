@@ -92,6 +92,7 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig\Error\RuntimeError
      */
     public function themesAction(Request $request)
     {
@@ -122,7 +123,7 @@ class ThemeController extends InstallApp
              */
             try {
                 $fixtures = $this->getFixtures($request);
-                $fixtures->saveInformations($informationData);
+                $fixtures->saveInformation($informationData);
 
                 if (!empty($informationData["install_theme"])) {
                     /*

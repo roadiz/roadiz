@@ -42,7 +42,14 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     public function isDebug();
 
     /**
-     * Gets the application root dir (path of the project's Kernel class).
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir();
+
+    /**
+     * Gets the application root dir (path of the project's AppKernel class).
      *
      * @return string The Kernel root dir
      */

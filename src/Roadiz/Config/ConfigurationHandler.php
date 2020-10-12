@@ -39,17 +39,22 @@ abstract class ConfigurationHandler
      */
     protected $confCache;
 
+    /** @var Config */
+    protected $configurationTree;
+
     /**
+     * @param Config $configurationTree
      * @param string $cacheDir
      * @param boolean $debug
      * @param string $path
      */
-    public function __construct(string $cacheDir, bool $debug, string $path)
+    public function __construct(Config $configurationTree, string $cacheDir, bool $debug, string $path)
     {
         $this->cacheDir = $cacheDir;
         $this->path = $path;
         $this->cachePath = $this->cacheDir . '/configuration.php';
         $this->confCache = new ConfigCache($this->cachePath, $debug);
+        $this->configurationTree = $configurationTree;
     }
 
     /**
@@ -104,8 +109,7 @@ abstract class ConfigurationHandler
             $configuration,
         ];
         $processor = new Processor();
-        $roadizConfiguration = new Config();
-        $this->configuration = $processor->processConfiguration($roadizConfiguration, $configs);
+        $this->configuration = $processor->processConfiguration($this->configurationTree, $configs);
 
         return $this;
     }
