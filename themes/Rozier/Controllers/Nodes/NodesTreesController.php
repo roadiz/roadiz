@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Workflow\Workflow;
@@ -252,7 +253,7 @@ class NodesTreesController extends RozierApp
     }
 
     /**
-     * @param bool  $referer
+     * @param false|string  $referer
      * @param array $nodesIds
      *
      * @return FormInterface
@@ -273,7 +274,7 @@ class NodesTreesController extends RozierApp
                             ],
                         ]);
 
-        if (false !== $referer) {
+        if (false !== $referer && (new UnicodeString($referer))->startsWith('/')) {
             $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
             ]);
@@ -483,7 +484,7 @@ class NodesTreesController extends RozierApp
     }
 
     /**
-     * @param bool  $referer
+     * @param false|string  $referer
      * @param array $nodesIds
      * @param string $status
      *
@@ -521,7 +522,7 @@ class NodesTreesController extends RozierApp
             ])
         ;
 
-        if (false !== $referer) {
+        if (false !== $referer && (new UnicodeString($referer))->startsWith('/')) {
             $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
             ]);

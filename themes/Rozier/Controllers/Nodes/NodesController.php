@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Workflow\Workflow;
 use Themes\Rozier\Forms;
 use Themes\Rozier\Forms\Node\AddNodeType;
@@ -129,7 +130,7 @@ class NodesController extends RozierApp
      *
      * @param Request $request
      * @param int     $nodeId
-     * @param int     $translationId
+     * @param int|null     $translationId
      *
      * @return Response
      * @throws \Twig_Error_Runtime
@@ -487,7 +488,8 @@ class NodesController extends RozierApp
             );
             $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
 
-            if ($request->query->has('referer')) {
+            if ($request->query->has('referer') &&
+                (new UnicodeString($request->query->get('referer')))->startsWith('/')) {
                 return $this->redirect($request->query->get('referer'));
             }
             if (null !== $parent) {
