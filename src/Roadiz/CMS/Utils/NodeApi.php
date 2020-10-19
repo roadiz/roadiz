@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Utils;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 
@@ -23,8 +24,13 @@ class NodeApi extends AbstractApi
                     ->setDisplayingNotPublishedNodes(false)
                     ->setDisplayingAllNodesStatuses(false);
     }
+
     /**
-     * {@inheritdoc}
+     * @param array $criteria
+     * @param array|null $order
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array|Paginator
      */
     public function getBy(
         array $criteria,

@@ -3,7 +3,8 @@
         {% set link = app.request.get('referer') %}
         {% set title = 'back'|trans %}
     {%- endif -%}
-    {%- if link -%}
+    {# Prevent display non local referer links #}
+    {%- if link and link|u.startsWith('/') -%}
         {%- if title is not defined -%}
             {% set title = 'back'|trans %}
         {%- endif -%}

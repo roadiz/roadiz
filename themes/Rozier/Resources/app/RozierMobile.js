@@ -66,6 +66,8 @@ export default class RozierMobile {
         this.$userPicture.on('click', this.userPictureClick)
         this.$userActionsLink.on('click', this.userActionsLinkClick)
         this.$mainContentOverlay.on('click', this.mainContentOverlayClick)
+
+        window.addEventListener('pageload', this.mainContentOverlayClick)
     }
 
     /**
@@ -128,8 +130,10 @@ export default class RozierMobile {
 
         // Translate menu panel
         TweenLite.to(this.$adminMenu, 0.6, {x: 0, ease: Expo.easeOut})
-        this.$mainContentOverlay[0].style.display = 'block'
-        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+        if (this.$mainContentOverlay.length) {
+            this.$mainContentOverlay[0].style.display = 'block'
+            TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+        }
         this.menuOpen = true
     }
 
@@ -142,8 +146,10 @@ export default class RozierMobile {
         TweenLite.to(this.$adminMenu, 0.6, {x: adminMenuX, ease: Expo.easeOut})
         TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
             ease: Expo.easeOut,
-            onComplete: function () {
-                this.$mainContentOverlay[0].style.display = 'none'
+            onComplete: () => {
+                if (this.$mainContentOverlay.length) {
+                    this.$mainContentOverlay[0].style.display = 'none'
+                }
             }})
 
         this.menuOpen = false
@@ -171,8 +177,10 @@ export default class RozierMobile {
         // Translate search panel
         TweenLite.to(this.$searchPanel, 0.6, {x: 0, ease: Expo.easeOut})
 
-        this.$mainContentOverlay[0].style.display = 'block'
-        TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+        if (this.$mainContentOverlay.length) {
+            this.$mainContentOverlay[0].style.display = 'block'
+            TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0.5, ease: Expo.easeOut})
+        }
 
         // Add active class
         this.$searchButton.addClass('active')
@@ -188,7 +196,7 @@ export default class RozierMobile {
         TweenLite.to(this.$searchPanel, 0.6, {x: searchPanelX, ease: Expo.easeOut})
         TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
             ease: Expo.easeOut,
-            onComplete: function () {
+            onComplete: () => {
                 this.$mainContentOverlay[0].style.display = 'none'
             }})
 
@@ -247,7 +255,7 @@ export default class RozierMobile {
         TweenLite.to(this.$treeWrapper, 0.6, {x: treeWrapperX, ease: Expo.easeOut})
         TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
             ease: Expo.easeOut,
-            onComplete: function () {
+            onComplete: () => {
                 this.$mainContentOverlay[0].style.display = 'none'
             }})
 
@@ -309,7 +317,7 @@ export default class RozierMobile {
         TweenLite.to(this.$userActions, 0.6, {x: userActionsX, ease: Expo.easeOut})
         TweenLite.to(this.$mainContentOverlay, 0.6, {opacity: 0,
             ease: Expo.easeOut,
-            onComplete: function () {
+            onComplete: () => {
                 this.$mainContentOverlay[0].style.display = 'none'
             }})
 

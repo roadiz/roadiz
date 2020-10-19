@@ -97,8 +97,12 @@ type|lower,
                 }) }}">{{- name -}}</a>
             {% else %}
                 <a href="{{ path('nodesEditSourcePage', {
-                    nodeId:node.id,
-                    translationId: nodeTree.translation.id
+                    nodeId: node.id,
+                    translationId: nodeTree.translation.id,
+                    referer: node.parent ? path('nodesEditSourcePage', {
+                        nodeId: node.parent.id,
+                        translationId: nodeTree.translation.id,
+                    }) : null
                 }) }}">{{- name -}}</a>
             {% endif %}
         </div>
@@ -120,7 +124,8 @@ type|lower,
         {% endif %}
 
         {% include 'widgets/nodeTree/contextualMenu.html.twig' with {
-            'node': node
+            'node': node,
+            'nodeTree': nodeTree
         } only %}
 
         {% if children %}

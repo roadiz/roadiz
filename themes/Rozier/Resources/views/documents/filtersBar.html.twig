@@ -10,6 +10,19 @@
                     <i class="uk-icon-search"></i>
                     <input id="uk-form-filter-input-search" type="text" name="search" placeholder="{% trans %}search{% endtrans %}" value="{{ filters.search }}">
                 </div>
+                <div class="rz-select">
+                    <select class="uk-form-control" name="embedPlatform" id="embedPlatform">
+                        <option value="">{{ 'document.no_embed_platform'|trans }}</option>
+                        <option{% if embedPlatform == 'splashbase' %} selected{% endif %} value="splashbase">{{ 'random.document'|trans }}</option>
+                        {% for availablePlatform, class in availablePlatforms %}
+                            <option{% if embedPlatform == availablePlatform %} selected{% endif %}
+                                value="{{ availablePlatform }}">{{ availablePlatform|capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button class="uk-button uk-button-filter" type="submit" aria-label="{{ 'filter'|trans }}">
+                    <i class="uk-icon uk-icon-filter"></i>
+                </button>
             </form>
             {% endif %}
 
