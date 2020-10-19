@@ -307,7 +307,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * A secure findBy with which user must be a backend user
      * to see unpublished nodes.
      *
-     * Reimplementing findBy features… with extra things.
+     * Reimplementing findBy features with extra things.
      *
      * * key => array('<=', $value)
      * * key => array('<', $value)
@@ -330,9 +330,9 @@ class NodesSourcesRepository extends StatusAwareRepository
      * * `tags => [$tag1, $tag2], tagExclusive => true`
      *
      * @param array $criteria
-     * @param array $orderBy
-     * @param integer $limit
-     * @param integer $offset
+     * @param array|null $orderBy
+     * @param int|null $limit
+     * @param int|null $offset
      * @return array|Paginator
      */
     public function findBy(
