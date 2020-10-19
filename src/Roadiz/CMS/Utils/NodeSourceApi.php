@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Utils;
 
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
@@ -40,6 +42,9 @@ class NodeSourceApi extends AbstractApi
         return $this->repository;
     }
 
+    /**
+     * @return NodesSourcesRepository|EntityRepository
+     */
     public function getRepository()
     {
         return $this->container['em']->getRepository($this->repository);
@@ -48,9 +53,9 @@ class NodeSourceApi extends AbstractApi
     /**
      * @param array $criteria
      * @param array|null $order
-     * @param null $limit
-     * @param null $offset
-     * @return array
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array|Paginator
      */
     public function getBy(
         array $criteria,
@@ -72,6 +77,8 @@ class NodeSourceApi extends AbstractApi
     /**
      * @param array $criteria
      * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy(
         array $criteria
@@ -87,7 +94,7 @@ class NodeSourceApi extends AbstractApi
     /**
      * @param array $criteria
      * @param array|null $order
-     * @return null|\RZ\Roadiz\Core\Entities\NodesSources
+     * @return null|NodesSources
      */
     public function getOneBy(array $criteria, array $order = null)
     {

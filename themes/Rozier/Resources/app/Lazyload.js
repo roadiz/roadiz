@@ -396,31 +396,38 @@ export default class Lazyload {
         }
     }
 
-    initCollectionsForms () {
+    initCollectionsForms ($scope = null) {
         const _this = this
+        let $types = null
+        if ($scope !== null) {
+            $types = $scope.find('.rz-collection-form-type')
+        } else {
+            $types = $('.rz-collection-form-type')
+        }
+        if ($types.length) {
+            $types.collection({
+                up: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-up"></i></a>',
+                down: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-down"></i></a>',
+                add: '<a tabindex="-1" class="uk-button-primary uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-plus"></i></a>',
+                remove: '<a tabindex="-1" class="uk-button-danger uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-minus"></i></a>',
+                after_add: (collection, element) => {
+                    _this.initMarkdownEditors(element)
+                    _this.initJsonEditors(element)
+                    _this.initCssEditors(element)
+                    _this.initYamlEditors(element)
+                    _this.initBootstrapSwitches(element)
+                    _this.initColorPickers(element)
+                    _this.initCollectionsForms(element)
 
-        $('.rz-collection-form-type').collection({
-            up: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-up"></i></a>',
-            down: '<a tabindex="-1" class="uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-angle-down"></i></a>',
-            add: '<a tabindex="-1" class="uk-button-primary uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-plus"></i></a>',
-            remove: '<a tabindex="-1" class="uk-button-danger uk-button uk-button-small" href="#"><i tabindex="-1" class="uk-icon uk-icon-minus"></i></a>',
-            after_add: (collection, element) => {
-                _this.initMarkdownEditors(element)
-                _this.initJsonEditors(element)
-                _this.initCssEditors(element)
-                _this.initYamlEditors(element)
-                _this.initBootstrapSwitches(element)
-                _this.initColorPickers(element)
-                _this.initCollectionsForms()
-
-                let $vueComponents = element.find('[data-vuejs]')
-                // Create each component
-                $vueComponents.each((i, el) => {
-                    window.Rozier.vueApp.mainContentComponents.push(window.Rozier.vueApp.buildComponent(el))
-                })
-                return true
-            }
-        })
+                    let $vueComponents = element.find('[data-vuejs]')
+                    // Create each component
+                    $vueComponents.each((i, el) => {
+                        window.Rozier.vueApp.mainContentComponents.push(window.Rozier.vueApp.buildComponent(el))
+                    })
+                    return true
+                }
+            })
+        }
     }
 
     initColorPickers ($scope) {

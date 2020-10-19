@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Utils;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Repositories\TagRepository;
 
@@ -26,12 +27,12 @@ class TagApi extends AbstractApi
      *
      * When no order is defined, tags are ordered by position.
      *
-     * @param  array      $criteria
-     * @param  array|null $order
-     * @param  int        $limit
-     * @param  int        $offset
+     * @param array      $criteria
+     * @param array|null $order
+     * @param int|null   $limit
+     * @param int|null   $offset
      *
-     * @return array
+     * @return array|Paginator
      */
     public function getBy(
         array $criteria,

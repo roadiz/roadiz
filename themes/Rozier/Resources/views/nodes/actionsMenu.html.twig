@@ -9,7 +9,13 @@
         </a>
         {% endif %}
         {% if workflow_can(node, 'delete') and (node.nodeSources|length == 1 or source.translation.defaultTranslation)  %}
-        <a role="button" tabindex="0" class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', { nodeId: node.getId}) }}">
+        <a role="button" tabindex="0" class="uk-button uk-button-danger" href="{{ path('nodesDeletePage', {
+            nodeId: node.getId,
+            referer: node.parent and translation ? path('nodesEditSourcePage', {
+                nodeId: node.parent.id,
+                translationId: translation.id
+            }) : null
+        }) }}">
             <span class="icon-container"><i class="uk-icon-rz-trash"></i></span>
             <span class="label"><span class="label-text">{% trans %}delete.node{% endtrans %}</span></span>
         </a>

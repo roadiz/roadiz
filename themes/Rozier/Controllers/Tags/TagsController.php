@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\TagTranslationType;
@@ -604,7 +605,7 @@ class TagsController extends RozierApp
     }
 
     /**
-     * @param bool  $referer
+     * @param false|string $referer
      * @param array $tagsIds
      *
      * @return FormInterface
@@ -625,7 +626,7 @@ class TagsController extends RozierApp
                 ],
             ]);
 
-        if (false !== $referer) {
+        if (false !== $referer && (new UnicodeString($referer))->startsWith('/')) {
             $builder->add('referer', HiddenType::class, [
                 'data' => $referer,
             ]);

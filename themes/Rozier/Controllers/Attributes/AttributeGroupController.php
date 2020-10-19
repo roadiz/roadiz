@@ -7,6 +7,7 @@ use RZ\Roadiz\Attribute\Form\AttributeGroupType;
 use RZ\Roadiz\Core\Entities\AttributeGroup;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\String\UnicodeString;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -71,8 +72,9 @@ class AttributeGroupController extends RozierApp
             /*
              * Force redirect to avoid resending form when refreshing page
              */
-            if ($request->get('referer', '') !== '') {
-                return $this->redirect($request->get('referer'));
+            if ($request->query->has('referer') &&
+                (new UnicodeString($request->query->get('referer')))->startsWith('/')) {
+                return $this->redirect($request->query->get('referer'));
             }
             return $this->redirect($this->generateUrl('attributeGroupsEditPage', ['id' => $item->getId()]));
         }

@@ -5316,6 +5316,12 @@
             <target></target>
             <note>Default login button label for OpenID</note>
         </trans-unit>
+
+        <trans-unit id="filter">
+            <source>filter</source>
+            <target></target>
+            <note>Button label for a generic filtering action.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

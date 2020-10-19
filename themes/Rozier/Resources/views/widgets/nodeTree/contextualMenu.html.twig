@@ -5,22 +5,21 @@
        class="tree-contextualmenu-button uk-button uk-button-mini"><i class="uk-icon-caret-down"></i></a>
     <nav class="uk-dropdown uk-dropdown-small uk-dropdown-flip">
         <div class="vertical-nodetype">
-            {#<p class="text">{{- type -}}</p>#}
             {% if node.Locked %} <i class="uk-icon-lock"></i>{% endif %}
             {% if not node.Visible %} <i class="uk-icon-eye-slash"></i>{% endif %}
         </div>
         <div class="uk-nav uk-nav-dropdown">
             <p class="add-child">
-                <a title="{{ "add.node.%name%.child"|trans({'%name%': node.getNodeName}) }}"
-                   href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}">
+                <a title="{{ "add.node.%name%.child"|trans({'%name%': node.nodeName}) }}"
+                   href="{{ path('nodesAddChildPage', { nodeId:node.id }) }}">
                     <i class="uk-icon-rz-plus"></i> {% trans %}add.a.child.node{% endtrans %}
                 </a>
             </p>
             <div class="wrapper">
                 <header class="uk-nav-header">Actions</header>
                 <p>
-                    <a title="{{ "edit.node.%name%"|trans({'%name%': node.getNodeName}) }}"
-                       href="{{ path('nodesEditPage', { nodeId:node.getId }) }}">
+                    <a title="{{ "edit.node.%name%"|trans({'%name%': node.nodeName}) }}"
+                       href="{{ path('nodesEditPage', { nodeId:node.id }) }}">
                         <i class="uk-icon-rz-pencil"></i> {% trans %}edit.node{% endtrans %}
                     </a>
                 </p>
@@ -42,15 +41,16 @@
                 {% endif %}
 
                 {% if workflow_can(node, 'delete') %}
-                    {% set refererUrl = request.uri %}
-                    {% if refererUrl matches '/ajax/' and parent %}
-                        {% set refererUrl = path('nodesEditSourcePage', { nodeId:parent.getId, translationId:nodeTree.getTranslation.getId}) %}
-                    {% elseif refererUrl matches '/ajax/' %}
-                        {% set refererUrl = path('nodesHomePage') %}
+                    {% set refererUrl = null %}
+                    {% if node.parent %}
+                        {% set refererUrl = path('nodesEditSourcePage', {
+                            nodeId: node.parent.id,
+                            translationId: nodeTree.translation.id
+                        }) %}
                     {% endif %}
                     <p>
-                        <a title="{{ "delete.node.%name%"|trans({'%name%': node.getNodeName}) }}"
-                           href="{{ path('nodesDeletePage', { nodeId:node.getId, referer:refererUrl }) }}">
+                        <a title="{{ "delete.node.%name%"|trans({'%name%': node.nodeName}) }}"
+                           href="{{ path('nodesDeletePage', { nodeId: node.id, referer: refererUrl }) }}">
                             <i class="uk-icon-rz-trash-o"></i> {% trans %}delete.node{% endtrans %}
                         </a>
                     </p>
@@ -99,7 +99,7 @@
                     {% if workflow_can(node, 'publish') %}
                         <p><a class="publish-all-node"
                               title="{% trans %}publish_node_offspring{% endtrans %}"
-                              href="{{ path('nodesPublishAllAction', {nodeId : node.id}) }}">
+                              href="{{ path('nodesPublishAllAction', { nodeId : node.id }) }}">
                                 <i class="uk-icon-rz-published-mini"></i> {% trans %}publish_node_offspring{% endtrans %}</a>
                         </p>
                     {% endif %}

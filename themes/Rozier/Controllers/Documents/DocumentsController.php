@@ -21,7 +21,6 @@ use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
-use RZ\Roadiz\Utils\MediaFinders\EmbedFinderInterface;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
@@ -92,6 +91,19 @@ class DocumentsController extends RozierApp
             $prefilters['folders'] = [$folder];
             $this->assignation['folder'] = $folder;
         }
+
+        if ($request->query->has('type') &&
+            $request->query->get('type', '') !== '') {
+            $prefilters['mimeType'] = trim($request->query->get('type', ''));
+            $this->assignation['mimeType'] = trim($request->query->get('type', ''));
+        }
+
+        if ($request->query->has('embedPlatform') &&
+            $request->query->get('embedPlatform', '') !== '') {
+            $prefilters['embedPlatform'] = trim($request->query->get('embedPlatform', ''));
+            $this->assignation['embedPlatform'] = trim($request->query->get('embedPlatform', ''));
+        }
+        $this->assignation['availablePlatforms'] = $this->get('document.platforms');
 
         /*
          * Handle bulk folder form
