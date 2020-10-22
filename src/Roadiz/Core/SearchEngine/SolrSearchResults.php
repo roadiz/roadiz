@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\SearchEngine;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Wrapper over Solr search results and metas.
@@ -16,21 +17,25 @@ class SolrSearchResults implements \Iterator
 {
     /**
      * @var array
+     * @JMS\Exclude()
      */
     protected $response;
 
     /**
      * @var EntityManagerInterface
+     * @JMS\Exclude()
      */
     protected $entityManager;
 
     /**
      * @var int
+     * @JMS\Exclude()
      */
     protected $position;
 
     /**
      * @var array|null
+     * @JMS\Exclude()
      */
     protected $resultItems;
 
@@ -50,6 +55,8 @@ class SolrSearchResults implements \Iterator
 
     /**
      * @return int
+     * @JMS\Groups({"search_results"})
+     * @JMS\VirtualProperty()
      */
     public function getResultCount(): int
     {
@@ -62,6 +69,8 @@ class SolrSearchResults implements \Iterator
 
     /**
      * @return array
+     * @JMS\Groups({"search_results"})
+     * @JMS\VirtualProperty()
      */
     public function getResultItems(): array
     {
