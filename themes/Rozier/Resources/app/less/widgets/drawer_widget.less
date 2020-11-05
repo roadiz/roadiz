@@ -70,11 +70,14 @@
 }
 
 .drawer-widget-nav {
-    min-height:45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border-bottom:1px dashed @documents-widget-border;
 
-    @media (min-width: @screen-lg-min) {
-        min-height:55px;
+    &::before,
+    &::after {
+        content: none;
     }
 
     .uk-navbar-brand {
