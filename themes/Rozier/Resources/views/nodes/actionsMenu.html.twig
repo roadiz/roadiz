@@ -68,7 +68,8 @@
                 {% if node.nodeType.reachable %}
                     {% if source and node.published %}
                         <a class="uk-button public-url-link" target="_blank" href="{{ path(source) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
-                    {% elseif source %}
+                    {% endif %}
+                    {% if source and (node.published or node.draft or node.pending) %}
                         <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ path(source)|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
                     {% endif %}
                 {% endif %}
