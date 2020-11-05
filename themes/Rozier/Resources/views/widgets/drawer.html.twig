@@ -36,27 +36,26 @@
                     </li>
                     <li class="uk-navbar-brand label">
                         {{ label|trans }}
-                        {% if attr['data-universal'] %}
-                        <i data-uk-tooltip="{animation:true}"
-                           title="{% trans %}universal{% endtrans %}"
-                           class="uk-icon uk-icon-flag universal-indicator"></i>
-                        {% endif %}
-                    </li>
-                    {% if isSortable == 'false' %}
-                        <li class="uk-navbar-brand uk-text-muted">
+                        {% if isSortable == 'false' %}
+                        <span class="uk-text-muted">
                             {% trans %}drawer.sortable-not-enable{% endtrans %}
-                        </li>
-                    {% endif %}
-
-                    <li
-                        class="uk-navbar-brand uk-text-muted"
-                        :class="{ 'uk-text-danger': items.length < this.drawer.minLength }">
-                        <template v-if="this.drawer.maxLength < 9999">
-                            ${ items.length } / ${ this.drawer.maxLength }
-                        </template>
-                        <template v-if="this.drawer.minLength > 0">
-                            ({% trans %}min{% endtrans %}: ${ this.drawer.minLength })
-                        </template>
+                        </span>
+                        {% endif %}
+                        <span
+                            class="uk-text-muted"
+                            :class="{ 'uk-text-danger': items.length < this.drawer.minLength }">
+                            <template v-if="this.drawer.maxLength < 9999">
+                                ${ items.length } / ${ this.drawer.maxLength }
+                            </template>
+                            <template v-if="this.drawer.minLength > 0">
+                                ({% trans %}min{% endtrans %}: ${ this.drawer.minLength })
+                            </template>
+                        </span>
+                        {% if attr['data-universal'] %}
+                            <i data-uk-tooltip="{animation:true}"
+                               title="{% trans %}universal{% endtrans %}"
+                               class="uk-icon uk-icon-flag universal-indicator"></i>
+                        {% endif %}
                     </li>
                 </ul>
                 <div class="uk-navbar-content uk-navbar-flip">
@@ -88,20 +87,16 @@
             </template>
 
             <div class="drawer-widget-sortable-container">
-
                 <transition name="fade" v-if="drawer.isLoading">
                     <div class="spinner"></div>
                 </transition>
-
                 <ul class="drawer-widget-sortable"
                     data-input-name="{{ name }}">
-
                     <draggable
                         v-model="items"
-                        {#:options="{ group: { name: '{{ entity }}' }, sort: {{ isSortable }} }"#}
                         :options="getOptions()"
                         >
-                        <transition-group style="display:block; min-height: 80px; display: flex; flex-wrap: wrap;">
+                        <transition-group>
                             <component
                                 v-bind:is="drawer.currentListingView"
                                 v-for="(item, index) in items"

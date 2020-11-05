@@ -4,7 +4,7 @@
             class="uk-sortable-list-item drawer-item type-label"
             v-if="item"
             @click.prevent="onAddItemButtonClick"
-            :class="{ 'has-thumbnail': item.thumbnail, 'not-published': item.isPublished === false  }">
+            :class="{ 'has-thumbnail': item.thumbnail, 'not-published': item.isPublished === false  }">
 
             <div class="uk-sortable-handle"></div>
             <div class="border" :style="{ backgroundColor: getColor() }"></div>
