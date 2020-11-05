@@ -40,7 +40,7 @@
             <ul class="drawer-widget-sortable"
                 data-input-name="">
                 <draggable v-model="items" :options="{ group: '' }">
-                    <transition-group style="display:block; min-height: 80px;">
+                    <transition-group>
                         <component
                             v-bind:is="drawer.currentListingView"
                             v-for="(item, index) in items"

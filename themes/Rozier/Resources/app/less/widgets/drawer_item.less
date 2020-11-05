@@ -75,7 +75,6 @@
     display: flex;
     align-items: flex-start;
     justify-items: center;
-    float: left;
     width: 240px;
     height: @drawer-item-height;
     margin: 0 10px 10px 0;
@@ -89,6 +88,12 @@
     cursor: default;
     .border-radius(3px, 3px, 0, 0);
     .transition(0.4s background @easeOutExpo, 0.4s opacity @easeOutExpo);
+
+    flex: 0 1 ~"calc(50% - 12px)";
+
+    @media (min-width: @screen-lg-min) {
+        flex: 0 1 ~"calc(33.333% - 12px)";
+    }
 
     &.has-thumbnail {
         height: @drawer-item-height*3;

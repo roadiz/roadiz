@@ -185,7 +185,6 @@ class FolderRepository extends EntityRepository
      * @param QueryBuilder $qb QueryBuilder to pass
      * @param array $criteria Additional criteria
      * @param string $alias SQL query table alias
-     *
      * @return QueryBuilder
      */
     protected function createSearchBy(
@@ -222,17 +221,17 @@ class FolderRepository extends EntityRepository
 
     /**
      * @param string $pattern
-     * @param array  $criteria
-     *
+     * @param array $criteria
+     * @param string $alias
      * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countSearchBy($pattern, array $criteria = [])
+    public function countSearchBy($pattern, array $criteria = [], $alias = "obj")
     {
-        $qb = $this->createQueryBuilder('f');
-        $qb->select($qb->expr()->countDistinct('f'))
-            ->leftJoin('f.translatedFolders', 'obj');
-
-        $qb = $this->createSearchBy($pattern, $qb, $criteria);
+        $qb = $this->createQueryBuilder($alias);
+        $qb->select($qb->expr()->countDistinct($alias));
+        $qb = $this->createSearchBy($pattern, $qb, $criteria, $alias);
 
         return (int) $qb->getQuery()->getSingleScalarResult();
     }

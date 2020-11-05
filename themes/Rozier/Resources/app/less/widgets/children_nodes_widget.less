@@ -304,8 +304,8 @@
             &.unpublished-node {
                 & > .non-nestable-handle:before,
                 & > .uk-nestable-handle:before {
-                    top: 11px;
-                    left: 7px;
+                    top: 6px;
+                    left: 3px;
                     width: @children-node-height / 2;
                     height: @children-node-height / 2;
                     .rounded(3px);
@@ -318,8 +318,7 @@
                 & > .uk-nestable-handle {
                     position: relative;
                     width: 32px;
-                    //top: -20px;
-                    top: 7px;
+                    top: 0;
                     left: -7px;
                     border-color: #a0a0a0;
                     z-index: 2;
@@ -340,10 +339,10 @@
                     .rounded(100%);
                     background-color: white;
                     border: 1px solid #a0a0a0;
-                    width: 25px;
+                    width: @children-node-height / 2;
+                    height: @children-node-height / 2;
                     display: inline-block;
-                    height: 25px;
-                    top: 6px;
+                    top: 9px;
                     left: 9px;
                     position: absolute;
 
@@ -354,6 +353,9 @@
                     .icon-stack-folder,
                     .uk-icon-folder {
                         .rounded(15%);
+                        top: 10px;
+                        width: (@children-node-height / 2) - 3;
+                        height: (@children-node-height / 2) - 3;
                     }
                 }
 
@@ -362,7 +364,6 @@
                     &-final {
                         left: 21px;
                         &:after {
-                            // position: relative;
                             position: absolute;
                             display: block;
                             content: "";
@@ -373,8 +374,9 @@
                             background-color: #a0a0a0;
                             width: 8px;
                             height: 8px;
-                            top: 9px;
-                            left: 9px;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
                         }
                     }
                 }
@@ -389,7 +391,7 @@
                 }
 
                 .nodetree-element-name {
-                    left: 9px;
+                    left: 4px;
                 }
                 &:hover {
                     .icon-stack-folder,
