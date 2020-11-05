@@ -25,8 +25,7 @@
 
     {% include '@Rozier/documents/filtersBar.html.twig' %}
 
-    <article class="content content-no-action-menu">
-
+    <article class="content">
         {% apply spaceless %}
         <ul class="documents-list">
         {% for document in documents %}
@@ -38,7 +37,6 @@
         {% endfor %}
         </ul>
         {% endapply %}
-
 	</article>
 </section>
 {% endblock %}

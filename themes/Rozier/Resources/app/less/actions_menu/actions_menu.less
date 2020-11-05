@@ -4,15 +4,16 @@
 
 
 /* -------- VARS -------- */
-
-@action-menu-H: 52px;
+@action-menu-border-size: 4px;
+@action-menu-H: 46px;
+@action-menu-W: @action-menu-H + @action-menu-border-size;
+@action-submenu-H: 36px;
 @separation-border-color: #DDDDDD;
 @item-global-color: #808080;
 @item-global-label-color: #999999;
 @item-global-border-color: #cecece;
 @item-global-background: #f9f9f9;
 @subnav-W: 240px;
-
 
 /* -------- STYLES -------- */
 
@@ -41,12 +42,25 @@
 }
 
 .actions-menu {
+    @media (max-width: @screen-xs-max) {
+        position: relative;
+        width: auto;
+        height: auto;
+        top: auto;
+        right: 0;
+        box-shadow: none;
+        background: none;
+        padding: 20px 15px;
+        border-top: 3px solid #E5E5E5;
+        z-index:4;
+    }
+
     @media (min-width: @screen-sm-min) {
         position: fixed;
         top: 220px;
-        right: -56px;
+        right: @action-menu-W * -1;
         z-index: 9999;
-        width:56px;
+        width: @action-menu-W;
         .box-sizing();
         background:white;
         box-shadow: 3px 5px 30px rgba(0,0,0,0.1);
@@ -68,7 +82,7 @@
             width: 100%;
             white-space: nowrap;
             text-align: left;
-            padding: 9px 9px 9px 13px;
+            padding: 6px 6px 6px (6px + @action-menu-border-size);
             border-top: 1px solid @separation-border-color !important;
             background-image: none;
             background-color: white;
@@ -104,7 +118,7 @@
                 top: 0px;
                 bottom: 0px;
                 left: 0px;
-                width: 4px;
+                width: @action-menu-border-size;
                 background-color: @item-global-label-color;
                 z-index: 99999;
             }
@@ -118,7 +132,7 @@
     }
 
     @media (min-width: @screen-sm-min) {
-        // for Save button  and other too !
+        // for Save button and other too !
         .uk-button {
             .icon-container {
                 position: absolute;
@@ -126,7 +140,7 @@
                 // width: 100%;
                 top: 0; right:0; bottom:0; left: 0;
                 text-align: center;
-                padding: 7px 9px 9px 13px;
+                padding: 6px 6px 6px (6px + @action-menu-border-size);
                 .box-sizing();
                 display: block;
                 z-index: 2;
@@ -146,7 +160,6 @@
                     }
                 }
             }
-
 
             &.uk-button-primary {
                 .label-text {
@@ -168,7 +181,6 @@
         }
     }
 
-
     // for Classic button
     .no-subnav {
         position: relative;
@@ -188,7 +200,7 @@
             position: absolute;
             display: block;
             font-size: 12px;
-            line-height: 52px;
+            line-height: @action-menu-H;
             font-weight: bold;
             color: #444;
             text-shadow: none;
@@ -212,11 +224,10 @@
         }
     }
 
-
     // for Subnav button
     .with-subnav {
         position: relative;
-        height:52px;
+        height: @action-menu-H;
         border-top:none;
         .box-sizing();
 
@@ -230,7 +241,7 @@
         &.reverse {
             nav, ul {
                 top: auto;
-                bottom: 52px;
+                bottom: @action-menu-H;
             }
 
             .label:after {
@@ -255,7 +266,7 @@
                     border-right: 5px solid transparent;
                     border-top: 5px solid #DADADA;
                     right: 18px;
-                    top: 24px;
+                    top: (@action-menu-H / 2) - 1;
                 }
             }
         }
@@ -275,27 +286,28 @@
             position: absolute;
             margin: 0px;
             padding: 0px;
-            width: @subnav-W + 1px;
-            right: 55px;
-            top: 52px;
+            width: @subnav-W;
+            right: @action-menu-W;
+            top: @action-menu-H;
             z-index: 10000;
             border-right: 1px dashed @item-global-border-color;
             border-bottom: 1px solid @item-global-border-color;
-            border-left: 4px solid @item-global-label-color;
+            border-left: @action-menu-border-size solid @item-global-label-color;
             .box-sizing();
             box-shadow: 3px 5px 20px rgba(0,0,0,0.1);
 
-            .uk-button, li {
+            .uk-button,
+            li {
                 position: relative;
                 border: 0 none;
-                height: @action-menu-H - 4px;
+                height: @action-submenu-H;
                 white-space: nowrap;
                 text-align: left;
                 padding: 0 9px;
                 border-top: 1px solid @separation-border-color;
                 background-color: @item-global-background;
                 .box-sizing();
-                line-height: @action-menu-H - 4px;
+                line-height: @action-submenu-H;
 
                 &:before {
                     display: none;
@@ -306,6 +318,14 @@
                 i {
                     .action-menu-icon();
                     .transition(~'border-color ease 0.3s, color ease 0.3s');
+
+                    width: 24px;
+                    height: 24px;
+                    font-size: 14px;
+
+                    &::before {
+                        top: 21%;
+                    }
                 }
 
                 .label {
@@ -314,7 +334,7 @@
                     vertical-align: middle;
                     font-size: 11px;
                     font-weight: bold;
-                    line-height:48px;
+                    line-height: @action-submenu-H;
                     padding-left: 9px;
                     &:before {
                         display: none;
@@ -322,8 +342,8 @@
                 }
                 .bootstrap-switch {
                     position: absolute;
-                    right: 13px;
-                    top: 10px;
+                    right: 10px;
+                    top: @action-menu-border-size;
                 }
                 &:hover {
                     background: white;
@@ -336,7 +356,7 @@
            input[type=radio] {
                 position: absolute;
                 right: 16px;
-                top:13px; // top: 21px;
+                top: 8px;
             }
         }
         nav {

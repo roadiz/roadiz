@@ -70,15 +70,32 @@
 }
 
 .drawer-widget-nav {
-    min-height:45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     border-bottom:1px dashed @documents-widget-border;
 
-    @media (min-width: @screen-lg-min) {
-        min-height:55px;
+    &::before,
+    &::after {
+        content: none;
+    }
+
+    .uk-navbar-nav {
+        float: none;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
     .uk-navbar-brand {
         .widgetNavBarBrand();
+
+        height: auto;
+
+        .uk-text-muted {
+            margin: 0 0 0 1em;
+            font-size: 11px;
+        }
     }
 
     .uk-icon-rz-documents{
@@ -120,9 +137,8 @@
 }
 
 .drawer-widget-sortable-container {
-    background: #fff;
     position: relative;
-
+    background: #ffffff;
     @media (min-width: @screen-sm-min) {
         min-height: 108px;
     }
@@ -131,7 +147,14 @@
 .drawer-widget-sortable{
     margin: 0;
     padding: 10px;
-    background: #fff;
+
+    // Weird vuedraggable DOM
+    // transition-group component
+    & > div > span {
+        display: flex;
+        flex-wrap: wrap;
+        min-height: 80px;
+    }
 }
 
 .sortable-ghost {

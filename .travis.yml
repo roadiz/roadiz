@@ -2,7 +2,9 @@
 # Ambroise Maupate
 node_js:
   - "lts/*"
-  - "8"
+  - "12"
+  - "10"
+
 php:
   - 7.2
   - 7.3
@@ -19,8 +21,8 @@ jobs:
           language: node_js
           node_js:
               - "lts/*"
+              - "12"
               - "10"
-              - "8"
           script:
               - cd themes/DefaultTheme/static
               - yarn install --pure-lockfile
@@ -30,8 +32,8 @@ jobs:
           language: node_js
           node_js:
               - "lts/*"
+              - "12"
               - "10"
-              - "8"
           script:
               - cd themes/Install/static
               - yarn install --pure-lockfile
@@ -41,8 +43,8 @@ jobs:
           language: node_js
           node_js:
               - "lts/*"
+              - "12"
               - "10"
-              - "8"
           script:
               - cd themes/Rozier
               - yarn install --pure-lockfile
