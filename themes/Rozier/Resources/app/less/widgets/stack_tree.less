@@ -4,7 +4,25 @@
 
 
 /* -------- STYLES -------- */
+.available-nodetree-tags,
+.stack-tree-widget .nodetree-tags {
+    .uk-badge {
+        border-radius: 15px;
+        padding: 5px 10px;
+        font-size: 10px;
+        background: none;
+        border: 1px solid #bababa;
+        line-height: 1;
+        color: #717171;
+        transition: border-color ease 0.33s, color ease 0.33s;
 
+        &:hover {
+            text-decoration: none;
+            border: 1px solid #7c7c7c;
+            color: #434343;
+        }
+    }
+}
 .root-tree.stack-tree-widget {
     .nodetree-bulk-selection {
         right:48px;
@@ -60,7 +78,7 @@
         & > .non-nestable-list-item,
         & > .uk-nestable-item {
             padding: 11px 0;
-            background-color: #F0F0F0;
+            //background-color: #F0F0F0;
             border-color: #D2D2D2;
         }
     }
