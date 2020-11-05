@@ -189,17 +189,19 @@
         }
     }
     .unpublished-node .nodetree-element-img {
-        top: 12px;
-        left: 6px;
-        width: 30px;
-        height: 30px;
-        .rounded(0);
+        .rounded(2px);
         .transform(rotate(45deg));
+        top: 9px;
+        left: 4px;
+        width: @children-node-height / 2;
+        height: @children-node-height / 2;
 
         img {
+            transform-origin: center center;
             .transform(rotate(-45deg) scale(1.4));
         }
         object {
+            transform-origin: center center;
             .transform(rotate(-45deg));
         }
     }
