@@ -31,7 +31,7 @@
         <object class="document-image" type="image/svg+xml" width="80" height="80" data="{{ document|url }}"></object>
     {% elseif document.isImage and not document.private %}
         {{- document|display({
-            "crop":"80x80",
+            "fit":"80x80",
             "quality":50,
             "picture": true,
             "class": "document-image"
