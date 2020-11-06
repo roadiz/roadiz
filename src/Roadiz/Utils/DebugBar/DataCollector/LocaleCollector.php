@@ -27,7 +27,7 @@ final class LocaleCollector extends DataCollector implements Renderable
     /**
      * @inheritDoc
      */
-    function collect()
+    public function collect()
     {
         return [
             'locale' => $this->requestStack->getMasterRequest()->getLocale() .
@@ -40,7 +40,7 @@ final class LocaleCollector extends DataCollector implements Renderable
     /**
      * @inheritDoc
      */
-    function getName()
+    public function getName()
     {
         return 'locale';
     }

@@ -40,7 +40,7 @@
         "ext-pdo":                                 "*",
         "ext-simplexml":                           "*",
         "ambroisemaupate/intervention-request":    "^3.1.0",
-        "composer/composer":                       "^1.8.6",
+        "composer/composer":                       "^1.8.6 || ^2.0.0",
         "doctrine/orm":                            "^2.7",
         "enshrined/svg-sanitize":                  "^0.10.0",
         "gedmo/doctrine-extensions":               "^2.4",
