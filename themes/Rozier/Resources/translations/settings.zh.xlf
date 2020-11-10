@@ -60,6 +60,16 @@
                 <note>Setting name</note>
             </trans-unit>
       <!-- Setting groups names -->
+      <trans-unit xml:space="preserve" id="APIs">
+                <source>APIs</source>
+                <target state="translated">API</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="OpenId">
+                <source>OpenId</source>
+                <target state="translated">OpenID</target>
+                <note>Setting group name</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>
