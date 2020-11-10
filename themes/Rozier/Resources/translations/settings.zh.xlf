@@ -65,9 +65,24 @@
                 <target state="translated">API</target>
                 <note>Setting group name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="Development">
+                <source>Development</source>
+                <target state="translated">开发</target>
+                <note>Setting group name</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="OpenId">
                 <source>OpenId</source>
                 <target state="translated">OpenID</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Site informations">
+                <source>Site informations</source>
+                <target state="translated">站点信息</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Social networks">
+                <source>Social networks</source>
+                <target state="translated">社交网络</target>
                 <note>Setting group name</note>
             </trans-unit>
     </body>
