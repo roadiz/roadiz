@@ -422,6 +422,9 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
 
     /**
      * @return string
+     * @Serializer\VirtualProperty
+     * @Serializer\SerializedName("slug")
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_base"})
      */
     public function getIdentifier(): string
     {
