@@ -5,7 +5,7 @@
 
     <header class="content-header header-node header-node-delete">
         <h1 class="content-title node-delete-title">{{ "delete.node.%name%"|trans({'%name%': node.getNodeName})|u.truncate(25, '[…]', true) }}</h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include 'nodes/navBack.html.twig' %}
     </header>
 
     <article class="content content-delete content-node-delete content-no-action-menu">

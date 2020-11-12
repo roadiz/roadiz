@@ -58,6 +58,7 @@
                 <a data-uk-tooltip="{animation:true}" title="{% trans %}history{% endtrans %}" class="uk-navbar-link" href="{{ path('nodesHistoryPage', { nodeId: node.id}) }}"><i class="uk-icon uk-icon-clock-o"></i></a>
             </li>
         {% endif %}
+        {% block additional_entries %}{% endblock %}
     </ul>
     {% endapply %}
 </nav>

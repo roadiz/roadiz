@@ -15,8 +15,8 @@
             {{ pageTitle }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
-        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
     </header>
     <article class="content content-node-edit-tags">
         {% form_theme form '@Rozier/forms.html.twig' %}
