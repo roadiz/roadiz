@@ -33,7 +33,6 @@ class EntityListManager
      * @var string
      */
     protected $entityName;
-
     /**
      * @var Paginator
      */
@@ -74,28 +73,26 @@ class EntityListManager
      * @var Translation|null
      */
     protected $translation = null;
-
     /**
      * @var bool
      */
     protected $displayNotPublishedNodes;
-
     /**
      * @var bool
      */
     protected $displayAllNodesStatuses;
 
     /**
-     * @param Request       $request
+     * @param Request|null  $request
      * @param EntityManager $entityManager
      * @param string        $entityName
      * @param array         $preFilters
      * @param array         $preOrdering
      */
     public function __construct(
-        Request $request,
+        ?Request $request,
         EntityManager $entityManager,
-        $entityName,
+        string $entityName,
         $preFilters = [],
         $preOrdering = []
     ) {
@@ -169,12 +166,12 @@ class EntityListManager
     }
 
     /**
-     * @param Translation $newtranslation
+     * @param Translation|null $translation
      * @return $this
      */
-    public function setTranslation(Translation $newtranslation = null)
+    public function setTranslation(Translation $translation = null)
     {
-        $this->translation = $newtranslation;
+        $this->translation = $translation;
 
         return $this;
     }
@@ -223,7 +220,7 @@ class EntityListManager
             unset($this->filteringArray["chroot"]); // remove placeholder
         }
 
-        if (false === $disabled) {
+        if (false === $disabled && null !== $this->request) {
             if ($this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
                 $this->orderingArray = [
@@ -258,7 +255,7 @@ class EntityListManager
 
         $this->createPaginator();
 
-        if (false === $disabled) {
+        if (false === $disabled && null !== $this->request) {
             if ($this->request->query->get('search') != "") {
                 $this->paginator->setSearchPattern($this->request->query->get('search'));
             }
@@ -268,7 +265,7 @@ class EntityListManager
     /**
      * Configure a custom current page.
      *
-     * @param integer $page
+     * @param int $page
      *
      * @return $this
      */
@@ -453,7 +450,7 @@ class EntityListManager
     /**
      * Configure a custom item count per page.
      *
-     * @param integer $itemPerPage
+     * @param int $itemPerPage
      *
      * @return $this
      */

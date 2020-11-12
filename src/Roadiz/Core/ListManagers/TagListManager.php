@@ -14,13 +14,17 @@ use Symfony\Component\HttpFoundation\Request;
 class TagListManager extends EntityListManager
 {
     /**
-     * @param Request       $request
+     * @param Request|null  $request
      * @param EntityManager $entityManager
      * @param array         $preFilters
      * @param array         $preOrdering
      */
-    public function __construct(Request $request, EntityManager $entityManager, $preFilters = [], $preOrdering = [])
-    {
+    public function __construct(
+        ?Request $request,
+        EntityManager $entityManager,
+        $preFilters = [],
+        $preOrdering = []
+    ) {
         parent::__construct($request, $entityManager, Tag::class, $preFilters, $preOrdering);
     }
 
