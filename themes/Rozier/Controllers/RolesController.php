@@ -206,7 +206,7 @@ class RolesController extends RozierApp
                                 new NotNull(),
                                 new NotBlank(),
                                 new Regex([
-                                    'pattern' => '#^ROLE_([A-Z\_]+)$#',
+                                    'pattern' => '#^ROLE_([A-Z0-9\_]+)$#',
                                     'message' => 'role.name.must_comply_with_standard',
                                 ]),
                             ],
