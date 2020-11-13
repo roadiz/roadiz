@@ -307,6 +307,11 @@
                 <target state="translated">您确定要重置此语言的属性值吗？</target>
                 <note/>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_value.%attributeValueId%.not_exists">
+                <source>attribute_value.%attributeValueId%.not_exists</source>
+                <target state="translated">属性 %attributeValueId% 的值不存在</target>
+                <note/>
+            </trans-unit>
     </body>
   </file>
 </xliff>

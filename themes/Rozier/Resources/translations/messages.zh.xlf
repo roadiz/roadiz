@@ -5154,6 +5154,11 @@
             <target state="translated">使用 OpenID 登录</target>
             <note>Default login button label for OpenID</note>
         </trans-unit>
+      <trans-unit id="filter">
+        <source>filter</source>
+        <target state="translated">过滤器</target>
+        <note>Button label for a generic filtering action.</note>
+      </trans-unit>
     </body>
   </file>
 </xliff>
