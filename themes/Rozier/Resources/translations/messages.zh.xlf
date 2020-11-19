@@ -5156,7 +5156,7 @@
         </trans-unit>
       <trans-unit id="filter">
         <source>filter</source>
-        <target state="translated">过滤器</target>
+        <target state="translated">筛选器</target>
         <note>Button label for a generic filtering action.</note>
       </trans-unit>
     </body>
