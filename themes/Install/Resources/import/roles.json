@@ -24,14 +24,6 @@
         ]
     },
     {
-        "name": "ROLE_ACCESS_COMMENTS",
-        "groups": [
-            {
-                "name": "Editors"
-            }
-        ]
-    },
-    {
         "name": "ROLE_ACCESS_CUSTOMFORMS",
         "groups": [
             {
@@ -77,10 +69,6 @@
     },
     {
         "name": "ROLE_ACCESS_GROUPS",
-        "groups": []
-    },
-    {
-        "name": "ROLE_ACCESS_MANAGE_SUBSCRIBERS",
         "groups": []
     },
     {
