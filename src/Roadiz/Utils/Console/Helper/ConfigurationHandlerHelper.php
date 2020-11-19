@@ -3,17 +3,17 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Console\Helper;
 
-use RZ\Roadiz\Config\ConfigurationHandler;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use Symfony\Component\Console\Helper\Helper;
 
 class ConfigurationHandlerHelper extends Helper
 {
     /**
-     * @var ConfigurationHandler
+     * @var ConfigurationHandlerInterface
      */
     protected $configurationHandler;
 
-    public function __construct(ConfigurationHandler $configurationHandler)
+    public function __construct(ConfigurationHandlerInterface $configurationHandler)
     {
         $this->configurationHandler = $configurationHandler;
     }
@@ -27,7 +27,7 @@ class ConfigurationHandlerHelper extends Helper
     }
 
     /**
-     * @return ConfigurationHandler
+     * @return ConfigurationHandlerInterface
      */
     public function getConfigurationHandler()
     {

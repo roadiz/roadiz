@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
+use Symfony\Component\Dotenv\Dotenv;
 
 if (PHP_VERSION_ID < 70200) {
     echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
@@ -22,6 +23,8 @@ define('ROADIZ_ROOT', dirname(__FILE__));
 require("vendor/autoload.php");
 
 $kernel = new Kernel('prod', false, true);
+$dotenv = new Dotenv();
+$dotenv->load($kernel->getProjectDir() . '/.env');
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);

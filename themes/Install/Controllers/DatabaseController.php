@@ -5,7 +5,7 @@ namespace Themes\Install\Controllers;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use RZ\Roadiz\Config\YamlConfigurationHandler;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
@@ -50,6 +50,7 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig\Error\RuntimeError
      */
     public function databaseAction(Request $request)
     {
@@ -57,14 +58,14 @@ class DatabaseController extends InstallApp
         if ($databaseForm->has('inheritance_type')) {
             $databaseForm->get('inheritance_type')->setData($this->get('config')['inheritance']['type']);
         }
-        /** @var YamlConfigurationHandler $yamlConfigHandler */
-        $yamlConfigHandler = $this->get('config.handler');
+        /** @var ConfigurationHandlerInterface $configurationHandler */
+        $configurationHandler = $this->get(ConfigurationHandlerInterface::class);
         $databaseForm->handleRequest($request);
 
         if ($databaseForm->isSubmitted() && $databaseForm->isValid()) {
             try {
                 if (false !== $this->testDoctrineConnection($databaseForm->getData())) {
-                    $tempConf = $yamlConfigHandler->getConfiguration();
+                    $tempConf = $configurationHandler->load();
                     foreach ($databaseForm->getData() as $key => $value) {
                         $tempConf['doctrine'][$key] = $value;
                     }
@@ -73,7 +74,7 @@ class DatabaseController extends InstallApp
                         $tempConf['inheritance']['type'] = $databaseForm->get('inheritance_type')->getData();
                     }
 
-                    $yamlConfigHandler->setConfiguration($tempConf);
+                    $configurationHandler->setConfiguration($tempConf);
 
                     /*
                      * Test connection
@@ -81,7 +82,7 @@ class DatabaseController extends InstallApp
                     $fixtures = $this->getFixtures($request);
 
                     $fixtures->createFolders();
-                    $yamlConfigHandler->writeConfiguration();
+                    $configurationHandler->writeConfiguration();
 
                     /*
                      * Need to clear configuration cache.
