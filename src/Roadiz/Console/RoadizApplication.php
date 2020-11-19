@@ -12,6 +12,7 @@ use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
@@ -163,7 +164,7 @@ class RoadizApplication extends Application
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
         $helperSet->set(new ThemeResolverHelper($this->kernel->get('themeResolver')));
-        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get('config.handler')));
+        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get(ConfigurationHandlerInterface::class)));
         $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
         $helperSet->set(new CacheProviderHelper($this->kernel->get('nodesSourcesUrlCacheProvider')));
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 
 set_time_limit(0);
@@ -30,6 +31,8 @@ if ($debug) {
 }
 
 $kernel = new Kernel($env, $debug, $preview);
+$dotenv = new Dotenv();
+$dotenv->load($kernel->getProjectDir() . '/.env');
 
 $application = new RoadizApplication($kernel);
 $application->run($input);

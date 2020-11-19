@@ -13,7 +13,7 @@
 # Ignore Google webmaster tool verification
 /google*.html
 
-# PHPCS report
+# PHPCS report
 /report.txt
 /.php_cs.cache
 /.phpcs-cache

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Composer\InstallFiles;
 
 use Composer\Script\Event;
+use RZ\Roadiz\Config\DotEnvConfigurationHandler;
 use RZ\Roadiz\Utils\Security\TokenGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -107,6 +108,14 @@ class ScriptHandler
 
         $parser = new Parser();
         $configuration = $parser->parse(file_get_contents($extras['config-path']));
+
+        /*
+         * Do not rotate secret if it is a dot-env variable.
+         */
+        if (preg_match(DotEnvConfigurationHandler::ENV_PATTERN, $configuration['security']['secret']) === 1) {
+            return true;
+        }
+
         $generator = new TokenGenerator();
         $configuration['security']['secret'] = $generator->generateToken();
 

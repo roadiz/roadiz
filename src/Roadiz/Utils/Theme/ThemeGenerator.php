@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Utils\Theme;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Config\ConfigurationHandler;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -41,7 +41,7 @@ class ThemeGenerator
     protected $cacheDir;
 
     /**
-     * @var ConfigurationHandler
+     * @var ConfigurationHandlerInterface
      */
     protected $configurationHandler;
 
@@ -61,14 +61,14 @@ class ThemeGenerator
      * @param string $projectDir
      * @param string $publicDir
      * @param string $cacheDir
-     * @param ConfigurationHandler $configurationHandler
+     * @param ConfigurationHandlerInterface $configurationHandler
      * @param LoggerInterface $logger
      */
     public function __construct(
         string $projectDir,
         string $publicDir,
         string $cacheDir,
-        ConfigurationHandler $configurationHandler,
+        ConfigurationHandlerInterface $configurationHandler,
         LoggerInterface $logger
     ) {
         $this->filesystem = new Filesystem();
@@ -223,7 +223,7 @@ class ThemeGenerator
                 $themeInfo->getThemeName() . ' is protected and cannot be registered.'
             );
         }
-        $config = $this->configurationHandler->getConfiguration();
+        $config = $this->configurationHandler->load();
         /*
          * Checks if theme is not already registered
          */
@@ -239,6 +239,7 @@ class ThemeGenerator
             'hostname' => '*',
             'routePrefix' => '',
         ];
+
         $this->configurationHandler->setConfiguration($config);
         $this->configurationHandler->writeConfiguration();
         /*

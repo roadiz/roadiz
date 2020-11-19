@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Log\LoggerFactory;
 use RZ\Roadiz\Utils\Theme\StaticThemeResolver;
@@ -41,7 +42,7 @@ class ThemeServiceProvider implements ServiceProviderInterface
                 $kernel->getProjectDir(),
                 $kernel->getPublicDir(),
                 $kernel->getCacheDir(),
-                $c['config.handler'],
+                $c[ConfigurationHandlerInterface::class],
                 $c['logger.themes']
             );
         };

@@ -4,6 +4,7 @@ declare(strict_types=1);
 use RZ\Roadiz\Core\Kernel;
 // use RZ\Roadiz\Core\DevKernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 
 if (PHP_VERSION_ID < 70200) {
@@ -39,6 +40,8 @@ Debug::enable();
 //$kernel = new DevKernel('dev', true, false, 'my_site');
 
 $kernel = new Kernel('dev', true, false);
+$dotenv = new Dotenv();
+$dotenv->load($kernel->getProjectDir() . '/.env');
 $request = Request::createFromGlobals();
 
 $response = $kernel->handle($request);

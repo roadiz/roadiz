@@ -5,6 +5,7 @@ use RZ\Roadiz\Core\Events\Cache\CachePurgeAssetsRequestEvent;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -46,6 +47,9 @@ if ($request->query->has('env') && $request->query->get('env') == 'preview') {
 } else {
     $kernel = new Kernel('prod', false);
 }
+
+$dotenv = new Dotenv();
+$dotenv->load($kernel->getProjectDir() . '/.env');
 
 $kernel->boot();
 $kernel->getContainer()->offsetSet('request', $request);
