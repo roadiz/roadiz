@@ -68,7 +68,7 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
     }
 
     /**
-     * @param $rawConfiguration
+     * @param array|string|\stdClass $rawConfiguration
      * @return string
      */
     protected function generateConfigurationCacheSource($rawConfiguration): string
