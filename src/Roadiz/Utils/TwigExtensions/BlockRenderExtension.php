@@ -82,6 +82,6 @@ class BlockRenderExtension extends AbstractExtension
     protected function getNodeSourceControllerName(NodesSources $nodeSource, string $themeName): string
     {
         return '\\Themes\\' . $themeName . '\\Controllers\\Blocks\\' .
-                $nodeSource->getNode()->getNodeType()->getName() . 'Controller';
+                $nodeSource->getNodeTypeName() . 'Controller';
     }
 }

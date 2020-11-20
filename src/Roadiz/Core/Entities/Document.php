@@ -44,13 +44,13 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     protected $raw = false;
     /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedId = null;
     /**
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedPlatform = null;
@@ -102,7 +102,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     private $filename;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      * @var string|null
      */
@@ -130,28 +130,28 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $imageWidth;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $imageHeight;
     /**
      * @var string|null
      * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     private $imageAverageColor;
     /**
      * @var int|null The filesize in bytes.
      * @ORM\Column(type="integer", nullable=true, unique=false)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
     private $filesize;

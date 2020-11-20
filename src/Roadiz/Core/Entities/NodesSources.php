@@ -471,7 +471,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     {
         return '#' . $this->getId() .
         ' <' . $this->getTitle() . '>[' . $this->getTranslation()->getLocale() .
-        '], type="' . $this->getNode()->getNodeType()->getName() . '"';
+        '], type="' . $this->getNodeTypeName() . '"';
     }
 
     /**
