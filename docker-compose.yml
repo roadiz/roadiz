@@ -114,7 +114,7 @@ services:
         networks:
             - default
         ports:
-            - ${MAILER_PORT}:8025/tcp
+            - ${PUBLIC_MAILER_PORT}:8025/tcp
 
 networks:
     frontproxynet:

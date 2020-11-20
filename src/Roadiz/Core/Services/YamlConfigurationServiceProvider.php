@@ -6,8 +6,13 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Config\Configuration;
-use RZ\Roadiz\Config\YamlConfigurationHandler;
+use RZ\Roadiz\Config\ConfigurationHandler;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
+use RZ\Roadiz\Config\DotEnvConfigurationHandler;
+use RZ\Roadiz\Config\Loader\ConfigurationLoader;
+use RZ\Roadiz\Config\Loader\YamlConfigurationLoader;
 use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\Config\ConfigCache;
 
 /**
  * Register configuration services for dependency injection container.
@@ -40,17 +45,28 @@ class YamlConfigurationServiceProvider implements ServiceProviderInterface
             return new Configuration($kernel);
         };
 
+        $container[ConfigCache::class] = function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return new ConfigCache(
+                $kernel->getCacheDir() . '/configuration.php',
+                $kernel->isDebug()
+            );
+        };
+
+        $container[ConfigurationLoader::class] = function (Container $c) {
+            return new YamlConfigurationLoader();
+        };
+
         /*
          * Inject app config
          */
-        $container['config.handler'] = function (Container $c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            return new YamlConfigurationHandler(
+        $container[ConfigurationHandlerInterface::class] = function (Container $c) {
+            return new DotEnvConfigurationHandler(
                 $c[Configuration::class],
-                $kernel->getCacheDir(),
-                $kernel->isDebug(),
-                $c['config.path']
+                $c['config.path'],
+                $c[ConfigurationLoader::class],
+                $c[ConfigCache::class]
             );
         };
 
@@ -58,8 +74,7 @@ class YamlConfigurationServiceProvider implements ServiceProviderInterface
          * Inject app config
          */
         $container['config'] = function (Container $c) {
-            /** @var YamlConfigurationHandler $configuration */
-            $configuration = $c['config.handler'];
+            $configuration = $c[ConfigurationHandlerInterface::class];
             return $configuration->load();
         };
 
