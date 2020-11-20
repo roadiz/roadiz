@@ -33,7 +33,8 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     /**
      * ' . implode("\n     * ", $this->getFieldAutodoc()) .'
      *
-     * @var \\' . $configuration['classname'] . '
+     * @Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
+     * @var \\' . $configuration['classname'] . '|null
      * @ORM\ManyToOne(targetEntity="'. $configuration['classname'] .'")
      * @ORM\JoinColumn(' . static::flattenORMParameters($ormParams) . ')
      */'.PHP_EOL;
@@ -46,7 +47,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @return \RZ\Roadiz\Core\AbstractEntities\AbstractEntity
+     * @return \RZ\Roadiz\Core\AbstractEntities\AbstractEntity|null
      */
     public function '.$this->field->getGetterName().'()
     {
@@ -61,7 +62,7 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @var $'.$this->field->getVarName().'
+     * @var \RZ\Roadiz\Core\AbstractEntities\AbstractEntity|null $'.$this->field->getVarName().'
      * @return $this
      */
     public function '.$this->field->getSetterName().'($'.$this->field->getVarName().' = null)
