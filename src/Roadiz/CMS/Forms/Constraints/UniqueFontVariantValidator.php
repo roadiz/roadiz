@@ -8,6 +8,10 @@ use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * @package RZ\Roadiz\CMS\Forms\Constraints
+ * @deprecated Use UniqueEntityValidator constraint instead with "name" and "variant" fields
+ */
 class UniqueFontVariantValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
