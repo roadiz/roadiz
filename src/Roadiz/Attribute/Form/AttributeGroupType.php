@@ -57,7 +57,6 @@ class AttributeGroupType extends AbstractType
             return [
                 new UniqueEntity([
                     'fields' => ['canonicalName'],
-                    'entityManager' => $options['entityManager']
                 ])
             ];
         });

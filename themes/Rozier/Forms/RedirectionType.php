@@ -73,12 +73,8 @@ class RedirectionType extends AbstractType
          * Use normalizer to populate choices from ChoiceType
          */
         $resolver->setNormalizer('constraints', function (Options $options, $constraints) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $options['entityManager'];
-
             $constraints[] = new UniqueEntity([
                 'fields' => 'query',
-                'entityManager' => $entityManager,
             ]);
 
             return $constraints;

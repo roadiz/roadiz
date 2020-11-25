@@ -8,6 +8,8 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Constraint for the Unique Entity validator.
  *
+ * @Annotation
+ * @Target({"CLASS"})
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  * @see https://github.com/symfony/doctrine-bridge/blob/master/Validator/Constraints/UniqueEntity.php
  */
@@ -25,7 +27,7 @@ class UniqueEntity extends Constraint
 
     public function getRequiredOptions()
     {
-        return ['fields', 'entityManager'];
+        return ['fields'];
     }
 
     public function getDefaultOption()
