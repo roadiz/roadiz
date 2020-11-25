@@ -46,7 +46,7 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
                             $item = json_decode($_ENV[$envName], true);
                             break;
                         case 'bool':
-                            $item = boolval($_ENV[$envName]);
+                            $item = $this->getBooleanValue($_ENV[$envName]);
                             break;
                         case 'float':
                             $item = floatval($_ENV[$envName]);
@@ -65,6 +65,20 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
             }
         });
         return $unresolvedConfiguration;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    protected function getBooleanValue($value): bool
+    {
+        if (\is_bool($value)) {
+            return $value;
+        }
+        if (\in_array($value, ['true', 'on', 1, '1', 'ok'], true)) {
+            return true;
+        }
+        return false;
     }
 
     /**

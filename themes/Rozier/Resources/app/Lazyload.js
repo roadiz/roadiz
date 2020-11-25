@@ -124,7 +124,7 @@ export default class Lazyload {
     }
 
     parseLinks () {
-        this.$linksSelector = $("a:not('[target=_blank]')").not('.rz-no-ajax-link').not('[href="#"]')
+        this.$linksSelector = $("a:not('[target=_blank]')").not('.rz-no-ajax-link').not('[download]').not('[href="#"]')
     }
 
     /**

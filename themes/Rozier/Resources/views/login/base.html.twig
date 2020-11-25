@@ -13,16 +13,16 @@
         </div>
         <div id="login-formGlobal">
             <h1 id="tag-title">{% trans %}back_office{% endtrans %}</h1>
-            {% block login_content %}
-                
-            {% endblock %}
+            {% block login_content %}{% endblock %}
             <div id="login-link">
-                <a id="frontend-home-link"
-                   title="{% trans %}see.website{% endtrans %}"
-                   target="_blank"
-                   href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>
-                    <span class="text">{% trans %}view.site{% endtrans %}</span>
-                </a>
+                {% if not hide_website %}
+                    <a id="frontend-home-link"
+                       title="{% trans %}see.website{% endtrans %}"
+                       target="_blank"
+                       href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>
+                        <span class="text">{% trans %}view.site{% endtrans %}</span>
+                    </a>
+                {% endif %}
                 {% block login_links %}
                     <a href="{{ path('loginRequestPage') }}" class="login-link">{% trans %}forgot.password{% endtrans %}</a>
                 {% endblock %}
