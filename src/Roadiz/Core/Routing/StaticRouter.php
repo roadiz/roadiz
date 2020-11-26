@@ -20,7 +20,6 @@ class StaticRouter extends Router
     protected $routeCollection;
 
     /**
-     * StaticRouter constructor.
      * @param DeferredRouteCollection $routeCollection
      * @param array $options
      * @param RequestContext|null $context
