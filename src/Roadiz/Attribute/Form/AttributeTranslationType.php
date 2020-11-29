@@ -67,7 +67,6 @@ class AttributeTranslationType extends AbstractType
             return [
                 new UniqueEntity([
                     'fields' => ['attribute', 'translation'],
-                    'entityManager' => $options['entityManager'],
                 ])
             ];
         });

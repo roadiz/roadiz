@@ -31,7 +31,7 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
         array_walk_recursive($unresolvedConfiguration, function (&$item) {
             if (is_string($item) && preg_match(static::ENV_PATTERN, $item, $matches) === 1) {
                 $envName = trim($matches['env']);
-                if (!key_exists($envName, $_ENV) || empty($_ENV[$envName])) {
+                if (!key_exists($envName, $_ENV) || (is_string($_ENV[$envName]) && $_ENV[$envName] === '')) {
                     if (empty($matches['fallback']) || $matches['fallback'] === '') {
                         $item = null;
                     } else {
@@ -46,7 +46,7 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
                             $item = json_decode($_ENV[$envName], true);
                             break;
                         case 'bool':
-                            $item = boolval($_ENV[$envName]);
+                            $item = $this->getBooleanValue($_ENV[$envName]);
                             break;
                         case 'float':
                             $item = floatval($_ENV[$envName]);
@@ -65,6 +65,20 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
             }
         });
         return $unresolvedConfiguration;
+    }
+
+    /**
+     * @param mixed $value
+     */
+    protected function getBooleanValue($value): bool
+    {
+        if (\is_bool($value)) {
+            return $value;
+        }
+        if (\in_array($value, ['true', 'on', 1, '1', 'ok'], true)) {
+            return true;
+        }
+        return false;
     }
 
     /**

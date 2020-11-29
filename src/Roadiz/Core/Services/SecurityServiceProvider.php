@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
@@ -196,21 +197,19 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['cookieClearingLogoutHandler'] = function (Container $c) {
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $request = $requestStack->getMasterRequest();
+            /** @var RequestContext $requestContext */
+            $requestContext = $c['requestContext'];
             return new CookieClearingLogoutHandler([
                 $c['rememberMeCookieName'] => [
-                    'path' => $request->getBasePath(),
-                    'domain' => $request->getHost(),
+                    'path' => $requestContext->getBaseUrl(),
+                    'domain' => $requestContext->getHost(),
                 ],
             ]);
         };
 
         $container['tokenBasedRememberMeServices'] = function (Container $c) {
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $request = $requestStack->getMasterRequest();
+            /** @var RequestContext $requestContext */
+            $requestContext = $c['requestContext'];
             return new TokenBasedRememberMeServices(
                 [$c['userProvider']],
                 $c['config']["security"]['secret'],
@@ -219,8 +218,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'name' => $c['rememberMeCookieName'],
                     'lifetime' => $c['rememberMeCookieLifetime'],
                     'remember_me_parameter' => '_remember_me',
-                    'path' => $request->getBasePath(),
-                    'domain' => $request->getHost(),
+                    'path' => $requestContext->getBaseUrl(),
+                    'domain' => $requestContext->getHost(),
                     'always_remember_me' => false,
                     'httponly' => $c['config']["security"]['session_cookie_httponly'],
                 ],

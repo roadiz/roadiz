@@ -8,6 +8,8 @@ use Symfony\Component\Validator\Constraint;
 /**
  * Constraint for the Unique Entity validator.
  *
+ * @Annotation
+ * @Target({"CLASS"})
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  * @see https://github.com/symfony/doctrine-bridge/blob/master/Validator/Constraints/UniqueEntity.php
  */
@@ -16,7 +18,6 @@ class UniqueEntity extends Constraint
     const NOT_UNIQUE_ERROR = '23bd9dbf-6b9b-41cd-a99e-4844bcf3077f';
 
     public $message = 'value.is.already.used';
-    public $entityManager = null;
     public $entityClass = null;
     public $repositoryMethod = 'findBy';
     public $errorPath = null;
@@ -25,7 +26,7 @@ class UniqueEntity extends Constraint
 
     public function getRequiredOptions()
     {
-        return ['fields', 'entityManager'];
+        return ['fields'];
     }
 
     public function getDefaultOption()

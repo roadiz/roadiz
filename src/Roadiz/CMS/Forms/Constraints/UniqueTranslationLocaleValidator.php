@@ -7,6 +7,10 @@ use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * @package RZ\Roadiz\CMS\Forms\Constraints
+ * @deprecated Use UniqueEntityValidator constraint instead with "locale" field
+ */
 class UniqueTranslationLocaleValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)

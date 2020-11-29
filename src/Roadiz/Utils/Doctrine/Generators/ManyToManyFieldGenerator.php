@@ -40,6 +40,16 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
             'joinColumns' => '{@ORM\JoinColumn(' . static::flattenORMParameters($joinColumnParams) . ')}',
             'inverseJoinColumns' => '{@ORM\JoinColumn(' . static::flattenORMParameters($inverseJoinColumns) . ')}',
         ];
+        $orderByClause = '';
+        if (count($configuration['orderBy']) > 0) {
+            // use default order for Collections
+            $orderBy = [];
+            foreach ($configuration['orderBy'] as $order) {
+                $orderBy[$order['field']] = $order['direction'];
+            }
+            $orderByClause = '@ORM\OrderBy(value='.json_encode($orderBy).')';
+        }
+
         return '
     /**
      * ' . $this->field->getLabel() .'
@@ -47,6 +57,7 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
      * @Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
      * @var \Doctrine\Common\Collections\ArrayCollection<' . $configuration['classname'] . '>
      * @ORM\ManyToMany(targetEntity="'. $configuration['classname'] .'")
+     * ' . $orderByClause . '
      * @ORM\JoinTable(' . static::flattenORMParameters($ormParams) . ')
      */'.PHP_EOL;
     }

@@ -111,7 +111,6 @@ class AttributeType extends AbstractType
             return [
                 new UniqueEntity([
                     'fields' => ['code'],
-                    'entityManager' => $options['entityManager'],
                 ])
             ];
         });

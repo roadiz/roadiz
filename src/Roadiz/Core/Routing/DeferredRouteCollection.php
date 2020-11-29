@@ -9,8 +9,7 @@ use Symfony\Component\Routing\RouteCollection;
  * Extends Symfony2 RouteCollection to add parseResources()
  * method to defer route loading.
  *
- * TODO: Use Symfony\Cmf\Component\Routing\LazyRouteCollection
- * @deprecated Use Symfony\Cmf\Component\Routing\LazyRouteCollection
+ * TODO: Use \Symfony\Cmf\Component\Routing\LazyRouteCollection
  */
 class DeferredRouteCollection extends RouteCollection
 {

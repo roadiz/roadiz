@@ -39,7 +39,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
     /**
      * @param ThemeResolverInterface $themeResolver
      * @param Settings $settingsBag
-     * @param Stopwatch $stopwatch
+     * @param Stopwatch|null $stopwatch
      * @param bool $isPreview
      */
     public function __construct(

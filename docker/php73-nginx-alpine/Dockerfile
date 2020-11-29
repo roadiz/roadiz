@@ -4,8 +4,8 @@ MAINTAINER Ambroise Maupate <ambroise@rezo-zero.com>
 
 ARG USER_UID=1000
 ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV ROADIZ_ENV=dev
-ENV USE_APP_CACHE=0
+ENV APP_ENV=dev
+ENV APP_CACHE=0
 
 RUN apk add --no-cache shadow make git \
     && usermod -u ${USER_UID} www-data \

@@ -79,7 +79,7 @@ class GroupsUtilsController extends RozierApp
 
         return new JsonResponse(
             $serializer->serialize(
-                $existingGroup,
+                [$existingGroup], // need to wrap in array
                 'json',
                 SerializationContext::create()->setGroups(['group'])
             ),

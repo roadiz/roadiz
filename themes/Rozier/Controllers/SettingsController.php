@@ -189,7 +189,6 @@ class SettingsController extends RozierApp
                 'constraints' => [
                     new UniqueEntity([
                         'fields' => ['name'],
-                        'entityManager' => $this->get('em')
                     ]),
                 ]
             ]);
@@ -255,7 +254,6 @@ class SettingsController extends RozierApp
             'constraints' => [
                 new UniqueEntity([
                     'fields' => ['name'],
-                    'entityManager' => $this->get('em')
                 ]),
             ]
         ]);

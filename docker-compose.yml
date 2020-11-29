@@ -42,7 +42,7 @@ services:
         volumes:
             - ./:/var/www/html:cached
         environment:
-            USE_APP_CACHE: ${USE_APP_CACHE}
+            APP_CACHE: ${APP_CACHE}
             USER_UID: ${USER_UID}
         networks:
             # Use your docker reverse-proxy service network to

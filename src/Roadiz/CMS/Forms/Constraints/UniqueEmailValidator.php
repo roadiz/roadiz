@@ -8,6 +8,10 @@ use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
+/**
+ * @package RZ\Roadiz\CMS\Forms\Constraints
+ * @deprecated Use UniqueEntityValidator constraint instead with "email" field
+ */
 class UniqueEmailValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
