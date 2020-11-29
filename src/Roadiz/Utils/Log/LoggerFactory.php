@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Log;
 
-use Gelf\Publisher;
-use Gelf\Transport\HttpTransport;
-use Monolog\Handler\RavenHandler;
 use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
@@ -104,12 +101,18 @@ class LoggerFactory
                                     'A monolog GELFHandler must define a log "url".'
                                 );
                             }
-                            $publisher = new Publisher(HttpTransport::fromUrl($config['url']));
-
-                            $handlers[] = new TolerantGelfHandler(
-                                $publisher,
-                                constant('\Monolog\Logger::'.$config['level'])
-                            );
+                            if (class_exists('\Gelf\Publisher') &&
+                                class_exists('\Gelf\Transport\HttpTransport')) {
+                                $publisher = new \Gelf\Publisher(\Gelf\Transport\HttpTransport::fromUrl($config['url']));
+                                $handlers[] = new TolerantGelfHandler(
+                                    $publisher,
+                                    constant('\Monolog\Logger::'.$config['level'])
+                                );
+                            } else {
+                                throw new InvalidConfigurationException(
+                                    'A monolog GELFHandler requires "graylog2/gelf-php" library.'
+                                );
+                            }
                             break;
                         case 'sentry':
                             if (empty($config['url'])) {
@@ -124,19 +127,6 @@ class LoggerFactory
                                 $client = \Sentry\ClientBuilder::create($sentryConfig)->getClient();
                                 $handler = new \Sentry\Monolog\Handler(
                                     new \Sentry\State\Hub($client),
-                                    constant('\Monolog\Logger::'.$config['level'])
-                                );
-                                $handlers[] = $handler;
-                            } elseif (class_exists('\Raven_Client') &&
-                                class_exists('\Raven_ErrorHandler')
-                            ) {
-                                $client = new \Raven_Client($config['url']);
-                                $error_handler = new \Raven_ErrorHandler($client);
-                                $error_handler->registerExceptionHandler();
-                                $error_handler->registerErrorHandler();
-                                $error_handler->registerShutdownFunction();
-                                $handler = new RavenHandler(
-                                    $client,
                                     constant('\Monolog\Logger::'.$config['level'])
                                 );
                                 $handlers[] = $handler;

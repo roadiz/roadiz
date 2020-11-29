@@ -17,12 +17,14 @@ class TolerantGelfHandler extends GelfHandler
      *
      * @param array $record
      */
-    protected function write(array $record)
+    protected function write(array $record): void
     {
-        try {
-            $this->publisher->publish($record['formatted']);
-        } catch (\Exception $e) {
-            // Do nothing
+        if (class_exists('\Gelf\PublisherInterface')) {
+            try {
+                $this->publisher->publish($record['formatted']);
+            } catch (\Exception $e) {
+                // Do nothing
+            }
         }
     }
 }

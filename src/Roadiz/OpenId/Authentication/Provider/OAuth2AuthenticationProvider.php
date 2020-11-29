@@ -3,13 +3,12 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId\Authentication\Provider;
 
-use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Token\Plain;
+use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
-use RZ\Roadiz\OpenId\Authentication\Validator\JwtValidator;
-use RZ\Roadiz\OpenId\Discovery;
-use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -17,6 +16,9 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
 {
+    /**
+     * @var string
+     */
     protected $providerKey;
     /**
      * @var bool
@@ -31,33 +33,25 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
      */
     protected $roleStrategy;
     /**
-     * @var Discovery|null
-     */
-    protected $discovery;
-    /**
      * @var Settings
      */
     protected $settingsBag;
     /**
-     * @var JwtValidator[]
+     * @var Configuration
      */
-    protected $validators;
+    protected $jwtConfiguration;
 
     /**
-     * AccountAuthenticationProvider constructor.
-     *
-     * @param Discovery|null  $discovery
+     * @param Configuration $jwtConfiguration
      * @param JwtRoleStrategy $roleStrategy
-     * @param string          $providerKey
-     * @param JwtValidator[]  $validators
-     * @param array           $defaultRoles
-     * @param bool            $hideUserNotFoundExceptions
+     * @param string $providerKey
+     * @param array $defaultRoles
+     * @param bool $hideUserNotFoundExceptions
      */
     public function __construct(
-        ?Discovery $discovery,
+        Configuration $jwtConfiguration,
         JwtRoleStrategy $roleStrategy,
         string $providerKey,
-        array $validators = [],
         array $defaultRoles = ['ROLE_USER'],
         bool $hideUserNotFoundExceptions = true
     ) {
@@ -65,14 +59,7 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
         $this->hideUserNotFoundExceptions = $hideUserNotFoundExceptions;
         $this->defaultRoles = $defaultRoles;
         $this->roleStrategy = $roleStrategy;
-        $this->discovery = $discovery;
-
-        foreach ($validators as $validator) {
-            if (!($validator instanceof JwtValidator)) {
-                throw new \RuntimeException('Validators must implement ' . JwtValidator::class);
-            }
-        }
-        $this->validators = $validators;
+        $this->jwtConfiguration = $jwtConfiguration;
     }
 
     /**
@@ -83,17 +70,21 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
         if (!$this->supports($token)) {
             throw new AuthenticationException('The token is not supported by this authentication provider.');
         }
-
-        if (null === $this->discovery) {
-            throw new DiscoveryNotAvailableException();
-        }
-
-        foreach ($this->validators as $validator) {
-            $validator($token);
-        }
-
         /** @var Token $jwt */
-        $jwt = (new Parser())->parse((string) $token->getCredentials()); // Parses from a string
+        $jwt = $token->getCredentials();
+        $constraints = $this->jwtConfiguration->validationConstraints();
+
+        if (!($jwt instanceof Plain)) {
+            throw new AuthenticationException(
+                'JWT token must be instance of ' . Plain::class
+            );
+        }
+
+        try {
+            $this->jwtConfiguration->validator()->assert($jwt, ...$constraints);
+        } catch (RequiredConstraintsViolated $e) {
+            throw new AuthenticationException($e->getMessage());
+        }
 
         // https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
         $user = new OpenIdAccount(
@@ -104,7 +95,7 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
 
         $accessToken = null;
         if ($token instanceof JwtAccountToken) {
-            $accessToken = $token->getAccessToken();
+            $accessToken = $token->getAccessToken() ?? $token->getCredentials()->toString();
         }
 
         $authenticatedToken = new JwtAccountToken(

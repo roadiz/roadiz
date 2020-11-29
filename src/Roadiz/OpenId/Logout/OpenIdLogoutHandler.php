@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\OpenId\Logout;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\Discovery;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -37,16 +38,19 @@ class OpenIdLogoutHandler implements LogoutHandlerInterface
         if ($this->discovery->has('revocation_endpoint') &&
             $token instanceof JwtAccountToken &&
             null !== $token->getAccessToken()) {
-            $tokenToRevoke = $token->getAccessToken();
-            $client = new Client();
-            $client->post($this->discovery->get('revocation_endpoint'), [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $tokenToRevoke
-                ],
-                'form_params' => [
-                    'token' => $tokenToRevoke
-                ]
-            ]);
+            try {
+                $tokenToRevoke = $token->getAccessToken();
+                $client = new Client();
+                $client->post($this->discovery->get('revocation_endpoint'), [
+                    'headers' => [
+                        'Authorization' => 'Bearer ' . $tokenToRevoke
+                    ],
+                    'form_params' => [
+                        'token' => $tokenToRevoke
+                    ]
+                ]);
+            } catch (ClientException $e) {
+            }
         }
         /**
          * If a end_session_endpoint is available

@@ -104,20 +104,24 @@ class OpenIdAccount implements UserInterface, EquatableInterface
         $this->roles = $roles;
         $this->email = $email;
         $this->jwtToken = $jwtToken;
+        if (!($jwtToken instanceof Token\Plain)) {
+            throw new \InvalidArgumentException('Token must be an instance of ' . Token\Plain::class);
+        }
         /*
          * https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
          */
-        $this->name = $jwtToken->hasClaim('name') ? (string) $jwtToken->getClaim('name') : null;
-        $this->issuer = $jwtToken->hasClaim('iss') ? (string) $jwtToken->getClaim('iss') : null;
-        $this->givenName = $jwtToken->hasClaim('given_name') ? (string) $jwtToken->getClaim('given_name') : null;
-        $this->familyName = $jwtToken->hasClaim('family_name') ? (string) $jwtToken->getClaim('family_name') : null;
-        $this->middleName = $jwtToken->hasClaim('middle_name') ? (string) $jwtToken->getClaim('middle_name') : null;
-        $this->nickname = $jwtToken->hasClaim('nickname') ? (string) $jwtToken->getClaim('nickname') : null;
-        $this->profile = $jwtToken->hasClaim('profile') ? (string) $jwtToken->getClaim('profile') : null;
-        $this->picture = $jwtToken->hasClaim('picture') ? (string) $jwtToken->getClaim('picture') : null;
-        $this->locale = $jwtToken->hasClaim('locale') ? (string) $jwtToken->getClaim('locale') : null;
-        $this->phoneNumber = $jwtToken->hasClaim('phone_number') ? (string) $jwtToken->getClaim('phone_number') : null;
-        $this->address = $jwtToken->hasClaim('address') ? $jwtToken->getClaim('address') : null;
+        $claims = $jwtToken->claims();
+        $this->name = $claims->has('name') ? (string) $claims->get('name') : null;
+        $this->issuer = $claims->has('iss') ? (string) $claims->get('iss') : null;
+        $this->givenName = $claims->has('given_name') ? (string) $claims->get('given_name') : null;
+        $this->familyName = $claims->has('family_name') ? (string) $claims->get('family_name') : null;
+        $this->middleName = $claims->has('middle_name') ? (string) $claims->get('middle_name') : null;
+        $this->nickname = $claims->has('nickname') ? (string) $claims->get('nickname') : null;
+        $this->profile = $claims->has('profile') ? (string) $claims->get('profile') : null;
+        $this->picture = $claims->has('picture') ? (string) $claims->get('picture') : null;
+        $this->locale = $claims->has('locale') ? (string) $claims->get('locale') : null;
+        $this->phoneNumber = $claims->has('phone_number') ? (string) $claims->get('phone_number') : null;
+        $this->address = $claims->has('address') ? $claims->get('address') : null;
     }
 
     /**

@@ -6,9 +6,8 @@ node_js:
   - "10"
 
 php:
-  - 7.2
-  - 7.3
   - 7.4
+  - 8.0
 
 # blocklist
 branches:
@@ -58,9 +57,8 @@ jobs:
             - postgresql
             - mysql
           php:
-            - 7.2
-            - 7.3
             - 7.4
+            - 8.0
           install:
             - curl -s http://getcomposer.org/installer | php
             - php composer.phar install --dev --no-interaction
@@ -77,9 +75,8 @@ jobs:
             - postgresql
             - mysql
           php:
-            - 7.2
-            - 7.3
             - 7.4
+            - 8.0
           env:
             - DB=mysql
             - DB=pgsql

@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId;
 
+use CoderCat\JWKToPEM\JWKConverter;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use Jose\Component\Core\JWKSet;
 use RZ\Roadiz\Core\Bags\LazyParameterBag;
 
 /**
@@ -76,34 +76,40 @@ class Discovery extends LazyParameterBag
      */
     public function canVerifySignature(): bool
     {
-        return \extension_loaded('gmp') && $this->has('jwks_uri');
+        return $this->has('jwks_uri');
     }
 
     /**
-     * @return JWKSet|null
+     * @return array<string>|null
+     * @throws \CoderCat\JWKToPEM\Exception\Base64DecodeException
+     * @throws \CoderCat\JWKToPEM\Exception\JWKConverterException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @see https://auth0.com/docs/tokens/json-web-tokens/json-web-key-sets
      */
-    public function getJWKSet(): ?JWKSet
+    public function getPems(): ?array
     {
-        $jwksData = $this->getJWKData();
-        if (null !== $jwksData) {
-            return JWKSet::createFromKeyData($jwksData);
+        $jwksData = $this->getJwksData();
+        if (null !== $jwksData && isset($jwksData['keys'])) {
+            $converter = new JWKConverter();
+            return $converter->multipleToPEM($jwksData['keys']);
         }
         return null;
     }
 
     /**
      * @return array|null
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getJWKData(): ?array
+    protected function getJwksData(): ?array
     {
         if (null === $this->jwksData && $this->has('jwks_uri')) {
-            $cacheKey = md5($this->get('jwks_uri'));
+            $cacheKey = 'jwks_uri_' . md5($this->get('jwks_uri'));
             if (null !== $this->cacheProvider && $this->cacheProvider->contains($cacheKey)) {
                 $this->jwksData = $this->cacheProvider->fetch($cacheKey);
             } else {
                 $client = new Client([
                     // You can set any number of default request options.
-                    'timeout'  => 2.0,
+                    'timeout'  => 3.0,
                 ]);
                 $response = $client->get($this->get('jwks_uri'));
                 $this->jwksData = json_decode($response->getBody()->getContents(), true);

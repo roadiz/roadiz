@@ -8,6 +8,7 @@ use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
+use RZ\Roadiz\JWT\JwtConfigurationFactory;
 use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Bags\Settings;
@@ -227,6 +228,8 @@ class FirewallEntry
         $settingsBag = $this->container['settingsBag'];
         /** @var Discovery|null $discovery */
         $discovery = $this->container[Discovery::class];
+        /** @var JwtConfigurationFactory $jwtConfigurationFactory */
+        $jwtConfigurationFactory = $this->container[JwtConfigurationFactory::class];
         if (null !== $discovery &&
             !empty($settingsBag->get('oauth_client_id')) &&
             !empty($settingsBag->get('oauth_client_secret'))) {
@@ -241,6 +244,7 @@ class FirewallEntry
                     $this->getAuthenticationFailureHandler(),
                     $this->container['csrfTokenManager'],
                     $discovery,
+                    $jwtConfigurationFactory->create(),
                     [
                         'check_path' => $this->firewallLoginCheck,
                         'oauth_client_id' => $settingsBag->get('oauth_client_id'),

@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\OpenId\Authentication;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
-use Lcobucci\JWT\Parser;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Query;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Token\Plain;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\OpenId\Discovery;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +21,6 @@ use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategyInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use function GuzzleHttp\Psr7\parse_query;
 
 class OAuth2AuthenticationListener extends AbstractAuthenticationListener
 {
@@ -40,20 +41,24 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
     protected $discovery;
 
     /**
-     * OAuth2AuthenticationListener constructor.
-     *
-     * @param TokenStorageInterface                  $tokenStorage
-     * @param AuthenticationManagerInterface         $authenticationManager
+     * @var Configuration
+     */
+    protected $jwtConfiguration;
+
+    /**
+     * @param TokenStorageInterface $tokenStorage
+     * @param AuthenticationManagerInterface $authenticationManager
      * @param SessionAuthenticationStrategyInterface $sessionStrategy
-     * @param HttpUtils                              $httpUtils
-     * @param string                                 $providerKey
-     * @param AuthenticationSuccessHandlerInterface  $successHandler
-     * @param AuthenticationFailureHandlerInterface  $failureHandler
-     * @param CsrfTokenManagerInterface              $csrfTokenManager
-     * @param Discovery                              $discovery
-     * @param array                                  $options
-     * @param LoggerInterface|null                   $logger
-     * @param EventDispatcherInterface|null          $dispatcher
+     * @param HttpUtils $httpUtils
+     * @param string $providerKey
+     * @param AuthenticationSuccessHandlerInterface $successHandler
+     * @param AuthenticationFailureHandlerInterface $failureHandler
+     * @param CsrfTokenManagerInterface $csrfTokenManager
+     * @param Discovery $discovery
+     * @param Configuration $jwtConfiguration
+     * @param array $options
+     * @param LoggerInterface|null $logger
+     * @param EventDispatcherInterface|null $dispatcher
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -65,6 +70,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         AuthenticationFailureHandlerInterface $failureHandler,
         CsrfTokenManagerInterface $csrfTokenManager,
         Discovery $discovery,
+        Configuration $jwtConfiguration,
         array $options = [],
         LoggerInterface $logger = null,
         EventDispatcherInterface $dispatcher = null
@@ -96,6 +102,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
             throw new \InvalidArgumentException('roles option must not be empty');
         }
         $this->discovery = $discovery;
+        $this->jwtConfiguration = $jwtConfiguration;
     }
 
 
@@ -106,7 +113,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
     {
         return $this->requiresAuthentication($request) &&
             $request->query->has('state') &&
-            $request->query->has('code') &&
+            ($request->query->has('code') || $request->query->has('error')) &&
             isset($this->options['check_path']) &&
             $this->httpUtils->checkRequestPath($request, $this->options['check_path']);
     }
@@ -116,6 +123,10 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
      */
     protected function attemptAuthentication(Request $request)
     {
+        if (null !== $request->query->get('error') &&
+            null !== $request->query->get('error_description')) {
+            throw new AuthenticationException($request->query->get('error_description'));
+        }
         /*
          * Verify CSRF token passed to OAuth2 Service provider,
          * State is an url_encoded string containing the "token" and other
@@ -124,7 +135,7 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
         if (null === $request->query->get('state')) {
             throw new AuthenticationException('State is not valid');
         }
-        $state = parse_query($request->query->get('state'));
+        $state = Query::parse($request->query->get('state'));
         $stateToken = $this->csrfTokenManager->getToken(static::OAUTH_STATE_TOKEN);
 
         if (!isset($state['token']) ||
@@ -152,9 +163,9 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
                 ]
             ]);
             $jsonResponse = json_decode($response->getBody()->getContents(), true);
-        } catch (ClientException $e) {
+        } catch (GuzzleException $e) {
             throw new AuthenticationException(
-                'Cannot contact Identity provider to issue authorization_code.',
+                'Cannot contact Identity provider to issue authorization_code.' . $e->getMessage(),
                 $e->getCode(),
                 $e
             );
@@ -164,16 +175,25 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
             throw new AuthenticationException('JWT is missing from response.');
         }
 
-        $jwt = (new Parser())->parse((string) $jsonResponse['id_token']);
+        $jwt = $this->jwtConfiguration->parser()->parse((string) $jsonResponse['id_token']);
 
-        if (!$jwt->hasClaim($this->getUsernameClaimName()) || empty($jwt->getClaim($this->getUsernameClaimName()))) {
-            throw new AuthenticationException('JWT does not contain “' . $this->getUsernameClaimName() . '” claim.');
+        if (!($jwt instanceof Plain)) {
+            throw new AuthenticationException(
+                'JWT token must be instance of ' . Plain::class
+            );
+        }
+
+        if (!$jwt->claims()->has($this->getUsernameClaimName()) ||
+            empty($jwt->claims()->get($this->getUsernameClaimName()))) {
+            throw new AuthenticationException(
+                'JWT does not contain “' . $this->getUsernameClaimName() . '” claim.'
+            );
         }
 
         return $this->authenticationManager->authenticate(new JwtAccountToken(
-            (string) $jwt->getClaim($this->getUsernameClaimName()),
-            (string) $jwt,
-            !empty($jsonResponse['access_token']) ? $jsonResponse['access_token'] : null,
+            (string) $jwt->claims()->get($this->getUsernameClaimName()),
+            $jwt,
+            !empty($jsonResponse['access_token']) ? $jsonResponse['access_token'] : $jwt->toString(),
             $this->providerKey,
             $this->options['roles']
         ));

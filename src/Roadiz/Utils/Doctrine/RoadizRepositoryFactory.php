@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Utils\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Repository\RepositoryFactory;
+use Doctrine\Persistence\ObjectRepository;
 use Pimple\Container;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 
@@ -14,11 +15,10 @@ class RoadizRepositoryFactory implements RepositoryFactory
      * @var bool
      */
     private $isPreview;
-
     /**
      * The list of EntityRepository instances.
      *
-     * @var \Doctrine\Common\Persistence\ObjectRepository[]
+     * @var ObjectRepository[]
      */
     private $repositoryList = [];
     /**
@@ -54,15 +54,14 @@ class RoadizRepositoryFactory implements RepositoryFactory
     /**
      * Create a new repository instance for an entity class.
      *
-     * @param \Doctrine\ORM\EntityManagerInterface $entityManager The EntityManager instance.
-     * @param string                               $entityName    The name of the entity.
+     * @param EntityManagerInterface $entityManager The EntityManager instance.
+     * @param string $entityName    The name of the entity.
      *
-     * @return \Doctrine\Common\Persistence\ObjectRepository
+     * @return ObjectRepository
      */
     private function createRepository(EntityManagerInterface $entityManager, $entityName)
     {
-        /* @var $metadata \Doctrine\ORM\Mapping\ClassMetadata */
-        $metadata            = $entityManager->getClassMetadata($entityName);
+        $metadata = $entityManager->getClassMetadata($entityName);
         $repositoryClassName = $metadata->customRepositoryClassName
             ?: $entityManager->getConfiguration()->getDefaultRepositoryClassName();
 

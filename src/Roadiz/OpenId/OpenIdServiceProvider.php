@@ -8,18 +8,12 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\JWT\JwtConfigurationFactory;
 use RZ\Roadiz\OpenId\Authentication\Provider\ChainJwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\JwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\OAuth2AuthenticationProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\OpenIdAccountProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\SettingsRoleStrategy;
-use RZ\Roadiz\OpenId\Authentication\Validator\AudienceValidator;
-use RZ\Roadiz\OpenId\Authentication\Validator\DebugValidator;
-use RZ\Roadiz\OpenId\Authentication\Validator\ExpirationValidator;
-use RZ\Roadiz\OpenId\Authentication\Validator\HostedDomainValidator;
-use RZ\Roadiz\OpenId\Authentication\Validator\IssuerValidator;
-use RZ\Roadiz\OpenId\Authentication\Validator\SignatureValidator;
-use RZ\Roadiz\OpenId\Authentication\Validator\UserInfoValidator;
 
 class OpenIdServiceProvider implements ServiceProviderInterface
 {
@@ -28,6 +22,13 @@ class OpenIdServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container[JwtConfigurationFactory::class] = function (Container $c) {
+            return new OpenIdJwtConfigurationFactory(
+                $c[Discovery::class],
+                $c['settingsBag']
+            );
+        };
+
         $container[OAuth2LinkGenerator::class] = function (Container $c) {
             return new OAuth2LinkGenerator(
                 $c[Discovery::class],
@@ -46,23 +47,13 @@ class OpenIdServiceProvider implements ServiceProviderInterface
             return new ChainJwtRoleStrategy($c['jwtRoleStrategies']);
         };
 
-        $container['oauth2AuthenticationProvider.validators'] = function (Container $c) {
-            return [
-                new ExpirationValidator(),
-                new IssuerValidator($c[Discovery::class]),
-                new AudienceValidator($c['settingsBag']),
-                new SignatureValidator($c[Discovery::class]),
-                new UserInfoValidator($c[Discovery::class]),
-                new HostedDomainValidator($c['settingsBag']),
-            ];
-        };
-
         $container[OAuth2AuthenticationProvider::class] = function (Container $c) {
+            /** @var JwtConfigurationFactory $factory */
+            $factory = $c[JwtConfigurationFactory::class];
             return new OAuth2AuthenticationProvider(
-                $c[Discovery::class],
+                $factory->create(),
                 $c[JwtRoleStrategy::class],
                 Kernel::SECURITY_DOMAIN,
-                $c['oauth2AuthenticationProvider.validators'],
                 [
                     Role::ROLE_DEFAULT
                 ]

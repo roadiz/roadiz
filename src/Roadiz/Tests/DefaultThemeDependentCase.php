@@ -24,7 +24,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
     /**
      * @throws ToolsException
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

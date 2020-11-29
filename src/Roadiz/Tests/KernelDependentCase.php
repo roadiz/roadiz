@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Tests;
 
 use Doctrine\ORM\Tools\ToolsException;
+use PHPUnit\Framework\TestCase;
 use Pimple\Container;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Kernel;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package RZ\Roadiz\Tests
  */
-abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implements ContainerAwareInterface
+abstract class KernelDependentCase extends TestCase implements ContainerAwareInterface
 {
     /**
      * @var Kernel
@@ -32,7 +33,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
     /**
      * @throws ToolsException
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         static::$kernel = new Kernel('test', true, false);
         static::$kernel->boot();
@@ -42,7 +43,7 @@ abstract class KernelDependentCase extends \PHPUnit_Framework_TestCase implement
         static::$kernel->get('requestStack')->push($request);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         static::$kernel->shutdown();
     }

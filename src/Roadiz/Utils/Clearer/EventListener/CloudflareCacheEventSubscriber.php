@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\Clearer\EventListener;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use Pimple\Container;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
@@ -73,7 +74,7 @@ class CloudflareCacheEventSubscriber implements EventSubscriberInterface
                 static::class,
                 'Cloudflare proxy cache'
             );
-        } catch (ClientException $e) {
+        } catch (RequestException $e) {
             if (null !== $e->getResponse()) {
                 $data = json_decode($e->getResponse()->getBody()->getContents(), true);
                 $event->addError(
