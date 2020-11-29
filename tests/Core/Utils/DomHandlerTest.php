@@ -33,7 +33,7 @@ use RZ\Roadiz\Utils\DomHandler;
 /**
  *
  */
-class DomHandlerTest extends PHPUnit_Framework_TestCase
+class DomHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getExternalStylesProvider

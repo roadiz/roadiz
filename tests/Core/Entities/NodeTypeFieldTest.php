@@ -33,7 +33,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 /**
  * Test node-type field features
  */
-class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
+class NodeTypeFieldTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getGetterNameProvider

@@ -29,7 +29,7 @@
  */
 use RZ\Roadiz\Core\Entities\NodeType;
 
-class NodeTypeTest extends PHPUnit_Framework_TestCase
+class NodeTypeTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider sourceEntityClassNameProvider

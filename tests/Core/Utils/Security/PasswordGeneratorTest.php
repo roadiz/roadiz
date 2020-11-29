@@ -32,7 +32,7 @@ use RZ\Roadiz\Utils\Security\PasswordGenerator;
 /**
  * Class PasswordGeneratorTest
  */
-class PasswordGeneratorTest extends PHPUnit_Framework_TestCase
+class PasswordGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider generatePasswordProvider
