@@ -6,7 +6,6 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Config\Configuration;
-use RZ\Roadiz\Config\ConfigurationHandler;
 use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Config\DotEnvConfigurationHandler;
 use RZ\Roadiz\Config\Loader\ConfigurationLoader;

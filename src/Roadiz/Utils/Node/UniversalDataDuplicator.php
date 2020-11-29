@@ -9,7 +9,6 @@ use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
-use RZ\Roadiz\Core\Repositories\NodeTypeFieldRepository;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 
 class UniversalDataDuplicator

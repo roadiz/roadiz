@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\AbstractEntities\PositionedInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
-interface AttributeValueInterface extends PositionedInterface
+interface AttributeValueInterface extends PositionedInterface, PersistableInterface
 {
     /**
      * @return AttributeInterface

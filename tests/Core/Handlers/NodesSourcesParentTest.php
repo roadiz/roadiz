@@ -38,7 +38,7 @@ use RZ\Roadiz\Tests\SchemaDependentCase;
  */
 class NodesSourcesParentTest extends SchemaDependentCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         $nodes = static::getManager()
             ->getRepository(Node::class)
@@ -55,7 +55,7 @@ class NodesSourcesParentTest extends SchemaDependentCase
      * Nothing special to do except init collection
      * array.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

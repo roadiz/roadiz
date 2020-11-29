@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Model;
 
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
-interface AttributeGroupTranslationInterface
+interface AttributeGroupTranslationInterface extends PersistableInterface
 {
     /**
      * @return string|null

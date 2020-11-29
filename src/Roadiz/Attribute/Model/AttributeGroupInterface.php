@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
-interface AttributeGroupInterface
+interface AttributeGroupInterface extends PersistableInterface
 {
     public function getName(): ?string;
     public function getTranslatedName(Translation $translation): ?string;

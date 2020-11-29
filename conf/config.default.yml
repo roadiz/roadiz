@@ -38,6 +38,8 @@ themes:
     - classname: \Themes\DefaultTheme\DefaultThemeApp
       hostname: '*'
       routePrefix: ''
+additionalServiceProviders:
+    - \Themes\DefaultTheme\Services\DefaultThemeServiceProvider
 additionalCommands:
     - \Themes\DefaultTheme\Commands\DefaultThemeCommand
 # Image intervention and Intervention Request

@@ -73,7 +73,7 @@ class CdnPackagesTest extends DefaultThemeDependentCase
         ]);
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         /** @var Setting $setting */
         $setting = static::getManager()

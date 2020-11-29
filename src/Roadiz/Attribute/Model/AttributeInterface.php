@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
-interface AttributeInterface
+interface AttributeInterface extends PersistableInterface
 {
     /**
      * String field is a simple 255 characters long text.

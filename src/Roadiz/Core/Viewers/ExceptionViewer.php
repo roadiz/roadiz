@@ -8,7 +8,6 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

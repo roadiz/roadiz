@@ -148,7 +148,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
      * Nothing special to do except init collection
      * array.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -159,7 +159,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
     /**
      * Remove test entities.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         try {
             $solr = static::$kernel->get('solr');

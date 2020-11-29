@@ -75,7 +75,7 @@ class NodeHandlerTest extends DefaultThemeDependentCase
         }
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

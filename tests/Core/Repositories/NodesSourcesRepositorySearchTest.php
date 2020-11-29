@@ -113,7 +113,7 @@ class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

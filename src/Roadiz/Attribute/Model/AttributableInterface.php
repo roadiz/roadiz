@@ -4,9 +4,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 
-interface AttributableInterface
+interface AttributableInterface extends PersistableInterface
 {
     /**
      * @return Collection

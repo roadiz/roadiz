@@ -5,7 +5,6 @@ namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Bags\Settings;
-use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
