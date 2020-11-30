@@ -6,6 +6,7 @@ namespace RZ\Roadiz\CMS\Controllers;
 use Exception;
 use InvalidArgumentException;
 use Pimple\Container;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
@@ -421,7 +422,9 @@ abstract class AppController extends Controller
      */
     public function throw404($message = "")
     {
-        $this->get('logger')->warn($message);
+        /** @var LoggerInterface $logger */
+        $logger = $this->get('logger');
+        $logger->warning($message);
 
         $this->assignation['nodeName'] = 'error-404';
         $this->assignation['nodeTypeName'] = 'error404';
