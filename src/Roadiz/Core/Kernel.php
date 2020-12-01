@@ -110,9 +110,21 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public static $cmsBuild = null;
     public static $cmsVersion = "1.5.14";
 
+    /**
+     * @var string
+     */
     protected $environment;
+    /**
+     * @var bool
+     */
     protected $debug;
+    /**
+     * @var bool
+     */
     protected $preview;
+    /**
+     * @var bool
+     */
     protected $booted = false;
     protected $name;
     protected $rootDir;
@@ -124,12 +136,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
     /**
      * @param string $environment
-     * @param boolean $debug
+     * @param bool $debug
      * @param bool $preview
      */
     public function __construct($environment, $debug, $preview = false)
     {
-        $this->environment = $environment;
+        $this->environment = strtolower((string) $environment);
         $this->preview = (boolean) $preview;
         $this->debug = (boolean) $debug;
         $this->rootDir = $this->getRootDir();
@@ -558,7 +570,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function isInstallMode()
     {
-        return $this->environment == 'install';
+        return $this->environment === 'install';
     }
 
     /**
@@ -574,7 +586,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function isDevMode()
     {
-        return $this->environment == 'dev';
+        return $this->environment === 'dev';
     }
 
     /**
@@ -582,7 +594,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function isProdMode()
     {
-        return $this->environment == 'prod';
+        return $this->environment === 'prod';
     }
 
     /**

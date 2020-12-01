@@ -79,7 +79,7 @@ final class TranslatorFactory implements TranslatorFactoryInterface
         $translator = new Translator(
             $this->getCurrentLocale(),
             null,
-            $this->kernel->isDevMode() ? null : $this->kernel->getCacheDir() . '/translations',
+            $this->kernel->isDebug() ? null : $this->kernel->getCacheDir() . '/translations',
             $this->kernel->isDebug()
         );
 
@@ -271,7 +271,7 @@ final class TranslatorFactory implements TranslatorFactoryInterface
 
         if (null !== $this->entityManager) {
             try {
-                if (!$this->kernel->isInstallMode()) {
+                if ($this->kernel->getEnvironment() !== 'install') {
                     /** @var TranslationRepository $translationRepository */
                     $translationRepository = $this->entityManager->getRepository(Translation::class);
                     if ($this->kernel->isPreview()) {
