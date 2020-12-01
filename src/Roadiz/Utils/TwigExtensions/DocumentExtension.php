@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Exceptions\InvalidEmbedId;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
+use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -22,23 +22,38 @@ use Twig\TwigFilter;
 class DocumentExtension extends AbstractExtension
 {
     /**
-     * @var Container
-     */
-    private $container;
-    /**
      * @var bool
      */
     private $throwExceptions;
+    /**
+     * @var RendererInterface
+     */
+    private $renderer;
+    /**
+     * @var EmbedFinderFactory
+     */
+    private $embedFinderFactory;
+    /**
+     * @var Packages
+     */
+    private $assetPackages;
 
     /**
-     * DocumentExtension constructor.
-     * @param Container $container
+     * @param RendererInterface $renderer
+     * @param EmbedFinderFactory $embedFinderFactory
+     * @param Packages $assetPackages
      * @param bool $throwExceptions Trigger exception if using filter on NULL values (default: false)
      */
-    public function __construct(Container $container, $throwExceptions = false)
-    {
-        $this->container = $container;
+    public function __construct(
+        RendererInterface $renderer,
+        EmbedFinderFactory $embedFinderFactory,
+        Packages $assetPackages,
+        $throwExceptions = false
+    ) {
         $this->throwExceptions = $throwExceptions;
+        $this->renderer = $renderer;
+        $this->embedFinderFactory = $embedFinderFactory;
+        $this->assetPackages = $assetPackages;
     }
 
     /**
@@ -73,11 +88,9 @@ class DocumentExtension extends AbstractExtension
         }
 
         try {
-            /** @var EmbedFinderFactory $embedFinderFactory */
-            $embedFinderFactory = $this->container[EmbedFinderFactory::class];
             if (null !== $document->getEmbedPlatform() &&
-                $embedFinderFactory->supports($document->getEmbedPlatform())) {
-                return $embedFinderFactory->createForPlatform(
+                $this->embedFinderFactory->supports($document->getEmbedPlatform())) {
+                return $this->embedFinderFactory->createForPlatform(
                     $document->getEmbedPlatform(),
                     $document->getEmbedId()
                 );
@@ -110,9 +123,7 @@ class DocumentExtension extends AbstractExtension
             }
         }
         try {
-            /** @var RendererInterface $renderer */
-            $renderer = $this->container[RendererInterface::class];
-            return $renderer->render($document, $options);
+            return $this->renderer->render($document, $options);
         } catch (InvalidEmbedId $embedException) {
             if ($this->throwExceptions) {
                 throw new RuntimeError($embedException->getMessage());
@@ -131,7 +142,7 @@ class DocumentExtension extends AbstractExtension
      * - Return `'landscape'` if width is higher or equal to height
      * - Return `'portrait'` if height is strictly lower to width
      *
-     * @param Document $document
+     * @param Document|null $document
      * @return null|string
      * @throws RuntimeError
      */
@@ -153,7 +164,7 @@ class DocumentExtension extends AbstractExtension
     }
 
     /**
-     * @param Document $document
+     * @param Document|null $document
      * @return array
      * @throws RuntimeError
      */
@@ -213,7 +224,7 @@ class DocumentExtension extends AbstractExtension
     public function getPath(Document $document = null)
     {
         if (null !== $document) {
-            return $this->container['assetPackages']->getDocumentFilePath($document);
+            return $this->assetPackages->getDocumentFilePath($document);
         }
 
         return null;
@@ -227,7 +238,7 @@ class DocumentExtension extends AbstractExtension
     {
         if (null !== $document) {
             $fs = new Filesystem();
-            return $fs->exists($this->container['assetPackages']->getDocumentFilePath($document));
+            return $fs->exists($this->assetPackages->getDocumentFilePath($document));
         }
 
         return false;

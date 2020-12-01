@@ -130,28 +130,28 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return [
                 new ImageRenderer(
                     $c[EmbedFinderFactory::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new PictureRenderer(
                     $c[EmbedFinderFactory::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new VideoRenderer(
                     $c['assetPackages'],
                     $c[DocumentFinderInterface::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new AudioRenderer(
                     $c['assetPackages'],
                     $c[DocumentFinderInterface::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new PdfRenderer(
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new SvgRenderer($c['assetPackages']),
