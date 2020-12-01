@@ -285,7 +285,7 @@ final class TranslatorFactory implements TranslatorFactoryInterface
                     }
                 }
             } catch (Exception $e) {
-            } catch (PDOException $e) {
+            } catch (\PDOException $e) {
                 // Trying to use translator without DB
                 // in CI or CLI environments
             }
