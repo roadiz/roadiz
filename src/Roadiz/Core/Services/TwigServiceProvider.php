@@ -10,6 +10,8 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Translation\Twig\TranslationExtension as RoadizTranslationExtension;
+use RZ\Roadiz\Translation\Twig\TranslationMenuExtension;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\CentralTruncateExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
@@ -20,7 +22,6 @@ use RZ\Roadiz\Utils\TwigExtensions\HttpKernelExtension;
 use RZ\Roadiz\Utils\TwigExtensions\NodesSourcesExtension;
 use RZ\Roadiz\Utils\TwigExtensions\RoadizExtension;
 use RZ\Roadiz\Utils\TwigExtensions\RoutingExtension;
-use RZ\Roadiz\Utils\TwigExtensions\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
@@ -87,6 +88,13 @@ class TwigServiceProvider implements ServiceProviderInterface
             ]);
         };
 
+        $container['twig.safe_environment_class'] = function (Container $c) {
+            return new Environment($c['twig.loaderFileSystem'], [
+                'debug' => $c['kernel']->isDebug(),
+                'cache' => $c['twig.cacheFolder'],
+            ]);
+        };
+
         /**
          * Twig form renderer extension.
          *
@@ -102,6 +110,8 @@ class TwigServiceProvider implements ServiceProviderInterface
 
         /**
          * Main twig environment.
+         * Not to use as a Event or Dispatcher dependency, use
+         * safe_environment instead.
          *
          * @param Container $c
          * @return Environment
@@ -143,6 +153,40 @@ class TwigServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * Safe twig environment for using it from dispatcher.
+         *
+         * @param Container $c
+         * @return Environment
+         */
+        $container['twig.safe_environment'] = function (Container $c) {
+            $c['stopwatch']->start('initSafeTwig');
+            /** @var Environment $twig */
+            $twig = $c['twig.safe_environment_class'];
+
+            foreach ($c['twig.safe_extensions'] as $extension) {
+                if ($extension instanceof AbstractExtension) {
+                    $twig->addExtension($extension);
+                } else {
+                    throw new \RuntimeException('Try to add Twig extension which does not extends AbstractExtension.');
+                }
+            }
+
+            /** @var TwigRendererEngine $formEngine */
+            $formEngine = $c['twig.formRenderer'];
+            /** @var CsrfTokenManager $csrfManager */
+            $csrfManager = $c['csrfTokenManager'];
+
+            $twig->addRuntimeLoader(new FactoryRuntimeLoader([
+                FormRenderer::class => function () use ($formEngine, $csrfManager) {
+                    return new FormRenderer($formEngine, $csrfManager);
+                },
+            ]));
+
+            $c['stopwatch']->stop('initSafeTwig');
+            return $twig;
+        };
+
+        /**
          * Twig filters.
          *
          * We separate filters from environment to be able to
@@ -175,6 +219,49 @@ class TwigServiceProvider implements ServiceProviderInterface
          * @param Container $c
          * @return ArrayCollection
          */
+        $container['twig.safe_extensions'] = function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            $extensions = new ArrayCollection();
+            $extensions->add(new FormExtension());
+            $extensions->add(new StringExtension());
+            $extensions->add(new CentralTruncateExtension());
+            $extensions->add(new HtmlExtension());
+            $extensions->add(new RoadizExtension($kernel));
+            $extensions->add($c['twig.safe_routingExtension']);
+            $extensions->add(new HandlerExtension($c['factory.handler']));
+            $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
+            $extensions->add(new TranslationExtension($c['translator']));
+            $extensions->add(new AssetExtension($c['assetPackages']));
+            $extensions->add(new IntlExtension());
+            $extensions->add(new RoadizTranslationExtension());
+            $extensions->add(new UrlExtension(
+                $c['document.url_generator'],
+                $c['nodesSourcesUrlCacheProvider'],
+                (boolean) $c['settingsBag']->get('force_locale')
+            ));
+            /*
+             * These extension need a valid Database connection
+             * with EntityManager not null.
+             */
+            try {
+                $extensions->add(new DumpExtension($c));
+                if ($kernel->isDebug()) {
+                    $extensions->add(new ProfilerExtension($c['twig.profile']));
+                }
+                if (!$kernel->isInstallMode()) {
+                    $extensions->add(new DocumentExtension($c));
+                    $extensions->add(new FontExtension($c));
+                }
+            } catch (Exception $e) {
+            } catch (PDOException $e) {
+                // Trying to use translator without DB
+                // in CI or CLI environments
+            }
+
+            return $extensions;
+        };
+
         $container['twig.extensions'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -187,10 +274,12 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add(new RoadizExtension($kernel));
             $extensions->add(new HandlerExtension($c['factory.handler']));
             $extensions->add(new HttpFoundationExtension($c[UrlHelper::class]));
-            $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add(new TranslationExtension($c['translator']));
             $extensions->add(new AssetExtension($c['assetPackages']));
             $extensions->add(new IntlExtension());
+            $extensions->add(new RoadizTranslationExtension());
+            $extensions->add(new TranslationMenuExtension($c['requestStack'], $c['translation.viewer']));
+            $extensions->add(new SecurityExtension($c['securityAuthorizationChecker']));
             $extensions->add($c['twig.routingExtension']);
             $extensions->add(new BlockRenderExtension($c['twig.fragmentHandler']));
             $extensions->add(new HttpKernelExtension($c['twig.fragmentHandler']));
@@ -199,7 +288,6 @@ class TwigServiceProvider implements ServiceProviderInterface
                 $c['nodesSourcesUrlCacheProvider'],
                 (boolean) $c['settingsBag']->get('force_locale')
             ));
-            $extensions->add(new RoadizTranslationExtension($c['requestStack'], $c['translation.viewer']));
             /*
              * These extension need a valid Database connection
              * with EntityManager not null.
@@ -209,7 +297,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                 if ($kernel->isDebug()) {
                     $extensions->add(new ProfilerExtension($c['twig.profile']));
                 }
-                if (true !== $kernel->isInstallMode()) {
+                if (!$kernel->isInstallMode()) {
                     $extensions->add(new DocumentExtension($c));
                     $extensions->add(new FontExtension($c));
                     $extensions->add(new NodesSourcesExtension(
@@ -238,6 +326,12 @@ class TwigServiceProvider implements ServiceProviderInterface
          */
         $container['twig.routingExtension'] = function (Container $c) {
             return new RoutingExtension($c['router']);
+        };
+        /*
+         * Safe routing extension not depending on dispatcher
+         */
+        $container['twig.safe_routingExtension'] = function (Container $c) {
+            return new RoutingExtension($c['staticRouter']);
         };
 
         return $container;

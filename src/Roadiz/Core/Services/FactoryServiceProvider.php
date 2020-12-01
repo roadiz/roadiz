@@ -176,6 +176,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
         $container['translation.viewer'] = $container->factory(function (Container $c) {
             return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
         });
+
         $container['user.viewer'] = $container->factory(function (Container $c) {
             return new UserViewer(
                 $c['em'],
@@ -194,7 +195,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             if ($cacheProvider instanceof ArrayCache) {
                 $cacheProvider = null;
             }
-            return new DocumentUrlGenerator($c['assetPackages'], $c['urlGenerator'], $cacheProvider);
+            return new DocumentUrlGenerator($c['assetPackages'], $c['staticRouter'], $cacheProvider);
         });
 
         /*

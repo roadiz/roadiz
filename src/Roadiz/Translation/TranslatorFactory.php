@@ -1,157 +1,116 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Core\Services;
+namespace RZ\Roadiz\Translation;
 
 use Doctrine\DBAL\Exception;
-use PDOException;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\KernelInterface;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Translation\Loader\XliffFileLoader;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Themes\Install\InstallApp;
 use Themes\Rozier\RozierApp;
 
-/**
- * Register Embed documents services for dependency injection container.
- */
-class TranslationServiceProvider implements ServiceProviderInterface
+final class TranslatorFactory implements TranslatorFactoryInterface
 {
     /**
-     * Initialize translator services.
-     *
-     * @param Container $container
-     *
-     * @return Container
+     * @var KernelInterface
      */
-    public function register(Container $container)
+    protected $kernel;
+
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+
+    /**
+     * @var EntityManagerInterface|null
+     */
+    protected $entityManager;
+
+    /**
+     * @var Stopwatch
+     */
+    protected $stopwatch;
+
+    /**
+     * @var ThemeResolverInterface
+     */
+    protected $themeResolver;
+
+    /**
+     * @param KernelInterface $kernel
+     * @param RequestStack $requestStack
+     * @param EntityManagerInterface|null $entityManager
+     * @param Stopwatch $stopwatch
+     * @param ThemeResolverInterface $themeResolver
+     */
+    public function __construct(
+        KernelInterface $kernel,
+        RequestStack $requestStack,
+        ?EntityManagerInterface $entityManager,
+        Stopwatch $stopwatch,
+        ThemeResolverInterface $themeResolver
+    ) {
+        $this->kernel = $kernel;
+        $this->requestStack = $requestStack;
+        $this->entityManager = $entityManager;
+        $this->stopwatch = $stopwatch;
+        $this->themeResolver = $themeResolver;
+    }
+
+    /**
+     * @return TranslatorInterface
+     * @throws \ReflectionException
+     */
+    public function create(): TranslatorInterface
     {
-        /**
-         * @param Container $c
-         * @return Translation
-         */
-        $container['defaultTranslation'] = function (Container $c) {
-            return $c['em']->getRepository(Translation::class)->findDefault();
-        };
+        $this->stopwatch->start('createTranslator');
 
-        /**
-         * This service have to be called once a controller has
-         * been matched! Never before.
-         * @param Container $c
-         * @return string
-         */
-        $container['translator.locale'] = function (Container $c) {
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $request = $requestStack->getMasterRequest();
+        $translator = new Translator(
+            $this->getCurrentLocale(),
+            null,
+            $this->kernel->isDevMode() ? null : $this->kernel->getCacheDir() . '/translations',
+            $this->kernel->isDebug()
+        );
 
-            if (null === $request) {
-                return null;
-            }
-            if ($request->hasPreviousSession() &&
-                null !== $request->getSession() &&
-                null !== $request->getSession()->get('_locale')) {
-                return $request->getSession()->get('_locale');
-            }
-            return $request->getLocale();
-        };
+        $translator->addLoader('xlf', new XliffFileLoader());
+        $translator->addLoader('yml', new YamlFileLoader());
+        $classes = array_merge(
+            [$this->themeResolver->getBackendTheme()],
+            $this->themeResolver->getFrontendThemes()
+        );
 
-        /**
-         * @param Container $c
-         * @return Translator
-         */
-        $container['translator'] = function (Container $c) {
-            $c['stopwatch']->start('initTranslator');
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            /** @var ThemeResolverInterface $themeResolver */
-            $themeResolver = $c['themeResolver'];
+        foreach ($this->getAvailableLocales() as $locale) {
+            $this->addResourcesForLocale($locale, $translator, $classes);
+        }
 
-            $translator = new Translator(
-                $c['translator.locale'],
-                null,
-                $kernel->isDevMode() ? null : $kernel->getCacheDir() . '/translations',
-                $kernel->isDebug()
-            );
+        $this->stopwatch->stop('createTranslator');
 
-            $translator->addLoader('xlf', new XliffFileLoader());
-            $translator->addLoader('yml', new YamlFileLoader());
-            $classes = array_merge(
-                [$themeResolver->getBackendTheme()],
-                $themeResolver->getFrontendThemes()
-            );
-
-            /** @var string $locale */
-            foreach ($c['translator.locales'] as $locale) {
-                $this->addResourcesForLocale($locale, $translator, $classes, $c['kernel']);
-            }
-
-            $c['stopwatch']->stop('initTranslator');
-
-            return $translator;
-        };
-
-        /**
-         * Get available Roadiz locales for translation.
-         *
-         * @param Container $c
-         * @return string[]
-         */
-        $container['translator.locales'] = function (Container $c) {
-            // Add Rozier backend languages
-            $locales = array_values(RozierApp::$backendLanguages);
-            // Add default translation
-            $locales[] = $c['translator.locale'];
-
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            try {
-                if (!$kernel->isInstallMode()) {
-                    /** @var TranslationRepository $translationRepository */
-                    $translationRepository = $c['em']->getRepository(Translation::class);
-                    if ($kernel->isPreview()) {
-                        $availableTranslations = $translationRepository->findAll();
-                    } else {
-                        $availableTranslations = $translationRepository->findAllAvailable();
-                    }
-                    /** @var Translation $availableTranslation */
-                    foreach ($availableTranslations as $availableTranslation) {
-                        $locales[] = $availableTranslation->getLocale();
-                    }
-                }
-            } catch (Exception $e) {
-            } catch (PDOException $e) {
-                // Trying to use translator without DB
-                // in CI or CLI environments
-            }
-
-            return array_unique($locales);
-        };
-
-        return $container;
+        return $translator;
     }
 
     /**
      * @param string $locale
      * @param Translator $translator
      * @param Theme[] $classes
-     * @param Kernel $kernel
      * @throws \ReflectionException
      */
-    protected function addResourcesForLocale(string $locale, Translator $translator, array &$classes, Kernel $kernel)
+    protected function addResourcesForLocale(string $locale, Translator $translator, array &$classes)
     {
         /*
          * Add existing Symfony validator translations
          */
-        $vendorDir = $kernel->getVendorDir();
+        $vendorDir = $this->kernel->getVendorDir();
         $vendorFormDir = $vendorDir.'/symfony/form';
         $vendorValidatorDir = $vendorDir.'/symfony/validator';
         $validatorFromVendorFormDir = $vendorFormDir.'/Resources/translations/validators.'.$locale.'.xlf';
@@ -281,5 +240,57 @@ class TranslationServiceProvider implements ServiceProviderInterface
                 $domain
             );
         }
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getCurrentLocale(): ?string
+    {
+        $request = $this->requestStack->getMasterRequest();
+        if (null === $request) {
+            return null;
+        }
+        if ($request->hasPreviousSession() &&
+            null !== $request->getSession() &&
+            null !== $request->getSession()->get('_locale')) {
+            return $request->getSession()->get('_locale');
+        }
+        return $request->getLocale();
+    }
+
+    /**
+     * @return array<string>
+     */
+    protected function getAvailableLocales(): array
+    {
+        // Add Rozier backend languages
+        $locales = array_values(RozierApp::$backendLanguages);
+        // Add default translation
+        $locales[] = $this->getCurrentLocale();
+
+        if (null !== $this->entityManager) {
+            try {
+                if (!$this->kernel->isInstallMode()) {
+                    /** @var TranslationRepository $translationRepository */
+                    $translationRepository = $this->entityManager->getRepository(Translation::class);
+                    if ($this->kernel->isPreview()) {
+                        $availableTranslations = $translationRepository->findAll();
+                    } else {
+                        $availableTranslations = $translationRepository->findAllAvailable();
+                    }
+                    /** @var Translation $availableTranslation */
+                    foreach ($availableTranslations as $availableTranslation) {
+                        $locales[] = $availableTranslation->getLocale();
+                    }
+                }
+            } catch (Exception $e) {
+            } catch (PDOException $e) {
+                // Trying to use translator without DB
+                // in CI or CLI environments
+            }
+        }
+
+        return array_unique(array_filter($locales));
     }
 }

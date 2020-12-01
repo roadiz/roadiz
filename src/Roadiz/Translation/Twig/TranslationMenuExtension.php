@@ -1,33 +1,27 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\TwigExtensions;
+namespace RZ\Roadiz\Translation\Twig;
 
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Viewers\TranslationViewer;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Intl\Countries;
-use Symfony\Component\Intl\Locales;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
-use Twig\TwigTest;
 
-/**
- * Extension that allow render document images
- */
-class TranslationExtension extends AbstractExtension
+class TranslationMenuExtension extends AbstractExtension
 {
     /**
      * @var RequestStack
      */
     private $requestStack;
+
     /**
      * @var TranslationViewer
      */
     private $translationViewer;
 
     /**
-     * TranslationExtension constructor.
      * @param RequestStack $requestStack
      * @param TranslationViewer $translationViewer
      */
@@ -41,34 +35,7 @@ class TranslationExtension extends AbstractExtension
     {
         return [
             new TwigFilter('menu', [$this, 'getMenuAssignation']),
-            new TwigFilter('country_iso', [$this, 'getCountryName']),
-            new TwigFilter('locale_iso', [$this, 'getLocaleName']),
         ];
-    }
-
-    public function getTests()
-    {
-        return [
-            new TwigTest('rtl', [$this, 'isLocaleRtl'])
-        ];
-    }
-
-    /**
-     * @param mixed $mixed
-     *
-     * @return bool
-     */
-    public function isLocaleRtl($mixed)
-    {
-        if ($mixed instanceof Translation) {
-            return $mixed->isRtl();
-        }
-
-        if (is_string($mixed)) {
-            return in_array($mixed, Translation::getRightToLeftLocales());
-        }
-
-        return false;
     }
 
     /**
@@ -86,26 +53,5 @@ class TranslationExtension extends AbstractExtension
         } else {
             return [];
         }
-    }
-
-    /**
-     * @param string $iso
-     * @param string|null $locale
-     * @return string
-     */
-    public function getCountryName(string $iso, ?string $locale = null): string
-    {
-        return Countries::getName($iso, $locale);
-    }
-
-    /**
-     * @param string      $iso
-     * @param string|null $locale
-     *
-     * @return string
-     */
-    public function getLocaleName(string $iso, ?string $locale = null): string
-    {
-        return Locales::getName($iso, $locale);
     }
 }

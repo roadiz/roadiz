@@ -66,6 +66,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
             return $router;
         };
+
         $container['staticRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -86,6 +87,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['logger']
             );
         };
+
         $container['nodeRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -123,7 +125,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         /*
-         * As we are using CMF ChainRouter, it take responsability for
+         * As we are using CMF ChainRouter, it takes responsability for
          * URL generation.
          */
         $container['urlGenerator'] = function (Container $c) {
