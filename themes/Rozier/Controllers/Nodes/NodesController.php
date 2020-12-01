@@ -26,7 +26,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Workflow\Workflow;
-use Themes\Rozier\Forms;
 use Themes\Rozier\Forms\Node\AddNodeType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
@@ -185,7 +184,7 @@ class NodesController extends RozierApp
             /*
              * Handle main form
              */
-            $form = $this->createForm(Forms\NodeType::class, $node, [
+            $form = $this->createForm($this->get('rozier.form_type.node'), $node, [
                 'em' => $this->get('em'),
                 'nodeName' => $node->getNodeName(),
             ]);
@@ -352,10 +351,13 @@ class NodesController extends RozierApp
      * Handle node creation pages.
      *
      * @param Request $request
-     * @param int     $nodeId
-     * @param int     $translationId
+     * @param null $nodeId
+     * @param null $translationId
      *
      * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Twig\Error\RuntimeError
      */
     public function addChildAction(Request $request, $nodeId = null, $translationId = null)
     {
@@ -387,8 +389,7 @@ class NodesController extends RozierApp
                 $node->setParent($parentNode);
             }
 
-            /** @var Form $form */
-            $form = $this->createForm(AddNodeType::class, $node, [
+            $form = $this->createForm($this->get('rozier.form_type.add_node'), $node, [
                 'nodeName' => '',
                 'em' => $this->get('em'),
             ]);
@@ -439,9 +440,10 @@ class NodesController extends RozierApp
      * Return an deletion form for requested node.
      *
      * @param Request $request
-     * @param int     $nodeId
+     * @param int $nodeId
      *
      * @return Response
+     * @throws \Twig\Error\RuntimeError
      */
     public function deleteAction(Request $request, $nodeId)
     {
@@ -510,6 +512,7 @@ class NodesController extends RozierApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig\Error\RuntimeError
      */
     public function emptyTrashAction(Request $request)
     {
@@ -556,13 +559,15 @@ class NodesController extends RozierApp
 
         return $this->render('nodes/emptyTrash.html.twig', $this->assignation);
     }
+
     /**
      * Return an deletion form for requested node.
      *
      * @param Request $request
-     * @param int     $nodeId
+     * @param int $nodeId
      *
      * @return Response
+     * @throws \Twig\Error\RuntimeError
      */
     public function undeleteAction(Request $request, $nodeId)
     {

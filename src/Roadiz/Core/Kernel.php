@@ -93,6 +93,7 @@ use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
 use Themes\Rozier\Events\RawDocumentsSubscriber;
 use Themes\Rozier\Events\SvgDocumentSubscriber;
 use Themes\Rozier\Events\TranslationSubscriber;
+use Themes\Rozier\Services\RozierServiceProvider;
 
 /**
  * Roadiz Kernel.
@@ -406,6 +407,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new NodeServiceProvider());
         $container->register(new MarkdownServiceProvider());
         $container->register(new OpenIdServiceProvider());
+        $container->register(new RozierServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
