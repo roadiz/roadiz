@@ -58,6 +58,12 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
             );
         } else {
             $this->runCommand(
+                sprintf('migrations:migrate --allow-no-migration'),
+                'dev',
+                false,
+                $input->isInteractive()
+            );
+            $this->runCommand(
                 sprintf('themes:install --data "%s"', $input->getArgument('classname')),
                 'dev',
                 false,
@@ -65,7 +71,13 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
             );
             $this->runCommand(sprintf('generate:nsentities'), 'dev', false, $input->isInteractive());
             $this->runCommand(
-                sprintf('orm:schema-tool:update --dump-sql --force'),
+                sprintf('migrations:diff --allow-empty-diff'),
+                'dev',
+                false,
+                $input->isInteractive()
+            );
+            $this->runCommand(
+                sprintf('migrations:migrate --allow-no-migration'),
                 'dev',
                 false,
                 $input->isInteractive()

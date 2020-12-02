@@ -5,7 +5,14 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\Migrations\Configuration\Connection\ExistingConnection;
+use Doctrine\Migrations\Configuration\EntityManager\EntityManagerLoader;
+use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
+use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
+use Doctrine\Migrations\DependencyFactory;
+use Doctrine\Migrations\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\Command\InfoCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
@@ -105,13 +112,14 @@ class RoadizApplication extends Application
 
     protected function addDoctrineCommands()
     {
-        $this->addCommands([
-            new CreateCommand(),
-            new UpdateCommand(),
-            new DropCommand(),
-            new ValidateSchemaCommand(),
-            new InfoCommand(),
-        ]);
+        try {
+            /** @var EntityManagerInterface $entityManager */
+            $entityManager = $this->kernel->get('em');
+            \Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($this);
+            ConsoleRunner::addCommands($this, $this->kernel->get(DependencyFactory::class));
+        } catch (ConnectionException $exception) {
+        } catch (\PDOException $exception) {
+        }
     }
 
     /**

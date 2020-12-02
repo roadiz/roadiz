@@ -189,13 +189,16 @@ final class ThemeInfo
     }
 
     /**
-     * @param string $className
+     * @param string|null $className
      *
      * @return null|ReflectionClass
      */
-    public function getThemeReflectionClass(string $className): ?ReflectionClass
+    public function getThemeReflectionClass(string $className = null): ?ReflectionClass
     {
         try {
+            if (null === $className) {
+                $className = $this->getClassname();
+            }
             $reflection = new ReflectionClass($className);
             if ($reflection->isSubclassOf(AppController::class)) {
                 return $reflection;

@@ -55,7 +55,7 @@ class SchemaUpdater
     /**
      * Update database schema.
      *
-     * @param boolean $delete Enable DELETE and DROP statements
+     * @param boolean $delete Enable DELETE and DROP statements
      *
      * @return boolean
      * @throws \Doctrine\DBAL\DBALException
