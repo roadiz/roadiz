@@ -86,6 +86,7 @@ final class NodeFactory implements ContainerAwareInterface
         $sourceClass = $node->getNodeType()->getSourceEntityFullQualifiedClassName();
         /** @var NodesSources $source */
         $source = new $sourceClass($node, $translation);
+        $source->injectObjectManager($entityManager, $entityManager->getClassMetadata($sourceClass));
         $source->setTitle($title);
         $source->setPublishedAt(new \DateTime());
         $entityManager->persist($source);
