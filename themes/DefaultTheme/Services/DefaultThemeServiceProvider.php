@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Themes\DefaultTheme\Event\LinkPathSubscriber;
 use Themes\DefaultTheme\Serialization\DocumentUriSubscriber;
 use Themes\DefaultTheme\Twig\ImageFormatsExtension;
