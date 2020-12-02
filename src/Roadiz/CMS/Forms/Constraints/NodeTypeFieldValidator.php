@@ -7,6 +7,7 @@ use RZ\Roadiz\Config\CollectionFieldConfiguration;
 use RZ\Roadiz\Config\JoinNodeTypeFieldConfiguration;
 use RZ\Roadiz\Config\ProviderFieldConfiguration;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Entities\NodeTypeField as NodeTypeFieldEntity;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraint;
@@ -19,7 +20,10 @@ class NodeTypeFieldValidator extends ConstraintValidator
 {
     public function validate($value, Constraint $constraint)
     {
-        if ($value instanceof \RZ\Roadiz\Core\Entities\NodeTypeField) {
+        if ($value instanceof NodeTypeFieldEntity) {
+            if ($value->isMarkdown()) {
+                $this->validateMarkdownOptions($value);
+            }
             if ($value->isManyToMany() || $value->isManyToOne()) {
                 $this->validateJoinTypes($value, $constraint);
             }
@@ -35,10 +39,10 @@ class NodeTypeFieldValidator extends ConstraintValidator
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $value
+     * @param NodeTypeFieldEntity $value
      * @param Constraint $constraint
      */
-    protected function validateJoinTypes(\RZ\Roadiz\Core\Entities\NodeTypeField $value, Constraint $constraint)
+    protected function validateJoinTypes(NodeTypeFieldEntity $value, Constraint $constraint)
     {
         try {
             $defaultValuesParsed = Yaml::parse($value->getDefaultValues() ?? '');
@@ -96,12 +100,12 @@ class NodeTypeFieldValidator extends ConstraintValidator
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $value
-     * @param Constraint                             $constraint
+     * @param NodeTypeFieldEntity $value
+     * @param Constraint $constraint
      *
      * @throws \ReflectionException
      */
-    protected function validateProviderTypes(\RZ\Roadiz\Core\Entities\NodeTypeField $value, Constraint $constraint)
+    protected function validateProviderTypes(NodeTypeFieldEntity $value, Constraint $constraint)
     {
         try {
             if (null === $value->getDefaultValues()) {
@@ -145,10 +149,10 @@ class NodeTypeFieldValidator extends ConstraintValidator
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $value
+     * @param NodeTypeFieldEntity $value
      * @param Constraint $constraint
      */
-    protected function validateCollectionTypes(\RZ\Roadiz\Core\Entities\NodeTypeField $value, Constraint $constraint)
+    protected function validateCollectionTypes(NodeTypeFieldEntity $value, Constraint $constraint)
     {
         try {
             $defaultValuesParsed = Yaml::parse($value->getDefaultValues() ?? '');
@@ -183,6 +187,24 @@ class NodeTypeFieldValidator extends ConstraintValidator
         } catch (ParseException $e) {
             $this->context->buildViolation($e->getMessage())->atPath('defaultValues')->addViolation();
         } catch (\RuntimeException $e) {
+            $this->context->buildViolation($e->getMessage())->atPath('defaultValues')->addViolation();
+        }
+    }
+
+    /**
+     * @param NodeTypeFieldEntity $value
+     */
+    protected function validateMarkdownOptions(NodeTypeFieldEntity $value)
+    {
+        try {
+            $options = Yaml::parse($value->getDefaultValues() ?? '');
+            if (!is_array($options)) {
+                $this->context
+                    ->buildViolation('Markdown options must be an array.')
+                    ->atPath('defaultValues')
+                    ->addViolation();
+            }
+        } catch (ParseException $e) {
             $this->context->buildViolation($e->getMessage())->atPath('defaultValues')->addViolation();
         }
     }

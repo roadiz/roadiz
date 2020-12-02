@@ -270,6 +270,7 @@ class NodeSourceType extends AbstractType
         $options = $this->getDefaultOptions($nodeSource, $field, $formOptions);
 
         switch ($field->getType()) {
+            case NodeTypeField::ENUM_T:
             case NodeTypeField::MULTIPLE_T:
                 $options = array_merge_recursive($options, [
                     'nodeTypeField' => $field,
@@ -324,6 +325,7 @@ class NodeSourceType extends AbstractType
                     'placeholder' => '',
                 ]);
                 break;
+            case NodeTypeField::DECIMAL_T:
             case NodeTypeField::INTEGER_T:
                 $options = array_merge_recursive($options, [
                     'constraints' => [
@@ -338,18 +340,6 @@ class NodeSourceType extends AbstractType
                         new Length([
                             'max' => 255
                         ])
-                    ],
-                ]);
-                break;
-            case NodeTypeField::ENUM_T:
-                $options = array_merge_recursive($options, [
-                    'nodeTypeField' => $field,
-                ]);
-                break;
-            case NodeTypeField::DECIMAL_T:
-                $options = array_merge_recursive($options, [
-                    'constraints' => [
-                        new Type('numeric'),
                     ],
                 ]);
                 break;
@@ -377,11 +367,12 @@ class NodeSourceType extends AbstractType
                 ]);
                 break;
             case NodeTypeField::MARKDOWN_T:
+                $additionalOptions = Yaml::parse($field->getDefaultValues() ?? '[]');
                 $options = array_merge_recursive($options, [
                     'attr' => [
                         'class' => 'markdown_textarea',
                     ],
-                ]);
+                ], $additionalOptions);
                 break;
             case NodeTypeField::CHILDREN_T:
                 $options = array_merge_recursive($options, [
