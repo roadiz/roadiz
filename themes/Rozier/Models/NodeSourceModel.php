@@ -3,14 +3,17 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Models;
 
+use JMS\Serializer\Annotation as Serializer;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 
 /**
  * Class NodeModel.
  *
  * @package Themes\Rozier\Models
+ * @Serializer\ExclusionPolicy("all")
  */
 class NodeSourceModel implements ModelInterface
 {
@@ -43,10 +46,15 @@ class NodeSourceModel implements ModelInterface
         if (null === $node) {
             throw new \RuntimeException('Node-source does not have a Node.');
         }
+
+        /** @var NodesSourcesDocuments|false $thumbnail */
+        $thumbnail = $this->nodeSource->getDocumentsByFields()->first();
+
         $result = [
             'id' => $node->getId(),
             'title' => $this->nodeSource->getTitle(),
             'nodeName' => $node->getNodeName(),
+            'thumbnail' => $thumbnail ? $thumbnail->getDocument() : null,
             'isPublished' => $node->isPublished(),
             'nodesEditPage' => $urlGenerator->generate('nodesEditSourcePage', [
                 'nodeId' => $node->getId(),

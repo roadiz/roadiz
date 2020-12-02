@@ -124,7 +124,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
         $responseArray = [
             'statusCode' => '200',
             'status' => 'success',
-            'nodeTree' => $this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation),
+            'nodeTree' => trim($this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation)),
         ];
 
         return new JsonResponse(

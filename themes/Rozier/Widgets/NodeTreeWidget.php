@@ -8,6 +8,7 @@ use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Utils\SessionListFilters;
 
@@ -58,8 +59,8 @@ class NodeTreeWidget extends AbstractWidget
     /**
      * @param Request     $request           Current kernel request
      * @param Controller  $refereeController Calling controller
-     * @param Node        $parent            Entry point of NodeTreeWidget, set null if it's root
-     * @param Translation $translation       NodeTree translation
+     * @param Node|null  $parent            Entry point of NodeTreeWidget, set null if it's root
+     * @param Translation|null $translation       NodeTree translation
      */
     public function __construct(
         Request $request,
@@ -179,7 +180,7 @@ class NodeTreeWidget extends AbstractWidget
      * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @param array $additionalCriteria Default: []
-     * @return \RZ\Roadiz\Core\ListManagers\EntityListManager
+     * @return EntityListManager
      */
     protected function getListManager(Node $parent = null, $subRequest = false, array $additionalCriteria = [])
     {
@@ -235,7 +236,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param Node $parent
+     * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @return array|Paginator
      */
@@ -245,7 +246,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param Node $parent
+     * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @return array|Paginator
      */

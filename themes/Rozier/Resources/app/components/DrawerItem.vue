@@ -8,7 +8,16 @@
 
             <div class="uk-sortable-handle"></div>
             <div class="border" :style="{ backgroundColor: getColor() }"></div>
-            <figure class="thumbnail" v-if="item.thumbnail" :style="{ 'background-image': 'url(' + item.thumbnail + ')' }"></figure>
+            <figure class="thumbnail"
+                    v-if="getThumbnail() && !item.thumbnail.processable"
+                    :style="{ 'background-image': 'url(' + getThumbnail() + ')' }"></figure>
+            <figure class="thumbnail"
+                    v-else-if="getThumbnail() && item.thumbnail.processable">
+                <picture>
+                    <source :srcset="getThumbnail() + '.webp'" type="image/webp" />
+                    <img :src="getThumbnail()" :alt="name">
+                </picture>
+            </figure>
             <div class="names">
                 <p class="parent-name">
                     <template v-if="parentName">
@@ -106,6 +115,14 @@
             },
             getReferer: function () {
                 return '?referer=' + window.location.pathname
+            },
+            getThumbnail: function () {
+                if (this.item.thumbnail && this.item.thumbnail.url) {
+                    return this.item.thumbnail.url
+                } else if (this.item.thumbnail) {
+                    return this.item.thumbnail
+                }
+                return null
             }
         },
         components: {

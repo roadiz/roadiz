@@ -6,8 +6,14 @@ namespace Themes\Rozier\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Themes\AbstractApiTheme\Serialization\ChildrenApiSubscriber;
+use Themes\AbstractApiTheme\Serialization\EntityListManagerSubscriber;
+use Themes\AbstractApiTheme\Serialization\NodeSourceApiSubscriber;
+use Themes\AbstractApiTheme\Serialization\TagTranslationNameSubscriber;
+use Themes\AbstractApiTheme\Serialization\TokenSubscriber;
 use Themes\Rozier\Forms\Node\AddNodeType;
 use Themes\Rozier\Forms\NodeType;
+use Themes\Rozier\Serialization\DocumentThumbnailSerializeSubscriber;
 
 final class RozierServiceProvider implements ServiceProviderInterface
 {
@@ -21,6 +27,11 @@ final class RozierServiceProvider implements ServiceProviderInterface
          */
         $container['rozier.form_type.add_node'] = AddNodeType::class;
         $container['rozier.form_type.node'] = NodeType::class;
+
+        $container->extend('serializer.subscribers', function (array $subscribers, $c) {
+            $subscribers[] = new DocumentThumbnailSerializeSubscriber($c['document.url_generator']);
+            return $subscribers;
+        });
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
             /** @var UrlGenerator $urlGenerator */

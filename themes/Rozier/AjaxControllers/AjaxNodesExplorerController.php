@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
@@ -51,9 +53,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             ]);
         }
 
-        return new JsonResponse(
-            $responseArray
-        );
+        return $this->createSerializedResponse($responseArray);
     }
 
     /**
@@ -186,15 +186,11 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $nodes = $this->sortIsh($nodes, $cleanNodeIds);
         $nodesArray = $this->normalizeNodes($nodes);
 
-        $responseArray = [
+        return $this->createSerializedResponse([
             'status' => 'confirm',
             'statusCode' => 200,
             'items' => $nodesArray
-        ];
-
-        return new JsonResponse(
-            $responseArray
-        );
+        ]);
     }
 
     /**
@@ -224,5 +220,30 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         }
 
         return array_values($nodesArray);
+    }
+
+    /**
+     * @param array $data
+     * @return JsonResponse
+     */
+    protected function createSerializedResponse(array $data): JsonResponse
+    {
+        /** @var Serializer $serializer */
+        $serializer = $this->container['serializer'];
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $data,
+                'json',
+                SerializationContext::create()->setGroups([
+                    'document_display',
+                    'explorer_thumbnail',
+                    'model'
+                ])
+            ),
+            200,
+            [],
+            true
+        );
     }
 }
