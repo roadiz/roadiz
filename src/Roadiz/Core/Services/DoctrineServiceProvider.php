@@ -9,6 +9,9 @@ use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
+use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
+use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
@@ -29,6 +32,8 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
+use RZ\Roadiz\Utils\Theme\ThemeInfo;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -229,6 +234,39 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
         $container[CachedReader::class] = function (Container $c) {
             return new CachedReader(new AnnotationReader(), $c[CacheProvider::class]);
+        };
+
+        $container['doctrine.migrations_paths'] = function (Container $c) {
+            /** @var ThemeResolverInterface $themeResolver */
+            $themeResolver = $c['themeResolver'];
+            $paths = [
+                'RZ\Roadiz\Migrations' => realpath(dirname(__DIR__) . '/../Migrations'),
+            ];
+
+            foreach ($themeResolver->getFrontendThemes() as $frontendTheme) {
+                $themeInfo = new ThemeInfo($frontendTheme->getClassName(), $c['kernel']->getProjectDir());
+                if (\file_exists($themeInfo->getThemePath() . '/Migrations')) {
+                    $themeNamespace = $themeInfo->getThemeReflectionClass()->getNamespaceName();
+                    $paths[$themeNamespace . '\Migrations'] = $themeInfo->getThemePath() . '/Migrations';
+                }
+            }
+
+            $appMigrationsPath = $c['kernel']->getRootDir() . '/migrations';
+            if (\file_exists($appMigrationsPath)) {
+                $paths['App\Migrations'] = $appMigrationsPath;
+            }
+
+            return array_reverse($paths);
+        };
+
+        $container[DependencyFactory::class] = function (Container $c) {
+            return DependencyFactory::fromEntityManager(
+                new ConfigurationArray([
+                    'migrations_paths' => $c['doctrine.migrations_paths']
+                ]),
+                new ExistingEntityManager($c['em']),
+                $c['logger.cli']
+            );
         };
 
         return $container;

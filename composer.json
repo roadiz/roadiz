@@ -43,6 +43,7 @@
         "intervention/image":                      "^2.5 || dev-master",
         "composer/composer":                       "^1.8.6 || ^2.0.0",
         "doctrine/orm":                            "^2.7",
+        "doctrine/migrations":                     "^3.0",
         "gedmo/doctrine-extensions":               "^2.4 || ^3.0.0",
         "guzzlehttp/guzzle":                       "^6.3 || ^7.2.0",
         "inlinestyle/inlinestyle":                 "~1.2.7",

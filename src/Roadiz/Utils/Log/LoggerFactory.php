@@ -77,8 +77,20 @@ class LoggerFactory
                                     'A monolog StreamHandler must define a log "path".'
                                 );
                             }
+                            if (null !== $name) {
+                                $basename = pathinfo($config['path'], PATHINFO_FILENAME);
+                                $dirname = pathinfo($config['path'], PATHINFO_DIRNAME);
+                                $extension = pathinfo($config['path'], PATHINFO_EXTENSION);
+                                if ($basename !== $name) {
+                                    $filename = $dirname . '/' .  $name . '.' . $extension;
+                                } else {
+                                    $filename = $config['path'];
+                                }
+                            } else {
+                                $filename = $config['path'];
+                            }
                             $handlers[] = new RotatingFileHandler(
-                                $config['path'],
+                                $filename,
                                 $config['max_files'],
                                 constant('\Monolog\Logger::'.$config['level'])
                             );
@@ -157,7 +169,7 @@ class LoggerFactory
 
     /**
      * @param string $name
-     *
+     * @param string $filename
      * @return LoggerInterface
      */
     public function createLogger(string $name = 'roadiz', string $filename = 'roadiz'): LoggerInterface

@@ -8,6 +8,7 @@ use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -137,10 +138,7 @@ class SchemaController extends RozierApp
         }
     }
 
-    /**
-     * @param Request $request
-     */
-    protected function updateSchema(Request $request)
+    protected function createApplication(): Application
     {
         /*
          * Very important, when using standard-edition,
@@ -149,22 +147,43 @@ class SchemaController extends RozierApp
         $kernelClass = get_class($this->get('kernel'));
         $application = new RoadizApplication(new $kernelClass('dev', true));
         $application->setAutoExit(false);
+        return $application;
+    }
 
+    /**
+     * @param Request $request
+     */
+    protected function updateSchema(Request $request)
+    {
+        /*
+         * Execute pending application migrations
+         */
+        $input = new ArrayInput([
+            'command' => 'migrations:migrate',
+            '--no-interaction' => true,
+            '--allow-no-migration' => true
+        ]);
+        $output = new BufferedOutput();
+        $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
+        $this->get('logger.doctrine')->info('Executed pending migrations.', ['migration' => $content]);
+
+        /*
+         * Update schema with new node-types
+         * without creating any migration s
+         */
         $input = new ArrayInput([
             'command' => 'orm:schema-tool:update',
             '--dump-sql' => true,
             '--force' => true,
         ]);
-        // You can use NullOutput() if you don't need the output
         $output = new BufferedOutput();
-        $application->run($input, $output);
-
-        // return the output, don't use if you used NullOutput()
+        $this->createApplication()->run($input, $output);
         $content = $output->fetch();
 
         $msg = $this->getTranslator()->trans('database.schema.updated');
         $this->publishConfirmMessage($request, $msg);
 
-        $this->get('logger')->info('DB schema has been updated.', ['sql' => $content]);
+        $this->get('logger.doctrine')->info('DB schema has been updated.', ['sql' => $content]);
     }
 }

@@ -58,6 +58,12 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
             );
         } else {
             $this->runCommand(
+                sprintf('migrations:migrate --allow-no-migration'),
+                'dev',
+                false,
+                $input->isInteractive()
+            );
+            $this->runCommand(
                 sprintf('themes:install --data "%s"', $input->getArgument('classname')),
                 'dev',
                 false,
