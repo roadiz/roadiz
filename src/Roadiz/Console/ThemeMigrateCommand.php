@@ -71,13 +71,7 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
             );
             $this->runCommand(sprintf('generate:nsentities'), 'dev', false, $input->isInteractive());
             $this->runCommand(
-                sprintf('migrations:diff --allow-empty-diff'),
-                'dev',
-                false,
-                $input->isInteractive()
-            );
-            $this->runCommand(
-                sprintf('migrations:migrate --allow-no-migration'),
+                sprintf('orm:schema-tool:update --dump-sql --force'),
                 'dev',
                 false,
                 $input->isInteractive()

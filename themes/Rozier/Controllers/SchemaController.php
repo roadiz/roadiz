@@ -155,20 +155,27 @@ class SchemaController extends RozierApp
      */
     protected function updateSchema(Request $request)
     {
-        $input = new ArrayInput([
-            'command' => 'migrations:diff',
-            '--allow-empty-diff' => true,
-            '--no-interaction' => true
-        ]);
-        $output = new BufferedOutput();
-        $this->createApplication()->run($input, $output);
-        $content = $output->fetch();
-        $this->get('logger.doctrine')->info('New migration generated.', ['migration' => $content]);
-
+        /*
+         * Execute pending application migrations
+         */
         $input = new ArrayInput([
             'command' => 'migrations:migrate',
             '--no-interaction' => true,
             '--allow-no-migration' => true
+        ]);
+        $output = new BufferedOutput();
+        $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
+        $this->get('logger.doctrine')->info('Executed pending migrations.', ['migration' => $content]);
+
+        /*
+         * Update schema with new node-types
+         * without creating any migration s
+         */
+        $input = new ArrayInput([
+            'command' => 'orm:schema-tool:update',
+            '--dump-sql' => true,
+            '--force' => true,
         ]);
         $output = new BufferedOutput();
         $this->createApplication()->run($input, $output);
