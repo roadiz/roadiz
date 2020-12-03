@@ -4,42 +4,44 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Doctrine;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\SchemaTool;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
-/**
- * SchemaUpdater.
- */
-class SchemaUpdater
+final class SchemaUpdater
 {
     /**
      * @var EntityManager
      */
     private $entityManager;
-
     /**
      * @var Kernel
      */
     private $kernel;
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
 
     /**
-     * SchemaUpdater constructor.
      * @param EntityManager $entityManager
      * @param Kernel $kernel
+     * @param LoggerInterface $logger
      */
-    public function __construct(EntityManager $entityManager, Kernel $kernel)
+    public function __construct(EntityManager $entityManager, Kernel $kernel, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;
+        $this->logger = $logger;
     }
 
-    /**
-     *
-     */
-    public function clearMetadata()
+    public function clearMetadata(): void
     {
         $clearers = [
             new DoctrineCacheClearer($this->entityManager, $this->kernel),
@@ -52,39 +54,72 @@ class SchemaUpdater
         }
     }
 
+    protected function createApplication(): Application
+    {
+        /*
+         * Very important, when using standard-edition,
+         * Kernel class is AppKernel or DevAppKernel.
+         */
+        $kernelClass = get_class($this->kernel);
+        $application = new RoadizApplication(new $kernelClass('dev', true));
+        $application->setAutoExit(false);
+        return $application;
+    }
+
     /**
      * Update database schema.
      *
-     * @param boolean $delete Enable DELETE and DROP statements
-     *
-     * @return boolean
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function updateSchema($delete = false)
+    public function updateSchema(): void
     {
         $this->clearMetadata();
 
-        $tool = new SchemaTool($this->entityManager);
-        $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        /*
+         * Execute pending application migrations
+         */
+        $input = new ArrayInput([
+            'command' => 'migrations:migrate',
+            '--no-interaction' => true,
+            '--allow-no-migration' => true
+        ]);
+        $output = new BufferedOutput();
+        $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
+        $this->logger->info('Executed pending migrations.', ['migration' => $content]);
+    }
 
-        $sql = $tool->getUpdateSchemaSql($meta, true);
-        $deletions = [];
+    /**
+     * @throws \Exception
+     */
+    public function updateNodeTypesSchema(): void
+    {
+        /*
+         * Execute pending application migrations
+         */
+        $input = new ArrayInput([
+            'command' => 'migrations:migrate',
+            '--no-interaction' => true,
+            '--allow-no-migration' => true
+        ]);
+        $output = new BufferedOutput();
+        $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
+        $this->logger->info('Executed pending migrations.', ['migration' => $content]);
 
-        foreach ($sql as $statement) {
-            if (substr($statement, 0, 6) == 'DELETE' ||
-                strpos($statement, 'DROP')) {
-                $deletions[] = $statement;
-            } else {
-                $this->entityManager->getConnection()->exec($statement);
-            }
-        }
+        /*
+         * Update schema with new node-types
+         * without creating any migration
+         */
+        $input = new ArrayInput([
+            'command' => 'orm:schema-tool:update',
+            '--dump-sql' => true,
+            '--force' => true,
+        ]);
+        $output = new BufferedOutput();
+        $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
 
-        if (true === $delete) {
-            foreach ($deletions as $statement) {
-                $this->entityManager->getConnection()->exec($statement);
-            }
-        }
-
-        return true;
+        $this->logger->info('DB schema has been updated.', ['sql' => $content]);
     }
 }

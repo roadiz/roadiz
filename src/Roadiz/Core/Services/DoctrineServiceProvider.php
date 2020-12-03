@@ -32,6 +32,7 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Theme\ThemeInfo;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
@@ -229,6 +230,14 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return new AnnotationDriver(
                 new CachedReader(new AnnotationReader(), new ArrayCache()),
                 $c['doctrine.entities_paths']
+            );
+        };
+
+        $container[SchemaUpdater::class] = function (Container $c) {
+            return new SchemaUpdater(
+                $c['em'],
+                $c['kernel'],
+                $c['logger.doctrine']
             );
         };
 

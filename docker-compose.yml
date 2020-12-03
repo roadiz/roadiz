@@ -1,12 +1,16 @@
 version: '3'
 services:
     db:
-        image: mysql:5.7
+        build:
+            # Custom image for file permissions
+            context: ./docker/mysql
+            args:
+                USER_UID: ${USER_UID}
+        networks:
+            default:
         volumes:
             - "./.data/db:/var/lib/mysql:delegated"
             - "./docker/mysql/performances.cnf:/etc/mysql/conf.d/performances.cnf"
-        networks:
-            - default
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}

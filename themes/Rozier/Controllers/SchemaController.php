@@ -4,15 +4,14 @@ declare(strict_types=1);
 namespace Themes\Rozier\Controllers;
 
 use Doctrine\ORM\Mapping\MappingException;
+use Exception;
 use RZ\Roadiz\Console\RoadizApplication;
-use RZ\Roadiz\Utils\Clearer\ClearerInterface;
-use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
-use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use Symfony\Component\Console\Application;
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
@@ -34,13 +33,16 @@ class SchemaController extends RozierApp
     /**
      * @param Request $request
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Exception
      */
     public function updateNodeTypesSchemaAction(Request $request)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
-        $this->clearMetadata();
-        $this->updateSchema($request);
+        /** @var SchemaUpdater $updater */
+        $updater = $this->get(SchemaUpdater::class);
+        $updater->clearMetadata();
+        $updater->updateNodeTypesSchema();
 
         return $this->redirect($this->generateUrl(
             'nodeTypesHomePage'
@@ -51,13 +53,16 @@ class SchemaController extends RozierApp
      * @param Request $request
      * @param int $nodeTypeId
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Exception
      */
     public function updateNodeTypeFieldsSchemaAction(Request $request, $nodeTypeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
-        $this->clearMetadata();
-        $this->updateSchema($request);
+        /** @var SchemaUpdater $updater */
+        $updater = $this->get(SchemaUpdater::class);
+        $updater->clearMetadata();
+        $updater->updateNodeTypesSchema();
 
         return $this->redirect($this->generateUrl(
             'nodeTypeFieldsListPage',
@@ -68,18 +73,18 @@ class SchemaController extends RozierApp
     }
 
     /**
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Exception
      */
-    public function updateThemeSchemaAction(Request $request)
+    public function updateThemeSchemaAction()
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
         try {
-            $this->clearMetadata();
-            $this->updateSchema($request);
+            /** @var SchemaUpdater $updater */
+            $updater = $this->get(SchemaUpdater::class);
+            $updater->clearMetadata();
+            $updater->updateNodeTypesSchema();
             return new JsonResponse(['status' => true], JsonResponse::HTTP_PARTIAL_CONTENT);
         } catch (MappingException $e) {
             return new JsonResponse([
@@ -90,10 +95,10 @@ class SchemaController extends RozierApp
     }
 
     /**
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
+     * @throws Exception
      */
-    public function clearThemeCacheAction(Request $request)
+    public function clearThemeCacheAction()
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_THEMES');
 
@@ -120,70 +125,5 @@ class SchemaController extends RozierApp
         $application->run($inputFpm, $outputFpm);
 
         return new JsonResponse(['status' => true], JsonResponse::HTTP_PARTIAL_CONTENT);
-    }
-
-    /**
-     *
-     */
-    protected function clearMetadata()
-    {
-        $clearers = [
-            new DoctrineCacheClearer($this->get('em'), $this->get('kernel')),
-            new OPCacheClearer(),
-        ];
-
-        /** @var ClearerInterface $clearer */
-        foreach ($clearers as $clearer) {
-            $clearer->clear();
-        }
-    }
-
-    protected function createApplication(): Application
-    {
-        /*
-         * Very important, when using standard-edition,
-         * Kernel class is AppKernel or DevAppKernel.
-         */
-        $kernelClass = get_class($this->get('kernel'));
-        $application = new RoadizApplication(new $kernelClass('dev', true));
-        $application->setAutoExit(false);
-        return $application;
-    }
-
-    /**
-     * @param Request $request
-     */
-    protected function updateSchema(Request $request)
-    {
-        /*
-         * Execute pending application migrations
-         */
-        $input = new ArrayInput([
-            'command' => 'migrations:migrate',
-            '--no-interaction' => true,
-            '--allow-no-migration' => true
-        ]);
-        $output = new BufferedOutput();
-        $this->createApplication()->run($input, $output);
-        $content = $output->fetch();
-        $this->get('logger.doctrine')->info('Executed pending migrations.', ['migration' => $content]);
-
-        /*
-         * Update schema with new node-types
-         * without creating any migration s
-         */
-        $input = new ArrayInput([
-            'command' => 'orm:schema-tool:update',
-            '--dump-sql' => true,
-            '--force' => true,
-        ]);
-        $output = new BufferedOutput();
-        $this->createApplication()->run($input, $output);
-        $content = $output->fetch();
-
-        $msg = $this->getTranslator()->trans('database.schema.updated');
-        $this->publishConfirmMessage($request, $msg);
-
-        $this->get('logger.doctrine')->info('DB schema has been updated.', ['sql' => $content]);
     }
 }

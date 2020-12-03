@@ -122,6 +122,7 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
+     * @throws \Twig\Error\RuntimeError
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -132,12 +133,14 @@ class DatabaseController extends InstallApp
             $this->assignation['error'] = true;
         } else {
             try {
-                /*
+                /**
                  * Very important !
                  * Use updateSchema instead of create to enable upgrading
                  * Roadiz database using Install theme.
+                 *
+                 * @var SchemaUpdater $updater
                  */
-                $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
+                $updater = $this->get(SchemaUpdater::class);
                 $updater->updateSchema();
 
                 /*
@@ -197,8 +200,9 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
-        $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
-        $updater->updateSchema();
+        /** @var SchemaUpdater $updater */
+        $updater = $this->get(SchemaUpdater::class);
+        $updater->updateNodeTypesSchema();
 
         return new JsonResponse(['status' => true]);
     }

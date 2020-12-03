@@ -91,7 +91,7 @@ jobs:
             - curl -s http://getcomposer.org/installer | php
             - php composer.phar install --dev --no-interaction
           script:
-            - php bin/roadiz orm:schema-tool:create -n --env=install
+            - php bin/roadiz migration:migrate --allow-no-migration
             - php bin/roadiz install -n --env=install
             - php bin/roadiz themes:install -n "/Themes/DefaultTheme/DefaultThemeApp"
             - php bin/roadiz themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"
