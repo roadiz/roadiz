@@ -64,9 +64,24 @@
                 <target state="translated">OAuth2 Client ID</target>
                 <note>Setting name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_id.help">
+                <source>oauth_client_id.help</source>
+                <target state="translated">粘贴从您的 OpenID 身份验证提供者(OAuth2)取得的 Client ID</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="oauth_client_secret">
                 <source>oauth_client_secret</source>
                 <target state="translated">OAuth2 Client secret</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_secret.help">
+                <source>oauth_client_secret.help</source>
+                <target state="translated">粘贴从您的 OpenID 身份验证提供者(OAuth2)取得的密钥</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_hd">
+                <source>openid_hd</source>
+                <target state="translated">限制为域名</target>
                 <note>Setting name</note>
             </trans-unit>
       <!-- Setting groups names -->
