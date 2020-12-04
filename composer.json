@@ -42,7 +42,7 @@
         "roadiz/documents":                        "~1.4.0 || dev-develop",
         "roadiz/markdown":                         "~1.4.0 || dev-develop",
         "ambroisemaupate/intervention-request":    "^3.0.0 || dev-develop",
-        "doctrine/orm":                            "^2.6.3",
+        "doctrine/orm":                            "~2.7.5",
         "symfony/yaml":                            "~4.4.1",
         "symfony/console":                         "~4.4.1",
         "symfony/http-foundation":                 "~4.4.1",
