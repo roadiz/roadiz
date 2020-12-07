@@ -32,14 +32,16 @@
                 </li>
             {% endif %}
 
-            {% if node.nodeType.reachable %}
-                <li class="uk-navbar-item{% if current == 'seo' %} uk-active{% endif %}">
-                    <a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', {
-                        nodeId: node.id,
-                        translationId: translation.id
-                    }) }}">{% trans %}seo{% endtrans %}</a>
-                </li>
-            {% endif %}
+            {% block node_seo %}
+                {% if node.nodeType.reachable %}
+                    <li class="uk-navbar-item{% if current == 'seo' %} uk-active{% endif %}">
+                        <a class="uk-navbar-link" href="{{ path('nodesEditSEOPage', {
+                            nodeId: node.id,
+                            translationId: translation.id
+                        }) }}">{% trans %}seo{% endtrans %}</a>
+                    </li>
+                {% endif %}
+            {% endblock %}
         {% endif %}
 
         {% if is_granted('ROLE_ACCESS_NODES') %}

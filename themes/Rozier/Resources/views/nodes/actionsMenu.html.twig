@@ -64,25 +64,32 @@
                     <a class="uk-button publish-all-node" title="{% trans %}publish_node_offspring{% endtrans %}" href="{{ path('nodesPublishAllAction', {nodeId : node.id}) }}"><i class="uk-icon-rz-published-mini"></i><span class="label">{% trans %}publish_node_offspring{% endtrans %}</span></a>
                 {% endif %}
 
-                {# Only add preview/see button for Reachable node-types #}
-                {% if node.nodeType.reachable %}
-                    {% if source and node.published %}
-                        <a class="uk-button public-url-link" target="_blank" href="{{ path(source) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+                {% block node_public_urls %}
+                    {# Only add preview/see button for Reachable node-types #}
+                    {% if node.nodeType.reachable %}
+                        {% if source and node.published %}
+                            <a class="uk-button public-url-link" target="_blank" href="{{ path(source) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+                        {% endif %}
+                        {% if source and (node.published or node.draft or node.pending) %}
+                            <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ path(source)|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
+                        {% endif %}
                     {% endif %}
-                    {% if source and (node.published or node.draft or node.pending) %}
-                        <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ path(source)|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
-                    {% endif %}
-                {% endif %}
+                {% endblock %}
+
                 {% if not node.isLocked %}
                     <a class="uk-button rz-no-ajax-link" href="{{ path('nodesDuplicatePage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-duplicate"></i><span class="label">{% trans %}duplicate{% endtrans %}</span></a>
                     <a class="uk-button" href="{{ path('nodesTranstypePage', { nodeId:node.getId }) }}"><i class="uk-icon-bolt"></i><span class="label">{% trans %}transtype{% endtrans %}</span></a>
                 {% endif %}
 
-                <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
-                <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-download"></i><span class="label">{% trans %}export{% endtrans %}</span></a>
-                {% if node.hidingChildren and translation %}
-                    <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportNodeXlsxPage', {parentNodeId: node.id, translationId:translation.id}) }}"><i class="uk-icon-file-excel-o"></i> <span class="label">{{ 'export_format.excel.%language%'|trans({'%language%':translation.name }) }}</span></a>
-                {% endif %}
+                {% block node_add_child %}
+                    <a class="uk-button" href="{{ path('nodesAddChildPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-plus"></i><span class="label">{% trans %}add.child{% endtrans %}</span></a>
+                {% endblock %}
+                {% block node_export %}
+                    <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportPage', { nodeId:node.getId }) }}"><i class="uk-icon-rz-download"></i><span class="label">{% trans %}export{% endtrans %}</span></a>
+                    {% if node.hidingChildren and translation %}
+                        <a class="uk-button rz-no-ajax-link" href="{{ path('nodesExportNodeXlsxPage', {parentNodeId: node.id, translationId:translation.id}) }}"><i class="uk-icon-file-excel-o"></i> <span class="label">{{ 'export_format.excel.%language%'|trans({'%language%':translation.name }) }}</span></a>
+                    {% endif %}
+                {% endblock %}
             </nav>
         </div>
 
