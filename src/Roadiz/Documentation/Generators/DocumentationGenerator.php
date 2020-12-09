@@ -34,8 +34,6 @@ class DocumentationGenerator
     private $markdownGeneratorFactory;
 
     /**
-     * DocumentationGenerator constructor.
-     *
      * @param NodeTypes  $nodeTypesBag
      * @param Translator $translator
      */
@@ -46,16 +44,21 @@ class DocumentationGenerator
         $this->markdownGeneratorFactory = new MarkdownGeneratorFactory($nodeTypesBag, $translator);
     }
 
+    protected function getAllNodeTypes(): array
+    {
+        return array_unique($this->nodeTypesBag->all());
+    }
+
     protected function getReachableTypes(): array
     {
-        return array_filter($this->nodeTypesBag->all(), function (NodeType $nodeType) {
+        return array_filter($this->getAllNodeTypes(), function (NodeType $nodeType) {
             return $nodeType->isReachable();
         });
     }
 
     protected function getNonReachableTypes(): array
     {
-        return array_filter($this->nodeTypesBag->all(), function (NodeType $nodeType) {
+        return array_filter($this->getAllNodeTypes(), function (NodeType $nodeType) {
             return !$nodeType->isReachable();
         });
     }

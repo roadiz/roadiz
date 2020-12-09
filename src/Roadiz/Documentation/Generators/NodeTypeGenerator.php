@@ -98,14 +98,14 @@ class NodeTypeGenerator
             '',
             '|     |     |',
             '| --- | --- |',
-            '| **' . $this->translator->trans('docs.technical_name') . '** | `' . $this->nodeType->getName() . '` |',
+            '| **' . trim($this->translator->trans('docs.technical_name')) . '** | `' . $this->nodeType->getName() . '` |',
         ]);
 
         if ($this->nodeType->isPublishable()) {
-            $lines[] = '| **' . $this->translator->trans('docs.publishable') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isPublishable()) . '* |';
+            $lines[] = '| **' . trim($this->translator->trans('docs.publishable')) . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isPublishable()) . '* |';
         }
         if (!$this->nodeType->isVisible()) {
-            $lines[] = '| **' . $this->translator->trans('docs.visible') . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isVisible()) . '* |';
+            $lines[] = '| **' . trim($this->translator->trans('docs.visible') ). '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isVisible()) . '* |';
         }
 
         return implode("\n", $lines);

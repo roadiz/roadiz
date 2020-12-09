@@ -34,7 +34,7 @@ class ChildrenNodeFieldGenerator extends AbstractFieldGenerator
         return implode("\n", array_map(function (NodeType $nodeType) {
             $nodeTypeGenerator = $this->markdownGeneratorFactory->createForNodeType($nodeType);
             return implode("\n", [
-                '* **' . $nodeTypeGenerator->getMenuEntry() . '**    ',
+                '* **' . trim($nodeTypeGenerator->getMenuEntry()) . '**    ',
                 $nodeType->getDescription(),
             ]);
         }, $this->getChildrenNodeTypes())) . "\n";
