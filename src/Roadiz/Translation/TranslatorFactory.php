@@ -143,7 +143,7 @@ final class TranslatorFactory implements TranslatorFactoryInterface
 
         $this->addTranslatorResource(
             $translator,
-            dirname(__FILE__) . '/../../Documentation/Resources/translations',
+            dirname(__FILE__) . '/../Documentation/Resources/translations',
             'xlf',
             $locale
         );
