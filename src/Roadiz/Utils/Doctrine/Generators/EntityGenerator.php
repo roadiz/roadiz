@@ -7,6 +7,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class EntityGenerator
@@ -76,6 +77,14 @@ class EntityGenerator
             return new ManyToOneFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::MANY_TO_MANY_T) {
+            $configuration = Yaml::parse($field->getDefaultValues() ?? '');
+            if (isset($configuration['proxy']) && !empty($configuration['proxy']['classname'])) {
+                /*
+                 * Manually create a Many to Many relation using a proxy class
+                 * for handling position for example.
+                 */
+                return new ProxiedManyToManyFieldGenerator($field, $this->options);
+            }
             return new ManyToManyFieldGenerator($field, $this->options);
         }
         if ($field->getType() === AbstractField::NODES_T) {

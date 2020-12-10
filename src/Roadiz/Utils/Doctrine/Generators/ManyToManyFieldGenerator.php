@@ -7,7 +7,6 @@ use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class ManyToManyFieldGenerator
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class ManyToManyFieldGenerator extends AbstractFieldGenerator
