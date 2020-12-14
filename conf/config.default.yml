@@ -8,6 +8,7 @@ doctrine:
     password: ""
     dbname: ""
     charset: utf8mb4
+    server_version: 8.0
     default_table_options:
         charset: utf8mb4
         collate: utf8mb4_unicode_ci

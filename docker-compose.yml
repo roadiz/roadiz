@@ -6,6 +6,9 @@ services:
             context: ./docker/mysql
             args:
                 USER_UID: ${USER_UID}
+        # MySQL 8.0
+        cap_add:
+            - SYS_NICE  # CAP_SYS_NICE
         networks:
             default:
         volumes:

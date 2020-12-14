@@ -1,4 +1,4 @@
-FROM mysql:5.7
+FROM mysql:8.0
 MAINTAINER Ambroise Maupate <ambroise@rezo-zero.com>
 
 ARG USER_UID=1000
