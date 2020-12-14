@@ -10,6 +10,7 @@ use RZ\Roadiz\Config\NullLoader;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
@@ -28,7 +29,6 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var string
      */
     const NO_CACHE_PARAMETER = '_no_cache';
-
     /**
      * @var EntityManagerInterface
      */
@@ -37,10 +37,6 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var Stopwatch|null
      */
     protected $stopwatch;
-    /**
-     * @var bool
-     */
-    protected $preview;
     /**
      * @var ThemeResolverInterface
      */
@@ -57,30 +53,32 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+    /**
+     * @var PreviewResolverInterface
+     */
+    private $previewResolver;
 
     /**
-     * NodeRouter constructor.
-     *
-     * @param EntityManagerInterface   $em
-     * @param ThemeResolverInterface   $themeResolver
-     * @param Settings                 $settingsBag
+     * @param EntityManagerInterface $em
+     * @param ThemeResolverInterface $themeResolver
+     * @param Settings $settingsBag
      * @param EventDispatcherInterface $eventDispatcher
-     * @param array                    $options
-     * @param RequestContext|null      $context
-     * @param LoggerInterface|null     $logger
-     * @param Stopwatch|null           $stopwatch
-     * @param bool                     $preview
+     * @param PreviewResolverInterface $previewResolver
+     * @param array $options
+     * @param RequestContext|null $context
+     * @param LoggerInterface|null $logger
+     * @param Stopwatch|null $stopwatch
      */
     public function __construct(
         EntityManagerInterface $em,
         ThemeResolverInterface $themeResolver,
         Settings $settingsBag,
         EventDispatcherInterface $eventDispatcher,
+        PreviewResolverInterface $previewResolver,
         array $options = [],
         RequestContext $context = null,
         LoggerInterface $logger = null,
-        Stopwatch $stopwatch = null,
-        $preview = false
+        Stopwatch $stopwatch = null
     ) {
         parent::__construct(
             new NullLoader(),
@@ -91,10 +89,10 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
         );
         $this->em = $em;
         $this->stopwatch = $stopwatch;
-        $this->preview = $preview;
         $this->themeResolver = $themeResolver;
         $this->settingsBag = $settingsBag;
         $this->eventDispatcher = $eventDispatcher;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -137,7 +135,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $this->themeResolver,
             $this->stopwatch,
             $this->logger,
-            $this->preview
+            $this->previewResolver
         );
     }
 

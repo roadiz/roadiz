@@ -23,10 +23,6 @@ class RedirectionRouter extends Router implements VersatileGeneratorInterface
      * @var Stopwatch|null
      */
     protected $stopwatch;
-    /**
-     * @var bool
-     */
-    protected $preview;
 
     /**
      * NodeRouter constructor.

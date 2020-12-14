@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Routing\NodeRouter;
 use RZ\Roadiz\Core\Routing\RedirectionRouter;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
@@ -96,14 +97,14 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['themeResolver'],
                 $c['settingsBag'],
                 $c['dispatcher'],
+                $c[PreviewResolverInterface::class],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
                 ],
                 $c['requestContext'],
                 $c['logger'],
-                $c['stopwatch'],
-                $kernel->isPreview()
+                $c['stopwatch']
             );
             $router->setNodeSourceUrlCacheProvider($c['nodesSourcesUrlCacheProvider']);
             return $router;
@@ -161,8 +162,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $collection = new RoadizRouteCollection(
                     $c['themeResolver'],
                     $c['settingsBag'],
-                    $c['stopwatch'],
-                    $kernel->isPreview()
+                    $c[PreviewResolverInterface::class],
+                    $c['stopwatch']
                 );
 
                 return $collection;

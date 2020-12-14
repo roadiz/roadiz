@@ -19,14 +19,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * @package RZ\Roadiz\Core\Events
  */
-class MaintenanceModeSubscriber implements EventSubscriberInterface
+final class MaintenanceModeSubscriber implements EventSubscriberInterface
 {
-    protected $container;
-
+    private $container;
     /**
      * @return array
      */
-    protected function getAuthorizedRoutes()
+    private function getAuthorizedRoutes()
     {
         return [
             'loginPage',
@@ -68,17 +67,17 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     public function onRequest(RequestEvent $event)
     {
         if ($event->isMasterRequest()) {
-            if (!in_array($event->getRequest()->get('_route'), $this->getAuthorizedRoutes()) &&
-                (boolean) $this->container['settingsBag']->get('maintenance_mode') === true) {
-                if (!$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER')) {
-                    /** @var ThemeResolverInterface $themeResolver */
-                    $themeResolver = $this->container['themeResolver'];
-                    $theme = $themeResolver->findTheme(null);
-                    if (null !== $theme) {
-                        throw new MaintenanceModeException($this->getControllerForTheme($theme, $event->getRequest()));
-                    }
-                    throw new MaintenanceModeException();
+            $maintenanceMode = (bool) $this->container['settingsBag']->get('maintenance_mode', false);
+            if ($maintenanceMode === true &&
+                !$this->container['securityAuthorizationChecker']->isGranted('ROLE_BACKEND_USER') &&
+                !in_array($event->getRequest()->get('_route'), $this->getAuthorizedRoutes())) {
+                /** @var ThemeResolverInterface $themeResolver */
+                $themeResolver = $this->container['themeResolver'];
+                $theme = $themeResolver->findTheme(null);
+                if (null !== $theme) {
+                    throw new MaintenanceModeException($this->getControllerForTheme($theme, $event->getRequest()));
                 }
+                throw new MaintenanceModeException();
             }
         }
     }

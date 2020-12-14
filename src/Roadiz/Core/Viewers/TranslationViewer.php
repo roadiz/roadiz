@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
@@ -18,10 +19,6 @@ use Symfony\Component\Routing\RouterInterface;
 
 class TranslationViewer
 {
-    /**
-     * @var bool
-     */
-    private $preview;
     /**
      * @var Settings
      */
@@ -38,25 +35,27 @@ class TranslationViewer
      * @var Translation
      */
     private $translation;
+    /**
+     * @var PreviewResolverInterface
+     */
+    private $previewResolver;
 
     /**
-     * TranslationViewer constructor.
-     *
      * @param EntityManager $entityManager
      * @param Settings $settingsBag
      * @param RouterInterface $router
-     * @param boolean $preview
+     * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
         EntityManager $entityManager,
         Settings $settingsBag,
         RouterInterface $router,
-        $preview = false
+        PreviewResolverInterface $previewResolver
     ) {
         $this->settingsBag = $settingsBag;
         $this->entityManager = $entityManager;
         $this->router = $router;
-        $this->preview = $preview;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -142,7 +141,7 @@ class TranslationViewer
             /*
              * If using dynamic routing…
              */
-            if ($this->preview === true) {
+            if ($this->previewResolver->isPreview()) {
                 $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
             } else {
                 $translations = $this->getRepository()->findStrictlyAvailableTranslationsForNode($node);

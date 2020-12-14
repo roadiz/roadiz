@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Translation\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Translation\TranslatorFactory;
 use RZ\Roadiz\Translation\TranslatorFactoryInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -37,6 +38,7 @@ class TranslationServiceProvider implements ServiceProviderInterface
                 $c['em'],
                 $c['stopwatch'],
                 $c['themeResolver'],
+                $c[PreviewResolverInterface::class],
             );
         };
 

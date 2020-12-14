@@ -5,6 +5,8 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
+use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
@@ -15,8 +17,6 @@ use RZ\Roadiz\Core\Events\LoggableUsernameSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
 use RZ\Roadiz\Core\Events\NodeNameSubscriber;
 use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
-use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
-use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
 use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
@@ -120,6 +120,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     protected $debug;
     /**
      * @var bool
+     * @deprecated Use request-time preview
      */
     protected $preview;
     /**
@@ -375,11 +376,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                         $c['config']['assetsProcessing']['maxPixelSize']
                     )
                 );
-
-                if (!$kernel->isInstallMode()) {
-                    $dispatcher->addSubscriber(new PreviewModeSubscriber($kernel, $c));
-                    $dispatcher->addSubscriber(new PreviewBarSubscriber($kernel));
-                }
             }
             /*
              * If debug, alter HTML responses to append Debug panel to view
@@ -419,6 +415,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new MarkdownServiceProvider());
         $container->register(new OpenIdServiceProvider());
         $container->register(new RozierServiceProvider());
+        $container->register(new PreviewServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
@@ -574,6 +571,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
     /**
      * @return boolean
+     * @deprecated Use request-time preview
      */
     public function isPreview()
     {

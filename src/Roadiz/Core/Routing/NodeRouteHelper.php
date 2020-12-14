@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Routing;
 use RZ\Roadiz\CMS\Controllers\DefaultController;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Theme;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\StringHandler;
 
 class NodeRouteHelper
@@ -19,25 +20,24 @@ class NodeRouteHelper
      */
     private $theme;
     /**
-     * @var bool
-     */
-    private $preview;
-    /**
      * @var string
      */
     private $controller;
+    /**
+     * @var PreviewResolverInterface
+     */
+    private $previewResolver;
 
     /**
-     * NodeRouteHelper constructor.
      * @param Node $node
      * @param Theme $theme
-     * @param bool $preview
+     * @param PreviewResolverInterface $previewResolver
      */
-    public function __construct(Node $node, Theme $theme, $preview = false)
+    public function __construct(Node $node, Theme $theme, PreviewResolverInterface $previewResolver)
     {
         $this->node = $node;
         $this->theme = $theme;
-        $this->preview = $preview;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -73,7 +73,7 @@ class NodeRouteHelper
     }
 
     /**
-     * Return FALSE or TRUE if node is viewable.
+     * Return FALSE or TRUE if node is viewable.
      *
      * @return boolean
      * @throws \ReflectionException
@@ -101,7 +101,7 @@ class NodeRouteHelper
          * For unpublished nodes
          */
         if ($this->node->getStatus() < Node::PUBLISHED) {
-            if (true === $this->preview) {
+            if (true === $this->previewResolver->isPreview()) {
                 return true;
             }
             /*

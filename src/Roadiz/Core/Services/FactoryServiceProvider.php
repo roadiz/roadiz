@@ -36,6 +36,7 @@ use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Document\Renderer\SvgRenderer;
 use RZ\Roadiz\Document\Renderer\ThumbnailRenderer;
 use RZ\Roadiz\Document\Renderer\VideoRenderer;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
@@ -174,7 +175,12 @@ class FactoryServiceProvider implements ServiceProviderInterface
         };
 
         $container['translation.viewer'] = $container->factory(function (Container $c) {
-            return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
+            return new TranslationViewer(
+                $c['em'],
+                $c['settingsBag'],
+                $c['router'],
+                $c[PreviewResolverInterface::class]
+            );
         });
 
         $container['user.viewer'] = $container->factory(function (Container $c) {

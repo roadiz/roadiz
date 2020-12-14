@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\TwigExtensions;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Bridge\Twig\AppVariable;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -46,7 +47,7 @@ class RoadizExtension extends AbstractExtension implements GlobalsInterface
             'help_external_url' => 'http://docs.roadiz.io',
             'request' => $this->kernel->get('requestStack')->getCurrentRequest(),
             'is_debug' => $this->kernel->isDebug(),
-            'is_preview' => $this->kernel->isPreview(),
+            'is_preview' => $this->kernel->get(PreviewResolverInterface::class)->isPreview(),
             'is_dev_mode' => $this->kernel->isDevMode(),
             'is_prod_mode' => $this->kernel->isProdMode(),
             'bags' => [

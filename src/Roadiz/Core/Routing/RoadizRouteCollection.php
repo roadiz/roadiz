@@ -5,15 +5,13 @@ namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Bags\Settings;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
- * Class RoadizRouteCollection.
- *
  * @package RZ\Roadiz\Core\Routing
- * TODO: Convert logic into Symfony\Cmf\Component\Routing\RouteProviderInterface
  * @deprecated Convert logic into Symfony\Cmf\Component\Routing\RouteProviderInterface
  */
 class RoadizRouteCollection extends DeferredRouteCollection
@@ -27,30 +25,30 @@ class RoadizRouteCollection extends DeferredRouteCollection
      */
     protected $themeResolver;
     /**
-     * @var bool
-     */
-    private $isPreview;
-    /**
      * @var Settings
      */
-    private $settingsBag;
+    protected $settingsBag;
+    /**
+     * @var PreviewResolverInterface
+     */
+    protected $previewResolver;
 
     /**
      * @param ThemeResolverInterface $themeResolver
      * @param Settings $settingsBag
+     * @param PreviewResolverInterface $previewResolver
      * @param Stopwatch|null $stopwatch
-     * @param bool $isPreview
      */
     public function __construct(
         ThemeResolverInterface $themeResolver,
         Settings $settingsBag,
-        Stopwatch $stopwatch = null,
-        $isPreview = false
+        PreviewResolverInterface $previewResolver,
+        Stopwatch $stopwatch = null
     ) {
         $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
-        $this->isPreview = $isPreview;
         $this->settingsBag = $settingsBag;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -74,7 +72,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
              */
             $assets = AssetsController::getRoutes();
             $staticDomain = $this->settingsBag->get('static_domain_name');
-            if (false === $this->isPreview &&
+            if (false === $this->previewResolver->isPreview() &&
                 false !== $staticDomain &&
                 '' != $staticDomain) {
                 /*

@@ -17,6 +17,15 @@ class Request extends BaseRequest
      */
     protected $theme = null;
 
+    /**
+     * @var bool Preview mode, override Kernel-wide parameter
+     */
+    protected $preview = false;
+
+    /**
+     * @param Theme|null $theme
+     * @return $this
+     */
     public function setTheme(Theme $theme = null): Request
     {
         $this->theme = $theme;
@@ -29,5 +38,23 @@ class Request extends BaseRequest
     public function getTheme(): ?Theme
     {
         return $this->theme;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPreview(): bool
+    {
+        return $this->preview;
+    }
+
+    /**
+     * @param bool $preview
+     * @return Request
+     */
+    public function setPreview(bool $preview): Request
+    {
+        $this->preview = $preview;
+        return $this;
     }
 }

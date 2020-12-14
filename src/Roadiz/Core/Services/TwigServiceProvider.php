@@ -11,6 +11,7 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Document\Renderer\RendererInterface;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Translation\Twig\TranslationExtension as RoadizTranslationExtension;
 use RZ\Roadiz\Translation\Twig\TranslationMenuExtension;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
@@ -222,8 +223,7 @@ class TwigServiceProvider implements ServiceProviderInterface
                         $c['securityAuthorizationChecker'],
                         $c['factory.handler'],
                         $c['nodeSourceApi'],
-                        $c['nodeTypesBag'],
-                        $kernel->isPreview()
+                        $c['nodeTypesBag']
                     ));
                 }
             } catch (Exception $e) {

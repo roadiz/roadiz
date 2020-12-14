@@ -21,6 +21,7 @@ use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
 use RZ\Roadiz\Core\Events\QueryEvent;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -33,26 +34,25 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
     use ContainerAwareTrait;
 
     /**
-     * @var bool
+     * @var PreviewResolverInterface
      */
-    protected $isPreview;
+    protected $previewResolver;
 
     /**
-     * EntityRepository constructor.
      * @param EntityManager $em
      * @param Mapping\ClassMetadata $class
      * @param Container $container
-     * @param bool $isPreview
+     * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
         EntityManager $em,
         Mapping\ClassMetadata $class,
         Container $container,
-        $isPreview = false
+        PreviewResolverInterface $previewResolver
     ) {
         parent::__construct($em, $class);
-        $this->isPreview = $isPreview;
         $this->container = $container;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -87,7 +87,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
 
     /**
      * Doctrine column types that can be search
-     * with LIKE feature.
+     * with LIKE feature.
      *
      * @var array
      */

@@ -20,7 +20,9 @@ use Twig\TwigTest;
  */
 class NodesSourcesExtension extends AbstractExtension
 {
-    protected $preview;
+    /**
+     * @var AuthorizationChecker
+     */
     protected $securityAuthorizationChecker;
     /**
      * @var HandlerFactory
@@ -40,13 +42,10 @@ class NodesSourcesExtension extends AbstractExtension
     private $nodeTypesBag;
 
     /**
-     * NodesSourcesExtension constructor.
-     *
      * @param AuthorizationChecker $securityAuthorizationChecker
      * @param HandlerFactory $handlerFactory
      * @param NodeSourceApi $nodeSourceApi
      * @param NodeTypes $nodeTypesBag
-     * @param bool $preview
      * @param bool $throwExceptions
      */
     public function __construct(
@@ -54,11 +53,9 @@ class NodesSourcesExtension extends AbstractExtension
         HandlerFactory $handlerFactory,
         NodeSourceApi $nodeSourceApi,
         NodeTypes $nodeTypesBag,
-        $preview = false,
         $throwExceptions = false
     ) {
         $this->securityAuthorizationChecker = $securityAuthorizationChecker;
-        $this->preview = $preview;
         $this->throwExceptions = $throwExceptions;
         $this->nodeSourceApi = $nodeSourceApi;
         $this->handlerFactory = $handlerFactory;
@@ -237,11 +234,10 @@ class NodesSourcesExtension extends AbstractExtension
     /**
      * @param NodesSources|null $ns
      * @param array|null $criteria
-     * @param null $preview
      * @return array
      * @throws RuntimeError
      */
-    public function getParents(NodesSources $ns = null, array $criteria = null, $preview = null)
+    public function getParents(NodesSources $ns = null, array $criteria = null)
     {
         if (null === $ns) {
             if ($this->throwExceptions) {

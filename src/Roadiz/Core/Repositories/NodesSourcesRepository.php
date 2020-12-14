@@ -184,7 +184,7 @@ class NodesSourcesRepository extends StatusAwareRepository
             return $qb;
         }
 
-        if (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
+        if (true === $this->isDisplayingNotPublishedNodes() || $this->previewResolver->isPreview()) {
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */

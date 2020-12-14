@@ -12,6 +12,7 @@ use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -229,7 +230,7 @@ abstract class Controller implements ContainerAwareInterface
         /** @var TranslationRepository $repository */
         $repository = $this->get('em')->getRepository(Translation::class);
 
-        if ($this->get('kernel')->isPreview()) {
+        if ($this->get(PreviewResolverInterface::class)->isPreview()) {
             $translation = $repository->findOneByLocaleOrOverrideLocale($_locale);
         } else {
             $translation = $repository->findOneAvailableByLocaleOrOverrideLocale($_locale);

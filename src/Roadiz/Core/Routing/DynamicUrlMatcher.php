@@ -9,6 +9,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -31,35 +32,37 @@ abstract class DynamicUrlMatcher extends UrlMatcher
     protected $stopwatch;
     /** @var LoggerInterface */
     protected $logger;
-    /** @var bool */
-    protected $preview;
     /**
      * @var ThemeResolverInterface
      */
     protected $themeResolver;
+    /**
+     * @var PreviewResolverInterface
+     */
+    protected $previewResolver;
 
     /**
      * @param RequestContext $context
      * @param EntityManagerInterface $em
      * @param ThemeResolverInterface $themeResolver
-     * @param Stopwatch $stopwatch
-     * @param LoggerInterface $logger
-     * @param bool $preview
+     * @param PreviewResolverInterface $previewResolver
+     * @param Stopwatch|null $stopwatch
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         RequestContext $context,
         EntityManagerInterface $em,
         ThemeResolverInterface $themeResolver,
+        PreviewResolverInterface $previewResolver,
         Stopwatch $stopwatch = null,
-        LoggerInterface $logger = null,
-        $preview = false
+        LoggerInterface $logger = null
     ) {
         parent::__construct(new RouteCollection(), $context);
         $this->em = $em;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
-        $this->preview = $preview;
         $this->themeResolver = $themeResolver;
+        $this->previewResolver = $previewResolver;
     }
 
     /**

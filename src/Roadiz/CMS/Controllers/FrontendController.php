@@ -9,6 +9,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -198,7 +199,7 @@ abstract class FrontendController extends AppController
             $nodeRouteHelper = new NodeRouteHelper(
                 $node,
                 $this->getTheme(),
-                $this->get('kernel')->isPreview()
+                $this->get(PreviewResolverInterface::class)
             );
             $controllerPath = $nodeRouteHelper->getController();
             $method = $nodeRouteHelper->getMethod();
@@ -501,7 +502,7 @@ abstract class FrontendController extends AppController
     {
         if (null !== $this->nodeSource) {
             if ($this->nodeSource->getPublishedAt() > new \DateTime() &&
-                !$this->get('kernel')->isPreview()) {
+                !$this->get(PreviewResolverInterface::class)->isPreview()) {
                 throw $this->createNotFoundException();
             }
         }

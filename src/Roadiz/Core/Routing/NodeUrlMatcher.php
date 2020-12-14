@@ -115,10 +115,10 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $nodeRouteHelper = new NodeRouteHelper(
                 $nodeSource->getNode(),
                 $this->theme,
-                $this->preview
+                $this->previewResolver
             );
 
-            if (!$this->preview && !$translation->isAvailable()) {
+            if (!$this->previewResolver->isPreview() && !$translation->isAvailable()) {
                 throw new ResourceNotFoundException();
             }
 
@@ -159,7 +159,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         ->findNodeTypeNameAndSourceIdByIdentifier(
                             $identifier,
                             $translation,
-                            !$this->preview
+                            !$this->previewResolver->isPreview()
                         );
                     if (null !== $array) {
                         $fqcn = NodeType::getGeneratedEntitiesNamespace() . '\\NS' . ucwords($array['name']);

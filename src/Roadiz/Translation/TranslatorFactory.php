@@ -10,6 +10,7 @@ use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\KernelInterface;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -26,26 +27,26 @@ final class TranslatorFactory implements TranslatorFactoryInterface
      * @var KernelInterface
      */
     protected $kernel;
-
     /**
      * @var RequestStack
      */
     protected $requestStack;
-
     /**
      * @var EntityManagerInterface|null
      */
     protected $entityManager;
-
     /**
      * @var Stopwatch
      */
     protected $stopwatch;
-
     /**
      * @var ThemeResolverInterface
      */
     protected $themeResolver;
+    /**
+     * @var PreviewResolverInterface
+     */
+    protected $previewResolver;
 
     /**
      * @param KernelInterface $kernel
@@ -53,19 +54,22 @@ final class TranslatorFactory implements TranslatorFactoryInterface
      * @param EntityManagerInterface|null $entityManager
      * @param Stopwatch $stopwatch
      * @param ThemeResolverInterface $themeResolver
+     * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
         KernelInterface $kernel,
         RequestStack $requestStack,
         ?EntityManagerInterface $entityManager,
         Stopwatch $stopwatch,
-        ThemeResolverInterface $themeResolver
+        ThemeResolverInterface $themeResolver,
+        PreviewResolverInterface $previewResolver
     ) {
         $this->kernel = $kernel;
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -274,7 +278,7 @@ final class TranslatorFactory implements TranslatorFactoryInterface
                 if ($this->kernel->getEnvironment() !== 'install') {
                     /** @var TranslationRepository $translationRepository */
                     $translationRepository = $this->entityManager->getRepository(Translation::class);
-                    if ($this->kernel->isPreview()) {
+                    if ($this->previewResolver->isPreview()) {
                         $availableTranslations = $translationRepository->findAll();
                     } else {
                         $availableTranslations = $translationRepository->findAllAvailable();

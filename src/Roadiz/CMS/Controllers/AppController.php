@@ -20,6 +20,7 @@ use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
@@ -723,7 +724,10 @@ abstract class AppController extends Controller
         $requestStack = $kernel->get('requestStack');
         /** @var Settings $settings */
         $settings = $this->get('settingsBag');
-        if (!$kernel->isPreview() &&
+        /** @var PreviewResolverInterface $previewResolver */
+        $previewResolver = $this->get(PreviewResolverInterface::class);
+
+        if (!$previewResolver->isPreview() &&
             !$kernel->isDebug() &&
             $requestStack->getMasterRequest() === $request &&
             $request->isMethodCacheable() &&

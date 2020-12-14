@@ -13,7 +13,6 @@ use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Handle operations with node-sources entities.
@@ -29,16 +28,6 @@ class NodesSourcesHandler extends AbstractHandler
      * @var array<NodesSources>
      */
     protected $parentsNodeSources = null;
-
-    /**
-     * @var AuthorizationChecker
-     */
-    protected $authorizationChecker;
-
-    /**
-     * @var bool
-     */
-    protected $isPreview = false;
 
     /**
      * @var Settings

@@ -22,6 +22,7 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 
 /**
@@ -105,11 +106,15 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
              */
             if ($exception instanceof MaintenanceModeException &&
                 null !== $ctrl = $exception->getController()) {
-                $response = $ctrl->maintenanceAction($event->getRequest());
-                // Set http code according to status
-                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-                $event->setResponse($response);
-                return;
+                try {
+                    $response = $ctrl->maintenanceAction($event->getRequest());
+                    // Set http code according to status
+                    $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+                    $event->setResponse($response);
+                    return;
+                } catch (LoaderError $error) {
+                    // Twig template does not exist
+                }
             } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
                 $event->setResponse($this->createThemeNotFoundResponse($theme, $exception, $event));
                 return;

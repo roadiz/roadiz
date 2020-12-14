@@ -29,6 +29,7 @@ use RZ\Roadiz\Core\Events\TablePrefixSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
@@ -130,7 +131,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                  * Override default repository factory
                  * to inject Container into Doctrine repositories!
                  */
-                $config->setRepositoryFactory(new RoadizRepositoryFactory($c, $kernel->isPreview()));
+
+                /** @var PreviewResolverInterface $previewResolver */
+                $previewResolver = $c[PreviewResolverInterface::class];
+                $config->setRepositoryFactory(new RoadizRepositoryFactory($c, $previewResolver));
 
                 return $config;
             } catch (NoConfigurationFoundException $e) {
@@ -205,7 +209,6 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
         $container[CacheProvider::class] = $container->factory(function (Container $c) {
             if ($c['config']['cacheDriver']['type'] !== null &&
-                !$c['kernel']->isPreview() &&
                 !$c['kernel']->isDebug()) {
                 $cache = CacheFactory::fromConfig(
                     $c['config']['cacheDriver'],

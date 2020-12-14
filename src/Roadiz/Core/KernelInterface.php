@@ -45,6 +45,7 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
      * Checks if preview mode is enabled.
      *
      * @return bool true if preview mode is enabled, false otherwise
+     * @deprecated Use request-time preview
      */
     public function isPreview();
 

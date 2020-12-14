@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Core\Events;
+namespace RZ\Roadiz\Preview\EventSubscriber;
 
-use Pimple\Container;
 use RZ\Roadiz\Core\KernelInterface;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -13,16 +13,16 @@ use Symfony\Component\HttpKernel\KernelEvents;
 class PreviewBarSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var KernelInterface|null
+     * @var PreviewResolverInterface
      */
-    protected $kernel = null;
+    protected $previewResolver;
 
     /**
      * @param KernelInterface $kernel
      */
-    public function __construct(KernelInterface $kernel)
+    public function __construct(PreviewResolverInterface $previewResolver)
     {
-        $this->kernel = $kernel;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -43,8 +43,8 @@ class PreviewBarSubscriber implements EventSubscriberInterface
     protected function supports(ResponseEvent $event)
     {
         $response = $event->getResponse();
-        if ($event->isMasterRequest() &&
-            $this->kernel->isPreview() &&
+        if ($this->previewResolver->isPreview() &&
+            $event->isMasterRequest() &&
             $response->getStatusCode() === Response::HTTP_OK &&
             false !== strpos($response->headers->get('Content-Type'), 'text/html')) {
             return true;

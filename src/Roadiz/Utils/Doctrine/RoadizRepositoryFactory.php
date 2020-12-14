@@ -8,13 +8,11 @@ use Doctrine\ORM\Repository\RepositoryFactory;
 use Doctrine\Persistence\ObjectRepository;
 use Pimple\Container;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
+use RZ\Roadiz\Preview\PreviewServiceProvider;
 
-class RoadizRepositoryFactory implements RepositoryFactory
+final class RoadizRepositoryFactory implements RepositoryFactory
 {
-    /**
-     * @var bool
-     */
-    private $isPreview;
     /**
      * The list of EntityRepository instances.
      *
@@ -25,16 +23,19 @@ class RoadizRepositoryFactory implements RepositoryFactory
      * @var Container
      */
     private $container;
+    /**
+     * @var PreviewResolverInterface
+     */
+    private PreviewResolverInterface $previewResolver;
 
     /**
-     * RoadizRepositoryFactory constructor.
      * @param Container $container
      * @param bool $isPreview
      */
-    public function __construct(Container $container, $isPreview = false)
+    public function __construct(Container $container, PreviewResolverInterface $previewResolver)
     {
-        $this->isPreview = $isPreview;
         $this->container = $container;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -67,7 +68,7 @@ class RoadizRepositoryFactory implements RepositoryFactory
 
         if (is_subclass_of($repositoryClassName, EntityRepository::class) ||
             $repositoryClassName == EntityRepository::class) {
-            return new $repositoryClassName($entityManager, $metadata, $this->container, $this->isPreview);
+            return new $repositoryClassName($entityManager, $metadata, $this->container, $this->previewResolver);
         }
 
         return new $repositoryClassName($entityManager, $metadata);

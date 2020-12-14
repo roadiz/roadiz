@@ -9,6 +9,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Log\LoggerFactory;
 use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
@@ -54,8 +55,8 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 $c['versionStrategy'],
                 $c['requestStack'],
                 $kernel,
-                $c['settingsBag']->get('static_domain_name'),
-                $kernel->isPreview()
+                $c[PreviewResolverInterface::class],
+                $c['settingsBag']->get('static_domain_name')
             );
         };
 
