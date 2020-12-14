@@ -133,9 +133,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $this->context,
             $this->em,
             $this->themeResolver,
+            $this->previewResolver,
             $this->stopwatch,
-            $this->logger,
-            $this->previewResolver
+            $this->logger
         );
     }
 
