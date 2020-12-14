@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Preview\EventSubscriber;
 
-use RZ\Roadiz\Core\KernelInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,7 @@ class PreviewBarSubscriber implements EventSubscriberInterface
     protected $previewResolver;
 
     /**
-     * @param KernelInterface $kernel
+     * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(PreviewResolverInterface $previewResolver)
     {

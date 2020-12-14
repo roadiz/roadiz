@@ -30,7 +30,7 @@ final class RoadizRepositoryFactory implements RepositoryFactory
 
     /**
      * @param Container $container
-     * @param bool $isPreview
+     * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(Container $container, PreviewResolverInterface $previewResolver)
     {

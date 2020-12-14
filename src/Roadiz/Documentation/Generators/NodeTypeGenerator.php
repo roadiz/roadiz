@@ -105,7 +105,7 @@ class NodeTypeGenerator
             $lines[] = '| **' . trim($this->translator->trans('docs.publishable')) . '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isPublishable()) . '* |';
         }
         if (!$this->nodeType->isVisible()) {
-            $lines[] = '| **' . trim($this->translator->trans('docs.visible') ). '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isVisible()) . '* |';
+            $lines[] = '| **' . trim($this->translator->trans('docs.visible')). '** | *' . $this->markdownGeneratorFactory->getHumanBool($this->nodeType->isVisible()) . '* |';
         }
 
         return implode("\n", $lines);
