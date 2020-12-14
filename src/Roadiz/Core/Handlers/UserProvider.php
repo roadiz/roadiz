@@ -11,8 +11,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Class UserProvider
- *
  * @package RZ\Roadiz\Core\Handlers
  */
 class UserProvider implements UserProviderInterface

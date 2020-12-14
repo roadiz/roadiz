@@ -26,8 +26,6 @@ class FontLifeCycleSubscriber implements EventSubscriber
     private $container;
 
     /**
-     * FontLifeCycleSubscriber constructor.
-     *
      * We need to pass whole container not to trigger asset packages
      * initialization and not to creation a dependency infinite loop.
      *

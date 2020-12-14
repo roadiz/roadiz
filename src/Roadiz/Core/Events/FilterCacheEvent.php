@@ -9,8 +9,6 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterCacheEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterCacheEvent extends Event
@@ -31,8 +29,6 @@ abstract class FilterCacheEvent extends Event
     private $errorCollection;
 
     /**
-     * FilterCacheEvent constructor.
-     *
      * @param Kernel $kernel
      */
     public function __construct(Kernel $kernel)

@@ -8,8 +8,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 
 /**
- * Class FilterNodesSourcesQueryBuilderCriteriaEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterNodesSourcesQueryBuilderCriteriaEvent extends QueryBuilderBuildEvent

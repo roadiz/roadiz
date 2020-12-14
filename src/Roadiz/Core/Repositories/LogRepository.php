@@ -7,8 +7,6 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
- * Class LogRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Log>
  */

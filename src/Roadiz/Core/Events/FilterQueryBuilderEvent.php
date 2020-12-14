@@ -7,8 +7,6 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterQueryBuilderEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterQueryBuilderEvent extends Event
@@ -23,8 +21,6 @@ abstract class FilterQueryBuilderEvent extends Event
     private $entityClass;
 
     /**
-     * FilterQueryBuilderEvent constructor.
-     *
      * @param QueryBuilder $queryBuilder
      * @param string $entityClass
      */

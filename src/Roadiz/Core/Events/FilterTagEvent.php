@@ -7,7 +7,6 @@ use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterTagEvent
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterTagEvent extends Event
@@ -18,8 +17,6 @@ abstract class FilterTagEvent extends Event
     protected $tag;
 
     /**
-     * FilterTagEvent constructor.
-     *
      * @param Tag $tag
      */
     public function __construct(Tag $tag)

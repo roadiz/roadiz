@@ -25,7 +25,6 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Twig\Error\RuntimeError;
 
 /**
- * Class ExceptionSubscriber
  * @package RZ\Roadiz\Core\Events
  */
 class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInterface
@@ -52,8 +51,6 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
     private $themeResolver;
 
     /**
-     * ExceptionSubscriber constructor.
-     *
      * @param Container              $container
      * @param ThemeResolverInterface $themeResolver
      * @param LoggerInterface        $logger

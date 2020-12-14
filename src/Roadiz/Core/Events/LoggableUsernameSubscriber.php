@@ -19,8 +19,6 @@ class LoggableUsernameSubscriber implements EventSubscriberInterface, ContainerA
     use ContainerAwareTrait;
 
     /**
-     * LoggableUsernameSubscriber constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)

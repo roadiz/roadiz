@@ -28,7 +28,6 @@ class UserLifeCycleSubscriber implements EventSubscriber
     private $container;
 
     /**
-     * UserLifeCycleSubscriber constructor.
      * @param Container $container
      */
     public function __construct(Container $container)

@@ -707,11 +707,16 @@ abstract class AppController extends Controller
      * @param Request $request
      * @param Response $response
      * @param int $minutes TTL in minutes
+     * @param bool $allowClientCache Allows browser level cache
      *
      * @return Response
      */
-    public function makeResponseCachable(Request $request, Response $response, $minutes)
-    {
+    public function makeResponseCachable(
+        Request $request,
+        Response $response,
+        int $minutes,
+        bool $allowClientCache = false
+    ) {
         /** @var Kernel $kernel */
         $kernel = $this->get('kernel');
         /** @var RequestStack $requestStack */
@@ -724,9 +729,18 @@ abstract class AppController extends Controller
             $request->isMethodCacheable() &&
             $minutes > 0 &&
             !$settings->get('maintenance_mode', false)) {
+            /*
+             * TODO: Need refactoring
+             * This method is not futureproof and assume that each request
+             * is served during one Roadiz lifecycle.
+             */
             /** @var EventDispatcherInterface $dispatcher */
             $dispatcher = $this->get('dispatcher');
-            $dispatcher->addSubscriber(new CachableResponseSubscriber($minutes, true));
+            $dispatcher->addSubscriber(new CachableResponseSubscriber(
+                $minutes,
+                true,
+                $allowClientCache
+            ));
         }
 
         return $response;

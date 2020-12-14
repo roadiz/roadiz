@@ -33,8 +33,6 @@ class NodeNameSubscriber implements EventSubscriberInterface
     private $nodeNameChecker;
 
     /**
-     * NodeNameSubscriber constructor.
-     *
      * @param Logger          $logger
      * @param NodeNameChecker $nodeNameChecker
      * @param NodeMover       $nodeMover

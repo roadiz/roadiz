@@ -17,7 +17,6 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 /**
- * Class MaintenanceModeSubscriber
  * @package RZ\Roadiz\Core\Events
  */
 class MaintenanceModeSubscriber implements EventSubscriberInterface
@@ -46,7 +45,6 @@ class MaintenanceModeSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * MaintenanceModeSubscriber constructor.
      * @param Container $container
      */
     public function __construct(Container $container)

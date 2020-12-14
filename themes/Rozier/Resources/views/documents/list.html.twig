@@ -18,7 +18,7 @@
             <a class="uk-button" href="{{ path('documentsEmbedPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
             <a class="uk-button rz-no-ajax-link" href="{{ path('documentsRandomPage', {folderId: folder.id}) }}"><i class="uk-icon-magic"></i> {% trans %}random.document{% endtrans %}</a>
             {% if not orphans %}
-            <a href="{{ path('documentsUnusedPage') }}" class="uk-button"><i class="uk-icon-ban"></i> {% trans %}unused_documents{% endtrans %}</a>
+            <a href="{{ path('documentsUnusedPage') }}" class="uk-button"><i class="uk-icon-unlink"></i> {% trans %}unused_documents{% endtrans %}</a>
             {% endif %}
         </div>
     </header>

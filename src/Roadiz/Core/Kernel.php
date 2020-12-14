@@ -376,10 +376,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                     )
                 );
 
-
-                if ($kernel->isPreview()) {
-                    $dispatcher->addSubscriber(new PreviewModeSubscriber($c));
-                    $dispatcher->addSubscriber(new PreviewBarSubscriber($c));
+                if (!$kernel->isInstallMode()) {
+                    $dispatcher->addSubscriber(new PreviewModeSubscriber($kernel, $c));
+                    $dispatcher->addSubscriber(new PreviewBarSubscriber($kernel));
                 }
             }
             /*
@@ -579,6 +578,16 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     public function isPreview()
     {
         return $this->preview;
+    }
+
+    /**
+     * @param bool $preview
+     * @return Kernel
+     */
+    public function setPreview(bool $preview): Kernel
+    {
+        $this->preview = $preview;
+        return $this;
     }
 
     /**

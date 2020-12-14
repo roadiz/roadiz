@@ -14,9 +14,6 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * UserViewer
- */
 class UserViewer
 {
     /** @var LoggerInterface */

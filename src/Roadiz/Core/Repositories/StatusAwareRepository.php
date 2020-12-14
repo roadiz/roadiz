@@ -13,8 +13,6 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
- * Class StatusAwareRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @template T
  * @extends EntityRepository<T>

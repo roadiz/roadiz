@@ -13,8 +13,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
- * Class NodesSourcesInheritanceSubscriber
- *
  * @package RZ\Roadiz\Core\Events
  */
 class NodesSourcesInheritanceSubscriber implements EventSubscriber

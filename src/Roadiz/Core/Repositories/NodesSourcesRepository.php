@@ -21,6 +21,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements search engine query with Solr.
+ *
  * @extends StatusAwareRepository<\RZ\Roadiz\Core\Entities\NodesSources>
  */
 class NodesSourcesRepository extends StatusAwareRepository

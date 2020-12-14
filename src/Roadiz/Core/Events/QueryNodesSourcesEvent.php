@@ -14,8 +14,6 @@ final class QueryNodesSourcesEvent extends QueryEvent
     protected $actualEntityName;
 
     /**
-     * QueryNodesSourcesEvent constructor.
-     *
      * @param Query  $query
      * @param string $actualEntityName
      */

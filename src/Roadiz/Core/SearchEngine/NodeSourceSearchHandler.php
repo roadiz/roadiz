@@ -11,7 +11,6 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
- * Class NodeSourceSearchHandler
  * @package RZ\Roadiz\Core\SearchEngine
  */
 class NodeSourceSearchHandler extends AbstractSearchHandler

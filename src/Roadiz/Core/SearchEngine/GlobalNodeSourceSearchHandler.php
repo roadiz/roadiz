@@ -10,7 +10,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
 /**
- * Class GlobalNodeSourceSearchHandler
  * @package RZ\Roadiz\Core\SearchEngine
  */
 class GlobalNodeSourceSearchHandler

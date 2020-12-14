@@ -9,19 +9,29 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class CachableResponseSubscriber implements EventSubscriberInterface
 {
-    /** @var bool  */
+    /**
+     * @var bool
+     */
     private $cachable = false;
-    /** @var int  */
+    /**
+     * @var int
+     */
     private $minutes = 0;
+    /**
+     * @var bool
+     */
+    private bool $allowClientCache;
 
     /**
-     * @param int  $minutes
+     * @param int $minutes
      * @param bool $cachable
+     * @param bool $allowClientCache
      */
-    public function __construct(int $minutes, bool $cachable = true)
+    public function __construct(int $minutes, bool $cachable = true, bool $allowClientCache = false)
     {
         $this->minutes = $minutes;
         $this->cachable = $cachable;
+        $this->allowClientCache = $allowClientCache;
     }
 
     public static function getSubscribedEvents()
@@ -45,9 +55,15 @@ class CachableResponseSubscriber implements EventSubscriberInterface
         $response->headers->remove('cache-control');
         $response->headers->remove('vary');
         $response->setPublic();
-        $response->setMaxAge(60 * $this->minutes);
         $response->setSharedMaxAge(60 * $this->minutes);
         $response->headers->addCacheControlDirective('must-revalidate', true);
+
+        if ($this->allowClientCache) {
+            $response->setMaxAge(60 * $this->minutes);
+        } else {
+            $response->headers->addCacheControlDirective('no-store', true);
+        }
+
         $response->setVary('Accept-Encoding, X-Partial, x-requested-with');
 
         if ($event->getRequest()->isXmlHttpRequest()) {

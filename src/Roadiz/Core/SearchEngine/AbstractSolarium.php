@@ -13,7 +13,6 @@ use Solarium\QueryType\Update\Query\Document;
 use Solarium\QueryType\Update\Query\Query;
 
 /**
- * Class AbstractSolarium
  * @package RZ\Roadiz\Core\SearchEngine
  */
 abstract class AbstractSolarium

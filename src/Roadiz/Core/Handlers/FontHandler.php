@@ -6,7 +6,7 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Entities\Font;
 
 /**
- * Handle operations with fonts entities..
+ * Handle operations with fonts entities.
  */
 class FontHandler extends AbstractHandler
 {

@@ -6,7 +6,6 @@ namespace RZ\Roadiz\Core\Repositories;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 
 /**
- * Class DocumentTranslationRepository
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<DocumentTranslation>
  */

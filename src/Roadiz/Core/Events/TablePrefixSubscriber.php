@@ -16,8 +16,6 @@ class TablePrefixSubscriber implements EventSubscriber
     protected $tablesPrefix;
 
     /**
-     * TablePrefixSubscriber constructor.
-     *
      * @param string $tablesPrefix
      */
     public function __construct(string $tablesPrefix = '')

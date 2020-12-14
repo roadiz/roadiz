@@ -23,8 +23,6 @@ final class SignatureListener implements EventSubscriberInterface
     private $debug;
 
     /**
-     * SignatureListener constructor.
-     *
      * @param Settings $settingsBag
      * @param string   $version
      * @param bool     $debug

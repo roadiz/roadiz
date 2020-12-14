@@ -17,7 +17,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 
 /**
- * Class DocumentRepository
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<Document>
  */

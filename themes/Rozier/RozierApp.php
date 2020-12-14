@@ -154,6 +154,6 @@ class RozierApp extends BackendController
             ['content-type' => 'text/css']
         );
 
-        return $this->makeResponseCachable($request, $response, 5);
+        return $this->makeResponseCachable($request, $response, 30, true);
     }
 }

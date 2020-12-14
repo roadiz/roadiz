@@ -6,8 +6,6 @@ namespace RZ\Roadiz\Core\Repositories;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 
 /**
- * Class TagTranslationDocumentsRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<\RZ\Roadiz\Core\Entities\TagTranslationDocuments>
  */

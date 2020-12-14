@@ -6,8 +6,6 @@ namespace RZ\Roadiz\Core\Events;
 use RZ\Roadiz\Core\Entities\Node;
 
 /**
- * Class FilterNodePathEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterNodePathEvent extends FilterNodeEvent
@@ -22,8 +20,6 @@ abstract class FilterNodePathEvent extends FilterNodeEvent
     protected $updatedAt;
 
     /**
-     * FilterNodePathEvent constructor.
-     *
      * @param Node           $node
      * @param array          $paths
      * @param \DateTime|null $updatedAt

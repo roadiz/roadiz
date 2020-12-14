@@ -19,8 +19,6 @@ class QueryEvent extends Event
     protected $entityClass;
 
     /**
-     * QueryEvent constructor.
-     *
      * @param Query  $query
      * @param string $entityClass
      */

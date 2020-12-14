@@ -14,8 +14,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * Class FolderRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<Folder>
  */

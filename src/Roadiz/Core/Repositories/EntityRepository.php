@@ -25,8 +25,6 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * EntityRepository that implements a simple countBy method.
- *
  * @template T
  * @extends \Doctrine\ORM\EntityRepository<T>
  */
