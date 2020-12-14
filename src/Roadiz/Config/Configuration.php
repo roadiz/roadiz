@@ -54,6 +54,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('application_name')->end()
                     ->scalarNode('dbname')->end()
                     ->scalarNode('unix_socket')->end()
+                    ->scalarNode('server_version')->end()
                     ->scalarNode('port')->defaultValue(null)->end()
                     ->scalarNode('path')->end()
                     ->booleanNode('logging')->defaultValue(false)->end()

@@ -53,11 +53,7 @@ class SiteInformationType extends AbstractType
                 'required' => false,
                 'label' => 'meta_description',
             ])
-            ->add('timezone', ChoiceType::class, [
-                'choices' => $timeZoneList,
-                'label' => 'timezone',
-                'required' => true,
-            ]);
+        ;
 
         if (count($options['themes_config']) > 0) {
             $builder->add('separator_1', SeparatorType::class, [

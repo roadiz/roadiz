@@ -11,7 +11,6 @@ use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
 /**
- * Class YamlConfigurationLoader
  * @package RZ\Roadiz\Config\Loader
  */
 final class YamlConfigurationLoader implements ConfigurationLoader

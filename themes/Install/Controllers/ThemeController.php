@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Install\Controllers;
 
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Utils\Installer\ThemeInstaller;
@@ -14,7 +15,6 @@ use Themes\Install\Forms\SiteInformationType;
 use Themes\Install\InstallApp;
 
 /**
- * Class ThemeController
  * @package Themes\Install\Controllers
  */
 class ThemeController extends InstallApp

@@ -6,8 +6,7 @@ namespace RZ\Roadiz\Console\Tools;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Config\Configuration;
-use RZ\Roadiz\Config\ConfigurationHandler;
-use RZ\Roadiz\Config\Loader\YamlConfigurationLoader;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
@@ -247,27 +246,5 @@ class Fixtures
         $set2->setType(NodeTypeField::BOOLEAN_T);
 
         $this->entityManager->flush();
-
-        /*
-         * Update timezone
-         */
-        if (!empty($data['timezone'])) {
-            $loader = new YamlConfigurationLoader();
-            $conf = new ConfigurationHandler(
-                $this->configurationTree,
-                $this->configPath,
-                $loader
-            );
-
-            $config = $conf->load();
-            $config['timezone'] = $data['timezone'];
-
-            $conf->setConfiguration($config);
-            /*
-             * do not pass through configuration handler
-             * which will alter user input.
-             */
-            $loader->saveToFile($this->configPath, $config);
-        }
     }
 }
