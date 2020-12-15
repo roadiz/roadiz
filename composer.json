@@ -40,9 +40,10 @@
         "ext-pdo":                                 "*",
         "ext-simplexml":                           "*",
         "ambroisemaupate/intervention-request":    "^3.2.0 || dev-develop",
+        "codercat/jwk-to-pem":                     "^1.0",
         "composer/composer":                       "^1.8.6 || ^2.0.0",
-        "doctrine/orm":                            "~2.7.5",
         "doctrine/migrations":                     "^3.0",
+        "doctrine/orm":                            "~2.7.5 || ~2.8.1",
         "gedmo/doctrine-extensions":               "^2.4 || ^3.0.0",
         "guzzlehttp/guzzle":                       "^6.3 || ^7.2.0",
         "inlinestyle/inlinestyle":                 "~1.2.7",
@@ -64,6 +65,7 @@
         "symfony/asset":                           "~4.4.1",
         "symfony/config":                          "~4.4.1",
         "symfony/console":                         "~4.4.1",
+        "symfony/dotenv":                          "^5.1",
         "symfony/filesystem":                      "~4.4.1",
         "symfony/finder":                          "~4.4.1",
         "symfony/form":                            "~4.4.1",
@@ -78,12 +80,10 @@
         "symfony/validator":                       "~4.4.1",
         "symfony/workflow":                        "^4.4.1",
         "symfony/yaml":                            "~4.4.1",
-        "symfony/dotenv":                          "^5.1",
         "twig/html-extra":                         "^3.0",
         "twig/intl-extra":                         "^3.0",
         "twig/string-extra":                       "^3.0",
-        "twig/twig":                               "^3.0",
-        "codercat/jwk-to-pem":                     "^1.0"
+        "twig/twig":                               "^3.0"
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.7",
