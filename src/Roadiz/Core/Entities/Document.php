@@ -344,6 +344,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     {
         if (!$this->getFolders()->contains($folder)) {
             $this->folders->add($folder);
+            $folder->addDocument($this);
         }
 
         return $this;
@@ -358,13 +359,25 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
+     * @param Collection<Folder> $folders
+     * @return $this
+     */
+    public function setFolders(Collection $folders)
+    {
+        $this->folders = $folders;
+
+        return $this;
+    }
+
+    /**
      * @param FolderInterface $folder
      * @return $this
      */
     public function removeFolder(FolderInterface $folder)
     {
         if ($this->getFolders()->contains($folder)) {
-            $this->folders->remove($folder);
+            $this->folders->removeElement($folder);
+            $folder->removeDocument($this);
         }
 
         return $this;

@@ -9,8 +9,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AjaxFoldersExplorerController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxFoldersExplorerController extends AbstractAjaxController
@@ -56,7 +54,8 @@ class AjaxFoldersExplorerController extends AbstractAjaxController
                 $children = $this->recurseFolders($folder->getChildren());
                 $foldersArray[] = [
                     'id' => $folder->getId(),
-                    'name' => $folder->getFolderName(),
+                    'name' => $folder->getName(),
+                    'folderName' => $folder->getFolderName(),
                     'children' => $children,
                 ];
             }

@@ -10,6 +10,7 @@ use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntityValidator;
+use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
@@ -20,6 +21,7 @@ use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Validation;
+use Themes\Rozier\Forms\FolderCollectionType;
 
 /**
  * Register form services for dependency injection container.
@@ -58,6 +60,14 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $container[UniqueEntityValidator::class] = function (Container $c) {
             return new UniqueEntityValidator($c['em']);
+        };
+
+        $container[FolderCollectionType::class] = function (Container $c) {
+            return new FolderCollectionType($c['em']);
+        };
+
+        $container[DocumentCollectionType::class] = function (Container $c) {
+            return new DocumentCollectionType($c['em']);
         };
 
         $container['formValidator'] = function (Container $c) {

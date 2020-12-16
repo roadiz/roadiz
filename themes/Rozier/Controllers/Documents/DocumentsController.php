@@ -261,8 +261,6 @@ class DocumentsController extends RozierApp
         $document = $this->get('em')->find(Document::class, (int) $documentId);
 
         if ($document !== null) {
-            $this->assignation['document'] = $document;
-            $this->assignation['rawDocument'] = $document->getRawDocument();
             /*
              * Handle main form
              */
@@ -297,7 +295,6 @@ class DocumentsController extends RozierApp
                        '%name%' => $document->getFilename(),
                     ]);
                     $this->publishConfirmMessage($request, $msg);
-
                     $this->get("dispatcher")->dispatch(
                         new DocumentUpdatedEvent($document)
                     );
@@ -309,7 +306,6 @@ class DocumentsController extends RozierApp
                            'referer' => $form->get('referer')->getData(),
                         ]);
                     }
-
                     /*
                     * Force redirect to avoid resending form when refreshing page
                     */
@@ -322,6 +318,8 @@ class DocumentsController extends RozierApp
                 }
             }
 
+            $this->assignation['document'] = $document;
+            $this->assignation['rawDocument'] = $document->getRawDocument();
             $this->assignation['form'] = $form->createView();
 
             return $this->render('documents/edit.html.twig', $this->assignation);

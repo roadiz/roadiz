@@ -217,7 +217,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection<TagTranslation>
      */
     public function getTranslatedTags(): Collection
     {
@@ -225,7 +225,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @param Collection $translatedTags
+     * @param Collection<TagTranslation> $translatedTags
      *
      * @return Tag
      */
@@ -241,7 +241,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @param Translation $translation
-     * @return Collection
+     * @return Collection<TagTranslation>
      */
     public function getTranslatedTagsByTranslation(Translation $translation)
     {
@@ -345,5 +345,25 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     public function __toString()
     {
         return '[' . ($this->getId() > 0 ? $this->getId() : 'NULL') . '] ' . $this->getTagName();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->getTranslatedTags()->first() ?
+            $this->getTranslatedTags()->first()->getName() :
+            $this->getTagName();
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription(): ?string
+    {
+        return $this->getTranslatedTags()->first() ?
+            $this->getTranslatedTags()->first()->getDescription() :
+            '';
     }
 }

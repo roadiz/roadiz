@@ -89,10 +89,15 @@ class DocumentEditType extends AbstractType
             $builder->add('thumbnails', DocumentCollectionType::class, [
                 'label' => 'document.thumbnails',
                 'multiple' => true,
-                'required' => false,
-                'entityManager' => $options['entityManager'],
+                'required' => false
             ]);
         }
+
+        $builder->add('folders', FolderCollectionType::class, [
+            'label' => 'folders',
+            'multiple' => true,
+            'required' => false
+        ]);
     }
 
     /**

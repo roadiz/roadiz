@@ -234,6 +234,15 @@
     } %}
 {% endblock documents_widget %}
 
+{% block folders_widget %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'explorer-provider',
+        icon: 'uk-icon-folder-o'
+    } %}
+{% endblock folders_widget %}
+
 {% block nodes_widget %}
     {% include '@Rozier/widgets/drawer.html.twig' with {
         widget_attributes: block('widget_attributes'),
@@ -280,7 +289,12 @@
 {% endblock custom_forms_widget %}
 
 {% block checkbox_widget -%}
-    <input class="rz-boolean-checkbox" type="checkbox" data-on-text="I" data-off-text="O" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <input class="rz-boolean-checkbox"
+           type="checkbox"
+           data-on-text="I"
+           data-off-text="O"
+        {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}
+        {% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget %}
 
 {%- block choice_widget_expanded -%}

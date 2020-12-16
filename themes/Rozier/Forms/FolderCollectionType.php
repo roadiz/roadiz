@@ -1,19 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\CMS\Forms;
+namespace Themes\Rozier\Forms;
 
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\DataTransformer\DocumentCollectionTransformer;
+use RZ\Roadiz\CMS\Forms\DataTransformer\FolderCollectionTransformer;
+use RZ\Roadiz\CMS\Forms\TagsType;
 use RZ\Roadiz\Core\Entities\Document;
-use Symfony\Component\Form\AbstractType;
+use RZ\Roadiz\Core\Entities\Folder;
+use RZ\Roadiz\Core\Entities\Node;
+use Symfony\Component\Form\AbstractType as AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Themes\Rozier\Explorer\FoldersProvider;
+use Themes\Rozier\Forms\DataTransformer\TagTransformer;
 
-final class DocumentCollectionType extends AbstractType
+final class FolderCollectionType extends AbstractType
 {
     /** @var EntityManagerInterface */
     protected $entityManager;
@@ -27,14 +34,15 @@ final class DocumentCollectionType extends AbstractType
     }
 
     /**
-     * {@inheritdoc}
+     * @param FormView $view
+     * @param FormInterface $form
+     * @param array $options
      */
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options)
     {
-        $builder->addModelTransformer(new DocumentCollectionTransformer(
-            $this->entityManager,
-            true
-        ));
+        parent::buildView($view, $form, $options);
+
+        $view->vars['provider_class'] = FoldersProvider::class;
     }
 
     /**
@@ -43,12 +51,22 @@ final class DocumentCollectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'label' => false,
             'required' => false,
-            'class' => Document::class,
+            'class' => Folder::class,
             'multiple' => true,
             'property' => 'id',
         ]);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param FormBuilderInterface $builder
+     * @param array $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $builder->addModelTransformer(new FolderCollectionTransformer($this->entityManager, true));
     }
 
     /**
@@ -64,6 +82,6 @@ final class DocumentCollectionType extends AbstractType
      */
     public function getBlockPrefix()
     {
-        return 'documents';
+        return 'folders';
     }
 }
