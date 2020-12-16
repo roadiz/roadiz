@@ -23,13 +23,13 @@ class EntityCollectionTransformer implements DataTransformerInterface
      */
     private $manager;
     /**
-     * @var class-name|string
+     * @var class-string|string
      */
     private $classname;
 
     /**
      * @param ObjectManager $manager
-     * @param class-name $classname
+     * @param class-string $classname
      * @param bool $asCollection
      */
     public function __construct(ObjectManager $manager, string $classname, bool $asCollection = false)
