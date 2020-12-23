@@ -1,5 +1,10 @@
-sh -c "if [ '$DB' = 'mysql' ] || [ '$DB' = 'mariadb' ]; then php bin/roadiz migration:migrate --allow-no-migration -n; fi";
-sh -c "if [ '$DB' = 'pgsql' ]; then php bin/roadiz bin/roadiz orm:schema-tool:create -n; fi";
+#!/bin/sh -x
+if [ "$DB" = 'mysql' ] || [ "$DB" = 'mariadb' ];
+    then php bin/roadiz migration:migrate --allow-no-migration -n;
+fi;
+if [ "$DB" = 'pgsql' ];
+    then php bin/roadiz bin/roadiz orm:schema-tool:create -n;
+fi;
 php bin/roadiz install -n --env=install;
 php bin/roadiz themes:install -n "/Themes/DefaultTheme/DefaultThemeApp";
 php bin/roadiz themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp";
