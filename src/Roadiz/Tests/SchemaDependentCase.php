@@ -35,7 +35,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
         // Drop and recreate tables for all entities
         $dropSQL = $schemaTool->getDropDatabaseSQL();
         if (count($dropSQL) > 0) {
-            throw new RiskyTestError('Test database is not empty! Do not execute tests on a running Roadiz db.');
+            throw new RiskyTestError('Test database is not empty!');
         }
 
         static::runCommand('orm:schema-tool:create');
