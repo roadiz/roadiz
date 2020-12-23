@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
-use RZ\Roadiz\Core\Bags\NodeTypes;
-use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
@@ -13,19 +11,19 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 class NodesFieldGenerator extends AbstractFieldGenerator
 {
     /**
-     * @var NodeTypes
+     * @var NodeTypeResolverInterface
      */
-    private $nodeTypesBag;
+    private $nodeTypeResolver;
 
     /**
      * @param NodeTypeField $field
-     * @param NodeTypes $nodeTypesBag
+     * @param NodeTypeResolverInterface $nodeTypeResolver
      * @param array $options
      */
-    public function __construct(NodeTypeField $field, NodeTypes $nodeTypesBag, array $options = [])
+    public function __construct(NodeTypeField $field, NodeTypeResolverInterface $nodeTypeResolver, array $options = [])
     {
         parent::__construct($field, $options);
-        $this->nodeTypesBag = $nodeTypesBag;
+        $this->nodeTypeResolver = $nodeTypeResolver;
     }
 
     /**
@@ -54,8 +52,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
         if (null !== $this->field->getDefaultValues() && $this->hasOnlyOneNodeType() === true) {
             $nodeTypeName = trim(explode(',', $this->field->getDefaultValues() ?? '')[0]);
 
-            /** @var NodeType $nodeType */
-            $nodeType = $this->nodeTypesBag->get($nodeTypeName);
+            $nodeType = $this->nodeTypeResolver->get($nodeTypeName);
             if (null !== $nodeType) {
                 return $nodeType->getSourceEntityFullQualifiedClassName();
             }

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractField;
-use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,9 +24,9 @@ class EntityGenerator
     private $fieldGenerators;
 
     /**
-     * @var NodeTypes
+     * @var NodeTypeResolverInterface
      */
-    private $nodeTypesBag;
+    private $nodeTypeResolver;
 
     /**
      * @var array
@@ -37,16 +35,16 @@ class EntityGenerator
 
     /**
      * @param NodeType $nodeType
-     * @param NodeTypes $nodeTypesBag
+     * @param NodeTypeResolverInterface $nodeTypeResolver
      * @param array $options
      */
-    public function __construct(NodeType $nodeType, NodeTypes $nodeTypesBag, array $options = [])
+    public function __construct(NodeType $nodeType, NodeTypeResolverInterface $nodeTypeResolver, array $options = [])
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
 
         $this->nodeType = $nodeType;
-        $this->nodeTypesBag = $nodeTypesBag;
+        $this->nodeTypeResolver = $nodeTypeResolver;
         $this->fieldGenerators = [];
         $this->options = $resolver->resolve($options);
 
@@ -94,22 +92,22 @@ class EntityGenerator
      */
     protected function getFieldGenerator(NodeTypeField $field): ?AbstractFieldGenerator
     {
-        if ($field->getType() === AbstractField::YAML_T) {
+        if ($field->isYaml()) {
             return new YamlFieldGenerator($field, $this->options);
         }
-        if ($field->getType() === AbstractField::COLLECTION_T) {
+        if ($field->isCollection()) {
             return new CollectionFieldGenerator($field, $this->options);
         }
-        if ($field->getType() === AbstractField::CUSTOM_FORMS_T) {
+        if ($field->isCustomForms()) {
             return new CustomFormsFieldGenerator($field, $this->options);
         }
-        if ($field->getType() === AbstractField::DOCUMENTS_T) {
+        if ($field->isDocuments()) {
             return new DocumentsFieldGenerator($field, $this->options);
         }
-        if ($field->getType() === AbstractField::MANY_TO_ONE_T) {
+        if ($field->isManyToOne()) {
             return new ManyToOneFieldGenerator($field, $this->options);
         }
-        if ($field->getType() === AbstractField::MANY_TO_MANY_T) {
+        if ($field->isManyToMany()) {
             $configuration = Yaml::parse($field->getDefaultValues() ?? '');
             if (isset($configuration['proxy']) && !empty($configuration['proxy']['classname'])) {
                 /*
@@ -120,8 +118,8 @@ class EntityGenerator
             }
             return new ManyToManyFieldGenerator($field, $this->options);
         }
-        if ($field->getType() === AbstractField::NODES_T) {
-            return new NodesFieldGenerator($field, $this->nodeTypesBag, $this->options);
+        if ($field->isNodes()) {
+            return new NodesFieldGenerator($field, $this->nodeTypeResolver, $this->options);
         }
         if (!$field->isVirtual()) {
             return new NonVirtualFieldGenerator($field, $this->options);
@@ -147,7 +145,10 @@ class EntityGenerator
     {
         return 'class '.$this->nodeType->getSourceEntityClassName().' extends \\'.$this->options['parent_class'].'
 {
-    ' . $this->getClassProperties() . $this->getClassConstructor() . $this->getNodeTypeNameGetter() . $this->getClassMethods() . '
+    ' . $this->getClassProperties() .
+        $this->getClassConstructor() .
+        $this->getNodeTypeNameGetter() .
+        $this->getClassMethods() . '
 }'.PHP_EOL;
     }
 

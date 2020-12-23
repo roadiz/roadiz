@@ -3,32 +3,31 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
-use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 final class EntityGeneratorFactory
 {
     /**
-     * @var NodeTypes
+     * @var NodeTypeResolverInterface
      */
-    private $nodeTypesBag;
+    private $nodeTypeResolverBag;
     /**
      * @var array
      */
     private $options;
 
     /**
-     * @param NodeTypes $nodeTypesBag
+     * @param NodeTypeResolverInterface $nodeTypeResolverBag
      * @param array $options
      */
-    public function __construct(NodeTypes $nodeTypesBag, array $options)
+    public function __construct(NodeTypeResolverInterface $nodeTypeResolverBag, array $options)
     {
-        $this->nodeTypesBag = $nodeTypesBag;
+        $this->nodeTypeResolverBag = $nodeTypeResolverBag;
         $this->options = $options;
     }
 
     public function create(NodeType $nodeType): EntityGenerator
     {
-        return new EntityGenerator($nodeType, $this->nodeTypesBag, $this->options);
+        return new EntityGenerator($nodeType, $this->nodeTypeResolverBag, $this->options);
     }
 }

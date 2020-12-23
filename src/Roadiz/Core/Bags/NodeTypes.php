@@ -7,8 +7,9 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
+use RZ\Roadiz\Utils\Doctrine\Generators\NodeTypeResolverInterface;
 
-class NodeTypes extends LazyParameterBag
+class NodeTypes extends LazyParameterBag implements NodeTypeResolverInterface
 {
     /**
      * @var EntityManager
@@ -20,7 +21,6 @@ class NodeTypes extends LazyParameterBag
     private $repository;
 
     /**
-     * SettingsBag constructor.
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)
