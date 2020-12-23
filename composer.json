@@ -39,7 +39,7 @@
         "ext-zip":                                 "*",
         "ext-pdo":                                 "*",
         "ext-simplexml":                           "*",
-        "ambroisemaupate/intervention-request":    "^3.2.0 || dev-develop",
+        "ambroisemaupate/intervention-request":    "^3.2.0",
         "codercat/jwk-to-pem":                     "^1.0",
         "composer/composer":                       "^1.8.6 || ^2.0.0",
         "doctrine/migrations":                     "^3.0",
