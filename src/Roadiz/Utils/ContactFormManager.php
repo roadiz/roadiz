@@ -454,7 +454,7 @@ class ContactFormManager extends EmailManager
     {
         if (!$uploadedFile->isValid() ||
             !in_array($uploadedFile->getMimeType(), $this->allowedMimeTypes) ||
-            $uploadedFile->getClientSize() > $this->maxFileSize) {
+            $uploadedFile->getSize() > $this->maxFileSize) {
             throw new BadFormRequestException(
                 $this->translator->trans('file.not.accepted'),
                 Response::HTTP_FORBIDDEN,
