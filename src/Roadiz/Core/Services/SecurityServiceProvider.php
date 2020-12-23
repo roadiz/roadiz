@@ -114,6 +114,20 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return $session;
         };
 
+        /*
+         * Required for HttpKernel AbstractSessionListener
+         */
+        $container['initialized_session'] = function (Container $c) {
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $request = $requestStack->getMasterRequest();
+            if (null !== $request && $request->hasSession()) {
+                return $request->getSession();
+            }
+
+            return null;
+        };
+
         $container['sessionTokenStorage'] = function (Container $c) {
             return new SessionTokenStorage(
                 $c['session'],

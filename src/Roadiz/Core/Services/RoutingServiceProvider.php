@@ -36,6 +36,13 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack'], $c['argumentResolver']);
         };
 
+        /*
+         * Required for HttpKernel AbstractSessionListener
+         */
+        $container['request_stack'] = function (Container $c) {
+            return $c['requestStack'];
+        };
+
         $container['requestStack'] = function () {
             return new RequestStack();
         };
