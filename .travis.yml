@@ -8,12 +8,17 @@ node_js:
 php:
   - 7.4
   - 8.0
+  - nightly
 
 branches:
     except:
         - l10n_develop
 
 jobs:
+    allow_failures:
+        - php: 8.0
+        - php: nightly
+
     include:
         - stage: "Default theme assets tests"
           language: node_js
@@ -70,6 +75,14 @@ jobs:
           php: 8.0
           install: sh .travis/composer_install.sh
           script: sh .travis/php_lint.sh
+        - stage: "PHP lint tests"
+          language: php
+          sudo: required
+          services:
+            - mysql
+          php: nightly
+          install: sh .travis/composer_install.sh
+          script: sh .travis/php_lint.sh
 
         # php 7.4
         - stage: "PHP unit tests"
@@ -87,8 +100,7 @@ jobs:
           sudo: required
           services:
             - mariadb
-          php:
-            - 7.4
+          php: 7.4
           env:
             - DB=mariadb
           before_script: sh .travis/php_unit_install.sh
@@ -98,8 +110,7 @@ jobs:
           sudo: required
           services:
             - postgresql
-          php:
-            - 7.4
+          php: 7.4
           env:
             - DB=pgsql
           before_script: sh .travis/php_unit_install.sh
@@ -121,8 +132,7 @@ jobs:
           sudo: required
           services:
             - mariadb
-          php:
-            - 8.0
+          php: 8.0
           env:
             - DB=mariadb
           before_script: sh .travis/php_unit_install.sh
@@ -132,8 +142,39 @@ jobs:
           sudo: required
           services:
             - postgresql
-          php:
-            - 8.0
+          php: 8.0
+          env:
+            - DB=pgsql
+          before_script: sh .travis/php_unit_install.sh
+          script: sh .travis/php_unit.sh
+
+        # php nightly
+        - stage: "PHP unit tests"
+          language: php
+          sudo: required
+          services:
+            - mysql
+          php: nightly
+          env:
+            - DB=mysql
+          before_script: sh .travis/php_unit_install.sh
+          script: sh .travis/php_unit.sh
+        - stage: "PHP unit tests"
+          language: php
+          sudo: required
+          services:
+            - mariadb
+          php: nightly
+          env:
+            - DB=mariadb
+          before_script: sh .travis/php_unit_install.sh
+          script: sh .travis/php_unit.sh
+        - stage: "PHP unit tests"
+          language: php
+          sudo: required
+          services:
+            - postgresql
+          php: nightly
           env:
             - DB=pgsql
           before_script: sh .travis/php_unit_install.sh
