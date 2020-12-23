@@ -10,6 +10,13 @@ php:
   - 8.0
   - nightly
 
+stages:
+    - "PHP lint tests"
+    - "PHP unit tests"
+    - "Install assets tests"
+    - "Backoffice assets tests"
+    - "Default theme assets tests"
+
 branches:
     except:
         - l10n_develop
