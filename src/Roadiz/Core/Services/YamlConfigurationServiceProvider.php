@@ -28,7 +28,7 @@ class YamlConfigurationServiceProvider implements ServiceProviderInterface
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $configDir = $kernel->getRootDir() . '/conf';
-            if ($kernel->getEnvironment() != 'prod') {
+            if ($kernel->getEnvironment() !== 'prod') {
                 $configName = 'config_' . $kernel->getEnvironment() . '.yml';
                 if (file_exists($configDir . '/' . $configName)) {
                     return $configDir . '/' . $configName;

@@ -8,7 +8,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 abstract class AbstractFieldGenerator
 {
     const USE_NATIVE_JSON = 'use_native_json';
-    
+
     /**
      * @var NodeTypeField
      */
@@ -19,8 +19,6 @@ abstract class AbstractFieldGenerator
     protected $options;
 
     /**
-     * AbstractFieldGenerator constructor.
-     *
      * @param NodeTypeField $field
      * @param array $options
      */

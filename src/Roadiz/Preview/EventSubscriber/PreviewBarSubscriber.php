@@ -59,7 +59,6 @@ class PreviewBarSubscriber implements EventSubscriberInterface
     {
         if ($this->supports($event)) {
             $response = $event->getResponse();
-
             if (false !== strpos($response->getContent(), '</body>') &&
                 false !== strpos($response->getContent(), '</head>')) {
                 $content = str_replace(

@@ -9,7 +9,6 @@ use Doctrine\Persistence\ObjectRepository;
 use Pimple\Container;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
-use RZ\Roadiz\Preview\PreviewServiceProvider;
 
 final class RoadizRepositoryFactory implements RepositoryFactory
 {

@@ -208,17 +208,14 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         };
 
         $container[CacheProvider::class] = $container->factory(function (Container $c) {
-            if ($c['config']['cacheDriver']['type'] !== null &&
-                !$c['kernel']->isDebug()) {
-                $cache = CacheFactory::fromConfig(
-                    $c['config']['cacheDriver'],
-                    $c['kernel'],
-                    $c['config']["appNamespace"]
-                );
-            } else {
-                $cache = new ArrayCache();
-            }
-            return $cache;
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return CacheFactory::fromConfig(
+                $c['config']['cacheDriver'],
+                $kernel->getEnvironment(),
+                $kernel->getCacheDir(),
+                $c['config']["appNamespace"]
+            );
         });
 
         $container[LoggableListener::class] = function (Container $c) {

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Preview;
 
-use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Core\KernelInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -12,7 +11,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
  *
  * @package RZ\Roadiz\Preview
  */
-final class KernelPreviewRevolver implements \RZ\Roadiz\Preview\PreviewResolverInterface
+final class KernelPreviewRevolver implements PreviewResolverInterface
 {
     /**
      * @var KernelInterface
@@ -40,7 +39,7 @@ final class KernelPreviewRevolver implements \RZ\Roadiz\Preview\PreviewResolverI
     public function isPreview(): bool
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (null !== $request && $request instanceof RoadizRequest) {
+        if (null !== $request && $request instanceof PreviewAwareInterface) {
             return $request->isPreview() || $this->kernel->isPreview();
         }
         return $this->kernel->isPreview();

@@ -51,7 +51,6 @@ class RoadizApplication extends Application
     protected $kernel;
 
     /**
-     * RoadizApplication constructor.
      * @param Kernel $kernel
      */
     public function __construct(Kernel $kernel)

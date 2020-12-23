@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\String\UnicodeString;
 

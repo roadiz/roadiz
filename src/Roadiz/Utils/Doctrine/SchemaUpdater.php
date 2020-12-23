@@ -60,6 +60,7 @@ final class SchemaUpdater
          * Very important, when using standard-edition,
          * Kernel class is AppKernel or DevAppKernel.
          */
+        /** @var class-string<Kernel> $kernelClass */
         $kernelClass = get_class($this->kernel);
         $application = new RoadizApplication(new $kernelClass('dev', true));
         $application->setAutoExit(false);
@@ -67,7 +68,7 @@ final class SchemaUpdater
     }
 
     /**
-     * Update database schema.
+     * Update database schema using doctrine migration.
      *
      * @throws \Doctrine\DBAL\DBALException
      */

@@ -10,8 +10,6 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodeTranslationFilter.
- *
  * Filter on translation fields when criteria contains translation. prefix.
  *
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter

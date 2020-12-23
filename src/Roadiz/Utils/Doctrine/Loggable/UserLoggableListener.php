@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserLoggableListener extends LoggableListener
 {
-    /** @var UserInterface */
+    /** @var UserInterface|null */
     protected $user = null;
 
     /**
@@ -22,7 +22,7 @@ class UserLoggableListener extends LoggableListener
     }
 
     /**
-     * @param UserInterface $user
+     * @param UserInterface|null $user
      *
      * @return UserLoggableListener
      */

@@ -16,7 +16,8 @@ final class Version20201214232628 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        // this up() migration is auto-generated, please modify it to your needs
+        $this->skipIf($schema->hasTable('usergroups'), 'Table `usergroups` already exists.');
+
         $this->addSql('RENAME TABLE `groups` TO `usergroups`');
         $this->addSql('ALTER TABLE groups_roles DROP FOREIGN KEY FK_E79D4963FE54D947');
         $this->addSql('ALTER TABLE groups_roles ADD CONSTRAINT FK_E79D4963FE54D947 FOREIGN KEY (group_id) REFERENCES usergroups (id)');
@@ -27,7 +28,8 @@ final class Version20201214232628 extends AbstractMigration
 
     public function down(Schema $schema) : void
     {
-        // this down() migration is auto-generated, please modify it to your needs
+        $this->skipIf($schema->hasTable('groups'), 'Table `groups` already exists.');
+
         $this->addSql('RENAME TABLE `usergroups` TO `groups`');
         $this->addSql('ALTER TABLE groups_roles DROP FOREIGN KEY FK_E79D4963FE54D947');
         $this->addSql('ALTER TABLE groups_roles ADD CONSTRAINT FK_E79D4963FE54D947 FOREIGN KEY (group_id) REFERENCES `groups` (id)');

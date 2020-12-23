@@ -6,7 +6,6 @@ namespace RZ\Roadiz\Utils\Doctrine\Generators;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class ManyToOneFieldGenerator
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class ManyToOneFieldGenerator extends AbstractFieldGenerator

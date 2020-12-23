@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Preview\EventSubscriber;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\HttpFoundation\Request as RoadizRequest;
 use RZ\Roadiz\Preview\Exception\PreviewNotAllowedException;
+use RZ\Roadiz\Preview\PreviewAwareInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -31,6 +31,7 @@ class PreviewModeSubscriber implements EventSubscriberInterface
     protected $container;
 
     /**
+     * @param PreviewResolverInterface $previewResolver
      * @param Container $container
      */
     public function __construct(PreviewResolverInterface $previewResolver, Container $container)
@@ -68,7 +69,7 @@ class PreviewModeSubscriber implements EventSubscriberInterface
         if ($event->isMasterRequest() &&
             $request->query->has(static::QUERY_PARAM_NAME) &&
             (bool) ($request->query->get(static::QUERY_PARAM_NAME, 0)) === true) {
-            if ($request instanceof RoadizRequest) {
+            if ($request instanceof PreviewAwareInterface) {
                 $request->setPreview(true);
             }
         }

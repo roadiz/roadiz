@@ -55,7 +55,7 @@ class SimpleQueryBuilder
      * @param mixed $value
      * @param string $prefix
      * @param string $key
-     * @param string $baseKey
+     * @param string|null $baseKey
      *
      * @return Comparison|Func|string
      */

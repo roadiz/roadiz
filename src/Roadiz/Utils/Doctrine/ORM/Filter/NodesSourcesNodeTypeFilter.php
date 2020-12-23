@@ -11,8 +11,6 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodesSourcesNodeTypeFilter
- *
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter
  */
 final class NodesSourcesNodeTypeFilter implements EventSubscriberInterface

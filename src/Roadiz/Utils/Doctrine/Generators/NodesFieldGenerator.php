@@ -9,8 +9,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
- * Class NodesFieldGenerator
- *
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class NodesFieldGenerator extends AbstractFieldGenerator

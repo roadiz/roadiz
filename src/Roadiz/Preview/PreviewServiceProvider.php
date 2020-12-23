@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Preview;
 
 use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Preview\EventSubscriber\PreviewModeSubscriber;
 use RZ\Roadiz\Preview\EventSubscriber\PreviewBarSubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class PreviewServiceProvider implements \Pimple\ServiceProviderInterface
+class PreviewServiceProvider implements ServiceProviderInterface
 {
     /**
      * @inheritDoc

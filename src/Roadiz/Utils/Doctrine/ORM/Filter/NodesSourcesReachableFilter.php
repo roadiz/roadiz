@@ -10,12 +10,9 @@ use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Events\QueryNodesSourcesEvent;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
-use RZ\Roadiz\Utils\Doctrine\ORM\SqlWalker;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodesSourcesNodeTypeFilter
- *
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter
  */
 final class NodesSourcesReachableFilter implements EventSubscriberInterface

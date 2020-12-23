@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
 /**
- * Class DocumentsFieldGenerator
- *
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class DocumentsFieldGenerator extends AbstractFieldGenerator

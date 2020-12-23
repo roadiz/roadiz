@@ -6,8 +6,6 @@ namespace RZ\Roadiz\Utils\Doctrine\Generators;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
- * Class NonVirtualFieldGenerator.
- *
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class NonVirtualFieldGenerator extends AbstractFieldGenerator

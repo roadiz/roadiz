@@ -134,6 +134,7 @@ class SolariumNodeSourceTest extends DefaultThemeDependentCase
                 $solrDoc->cleanAndCommit();
 
                 $this->assertFalse($solrDoc->getDocumentFromIndex());
+                return;
             } catch (SolrServerNotConfiguredException $e) {
                 $this->markTestSkipped('Solr is not available.');
             } catch (SolrServerNotAvailableException $e) {

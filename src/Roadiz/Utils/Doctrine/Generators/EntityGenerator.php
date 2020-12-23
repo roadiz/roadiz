@@ -10,7 +10,6 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class EntityGenerator
  * @package RZ\Roadiz\Utils\Doctrine\Generators
  */
 class EntityGenerator
