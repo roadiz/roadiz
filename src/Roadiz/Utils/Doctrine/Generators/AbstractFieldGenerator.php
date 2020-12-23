@@ -153,7 +153,7 @@ abstract class AbstractFieldGenerator
     /**
      * @return bool
      */
-    protected function excludeFromSerialization()
+    protected function excludeFromSerialization(): bool
     {
         return false;
     }

@@ -36,8 +36,8 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
         ];
         $ormParams = [
             'name' => '"'. $entityA .'_' . $entityB . '"',
-            'joinColumns' => '{@ORM\JoinColumn(' . static::flattenORMParameters($joinColumnParams) . ')}',
-            'inverseJoinColumns' => '{@ORM\JoinColumn(' . static::flattenORMParameters($inverseJoinColumns) . ')}',
+            'joinColumns' => '{ @ORM\JoinColumn(' . static::flattenORMParameters($joinColumnParams) . ') }',
+            'inverseJoinColumns' => '{ @ORM\JoinColumn(' . static::flattenORMParameters($inverseJoinColumns) . ') }',
         ];
         $orderByClause = '';
         if (count($configuration['orderBy']) > 0) {

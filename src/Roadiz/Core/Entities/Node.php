@@ -619,6 +619,30 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @param Collection<NodesCustomForms> $customForms
+     * @return Node
+     */
+    public function setCustomForms(Collection $customForms): self
+    {
+        $this->customForms = $customForms;
+        return $this;
+    }
+
+    /**
+     * Used by generated nodes-sources.
+     *
+     * @param NodesCustomForms $nodesCustomForms
+     * @return Node
+     */
+    public function addCustomForm(NodesCustomForms $nodesCustomForms): self
+    {
+        if (!$this->customForms->contains($nodesCustomForms)) {
+            $this->customForms->add($nodesCustomForms);
+        }
+        return $this;
+    }
+
+    /**
      * @ORM\ManyToMany(targetEntity="NodeType")
      * @ORM\JoinTable(name="stack_types")
      * @var Collection<NodeType>

@@ -7,6 +7,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -35,23 +36,56 @@ class EntityGenerator
     protected $options;
 
     /**
-     * EntityGenerator constructor.
-     *
-     * @param NodeType  $nodeType
+     * @param NodeType $nodeType
      * @param NodeTypes $nodeTypesBag
+     * @param array $options
      */
     public function __construct(NodeType $nodeType, NodeTypes $nodeTypesBag, array $options = [])
     {
+        $resolver = new OptionsResolver();
+        $this->configureOptions($resolver);
+
         $this->nodeType = $nodeType;
         $this->nodeTypesBag = $nodeTypesBag;
         $this->fieldGenerators = [];
-        $this->options = $options;
+        $this->options = $resolver->resolve($options);
 
-        /** @var NodeTypeField $field */
         foreach ($this->nodeType->getFields() as $field) {
             $this->fieldGenerators[] = $this->getFieldGenerator($field);
         }
         $this->fieldGenerators = array_filter($this->fieldGenerators);
+    }
+
+    /**
+     * @param OptionsResolver $resolver
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'use_native_json' => true,
+        ]);
+        $resolver->setRequired([
+            'parent_class',
+            'node_class',
+            'translation_class',
+            'document_class',
+            'document_proxy_class',
+            'custom_form_class',
+            'custom_form_proxy_class',
+            'repository_class',
+            'namespace',
+            'use_native_json'
+        ]);
+        $resolver->setAllowedTypes('parent_class', 'string');
+        $resolver->setAllowedTypes('node_class', 'string');
+        $resolver->setAllowedTypes('translation_class', 'string');
+        $resolver->setAllowedTypes('document_class', 'string');
+        $resolver->setAllowedTypes('document_proxy_class', 'string');
+        $resolver->setAllowedTypes('custom_form_class', 'string');
+        $resolver->setAllowedTypes('custom_form_proxy_class', 'string');
+        $resolver->setAllowedTypes('repository_class', 'string');
+        $resolver->setAllowedTypes('namespace', 'string');
+        $resolver->setAllowedTypes('use_native_json', 'bool');
     }
 
     /**
@@ -111,7 +145,7 @@ class EntityGenerator
      */
     protected function getClassBody(): string
     {
-        return 'class '.$this->nodeType->getSourceEntityClassName().' extends NodesSources
+        return 'class '.$this->nodeType->getSourceEntityClassName().' extends \\'.$this->options['parent_class'].'
 {
     ' . $this->getClassProperties() . $this->getClassConstructor() . $this->getNodeTypeNameGetter() . $this->getClassMethods() . '
 }'.PHP_EOL;
@@ -132,14 +166,8 @@ declare(strict_types=1);
  * THIS IS A GENERATED FILE, DO NOT EDIT IT
  * IT WILL BE RECREATED AT EACH NODE-TYPE UPDATE
  */
-namespace '.NodeType::getGeneratedEntitiesNamespace().';
+namespace '.$this->options['namespace'].';
 
-use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Entities\Document;
-use Symfony\Component\Yaml\Yaml;
 use JMS\Serializer\Annotation as Serializer;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
@@ -161,7 +189,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
  * DO NOT EDIT
  * Generated custom node-source type by Roadiz.
  *
- * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesSourcesRepository")
+ * @ORM\Entity(repositoryClass="\\'.$this->options['repository_class'].'")
  * @ORM\Table(name="'.$this->nodeType->getSourceEntityTableName().'", indexes={'.implode(',', $indexes).'})
  */'.PHP_EOL;
     }
@@ -195,7 +223,7 @@ use Doctrine\ORM\Mapping as ORM;'.PHP_EOL.PHP_EOL;
 
         if (count($constructorArray) > 0) {
             return '
-    public function __construct(Node $node, Translation $translation)
+    public function __construct(\\'.$this->options['node_class'].' $node, \\'.$this->options['translation_class'].' $translation)
     {
         parent::__construct($node, $translation);
 

@@ -15,7 +15,7 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @return array Documents array
+     * @return \\'.$this->options['document_class'].'[] Documents array
      * @Serializer\VirtualProperty
      * @Serializer\Groups({"nodes_sources", "nodes_sources_documents", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
      * @Serializer\SerializedName("'.$this->field->getVarName().'")
@@ -25,7 +25,7 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
         if (null === $this->' . $this->field->getVarName() . ') {
             if (null !== $this->objectManager) {
                 $this->' . $this->field->getVarName() . ' = $this->objectManager
-                    ->getRepository(Document::class)
+                    ->getRepository(\\'.$this->options['document_class'].'::class)
                     ->findByNodeSourceAndField(
                         $this,
                         $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getName().'")
@@ -47,15 +47,15 @@ class DocumentsFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @param Document $document
+     * @param \\'.$this->options['document_class'].' $document
      *
      * @return $this
      */
-    public function add'.ucfirst($this->field->getVarName()).'(Document $document)
+    public function add'.ucfirst($this->field->getVarName()).'(\\'.$this->options['document_class'].' $document)
     {
         $field = $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getName().'");
         if (null !== $field) {
-            $nodeSourceDocument = new \RZ\Roadiz\Core\Entities\NodesSourcesDocuments(
+            $nodeSourceDocument = new \\'.$this->options['document_proxy_class'].'(
                 $this,
                 $document,
                 $field

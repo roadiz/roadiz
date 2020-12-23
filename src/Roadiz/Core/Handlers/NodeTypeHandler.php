@@ -6,7 +6,6 @@ namespace RZ\Roadiz\Core\Handlers;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Pimple\Container;
 use RuntimeException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -14,8 +13,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Doctrine\Generators\AbstractFieldGenerator;
-use RZ\Roadiz\Utils\Doctrine\Generators\EntityGenerator;
+use RZ\Roadiz\Utils\Doctrine\Generators\EntityGeneratorFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -29,13 +27,17 @@ class NodeTypeHandler extends AbstractHandler
      */
     private $nodeType;
     /**
-     * @var Container
-     */
-    private $container;
-    /**
      * @var Kernel
      */
     private $kernel;
+    /**
+     * @var EntityGeneratorFactory
+     */
+    private $entityGeneratorFactory;
+    /**
+     * @var HandlerFactory
+     */
+    private $handlerFactory;
 
     /**
      * @return NodeType
@@ -59,14 +61,20 @@ class NodeTypeHandler extends AbstractHandler
      * Create a new node-type handler with node-type to handle.
      *
      * @param ObjectManager $objectManager
-     * @param Container $container
      * @param Kernel $kernel
+     * @param EntityGeneratorFactory $entityGeneratorFactory
+     * @param HandlerFactory $handlerFactory
      */
-    public function __construct(ObjectManager $objectManager, Container $container, Kernel $kernel)
-    {
+    public function __construct(
+        ObjectManager $objectManager,
+        Kernel $kernel,
+        EntityGeneratorFactory $entityGeneratorFactory,
+        HandlerFactory $handlerFactory
+    ) {
         parent::__construct($objectManager);
-        $this->container = $container;
         $this->kernel = $kernel;
+        $this->entityGeneratorFactory = $entityGeneratorFactory;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
@@ -110,11 +118,7 @@ class NodeTypeHandler extends AbstractHandler
         }
 
         if (!$fileSystem->exists($file)) {
-            $options = [
-                AbstractFieldGenerator::USE_NATIVE_JSON => $this->container['settingsBag']
-                    ->get(AbstractFieldGenerator::USE_NATIVE_JSON, false)
-            ];
-            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag'], $options);
+            $classGenerator = $this->entityGeneratorFactory->create($this->nodeType);
             $content = $classGenerator->getClassContent();
 
             if (false === @file_put_contents($file, $content)) {
@@ -220,8 +224,7 @@ class NodeTypeHandler extends AbstractHandler
         /** @var Node $node */
         foreach ($nodes as $node) {
             /** @var NodeHandler $nodeHandler */
-            $nodeHandler = $this->container['node.handler'];
-            $nodeHandler->setNode($node);
+            $nodeHandler = $this->handlerFactory->getHandler($node);
             $nodeHandler->removeWithChildrenAndAssociations();
         }
 

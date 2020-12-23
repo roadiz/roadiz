@@ -38,6 +38,7 @@ use RZ\Roadiz\Document\Renderer\ThumbnailRenderer;
 use RZ\Roadiz\Document\Renderer\VideoRenderer;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\ContactFormManager;
+use RZ\Roadiz\Utils\Doctrine\Generators\EntityGeneratorFactory;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
@@ -94,7 +95,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);
         });
         $container['node_type.handler'] = $container->factory(function (Container $c) {
-            return new NodeTypeHandler($c['em'], $c, $c['kernel']);
+            return new NodeTypeHandler($c['em'], $c['kernel'], $c[EntityGeneratorFactory::class], $c['factory.handler']);
         });
         $container['node_type_field.handler'] = $container->factory(function (Container $c) {
             return new NodeTypeFieldHandler($c['em'], $c);

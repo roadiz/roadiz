@@ -26,7 +26,6 @@ class HandlerFactory implements HandlerFactoryInterface
     private $container;
 
     /**
-     * HandlerFactory constructor.
      * @param Container $container
      */
     public function __construct(Container $container)

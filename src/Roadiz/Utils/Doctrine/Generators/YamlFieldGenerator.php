@@ -11,7 +11,7 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
     /**
      * @inheritDoc
      */
-    protected function excludeFromSerialization()
+    protected function excludeFromSerialization(): bool
     {
         return true;
     }
@@ -32,7 +32,7 @@ class YamlFieldGenerator extends NonVirtualFieldGenerator
     public function '.$this->field->getGetterName().'AsObject()
     {
         if (null !== '.$assignation.') {
-            return Yaml::parse('.$assignation.');
+            return \Symfony\Component\Yaml\Yaml::parse('.$assignation.');
         }
         return null;
     }'.PHP_EOL;

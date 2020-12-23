@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Doctrine\Generators;
 
 use RZ\Roadiz\Core\Bags\NodeTypes;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
@@ -19,10 +18,9 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     private $nodeTypesBag;
 
     /**
-     * NodesFieldGenerator constructor.
-     *
      * @param NodeTypeField $field
-     * @param NodeTypes     $nodeTypesBag
+     * @param NodeTypes $nodeTypesBag
+     * @param array $options
      */
     public function __construct(NodeTypeField $field, NodeTypes $nodeTypesBag, array $options = [])
     {
@@ -62,7 +60,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
                 return $nodeType->getSourceEntityFullQualifiedClassName();
             }
         }
-        return NodesSources::class;
+        return $this->options['parent_class'];
     }
 
     /**
@@ -72,7 +70,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     {
         return '
     /**
-     * @return Node[] '.$this->field->getVarName().' array
+     * @return \\'.$this->options['node_class'].'[] '.$this->field->getVarName().' array
      * @deprecated Use '.$this->field->getGetterName().'Sources() instead to directly handle node-sources
      * @Serializer\Exclude
      */
@@ -86,7 +84,7 @@ class NodesFieldGenerator extends AbstractFieldGenerator
         if (null === $this->' . $this->field->getVarName() . ') {
             if (null !== $this->objectManager) {
                  $this->' . $this->field->getVarName() . ' = $this->objectManager
-                      ->getRepository(Node::class)
+                      ->getRepository(\\'.$this->options['node_class'].'::class)
                       ->findByNodeAndFieldAndTranslation(
                           $this->getNode(),
                           $this->getNode()->getNodeType()->getFieldByName("'.$this->field->getVarName().'"),
@@ -102,12 +100,12 @@ class NodesFieldGenerator extends AbstractFieldGenerator
      * ' . $this->getFieldSourcesName() .' NodesSources direct field buffer.
      * (Virtual field, this var is a buffer)
      * @Serializer\Exclude
-     * @var NodesSources[]|null
+     * @var \\'.$this->getRepositoryClass().'[]|null
      */
     private $'.$this->getFieldSourcesName().';
 
     /**
-     * @return NodesSources[] '.$this->field->getVarName().' nodes-sources array
+     * @return \\'.$this->getRepositoryClass().'[] '.$this->field->getVarName().' nodes-sources array
      * @Serializer\VirtualProperty
      * @Serializer\Groups({"nodes_sources", "nodes_sources_'.($this->field->getGroupNameCanonical() ?: 'default').'"})
      * @Serializer\SerializedName("'.$this->field->getVarName().'")
