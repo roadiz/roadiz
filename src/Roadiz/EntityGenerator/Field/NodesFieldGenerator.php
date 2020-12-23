@@ -1,13 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator\Field;
 
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeFieldInterface;
+use RZ\Roadiz\EntityGenerator\NodeTypeResolverInterface;
 
-/**
- * @package RZ\Roadiz\Utils\Doctrine\Generators
- */
 class NodesFieldGenerator extends AbstractFieldGenerator
 {
     /**
@@ -16,11 +14,11 @@ class NodesFieldGenerator extends AbstractFieldGenerator
     private $nodeTypeResolver;
 
     /**
-     * @param NodeTypeField $field
+     * @param NodeTypeFieldInterface $field
      * @param NodeTypeResolverInterface $nodeTypeResolver
      * @param array $options
      */
-    public function __construct(NodeTypeField $field, NodeTypeResolverInterface $nodeTypeResolver, array $options = [])
+    public function __construct(NodeTypeFieldInterface $field, NodeTypeResolverInterface $nodeTypeResolver, array $options = [])
     {
         parent::__construct($field, $options);
         $this->nodeTypeResolver = $nodeTypeResolver;

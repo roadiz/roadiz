@@ -1,11 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator\Field;
 
-/**
- * @package RZ\Roadiz\Utils\Doctrine\Generators
- */
 class CustomFormsFieldGenerator extends AbstractFieldGenerator
 {
     /**

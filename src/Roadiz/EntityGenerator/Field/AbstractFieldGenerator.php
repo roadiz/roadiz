@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator\Field;
 
-use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeFieldInterface;
 
 abstract class AbstractFieldGenerator
 {
     const USE_NATIVE_JSON = 'use_native_json';
 
     /**
-     * @var NodeTypeField
+     * @var NodeTypeFieldInterface
      */
     protected $field;
     /**
@@ -19,10 +19,10 @@ abstract class AbstractFieldGenerator
     protected $options;
 
     /**
-     * @param NodeTypeField $field
+     * @param NodeTypeFieldInterface $field
      * @param array $options
      */
-    public function __construct(NodeTypeField $field, array $options = [])
+    public function __construct(NodeTypeFieldInterface $field, array $options = [])
     {
         $this->field = $field;
         $this->options = $options;

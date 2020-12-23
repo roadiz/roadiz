@@ -318,6 +318,7 @@ class Setting extends AbstractEntity
      * @Serializer\Type("int")
      */
     private $type = NodeTypeField::STRING_T;
+
     /**
      * @return integer
      */
@@ -325,6 +326,7 @@ class Setting extends AbstractEntity
     {
         return $this->type;
     }
+
     /**
      * @param integer $type
      *

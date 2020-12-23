@@ -11,9 +11,9 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\EntityGenerator\EntityGeneratorFactory;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Doctrine\Generators\EntityGeneratorFactory;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 

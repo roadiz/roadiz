@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Preview\PreviewResolverInterface;
+use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
@@ -416,6 +416,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new OpenIdServiceProvider());
         $container->register(new RozierServiceProvider());
         $container->register(new PreviewServiceProvider());
+        $container->register(new EntityGeneratorServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

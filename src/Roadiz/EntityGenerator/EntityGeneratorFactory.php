@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator;
 
-use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
 
 final class EntityGeneratorFactory
 {
@@ -26,7 +26,7 @@ final class EntityGeneratorFactory
         $this->options = $options;
     }
 
-    public function create(NodeType $nodeType): EntityGenerator
+    public function create(NodeTypeInterface $nodeType): EntityGenerator
     {
         return new EntityGenerator($nodeType, $this->nodeTypeResolverBag, $this->options);
     }

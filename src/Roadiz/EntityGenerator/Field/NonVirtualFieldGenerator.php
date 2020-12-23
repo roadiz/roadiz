@@ -1,13 +1,8 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator\Field;
 
-use RZ\Roadiz\Core\Entities\NodeTypeField;
-
-/**
- * @package RZ\Roadiz\Utils\Doctrine\Generators
- */
 class NonVirtualFieldGenerator extends AbstractFieldGenerator
 {
     /**
@@ -25,15 +20,15 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    protected function getDoctrineType()
+    protected function getDoctrineType(): string
     {
-        if ($this->field->getType() === NodeTypeField::MULTI_PROVIDER_T &&
+        if ($this->field->isMultiProvider() &&
             $this->options[AbstractFieldGenerator::USE_NATIVE_JSON] === true) {
             return 'json';
         }
-        return NodeTypeField::$typeToDoctrine[$this->field->getType()];
+        return $this->field->getDoctrineType();
     }
 
     /**
@@ -51,15 +46,15 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
             'name' => '"' . $this->field->getName() . '"',
         ];
 
-        if ($this->field->getType() == NodeTypeField::DECIMAL_T) {
+        if ($this->field->isDecimal()) {
             $ormParams['precision'] = 18;
             $ormParams['scale'] = 3;
             $serializationType = '@Serializer\Type("double")';
-        } elseif ($this->field->getType() == NodeTypeField::BOOLEAN_T) {
+        } elseif ($this->field->isBool()) {
             $ormParams['nullable'] = 'false';
             $ormParams['options'] = '{"default" = false}';
             $serializationType = '@Serializer\Type("boolean")';
-        } elseif ($this->field->getType() == NodeTypeField::INTEGER_T) {
+        } elseif ($this->field->isInteger()) {
             $serializationType = '@Serializer\Type("integer")';
         }
 
@@ -79,9 +74,9 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
      */
     public function getFieldDeclaration(): string
     {
-        if ($this->field->getType() === NodeTypeField::BOOLEAN_T) {
+        if ($this->field->isBool()) {
             return '    private $'.$this->field->getVarName().' = false;'.PHP_EOL;
-        } elseif ($this->field->getType() === NodeTypeField::INTEGER_T) {
+        } elseif ($this->field->isInteger()) {
             return '    private $'.$this->field->getVarName().' = 0;'.PHP_EOL;
         } else {
             return '    private $'.$this->field->getVarName().';'.PHP_EOL;
@@ -112,13 +107,13 @@ class NonVirtualFieldGenerator extends AbstractFieldGenerator
     {
         $assignation = '$'.$this->field->getVarName();
 
-        if ($this->field->getType() === NodeTypeField::BOOLEAN_T) {
+        if ($this->field->isBool()) {
             $assignation = '(boolean) $'.$this->field->getVarName();
         }
-        if ($this->field->getType() === NodeTypeField::INTEGER_T) {
+        if ($this->field->isInteger()) {
             $assignation = '(int) $'.$this->field->getVarName();
         }
-        if ($this->field->getType() === NodeTypeField::DECIMAL_T) {
+        if ($this->field->isDecimal()) {
             $assignation = '(double) $'.$this->field->getVarName();
         }
 

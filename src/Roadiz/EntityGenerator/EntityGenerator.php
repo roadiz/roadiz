@@ -1,20 +1,28 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator;
 
-use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeFieldInterface;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\EntityGenerator\Field\AbstractFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\CollectionFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\CustomFormsFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\DocumentsFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\ManyToManyFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\ManyToOneFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\NodesFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\NonVirtualFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\ProxiedManyToManyFieldGenerator;
+use RZ\Roadiz\EntityGenerator\Field\YamlFieldGenerator;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @package RZ\Roadiz\Utils\Doctrine\Generators
- */
 class EntityGenerator
 {
     /**
-     * @var NodeType
+     * @var NodeTypeInterface
      */
     private $nodeType;
 
@@ -34,11 +42,11 @@ class EntityGenerator
     protected $options;
 
     /**
-     * @param NodeType $nodeType
+     * @param NodeTypeInterface $nodeType
      * @param NodeTypeResolverInterface $nodeTypeResolver
      * @param array $options
      */
-    public function __construct(NodeType $nodeType, NodeTypeResolverInterface $nodeTypeResolver, array $options = [])
+    public function __construct(NodeTypeInterface $nodeType, NodeTypeResolverInterface $nodeTypeResolver, array $options = [])
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
@@ -87,10 +95,10 @@ class EntityGenerator
     }
 
     /**
-     * @param NodeTypeField $field
+     * @param NodeTypeFieldInterface $field
      * @return AbstractFieldGenerator|null
      */
-    protected function getFieldGenerator(NodeTypeField $field): ?AbstractFieldGenerator
+    protected function getFieldGenerator(NodeTypeFieldInterface $field): ?AbstractFieldGenerator
     {
         if ($field->isYaml()) {
             return new YamlFieldGenerator($field, $this->options);

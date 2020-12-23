@@ -1,14 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator\Field;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\String\UnicodeString;
 
-/**
- * @package RZ\Roadiz\Utils\Doctrine\Generators
- */
 class ProxiedManyToManyFieldGenerator extends AbstractFieldGenerator
 {
     /**

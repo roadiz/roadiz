@@ -1,13 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator\Field;
 
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @package RZ\Roadiz\Utils\Doctrine\Generators
- */
 class ManyToOneFieldGenerator extends AbstractFieldGenerator
 {
     /**
@@ -16,11 +13,9 @@ class ManyToOneFieldGenerator extends AbstractFieldGenerator
     public function getFieldAnnotation(): string
     {
         /*
-         *
          * Many Users have One Address.
          * @ORM\ManyToOne(targetEntity="Address")
          * @ORM\JoinColumn(name="address_id", referencedColumnName="id", onDelete="SET NULL")
-         *
          */
         $configuration = Yaml::parse($this->field->getDefaultValues() ?? '');
         $ormParams = [

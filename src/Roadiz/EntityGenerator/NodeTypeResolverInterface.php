@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator;
 
-use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
 
 interface NodeTypeResolverInterface
 {
     /**
      * @param string $nodeTypeName
-     * @return NodeType
+     * @return NodeTypeInterface|null
      */
     public function get(string $nodeTypeName);
 }

@@ -1,14 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace RZ\Roadiz\Utils\Doctrine\Generators;
+namespace RZ\Roadiz\EntityGenerator\Field;
 
-use RZ\Roadiz\Utils\StringHandler;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Yaml\Yaml;
 
-/**
- * @package RZ\Roadiz\Utils\Doctrine\Generators
- */
 class ManyToManyFieldGenerator extends AbstractFieldGenerator
 {
     /**
@@ -23,7 +20,15 @@ class ManyToManyFieldGenerator extends AbstractFieldGenerator
          *      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
          *      inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
          */
-        $entityA = StringHandler::variablize($this->field->getNodeType()->getName());
+        $entityA = (new UnicodeString($this->field->getNodeTypeName()))
+            ->ascii()
+            ->snake()
+            ->lower()
+            ->trim('-')
+            ->trim('_')
+            ->trim()
+            ->toString()
+        ;
         $entityB = $this->field->getName();
         $configuration = Yaml::parse($this->field->getDefaultValues() ?? '');
         $joinColumnParams = [
