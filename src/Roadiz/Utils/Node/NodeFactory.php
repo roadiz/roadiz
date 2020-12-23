@@ -21,8 +21,6 @@ final class NodeFactory implements ContainerAwareInterface
     use ContainerAwareTrait;
 
     /**
-     * NodeFactory constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)

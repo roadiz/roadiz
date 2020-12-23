@@ -48,8 +48,6 @@ final class NodeMover
     private $entityManager;
 
     /**
-     * NodeMover constructor.
-     *
      * @param EntityManagerInterface   $entityManager
      * @param UrlGeneratorInterface    $urlGenerator
      * @param HandlerFactoryInterface  $handlerFactory

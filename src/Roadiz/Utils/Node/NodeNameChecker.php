@@ -11,7 +11,6 @@ use RZ\Roadiz\Core\Repositories\UrlAliasRepository;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * Class NodeNameChecker
  * @package RZ\Roadiz\Utils\Node
  */
 class NodeNameChecker
@@ -22,8 +21,6 @@ class NodeNameChecker
     private $entityManager;
 
     /**
-     * NodeNameChecker constructor.
-     *
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)

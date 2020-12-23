@@ -57,6 +57,7 @@
         "roadiz/documents":                        "~1.6.0 || dev-develop",
         "roadiz/markdown":                         "~1.6.0 || dev-develop",
         "roadiz/models":                           "~1.6.0 || dev-develop",
+        "roadiz/entity-generator":                 "~1.6.0 || dev-main",
         "roadiz/nodetype-contracts":               "~1.0.0",
         "rollerworks/password-strength-validator": "^1.3",
         "scienta/doctrine-json-functions":         "^4.2",

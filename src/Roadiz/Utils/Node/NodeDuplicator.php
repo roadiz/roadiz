@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\AttributeValue;
 use RZ\Roadiz\Core\Entities\Document;
@@ -18,6 +19,9 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
  */
 class NodeDuplicator
 {
+    /**
+     * @var ObjectManager|null
+     */
     private $em = null;
 
     /**
@@ -26,9 +30,7 @@ class NodeDuplicator
     private $originalNode = null;
 
     /**
-     * NodeDuplicator constructor.
-     *
-     * @param Node          $originalNode
+     * @param Node $originalNode
      * @param ObjectManager $em
      */
     public function __construct(
@@ -40,8 +42,8 @@ class NodeDuplicator
     }
 
     /**
-     *
      * Warning this method flush entityManager at its end.
+     *
      * @return Node
      */
     public function duplicate()
@@ -140,7 +142,7 @@ class NodeDuplicator
      * @param Node $node
      * @return Node
      */
-    private function doDuplicateNodeRelations(Node &$node)
+    private function doDuplicateNodeRelations(Node $node)
     {
         $nodeRelations = new ArrayCollection($node->getBNodes()->toArray());
         foreach ($nodeRelations as $position => $nodeRelation) {

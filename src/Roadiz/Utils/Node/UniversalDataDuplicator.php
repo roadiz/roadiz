@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -14,15 +14,14 @@ use RZ\Roadiz\Core\Repositories\TranslationRepository;
 class UniversalDataDuplicator
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     private $em;
 
     /**
-     * UniversalDataDuplicator constructor.
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -34,6 +33,9 @@ class UniversalDataDuplicator
      *
      * @param NodesSources $source
      * @return bool
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
      */
     public function duplicateUniversalContents(NodesSources $source)
     {

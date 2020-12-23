@@ -26,8 +26,6 @@ final class NodeTranstyper
     private $entityManager;
 
     /**
-     * NodeTranstyper constructor.
-     *
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface        $logger
      */

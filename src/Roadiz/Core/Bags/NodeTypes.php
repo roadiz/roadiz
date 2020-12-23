@@ -5,9 +5,9 @@ namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeResolverInterface;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
-use RZ\Roadiz\EntityGenerator\NodeTypeResolverInterface;
 
 class NodeTypes extends LazyParameterBag implements NodeTypeResolverInterface
 {
