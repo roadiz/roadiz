@@ -112,7 +112,9 @@ jobs:
             language: php
             sudo: required
             services:
-                - mariadb
+                - mysql
+            addons:
+                mariadb: '10.2'
             php: 7.4
             env:
                 - DB=mariadb
