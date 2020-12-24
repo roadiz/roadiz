@@ -4,9 +4,9 @@ use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeWithNodesDependentCase;
 
-class NodesSourcesRepositorySearchTest extends DefaultThemeDependentCase
+class NodesSourcesRepositorySearchTest extends DefaultThemeWithNodesDependentCase
 {
     /**
      * @dataProvider findBySearchQueryProvider

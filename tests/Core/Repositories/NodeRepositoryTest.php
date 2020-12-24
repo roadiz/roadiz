@@ -2,9 +2,9 @@
 
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeWithNodesDependentCase;
 
-class NodeRepositoryTest extends DefaultThemeDependentCase
+class NodeRepositoryTest extends DefaultThemeWithNodesDependentCase
 {
     /**
      * @return NodeRepository

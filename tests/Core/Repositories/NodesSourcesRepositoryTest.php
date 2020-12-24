@@ -4,9 +4,9 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeWithNodesDependentCase;
 
-class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
+class NodesSourcesRepositoryTest extends DefaultThemeWithNodesDependentCase
 {
     /**
      * @return NodeRepository

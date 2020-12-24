@@ -32,13 +32,13 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotAvailableException;
 use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeWithNodesDependentCase;
 use Solarium\Exception\HttpException;
 
 /**
  * SolariumNodeSourceTest.
  */
-class SolariumNodeSourceTest extends DefaultThemeDependentCase
+class SolariumNodeSourceTest extends DefaultThemeWithNodesDependentCase
 {
     private static $entityCollection;
     private static $documentCollection;

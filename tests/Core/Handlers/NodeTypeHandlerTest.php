@@ -98,6 +98,8 @@ class NodeTypeHandlerTest extends SchemaDependentCase
         $ntfields = $nt->getFields();
         if (count($ntfields) > 0) {
             $this->assertEquals($expectedValue, $ntfields[0]->getDefaultValues());
+        } else {
+            $this->markTestSkipped('No field found');
         }
     }
 

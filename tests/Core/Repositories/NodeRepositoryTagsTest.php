@@ -4,9 +4,9 @@ use Doctrine\ORM\Tools\ToolsException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeWithNodesDependentCase;
 
-class NodeRepositoryTagsTest extends DefaultThemeDependentCase
+class NodeRepositoryTagsTest extends DefaultThemeWithNodesDependentCase
 {
     /**
      * @dataProvider getByTagInclusiveProvider

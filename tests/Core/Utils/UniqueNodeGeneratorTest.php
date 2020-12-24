@@ -1,6 +1,4 @@
 <?php
-
-
 use Doctrine\Common\Collections\ArrayCollection;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
