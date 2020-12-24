@@ -6,6 +6,10 @@ namespace RZ\Roadiz\Config;
 class DotEnvConfigurationHandler extends ConfigurationHandler
 {
     const ENV_PATTERN = '#^\%env\((?:default:(?<fallback>[^:]*):)?(?<cast>[a-z]+)?:?(?<env>[A-Za-z\-\_0-9]+)\)\%$#';
+    /**
+     * @var bool
+     */
+    protected $containsDotEnv = false;
 
     /**
      * @param array $configuration
@@ -31,6 +35,7 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
         array_walk_recursive($unresolvedConfiguration, function (&$item) {
             if (is_string($item) && preg_match(static::ENV_PATTERN, $item, $matches) === 1) {
                 $envName = trim($matches['env']);
+                $this->containsDotEnv = true;
                 if (!key_exists($envName, $_ENV) || (is_string($_ENV[$envName]) && $_ENV[$envName] === '')) {
                     if (empty($matches['fallback']) || $matches['fallback'] === '') {
                         $item = null;
@@ -88,5 +93,13 @@ class DotEnvConfigurationHandler extends ConfigurationHandler
     protected function generateConfigurationCacheSource($rawConfiguration): string
     {
         return '<?php return ' . var_export($rawConfiguration, true) . ';' . PHP_EOL;
+    }
+
+    /**
+     * @return bool
+     */
+    public function containsDotEnv(): bool
+    {
+        return $this->containsDotEnv;
     }
 }

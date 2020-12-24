@@ -6,6 +6,7 @@ namespace Themes\Install\Controllers;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use RZ\Roadiz\Config\ConfigurationHandlerInterface;
+use RZ\Roadiz\Config\DotEnvConfigurationHandler;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
@@ -54,35 +55,47 @@ class DatabaseController extends InstallApp
      */
     public function databaseAction(Request $request)
     {
-        $databaseForm = $this->createForm(DatabaseType::class, $this->get('config')['doctrine']);
-        if ($databaseForm->has('inheritance_type')) {
-            $databaseForm->get('inheritance_type')->setData($this->get('config')['inheritance']['type']);
-        }
         /** @var ConfigurationHandlerInterface $configurationHandler */
         $configurationHandler = $this->get(ConfigurationHandlerInterface::class);
+        $tempConf = $configurationHandler->load();
+
+        /*
+         * Build database form only if configuration does not contain any DotEnv
+         */
+        $databaseForm = $this->createForm(DatabaseType::class, $tempConf['doctrine'], [
+            'disabled' => $configurationHandler instanceof DotEnvConfigurationHandler &&
+                $configurationHandler->containsDotEnv()
+        ]);
+        if ($databaseForm->has('inheritance_type')) {
+            $databaseForm->get('inheritance_type')->setData($tempConf['inheritance']['type']);
+        }
         $databaseForm->handleRequest($request);
 
         if ($databaseForm->isSubmitted() && $databaseForm->isValid()) {
             try {
                 if (false !== $this->testDoctrineConnection($databaseForm->getData())) {
-                    $tempConf = $configurationHandler->load();
-                    foreach ($databaseForm->getData() as $key => $value) {
-                        $tempConf['doctrine'][$key] = $value;
+                    if ($configurationHandler instanceof DotEnvConfigurationHandler &&
+                        $configurationHandler->containsDotEnv()) {
+                        /*
+                         * do nothing to preserve DotEnv configuration
+                         */
+                    } else {
+                        foreach ($databaseForm->getData() as $key => $value) {
+                            if ($key !== 'server_version') {
+                                $tempConf['doctrine'][$key] = $value;
+                            }
+                        }
+
+                        if ($databaseForm->has('inheritance_type')) {
+                            $tempConf['inheritance']['type'] = $databaseForm->get('inheritance_type')->getData();
+                        }
+
+                        $configurationHandler->setConfiguration($tempConf);
+                        $configurationHandler->writeConfiguration();
                     }
 
-                    if ($databaseForm->has('inheritance_type')) {
-                        $tempConf['inheritance']['type'] = $databaseForm->get('inheritance_type')->getData();
-                    }
-
-                    $configurationHandler->setConfiguration($tempConf);
-
-                    /*
-                     * Test connection
-                     */
                     $fixtures = $this->getFixtures($request);
-
                     $fixtures->createFolders();
-                    $configurationHandler->writeConfiguration();
 
                     /*
                      * Need to clear configuration cache.
@@ -110,8 +123,8 @@ class DatabaseController extends InstallApp
                 $databaseForm->addError(new FormError($e->getMessage()));
             }
         }
-        $this->assignation['databaseForm'] = $databaseForm->createView();
 
+        $this->assignation['databaseForm'] = $databaseForm->createView();
 
         return $this->render('steps/database.html.twig', $this->assignation);
     }
