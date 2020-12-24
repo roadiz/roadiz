@@ -38,7 +38,6 @@ class RedirectionMatcher extends UrlMatcher
     private $repository;
 
     /**
-     * RedirectionMatcher constructor.
      * @param RequestContext $context
      * @param EntityManager $entityManager
      * @param Stopwatch $stopwatch

@@ -716,7 +716,7 @@ class Translation extends AbstractDateTimed
     /**
      * Sets the value of overrideLocale.
      *
-     * @param string $overrideLocale the override locale
+     * @param string|null $overrideLocale the override locale
      *
      * @return self
      */

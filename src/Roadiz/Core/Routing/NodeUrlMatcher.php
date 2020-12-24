@@ -110,7 +110,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         }
 
         if ($nodeSource !== null && !$nodeSource->getNode()->isHome()) {
-            /** @var Translation $translation */
             $translation = $nodeSource->getTranslation();
             $nodeRouteHelper = new NodeRouteHelper(
                 $nodeSource->getNode(),
@@ -163,6 +162,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
                         );
                     if (null !== $array) {
                         $fqcn = NodeType::getGeneratedEntitiesNamespace() . '\\NS' . ucwords($array['name']);
+                        if (!class_exists($fqcn)) {
+                            throw new ResourceNotFoundException($fqcn . ' entity does not exist.');
+                        }
                         /** @var NodesSources|null $nodeSource */
                         $nodeSource = $this->em->getRepository($fqcn)->findOneBy([
                             'id' => $array['id']

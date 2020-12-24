@@ -22,15 +22,25 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 abstract class DynamicUrlMatcher extends UrlMatcher
 {
-    /** @var EntityManagerInterface */
+    /**
+     * @var EntityManagerInterface
+     */
     protected $em;
-    /** @var Theme  */
+    /**
+     * @var Theme
+     */
     protected $theme;
-    /** @var NodeRepository */
+    /**
+     * @var NodeRepository
+     */
     protected $repository;
-    /** @var Stopwatch  */
+    /**
+     * @var Stopwatch
+     */
     protected $stopwatch;
-    /** @var LoggerInterface */
+    /**
+     * @var LoggerInterface
+     */
     protected $logger;
     /**
      * @var ThemeResolverInterface

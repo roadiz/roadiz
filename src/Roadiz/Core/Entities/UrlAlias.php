@@ -57,7 +57,7 @@ class UrlAlias extends AbstractEntity
         return $this->nodeSource;
     }
     /**
-     * @param NodesSources $nodeSource
+     * @param NodesSources|null $nodeSource
      * @return $this
      */
     public function setNodeSource(?NodesSources $nodeSource): UrlAlias

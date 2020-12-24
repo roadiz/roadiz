@@ -25,8 +25,6 @@ class RedirectionRouter extends Router implements VersatileGeneratorInterface
     protected $stopwatch;
 
     /**
-     * NodeRouter constructor.
-     *
      * @param EntityManager $em
      * @param array $options
      * @param RequestContext|null $context
