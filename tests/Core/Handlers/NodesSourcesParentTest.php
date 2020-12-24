@@ -76,7 +76,6 @@ class NodesSourcesParentTest extends SchemaDependentCase
         static::getManager()->flush();
     }
 
-
     public function testGetParent()
     {
         $sources = $this->getSourcesParentsProvider();

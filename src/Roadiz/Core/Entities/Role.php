@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * Roles are persisted version of string Symfony's roles.
@@ -95,16 +96,21 @@ class Role implements PersistableInterface
     /**
      * @param string $name
      *
-     * @return string $name
+     * @return string
      */
     public static function cleanName(string $name): string
     {
-        $name = StringHandler::variablize($name);
-        if (0 === preg_match("/^role_/i", $name)) {
-            $name = "ROLE_" . $name;
+        $string = (new UnicodeString($name))
+            ->ascii()
+            ->folded()
+            ->snake()
+            ->lower()
+        ;
+        if (!$string->startsWith('role_')) {
+            $string = $string->prepend('role_');
         }
 
-        return strtoupper($name);
+        return $string->upper()->toString();
     }
 
     /**
@@ -197,10 +203,9 @@ class Role implements PersistableInterface
      *
      * @param string $name Role name
      */
-    public function __construct($name)
+    public function __construct(string $name)
     {
-        $this->name = static::cleanName($name);
-
+        $this->setRole($name);
         $this->groups = new ArrayCollection();
     }
 

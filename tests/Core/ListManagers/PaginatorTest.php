@@ -49,9 +49,7 @@ class PaginatorTest extends DefaultThemeDependentCase
 
     /**
      * @dataProvider getTestingItemPerPage
-     *
      * @param $itemPerPage
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function testNodePaginatorFindByAtPage($itemPerPage)
@@ -101,9 +99,7 @@ class PaginatorTest extends DefaultThemeDependentCase
 
     /**
      * @dataProvider getTestingItemPerPage
-     *
      * @param $itemPerPage
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function testPaginatorFindByAtPage($itemPerPage)

@@ -76,26 +76,26 @@ class NodeTypeTest extends \PHPUnit\Framework\TestCase
 
     public function setNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "LigulaEgestasMattisNullam"),
-            array("Véèsti buœlum_Rïsus", "VeestiBuoelumRisus"),
-            array("J'aime les sushis", "JAimeLesSushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "LigulaEgestasMattisNullam"],
+            ["Véèsti buœlum_Rïsus", "VeestiBuoelumRisus"],
+            ["J'aime les sushis", "JAimeLesSushis"],
+        ];
     }
     public function sourceEntityClassNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "NSLigulaEgestasMattisNullam"),
-            array("Véèsti buœlum Rïsus", "NSVeestiBuoelumRisus"),
-            array("J'aime les sushis", "NSJAimeLesSushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "NSLigulaEgestasMattisNullam"],
+            ["Véèsti buœlum Rïsus", "NSVeestiBuoelumRisus"],
+            ["J'aime les sushis", "NSJAimeLesSushis"],
+        ];
     }
     public function sourceEntityTableNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "ns_ligulaegestasmattisnullam"),
-            array("Véèsti buœlum Rïsus", "ns_veestibuoelumrisus"),
-            array("J'aime les sushis", "ns_jaimelessushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "ns_ligulaegestasmattisnullam"],
+            ["Véèsti buœlum Rïsus", "ns_veestibuoelumrisus"],
+            ["J'aime les sushis", "ns_jaimelessushis"],
+        ];
     }
 }

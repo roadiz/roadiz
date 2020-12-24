@@ -30,6 +30,7 @@
  */
 
 use RZ\Roadiz\Core\Entities\Role;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * Test Role features
@@ -37,25 +38,56 @@ use RZ\Roadiz\Core\Entities\Role;
 class RoleTest extends \PHPUnit\Framework\TestCase
 {
     /**
+     * @dataProvider snakeProvider
+     * @param string $input
+     * @param string $expected
+     */
+    public function testSnake($input, $expected)
+    {
+        $output = (new UnicodeString($input))
+            ->ascii()
+            ->folded()
+            ->snake()
+            ->upper()
+            ->toString()
+        ;
+        $this->assertEquals($expected, $output);
+    }
+
+    public function snakeProvider()
+    {
+        return [
+            ["ROLE_TEST", "ROLE_TEST"],
+            ["ROLE_TEST_TEST", "ROLE_TEST_TEST"],
+            ["ROLE_ASDF_AASDF", "ROLE_ASDF_AASDF"],
+        ];
+    }
+
+    /**
      * @dataProvider roleNameProvider
      * @param $roleName
      * @param $expected
      */
     public function testRoleName($roleName, $expected)
     {
-        // Arrange
         $a = new Role($roleName);
-
-        // Assert
         $this->assertEquals($expected, $a->getRole());
     }
 
     public function roleNameProvider()
     {
-        return array(
-            array("role___àsdfasdf", "ROLE_ASDFASDF"),
-            array("asdf ààsdf", "ROLE_ASDF_AASDF"),
-            array("asdfasdf", "ROLE_ASDFASDF"),
-        );
+        return [
+            ["role___àsdfasdf", "ROLE_ASDFASDF"],
+            ["asdf ààsdf", "ROLE_ASDF_AASDF"],
+            ["asdfasdf", "ROLE_ASDFASDF"],
+            ["role___test", "ROLE_TEST"],
+            ["role___test", "ROLE_TEST"],
+            ["ROLE_TEST", "ROLE_TEST"],
+            ["tèst tèst", "ROLE_TEST_TEST"],
+            ["ROLE_TEST_TEST", "ROLE_TEST_TEST"],
+            ["role_test_test", "ROLE_TEST_TEST"],
+            ["ROLE_ASDF_AASDF", "ROLE_ASDF_AASDF"],
+            ["role_asdf_aasdf", "ROLE_ASDF_AASDF"],
+        ];
     }
 }

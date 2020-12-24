@@ -37,9 +37,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
  */
 class NodesSourcesTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     *
-     */
     public function testNodesSources()
     {
         $n = new Node();

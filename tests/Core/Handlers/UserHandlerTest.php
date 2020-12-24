@@ -38,6 +38,8 @@ class UserHandlerTest extends SchemaDependentCase
      * @param $userName
      * @param $email
      * @param $plainPassword
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function testEncodeUser($userName, $email, $plainPassword)
     {

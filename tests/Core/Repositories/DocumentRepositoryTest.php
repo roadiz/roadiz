@@ -217,7 +217,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
                     $document->addFolder($folder);
                     $folder->addDocument($document);
                 } else {
-                    throw new \PHPUnit_Framework_Exception("Folder does not exist: " . $folderName, 1);
+                    throw new \PHPUnit\Framework\Exception("Folder does not exist: " . $folderName, 1);
                 }
             }
         }

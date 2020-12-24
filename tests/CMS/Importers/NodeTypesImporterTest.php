@@ -25,7 +25,7 @@ class NodeTypesImporterTest extends SchemaDependentCase
     /**
      * @return \RZ\Roadiz\Core\Repositories\TagRepository
      */
-    public function getNodeTypeRepository()
+    protected function getNodeTypeRepository()
     {
         return $this->get('em')->getRepository(NodeType::class);
     }
@@ -33,7 +33,7 @@ class NodeTypesImporterTest extends SchemaDependentCase
     /**
      * @return int
      */
-    public function countNodeTypes()
+    protected function countNodeTypes()
     {
         return $this->getNodeTypeRepository()
             ->createQueryBuilder('t')
@@ -45,7 +45,7 @@ class NodeTypesImporterTest extends SchemaDependentCase
     /**
      * @return int
      */
-    public function countNodeTypeFields()
+    protected function countNodeTypeFields()
     {
         return $this->get('em')->getRepository(NodeTypeField::class)
             ->createQueryBuilder('t')

@@ -80,26 +80,27 @@ class NodeTypeFieldTest extends \PHPUnit\Framework\TestCase
 
     public function setNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "ligula_egestas_mattis_nullam"),
-            array("Véèsti buœlum_Rïsus", "veesti_buoelum_risus"),
-            array("J'aime les sushis", "j_aime_les_sushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "ligula_egestas_mattis_nullam"],
+            ["Véèsti buœlum_Rïsus", "veesti_buoelum_risus"],
+            ["J'aime les sushis", "j_aime_les_sushis"],
+            ["j_aime_les_sushis", "j_aime_les_sushis"],
+        ];
     }
     public function getGetterNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "getLigulaEgestasMattisNullam"),
-            array("Véèsti buœlum Rïsus", "getVeestiBuoelumRisus"),
-            array("J'aime les sushis", "getJAimeLesSushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "getLigulaEgestasMattisNullam"],
+            ["Véèsti buœlum Rïsus", "getVeestiBuoelumRisus"],
+            ["J'aime les sushis", "getJAimeLesSushis"],
+        ];
     }
     public function getSetterNameProvider()
     {
-        return array(
-             array("Ligula  $* _--Egestas Mattis Nullam", "setLigulaEgestasMattisNullam"),
-            array("Véèsti buœlum Rïsus", "setVeestiBuoelumRisus"),
-            array("J'aime les sushis", "setJAimeLesSushis"),
-        );
+        return [
+             ["Ligula  $* _--Egestas Mattis Nullam", "setLigulaEgestasMattisNullam"],
+            ["Véèsti buœlum Rïsus", "setVeestiBuoelumRisus"],
+            ["J'aime les sushis", "setJAimeLesSushis"],
+        ];
     }
 }

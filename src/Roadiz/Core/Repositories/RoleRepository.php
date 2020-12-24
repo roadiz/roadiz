@@ -31,6 +31,9 @@ class RoleRepository extends EntityRepository
     /**
      * @param string $roleName
      * @return Role
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOneByName($roleName)
     {

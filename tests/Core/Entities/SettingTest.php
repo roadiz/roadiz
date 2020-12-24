@@ -41,7 +41,7 @@ class SettingTest extends SchemaDependentCase
     public function testGetValue($name, $expected)
     {
         $value = static::getManager()
-            ->getRepository('RZ\Roadiz\Core\Entities\Setting')
+            ->getRepository(Setting::class)
             ->getValue($name);
 
         // Assert
@@ -53,13 +53,13 @@ class SettingTest extends SchemaDependentCase
      */
     public static function settingsProvider()
     {
-        return array(
-            array("test_de_setting", "1"),
-            array("test_de_setting_c", true),
-            array("test_de_setting_c_c", "j-aime-les-sushis"),
-            array("test_de_setting_c_c_c", "j-ai\"''me-les-sushis"),
-            array("test_de_setting_c_c_c_c", "j-ai\"''me-les-suéàçshis"),
-        );
+        return [
+            ["test_de_setting", "1"],
+            ["test_de_setting_c", true],
+            ["test_de_setting_c_c", "j-aime-les-sushis"],
+            ["test_de_setting_c_c_c", "j-ai\"''me-les-sushis"],
+            ["test_de_setting_c_c_c_c", "j-ai\"''me-les-suéàçshis"],
+        ];
     }
 
     public static function setUpBeforeClass(): void

@@ -53,7 +53,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
 
     public static function tearDownAfterClass(): void
     {
-        static::runCommand('orm:schema-tool:drop --force');
+        static::runCommand('orm:schema-tool:drop --force --full-database');
 
         parent::tearDownAfterClass();
     }
@@ -92,16 +92,16 @@ abstract class SchemaDependentCase extends KernelDependentCase
 
     /**
      * @param string $command
+     * @return int
      * @throws \Exception
      */
-    protected static function runCommand($command): void
+    protected static function runCommand($command): int
     {
         $command = sprintf('%s --quiet --no-interaction --env=test', $command);
         $kernel = new Kernel('test', true, false);
         $kernel->boot();
         $application = new RoadizApplication($kernel);
         $application->setAutoExit(false);
-        $application->setCatchExceptions(false);
-        $application->run(new StringInput($command));
+        return $application->run(new StringInput($command));
     }
 }
