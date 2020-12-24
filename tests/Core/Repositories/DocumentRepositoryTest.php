@@ -47,7 +47,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
     private static $folderCollection;
 
     /**
-     * @dataProvider testDocumentFoldersProvider
+     * @dataProvider documentFoldersProvider
      * @param $documentFilename
      * @param $expectedFolderCount
      */
@@ -61,7 +61,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
         $this->assertEquals($expectedFolderCount, count($document->getFolders()));
     }
 
-    public function testDocumentFoldersProvider()
+    public function documentFoldersProvider()
     {
         return [
             ["unittest_document1", 2],

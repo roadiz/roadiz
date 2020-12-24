@@ -54,7 +54,7 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodesSourcesRepository()->findBy([
             'node.aNodes.nodeA' => $home,
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodes()
@@ -63,7 +63,7 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodesSourcesRepository()->findBy([
             'node.bNodes.nodeB' => $home,
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByANodesFieldName()
@@ -71,7 +71,7 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodesSourcesRepository()->findBy([
             'node.aNodes.field.name' => 'related_node',
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodesFieldName()
@@ -79,7 +79,7 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodesSourcesRepository()->findBy([
             'node.bNodes.field.name' => 'related_node',
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByANodesAndFieldName()
@@ -89,7 +89,7 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
             'node.aNodes.nodeA' => $home,
             'node.aNodes.field.name' => 'related_node',
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodesAndFieldName()
@@ -99,6 +99,6 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
             'node.bNodes.nodeB' => $home,
             'node.bNodes.field.name' => 'related_node',
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 }

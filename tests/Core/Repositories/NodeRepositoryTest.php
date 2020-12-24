@@ -36,7 +36,7 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodeRepository()->findBy([
             'aNodes.nodeA' => $home,
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodes()
@@ -45,7 +45,7 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodeRepository()->findBy([
             'bNodes.nodeB' => $home,
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByANodesFieldName()
@@ -53,7 +53,7 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodeRepository()->findBy([
             'aNodes.field.name' => 'related_node',
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodesFieldName()
@@ -61,6 +61,6 @@ class NodeRepositoryTest extends DefaultThemeDependentCase
         $result = $this->getNodeRepository()->findBy([
             'bNodes.field.name' => 'related_node',
         ]);
-        $this->assertNotEmpty($result);
+        $this->assertEmpty($result);
     }
 }

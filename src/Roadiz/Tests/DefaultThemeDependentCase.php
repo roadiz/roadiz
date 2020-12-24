@@ -33,6 +33,7 @@ abstract class DefaultThemeDependentCase extends SchemaDependentCase
         static::runCommand('generate:nsentities');
         static::runCommand('orm:schema-tool:update --dump-sql --force');
         static::runCommand('cache:clear');
+        static::runCommand('themes:install --nodes "/Themes/DefaultTheme/DefaultThemeApp"');
         static::$kernel->get('nodeTypesBag')->reset();
         static::$kernel->get('settingsBag')->reset();
     }
