@@ -85,9 +85,13 @@ final class SchemaUpdater
             '--allow-no-migration' => true
         ]);
         $output = new BufferedOutput();
-        $this->createApplication()->run($input, $output);
+        $exitCode = $this->createApplication()->run($input, $output);
         $content = $output->fetch();
-        $this->logger->info('Executed pending migrations.', ['migration' => $content]);
+        if ($exitCode === 0) {
+            $this->logger->info('Executed pending migrations.', ['migration' => $content]);
+        } else {
+            throw new \RuntimeException('Migrations failed: ' . $content);
+        }
     }
 
     /**
@@ -104,9 +108,13 @@ final class SchemaUpdater
             '--allow-no-migration' => true
         ]);
         $output = new BufferedOutput();
-        $this->createApplication()->run($input, $output);
+        $exitCode = $this->createApplication()->run($input, $output);
         $content = $output->fetch();
-        $this->logger->info('Executed pending migrations.', ['migration' => $content]);
+        if ($exitCode === 0) {
+            $this->logger->info('Executed pending migrations.', ['migration' => $content]);
+        } else {
+            throw new \RuntimeException('Migrations failed: ' . $content);
+        }
 
         /*
          * Update schema with new node-types
@@ -118,9 +126,13 @@ final class SchemaUpdater
             '--force' => true,
         ]);
         $output = new BufferedOutput();
-        $this->createApplication()->run($input, $output);
+        $exitCode = $this->createApplication()->run($input, $output);
         $content = $output->fetch();
 
-        $this->logger->info('DB schema has been updated.', ['sql' => $content]);
+        if ($exitCode === 0) {
+            $this->logger->info('DB schema has been updated.', ['sql' => $content]);
+        } else {
+            throw new \RuntimeException('DB schema update failed: ' . $content);
+        }
     }
 }
