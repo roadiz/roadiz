@@ -23,7 +23,11 @@ final class Version20201214232628 extends AbstractMigration
         $this->addSql('ALTER TABLE groups_roles ADD CONSTRAINT FK_E79D4963FE54D947 FOREIGN KEY (group_id) REFERENCES usergroups (id)');
         $this->addSql('ALTER TABLE users_groups DROP FOREIGN KEY FK_FF8AB7E0FE54D947');
         $this->addSql('ALTER TABLE users_groups ADD CONSTRAINT FK_FF8AB7E0FE54D947 FOREIGN KEY (group_id) REFERENCES usergroups (id)');
-        $this->addSql('ALTER TABLE usergroups RENAME INDEX uniq_f06d39705e237e06 TO UNIQ_98972EB45E237E06');
+        // BC with MariaDB 10.2
+        $this->addSql('DROP INDEX uniq_f06d39705e237e06 ON `usergroups`');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_98972EB45E237E06 ON `usergroups` (name)');
+        // Only available on MariaDB 10.5
+        // $this->addSql('ALTER TABLE usergroups RENAME INDEX uniq_f06d39705e237e06 TO UNIQ_98972EB45E237E06');
     }
 
     public function down(Schema $schema) : void
@@ -35,6 +39,10 @@ final class Version20201214232628 extends AbstractMigration
         $this->addSql('ALTER TABLE groups_roles ADD CONSTRAINT FK_E79D4963FE54D947 FOREIGN KEY (group_id) REFERENCES `groups` (id)');
         $this->addSql('ALTER TABLE users_groups DROP FOREIGN KEY FK_FF8AB7E0FE54D947');
         $this->addSql('ALTER TABLE users_groups ADD CONSTRAINT FK_FF8AB7E0FE54D947 FOREIGN KEY (group_id) REFERENCES `groups` (id)');
-        $this->addSql('ALTER TABLE usergroups RENAME INDEX UNIQ_98972EB45E237E06 TO uniq_f06d39705e237e06');
+        // BC with MariaDB 10.2
+        $this->addSql('DROP INDEX UNIQ_98972EB45E237E06 ON `groups`');
+        $this->addSql('CREATE UNIQUE INDEX uniq_f06d39705e237e06 ON `groups` (name)');
+        // Only available on MariaDB 10.5
+        // $this->addSql('ALTER TABLE `groups` RENAME INDEX UNIQ_98972EB45E237E06 TO uniq_f06d39705e237e06');
     }
 }

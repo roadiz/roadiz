@@ -118,7 +118,7 @@ jobs:
             php: 7.4
             env:
                 - DB=mariadb
-                - MYSQL_VERSION=5.7
+                - MYSQL_VERSION=10.2.31
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -154,7 +154,7 @@ jobs:
             php: 8.0
             env:
                 - DB=mariadb
-                - MYSQL_VERSION=5.7
+                - MYSQL_VERSION=10.2.31
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -190,7 +190,7 @@ jobs:
             php: nightly
             env:
                 - DB=mariadb
-                - MYSQL_VERSION=5.7
+                - MYSQL_VERSION=10.2.31
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"

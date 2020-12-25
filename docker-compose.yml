@@ -3,7 +3,7 @@ services:
     db_test:
         build:
             # Custom image for file permissions
-            context: ./docker/mysql
+            context: ./docker/mariadb
             args:
                 USER_UID: ${USER_UID}
         networks:
