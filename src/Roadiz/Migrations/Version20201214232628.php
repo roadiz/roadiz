@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace RZ\Roadiz\Migrations;
@@ -16,6 +15,10 @@ final class Version20201214232628 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
+        $this->skipIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
         $this->skipIf($schema->hasTable('usergroups'), 'Table `usergroups` already exists.');
 
         $this->addSql('RENAME TABLE `groups` TO `usergroups`');
@@ -27,11 +30,15 @@ final class Version20201214232628 extends AbstractMigration
         $this->addSql('DROP INDEX uniq_f06d39705e237e06 ON `usergroups`');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_98972EB45E237E06 ON `usergroups` (name)');
         // Only available on MariaDB 10.5
-        // $this->addSql('ALTER TABLE usergroups RENAME INDEX uniq_f06d39705e237e06 TO UNIQ_98972EB45E237E06');
+        // $this->addSql('ALTER TABLE `usergroups` RENAME INDEX uniq_f06d39705e237e06 TO UNIQ_98972EB45E237E06');
     }
 
     public function down(Schema $schema) : void
     {
+        $this->skipIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
         $this->skipIf($schema->hasTable('groups'), 'Table `groups` already exists.');
 
         $this->addSql('RENAME TABLE `usergroups` TO `groups`');

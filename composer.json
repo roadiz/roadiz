@@ -1,7 +1,7 @@
 {
     "name": "roadiz/roadiz",
-    "description":"Roadiz is a polymorphic CMS based on a node system which can handle many type of services. It’s based on Symfony component and Doctrine ORM for maximum performances and security.",
-    "license":"MIT",
+    "description": "Roadiz is a modern CMS based on a polymorphic content-schema system which can handle many types of services. It’s based on Symfony component and Doctrine ORM for maximum performances and security.",
+    "license": "MIT",
     "type": "library",
     "keywords": [
         "cms",

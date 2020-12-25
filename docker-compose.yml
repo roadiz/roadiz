@@ -3,6 +3,8 @@ services:
     db_test:
         build:
             # Custom image for file permissions
+            #context: ./docker/mysql
+            #context: ./docker/postgres
             context: ./docker/mariadb
             args:
                 USER_UID: ${USER_UID}
@@ -11,11 +13,18 @@ services:
         volumes:
             - "./.data/db_test:/var/lib/mysql:delegated"
             - "./docker/mysql/performances.cnf:/etc/mysql/conf.d/performances.cnf"
+            - "./.data/pgsql_test:/var/lib/postgresql/data:delegated"
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}_test
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+            # Enable easy switching with Postgres
+            PGDATA: /var/lib/postgresql/data
+            POSTGRES_USER: ${MYSQL_USER}
+            POSTGRES_PASSWORD: ${MYSQL_PASSWORD}
+            POSTGRES_DB: ${MYSQL_DATABASE}_test
+
     db:
         build:
             # Custom image for file permissions

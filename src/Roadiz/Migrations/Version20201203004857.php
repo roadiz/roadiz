@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 namespace RZ\Roadiz\Migrations;
@@ -8,7 +7,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
- * Database initialization migration.
+ * Database initialization migration for MySQL/MariaDB.
  *
  * @package RZ\Roadiz\Migrations
  */
@@ -16,12 +15,17 @@ final class Version20201203004857 extends AbstractMigration
 {
     public function getDescription() : string
     {
-        return 'Roadiz database schema install';
+        return 'Database initialization migration for MySQL/MariaDB.';
     }
 
     public function up(Schema $schema) : void
     {
+        $this->skipIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
         $this->skipIf($schema->hasTable('nodes'), 'Database has been initialized before Doctrine Migration tool.');
+
         $this->addSql('CREATE TABLE attribute_group_translations (id INT AUTO_INCREMENT NOT NULL, attribute_group_id INT DEFAULT NULL, translation_id INT DEFAULT NULL, name VARCHAR(255) NOT NULL, INDEX IDX_5C704A6862D643B7 (attribute_group_id), INDEX IDX_5C704A689CAA2B25 (translation_id), INDEX IDX_5C704A685E237E06 (name), UNIQUE INDEX UNIQ_5C704A6862D643B79CAA2B25 (attribute_group_id, translation_id), UNIQUE INDEX UNIQ_5C704A685E237E069CAA2B25 (name, translation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE attribute_groups (id INT AUTO_INCREMENT NOT NULL, canonical_name VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_D28C172A674D812 (canonical_name), INDEX IDX_D28C172A674D812 (canonical_name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE attribute_translations (id INT AUTO_INCREMENT NOT NULL, attribute_id INT DEFAULT NULL, translation_id INT DEFAULT NULL, label VARCHAR(255) NOT NULL, options LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:simple_array)\', INDEX IDX_4059D4A0B6E62EFA (attribute_id), INDEX IDX_4059D4A09CAA2B25 (translation_id), INDEX IDX_4059D4A0EA750E8 (label), UNIQUE INDEX UNIQ_4059D4A0B6E62EFA9CAA2B25 (attribute_id, translation_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');

@@ -1,10 +1,7 @@
 #!/bin/sh -x
-if [ "$DB" = 'mysql' ] || [ "$DB" = 'mariadb' ];
-    then php bin/roadiz migration:migrate --allow-no-migration -n || exit 1;
-fi;
-if [ "$DB" = 'pgsql' ];
-    then php bin/roadiz bin/roadiz orm:schema-tool:create -n || exit 1;
-fi;
+# Migrations are supported on MySQL/MariaDB/PostgreSQL
+php bin/roadiz migration:migrate --allow-no-migration -n || exit 1;
+
 php bin/roadiz install -n --env=install || exit 1;
 php bin/roadiz themes:install -n "/Themes/DefaultTheme/DefaultThemeApp" || exit 1;
 php bin/roadiz themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp" || exit 1;
