@@ -134,6 +134,6 @@ class CustomFormsController extends AbstractAdminController
         if ($item instanceof CustomForm) {
             return $item->getName();
         }
-        throw new \InvalidArgumentException('Item should be instance of Font');
+        throw new \InvalidArgumentException('Item should be instance of CustomForm');
     }
 }

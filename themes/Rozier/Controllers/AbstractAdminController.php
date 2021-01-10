@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Contracts\EventDispatcher\Event;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
@@ -138,6 +142,13 @@ abstract class AbstractAdminController extends RozierApp
             );
             $this->publishConfirmMessage($request, $msg);
 
+            /*
+             * Force redirect to avoid resending form when refreshing page
+             */
+            if ($request->query->has('referer') &&
+                (new UnicodeString($request->query->get('referer')))->startsWith('/')) {
+                return $this->redirect($request->query->get('referer'));
+            }
             return $this->redirect($this->get('urlGenerator')->generate(
                 $this->getEditRouteName(),
                 [
@@ -156,6 +167,31 @@ abstract class AbstractAdminController extends RozierApp
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function exportAction()
+    {
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
+
+        $items = $this->get('em')->getRepository($this->getEntityClass())->findAll();
+        /** @var Serializer $serializer */
+        $serializer = $this->get('serializer');
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $items,
+                'json',
+                SerializationContext::create()->setGroups([$this->getNamespace()])
+            ),
+            JsonResponse::HTTP_OK,
+            [
+                'Content-Disposition' => sprintf('attachment; filename="%s"', $this->getNamespace() . '.json'),
+            ],
+            true
+        );
+    }
+
+    /**
      * @param Request $request
      * @param int $id
      * @return RedirectResponse|Response|null
@@ -163,7 +199,7 @@ abstract class AbstractAdminController extends RozierApp
      */
     public function deleteAction(Request $request, int $id)
     {
-        $this->denyAccessUnlessGranted($this->getRequiredRole());
+        $this->denyAccessUnlessGranted($this->getRequiredDeletionRole());
 
         /** @var mixed|object|null $item */
         $item = $this->get('em')->find($this->getEntityClass(), $id);
@@ -229,6 +265,14 @@ abstract class AbstractAdminController extends RozierApp
      * @return string
      */
     abstract protected function getRequiredRole(): string;
+
+    /**
+     * @return string
+     */
+    protected function getRequiredDeletionRole(): string
+    {
+        return $this->getRequiredRole();
+    }
 
     /**
      * @return string

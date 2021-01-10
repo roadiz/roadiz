@@ -112,7 +112,7 @@ usersRoutes:
 attributesHomePage:
     path:     /rz-admin/attributes
     defaults:
-        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::indexAction
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::defaultAction
 attributesRoutes:
     resource: "routing/attributes.yml"
     prefix: /rz-admin/attributes

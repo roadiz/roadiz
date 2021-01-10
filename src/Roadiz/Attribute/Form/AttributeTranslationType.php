@@ -19,6 +19,19 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class AttributeTranslationType extends AbstractType
 {
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * @inheritDoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -31,7 +44,7 @@ class AttributeTranslationType extends AbstractType
             ->add('translation', TranslationsType::class, [
                 'label' => false,
                 'required' => true,
-                'entityManager' => $options['entityManager'],
+                'entityManager' => $this->entityManager,
                 'constraints' => [
                     new NotNull()
                 ]
@@ -50,7 +63,7 @@ class AttributeTranslationType extends AbstractType
             ])
         ;
 
-        $builder->get('translation')->addModelTransformer(new TranslationTransformer($options['entityManager']));
+        $builder->get('translation')->addModelTransformer(new TranslationTransformer($this->entityManager));
     }
 
     /**
@@ -60,8 +73,6 @@ class AttributeTranslationType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefault('data_class', AttributeTranslation::class);
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
 
         $resolver->setNormalizer('constraints', function (Options $options) {
             return [

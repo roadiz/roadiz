@@ -11,8 +11,6 @@ use Symfony\Component\String\UnicodeString;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class AttributeGroupController
- *
  * @package Themes\Rozier\Controllers\Attributes
  */
 class AttributeGroupController extends RozierApp
