@@ -39,6 +39,16 @@
                 <target state="translated">在回应头及主题变量中隐藏 Roadiz 版本和名称。</target>
                 <note>Setting</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale_with_urlaliases">
+                <source>force_locale_with_urlaliases</source>
+                <target state="translated">使用网址别名时显示区域代码</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="force_locale_with_urlaliases.help">
+                <source>force_locale_with_urlaliases.help</source>
+                <target state="translated">这将在节点源路径中强制显示区域代码，即使网址别名已经存在。</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="use_native_json">
                 <source>use_native_json</source>
                 <target state="translated">使用原生 JSON 字段类型</target>
@@ -54,9 +64,24 @@
                 <target state="translated">OAuth2 Client ID</target>
                 <note>Setting name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_id.help">
+                <source>oauth_client_id.help</source>
+                <target state="translated">粘贴从您的 OpenID 身份验证提供者(OAuth2)取得的 Client ID</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="oauth_client_secret">
                 <source>oauth_client_secret</source>
                 <target state="translated">OAuth2 Client secret</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="oauth_client_secret.help">
+                <source>oauth_client_secret.help</source>
+                <target state="translated">粘贴从您的 OpenID 身份验证提供者(OAuth2)取得的密钥</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_hd">
+                <source>openid_hd</source>
+                <target state="translated">限制为域名</target>
                 <note>Setting name</note>
             </trans-unit>
       <!-- Setting groups names -->
@@ -68,6 +93,11 @@
       <trans-unit xml:space="preserve" id="Development">
                 <source>Development</source>
                 <target state="translated">开发</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Emailings">
+                <source>Emailings</source>
+                <target state="translated">电子邮件</target>
                 <note>Setting group name</note>
             </trans-unit>
       <trans-unit xml:space="preserve" id="OpenId">
