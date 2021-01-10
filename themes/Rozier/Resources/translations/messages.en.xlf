@@ -3122,7 +3122,7 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="delete.customForm.%name%" approved="yes">
           <source>delete.customForm.%name%</source>
-          <target state="final">Custom form %name% deleted</target>
+          <target state="final">Delete %name%</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="are_you_sure.delete.customForm" approved="yes">
           <source>are_you_sure.delete.customForm</source>
