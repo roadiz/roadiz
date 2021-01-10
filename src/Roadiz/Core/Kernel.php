@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\UpdateFontSubscriber;
 use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
@@ -518,6 +519,9 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             new DefaultNodesSourcesIndexingSubscriber(
                 $this->get('factory.handler')
             )
+        );
+        $this->get('dispatcher')->addSubscriber(
+            new UpdateFontSubscriber($this->container)
         );
         /*
          * Add custom event subscriber to manage node duplication

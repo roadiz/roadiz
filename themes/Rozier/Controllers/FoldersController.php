@@ -13,9 +13,8 @@ use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -127,14 +126,14 @@ class FoldersController extends RozierApp
                        ->find(Folder::class, (int) $folderId);
 
         if (null !== $folder) {
-            $form = $this->buildDeleteForm($folder);
+            $form = $this->createForm(FormType::class, $folder);
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['folder_id'] == $folder->getId()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
                     $this->deleteFolder($folder);
+                    $this->get('em')->remove($folder);
+                    $this->get('em')->flush();
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.deleted',
                         ['%name%' => $folder->getFolderName()]
@@ -185,7 +184,6 @@ class FoldersController extends RozierApp
             ->findDefault();
 
         if ($folder !== null) {
-            /** @var Form $form */
             $form = $this->createForm(FolderType::class, $folder, [
                 'em' => $this->get('em'),
                 'name' => $folder->getFolderName(),
@@ -259,7 +257,6 @@ class FoldersController extends RozierApp
         }
 
         if (null !== $folder && null !== $translation) {
-            /** @var Form $form */
             $form = $this->createForm(FolderTranslationType::class, $folderTranslation);
             $form->handleRequest($request);
 
@@ -354,33 +351,5 @@ class FoldersController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * Build delete folder form with name constraint.
-     *
-     * @param Folder $folder
-     *
-     * @return FormInterface
-     */
-    protected function buildDeleteForm(Folder $folder)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('folder_id', HiddenType::class, [
-                            'data' => $folder->getId(),
-                        ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param Folder $folder
-     *
-     * @return void
-     */
-    protected function deleteFolder(Folder $folder)
-    {
-        $this->get('em')->remove($folder);
-        $this->get('em')->flush();
     }
 }

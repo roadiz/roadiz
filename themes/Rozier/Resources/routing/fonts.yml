@@ -1,20 +1,20 @@
 fontsEditPage:
-    path:     /edit/{fontId}
+    path:     /edit/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\FontsController::editAction
-    requirements: { fontId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 fontsDownloadPage:
-    path:     /download/{fontId}
+    path:     /download/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\FontsController::downloadAction
-    requirements: { fontId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 fontsAddPage:
     path:     /add
     defaults:
         _controller: Themes\Rozier\Controllers\FontsController::addAction
-    requirements: { fontId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 fontsDeletePage:
-    path:     /delete/{fontId}
+    path:     /delete/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\FontsController::deleteAction
-    requirements: { fontId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }

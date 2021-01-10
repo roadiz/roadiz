@@ -121,7 +121,7 @@ attributesRoutes:
 fontsHomePage:
     path:     /rz-admin/fonts
     defaults:
-        _controller: Themes\Rozier\Controllers\FontsController::indexAction
+        _controller: Themes\Rozier\Controllers\FontsController::defaultAction
 fontsRoutes:
     resource: "routing/fonts.yml"
     prefix: /rz-admin/fonts
