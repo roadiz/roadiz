@@ -5322,6 +5322,22 @@
             <target></target>
             <note>Button label for a generic filtering action.</note>
         </trans-unit>
+
+        <trans-unit id="%namespace%.%item%.was_created">
+            <source>%namespace%.%item%.was_created</source>
+            <target></target>
+            <note>Default controller addAction result message.</note>
+        </trans-unit>
+        <trans-unit id="%namespace%.%item%.was_updated">
+            <source>%namespace%.%item%.was_updated</source>
+            <target></target>
+            <note>Default controller editAction result message.</note>
+        </trans-unit>
+        <trans-unit id="%namespace%.%item%.was_deleted">
+            <source>%namespace%.%item%.was_deleted</source>
+            <target></target>
+            <note>Default controller deleteAction result message.</note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

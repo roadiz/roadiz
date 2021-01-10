@@ -278,6 +278,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
+            $dispatcher->addSubscriber(new UpdateFontSubscriber($c));
             $dispatcher->addSubscriber(new SignatureListener(
                 $c['settingsBag'],
                 $kernel::$cmsVersion,
@@ -519,9 +520,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             new DefaultNodesSourcesIndexingSubscriber(
                 $this->get('factory.handler')
             )
-        );
-        $this->get('dispatcher')->addSubscriber(
-            new UpdateFontSubscriber($this->container)
         );
         /*
          * Add custom event subscriber to manage node duplication

@@ -6,13 +6,8 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Events\Font\PreUpdatedFontEvent;
-use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -159,12 +154,12 @@ class FontsController extends AbstractAdminController
      *
      * @return Response
      */
-    public function downloadAction(Request $request, $id)
+    public function downloadAction(Request $request, int $id)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
 
         /** @var Font $font */
-        $font = $this->get('em')->find(Font::class, (int) $id);
+        $font = $this->get('em')->find(Font::class, $id);
 
         if ($font !== null) {
             // Prepare File
