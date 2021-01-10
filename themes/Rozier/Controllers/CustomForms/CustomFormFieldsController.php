@@ -170,7 +170,7 @@ class CustomFormFieldsController extends RozierApp
     }
 
     /**
-     * Return an deletion form for requested node.
+     * Return a deletion form for requested node.
      *
      * @param Request $request
      * @param int     $customFormFieldId

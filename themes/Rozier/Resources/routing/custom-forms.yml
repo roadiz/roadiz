@@ -1,24 +1,24 @@
 customFormsEditPage:
-    path:     /edit/{customFormId}
+    path:     /edit/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::editAction
-    requirements: { customFormId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 customFormsAddPage:
     path:     /add
     defaults:
         _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::addAction
 customFormsDeletePage:
-    path:     /delete/{customFormId}
+    path:     /delete/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::deleteAction
-    requirements: { customFormId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 customFormsExportPage:
-    path:     /export/{customFormId}
-    requirements: { customFormId : "[0-9]+" }
+    path:     /export/{id}
+    requirements: { id : "[0-9]+" }
     defaults:
         _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsUtilsController::exportAction
 customFormsDuplicatePage:
-    path:     /duplicate/{customFormId}
-    requirements: { customFormId : "[0-9]+" }
+    path:     /duplicate/{id}
+    requirements: { id : "[0-9]+" }
     defaults:
         _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsUtilsController::duplicateAction

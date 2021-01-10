@@ -18,8 +18,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class NodeTypesController
- *
  * @package Themes\Rozier\Controllers\NodeTypes
  */
 class NodeTypesController extends RozierApp

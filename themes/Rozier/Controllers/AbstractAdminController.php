@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\EventDispatcher\Event;
 use Themes\Rozier\RozierApp;
+use Themes\Rozier\Utils\SessionListFilters;
 
 abstract class AbstractAdminController extends RozierApp
 {
@@ -38,7 +39,11 @@ abstract class AbstractAdminController extends RozierApp
             $this->getDefaultOrder()
         );
         $elm->setDisplayingNotPublishedNodes(true);
-        $elm->setItemPerPage(static::ITEM_PER_PAGE);
+        /*
+         * Stored item per pages in session
+         */
+        $sessionListFilter = new SessionListFilters($this->getNamespace() . '_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $elm);
         $elm->handle();
 
         $this->assignation['items'] = $elm->getEntities();
@@ -46,9 +51,7 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/list.html.twig',
-            $this->assignation,
-            null,
-            $this->getThemeDirectory()
+            $this->assignation
         );
     }
 
@@ -95,9 +98,7 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/add.html.twig',
-            $this->assignation,
-            null,
-            $this->getThemeDirectory()
+            $this->assignation
         );
     }
 
@@ -150,9 +151,7 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/edit.html.twig',
-            $this->assignation,
-            null,
-            $this->getThemeDirectory()
+            $this->assignation
         );
     }
 
@@ -201,9 +200,7 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/delete.html.twig',
-            $this->assignation,
-            null,
-            $this->getThemeDirectory()
+            $this->assignation
         );
     }
 

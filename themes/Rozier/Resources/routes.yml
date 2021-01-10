@@ -213,7 +213,7 @@ historyUserPage:
 customFormsHomePage:
     path:     /rz-admin/custom-forms
     defaults:
-        _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::indexAction
+        _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::defaultAction
 customFormsRoutes:
     resource: "routing/custom-forms.yml"
     prefix: /rz-admin/custom-forms

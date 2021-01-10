@@ -5,16 +5,19 @@
         <header class="content-header header-node-types header-node-types-list">
             <h1 class="content-title nodes-node-types-title">{{ customForm.displayName|u.truncate(25, '[…]', true) }}</h1>
             {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
-            <a class="content-header-nav-back uk-navbar-content" href="{{ path('customFormsHomePage') }}" title="{% trans %}back_to.customForms{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+            <a class="content-header-nav-back uk-navbar-content"
+               href="{{ path('customFormsHomePage') }}"
+               title="{% trans %}back_to.customForms{% endtrans %}"
+               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
             {% include '@Rozier/custom-forms/navBar.html.twig' with {
-            type: customForm,
-            current: 'customFormAnswers'
+                type: customForm,
+                current: 'customFormAnswers'
             } only %}
 
             <div class="content-header-action-menu">
                 <nav>
                     <a class="uk-button rz-no-ajax-link"
-                       href="{{ path('customFormsExportPage', { customFormId: customForm.id }) }}">
+                       href="{{ path('customFormsExportPage', { id: customForm.id }) }}">
                         <i class="uk-icon-rz-download"></i> {% trans %}export{% endtrans %}</a>
                 </nav>
             </div>
@@ -54,8 +57,14 @@
                                 <td>{{ type.submittedAt|format_date('short', locale=app.request.locale) }}</td>
                                 <td class="table-actions-row table-actions-row-2">
                                     {% apply spaceless %}
-                                        <a class="uk-button uk-button-content uk-button-small" href="{{ path('customFormFieldAttributesHomePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}customFormAnswer.answers{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
-                                        <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete" href="{{ path('customFormAnswersDeletePage', { customFormAnswerId: type.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}">
+                                        <a class="uk-button uk-button-content uk-button-small"
+                                           href="{{ path('customFormFieldAttributesHomePage', { customFormAnswerId: type.getId }) }}"
+                                           title="{% trans %}customFormAnswer.answers{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-node-type-field"></i></a>
+                                        <a class="uk-button uk-button-content uk-button-small uk-button-danger uk-button-table-delete"
+                                           href="{{ path('customFormAnswersDeletePage', { customFormAnswerId: type.getId }) }}"
+                                           title="{% trans %}delete{% endtrans %}"
+                                           data-uk-tooltip="{animation:true}">
                                             <i class="uk-icon-rz-trash-o"></i>
                                         </a>
                                     {% endapply %}
