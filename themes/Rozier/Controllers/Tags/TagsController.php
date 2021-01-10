@@ -33,8 +33,6 @@ use Themes\Rozier\Traits\VersionedControllerTrait;
 use Themes\Rozier\Widgets\TagTreeWidget;
 
 /**
- * Class TagsController
- *
  * @package Themes\Rozier\Controllers\Tags
  */
 class TagsController extends RozierApp
@@ -275,9 +273,7 @@ class TagsController extends RozierApp
         if ($tag !== null &&
             $translation !== null) {
             $this->assignation['tag'] = $tag;
-            $form = $this->createForm(TagType::class, $tag, [
-                'em' => $this->get('em'),
-            ]);
+            $form = $this->createForm(TagType::class, $tag);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -337,7 +333,6 @@ class TagsController extends RozierApp
 
         if ($tag !== null) {
             $form = $this->createForm(TagType::class, $tag, [
-                'em' => $this->get('em'),
                 'tagName' => $tag->getTagName(),
             ]);
 
@@ -495,9 +490,7 @@ class TagsController extends RozierApp
 
         if ($translation !== null &&
             $parentTag !== null) {
-            $form = $this->createForm(TagType::class, $tag, [
-                'em' => $this->get('em'),
-            ]);
+            $form = $this->createForm(TagType::class, $tag);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {

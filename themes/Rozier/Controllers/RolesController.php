@@ -20,8 +20,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class RolesController
- *
  * @package Themes\Rozier\Controllers
  */
 class RolesController extends RozierApp

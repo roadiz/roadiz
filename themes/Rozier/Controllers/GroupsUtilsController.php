@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class GroupsUtilsController
- *
  * @package Themes\Rozier\Controllers
  */
 class GroupsUtilsController extends RozierApp

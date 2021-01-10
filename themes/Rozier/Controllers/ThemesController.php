@@ -12,8 +12,6 @@ use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class ThemesController
- *
  * @package Themes\Rozier\Controllers
  * @deprecated Themes are no more registered in database.
  */

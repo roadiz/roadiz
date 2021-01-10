@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Themes\Rozier\Controllers;
 
 use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\SettingType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -19,9 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
 
-/**
- * Settings controller
- */
 class SettingsController extends RozierApp
 {
     /**
@@ -185,12 +181,7 @@ class SettingsController extends RozierApp
                 'entityManager' => $this->get('em'),
                 'shortEdit' => false,
                 'documentFactory' => $this->get('document.factory'),
-                'assetPackages' => $this->get('assetPackages'),
-                'constraints' => [
-                    new UniqueEntity([
-                        'fields' => ['name'],
-                    ]),
-                ]
+                'assetPackages' => $this->get('assetPackages')
             ]);
             $form->handleRequest($request);
 
@@ -250,12 +241,7 @@ class SettingsController extends RozierApp
             'entityManager' => $this->get('em'),
             'shortEdit' => false,
             'documentFactory' => $this->get('document.factory'),
-            'assetPackages' => $this->get('assetPackages'),
-            'constraints' => [
-                new UniqueEntity([
-                    'fields' => ['name'],
-                ]),
-            ]
+            'assetPackages' => $this->get('assetPackages')
         ]);
 
         $form->handleRequest($request);

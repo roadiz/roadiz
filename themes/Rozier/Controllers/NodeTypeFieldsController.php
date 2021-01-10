@@ -16,8 +16,6 @@ use Themes\Rozier\Forms\NodeTypeFieldType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class NodeTypeFieldsController
- *
  * @package Themes\Rozier\Controllers
  */
 class NodeTypeFieldsController extends RozierApp

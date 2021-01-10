@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class RolesUtilsController
- *
  * @package Themes\Rozier\Controllers
  */
 class RolesUtilsController extends RozierApp

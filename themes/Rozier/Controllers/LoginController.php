@@ -18,8 +18,6 @@ use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class LoginController
- *
  * @package Themes\Rozier\Controllers
  */
 class LoginController extends RozierApp

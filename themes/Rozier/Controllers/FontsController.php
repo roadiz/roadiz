@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueFontVariant;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
@@ -20,8 +19,6 @@ use Themes\Rozier\Forms\FontType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class FontsController
- *
  * @package Themes\Rozier\Controllers
  */
 class FontsController extends RozierApp
@@ -62,14 +59,7 @@ class FontsController extends RozierApp
 
         $font = new Font();
 
-        $form = $this->createForm(FontType::class, $font, [
-            'em' => $this->get('em'),
-            'constraints' => [
-                new UniqueFontVariant([
-                    'entityManager' => $this->get('em'),
-                ]),
-            ],
-        ]);
+        $form = $this->createForm(FontType::class, $font);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -161,16 +151,8 @@ class FontsController extends RozierApp
 
         if ($font !== null) {
             $form = $this->createForm(FontType::class, $font, [
-                'em' => $this->get('em'),
                 'name' => $font->getName(),
                 'variant' => $font->getVariant(),
-                'constraints' => [
-                    new UniqueFontVariant([
-                        'entityManager' => $this->get('em'),
-                        'currentName' => $font->getName(),
-                        'currentVariant' => $font->getVariant(),
-                    ]),
-                ],
             ]);
             $form->handleRequest($request);
 

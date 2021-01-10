@@ -11,10 +11,10 @@ use Lcobucci\JWT\Validation\Constraint;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
 use Lcobucci\JWT\Validation\Constraint\PermittedFor;
 use Lcobucci\JWT\Validation\Constraint\ValidAt;
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\JWT\JwtConfigurationFactory;
 use RZ\Roadiz\JWT\Validation\Constraint\HostedDomain;
 use RZ\Roadiz\JWT\Validation\Constraint\UserInfoEndpoint;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 final class OpenIdJwtConfigurationFactory implements JwtConfigurationFactory
 {
@@ -23,7 +23,7 @@ final class OpenIdJwtConfigurationFactory implements JwtConfigurationFactory
      */
     protected $discovery;
     /**
-     * @var Settings
+     * @var ParameterBag
      */
     protected $settingsBag;
     /**
@@ -33,10 +33,10 @@ final class OpenIdJwtConfigurationFactory implements JwtConfigurationFactory
 
     /**
      * @param Discovery|null $discovery
-     * @param Settings $settingsBag
+     * @param ParameterBag $settingsBag
      * @param bool $verifyUserInfo
      */
-    public function __construct(?Discovery $discovery, Settings $settingsBag, bool $verifyUserInfo = false)
+    public function __construct(?Discovery $discovery, ParameterBag $settingsBag, bool $verifyUserInfo = false)
     {
         $this->discovery = $discovery;
         $this->settingsBag = $settingsBag;

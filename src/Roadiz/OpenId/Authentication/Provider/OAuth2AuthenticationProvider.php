@@ -7,7 +7,6 @@ use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Token\Plain;
 use Lcobucci\JWT\Validation\RequiredConstraintsViolated;
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface;
@@ -32,10 +31,6 @@ class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
      * @var JwtRoleStrategy
      */
     protected $roleStrategy;
-    /**
-     * @var Settings
-     */
-    protected $settingsBag;
     /**
      * @var Configuration
      */

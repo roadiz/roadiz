@@ -19,8 +19,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class SettingsUtilsController
- *
  * @package Themes\Rozier\Controllers
  */
 class SettingsUtilsController extends RozierApp

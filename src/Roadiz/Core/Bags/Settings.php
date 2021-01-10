@@ -10,7 +10,6 @@ use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
 
 /**
- * Class Settings
  * @package RZ\Roadiz\Core\Bags
  */
 class Settings extends LazyParameterBag
@@ -25,7 +24,6 @@ class Settings extends LazyParameterBag
     private $repository;
 
     /**
-     * SettingsBag constructor.
      * @param EntityManager $entityManager
      */
     public function __construct(EntityManager $entityManager)

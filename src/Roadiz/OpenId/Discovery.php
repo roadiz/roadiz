@@ -31,8 +31,6 @@ class Discovery extends LazyParameterBag
     private $jwksData;
 
     /**
-     * Discovery constructor.
-     *
      * @param string             $discoveryUri
      * @param CacheProvider|null $cacheProvider
      */

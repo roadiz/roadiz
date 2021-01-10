@@ -35,7 +35,6 @@ use Symfony\Component\Validator\Constraints\GreaterThan;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class SearchController
  * @package Themes\Rozier\Controllers
  */
 class SearchController extends RozierApp

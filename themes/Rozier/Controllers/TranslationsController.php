@@ -19,9 +19,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\TranslationType;
 use Themes\Rozier\RozierApp;
 
-/**
- * Translation's controller
- */
 class TranslationsController extends RozierApp
 {
     const ITEM_PER_PAGE = 5;

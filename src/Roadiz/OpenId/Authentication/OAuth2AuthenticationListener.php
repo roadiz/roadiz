@@ -30,7 +30,6 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
      * @var CsrfTokenManagerInterface
      */
     protected $csrfTokenManager;
-
     /**
      * @var Client
      */
@@ -39,7 +38,6 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
      * @var ?Discovery
      */
     protected $discovery;
-
     /**
      * @var Configuration
      */

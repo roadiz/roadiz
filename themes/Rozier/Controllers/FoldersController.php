@@ -24,8 +24,6 @@ use Themes\Rozier\Forms\FolderType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class FoldersController
- *
  * @package Themes\Rozier\Controllers
  */
 class FoldersController extends RozierApp

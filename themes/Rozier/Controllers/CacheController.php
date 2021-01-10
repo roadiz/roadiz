@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class CacheController
- *
  * @package Themes\Rozier\Controllers
  */
 class CacheController extends RozierApp

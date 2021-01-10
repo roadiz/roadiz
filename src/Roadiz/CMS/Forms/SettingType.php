@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Entities\SettingGroup;
@@ -141,6 +142,11 @@ class SettingType extends AbstractType
             'entityManager',
             'documentFactory',
             'assetPackages',
+        ]);
+        $resolver->setDefault('constraints', [
+            new UniqueEntity([
+                'fields' => ['name'],
+            ])
         ]);
 
         $resolver->setAllowedTypes('entityManager', [EntityManager::class]);

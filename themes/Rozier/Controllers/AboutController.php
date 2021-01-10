@@ -12,54 +12,10 @@ use Themes\Rozier\RozierApp;
 
 class AboutController extends RozierApp
 {
-    /**
-     * Allow upgrade even if roadiz has been
-     * setup with Git.
-     *
-     * For prod environment, set this to false.
-     */
-    const UPDATE_WITH_GIT = false;
-    const UPDATE_STEPS = 5;
-    /**
-     * Destination folder for updated files.
-     * When doing test set this as /testDir or something
-     * else than "".
-     *
-     * For prod environment, set this to "" (empty).
-     */
-    const UPDATE_DEST_DIR = "";
-    /**
-     * Trash folder in which old files will be moved
-     * and kept until an other upgrade request is performed.
-     */
-    const UPDATE_TRASH_DIR = "/old";
-    /**
-     * This is the folder name when archive is extracted.
-     *
-     * roadiz.zip
-     *  |__ /roadiz-master
-     *       |__ files…
-     */
-    const UPDATE_ZIP_FOLDER = "/roadiz-master";
-
-    protected static $filesToUpgrade = [
-        'index.php',
-        'vendor',
-        'src',
-        'bin',
-        'tests',
-    ];
-    protected static $themesToUpgrade = [
-        'themes/Install',
-        'themes/Rozier',
-        'themes/DefaultTheme',
-    ];
-
     protected function getGithubReleases()
     {
         try {
             $url = "https://api.github.com/repos/roadiz/roadiz/releases";
-
             $client = new Client();
             $response = $client->get($url);
 
@@ -89,7 +45,7 @@ class AboutController extends RozierApp
     }
 
     /**
-     * About action to display some useful informations.
+     * About action to display some useful information.
      *
      * @param Request $request
      *

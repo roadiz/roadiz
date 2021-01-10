@@ -12,8 +12,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class RedirectionsController
- *
  * @package Themes\Rozier\Controllers
  */
 class RedirectionsController extends RozierApp

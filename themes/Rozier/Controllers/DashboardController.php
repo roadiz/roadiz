@@ -8,8 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class DashboardController
- *
  * @package Themes\Rozier\Controllers
  */
 class DashboardController extends RozierApp
@@ -18,6 +16,7 @@ class DashboardController extends RozierApp
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response $response
+     * @throws \Twig\Error\RuntimeError
      */
     public function indexAction(Request $request)
     {

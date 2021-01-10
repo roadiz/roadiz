@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId;
 
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\Utils\Security\TokenGenerator;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
@@ -16,28 +16,24 @@ class OAuth2LinkGenerator
      * @var Discovery|null
      */
     protected $discovery;
-
     /**
      * @var CsrfTokenManagerInterface
      */
     protected $csrfTokenManager;
-
     /**
-     * @var Settings
+     * @var ParameterBag
      */
     protected $settingsBag;
 
     /**
-     * OAuth2LinkGenerator constructor.
-     *
      * @param Discovery|null $discovery
      * @param CsrfTokenManagerInterface $csrfTokenManager
-     * @param Settings $settingsBag
+     * @param ParameterBag $settingsBag
      */
     public function __construct(
         ?Discovery $discovery,
         CsrfTokenManagerInterface $csrfTokenManager,
-        Settings $settingsBag
+        ParameterBag $settingsBag
     ) {
         $this->discovery = $discovery;
         $this->csrfTokenManager = $csrfTokenManager;

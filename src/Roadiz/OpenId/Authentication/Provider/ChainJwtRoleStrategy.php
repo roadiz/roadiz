@@ -13,8 +13,6 @@ final class ChainJwtRoleStrategy implements JwtRoleStrategy
     private $strategies = [];
 
     /**
-     * ChainJwtRoleStrategy constructor.
-     *
      * @param array $strategies
      */
     public function __construct(array $strategies)

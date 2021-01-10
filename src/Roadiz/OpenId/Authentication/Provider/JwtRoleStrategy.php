@@ -8,6 +8,5 @@ use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
 interface JwtRoleStrategy
 {
     public function supports(JwtAccountToken $token): bool;
-
     public function getRoles(JwtAccountToken $token): ?array;
 }

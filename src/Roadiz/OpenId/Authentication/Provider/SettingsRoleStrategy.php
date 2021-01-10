@@ -3,23 +3,21 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId\Authentication\Provider;
 
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\OpenId\Authentication\JwtAccountToken;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 class SettingsRoleStrategy implements JwtRoleStrategy
 {
     const SETTING_NAME = 'openid_default_roles';
     /**
-     * @var Settings
+     * @var ParameterBag
      */
     protected $settingsBag;
 
     /**
-     * SettingsRoleStrategy constructor.
-     *
-     * @param Settings $settingsBag
+     * @param ParameterBag $settingsBag
      */
-    public function __construct(Settings $settingsBag)
+    public function __construct(ParameterBag $settingsBag)
     {
         $this->settingsBag = $settingsBag;
     }

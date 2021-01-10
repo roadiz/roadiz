@@ -18,8 +18,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class GroupsController
- *
  * @package Themes\Rozier\Controllers
  */
 class GroupsController extends RozierApp

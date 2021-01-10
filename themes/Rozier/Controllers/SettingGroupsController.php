@@ -15,9 +15,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
-/**
- * SettingGroups controller
- */
 class SettingGroupsController extends RozierApp
 {
     /**

@@ -14,9 +14,6 @@ abstract class LazyParameterBag extends ParameterBag
 
     abstract protected function populateParameters();
 
-    /**
-     * LazyParameterBag constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -28,7 +25,7 @@ abstract class LazyParameterBag extends ParameterBag
      * @param mixed|null $default
      * @return mixed|null
      */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         if (!$this->ready) {
             $this->populateParameters();
@@ -54,7 +51,7 @@ abstract class LazyParameterBag extends ParameterBag
      *
      * @return bool
      */
-    public function has($key)
+    public function has(string $key)
     {
         if (!$this->ready) {
             $this->populateParameters();
@@ -107,7 +104,7 @@ abstract class LazyParameterBag extends ParameterBag
      *
      * @return mixed
      */
-    public function filter($key, $default = null, $filter = FILTER_DEFAULT, $options = [])
+    public function filter(string $key, $default = null, $filter = FILTER_DEFAULT, $options = [])
     {
         if (!$this->ready) {
             $this->populateParameters();
