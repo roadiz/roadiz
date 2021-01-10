@@ -143,7 +143,7 @@ class FontsController extends AbstractAdminController
         if ($item instanceof Font) {
             return $item->getName();
         }
-        return (string) $item;
+        throw new \InvalidArgumentException('Item should be instance of Font');
     }
 
     /**

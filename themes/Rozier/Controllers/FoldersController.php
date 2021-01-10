@@ -131,7 +131,6 @@ class FoldersController extends RozierApp
 
             if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->deleteFolder($folder);
                     $this->get('em')->remove($folder);
                     $this->get('em')->flush();
                     $msg = $this->getTranslator()->trans(
