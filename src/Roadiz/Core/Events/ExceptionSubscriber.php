@@ -153,11 +153,23 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
          * Log error before displaying a fallback page.
          */
         $class = get_class($e);
-
-        $this->logger->emergency($e->getMessage(), [
-            'trace' => $e->getTraceAsString(),
-            'exception' => $class,
-        ]);
+        /*
+         * Do not flood logs with not-found errors
+         */
+        if (!($e instanceof NotFoundHttpException) && !($e instanceof ResourceNotFoundException)) {
+            if ($e instanceof HttpExceptionInterface) {
+                // If HTTP exception do not log to critical
+                $this->logger->notice($e->getMessage(), [
+                    'trace' => $e->getTraceAsString(),
+                    'exception' => $class,
+                ]);
+            } else {
+                $this->logger->emergency($e->getMessage(), [
+                    'trace' => $e->getTraceAsString(),
+                    'exception' => $class,
+                ]);
+            }
+        }
 
         return $this->viewer->getResponse($e, $request, $this->debug);
     }
