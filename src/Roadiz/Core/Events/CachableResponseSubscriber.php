@@ -60,8 +60,6 @@ class CachableResponseSubscriber implements EventSubscriberInterface
 
         if ($this->allowClientCache) {
             $response->setMaxAge(60 * $this->minutes);
-        } else {
-            $response->headers->addCacheControlDirective('no-store', true);
         }
 
         $response->setVary('Accept-Encoding, X-Partial, x-requested-with');
