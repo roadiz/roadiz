@@ -302,7 +302,10 @@ abstract class AbstractSolarium
          * Strip markdown syntax
          */
         if (true === $stripMarkdown && null !== $this->markdown) {
-            $content = strip_tags($this->markdown->textExtra($content));
+            $content = $this->markdown->textExtra($content);
+            // replace BR with space to avoid merged words.
+            $content = str_replace(['<br>', '<br />', '<br/>'], ' ', $content);
+            $content = strip_tags($content);
         }
         /*
          * Remove ctrl characters
