@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Form\AbstractType;
@@ -11,13 +10,11 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * Class RedirectionType
  * @package Themes\Rozier\Forms
  */
 class RedirectionType extends AbstractType
@@ -63,21 +60,11 @@ class RedirectionType extends AbstractType
             'attr' => [
                 'class' => 'uk-form redirection-form',
             ],
-            'constraints' => []
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => 'query',
+                ])
+            ]
         ]);
-
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
-
-        /*
-         * Use normalizer to populate choices from ChoiceType
-         */
-        $resolver->setNormalizer('constraints', function (Options $options, $constraints) {
-            $constraints[] = new UniqueEntity([
-                'fields' => 'query',
-            ]);
-
-            return $constraints;
-        });
     }
 }

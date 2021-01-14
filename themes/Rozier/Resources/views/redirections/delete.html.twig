@@ -1,6 +1,5 @@
 {% extends '@Rozier/layout.html.twig' %}
 
-
 {% block content %}
 <section class="content-global">
     <header class="content-header header-redirection header-redirection-add">
@@ -12,9 +11,13 @@
         {{ form_start(form) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.redirection{% endtrans %}</legend>
-                <a href="{{ path('redirectionsHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
+                <legend class="uk-alert uk-alert-danger">
+                    <i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.redirection{% endtrans %}
+                </legend>
+                <a href="{{ path('redirectionsHomePage') }}"
+                   class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger"
+                        type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
             </fieldset>
         {{ form_end(form) }}
     </article>

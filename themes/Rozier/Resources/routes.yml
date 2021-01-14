@@ -163,7 +163,7 @@ documentsRoutes:
 redirectionsHomePage:
     path:     /rz-admin/redirections
     defaults:
-        _controller: Themes\Rozier\Controllers\RedirectionsController::indexAction
+        _controller: Themes\Rozier\Controllers\RedirectionsController::defaultAction
 redirectionsRoutes:
     resource: "routing/redirections.yml"
     prefix: /rz-admin/redirections
