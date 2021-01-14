@@ -18,7 +18,9 @@
         <!-- Modernizr -->
         <script src="{{ asset('js/vendor/modernizr-custom.js', 'Install') }}"></script>
     </head>
-    <body class="install {{ request.locale }}" data-locale="{{ request.locale }}" data-session-locale="{{ app.session.locale }}">
+    <body class="install {{ request.locale }}"
+          data-locale="{{ request.locale }}"
+          data-session-locale="{{ app.session.locale }}">
         <div id="main-container" class="absolute">
             <section id="inner-container">
                 <aside class="infos">

@@ -8,16 +8,9 @@
             <h1 class="content-title">{% trans %}user.title{% endtrans %}</h1>
         </div>
 
-        <div class="content-progress">
-            <div class="content-progress-item first active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item active"></div>
-            <div class="content-progress-item last"></div>
-        </div>
+        {% include 'includes/progress.html.twig' with {
+            'current': 7
+        } %}
 
         <div class="content-text-cont">
 
