@@ -10,8 +10,6 @@ use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 
 /**
- * Class DocumentModel.
- *
  * @package Themes\Rozier\Models
  */
 class DocumentModel implements ModelInterface
@@ -31,7 +29,6 @@ class DocumentModel implements ModelInterface
     private $container;
 
     /**
-     * DocumentModel constructor.
      * @param Document $document
      * @param Container $container
      */
@@ -64,17 +61,11 @@ class DocumentModel implements ModelInterface
             $hasThumbnail = true;
         }
 
-        $documentUrlGenerator->setOptions(static::$thumbnailArray);
-        $thumbnailUrl = $documentUrlGenerator->getUrl();
-
         $documentUrlGenerator->setOptions(static::$thumbnail80Array);
         $thumbnail80Url = $documentUrlGenerator->getUrl();
 
         $documentUrlGenerator->setOptions(static::$previewArray);
         $previewUrl = $documentUrlGenerator->getUrl();
-
-        $documentUrlGenerator->setOptions(static::$largeArray);
-        $largeUrl = $documentUrlGenerator->getUrl();
 
         return [
             'id' => $this->document->getId(),
@@ -89,17 +80,16 @@ class DocumentModel implements ModelInterface
             'isPdf' => $this->document->isPdf(),
             'isPrivate' => $this->document->isPrivate(),
             'shortType' => $this->document->getShortType(),
-            'editUrl' => $this->container->offsetGet('urlGenerator')->generate('documentsEditPage', [
+            'editUrl' => $this->container
+                ->offsetGet('urlGenerator')
+                ->generate('documentsEditPage', [
                 'documentId' => $this->document->getId()
             ]),
-            'thumbnail' => $thumbnailUrl,
-            'large' => $largeUrl,
             'preview' => $previewUrl,
             'preview_html' => $renderer->render($this->document, static::$previewArray),
             'embedPlatform' => $this->document->getEmbedPlatform(),
             'shortMimeType' => $this->document->getShortMimeType(),
             'thumbnail_80' => $thumbnail80Url,
-            'html' => $this->container->offsetGet('twig.environment')->render('widgets/documentSmallThumbnail.html.twig', ['document' => $this->document]),
         ];
     }
 }
