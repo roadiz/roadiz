@@ -14,6 +14,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagNameValidator;
 use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
+use RZ\Roadiz\CMS\Forms\RolesType;
 use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
@@ -73,6 +74,10 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $container[DocumentCollectionType::class] = function (Container $c) {
             return new DocumentCollectionType($c['em']);
+        };
+
+        $container[RolesType::class] = function (Container $c) {
+            return new RolesType($c['em'], $c['securityAuthorizationChecker']);
         };
 
         $container['formValidator'] = function (Container $c) {

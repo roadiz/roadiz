@@ -2,11 +2,15 @@
 
 {% block content %}
 <section class="content-global edit-group">
-
     <header class="content-header header-group header-group-roles">
-        <h1 class="content-title group-add-title">{{ "edit.group.%name%.roles"|trans({'%name%': group.getName})|u.truncate(25, '[…]', true) }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-        {% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'roles'} %}
+        <h1 class="content-title group-add-title">
+            {{- "edit.group.%name%.roles"|trans({'%name%': item.getName})|u.truncate(25, '[…]', true) -}}
+        </h1>
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('groupsHomePage') }}"
+           title="{% trans %}back_to.groups{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+        {% include '@Rozier/groups/navBar.html.twig' with {'item':item, current:'roles'} %}
     </header>
 
     <article class="content content-edit">
@@ -19,13 +23,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for role in group.getRolesEntities %}
+                    {% for role in item.getRolesEntities %}
                     <tr>
                         <td>{{ role.name }}</td>
                         <td>
                         {% apply spaceless %}
                             {% if is_granted(role.role) %}
-                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('groupsRemoveRolesPage', { groupId: group.getId, roleId: role.getId }) }}" title="{% trans %}unlink.role{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+                                   href="{{ path('groupsRemoveRolesPage', { id: item.getId, roleId: role.getId }) }}"
+                                   title="{% trans %}unlink.role{% endtrans %}"
+                                   data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                             {% endif %}
                         {% endapply %}
                         </td>
@@ -44,7 +51,9 @@
             }
         }) }}{{ form_widget(form) }}
             <fieldset data-uk-margin>
-                <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-rz-plus"></i> {% trans %}add.role{% endtrans %}</button>
+                <button class="uk-button uk-button-primary" type="submit">
+                    <i class="uk-icon-rz-plus"></i> {% trans %}add.role{% endtrans %}
+                </button>
             </fieldset>
         {{ form_end(form) }}
     </article>

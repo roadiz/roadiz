@@ -5,9 +5,12 @@
 <section class="content-global edit-group">
 
     <header class="content-header header-group header-group-edit">
-        <h1 class="content-title group-add-title">{{ "edit.group.%name%"|trans({'%name%': group.getName})|u.truncate(25, '[…]', true) }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-        {% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'edit'} %}
+        <h1 class="content-title group-add-title">{{ "edit.group.%name%"|trans({'%name%': item.name})|u.truncate(25, '[…]', true) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('groupsHomePage') }}"
+           title="{% trans %}back_to.groups{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+        {% include '@Rozier/groups/navBar.html.twig' with {'item': item, current: 'edit'} %}
     </header>
 
     <article class="content content-edit">

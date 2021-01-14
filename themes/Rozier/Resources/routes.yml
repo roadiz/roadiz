@@ -192,7 +192,7 @@ rolesRoutes:
 groupsHomePage:
     path:     /rz-admin/groups
     defaults:
-        _controller: Themes\Rozier\Controllers\GroupsController::indexAction
+        _controller: Themes\Rozier\Controllers\GroupsController::defaultAction
 groupsRoutes:
     resource: "routing/groups.yml"
     prefix: /rz-admin/groups

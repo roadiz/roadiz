@@ -143,7 +143,7 @@ class FontsController extends AbstractAdminController
         if ($item instanceof Font) {
             return $item->getName();
         }
-        throw new \InvalidArgumentException('Item should be instance of Font');
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
     }
 
     /**

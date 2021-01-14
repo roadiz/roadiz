@@ -87,14 +87,6 @@ class AttributeController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getDefaultCriteria(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function getDefaultOrder(): array
     {
         return ['code' => 'ASC'];
@@ -119,36 +111,12 @@ class AttributeController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createCreateEvent(AbstractEntity $item): ?Event
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function createUpdateEvent(AbstractEntity $item): ?Event
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function createDeleteEvent(AbstractEntity $item): ?Event
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function getEntityName(AbstractEntity $item): string
     {
         if ($item instanceof Attribute) {
             return $item->getCode();
         }
-        throw new \InvalidArgumentException('Item should be instance of Attribute');
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
     }
 
     /**

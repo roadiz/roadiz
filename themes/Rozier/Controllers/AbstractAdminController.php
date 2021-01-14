@@ -123,6 +123,8 @@ abstract class AbstractAdminController extends RozierApp
             throw $this->createNotFoundException();
         }
 
+        $this->denyAccessUnlessItemGranted($item);
+
         $form = $this->createForm($this->getFormType(), $item);
         $form->handleRequest($request);
 
@@ -208,6 +210,8 @@ abstract class AbstractAdminController extends RozierApp
             throw $this->createNotFoundException();
         }
 
+        $this->denyAccessUnlessItemGranted($item);
+
         $form = $this->createForm(FormType::class);
         $form->handleRequest($request);
 
@@ -287,12 +291,18 @@ abstract class AbstractAdminController extends RozierApp
     /**
      * @return array
      */
-    abstract protected function getDefaultCriteria(): array;
+    protected function getDefaultCriteria(): array
+    {
+        return [];
+    }
 
     /**
      * @return array
      */
-    abstract protected function getDefaultOrder(): array;
+    protected function getDefaultOrder(): array
+    {
+        return [];
+    }
 
     /**
      * @return string
@@ -308,23 +318,40 @@ abstract class AbstractAdminController extends RozierApp
      * @param AbstractEntity $item
      * @return Event|null
      */
-    abstract protected function createCreateEvent(AbstractEntity $item): ?Event;
+    protected function createCreateEvent(AbstractEntity $item): ?Event
+    {
+        return null;
+    }
 
     /**
      * @param AbstractEntity $item
      * @return Event|null
      */
-    abstract protected function createUpdateEvent(AbstractEntity $item): ?Event;
+    protected function createUpdateEvent(AbstractEntity $item): ?Event
+    {
+        return null;
+    }
 
     /**
      * @param AbstractEntity $item
      * @return Event|null
      */
-    abstract protected function createDeleteEvent(AbstractEntity $item): ?Event;
+    protected function createDeleteEvent(AbstractEntity $item): ?Event
+    {
+        return null;
+    }
 
     /**
      * @param AbstractEntity $item
      * @return string
      */
     abstract protected function getEntityName(AbstractEntity $item): string;
+
+    /**
+     * @param AbstractEntity $item
+     */
+    protected function denyAccessUnlessItemGranted(AbstractEntity $item): void
+    {
+        // Do nothing
+    }
 }

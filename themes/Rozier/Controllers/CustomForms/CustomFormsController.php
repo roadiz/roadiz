@@ -5,7 +5,6 @@ namespace Themes\Rozier\Controllers\CustomForms;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\CustomForm;
-use Symfony\Contracts\EventDispatcher\Event;
 use Themes\Rozier\Controllers\AbstractAdminController;
 use Themes\Rozier\Forms\CustomFormType;
 
@@ -73,14 +72,6 @@ class CustomFormsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getDefaultCriteria(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function getDefaultOrder(): array
     {
         return ['createdAt' => 'DESC'];
@@ -105,35 +96,11 @@ class CustomFormsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createCreateEvent(AbstractEntity $item): ?Event
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function createUpdateEvent(AbstractEntity $item): ?Event
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function createDeleteEvent(AbstractEntity $item): ?Event
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function getEntityName(AbstractEntity $item): string
     {
         if ($item instanceof CustomForm) {
             return $item->getName();
         }
-        throw new \InvalidArgumentException('Item should be instance of CustomForm');
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
     }
 }

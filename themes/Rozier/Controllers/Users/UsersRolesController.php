@@ -174,10 +174,8 @@ class UsersRolesController extends RozierApp
                             'roleId',
                             RolesType::class,
                             [
-                                'label' => 'Role',
-                                'entityManager' => $this->get('em'),
+                                'label' => 'choose.role',
                                 'roles' => $user->getRolesEntities(),
-                                'authorizationChecker' => $this->get('securityAuthorizationChecker'),
                             ]
                         );
 
