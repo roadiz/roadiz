@@ -21,6 +21,7 @@ parameters:
         - '#Call to an undefined method Doctrine\\ORM\\EntityRepository::#'
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::#'
         - '#Access to an undefined property Symfony\\Component\\Validator\\Constraint::#'
+        - '#Call to method publish\(\) on an unknown class Gelf\\IMessagePublisher#'
         - '#Raven_Client#'
         - '#Raven_ErrorHandler#'
 
