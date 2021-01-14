@@ -24,10 +24,10 @@ use Themes\Rozier\RozierApp;
 class SettingsUtilsController extends RozierApp
 {
     /**
-     * Export all settings in a Json file (.rzt).
+     * Export all settings in a Json file.
      *
      * @param Request $request
-     * @param int|null    $settingGroupId
+     * @param int|null $settingGroupId
      *
      * @return Response
      */

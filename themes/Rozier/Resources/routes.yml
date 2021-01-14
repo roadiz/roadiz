@@ -169,10 +169,6 @@ redirectionsRoutes:
     prefix: /rz-admin/redirections
 
 # THEMES
-themesHomePage:
-    path:     /rz-admin/themes
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::indexAction
 themesRoutes:
     resource: "routing/themes.yml"
     prefix: /rz-admin/themes

@@ -132,12 +132,6 @@ final class RozierServiceProvider implements ServiceProviderInterface
                         'icon' => 'uk-icon-rz-translate',
                         'roles' => ['ROLE_ACCESS_TRANSLATIONS'],
                     ],
-                    'manage.themes' => [
-                        'name' => 'manage.themes',
-                        'path' => $urlGenerator->generate('themesHomePage'),
-                        'icon' => 'uk-icon-rz-themes',
-                        'roles' => ['ROLE_ACCESS_THEMES'],
-                    ],
                     'manage.fonts' => [
                         'name' => 'manage.fonts',
                         'path' => $urlGenerator->generate('fontsHomePage'),

@@ -79,14 +79,6 @@ class FontsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getDefaultCriteria(): array
-    {
-        return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function getDefaultOrder(): array
     {
         return ['name' => 'ASC'];
@@ -111,27 +103,11 @@ class FontsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createCreateEvent(AbstractEntity $item): ?Event
-    {
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function createUpdateEvent(AbstractEntity $item): ?Event
     {
         if ($item instanceof Font) {
             return new PreUpdatedFontEvent($item);
         }
-        return null;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function createDeleteEvent(AbstractEntity $item): ?Event
-    {
         return null;
     }
 
@@ -150,7 +126,7 @@ class FontsController extends AbstractAdminController
      * Return a ZipArchive of requested font.
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return Response
      */
