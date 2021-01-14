@@ -615,6 +615,16 @@ class SearchController extends RozierApp
             if ($field->isVirtual()) {
                 continue;
             }
+            /*
+             * Prevent searching on complex fields
+             */
+            if ($field->isMultipleProvider() ||
+                $field->isSingleProvider() ||
+                $field->isCollection() ||
+                $field->isManyToMany() ||
+                $field->isManyToOne()) {
+                continue;
+            }
 
             if ($field->getType() === NodeTypeField::ENUM_T) {
                 $choices = explode(',', $field->getDefaultValues() ?? '');
