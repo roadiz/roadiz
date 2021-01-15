@@ -35,12 +35,12 @@ class NodeTypesUtilsController extends RozierApp
      *
      * @return Response
      */
-    public function exportJsonFileAction(Request $request, $nodeTypeId)
+    public function exportJsonFileAction(Request $request, int $nodeTypeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
-        $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
+        $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         if (null === $nodeType) {
             throw $this->createNotFoundException();
@@ -83,7 +83,6 @@ class NodeTypesUtilsController extends RozierApp
             $documentationGenerator->getNavBar()
         );
 
-        /** @var NodeTypeGenerator $reachableTypeGenerator */
         foreach ($documentationGenerator->getReachableTypeGenerators() as $reachableTypeGenerator) {
             $zipArchive->addFromString(
                 $reachableTypeGenerator->getPath(),
@@ -91,7 +90,6 @@ class NodeTypesUtilsController extends RozierApp
             );
         }
 
-        /** @var NodeTypeGenerator $nonReachableTypeGenerator */
         foreach ($documentationGenerator->getNonReachableTypeGenerators() as $nonReachableTypeGenerator) {
             $zipArchive->addFromString(
                 $nonReachableTypeGenerator->getPath(),

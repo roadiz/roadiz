@@ -26,12 +26,12 @@ class TranstypeController extends RozierApp
      *
      * @return RedirectResponse|Response
      */
-    public function transtypeAction(Request $request, $nodeId)
+    public function transtypeAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
         $this->get('em')->refresh($node);
 
         if (null === $node) {

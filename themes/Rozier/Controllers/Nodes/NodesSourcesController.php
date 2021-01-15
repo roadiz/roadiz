@@ -41,19 +41,19 @@ class NodesSourcesController extends RozierApp
      * @return Response
      * @throws RuntimeError
      */
-    public function editSourceAction(Request $request, $nodeId, $translationId)
+    public function editSourceAction(Request $request, int $nodeId, int $translationId)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /*
          * Here we need to directly select nodeSource
          * if not doctrine will grab a cache tag because of NodeTreeWidget
          * that is initialized before calling route method.
          */
         /** @var Node $gnode */
-        $gnode = $this->get('em')->find(Node::class, (int) $nodeId);
+        $gnode = $this->get('em')->find(Node::class, $nodeId);
 
         if ($translation !== null && $gnode !== null) {
             /** @var NodesSources $source */
@@ -154,7 +154,7 @@ class NodesSourcesController extends RozierApp
      * @return Response
      * @throws RuntimeError
      */
-    public function removeAction(Request $request, $nodeSourceId)
+    public function removeAction(Request $request, int $nodeSourceId)
     {
         /** @var NodesSources $ns */
         $ns = $this->get("em")->find(NodesSources::class, $nodeSourceId);

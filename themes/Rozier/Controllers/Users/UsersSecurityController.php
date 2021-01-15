@@ -20,11 +20,12 @@ class UsersSecurityController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function securityAction(Request $request, $userId)
+    public function securityAction(Request $request, int $userId)
     {
         // Only user managers can review security
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
-        $user = $this->get('em')->find(User::class, (int) $userId);
+        /** @var User|null $user */
+        $user = $this->get('em')->find(User::class, $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;

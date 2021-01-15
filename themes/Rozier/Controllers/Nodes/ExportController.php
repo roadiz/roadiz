@@ -26,7 +26,7 @@ class ExportController extends RozierApp
      *
      * @return Response
      */
-    public function exportAllXlsxAction(Request $request, $translationId, $parentNodeId = null)
+    public function exportAllXlsxAction(Request $request, int $translationId, ?int $parentNodeId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 

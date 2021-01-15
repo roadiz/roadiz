@@ -88,12 +88,12 @@ class AttributeGroupController extends RozierApp
      *
      * @return Response
      */
-    public function editAction(Request $request, $id)
+    public function editAction(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
 
         /** @var AttributeGroup $item */
-        $item = $this->get('em')->find(AttributeGroup::class, (int) $id);
+        $item = $this->get('em')->find(AttributeGroup::class, $id);
 
         if ($item === null) {
             throw $this->createNotFoundException('AttributeGroup does not exist.');
@@ -129,12 +129,12 @@ class AttributeGroupController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
      */
-    public function deleteAction(Request $request, $id)
+    public function deleteAction(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
         /** @var AttributeGroup $item */
-        $item = $this->get('em')->find(AttributeGroup::class, (int) $id);
+        $item = $this->get('em')->find(AttributeGroup::class, $id);
 
         if ($item === null) {
             throw $this->createNotFoundException('AttributeGroup does not exist.');

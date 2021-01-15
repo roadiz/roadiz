@@ -56,7 +56,7 @@ class SchemaController extends RozierApp
      * @return Response
      * @throws Exception
      */
-    public function updateNodeTypeFieldsSchemaAction(Request $request, $nodeTypeId)
+    public function updateNodeTypeFieldsSchemaAction(Request $request, int $nodeTypeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
         /** @var SchemaUpdater $updater */

@@ -17,8 +17,6 @@ use Themes\Rozier\Forms\CustomFormFieldType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class CustomFormFieldsController
- *
  * @package Themes\Rozier\Controllers
  */
 class CustomFormFieldsController extends RozierApp
@@ -31,12 +29,11 @@ class CustomFormFieldsController extends RozierApp
      *
      * @return Response
      */
-    public function listAction(Request $request, $customFormId)
+    public function listAction(Request $request, int $customFormId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
-        $customForm = $this->get('em')
-                           ->find(CustomForm::class, (int) $customFormId);
+        $customForm = $this->get('em')->find(CustomForm::class, $customFormId);
 
         if ($customForm !== null) {
             $fields = $customForm->getFields();
@@ -58,13 +55,12 @@ class CustomFormFieldsController extends RozierApp
      *
      * @return Response
      */
-    public function editAction(Request $request, $customFormFieldId)
+    public function editAction(Request $request, int $customFormFieldId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
         /** @var CustomFormField $field */
-        $field = $this->get('em')
-                      ->find(CustomFormField::class, (int) $customFormFieldId);
+        $field = $this->get('em')->find(CustomFormField::class, $customFormFieldId);
 
         if ($field !== null) {
             $this->assignation['customForm'] = $field->getCustomForm();
@@ -109,13 +105,12 @@ class CustomFormFieldsController extends RozierApp
      *
      * @return Response
      */
-    public function addAction(Request $request, $customFormId)
+    public function addAction(Request $request, int $customFormId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
 
         $field = new CustomFormField();
-        $customForm = $this->get('em')
-                           ->find(CustomForm::class, $customFormId);
+        $customForm = $this->get('em')->find(CustomForm::class, $customFormId);
         $field->setCustomForm($customForm);
 
         if ($customForm !== null &&
@@ -177,12 +172,11 @@ class CustomFormFieldsController extends RozierApp
      *
      * @return Response
      */
-    public function deleteAction(Request $request, $customFormFieldId)
+    public function deleteAction(Request $request, int $customFormFieldId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS_DELETE');
 
-        $field = $this->get('em')
-                      ->find(CustomFormField::class, (int) $customFormFieldId);
+        $field = $this->get('em')->find(CustomFormField::class, $customFormFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;

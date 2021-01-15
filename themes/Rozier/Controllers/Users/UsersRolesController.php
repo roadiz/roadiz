@@ -26,13 +26,12 @@ class UsersRolesController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editRolesAction(Request $request, $userId)
+    public function editRolesAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User|null $user */
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -75,17 +74,15 @@ class UsersRolesController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeRoleAction(Request $request, $userId, $roleId)
+    public function removeRoleAction(Request $request, int $userId, int $roleId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User|null $user */
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, $userId);
 
         /** @var Role|null $role */
-        $role = $this->get('em')
-                     ->find(Role::class, (int) $roleId);
+        $role = $this->get('em')->find(Role::class, $roleId);
 
         if ($user !== null && $role !== null) {
             if (!$this->isGranted($role->getRole())) {

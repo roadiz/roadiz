@@ -84,7 +84,7 @@ class CustomFormsUtilsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
         /** @var CustomForm $existingCustomForm */
-        $existingCustomForm = $this->get('em')->find(CustomForm::class, (int) $id);
+        $existingCustomForm = $this->get('em')->find(CustomForm::class, $id);
         if (null === $existingCustomForm) {
             throw $this->createNotFoundException();
         }

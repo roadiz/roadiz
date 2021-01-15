@@ -7,7 +7,9 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\Tag\TagCreatedEvent;
 use RZ\Roadiz\Utils\Tag\TagFactory;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\MultiTagType;
 use Themes\Rozier\RozierApp;
@@ -17,12 +19,18 @@ use Themes\Rozier\RozierApp;
  */
 class TagMultiCreationController extends RozierApp
 {
-    public function addChildAction(Request $request, $parentTagId)
+    /**
+     * @param Request $request
+     * @param int $parentTagId
+     * @return RedirectResponse|Response|null
+     * @throws \Twig\Error\RuntimeError
+     */
+    public function addChildAction(Request $request, int $parentTagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
-        $parentTag = $this->get('em')->find(Tag::class, (int) $parentTagId);
+        $parentTag = $this->get('em')->find(Tag::class, $parentTagId);
 
         if (null !== $parentTag) {
             $form = $this->createForm(MultiTagType::class);

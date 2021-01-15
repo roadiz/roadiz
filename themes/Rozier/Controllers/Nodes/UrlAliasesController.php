@@ -42,22 +42,21 @@ class UrlAliasesController extends RozierApp
      *
      * @return Response
      */
-    public function editAliasesAction(Request $request, $nodeId, $translationId = null)
+    public function editAliasesAction(Request $request, int $nodeId, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         if (null === $translationId && $translationId < 1) {
             $translation = $this->get('defaultTranslation');
         } else {
-            $translation = $this->get('em')
-                                ->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, $translationId);
         }
         /** @var NodesSources|null $source */
         $source = $this->get('em')
                        ->getRepository(NodesSources::class)
                        ->setDisplayingAllNodesStatuses(true)
                        ->setDisplayingNotPublishedNodes(true)
-                       ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
+                       ->findOneBy(['translation' => $translation, 'node.id' => $nodeId]);
 
         if ($source !== null && null !== $node = $source->getNode()) {
             $redirections = $this->get('em')
@@ -119,7 +118,6 @@ class UrlAliasesController extends RozierApp
             }
 
             /*
-             * =======================
              * Main ADD url alias form
              */
             $addAliasForm = $this->buildAddUrlAliasForm($node);
@@ -165,7 +163,7 @@ class UrlAliasesController extends RozierApp
      * @throws EntityAlreadyExistsException
      * @throws NoTranslationAvailableException
      */
-    private function addNodeUrlAlias($data, Node $node)
+    private function addNodeUrlAlias(array $data, Node $node)
     {
         if ($data['nodeId'] == $node->getId()) {
             /** @var Translation $translation */
@@ -216,7 +214,7 @@ class UrlAliasesController extends RozierApp
      *
      * @return boolean
      */
-    private function urlAliasExists($name)
+    private function urlAliasExists(string $name)
     {
         return (boolean) $this->get('em')
                               ->getRepository(UrlAlias::class)
@@ -227,7 +225,7 @@ class UrlAliasesController extends RozierApp
      *
      * @return boolean
      */
-    private function nodeNameExists($name)
+    private function nodeNameExists(string $name)
     {
         return (boolean) $this->get('em')
                               ->getRepository(Node::class)
@@ -242,7 +240,7 @@ class UrlAliasesController extends RozierApp
      * @return bool
      * @throws EntityAlreadyExistsException
      */
-    private function editUrlAlias($data, UrlAlias $ua)
+    private function editUrlAlias(array $data, UrlAlias $ua)
     {
         $testingAlias = StringHandler::slugify($data['alias']);
         if ($testingAlias != $ua->getAlias() &&
@@ -424,7 +422,6 @@ class UrlAliasesController extends RozierApp
             $redirection,
             [
                 'placeholder' => $this->generateUrl($source),
-                'entityManager' => $this->get('em'),
                 'only_query' => true
             ]
         )->getForm();
@@ -457,7 +454,6 @@ class UrlAliasesController extends RozierApp
             RedirectionType::class,
             $redirection,
             [
-                'entityManager' => $this->get('em'),
                 'only_query' => true
             ]
         )->getForm();

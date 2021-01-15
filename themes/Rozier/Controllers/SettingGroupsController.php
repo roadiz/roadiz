@@ -15,6 +15,9 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
+/*
+ * TODO: Refactor --> AbstractAdmin
+ */
 class SettingGroupsController extends RozierApp
 {
     /**
@@ -52,11 +55,11 @@ class SettingGroupsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, $settingGroupId)
+    public function editAction(Request $request, int $settingGroupId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
         /** @var SettingGroup $settingGroup */
-        $settingGroup = $this->get('em')->find(SettingGroup::class, (int) $settingGroupId);
+        $settingGroup = $this->get('em')->find(SettingGroup::class, $settingGroupId);
 
         if ($settingGroup !== null) {
             $this->assignation['settingGroup'] = $settingGroup;
@@ -146,7 +149,7 @@ class SettingGroupsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request, $settingGroupId)
+    public function deleteAction(Request $request, int $settingGroupId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
         /** @var SettingGroup|null $settingGroup */

@@ -26,12 +26,12 @@ class UsersGroupsController extends RozierApp
      *
      * @return Response
      */
-    public function editGroupsAction(Request $request, $userId)
+    public function editGroupsAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        /** @var User|null $user */
+        $user = $this->get('em')->find(User::class, $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -74,12 +74,14 @@ class UsersGroupsController extends RozierApp
      *
      * @return Response
      */
-    public function removeGroupAction(Request $request, $userId, $groupId)
+    public function removeGroupAction(Request $request, int $userId, int $groupId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
-        $user = $this->get('em')->find(User::class, (int) $userId);
-        $group = $this->get('em')->find(Group::class, (int) $groupId);
+        /** @var User|null $user */
+        $user = $this->get('em')->find(User::class, $userId);
+        /** @var Group|null $group */
+        $group = $this->get('em')->find(Group::class, $groupId);
 
         if (!$this->isGranted($group)) {
             throw $this->createAccessDeniedException();

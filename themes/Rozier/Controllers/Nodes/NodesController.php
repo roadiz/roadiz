@@ -46,7 +46,7 @@ class NodesController extends RozierApp
      *
      * @return Response
      */
-    public function indexAction(Request $request, $filter = null)
+    public function indexAction(Request $request, ?string $filter = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
         $translation = $this->get('defaultTranslation');
@@ -130,12 +130,12 @@ class NodesController extends RozierApp
      *
      * @return Response
      */
-    public function editAction(Request $request, $nodeId, $translationId = null)
+    public function editAction(Request $request, int $nodeId, ?int $translationId = null)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_SETTING', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
@@ -235,7 +235,7 @@ class NodesController extends RozierApp
      * @param int $typeId
      * @return Response
      */
-    public function removeStackTypeAction(Request $request, $nodeId, $typeId)
+    public function removeStackTypeAction(Request $request, int $nodeId, int $typeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
@@ -274,20 +274,18 @@ class NodesController extends RozierApp
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function addAction(Request $request, $nodeTypeId, $translationId = null)
+    public function addAction(Request $request, int $nodeTypeId, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var NodeType $type */
-        $type = $this->get('em')
-            ->find(NodeType::class, $nodeTypeId);
+        $type = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         /** @var Translation $translation */
         $translation = $this->get('defaultTranslation');
 
         if ($translationId !== null) {
-            $translation = $this->get('em')
-                ->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, $translationId);
         }
 
         if ($type !== null && $translation !== null) {
@@ -299,7 +297,6 @@ class NodesController extends RozierApp
                 $node->setParent($chroot);
             }
 
-            /** @var Form $form */
             $form = $this->createForm(AddNodeType::class, $node, [
                 'nodeName' => '',
                 'em' => $this->get('em'),
@@ -349,15 +346,15 @@ class NodesController extends RozierApp
      * Handle node creation pages.
      *
      * @param Request $request
-     * @param null $nodeId
-     * @param null $translationId
+     * @param int|null $nodeId
+     * @param int|null $translationId
      *
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Twig\Error\RuntimeError
      */
-    public function addChildAction(Request $request, $nodeId = null, $translationId = null)
+    public function addChildAction(Request $request, ?int $nodeId = null, ?int $translationId = null)
     {
         // include CHRoot to enable creating node in it
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
@@ -370,13 +367,13 @@ class NodesController extends RozierApp
 
         if (null !== $translationId) {
             /** @var Translation $translation */
-            $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, $translationId);
         }
 
-        if ($nodeId > 0) {
+        if (null !== $nodeId && $nodeId > 0) {
             /** @var Node $parentNode */
             $parentNode = $this->get('em')
-                ->find(Node::class, (int) $nodeId);
+                ->find(Node::class, $nodeId);
         } else {
             $parentNode = null;
         }
@@ -443,12 +440,12 @@ class NodesController extends RozierApp
      * @return Response
      * @throws \Twig\Error\RuntimeError
      */
-    public function deleteAction(Request $request, $nodeId)
+    public function deleteAction(Request $request, int $nodeId)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {
             throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
@@ -567,12 +564,12 @@ class NodesController extends RozierApp
      * @return Response
      * @throws \Twig\Error\RuntimeError
      */
-    public function undeleteAction(Request $request, $nodeId)
+    public function undeleteAction(Request $request, int $nodeId)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {
             throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));
@@ -643,14 +640,14 @@ class NodesController extends RozierApp
     }
     /**
      * @param  Request $request
-     * @param  integer  $nodeId
+     * @param  int $nodeId
      * @return Response
      */
-    public function publishAllAction(Request $request, $nodeId)
+    public function publishAllAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES_STATUS');
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {
             throw new ResourceNotFoundException(sprintf('Node #%s does not exist.', $nodeId));

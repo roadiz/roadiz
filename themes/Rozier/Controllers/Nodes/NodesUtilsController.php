@@ -27,13 +27,12 @@ class NodesUtilsController extends RozierApp
      *
      * @return Response
      */
-    public function exportAction(Request $request, $nodeId)
+    public function exportAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $existingNode */
-        $existingNode = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $existingNode = $this->get('em')->find(Node::class, $nodeId);
         $this->get('em')->refresh($existingNode);
 
         $serializer = new NodeJsonSerializer($this->get('em'));
@@ -109,12 +108,12 @@ class NodesUtilsController extends RozierApp
      *
      * @return Response
      */
-    public function duplicateAction(Request $request, $nodeId)
+    public function duplicateAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $existingNode */
-        $existingNode = $this->get('em')->find(Node::class, (int) $nodeId);
+        $existingNode = $this->get('em')->find(Node::class, $nodeId);
 
         try {
             $duplicator = new NodeDuplicator($existingNode, $this->get('em'));

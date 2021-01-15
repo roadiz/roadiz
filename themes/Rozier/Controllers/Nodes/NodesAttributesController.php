@@ -27,14 +27,14 @@ class NodesAttributesController extends RozierApp
      *
      * @return Response
      */
-    public function editAction(Request $request, $nodeId, $translationId)
+    public function editAction(Request $request, int $nodeId, int $translationId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODE_ATTRIBUTES');
 
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');
@@ -181,14 +181,14 @@ class NodesAttributesController extends RozierApp
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
         /** @var AttributeValue $item */
-        $item = $this->get('em')->find(AttributeValue::class, (int) $attributeValueId);
+        $item = $this->get('em')->find(AttributeValue::class, $attributeValueId);
         if ($item === null) {
             throw $this->createNotFoundException('AttributeValue does not exist.');
         }
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');
@@ -246,7 +246,7 @@ class NodesAttributesController extends RozierApp
      * @param int     $translationId
      * @param int     $attributeValueId
      */
-    public function resetAction(Request $request, $nodeId, $translationId, $attributeValueId)
+    public function resetAction(Request $request, int $nodeId, int $translationId, int $attributeValueId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
@@ -261,9 +261,9 @@ class NodesAttributesController extends RozierApp
             throw $this->createNotFoundException('AttributeValueTranslation does not exist.');
         }
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');

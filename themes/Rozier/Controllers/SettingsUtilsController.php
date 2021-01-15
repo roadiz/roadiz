@@ -31,7 +31,7 @@ class SettingsUtilsController extends RozierApp
      *
      * @return Response
      */
-    public function exportAllAction(Request $request, $settingGroupId = null)
+    public function exportAllAction(Request $request, ?int $settingGroupId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 

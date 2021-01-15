@@ -21,10 +21,10 @@ use Themes\Rozier\RozierApp;
 class RolesUtilsController extends RozierApp
 {
     /**
-     * Export a Role in a Json file (.rzt).
+     * Export a Role in a Json file
      *
      * @param Request $request
-     * @param int     $id
+     * @param int $id
      *
      * @return Response
      */
@@ -32,8 +32,8 @@ class RolesUtilsController extends RozierApp
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
-        $existingRole = $this->get('em')
-                             ->find(Role::class, $id);
+        /** @var Role|null $existingRole */
+        $existingRole = $this->get('em')->find(Role::class, $id);
 
         if (null === $existingRole) {
             throw $this->createNotFoundException();
@@ -57,7 +57,7 @@ class RolesUtilsController extends RozierApp
     }
 
     /**
-     * Import a Json file (.rzt) containing Roles.
+     * Import a Json file containing Roles.
      *
      * @param Request $request
      *

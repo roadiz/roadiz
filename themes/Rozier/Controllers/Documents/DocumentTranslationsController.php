@@ -30,22 +30,20 @@ class DocumentTranslationsController extends RozierApp
     /**
      * @param Request $request
      * @param int     $documentId
-     * @param int     $translationId
+     * @param int|null     $translationId
      *
      * @return Response
      * @throws RuntimeError
      */
-    public function editAction(Request $request, $documentId, $translationId = null)
+    public function editAction(Request $request, int $documentId, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         if (null === $translationId) {
             $translation = $this->get('defaultTranslation');
-
             $translationId = $translation->getId();
         } else {
-            $translation = $this->get('em')
-                                ->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, $translationId);
         }
 
         $this->assignation['available_translations'] = $this->get('em')
@@ -54,10 +52,10 @@ class DocumentTranslationsController extends RozierApp
 
         /** @var Document $document */
         $document = $this->get('em')
-                         ->find(Document::class, (int) $documentId);
+                         ->find(Document::class, $documentId);
         $documentTr = $this->get('em')
                            ->getRepository(DocumentTranslation::class)
-                           ->findOneBy(['document' => (int) $documentId, 'translation' => (int) $translationId]);
+                           ->findOneBy(['document' => $documentId, 'translation' => $translationId]);
 
         if ($documentTr === null && $document !== null && $translation !== null) {
             $documentTr = $this->createDocumentTranslation($document, $translation);
@@ -119,8 +117,8 @@ class DocumentTranslationsController extends RozierApp
     }
 
     /**
-     * @param Document    $document    [description]
-     * @param Translation $translation [description]
+     * @param Document $document
+     * @param Translation $translation
      *
      * @return DocumentTranslation
      */
@@ -145,15 +143,15 @@ class DocumentTranslationsController extends RozierApp
      * @return Response
      * @throws RuntimeError
      */
-    public function deleteAction(Request $request, $documentId, $translationId)
+    public function deleteAction(Request $request, int $documentId, int $translationId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS_DELETE');
 
         $documentTr = $this->get('em')
                            ->getRepository(DocumentTranslation::class)
-                           ->findOneBy(['document' => (int) $documentId, 'translation' => (int) $translationId]);
+                           ->findOneBy(['document' => $documentId, 'translation' => $translationId]);
         $document = $this->get('em')
-                         ->find(Document::class, (int) $documentId);
+                         ->find(Document::class, $documentId);
 
         if ($documentTr !== null &&
             $document !== null) {
