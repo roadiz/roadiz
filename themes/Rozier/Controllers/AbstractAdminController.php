@@ -6,7 +6,6 @@ namespace Themes\Rozier\Controllers;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -73,6 +72,10 @@ abstract class AbstractAdminController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /*
+             * Events are dispatched before entity manager is flushed
+             * to be able to throw exceptions before it is persisted.
+             */
             $event = $this->createCreateEvent($item);
             if (null !== $event) {
                 $this->get('dispatcher')->dispatch($event);
@@ -89,12 +92,7 @@ abstract class AbstractAdminController extends RozierApp
             );
             $this->publishConfirmMessage($request, $msg);
 
-            return $this->redirect($this->get('urlGenerator')->generate(
-                $this->getEditRouteName(),
-                [
-                    'id' => $item->getId()
-                ]
-            ));
+            return $this->getPostSubmitResponse($item, $request);
         }
 
         $this->assignation['form'] = $form->createView();
@@ -129,6 +127,10 @@ abstract class AbstractAdminController extends RozierApp
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /*
+             * Events are dispatched before entity manager is flushed
+             * to be able to throw exceptions before it is persisted.
+             */
             $event = $this->createUpdateEvent($item);
             if (null !== $event) {
                 $this->get('dispatcher')->dispatch($event);
@@ -144,19 +146,7 @@ abstract class AbstractAdminController extends RozierApp
             );
             $this->publishConfirmMessage($request, $msg);
 
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
-            if ($request->query->has('referer') &&
-                (new UnicodeString($request->query->get('referer')))->startsWith('/')) {
-                return $this->redirect($request->query->get('referer'));
-            }
-            return $this->redirect($this->get('urlGenerator')->generate(
-                $this->getEditRouteName(),
-                [
-                    'id' => $item->getId()
-                ]
-            ));
+            return $this->getPostSubmitResponse($item, $request);
         }
 
         $this->assignation['form'] = $form->createView();
@@ -216,10 +206,14 @@ abstract class AbstractAdminController extends RozierApp
 
         $this->denyAccessUnlessItemGranted($item);
 
-        $form = $this->createForm(FormType::class);
+        $form = $this->createForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /*
+             * Events are dispatched before entity manager is flushed
+             * to be able to throw exceptions before it is persisted.
+             */
             $event = $this->createDeleteEvent($item);
             if (null !== $event) {
                 $this->get('dispatcher')->dispatch($event);
@@ -236,7 +230,7 @@ abstract class AbstractAdminController extends RozierApp
             );
             $this->publishConfirmMessage($request, $msg);
 
-            return $this->redirect($this->get('urlGenerator')->generate($this->getDefaultRouteName()));
+            return $this->getPostDeleteResponse($item);
         }
 
         $this->assignation['form'] = $form->createView();
@@ -255,7 +249,7 @@ abstract class AbstractAdminController extends RozierApp
     abstract protected function supports(PersistableInterface $item): bool;
 
     /**
-     * @return string
+     * @return string Namespace is used for composing messages and translations.
      */
     abstract protected function getNamespace(): string;
 
@@ -317,6 +311,38 @@ abstract class AbstractAdminController extends RozierApp
      * @return string
      */
     abstract protected function getEditRouteName(): string;
+
+    /**
+     * @param PersistableInterface $item
+     * @param Request|null $request
+     * @return Response
+     */
+    protected function getPostSubmitResponse(PersistableInterface $item, ?Request $request = null): Response
+    {
+        /*
+         * Force redirect to avoid resending form when refreshing page
+         */
+        if (null !== $request && $request->query->has('referer') &&
+            (new UnicodeString($request->query->get('referer')))->startsWith('/')) {
+            return $this->redirect($request->query->get('referer'));
+        }
+
+        return $this->redirect($this->get('urlGenerator')->generate(
+            $this->getEditRouteName(),
+            [
+                'id' => $item->getId()
+            ]
+        ));
+    }
+
+    /**
+     * @param PersistableInterface $item
+     * @return Response
+     */
+    protected function getPostDeleteResponse(PersistableInterface $item): Response
+    {
+        return $this->redirect($this->get('urlGenerator')->generate($this->getDefaultRouteName()));
+    }
 
     /**
      * @param PersistableInterface $item

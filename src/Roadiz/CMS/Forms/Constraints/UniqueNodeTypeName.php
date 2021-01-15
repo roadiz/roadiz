@@ -7,8 +7,6 @@ use Symfony\Component\Validator\Constraint;
 
 class UniqueNodeTypeName extends Constraint
 {
-    public $entityManager = null;
     public $currentValue = null;
-
     public $message = 'nodeType.name.alreadyExists';
 }

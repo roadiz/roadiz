@@ -3,13 +3,27 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 
-class UniqueNodeTypeNameValidator extends ConstraintValidator
+final class UniqueNodeTypeNameValidator extends ConstraintValidator
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function validate($value, Constraint $constraint)
     {
         if (null !== $value) {
@@ -24,24 +38,19 @@ class UniqueNodeTypeNameValidator extends ConstraintValidator
             return;
         }
 
-        if (null !== $constraint->entityManager) {
-            if (true === $this->nameExists($value, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message);
-            }
-        } else {
-            $this->context->addViolation('UniqueNodeTypeNameValidator constraint requires a valid EntityManager');
+        if (true === $this->nameExists($value)) {
+            $this->context->addViolation($constraint->message);
         }
     }
 
     /**
      * @param string $name
-     * @param \Doctrine\ORM\EntityManager $entityManager
      *
      * @return bool
      */
-    protected function nameExists($name, $entityManager)
+    protected function nameExists(string $name)
     {
-        $entity = $entityManager->getRepository(NodeType::class)
+        $entity = $this->entityManager->getRepository(NodeType::class)
                              ->findOneBy([
                                  'name' => $name,
                              ]);

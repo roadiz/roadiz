@@ -10,6 +10,7 @@ use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntityValidator;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeNameValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagNameValidator;
 use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
@@ -62,6 +63,10 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $container[UniqueEntityValidator::class] = function (Container $c) {
             return new UniqueEntityValidator($c['em']);
+        };
+
+        $container[UniqueNodeTypeNameValidator::class] = function (Container $c) {
+            return new UniqueNodeTypeNameValidator($c['em']);
         };
 
         $container[UniqueTagNameValidator::class] = function (Container $c) {

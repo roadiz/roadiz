@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
@@ -19,9 +18,6 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-/**
- *
- */
 class NodeTypeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -35,7 +31,6 @@ class NodeTypeType extends AbstractType
                     new NonSqlReservedWord(),
                     new SimpleLatinString(),
                     new UniqueNodeTypeName([
-                        'entityManager' => $options['em'],
                         'currentValue' => $options['name'] ?? '',
                     ]),
                 ],
@@ -111,10 +106,6 @@ class NodeTypeType extends AbstractType
             ],
         ]);
 
-        $resolver->setRequired([
-            'em',
-        ]);
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
     }
 }
