@@ -6,13 +6,12 @@ namespace Themes\Rozier\Controllers\Attributes;
 use RZ\Roadiz\Attribute\Form\AttributeImportType;
 use RZ\Roadiz\Attribute\Form\AttributeType;
 use RZ\Roadiz\Attribute\Importer\AttributeImporter;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Attribute;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\EventDispatcher\Event;
 use Themes\Rozier\Controllers\AbstractAdminController;
 
 class AttributeController extends AbstractAdminController
@@ -20,7 +19,7 @@ class AttributeController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function supports(AbstractEntity $item): bool
+    protected function supports(PersistableInterface $item): bool
     {
         return $item instanceof Attribute;
     }
@@ -36,7 +35,7 @@ class AttributeController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): AbstractEntity
+    protected function createEmptyItem(): PersistableInterface
     {
         $item = new Attribute();
         $item->setCode('new_attribute');
@@ -111,7 +110,7 @@ class AttributeController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getEntityName(AbstractEntity $item): string
+    protected function getEntityName(PersistableInterface $item): string
     {
         if ($item instanceof Attribute) {
             return $item->getCode();

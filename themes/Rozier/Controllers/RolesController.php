@@ -3,286 +3,150 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
-use RuntimeException;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
+use RZ\Roadiz\Core\Events\Role\PreCreatedRoleEvent;
+use RZ\Roadiz\Core\Events\Role\PreDeletedRoleEvent;
+use RZ\Roadiz\Core\Events\Role\PreUpdatedRoleEvent;
+use Symfony\Contracts\EventDispatcher\Event;
 use Themes\Rozier\Forms\RoleType;
-use Themes\Rozier\RozierApp;
-use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * @package Themes\Rozier\Controllers
  */
-class RolesController extends RozierApp
+class RolesController extends AbstractAdminController
 {
-
     /**
-     * @param Request $request
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function indexAction(Request $request)
+    protected function supports(PersistableInterface $item): bool
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
-
-        $listManager = $this->createEntityListManager(
-            Role::class,
-            [],
-            ['name' => 'ASC']
-        );
-        $listManager->setDisplayingNotPublishedNodes(true);
-        /*
-         * Stored in session
-         */
-        $sessionListFilter = new SessionListFilters('role_item_per_page');
-        $sessionListFilter->handleItemPerPage($request, $listManager);
-        $listManager->handle();
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['roles'] = $listManager->getEntities();
-
-        return $this->render('roles/list.html.twig', $this->assignation);
+        return $item instanceof Role;
     }
 
     /**
-     * Return an creation form for requested role.
-     *
-     * @param Request $request
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function addAction(Request $request)
+    protected function getNamespace(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
-
-        $role = new Role('ROLE_EXAMPLE');
-        $form = $this->createForm(RoleType::class, $role);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $role = $this->addRole($role);
-                $msg = $this->getTranslator()->trans(
-                    'role.%name%.created',
-                    ['%name%' => $role->getRole()]
-                );
-                $this->publishConfirmMessage($request, $msg);
-                return $this->redirect($this->generateUrl('rolesHomePage'));
-            } catch (EntityAlreadyExistsException $e) {
-                $form->addError(new FormError($e->getMessage()));
-            } catch (RuntimeException $e) {
-                $form->addError(new FormError($e->getMessage()));
-            }
-        }
-
-        $this->assignation['form'] = $form->createView();
-
-        return $this->render('roles/add.html.twig', $this->assignation);
+        return 'role';
     }
 
     /**
-     * Return an deletion form for requested role.
-     *
-     * @param Request $request
-     * @param int     $roleId
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function deleteAction(Request $request, $roleId)
+    protected function createEmptyItem(): PersistableInterface
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
-
-        /** @var Role|null $role */
-        $role = $this->get('em')
-                     ->find(Role::class, (int) $roleId);
-        if ($role !== null) {
-            if (!$this->isGranted($role->getRole())) {
-                throw $this->createAccessDeniedException('You cannot delete a role you do not have.');
-            }
-            $form = $this->buildDeleteForm($role);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['roleId'] == $role->getId()) {
-                try {
-                    $this->deleteRole($form->getData(), $role);
-                    $msg = $this->getTranslator()->trans(
-                        'role.%name%.deleted',
-                        ['%name%' => $role->getName()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                    return $this->redirect($this->generateUrl('rolesHomePage'));
-                } catch (EntityRequiredException $e) {
-                    $form->addError(new FormError($e->getMessage()));
-                } catch (RuntimeException $e) {
-                    $form->addError(new FormError($e->getMessage()));
-                }
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('roles/delete.html.twig', $this->assignation);
-        }
-
-        throw new ResourceNotFoundException();
+        return new Role('ROLE_EXAMPLE');
     }
 
     /**
-     * Return an edition form for requested role.
-     *
-     * @param Request $request
-     * @param int     $roleId
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function editAction(Request $request, $roleId)
+    protected function getTemplateFolder(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
-
-        /** @var Role|null $role */
-        $role = $this->get('em')->find(Role::class, (int) $roleId);
-
-        if ($role !== null && !$role->required()) {
-            if (!$this->isGranted($role->getRole())) {
-                throw $this->createAccessDeniedException('You cannot edit a role you do not have.');
-            }
-            $form = $this->createForm(RoleType::class, $role);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    $this->editRole($role);
-                    $msg = $this->getTranslator()->trans(
-                        'role.%name%.updated',
-                        ['%name%' => $role->getRole()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                    return $this->redirect($this->generateUrl('rolesHomePage'));
-                } catch (EntityRequiredException $e) {
-                    $form->addError(new FormError($e->getMessage()));
-                } catch (EntityAlreadyExistsException $e) {
-                    $form->addError(new FormError($e->getMessage()));
-                } catch (RuntimeException $e) {
-                    $form->addError(new FormError($e->getMessage()));
-                }
-            }
-
-            $this->assignation['form'] = $form->createView();
-            $this->assignation['role'] = $role;
-
-            return $this->render('roles/edit.html.twig', $this->assignation);
-        }
-
-        throw new ResourceNotFoundException();
+        return 'roles';
     }
 
     /**
-     * Build delete role form with name constraint.
-     *
-     * @param Role $role
-     *
-     * @return FormInterface
+     * @inheritDoc
      */
-    protected function buildDeleteForm(Role $role)
+    protected function getRequiredRole(): string
     {
-        $builder = $this->createFormBuilder()
-                        ->add('roleId', HiddenType::class, [
-                            'data' => $role->getId(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ]);
-
-        return $builder->getForm();
+        return 'ROLE_ACCESS_ROLES';
     }
 
     /**
-     * @param Role $newRole
-     * @return Role
+     * @inheritDoc
      */
-    protected function addRole(Role $newRole)
+    protected function getEntityClass(): string
     {
-        $existing = $this->get('em')
-                         ->getRepository(Role::class)
-                         ->findOneBy(['name' => $newRole->getRole()]);
-        if ($existing !== null) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans("role.name.already.exists"), 1);
-        }
-
-        $this->get('em')->persist($newRole);
-        $this->get('em')->flush();
-
-        // Clear result cache
-        $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null) {
-            $cacheDriver->deleteAll();
-        }
-
-        return $newRole;
+        return Role::class;
     }
 
     /**
-     * @param Role  $role
-     *
-     * @return Role
-     * @throws EntityAlreadyExistsException
-     * @throws EntityRequiredException
+     * @inheritDoc
      */
-    protected function editRole(Role $role)
+    protected function getFormType(): string
     {
-        if ($role->required()) {
-            throw new EntityRequiredException($this->getTranslator()->trans("role.required.cannot_be_updated"), 1);
-        }
-
-        $existing = $this->get('em')
-                         ->getRepository(Role::class)
-                         ->findOneBy(['name' => $role->getRole()]);
-        if ($existing !== null &&
-            $existing->getId() !== $role->getId()) {
-            throw new EntityAlreadyExistsException($this->getTranslator()->trans("role.name.already.exists"), 1);
-        }
-
-        $this->get('em')->flush();
-
-        // Clear result cache
-        $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
-        if ($cacheDriver !== null) {
-            $cacheDriver->deleteAll();
-        }
-
-        return $role;
+        return RoleType::class;
     }
 
     /**
-     * @param array $data
-     * @param Role  $role
-     *
-     * @throws EntityRequiredException
+     * @inheritDoc
      */
-    protected function deleteRole(array $data, Role $role)
+    protected function getDefaultRouteName(): string
     {
-        if (!$role->required()) {
-            $this->get('em')->remove($role);
-            $this->get('em')->flush();
+        return 'rolesHomePage';
+    }
 
-            // Clear result cache
-            $cacheDriver = $this->get('em')->getConfiguration()->getResultCacheImpl();
-            if ($cacheDriver !== null) {
-                $cacheDriver->deleteAll();
-            }
-        } else {
-            throw new EntityRequiredException($this->getTranslator()->trans("role.is.required"), 1);
+    /**
+     * @inheritDoc
+     */
+    protected function getEditRouteName(): string
+    {
+        return 'rolesEditPage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityName(PersistableInterface $item): string
+    {
+        if ($item instanceof Role) {
+            return $item->getRole();
         }
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultOrder(): array
+    {
+        return ['name' => 'ASC'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function denyAccessUnlessItemGranted(PersistableInterface $item): void
+    {
+        if ($item instanceof Role) {
+            $this->denyAccessUnlessGranted($item->getRole());
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createCreateEvent(PersistableInterface $item): ?Event
+    {
+        if ($item instanceof Role) {
+            return new PreCreatedRoleEvent($item);
+        }
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createUpdateEvent(PersistableInterface $item): ?Event
+    {
+        if ($item instanceof Role) {
+            return new PreUpdatedRoleEvent($item);
+        }
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createDeleteEvent(PersistableInterface $item): ?Event
+    {
+        if ($item instanceof Role) {
+            return new PreDeletedRoleEvent($item);
+        }
+        return null;
     }
 }

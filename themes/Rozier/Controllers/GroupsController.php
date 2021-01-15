@@ -5,7 +5,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\RolesType;
 use RZ\Roadiz\CMS\Forms\UsersType;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
@@ -23,7 +23,7 @@ class GroupsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function supports(AbstractEntity $item): bool
+    protected function supports(PersistableInterface $item): bool
     {
         return $item instanceof Group;
     }
@@ -39,7 +39,7 @@ class GroupsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): AbstractEntity
+    protected function createEmptyItem(): PersistableInterface
     {
         return new Group();
     }
@@ -95,7 +95,7 @@ class GroupsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getEntityName(AbstractEntity $item): string
+    protected function getEntityName(PersistableInterface $item): string
     {
         if ($item instanceof Group) {
             return $item->getName();
@@ -106,7 +106,7 @@ class GroupsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function denyAccessUnlessItemGranted(AbstractEntity $item): void
+    protected function denyAccessUnlessItemGranted(PersistableInterface $item): void
     {
         $this->denyAccessUnlessGranted($item);
     }

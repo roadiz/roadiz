@@ -18,7 +18,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class UsersController
  * @package Themes\Rozier\Controllers\Users
  */
 class UsersController extends RozierApp

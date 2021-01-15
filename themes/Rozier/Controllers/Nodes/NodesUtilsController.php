@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class NodesUtilsController
- *
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesUtilsController extends RozierApp

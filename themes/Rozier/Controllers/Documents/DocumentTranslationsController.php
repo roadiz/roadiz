@@ -21,7 +21,6 @@ use Themes\Rozier\Traits\VersionedControllerTrait;
 use Twig\Error\RuntimeError;
 
 /**
- * Class DocumentTranslationsController
  * @package Themes\Rozier\Controllers\Documents
  */
 class DocumentTranslationsController extends RozierApp
@@ -89,7 +88,7 @@ class DocumentTranslationsController extends RozierApp
 
             if ($form->isSubmitted() && $form->isValid()) {
                 $this->onPostUpdate($documentTr, $request);
-                
+
                 $routeParams = [
                     'documentId' => $document->getId(),
                     'translationId' => $translationId,

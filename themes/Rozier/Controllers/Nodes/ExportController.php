@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class ExportController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class ExportController extends RozierApp

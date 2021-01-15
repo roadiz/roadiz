@@ -5,7 +5,7 @@ namespace Themes\Rozier\Controllers;
 
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -119,7 +119,7 @@ abstract class AbstractAdminController extends RozierApp
         /** @var mixed|object|null $item */
         $item = $this->get('em')->find($this->getEntityClass(), $id);
 
-        if (null === $item || !($item instanceof AbstractEntity)) {
+        if (null === $item || !($item instanceof PersistableInterface)) {
             throw $this->createNotFoundException();
         }
 
@@ -187,7 +187,11 @@ abstract class AbstractAdminController extends RozierApp
             ),
             JsonResponse::HTTP_OK,
             [
-                'Content-Disposition' => sprintf('attachment; filename="%s"', $this->getNamespace() . '.json'),
+                'Content-Disposition' => sprintf(
+                    'attachment; filename="%s_%s.json"',
+                    $this->getNamespace(),
+                    (new \DateTime())->format('YmdHi')
+                ),
             ],
             true
         );
@@ -245,10 +249,10 @@ abstract class AbstractAdminController extends RozierApp
     }
 
     /**
-     * @param AbstractEntity $item
+     * @param PersistableInterface $item
      * @return bool
      */
-    abstract protected function supports(AbstractEntity $item): bool;
+    abstract protected function supports(PersistableInterface $item): bool;
 
     /**
      * @return string
@@ -256,9 +260,9 @@ abstract class AbstractAdminController extends RozierApp
     abstract protected function getNamespace(): string;
 
     /**
-     * @return AbstractEntity
+     * @return PersistableInterface
      */
-    abstract protected function createEmptyItem(): AbstractEntity;
+    abstract protected function createEmptyItem(): PersistableInterface;
 
     /**
      * @return string
@@ -315,42 +319,42 @@ abstract class AbstractAdminController extends RozierApp
     abstract protected function getEditRouteName(): string;
 
     /**
-     * @param AbstractEntity $item
+     * @param PersistableInterface $item
      * @return Event|null
      */
-    protected function createCreateEvent(AbstractEntity $item): ?Event
+    protected function createCreateEvent(PersistableInterface $item): ?Event
     {
         return null;
     }
 
     /**
-     * @param AbstractEntity $item
+     * @param PersistableInterface $item
      * @return Event|null
      */
-    protected function createUpdateEvent(AbstractEntity $item): ?Event
+    protected function createUpdateEvent(PersistableInterface $item): ?Event
     {
         return null;
     }
 
     /**
-     * @param AbstractEntity $item
+     * @param PersistableInterface $item
      * @return Event|null
      */
-    protected function createDeleteEvent(AbstractEntity $item): ?Event
+    protected function createDeleteEvent(PersistableInterface $item): ?Event
     {
         return null;
     }
 
     /**
-     * @param AbstractEntity $item
+     * @param PersistableInterface $item
      * @return string
      */
-    abstract protected function getEntityName(AbstractEntity $item): string;
+    abstract protected function getEntityName(PersistableInterface $item): string;
 
     /**
-     * @param AbstractEntity $item
+     * @param PersistableInterface $item
      */
-    protected function denyAccessUnlessItemGranted(AbstractEntity $item): void
+    protected function denyAccessUnlessItemGranted(PersistableInterface $item): void
     {
         // Do nothing
     }

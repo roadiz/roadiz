@@ -12,13 +12,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class TagsUtilsController
- *
  * @package Themes\Rozier\Controllers\Tags
  */
 class TagsUtilsController extends RozierApp
 {
-
     /**
      * Export a Tag in a Json file (.rzn).
      *

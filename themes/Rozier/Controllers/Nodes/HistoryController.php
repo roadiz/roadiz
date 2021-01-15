@@ -12,7 +12,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class HistoryController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class HistoryController extends RozierApp

@@ -32,8 +32,6 @@ use Themes\Rozier\Traits\NodesTrait;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class NodesController
- *
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesController extends RozierApp

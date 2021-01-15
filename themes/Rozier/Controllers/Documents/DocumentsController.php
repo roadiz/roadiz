@@ -50,7 +50,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class DocumentsController
  * @package Themes\Rozier\Controllers\Documents
  */
 class DocumentsController extends RozierApp

@@ -8,7 +8,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\NodeTranstyper;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +16,6 @@ use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class TranstypeController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class TranstypeController extends RozierApp

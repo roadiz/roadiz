@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\CustomForms;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use Themes\Rozier\Controllers\AbstractAdminController;
 use Themes\Rozier\Forms\CustomFormType;
@@ -16,7 +16,7 @@ class CustomFormsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function supports(AbstractEntity $item): bool
+    protected function supports(PersistableInterface $item): bool
     {
         return $item instanceof CustomForm;
     }
@@ -32,7 +32,7 @@ class CustomFormsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): AbstractEntity
+    protected function createEmptyItem(): PersistableInterface
     {
         return new CustomForm();
     }
@@ -96,7 +96,7 @@ class CustomFormsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getEntityName(AbstractEntity $item): string
+    protected function getEntityName(PersistableInterface $item): string
     {
         if ($item instanceof CustomForm) {
             return $item->getName();

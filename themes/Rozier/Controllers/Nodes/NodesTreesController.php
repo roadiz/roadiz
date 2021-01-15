@@ -7,7 +7,6 @@ use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -27,8 +26,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
 /**
- * Class NodesTreesController
- *
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesTreesController extends RozierApp

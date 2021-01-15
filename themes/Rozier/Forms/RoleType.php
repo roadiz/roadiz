@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -38,6 +39,13 @@ class RoleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('data_class', Role::class);
+        $resolver->setDefault('constraints', [
+            new UniqueEntity([
+                'fields' => [
+                    'name'
+                ]
+            ])
+        ]);
     }
 
     /**

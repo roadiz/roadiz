@@ -25,8 +25,6 @@ use Themes\Rozier\Traits\VersionedControllerTrait;
 use Twig\Error\RuntimeError;
 
 /**
- * Class NodesSourcesController
- *
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesSourcesController extends RozierApp

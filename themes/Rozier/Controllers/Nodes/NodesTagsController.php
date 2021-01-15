@@ -18,7 +18,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
 
 /**
- * Class NodesTagsController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesTagsController extends RozierApp

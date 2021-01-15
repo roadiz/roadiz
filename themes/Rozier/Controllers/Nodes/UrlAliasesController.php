@@ -31,9 +31,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\RedirectionType;
 use Themes\Rozier\RozierApp;
 
-/**
- * {@inheritdoc}
- */
 class UrlAliasesController extends RozierApp
 {
     /**

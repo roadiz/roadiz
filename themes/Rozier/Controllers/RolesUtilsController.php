@@ -21,51 +21,19 @@ use Themes\Rozier\RozierApp;
 class RolesUtilsController extends RozierApp
 {
     /**
-     * Export all Roles data in a Json file
-     *
-     * @param Request $request
-     *
-     * @return Response
-     */
-    public function exportAllAction(Request $request)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
-
-        $existingRole = $this->get('em')
-                             ->getRepository(Role::class)
-                             ->findAll();
-
-        /** @var Serializer $serializer */
-        $serializer = $this->get('serializer');
-
-        return new JsonResponse(
-            $serializer->serialize(
-                $existingRole,
-                'json',
-                SerializationContext::create()->setGroups(['role'])
-            ),
-            JsonResponse::HTTP_OK,
-            [
-                'Content-Disposition' => sprintf('attachment; filename="%s"', 'role-all-' . date("YmdHis") . '.json'),
-            ],
-            true
-        );
-    }
-
-    /**
      * Export a Role in a Json file (.rzt).
      *
      * @param Request $request
-     * @param int     $roleId
+     * @param int     $id
      *
      * @return Response
      */
-    public function exportAction(Request $request, $roleId)
+    public function exportAction(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
         $existingRole = $this->get('em')
-                             ->find(Role::class, (int) $roleId);
+                             ->find(Role::class, $id);
 
         if (null === $existingRole) {
             throw $this->createNotFoundException();

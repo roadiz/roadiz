@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Font;
 use RZ\Roadiz\Core\Events\Font\PreUpdatedFontEvent;
 use RZ\Roadiz\Utils\Asset\Packages;
@@ -23,7 +23,7 @@ class FontsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function supports(AbstractEntity $item): bool
+    protected function supports(PersistableInterface $item): bool
     {
         return $item instanceof Font;
     }
@@ -39,7 +39,7 @@ class FontsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): AbstractEntity
+    protected function createEmptyItem(): PersistableInterface
     {
         return new Font();
     }
@@ -103,7 +103,7 @@ class FontsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createUpdateEvent(AbstractEntity $item): ?Event
+    protected function createUpdateEvent(PersistableInterface $item): ?Event
     {
         if ($item instanceof Font) {
             return new PreUpdatedFontEvent($item);
@@ -114,7 +114,7 @@ class FontsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getEntityName(AbstractEntity $item): string
+    protected function getEntityName(PersistableInterface $item): string
     {
         if ($item instanceof Font) {
             return $item->getName();

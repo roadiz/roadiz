@@ -178,7 +178,7 @@ themesRoutes:
 rolesHomePage:
     path:     /rz-admin/roles
     defaults:
-        _controller: Themes\Rozier\Controllers\RolesController::indexAction
+        _controller: Themes\Rozier\Controllers\RolesController::defaultAction
 rolesRoutes:
     resource: "routing/roles.yml"
     prefix: /rz-admin/roles

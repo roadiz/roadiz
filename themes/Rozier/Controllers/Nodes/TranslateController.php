@@ -17,7 +17,6 @@ use Themes\Rozier\Forms\Node\TranslateNodeType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class TranslateController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class TranslateController extends RozierApp

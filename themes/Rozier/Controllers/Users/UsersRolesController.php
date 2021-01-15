@@ -14,8 +14,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class UsersRolesController
- *
  * @package Themes\Rozier\Controllers\Users
  */
 class UsersRolesController extends RozierApp

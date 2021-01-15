@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Redirection;
 use Themes\Rozier\Forms\RedirectionType;
 
@@ -15,7 +15,7 @@ class RedirectionsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function supports(AbstractEntity $item): bool
+    protected function supports(PersistableInterface $item): bool
     {
         return $item instanceof Redirection;
     }
@@ -31,7 +31,7 @@ class RedirectionsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): AbstractEntity
+    protected function createEmptyItem(): PersistableInterface
     {
         return new Redirection();
     }
@@ -87,7 +87,7 @@ class RedirectionsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function getEntityName(AbstractEntity $item): string
+    protected function getEntityName(PersistableInterface $item): string
     {
         if ($item instanceof Redirection) {
             return (string) $item->getQuery();

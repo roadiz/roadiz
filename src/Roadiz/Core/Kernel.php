@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\RoleSubscriber;
 use RZ\Roadiz\Core\Events\UpdateFontSubscriber;
 use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Preview\PreviewServiceProvider;
@@ -317,6 +318,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $dispatcher->addSubscriber(
                     new TranslationSubscriber($c['em']->getConfiguration()->getResultCacheImpl())
                 );
+                $dispatcher->addSubscriber(new RoleSubscriber(
+                    $c['em']->getConfiguration()->getResultCacheImpl(),
+                    $c['rolesBag']
+                ));
                 /*
                  * Add custom event subscriber to manage universal node-type fields
                  */
