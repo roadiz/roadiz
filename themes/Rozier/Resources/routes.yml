@@ -84,7 +84,7 @@ settingsRoutes:
 settingGroupsHomePage:
     path:     /rz-admin/setting-groups
     defaults:
-        _controller: Themes\Rozier\Controllers\SettingGroupsController::indexAction
+        _controller: Themes\Rozier\Controllers\SettingGroupsController::defaultAction
 settingGroupsRoutes:
     resource: "routing/setting-groups.yml"
     prefix: /rz-admin/setting-groups
