@@ -5,6 +5,7 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\SettingGroup;
+use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Forms\SettingGroupType;
 
 class SettingGroupsController extends AbstractAdminController
@@ -28,7 +29,7 @@ class SettingGroupsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): PersistableInterface
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
         return new SettingGroup();
     }

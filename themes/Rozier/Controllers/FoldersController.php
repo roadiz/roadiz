@@ -14,7 +14,6 @@ use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -52,7 +51,7 @@ class FoldersController extends RozierApp
      * Return an creation form for requested folder.
      *
      * @param Request $request
-     * @param int $parentFolderId
+     * @param int|null $parentFolderId
      *
      * @return Response
      */
@@ -68,9 +67,7 @@ class FoldersController extends RozierApp
                 $folder->setParent($parentFolder);
             }
         }
-        $form = $this->createForm(FolderType::class, $folder, [
-            'em' => $this->get('em'),
-        ]);
+        $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -179,10 +176,7 @@ class FoldersController extends RozierApp
             ->findDefault();
 
         if ($folder !== null) {
-            $form = $this->createForm(FolderType::class, $folder, [
-                'em' => $this->get('em'),
-                'name' => $folder->getFolderName(),
-            ]);
+            $form = $this->createForm(FolderType::class, $folder);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {

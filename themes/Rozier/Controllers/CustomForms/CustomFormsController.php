@@ -5,6 +5,7 @@ namespace Themes\Rozier\Controllers\CustomForms;
 
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\CustomForm;
+use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Controllers\AbstractAdminController;
 use Themes\Rozier\Forms\CustomFormType;
 
@@ -32,7 +33,7 @@ class CustomFormsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): PersistableInterface
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
         return new CustomForm();
     }

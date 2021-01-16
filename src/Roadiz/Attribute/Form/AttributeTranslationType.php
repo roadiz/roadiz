@@ -44,7 +44,6 @@ class AttributeTranslationType extends AbstractType
             ->add('translation', TranslationsType::class, [
                 'label' => false,
                 'required' => true,
-                'entityManager' => $this->entityManager,
                 'constraints' => [
                     new NotNull()
                 ]
@@ -73,14 +72,11 @@ class AttributeTranslationType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefault('data_class', AttributeTranslation::class);
-
-        $resolver->setNormalizer('constraints', function (Options $options) {
-            return [
-                new UniqueEntity([
-                    'fields' => ['attribute', 'translation'],
-                ])
-            ];
-        });
+        $resolver->setDefault('constraints', [
+            new UniqueEntity([
+                'fields' => ['attribute', 'translation'],
+            ])
+        ]);
     }
 
     /**

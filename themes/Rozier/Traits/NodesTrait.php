@@ -12,7 +12,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Node\NodeFactory;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
@@ -109,9 +108,7 @@ trait NodesTrait
                             'constraints' => [
                                 new NotNull(),
                                 new NotBlank(),
-                                new UniqueNodeName([
-                                    'entityManager' => $this->get('em'),
-                                ]),
+                                new UniqueNodeName(),
                             ],
                         ])
             ->add('nodeTypeId', NodeTypesType::class, [

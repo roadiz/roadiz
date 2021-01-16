@@ -67,7 +67,7 @@ abstract class AbstractAdminController extends RozierApp
     {
         $this->denyAccessUnlessGranted($this->getRequiredRole());
 
-        $item = $this->createEmptyItem();
+        $item = $this->createEmptyItem($request);
         $form = $this->createForm($this->getFormType(), $item);
         $form->handleRequest($request);
 
@@ -254,9 +254,10 @@ abstract class AbstractAdminController extends RozierApp
     abstract protected function getNamespace(): string;
 
     /**
+     * @param Request $request
      * @return PersistableInterface
      */
-    abstract protected function createEmptyItem(): PersistableInterface;
+    abstract protected function createEmptyItem(Request $request): PersistableInterface;
 
     /**
      * @return string

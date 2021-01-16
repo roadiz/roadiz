@@ -10,12 +10,15 @@ use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntityValidator;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeNameValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeNameValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagNameValidator;
 use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use RZ\Roadiz\CMS\Forms\RolesType;
+use RZ\Roadiz\CMS\Forms\TranslationsType;
+use RZ\Roadiz\CMS\Forms\UrlAliasType;
 use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
@@ -69,6 +72,10 @@ class FormServiceProvider implements ServiceProviderInterface
             return new UniqueNodeTypeNameValidator($c['em']);
         };
 
+        $container[UniqueNodeNameValidator::class] = function (Container $c) {
+            return new UniqueNodeNameValidator($c['em']);
+        };
+
         $container[UniqueTagNameValidator::class] = function (Container $c) {
             return new UniqueTagNameValidator($c['em']);
         };
@@ -81,8 +88,16 @@ class FormServiceProvider implements ServiceProviderInterface
             return new DocumentCollectionType($c['em']);
         };
 
+        $container[TranslationsType::class] = function (Container $c) {
+            return new TranslationsType($c['em']);
+        };
+
         $container[RolesType::class] = function (Container $c) {
             return new RolesType($c['em'], $c['securityAuthorizationChecker']);
+        };
+
+        $container[UrlAliasType::class] = function (Container $c) {
+            return new UrlAliasType($c['em']);
         };
 
         $container['formValidator'] = function (Container $c) {

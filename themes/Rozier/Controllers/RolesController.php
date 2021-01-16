@@ -8,6 +8,7 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Events\Role\PreCreatedRoleEvent;
 use RZ\Roadiz\Core\Events\Role\PreDeletedRoleEvent;
 use RZ\Roadiz\Core\Events\Role\PreUpdatedRoleEvent;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\EventDispatcher\Event;
 use Themes\Rozier\Forms\RoleType;
 
@@ -35,7 +36,7 @@ class RolesController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): PersistableInterface
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
         return new Role('ROLE_EXAMPLE');
     }

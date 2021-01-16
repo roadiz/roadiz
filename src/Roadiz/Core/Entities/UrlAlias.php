@@ -68,9 +68,9 @@ class UrlAlias extends AbstractEntity
     /**
      * Create a new UrlAlias linked to a NodeSource.
      *
-     * @param NodesSources $nodeSource
+     * @param NodesSources|null $nodeSource
      */
-    public function __construct(NodesSources $nodeSource)
+    public function __construct(?NodesSources $nodeSource = null)
     {
         $this->setNodeSource($nodeSource);
     }

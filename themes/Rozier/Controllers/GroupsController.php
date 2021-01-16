@@ -39,7 +39,7 @@ class GroupsController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): PersistableInterface
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
         return new Group();
     }

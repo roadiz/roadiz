@@ -35,7 +35,7 @@ class AttributeController extends AbstractAdminController
     /**
      * @inheritDoc
      */
-    protected function createEmptyItem(): PersistableInterface
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
         $item = new Attribute();
         $item->setCode('new_attribute');

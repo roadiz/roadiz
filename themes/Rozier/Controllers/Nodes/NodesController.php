@@ -183,7 +183,6 @@ class NodesController extends RozierApp
              * Handle main form
              */
             $form = $this->createForm($this->get('rozier.form_type.node'), $node, [
-                'em' => $this->get('em'),
                 'nodeName' => $node->getNodeName(),
             ]);
             try {
