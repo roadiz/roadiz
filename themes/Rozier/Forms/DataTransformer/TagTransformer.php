@@ -4,24 +4,24 @@ declare(strict_types=1);
 namespace Themes\Rozier\Forms\DataTransformer;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 
 /**
- * Class TagTransformer
  * @package Themes\Rozier\Forms\DataTransformer
  */
 class TagTransformer implements DataTransformerInterface
 {
-    private $manager;
-
     /**
-     * NodeTypeTransformer constructor.
-     * @param ObjectManager $manager
+     * @var EntityManagerInterface
      */
-    public function __construct(ObjectManager $manager)
+    private $manager;
+    /**
+     * @param EntityManagerInterface $manager
+     */
+    public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
     }

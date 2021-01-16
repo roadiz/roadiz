@@ -7,7 +7,9 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Themes\Rozier\Forms\FolderCollectionType;
+use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\Forms\Node\AddNodeType;
+use Themes\Rozier\Forms\Node\TranslateNodeType;
 use Themes\Rozier\Forms\NodeTagsType;
 use Themes\Rozier\Forms\NodeTreeType;
 use Themes\Rozier\Forms\NodeType;
@@ -33,6 +35,21 @@ final class RozierServiceProvider implements ServiceProviderInterface
                 $c['request_stack'],
                 $c['em'],
             );
+        };
+
+        $container[LoginType::class] = function (Container $c) {
+            return new LoginType(
+                $c['router'],
+                $c['request_stack'],
+            );
+        };
+
+        $container[AddNodeType::class] = function (Container $c) {
+            return new AddNodeType($c['em']);
+        };
+
+        $container[TranslateNodeType::class] = function (Container $c) {
+            return new TranslateNodeType($c['em']);
         };
 
         $container[FolderCollectionType::class] = function (Container $c) {

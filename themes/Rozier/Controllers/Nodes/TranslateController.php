@@ -40,9 +40,7 @@ class TranslateController extends RozierApp
                                  ->findUnavailableTranslationsForNode($node);
 
             if (count($availableTranslations) > 0) {
-                /** @var Form $form */
                 $form = $this->createForm(TranslateNodeType::class, null, [
-                    'em' => $this->get('em'),
                     'node' => $node,
                 ]);
                 $form->handleRequest($request);

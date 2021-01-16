@@ -296,9 +296,8 @@ class NodesController extends RozierApp
                 $node->setParent($chroot);
             }
 
-            $form = $this->createForm(AddNodeType::class, $node, [
+            $form = $this->createForm($this->get('rozier.form_type.add_node'), $node, [
                 'nodeName' => '',
-                'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);
 
@@ -385,7 +384,6 @@ class NodesController extends RozierApp
 
             $form = $this->createForm($this->get('rozier.form_type.add_node'), $node, [
                 'nodeName' => '',
-                'em' => $this->get('em'),
             ]);
             $form->handleRequest($request);
 

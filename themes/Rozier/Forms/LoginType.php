@@ -19,6 +19,25 @@ use Symfony\Component\Validator\Constraints\NotNull;
 class LoginType extends AbstractType
 {
     /**
+     * @var UrlGeneratorInterface
+     */
+    protected $urlGenerator;
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+
+    /**
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param RequestStack $requestStack
+     */
+    public function __construct(UrlGeneratorInterface $urlGenerator, RequestStack $requestStack)
+    {
+        $this->urlGenerator = $urlGenerator;
+        $this->requestStack = $requestStack;
+    }
+
+    /**
      * @inheritDoc
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -51,9 +70,9 @@ class LoginType extends AbstractType
             ],
         ]);
 
-        if ($options['requestStack']->getMasterRequest()->query->has('_home')) {
+        if ($this->requestStack->getMasterRequest()->query->has('_home')) {
             $builder->add('_target_path', HiddenType::class, [
-                'data' => $options['urlGenerator']->generate('adminHomePage')
+                'data' => $this->urlGenerator->generate('adminHomePage')
             ]);
         }
     }
@@ -64,12 +83,8 @@ class LoginType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setNormalizer('action', function (Options $options) {
-            return $options['urlGenerator']->generate('loginCheckPage');
+            return $this->urlGenerator->generate('loginCheckPage');
         });
-        $resolver->setRequired('urlGenerator');
-        $resolver->setRequired('requestStack');
-        $resolver->setAllowedTypes('urlGenerator', [UrlGeneratorInterface::class]);
-        $resolver->setAllowedTypes('requestStack', [RequestStack::class]);
     }
 
     /**
