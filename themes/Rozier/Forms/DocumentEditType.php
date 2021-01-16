@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilename;
 use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -45,7 +43,6 @@ class DocumentEditType extends AbstractType
                     ]),
                     new UniqueFilename([
                         'document' => $builder->getData(),
-                        'packages' => $options['assetPackages'],
                     ]),
                 ],
             ])
@@ -109,17 +106,11 @@ class DocumentEditType extends AbstractType
             'data_class' => Document::class
         ]);
 
-        $resolver->setRequired('assetPackages');
-        $resolver->setAllowedTypes('assetPackages', [Packages::class]);
-
         $resolver->setRequired('referer');
         $resolver->setAllowedTypes('referer', ['null', 'string']);
 
         $resolver->setRequired('document_platforms');
         $resolver->setAllowedTypes('document_platforms', ['array']);
-
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', EntityManagerInterface::class);
     }
 
 

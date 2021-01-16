@@ -10,15 +10,25 @@ use Rollerworks\Component\PasswordStrength\Blacklist\BlacklistProviderInterface;
 use Rollerworks\Component\PasswordStrength\Blacklist\LazyChainProvider;
 use Rollerworks\Component\PasswordStrength\Validator\Constraints\BlacklistValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntityValidator;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueFilenameValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeNameValidator;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeNameValidator;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagNameValidator;
+use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationTokenValidator;
+use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountEmailValidator;
 use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
+use RZ\Roadiz\CMS\Forms\GroupsType;
+use RZ\Roadiz\CMS\Forms\NodesType;
+use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\RolesType;
+use RZ\Roadiz\CMS\Forms\SettingDocumentType;
+use RZ\Roadiz\CMS\Forms\SettingGroupType;
+use RZ\Roadiz\CMS\Forms\TagTranslationDocumentType;
 use RZ\Roadiz\CMS\Forms\TranslationsType;
 use RZ\Roadiz\CMS\Forms\UrlAliasType;
+use RZ\Roadiz\CMS\Forms\UsersType;
+use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\Security\Blacklist\Top500Provider;
 use Symfony\Component\Form\Extension\Csrf\CsrfExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
@@ -27,7 +37,6 @@ use Symfony\Component\Form\Extension\Validator\ValidatorExtension;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Validator\ContainerConstraintValidatorFactory;
 use Symfony\Component\Validator\Validation;
-use Themes\Rozier\Forms\FolderCollectionType;
 
 /**
  * Register form services for dependency injection container.
@@ -68,10 +77,6 @@ class FormServiceProvider implements ServiceProviderInterface
             return new UniqueEntityValidator($c['em']);
         };
 
-        $container[UniqueNodeTypeNameValidator::class] = function (Container $c) {
-            return new UniqueNodeTypeNameValidator($c['em']);
-        };
-
         $container[UniqueNodeNameValidator::class] = function (Container $c) {
             return new UniqueNodeNameValidator($c['em']);
         };
@@ -80,8 +85,16 @@ class FormServiceProvider implements ServiceProviderInterface
             return new UniqueTagNameValidator($c['em']);
         };
 
-        $container[FolderCollectionType::class] = function (Container $c) {
-            return new FolderCollectionType($c['em']);
+        $container[ValidAccountConfirmationTokenValidator::class] = function (Container $c) {
+            return new ValidAccountConfirmationTokenValidator($c['em']);
+        };
+
+        $container[ValidAccountEmailValidator::class] = function (Container $c) {
+            return new ValidAccountEmailValidator($c['em']);
+        };
+
+        $container[UniqueFilenameValidator::class] = function (Container $c) {
+            return new UniqueFilenameValidator($c['assetPackages']);
         };
 
         $container[DocumentCollectionType::class] = function (Container $c) {
@@ -94,6 +107,34 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $container[RolesType::class] = function (Container $c) {
             return new RolesType($c['em'], $c['securityAuthorizationChecker']);
+        };
+
+        $container[GroupsType::class] = function (Container $c) {
+            return new GroupsType($c['securityAuthorizationChecker'], $c['em']);
+        };
+
+        $container[NodesType::class] = function (Container $c) {
+            return new NodesType($c['em']);
+        };
+
+        $container[NodeTypesType::class] = function (Container $c) {
+            return new NodeTypesType($c['em']);
+        };
+
+        $container[SettingDocumentType::class] = function (Container $c) {
+            return new SettingDocumentType($c['em'], $c[DocumentFactory::class], $c['assetPackages']);
+        };
+
+        $container[SettingGroupType::class] = function (Container $c) {
+            return new SettingGroupType($c['em']);
+        };
+
+        $container[TagTranslationDocumentType::class] = function (Container $c) {
+            return new TagTranslationDocumentType($c['em']);
+        };
+
+        $container[UsersType::class] = function (Container $c) {
+            return new UsersType($c['em']);
         };
 
         $container[UrlAliasType::class] = function (Container $c) {

@@ -265,9 +265,7 @@ class DocumentsController extends RozierApp
              */
             $form = $this->createForm(DocumentEditType::class, $document, [
                 'referer' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
-                'assetPackages' => $this->get('assetPackages'),
                 'document_platforms' => $this->get('document.platforms'),
-                'entityManager' => $this->get('em'),
             ]);
             $form->handleRequest($request);
 

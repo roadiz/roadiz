@@ -30,8 +30,7 @@ class UsersSecurityController extends RozierApp
         if ($user !== null) {
             $this->assignation['user'] = $user;
             $form = $this->createForm(UserSecurityType::class, $user, [
-                'canChroot' => $this->isGranted("ROLE_SUPERADMIN"),
-                'entityManager' => $this->get('em'),
+                'canChroot' => $this->isGranted("ROLE_SUPERADMIN")
             ]);
             $form->handleRequest($request);
 

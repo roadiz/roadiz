@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Widgets;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use RZ\Roadiz\CMS\Controllers\Controller;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Prepare a Tag tree according to Tag hierarchy and given options.
  */
-class TagTreeWidget extends AbstractWidget
+final class TagTreeWidget extends AbstractWidget
 {
     protected $parentTag = null;
     protected $tags = null;
@@ -21,22 +21,22 @@ class TagTreeWidget extends AbstractWidget
     protected $forceTranslation = false;
 
     /**
-     * @param Request    $request
-     * @param Controller $refereeController
-     * @param Tag        $parent
-     * @param bool       $forceTranslation
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param Tag|null $parent
+     * @param bool $forceTranslation
      */
     public function __construct(
         Request $request,
-        Controller $refereeController,
+        EntityManagerInterface $entityManager,
         Tag $parent = null,
         bool $forceTranslation = false
     ) {
-        parent::__construct($request, $refereeController);
+        parent::__construct($request, $entityManager);
 
         $this->parentTag = $parent;
         $this->forceTranslation = $forceTranslation;
-        $this->translation = $this->getController()->get('em')
+        $this->translation = $this->entityManager
             ->getRepository(Translation::class)
             ->findOneBy(['defaultTranslation' => true]);
         $this->getTagTreeAssignationForParent();
@@ -65,7 +65,7 @@ class TagTreeWidget extends AbstractWidget
         if ($this->forceTranslation) {
             $criteria['translation'] = $this->translation;
         }
-        $this->tags = $this->getController()->get('em')
+        $this->tags = $this->entityManager
              ->getRepository(Tag::class)
             ->findBy($criteria, $ordering);
     }
@@ -95,7 +95,7 @@ class TagTreeWidget extends AbstractWidget
                 $criteria['translation'] = $this->translation;
             }
 
-            return $this->tags = $this->getController()->get('em')
+            return $this->tags = $this->entityManager
                         ->getRepository(Tag::class)
                         ->findBy($criteria, $ordering);
         }

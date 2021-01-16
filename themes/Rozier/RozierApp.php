@@ -78,15 +78,15 @@ class RozierApp extends BackendController
         $this->themeContainer['nodeTree'] = function () {
             return new NodeTreeWidget(
                 $this->getRequest(),
-                $this,
+                $this->get('em'),
                 $this->get(NodeChrootResolver::class)->getChroot($this->getUser())
             );
         };
         $this->themeContainer['tagTree'] = function () {
-            return new TagTreeWidget($this->getRequest(), $this);
+            return new TagTreeWidget($this->getRequest(), $this->get('em'));
         };
         $this->themeContainer['folderTree'] = function () {
-            return new FolderTreeWidget($this->getRequest(), $this);
+            return new FolderTreeWidget($this->getRequest(), $this->get('em'));
         };
         $this->themeContainer['maxFilesize'] = function () {
             $requirements = new Requirements($this->get('kernel'));

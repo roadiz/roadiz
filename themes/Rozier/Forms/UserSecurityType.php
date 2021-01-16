@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
@@ -66,7 +65,6 @@ class UserSecurityType extends AbstractType
                 'label' => 'chroot',
                 'required' => false,
                 'multiple' => false,
-                'entityManager' => $options['entityManager'],
             ]);
         }
     }
@@ -87,10 +85,6 @@ class UserSecurityType extends AbstractType
             ],
         ]);
 
-        $resolver->setRequired([
-            'entityManager'
-        ]);
         $resolver->setAllowedTypes('canChroot', ['bool']);
-        $resolver->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
     }
 }

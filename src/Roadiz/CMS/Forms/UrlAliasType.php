@@ -61,7 +61,6 @@ class UrlAliasType extends AbstractType
     {
         $resolver->setDefault('data_class', UrlAlias::class);
         $resolver->setDefault('with_translation', false);
-
         $resolver->setAllowedTypes('with_translation', ['bool']);
     }
 }

@@ -39,7 +39,6 @@ class TranstypeController extends RozierApp
         }
 
         $form = $this->createForm(TranstypeType::class, null, [
-            'em' => $this->get('em'),
             'currentType' => $node->getNodeType(),
         ]);
         $form->handleRequest($request);

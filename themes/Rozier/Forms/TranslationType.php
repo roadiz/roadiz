@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationLocale;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueTranslationOverrideLocale;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -17,9 +15,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-/**
- * TranslationType.
- */
 class TranslationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -38,12 +33,6 @@ class TranslationType extends AbstractType
             'label' => 'locale',
             'required' => true,
             'choices' => array_flip(Translation::$availableLocales),
-            'constraints' => [
-                new UniqueTranslationLocale([
-                    'entityManager' => $options['em'],
-                    'currentValue' => $options['locale'],
-                ]),
-            ],
         ])
         ->add('available', CheckboxType::class, [
             'label' => 'available',
@@ -53,10 +42,6 @@ class TranslationType extends AbstractType
             'label' => 'overrideLocale',
             'required' => false,
             'constraints' => [
-                new UniqueTranslationOverrideLocale([
-                    'entityManager' => $options['em'],
-                    'currentValue' => $options['overrideLocale'],
-                ]),
                 new Length([
                     'max' => 7,
                 ])
@@ -79,14 +64,14 @@ class TranslationType extends AbstractType
             'attr' => [
                 'class' => 'uk-form translation-form',
             ],
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => ['locale']
+                ]),
+                new UniqueEntity([
+                    'fields' => ['overrideLocale']
+                ])
+            ]
         ]);
-
-        $resolver->setRequired([
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', ObjectManager::class);
-        $resolver->setAllowedTypes('locale', ['string']);
-        $resolver->setAllowedTypes('overrideLocale', ['string', 'null']);
     }
 }

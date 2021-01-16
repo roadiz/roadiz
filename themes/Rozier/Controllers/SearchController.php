@@ -304,7 +304,6 @@ class SearchController extends RozierApp
                 'placeholder' => "ignore",
                 'required' => false,
                 'data' => $nodetypeId,
-                'entityManager' => $this->get('em'),
                 'showInvisible' => true,
             ]
         );

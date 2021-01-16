@@ -45,7 +45,6 @@ class AddNodeType extends AbstractType
         if ($options['showNodeType'] === true) {
             $builder->add('nodeType', NodeTypesType::class, [
                 'label' => 'nodeType',
-                'entityManager' => $options['em'],
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),

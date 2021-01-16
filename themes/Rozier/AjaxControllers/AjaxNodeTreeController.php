@@ -64,7 +64,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
 
                 $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $node,
                     $translation
                 );
@@ -111,7 +111,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
 
                 $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $parent,
                     $translation
                 );

@@ -22,7 +22,6 @@ use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
- * Class CustomFormsType
  * @package RZ\Roadiz\CMS\Forms
  */
 class CustomFormsType extends AbstractType

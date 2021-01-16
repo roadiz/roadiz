@@ -82,12 +82,7 @@ class UsersController extends RozierApp
 
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(UserType::class, $user, [
-                'em' => $this->get('em'),
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-            ]);
-
+            $form = $this->createForm(UserType::class, $user);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -191,11 +186,7 @@ class UsersController extends RozierApp
         $user->sendCreationConfirmationEmail(true);
         $this->assignation['user'] = $user;
 
-        $form = $this->createForm(AddUserType::class, $user, [
-            'em' => $this->get('em'),
-            'authorizationChecker' => $this->get('securityAuthorizationChecker')
-        ]);
-
+        $form = $this->createForm(AddUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

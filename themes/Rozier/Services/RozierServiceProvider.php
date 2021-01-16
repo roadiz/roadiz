@@ -6,13 +6,12 @@ namespace Themes\Rozier\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Themes\AbstractApiTheme\Serialization\ChildrenApiSubscriber;
-use Themes\AbstractApiTheme\Serialization\EntityListManagerSubscriber;
-use Themes\AbstractApiTheme\Serialization\NodeSourceApiSubscriber;
-use Themes\AbstractApiTheme\Serialization\TagTranslationNameSubscriber;
-use Themes\AbstractApiTheme\Serialization\TokenSubscriber;
+use Themes\Rozier\Forms\FolderCollectionType;
 use Themes\Rozier\Forms\Node\AddNodeType;
+use Themes\Rozier\Forms\NodeTagsType;
+use Themes\Rozier\Forms\NodeTreeType;
 use Themes\Rozier\Forms\NodeType;
+use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\Serialization\DocumentThumbnailSerializeSubscriber;
 
 final class RozierServiceProvider implements ServiceProviderInterface
@@ -27,6 +26,26 @@ final class RozierServiceProvider implements ServiceProviderInterface
          */
         $container['rozier.form_type.add_node'] = AddNodeType::class;
         $container['rozier.form_type.node'] = NodeType::class;
+
+        $container[NodeTreeType::class] = function (Container $c) {
+            return new NodeTreeType(
+                $c['securityAuthorizationChecker'],
+                $c['request_stack'],
+                $c['em'],
+            );
+        };
+
+        $container[FolderCollectionType::class] = function (Container $c) {
+            return new FolderCollectionType($c['em']);
+        };
+
+        $container[NodeTagsType::class] = function (Container $c) {
+            return new NodeTagsType($c['em']);
+        };
+
+        $container[TranstypeType::class] = function (Container $c) {
+            return new TranstypeType($c['em']);
+        };
 
         $container->extend('serializer.subscribers', function (array $subscribers, $c) {
             $subscribers[] = new DocumentThumbnailSerializeSubscriber($c['document.url_generator']);

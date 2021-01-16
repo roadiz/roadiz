@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormFieldName;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
-use RZ\Roadiz\Core\Entities\CustomForm;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -18,8 +16,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * Class CustomFormFieldType
- *
  * @package Themes\Rozier\Forms
  */
 class CustomFormFieldType extends AbstractType
@@ -31,11 +27,6 @@ class CustomFormFieldType extends AbstractType
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
-                    new UniqueCustomFormFieldName([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['fieldName'],
-                        'customForm' => $options['customForm'],
-                    ]),
                 ],
             ])
             ->add('description', MarkdownType::class, [
@@ -95,15 +86,14 @@ class CustomFormFieldType extends AbstractType
             'attr' => [
                 'class' => 'uk-form custom-form-field-form',
             ],
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => [
+                        'label',
+                        'customForm'
+                    ]
+                ])
+            ]
         ]);
-
-        $resolver->setRequired([
-            'customForm',
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', ObjectManager::class);
-        $resolver->setAllowedTypes('fieldName', 'string');
-        $resolver->setAllowedTypes('customForm', CustomForm::class);
     }
 }

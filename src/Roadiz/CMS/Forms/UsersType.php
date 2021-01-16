@@ -5,7 +5,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -18,6 +18,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class UsersType extends AbstractType
 {
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -25,17 +38,13 @@ class UsersType extends AbstractType
         $resolver->setDefaults([
             'users' => new ArrayCollection(),
         ]);
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
         $resolver->setAllowedTypes('users', [Collection::class]);
 
         /*
          * Use normalizer to populate choices from ChoiceType
          */
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $options['entityManager'];
-            $users = $entityManager->getRepository(User::class)->findAll();
+            $users = $this->entityManager->getRepository(User::class)->findAll();
 
             /** @var User $user */
             foreach ($users as $user) {

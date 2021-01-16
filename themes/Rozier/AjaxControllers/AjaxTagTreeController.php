@@ -48,7 +48,7 @@ class AjaxTagTreeController extends AbstractAjaxController
 
                 $tagTree = new TagTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $tag
                 );
 
@@ -62,7 +62,7 @@ class AjaxTagTreeController extends AbstractAjaxController
                 $parent = null;
                 $tagTree = new TagTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $parent
                 );
                 $this->assignation['mainTagTree'] = true;

@@ -71,10 +71,7 @@ class NodeTypesController extends RozierApp
             throw $this->createNotFoundException();
         }
 
-        $form = $this->createForm(NodeTypeType::class, $nodeType, [
-            'name' => $nodeType->getName(),
-        ]);
-
+        $form = $this->createForm(NodeTypeType::class, $nodeType);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

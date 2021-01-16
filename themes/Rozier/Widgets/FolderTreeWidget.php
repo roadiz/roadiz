@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
-use RZ\Roadiz\CMS\Controllers\Controller;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,26 +11,29 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Prepare a Folder tree according to Folder hierarchy and given options.
  */
-class FolderTreeWidget extends AbstractWidget
+final class FolderTreeWidget extends AbstractWidget
 {
     protected $parentFolder = null;
+    /**
+     * @var Translation|null
+     */
     protected $translation = null;
     protected $folders = null;
 
     /**
-     * @param Request    $request
-     * @param Controller $refereeController
-     * @param Folder     $parent
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param Folder|null $parent
      */
     public function __construct(
         Request $request,
-        Controller $refereeController,
+        EntityManagerInterface $entityManager,
         Folder $parent = null
     ) {
-        parent::__construct($request, $refereeController);
+        parent::__construct($request, $entityManager);
 
         $this->parentFolder = $parent;
-        $this->translation = $this->getController()->get('em')
+        $this->translation = $this->entityManager
             ->getRepository(Translation::class)
             ->findOneBy(['defaultTranslation' => true]);
         $this->getFolderTreeAssignationForParent();
@@ -41,7 +44,7 @@ class FolderTreeWidget extends AbstractWidget
      */
     protected function getFolderTreeAssignationForParent()
     {
-        $this->folders = $this->getController()->get('em')
+        $this->folders = $this->entityManager
              ->getRepository(Folder::class)
              ->findByParentAndTranslation($this->parentFolder, $this->translation);
     }
@@ -52,7 +55,7 @@ class FolderTreeWidget extends AbstractWidget
      */
     public function getChildrenFolders(Folder $parent)
     {
-        return $this->folders = $this->getController()->get('em')
+        return $this->folders = $this->entityManager
                     ->getRepository(Folder::class)
                     ->findByParentAndTranslation($parent, $this->translation);
     }

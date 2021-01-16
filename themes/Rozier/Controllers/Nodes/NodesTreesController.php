@@ -65,7 +65,7 @@ class NodesTreesController extends RozierApp
             $translation = $this->get('defaultTranslation');
         }
 
-        $widget = new NodeTreeWidget($request, $this, $node, $translation);
+        $widget = new NodeTreeWidget($request, $this->get('em'), $node, $translation);
 
         if ($request->get('tagId') &&
             $request->get('tagId') > 0) {

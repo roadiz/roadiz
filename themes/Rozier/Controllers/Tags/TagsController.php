@@ -136,7 +136,6 @@ class TagsController extends RozierApp
             }
 
             $form = $this->createForm(TagTranslationType::class, $tagTranslation, [
-                'em' => $this->get('em'),
                 'tagName' => $tag->getTagName(),
                 'disabled' => $this->isReadOnly,
             ]);
@@ -401,7 +400,7 @@ class TagsController extends RozierApp
         }
 
         if (null !== $tag) {
-            $widget = new TagTreeWidget($request, $this, $tag);
+            $widget = new TagTreeWidget($request, $this->get('em'), $tag);
             $this->assignation['tag'] = $tag;
             $this->assignation['translation'] = $translation;
             $this->assignation['specificTagTree'] = $widget;

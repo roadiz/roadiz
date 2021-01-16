@@ -94,12 +94,9 @@ class SettingsController extends RozierApp
         /** @var Setting $setting */
         foreach ($settings as $setting) {
             /** @var Form $form */
-            $form = $this->get('formFactory')->createNamedBuilder($setting->getName(), SettingType::class, $setting, [
-                'entityManager' => $this->get('em'),
+            $form = $this->get('formFactory')->createNamed($setting->getName(), SettingType::class, $setting, [
                 'shortEdit' => true,
-                'documentFactory' => $this->get('document.factory'),
-                'assetPackages' => $this->get('assetPackages'),
-            ])->getForm();
+            ]);
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -179,10 +176,7 @@ class SettingsController extends RozierApp
             $this->assignation['setting'] = $setting;
 
             $form = $this->createForm(SettingType::class, $setting, [
-                'entityManager' => $this->get('em'),
-                'shortEdit' => false,
-                'documentFactory' => $this->get('document.factory'),
-                'assetPackages' => $this->get('assetPackages')
+                'shortEdit' => false
             ]);
             $form->handleRequest($request);
 
@@ -237,14 +231,9 @@ class SettingsController extends RozierApp
         $setting->setSettingGroup(null);
 
         $this->assignation['setting'] = $setting;
-
         $form = $this->createForm(SettingType::class, $setting, [
-            'entityManager' => $this->get('em'),
             'shortEdit' => false,
-            'documentFactory' => $this->get('document.factory'),
-            'assetPackages' => $this->get('assetPackages')
         ]);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

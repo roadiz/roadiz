@@ -360,7 +360,6 @@ class GroupsController extends AbstractAdminController
                                     new NotNull(),
                                     new NotBlank(),
                                 ],
-                                'entityManager' => $this->get('em'),
                                 'users' => $group->getUsers(),
                             ]
                         );

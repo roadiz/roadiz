@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Forms;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\TagsType;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
@@ -12,12 +13,22 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Themes\Rozier\Forms\DataTransformer\TagTransformer;
 
 /**
- * Class NodeTagsType.
- *
  * @package Themes\Rozier\Forms
  */
 class NodeTagsType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
 
     /**
      * {@inheritdoc}
@@ -29,7 +40,7 @@ class NodeTagsType extends AbstractType
     {
         $builder->add('tags', TagsType::class);
         $builder->get('tags')
-            ->addModelTransformer(new TagTransformer($options['entityManager']));
+            ->addModelTransformer(new TagTransformer($this->entityManager));
     }
 
     /**
@@ -39,9 +50,7 @@ class NodeTagsType extends AbstractType
      */
     public function configureOptions(OptionsResolver $optionsResolver)
     {
-        $optionsResolver->setRequired('entityManager');
         $optionsResolver->setDefault('data_class', Node::class);
-        $optionsResolver->setAllowedTypes('entityManager', EntityManager::class);
     }
 
     /**

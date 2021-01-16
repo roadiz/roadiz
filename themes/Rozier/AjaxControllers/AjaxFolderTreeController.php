@@ -48,7 +48,7 @@ class AjaxFolderTreeController extends AbstractAjaxController
 
                 $folderTree = new FolderTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $folder
                 );
 
@@ -62,7 +62,7 @@ class AjaxFolderTreeController extends AbstractAjaxController
                 $parent = null;
                 $folderTree = new FolderTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $parent
                 );
                 $this->assignation['mainFolderTree'] = true;

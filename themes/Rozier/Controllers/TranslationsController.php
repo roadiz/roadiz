@@ -98,11 +98,7 @@ class TranslationsController extends RozierApp
         if ($translation !== null) {
             $this->assignation['translation'] = $translation;
 
-            $form = $this->createForm(TranslationType::class, $translation, [
-                'em' => $this->get('em'),
-                'locale' => $translation->getLocale(),
-                'overrideLocale' => $translation->getOverrideLocale(),
-            ]);
+            $form = $this->createForm(TranslationType::class, $translation);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -143,9 +139,7 @@ class TranslationsController extends RozierApp
         $translation = new Translation();
         $this->assignation['translation'] = $translation;
 
-        $form = $this->createForm(TranslationType::class, $translation, [
-            'em' => $this->get('em'),
-        ]);
+        $form = $this->createForm(TranslationType::class, $translation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

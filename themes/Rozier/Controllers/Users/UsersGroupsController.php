@@ -192,9 +192,7 @@ class UsersGroupsController extends RozierApp
                 'group',
                 GroupsType::class,
                 [
-                    'label' => 'Group',
-                    'entityManager' => $this->get('em'),
-                    'authorizationChecker' => $this->get('securityAuthorizationChecker'),
+                    'label' => 'Group'
                 ]
             )
         ;

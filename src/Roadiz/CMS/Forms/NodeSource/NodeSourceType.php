@@ -377,8 +377,7 @@ class NodeSourceType extends AbstractType
             case NodeTypeField::CHILDREN_T:
                 $options = array_merge_recursive($options, [
                     'nodeSource' => $nodeSource,
-                    'nodeTypeField' => $field,
-                    'controller' => $formOptions['controller']
+                    'nodeTypeField' => $field
                 ]);
                 break;
             case NodeTypeField::MULTI_PROVIDER_T:

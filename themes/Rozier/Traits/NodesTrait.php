@@ -78,7 +78,6 @@ trait NodesTrait
                     'data' => (int) $node->getId(),
                 ])
                 ->add('nodeTypeId', NodeTypesType::class, [
-                    'entityManager' => $this->get('em'),
                     'showInvisible' => true,
                     'label' => false,
                     'constraints' => [
@@ -113,7 +112,6 @@ trait NodesTrait
                         ])
             ->add('nodeTypeId', NodeTypesType::class, [
                 'label' => 'nodeType',
-                'entityManager' => $this->get('em'),
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),

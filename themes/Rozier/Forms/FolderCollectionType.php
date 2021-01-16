@@ -3,14 +3,9 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use RZ\Roadiz\CMS\Forms\DataTransformer\DocumentCollectionTransformer;
 use RZ\Roadiz\CMS\Forms\DataTransformer\FolderCollectionTransformer;
-use RZ\Roadiz\CMS\Forms\TagsType;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType as AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,11 +13,12 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Themes\Rozier\Explorer\FoldersProvider;
-use Themes\Rozier\Forms\DataTransformer\TagTransformer;
 
 final class FolderCollectionType extends AbstractType
 {
-    /** @var EntityManagerInterface */
+    /**
+     * @var EntityManagerInterface
+     */
     protected $entityManager;
 
     /**
