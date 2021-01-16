@@ -5,8 +5,10 @@ namespace Themes\Rozier\Widgets;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\TagRepository;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -19,6 +21,10 @@ final class TagTreeWidget extends AbstractWidget
     protected $translation = null;
     protected $canReorder = true;
     protected $forceTranslation = false;
+    /**
+     * @var TagRepository|null
+     */
+    protected $tagRepository;
 
     /**
      * @param Request $request
@@ -40,6 +46,7 @@ final class TagTreeWidget extends AbstractWidget
             ->getRepository(Translation::class)
             ->findOneBy(['defaultTranslation' => true]);
         $this->getTagTreeAssignationForParent();
+        $this->tagRepository = $this->entityManager->getRepository(Tag::class);
     }
 
     /**
@@ -65,15 +72,13 @@ final class TagTreeWidget extends AbstractWidget
         if ($this->forceTranslation) {
             $criteria['translation'] = $this->translation;
         }
-        $this->tags = $this->entityManager
-             ->getRepository(Tag::class)
-            ->findBy($criteria, $ordering);
+        $this->tags = $this->tagRepository->findBy($criteria, $ordering);
     }
 
     /**
      * @param Tag|null $parent
      *
-     * @return ArrayCollection|null
+     * @return ArrayCollection<Tag>|Paginator|array<Tag>|null
      */
     public function getChildrenTags(?Tag $parent)
     {
@@ -95,9 +100,9 @@ final class TagTreeWidget extends AbstractWidget
                 $criteria['translation'] = $this->translation;
             }
 
-            return $this->tags = $this->entityManager
-                        ->getRepository(Tag::class)
-                        ->findBy($criteria, $ordering);
+            $this->tags = $this->tagRepository->findBy($criteria, $ordering);
+
+            return $this->tags;
         }
 
         return null;
