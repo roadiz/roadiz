@@ -15,6 +15,7 @@ use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Install\InstallApp;
 
@@ -38,7 +39,7 @@ class ImportController extends AppController
      * @return Response
      * @throws \ReflectionException
      */
-    protected function genericImportAction($classImporter, Request $request, $themeId = null)
+    protected function genericImportAction(string $classImporter, Request $request, $themeId = null)
     {
         $this->validateAccess();
 
@@ -199,7 +200,7 @@ class ImportController extends AppController
      *
      * @return Response
      */
-    protected function importContent($pathFile, $classImporter, $themeId)
+    protected function importContent(string $pathFile, string $classImporter, $themeId)
     {
         $data = [];
         $data['status'] = false;
@@ -212,7 +213,7 @@ class ImportController extends AppController
                 $theme = $themeResolver->findById($themeId);
 
                 if ($theme === null) {
-                    throw new \Exception('Theme don’t exist in database.');
+                    throw new BadRequestHttpException('Theme don’t exist in database.');
                 }
 
                 $classname = $theme->getClassName();
@@ -226,14 +227,10 @@ class ImportController extends AppController
                 $importer->import($file);
                 $this->get('em')->flush();
             } else {
-                throw new \Exception('File: ' . $path . ' don’t exist');
+                throw new BadRequestHttpException('File: ' . $path . ' don’t exist');
             }
         } catch (\Exception $e) {
-            $data['error'] = $e->getMessage();
-            return new JsonResponse(
-                $data,
-                Response::HTTP_NOT_FOUND
-            );
+            throw new BadRequestHttpException($e->getMessage(), $e);
         }
         $data['status'] = true;
         return new JsonResponse(

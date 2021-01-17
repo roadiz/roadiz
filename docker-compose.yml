@@ -3,9 +3,9 @@ services:
     db_test:
         build:
             # Custom image for file permissions
-            #context: ./docker/mysql
+            context: ./docker/mysql
             #context: ./docker/postgres
-            context: ./docker/mariadb
+            #context: ./docker/mariadb
             args:
                 USER_UID: ${USER_UID}
         networks:

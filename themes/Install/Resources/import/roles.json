@@ -197,9 +197,5 @@
                 "name": "Admin"
             }
         ]
-    },
-    {
-        "name": "ROLE_USER",
-        "groups": []
     }
 ]
