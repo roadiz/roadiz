@@ -3034,7 +3034,11 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="non_breaking.space">
           <source>non_breaking.space</source>
-          <target></target>
+          <target>Markdown button to add a non-breaking space character in text</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="non_breaking.hyphen">
+          <source>non_breaking.hyphen</source>
+          <target>Markdown button to add a non-breaking hyphen character in text</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="forbidden.page">
