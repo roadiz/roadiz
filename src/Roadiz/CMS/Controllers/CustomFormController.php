@@ -40,11 +40,10 @@ class CustomFormController extends CmsController
      * @return Response
      * @throws \Twig\Error\RuntimeError
      */
-    public function addAction(Request $request, $customFormId)
+    public function addAction(Request $request, int $customFormId)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->get('em')
-            ->find(CustomForm::class, $customFormId);
+        $customForm = $this->get('em')->find(CustomForm::class, $customFormId);
 
         if (null !== $customForm &&
             $customForm->isFormStillOpen()) {
@@ -78,7 +77,7 @@ class CustomFormController extends CmsController
      *
      * @return Response
      */
-    public function sentAction(Request $request, $customFormId)
+    public function sentAction(Request $request, int $customFormId)
     {
         $customForm = $this->get('em')
             ->find(CustomForm::class, $customFormId);

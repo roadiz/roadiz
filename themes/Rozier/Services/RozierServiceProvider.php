@@ -5,7 +5,20 @@ namespace Themes\Rozier\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
+use Themes\Rozier\Events\DocumentFilesizeSubscriber;
+use Themes\Rozier\Events\DocumentSizeSubscriber;
+use Themes\Rozier\Events\ExifDocumentSubscriber;
+use Themes\Rozier\Events\ImageColorDocumentSubscriber;
+use Themes\Rozier\Events\NodeDuplicationSubscriber;
+use Themes\Rozier\Events\NodeRedirectionSubscriber;
+use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
+use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
+use Themes\Rozier\Events\RawDocumentsSubscriber;
+use Themes\Rozier\Events\SvgDocumentSubscriber;
+use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Forms\FolderCollectionType;
 use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\Forms\Node\AddNodeType;
@@ -67,6 +80,104 @@ final class RozierServiceProvider implements ServiceProviderInterface
         $container->extend('serializer.subscribers', function (array $subscribers, $c) {
             $subscribers[] = new DocumentThumbnailSerializeSubscriber($c['document.url_generator']);
             return $subscribers;
+        });
+
+        $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+
+            if (!$kernel->isInstallMode()) {
+                /*
+             * Add custom event subscriber to empty NS Url cache
+             */
+                $dispatcher->addSubscriber(
+                    new NodesSourcesUrlSubscriber($c['nodesSourcesUrlCacheProvider'])
+                );
+                /*
+                 * Add custom event subscriber to Translation result cache
+                 */
+                $dispatcher->addSubscriber(
+                    new TranslationSubscriber($c['em']->getConfiguration()->getResultCacheImpl())
+                );
+                /*
+                 * Add custom event subscriber to manage universal node-type fields
+                 */
+                $dispatcher->addSubscriber(
+                    new NodesSourcesUniversalSubscriber($c['em'], $c['utils.universalDataDuplicator'])
+                );
+                /*
+                 * Add custom event subscriber to manage Svg document sanitizing
+                 */
+                $dispatcher->addSubscriber(
+                    new SvgDocumentSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                /*
+                 * Add custom event subscriber to manage image document size and color
+                 */
+                $dispatcher->addSubscriber(
+                    new DocumentSizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new DocumentFilesizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new ImageColorDocumentSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                /*
+                 * Add custom event subscriber to manage document EXIF
+                 */
+                $dispatcher->addSubscriber(
+                    new ExifDocumentSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+
+                /*
+                 * Add custom event subscriber to create a downscaled version for HD images.
+                 */
+                $dispatcher->addSubscriber(
+                    new RawDocumentsSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger'],
+                        $c['config']['assetsProcessing']['driver'],
+                        $c['config']['assetsProcessing']['maxPixelSize']
+                    )
+                );
+            }
+            /*
+             * Add custom event subscriber to manage node duplication
+             */
+            $dispatcher->addSubscriber(
+                new NodeDuplicationSubscriber(
+                    $c['em'],
+                    $c['factory.handler']
+                )
+            );
+
+            /*
+             * Add event to create redirection after renaming a node.
+             */
+            $dispatcher->addSubscriber(
+                new NodeRedirectionSubscriber($c['proxy.nodeMover'], $kernel)
+            );
+
+            return $dispatcher;
         });
 
         $container->extend('backoffice.entries', function (array $entries, $c) {

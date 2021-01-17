@@ -9,7 +9,6 @@ use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodesSourcesUniversalSubscriber
  * @package Themes\Rozier\Events
  */
 class NodesSourcesUniversalSubscriber implements EventSubscriberInterface

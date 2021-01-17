@@ -53,8 +53,6 @@ class SolariumSubscriber implements EventSubscriberInterface
     protected $solariumFactory;
 
     /**
-     * SolariumSubscriber constructor.
-     *
      * @param Client|null              $solr
      * @param LoggerInterface          $logger
      * @param SolariumFactoryInterface $solariumFactory
