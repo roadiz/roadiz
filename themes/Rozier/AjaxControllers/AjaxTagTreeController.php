@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\TagTreeWidget;
 
 /**
- * Class AjaxTagTreeController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxTagTreeController extends AbstractAjaxController

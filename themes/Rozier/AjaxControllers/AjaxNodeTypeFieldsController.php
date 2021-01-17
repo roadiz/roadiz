@@ -8,8 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AjaxNodeTypeFieldsController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
@@ -23,7 +21,7 @@ class AjaxNodeTypeFieldsController extends AjaxAbstractFieldsController
      *
      * @return Response JSON response
      */
-    public function editAction(Request $request, $nodeTypeFieldId)
+    public function editAction(Request $request, int $nodeTypeFieldId)
     {
         /*
          * Validate

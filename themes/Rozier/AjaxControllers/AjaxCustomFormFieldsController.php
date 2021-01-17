@@ -8,8 +8,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AjaxCustomFormFieldsController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
@@ -23,7 +21,7 @@ class AjaxCustomFormFieldsController extends AjaxAbstractFieldsController
      *
      * @return Response JSON response
      */
-    public function editAction(Request $request, $customFormFieldId)
+    public function editAction(Request $request, int $customFormFieldId)
     {
         /*
          * Validate

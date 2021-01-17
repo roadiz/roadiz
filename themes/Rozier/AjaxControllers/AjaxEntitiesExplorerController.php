@@ -16,8 +16,6 @@ use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class AjaxEntitiesExplorerController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxEntitiesExplorerController extends AbstractAjaxController

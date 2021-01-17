@@ -24,18 +24,17 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Workflow\Workflow;
 
 /**
- * Class AjaxNodesController
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodesController extends AbstractAjaxController
 {
     /**
      *
-     * @param  Request $request [description]
-     * @param  int  $nodeId  [description]
+     * @param  Request $request
+     * @param  int $nodeId
      * @return JsonResponse
      */
-    public function getTagsAction(Request $request, $nodeId)
+    public function getTagsAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
         $tags = [];

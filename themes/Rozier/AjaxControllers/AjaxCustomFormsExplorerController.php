@@ -12,8 +12,6 @@ use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Themes\Rozier\Models\CustomFormModel;
 
 /**
- * Class AjaxCustomFormsExplorerController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxCustomFormsExplorerController extends AbstractAjaxController
