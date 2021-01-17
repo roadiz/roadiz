@@ -3034,7 +3034,11 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="non_breaking.space">
           <source>non_breaking.space</source>
-          <target></target>
+          <target>Markdown button to add a non-breaking space character in text</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="non_breaking.hyphen">
+          <source>non_breaking.hyphen</source>
+          <target>Markdown button to add a non-breaking hyphen character in text</target>
       </trans-unit>
 
       <trans-unit xml:space="preserve" id="forbidden.page">
@@ -5321,6 +5325,22 @@
             <source>filter</source>
             <target></target>
             <note>Button label for a generic filtering action.</note>
+        </trans-unit>
+
+        <trans-unit id="%namespace%.%item%.was_created">
+            <source>%namespace%.%item%.was_created</source>
+            <target></target>
+            <note>Default controller addAction result message.</note>
+        </trans-unit>
+        <trans-unit id="%namespace%.%item%.was_updated">
+            <source>%namespace%.%item%.was_updated</source>
+            <target></target>
+            <note>Default controller editAction result message.</note>
+        </trans-unit>
+        <trans-unit id="%namespace%.%item%.was_deleted">
+            <source>%namespace%.%item%.was_deleted</source>
+            <target></target>
+            <note>Default controller deleteAction result message.</note>
         </trans-unit>
     </body>
   </file>
