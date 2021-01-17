@@ -11,8 +11,10 @@ use RZ\Roadiz\Core\Routing\NodeRouter;
 use RZ\Roadiz\Core\Routing\RedirectionRouter;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
+use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -75,6 +77,17 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return $router;
         };
 
+        $container['proxy.router'] = function (Container $c) {
+            $factory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory();
+            return $factory->createProxy(
+                ChainRouter::class,
+                function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
+                    $wrappedObject = $c['router']; // instantiation logic here
+                    $initializer = null; // turning off further lazy initialization
+                }
+            );
+        };
+
         $container['staticRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -133,7 +146,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         /*
-         * As we are using CMF ChainRouter, it takes responsability for
+         * As we are using CMF ChainRouter, it takes responsibility for
          * URL generation.
          */
         $container['urlGenerator'] = function (Container $c) {
@@ -146,7 +159,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
         $container['routeListener'] = function (Container $c) {
             return new RouterListener(
-                $c['router'],
+                $c['proxy.router'], // Proxy to avoid cyclic dependencies
                 $c['requestStack'],
                 $c['requestContext'],
                 null

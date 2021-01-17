@@ -65,6 +65,7 @@ use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
+use RZ\Roadiz\Utils\Security\Firewall;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -162,7 +163,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
         try {
             $this->initializeContainer();
-            $this->initEvents();
             $this->booted = true;
         } catch (InvalidConfigurationException $e) {
             $view = new ExceptionViewer();
@@ -243,6 +243,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $dispatcher = new EventDispatcher();
+            /*
+             * Firewall service is private
+             */
+            $dispatcher->addSubscriber(new Firewall(
+                $c['firewallMap'],
+                $dispatcher
+            ));
+            $dispatcher->addSubscriber($c['routeListener']);
             $dispatcher->addSubscriber(new SessionListener(new \Pimple\Psr11\Container($c)));
             $dispatcher->addSubscriber(new AppCacheEventSubscriber());
             $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
@@ -399,24 +407,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         } finally {
             --$this->requestStackSize;
         }
-    }
-
-    /**
-     * Register additional subscribers, especially those which need
-     * dispatcher to be woken up.
-     *
-     * @deprecated Use Object proxy system to avoid cyclic dependencies issues
-     */
-    protected function initEvents()
-    {
-        $this->get('stopwatch')->start('kernel.initEvents');
-
-        if (!$this->isInstallMode()) {
-            $this->get('dispatcher')->addSubscriber($this->get('firewall'));
-        }
-        $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
-
-        $this->get('stopwatch')->stop('kernel.initEvents');
     }
 
     /**
