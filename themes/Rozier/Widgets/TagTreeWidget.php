@@ -22,7 +22,7 @@ final class TagTreeWidget extends AbstractWidget
     protected $canReorder = true;
     protected $forceTranslation = false;
     /**
-     * @var TagRepository|null
+     * @var TagRepository
      */
     protected $tagRepository;
 
@@ -45,8 +45,8 @@ final class TagTreeWidget extends AbstractWidget
         $this->translation = $this->entityManager
             ->getRepository(Translation::class)
             ->findOneBy(['defaultTranslation' => true]);
-        $this->getTagTreeAssignationForParent();
         $this->tagRepository = $this->entityManager->getRepository(Tag::class);
+        $this->getTagTreeAssignationForParent();
     }
 
     /**
