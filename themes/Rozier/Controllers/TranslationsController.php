@@ -84,25 +84,21 @@ class TranslationsController extends RozierApp
      * Return an edition form for requested translation.
      *
      * @param Request $request
-     * @param integer $translationId
+     * @param int $translationId
      *
      * @return Response
      */
-    public function editAction(Request $request, $translationId)
+    public function editAction(Request $request, int $translationId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TRANSLATIONS');
 
-        $translation = $this->get('em')
-                            ->find(Translation::class, (int) $translationId);
+        /** @var Translation|null $translation */
+        $translation = $this->get('em')->find(Translation::class, $translationId);
 
         if ($translation !== null) {
             $this->assignation['translation'] = $translation;
 
-            $form = $this->createForm(TranslationType::class, $translation, [
-                'em' => $this->get('em'),
-                'locale' => $translation->getLocale(),
-                'overrideLocale' => $translation->getOverrideLocale(),
-            ]);
+            $form = $this->createForm(TranslationType::class, $translation);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -143,9 +139,7 @@ class TranslationsController extends RozierApp
         $translation = new Translation();
         $this->assignation['translation'] = $translation;
 
-        $form = $this->createForm(TranslationType::class, $translation, [
-            'em' => $this->get('em'),
-        ]);
+        $form = $this->createForm(TranslationType::class, $translation);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -175,12 +169,12 @@ class TranslationsController extends RozierApp
      *
      * @return Response
      */
-    public function deleteAction(Request $request, $translationId)
+    public function deleteAction(Request $request, int $translationId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TRANSLATIONS');
 
-        $translation = $this->get('em')
-                            ->find(Translation::class, (int) $translationId);
+        /** @var Translation|null $translation */
+        $translation = $this->get('em')->find(Translation::class, $translationId);
 
         if (null !== $translation) {
             $this->assignation['translation'] = $translation;

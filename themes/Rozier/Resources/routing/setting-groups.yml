@@ -2,18 +2,18 @@ settingGroupsSettingsPage:
     path:     /settings/{settingGroupId}
     defaults:
         _controller: Themes\Rozier\Controllers\SettingsController::byGroupAction
-    requirements: { settingId : "[0-9]+" }
+    requirements: { settingGroupId : "[0-9]+" }
 settingGroupsEditPage:
-    path:     /edit/{settingGroupId}
+    path:     /edit/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\SettingGroupsController::editAction
-    requirements: { settingId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 settingGroupsAddPage:
     path:     /add
     defaults:
         _controller: Themes\Rozier\Controllers\SettingGroupsController::addAction
 settingGroupsDeletePage:
-    path:     /delete/{settingGroupId}
+    path:     /delete/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\SettingGroupsController::deleteAction
-    requirements: { settingId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }

@@ -10,22 +10,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AjaxFoldersController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxFoldersController extends AbstractAjaxController
 {
     /**
      * Handle AJAX edition requests for Folder
-     * such as comming from tagtree widgets.
+     * such as coming from tag-tree widgets.
      *
      * @param Request $request
-     * @param int     $folderId
+     * @param int $folderId
      *
      * @return Response JSON response
      */
-    public function editAction(Request $request, $folderId)
+    public function editAction(Request $request, int $folderId)
     {
         /*
          * Validate

@@ -1,24 +1,24 @@
 rolesEditPage:
-    path:     /edit/{roleId}
+    path:     /edit/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\RolesController::editAction
-    requirements: { roleId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 rolesAddPage:
     path:     /add
     defaults:
         _controller: Themes\Rozier\Controllers\RolesController::addAction
 rolesDeletePage:
-    path:     /delete/{roleId}
+    path:     /delete/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\RolesController::deleteAction
-    requirements: { roleId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 rolesExportAllPage:
     path:     /export
     defaults:
-        _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAllAction
+        _controller: Themes\Rozier\Controllers\RolesController::exportAction
 rolesExportPage:
-    path:     /export/{roleId}
-    requirements: { roleId : "[0-9]+" }
+    path:     /export/{id}
+    requirements: { id : "[0-9]+" }
     defaults:
         _controller: Themes\Rozier\Controllers\RolesUtilsController::exportAction
 rolesImportPage:

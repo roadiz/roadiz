@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManager;
-use Pimple\Container;
-use RZ\Roadiz\CMS\Controllers\Controller;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\CssType;
 use RZ\Roadiz\CMS\Forms\EnumerationType;
@@ -37,15 +35,28 @@ use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Component\Yaml\Yaml;
 use Themes\Rozier\Forms\NodeTreeType;
 
-class NodeSourceType extends AbstractType
+final class NodeSourceType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param  FormBuilderInterface $builder
      * @param  array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $fields = $this->getFieldsForSource($builder->getData(), $options['entityManager'], $options['nodeType']);
+        $fields = $this->getFieldsForSource($builder->getData(), $options['nodeType']);
 
         if ($options['withTitle'] === true) {
             $builder->add('base', NodeSourceBaseType::class, [
@@ -77,14 +88,8 @@ class NodeSourceType extends AbstractType
         ]);
         $resolver->setRequired([
             'class',
-            'entityManager',
-            'controller',
-            'container',
             'nodeType',
         ]);
-        $resolver->setAllowedTypes('container', Container::class);
-        $resolver->setAllowedTypes('controller', Controller::class);
-        $resolver->setAllowedTypes('entityManager', EntityManager::class);
         $resolver->setAllowedTypes('withTitle', 'boolean');
         $resolver->setAllowedTypes('withVirtual', 'boolean');
         $resolver->setAllowedTypes('nodeType', NodeType::class);
@@ -101,11 +106,10 @@ class NodeSourceType extends AbstractType
 
     /**
      * @param NodesSources $source
-     * @param EntityManager $entityManager
      * @param NodeType $nodeType
      * @return array
      */
-    private function getFieldsForSource(NodesSources $source, EntityManager $entityManager, NodeType $nodeType)
+    private function getFieldsForSource(NodesSources $source, NodeType $nodeType)
     {
         $criteria = [
             'nodeType' => $nodeType,
@@ -116,35 +120,33 @@ class NodeSourceType extends AbstractType
             'position' => 'ASC',
         ];
 
-        if (!$this->needsUniversalFields($source, $entityManager)) {
+        if (!$this->needsUniversalFields($source)) {
             $criteria = array_merge($criteria, ['universal' => false]);
         }
 
-        return $entityManager->getRepository(NodeTypeField::class)->findBy($criteria, $position);
+        return $this->entityManager->getRepository(NodeTypeField::class)->findBy($criteria, $position);
     }
 
     /**
      * @param NodesSources $source
-     * @param EntityManager $entityManager
      * @return bool
      */
-    private function needsUniversalFields(NodesSources $source, EntityManager $entityManager)
+    private function needsUniversalFields(NodesSources $source): bool
     {
-        return ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source, $entityManager));
+        return ($source->getTranslation()->isDefaultTranslation() || !$this->hasDefaultTranslation($source));
     }
 
     /**
      * @param NodesSources $source
-     * @param EntityManager $entityManager
      * @return bool
      */
-    private function hasDefaultTranslation(NodesSources $source, EntityManager $entityManager)
+    private function hasDefaultTranslation(NodesSources $source): bool
     {
         /** @var Translation $defaultTranslation */
-        $defaultTranslation = $entityManager->getRepository(Translation::class)
+        $defaultTranslation = $this->entityManager->getRepository(Translation::class)
                                             ->findDefault();
 
-        $sourceCount = $entityManager->getRepository(NodesSources::class)
+        $sourceCount = $this->entityManager->getRepository(NodesSources::class)
                                      ->setDisplayingAllNodesStatuses(true)
                                      ->setDisplayingNotPublishedNodes(true)
                                      ->countBy([
@@ -161,7 +163,7 @@ class NodeSourceType extends AbstractType
      * @param AbstractField $field
      * @return string AbstractType class name
      */
-    public static function getFormTypeFromFieldType(AbstractField $field)
+    public static function getFormTypeFromFieldType(AbstractField $field): string
     {
         return static::getFormTypeFromString($field->getType());
     }
@@ -170,7 +172,7 @@ class NodeSourceType extends AbstractType
      * @param int $type
      * @return string AbstractType class name
      */
-    public static function getFormTypeFromString($type)
+    public static function getFormTypeFromString(int $type): string
     {
         switch ($type) {
             case AbstractField::COLOUR_T:
@@ -286,20 +288,12 @@ class NodeSourceType extends AbstractType
                 break;
             case NodeTypeField::NODES_T:
                 $options = array_merge_recursive($options, [
-                    'nodeHandler' => $formOptions['container']->offsetGet('node.handler'),
                     'attr' => [
-                        'data-nodetypes' => json_encode(explode(',', $field->getDefaultValues() ?? ''))
+                        'data-nodetypes' => json_encode(explode(
+                            ',',
+                            $field->getDefaultValues() ?? ''
+                        ))
                     ],
-                ]);
-                break;
-            case NodeTypeField::CUSTOM_FORMS_T:
-                $options = array_merge_recursive($options, [
-                    'nodeHandler' => $formOptions['container']->offsetGet('node.handler'),
-                ]);
-                break;
-            case NodeTypeField::DOCUMENTS_T:
-                $options = array_merge_recursive($options, [
-                    'nodeSourceHandler' => $formOptions['container']->offsetGet('nodes_sources.handler'),
                 ]);
                 break;
             case NodeTypeField::DATETIME_T:
@@ -377,14 +371,7 @@ class NodeSourceType extends AbstractType
             case NodeTypeField::CHILDREN_T:
                 $options = array_merge_recursive($options, [
                     'nodeSource' => $nodeSource,
-                    'nodeTypeField' => $field,
-                    'controller' => $formOptions['controller']
-                ]);
-                break;
-            case NodeTypeField::MULTI_PROVIDER_T:
-            case NodeTypeField::SINGLE_PROVIDER_T:
-                $options = array_merge_recursive($options, [
-                    'container' => $formOptions['container']
+                    'nodeTypeField' => $field
                 ]);
                 break;
             case NodeTypeField::COUNTRY_T:
@@ -443,8 +430,13 @@ class NodeSourceType extends AbstractType
             'label' => $label,
             'required' => false,
             'attr' => [
-                'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ? $field->getGroupName() : 'default',
-                'data-field-group-canonical' => (null !== $field->getGroupNameCanonical() && '' != $field->getGroupNameCanonical()) ? $field->getGroupNameCanonical() : 'default',
+                'data-field-group' => (null !== $field->getGroupName() && '' != $field->getGroupName()) ?
+                    $field->getGroupName() :
+                    'default',
+                'data-field-group-canonical' => (
+                    null !== $field->getGroupNameCanonical() &&
+                    '' != $field->getGroupNameCanonical()
+                ) ? $field->getGroupNameCanonical() : 'default',
                 'data-dev-name' => $devName,
                 'autocomplete' => 'off',
                 'lang' => strtolower(str_replace('_', '-', $nodeSource->getTranslation()->getLocale())),
@@ -482,7 +474,6 @@ class NodeSourceType extends AbstractType
             NodeTypeField::SINGLE_PROVIDER_T,
         ])) {
             $options['nodeTypeField'] = $field;
-            $options['entityManager'] = $formOptions['entityManager'];
             $options['nodeSource'] = $nodeSource;
             unset($options['attr']['dir']);
         }

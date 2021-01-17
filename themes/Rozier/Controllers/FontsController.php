@@ -3,206 +3,139 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Font;
-use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use RZ\Roadiz\Core\Exceptions\EntityRequiredException;
+use RZ\Roadiz\Core\Events\Font\PreUpdatedFontEvent;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Contracts\EventDispatcher\Event;
 use Themes\Rozier\Forms\FontType;
-use Themes\Rozier\RozierApp;
 
 /**
  * @package Themes\Rozier\Controllers
  */
-class FontsController extends RozierApp
+class FontsController extends AbstractAdminController
 {
     /**
-     * @param Request $request
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function indexAction(Request $request)
+    protected function supports(PersistableInterface $item): bool
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
-
-        $listManager = $this->createEntityListManager(
-            Font::class,
-            [],
-            ['name' => 'ASC']
-        );
-        $listManager->setDisplayingNotPublishedNodes(true);
-        $listManager->handle();
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['fonts'] = $listManager->getEntities();
-
-        return $this->render('fonts/list.html.twig', $this->assignation);
+        return $item instanceof Font;
     }
 
     /**
-     * Return an creation form for requested font.
-     *
-     * @param Request $request
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function addAction(Request $request)
+    protected function getNamespace(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
-
-        $font = new Font();
-
-        $form = $this->createForm(FontType::class, $font);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->get('em')->persist($font);
-                $this->get('em')->flush();
-
-                $msg = $this->getTranslator()->trans('font.%name%.created', ['%name%' => $font->getName()]);
-                $this->publishConfirmMessage($request, $msg);
-            } catch (EntityAlreadyExistsException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
-            } catch (\RuntimeException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
-            }
-
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
-            return $this->redirect($this->generateUrl('fontsHomePage'));
-        }
-
-        $this->assignation['form'] = $form->createView();
-
-        return $this->render('fonts/add.html.twig', $this->assignation);
+        return 'font';
     }
 
     /**
-     * Return a deletion form for requested font.
-     *
-     * @param Request $request
-     * @param int     $fontId
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function deleteAction(Request $request, $fontId)
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
-
-        $font = $this->get('em')->find(Font::class, (int) $fontId);
-
-        if (null !== $font) {
-            $form = $this->buildDeleteForm($font);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['fontId'] == $font->getId()) {
-                try {
-                    $this->get('em')->remove($font);
-                    $this->get('em')->flush();
-
-                    $msg = $this->getTranslator()->trans(
-                        'font.%name%.deleted',
-                        ['%name%' => $font->getName()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                } catch (EntityRequiredException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                } catch (\RuntimeException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                }
-
-                return $this->redirect($this->generateUrl('fontsHomePage'));
-            }
-
-            $this->assignation['form'] = $form->createView();
-            $this->assignation['font'] = $font;
-
-            return $this->render('fonts/delete.html.twig', $this->assignation);
-        }
-
-        throw new ResourceNotFoundException();
+        return new Font();
     }
 
     /**
-     * Return an edition form for requested font.
-     *
-     * @param Request $request
-     * @param int     $fontId
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function editAction(Request $request, $fontId)
+    protected function getTemplateFolder(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
-
-        /** @var Font $font */
-        $font = $this->get('em')->find(Font::class, (int) $fontId);
-
-        if ($font !== null) {
-            $form = $this->createForm(FontType::class, $font, [
-                'name' => $font->getName(),
-                'variant' => $font->getVariant(),
-            ]);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    /*
-                     * Force updating files if uploaded
-                     * as doctrine wont see any changes.
-                     */
-                    $fontSubscriber = new FontLifeCycleSubscriber($this->getContainer());
-                    $fontSubscriber->setFontFilesNames($font);
-                    $fontSubscriber->upload($font);
-                    $this->get('em')->flush();
-
-                    $msg = $this->getTranslator()->trans(
-                        'font.%name%.updated',
-                        ['%name%' => $font->getName()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                } catch (\RuntimeException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                }
-
-                return $this->redirect($this->generateUrl('fontsHomePage'));
-            }
-
-            $this->assignation['font'] = $font;
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('fonts/edit.html.twig', $this->assignation);
-        }
-
-        throw new ResourceNotFoundException();
+        return 'fonts';
     }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getRequiredRole(): string
+    {
+        return 'ROLE_ACCESS_FONTS';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityClass(): string
+    {
+        return Font::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFormType(): string
+    {
+        return FontType::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultOrder(): array
+    {
+        return ['name' => 'ASC'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultRouteName(): string
+    {
+        return 'fontsHomePage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditRouteName(): string
+    {
+        return 'fontsEditPage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createUpdateEvent(PersistableInterface $item): ?Event
+    {
+        if ($item instanceof Font) {
+            return new PreUpdatedFontEvent($item);
+        }
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityName(PersistableInterface $item): string
+    {
+        if ($item instanceof Font) {
+            return $item->getName();
+        }
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
+    }
+
     /**
      * Return a ZipArchive of requested font.
      *
      * @param Request $request
-     * @param int     $fontId
+     * @param int $id
      *
      * @return Response
      */
-    public function downloadAction(Request $request, $fontId)
+    public function downloadAction(Request $request, int $id)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_FONTS');
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
 
         /** @var Font $font */
-        $font = $this->get('em')->find(Font::class, (int) $fontId);
+        $font = $this->get('em')->find(Font::class, $id);
 
         if ($font !== null) {
             // Prepare File
@@ -239,22 +172,5 @@ class FontsController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * Build delete font form with name constraint.
-     *
-     * @param Font $font
-     *
-     * @return FormInterface
-     */
-    protected function buildDeleteForm(Font $font)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('fontId', HiddenType::class, [
-                            'data' => $font->getId(),
-                        ]);
-
-        return $builder->getForm();
     }
 }

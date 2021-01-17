@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use RZ\Roadiz\CMS\Controllers\Controller;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -12,7 +12,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
 /**
@@ -20,10 +22,37 @@ use Themes\Rozier\Widgets\NodeTreeWidget;
  *
  * This form type is not published inside Roadiz CMS as it needs
  * NodeTreeWidget which is part of Rozier Theme.
- *
  */
 class NodeTreeType extends AbstractType
 {
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    protected $authorizationChecker;
+    /**
+     * @var RequestStack
+     */
+    protected $requestStack;
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     * @param RequestStack $requestStack
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(
+        AuthorizationCheckerInterface $authorizationChecker,
+        RequestStack $requestStack,
+        EntityManagerInterface $entityManager
+    ) {
+        $this->authorizationChecker = $authorizationChecker;
+        $this->requestStack = $requestStack;
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -39,11 +68,11 @@ class NodeTreeType extends AbstractType
             throw new \RuntimeException("Given field is not a NodeTypeField::CHILDREN_T field.", 1);
         }
 
-        $view->vars['authorizationChecker'] = $options['controller']->get('securityAuthorizationChecker');
+        $view->vars['authorizationChecker'] = $this->authorizationChecker;
         /*
          * Inject data as plain documents entities
          */
-        $view->vars['request'] = $options['controller']->getRequest();
+        $view->vars['request'] = $this->requestStack->getCurrentRequest();
 
         /*
          * Linked types to create quick add buttons
@@ -53,8 +82,7 @@ class NodeTreeType extends AbstractType
             $defaultValues[$key] = trim($value);
         }
 
-        $nodeTypes = $options['controller']->get('em')
-            ->getRepository(NodeType::class)
+        $nodeTypes = $this->entityManager->getRepository(NodeType::class)
             ->findBy(
                 ['name' => $defaultValues],
                 ['displayName' => 'ASC']
@@ -63,8 +91,8 @@ class NodeTreeType extends AbstractType
         $view->vars['linkedTypes'] = $nodeTypes;
 
         $nodeTree = new NodeTreeWidget(
-            $options['controller']->getRequest(),
-            $options['controller'],
+            $this->requestStack->getCurrentRequest(),
+            $this->entityManager,
             $options['nodeSource']->getNode(),
             $options['nodeSource']->getTranslation()
         );
@@ -110,11 +138,9 @@ class NodeTreeType extends AbstractType
         $resolver->setRequired([
             'nodeSource',
             'nodeTypeField',
-            'controller',
         ]);
 
         $resolver->setAllowedTypes('nodeSource', [NodesSources::class]);
         $resolver->setAllowedTypes('nodeTypeField', [NodeTypeField::class]);
-        $resolver->setAllowedTypes('controller', [Controller::class]);
     }
 }

@@ -22,6 +22,7 @@ parameters:
         - '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::#'
         - '#Access to an undefined property Symfony\\Component\\Validator\\Constraint::#'
         - '#Call to method publish\(\) on an unknown class Gelf\\IMessagePublisher#'
+        - '#RZ\\Roadiz\\Core\\Entities\\Tag does not have a field named \$translation#'
         - '#Raven_Client#'
         - '#Raven_ErrorHandler#'
 

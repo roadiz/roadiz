@@ -11,7 +11,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
- * Class FolderTranslationType
  * @package Themes\Rozier\Forms
  */
 class FolderTranslationType extends AbstractType

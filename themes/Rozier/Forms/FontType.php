@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\FontVariantsType;
 use RZ\Roadiz\Core\Entities\Font;

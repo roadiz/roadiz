@@ -5,8 +5,6 @@ namespace RZ\Roadiz\Core;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
-use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
@@ -15,17 +13,15 @@ use RZ\Roadiz\Core\Events\ExceptionSubscriber;
 use RZ\Roadiz\Core\Events\LocaleSubscriber;
 use RZ\Roadiz\Core\Events\LoggableUsernameSubscriber;
 use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
-use RZ\Roadiz\Core\Events\NodeNameSubscriber;
 use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
+use RZ\Roadiz\Core\Events\RoleSubscriber;
 use RZ\Roadiz\Core\Events\SignatureListener;
 use RZ\Roadiz\Core\Events\ThemesSubscriber;
+use RZ\Roadiz\Core\Events\UpdateFontSubscriber;
 use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
 use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
-use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
-use RZ\Roadiz\Core\SearchEngine\Subscriber\DefaultNodesSourcesIndexingSubscriber;
-use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
@@ -50,8 +46,10 @@ use RZ\Roadiz\Core\Services\ThemeServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
 use RZ\Roadiz\OpenId\OpenIdServiceProvider;
+use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Translation\Services\TranslationServiceProvider;
 use RZ\Roadiz\Utils\Clearer\EventListener\AnnotationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
@@ -67,7 +65,7 @@ use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
 use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
-use RZ\Roadiz\Utils\Node\NodeMover;
+use RZ\Roadiz\Utils\Security\Firewall;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -82,17 +80,6 @@ use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
-use Themes\Rozier\Events\DocumentFilesizeSubscriber;
-use Themes\Rozier\Events\DocumentSizeSubscriber;
-use Themes\Rozier\Events\ExifDocumentSubscriber;
-use Themes\Rozier\Events\ImageColorDocumentSubscriber;
-use Themes\Rozier\Events\NodeDuplicationSubscriber;
-use Themes\Rozier\Events\NodeRedirectionSubscriber;
-use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
-use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
-use Themes\Rozier\Events\RawDocumentsSubscriber;
-use Themes\Rozier\Events\SvgDocumentSubscriber;
-use Themes\Rozier\Events\TranslationSubscriber;
 use Themes\Rozier\Services\RozierServiceProvider;
 
 /**
@@ -176,7 +163,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
         try {
             $this->initializeContainer();
-            $this->initEvents();
             $this->booted = true;
         } catch (InvalidConfigurationException $e) {
             $view = new ExceptionViewer();
@@ -195,9 +181,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $this->boot();
     }
 
-    /**
-     *
-     */
     public function initializeContainer()
     {
         foreach (['cache' => $this->warmupDir ?: $this->getCacheDir(), 'logs' => $this->getLogDir()] as $name => $dir) {
@@ -260,6 +243,14 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $dispatcher = new EventDispatcher();
+            /*
+             * Firewall service is private
+             */
+            $dispatcher->addSubscriber(new Firewall(
+                $c['firewallMap'],
+                $dispatcher
+            ));
+            $dispatcher->addSubscriber($c['routeListener']);
             $dispatcher->addSubscriber(new SessionListener(new \Pimple\Psr11\Container($c)));
             $dispatcher->addSubscriber(new AppCacheEventSubscriber());
             $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
@@ -277,6 +268,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
+            $dispatcher->addSubscriber(new UpdateFontSubscriber($c));
             $dispatcher->addSubscriber(new SignatureListener(
                 $c['settingsBag'],
                 $kernel::$cmsVersion,
@@ -300,82 +292,11 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             if (!$kernel->isInstallMode()) {
                 $dispatcher->addSubscriber(new LocaleSubscriber($kernel));
                 $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
-
-                /*
-                 * Add custom event subscriber to empty NS Url cache
-                 */
-                $dispatcher->addSubscriber(
-                    new NodesSourcesUrlSubscriber($c['nodesSourcesUrlCacheProvider'])
-                );
-
                 $dispatcher->addSubscriber(new NodeSourcePathSubscriber($c[NodesSourcesPathAggregator::class]));
-                /*
-                 * Add custom event subscriber to Translation result cache
-                 */
-                $dispatcher->addSubscriber(
-                    new TranslationSubscriber($c['em']->getConfiguration()->getResultCacheImpl())
-                );
-                /*
-                 * Add custom event subscriber to manage universal node-type fields
-                 */
-                $dispatcher->addSubscriber(
-                    new NodesSourcesUniversalSubscriber($c['em'], $c['utils.universalDataDuplicator'])
-                );
-
-                /*
-                 * Add custom event subscriber to manage Svg document sanitizing
-                 */
-                $dispatcher->addSubscriber(
-                    new SvgDocumentSubscriber(
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                /*
-                 * Add custom event subscriber to manage image document size and color
-                 */
-                $dispatcher->addSubscriber(
-                    new DocumentSizeSubscriber(
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                $dispatcher->addSubscriber(
-                    new DocumentFilesizeSubscriber(
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                $dispatcher->addSubscriber(
-                    new ImageColorDocumentSubscriber(
-                        $c['em'],
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                /*
-                 * Add custom event subscriber to manage document EXIF
-                 */
-                $dispatcher->addSubscriber(
-                    new ExifDocumentSubscriber(
-                        $c['em'],
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-
-                /*
-                 * Add custom event subscriber to create a downscaled version for HD images.
-                 */
-                $dispatcher->addSubscriber(
-                    new RawDocumentsSubscriber(
-                        $c['em'],
-                        $c['assetPackages'],
-                        $c['logger'],
-                        $c['config']['assetsProcessing']['driver'],
-                        $c['config']['assetsProcessing']['maxPixelSize']
-                    )
-                );
+                $dispatcher->addSubscriber(new RoleSubscriber(
+                    $c['em']->getConfiguration()->getResultCacheImpl(),
+                    $c['rolesBag']
+                ));
             }
             /*
              * If debug, alter HTML responses to append Debug panel to view
@@ -486,65 +407,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         } finally {
             --$this->requestStackSize;
         }
-    }
-
-    /**
-     * Register additional subscribers, especially those which need
-     * dispatcher to be woken up.
-     */
-    protected function initEvents()
-    {
-        $this->get('stopwatch')->start('kernel.initEvents');
-
-        if (!$this->isInstallMode()) {
-            $this->get('dispatcher')->addSubscriber($this->get('firewall'));
-        }
-
-        $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
-        /*
-         * Add custom event subscribers to the general dispatcher.
-         *
-         * Important: do not check here if Solr respond, not to request
-         * solr server at each HTTP request.
-         */
-        $this->get('dispatcher')->addSubscriber(
-            new SolariumSubscriber(
-                $this->get('solr'),
-                $this->get('logger'),
-                $this->get(SolariumFactoryInterface::class)
-            )
-        );
-        $this->get('dispatcher')->addSubscriber(
-            new DefaultNodesSourcesIndexingSubscriber(
-                $this->get('factory.handler')
-            )
-        );
-        /*
-         * Add custom event subscriber to manage node duplication
-         */
-        $this->get('dispatcher')->addSubscriber(
-            new NodeDuplicationSubscriber(
-                $this->get('em'),
-                $this->get('factory.handler')
-            )
-        );
-
-        $this->get('dispatcher')->addSubscriber(
-            new NodeNameSubscriber(
-                $this->get('logger.doctrine'),
-                $this->get('utils.nodeNameChecker'),
-                $this->get(NodeMover::class)
-            )
-        );
-        /*
-         * Add event to create redirection after renaming a node.
-         */
-        if ($this->isProdMode() && !$this->isPreview()) {
-            $this->get('dispatcher')->addSubscriber(
-                new NodeRedirectionSubscriber($this->get(NodeMover::class), $this)
-            );
-        }
-        $this->get('stopwatch')->stop('kernel.initEvents');
     }
 
     /**

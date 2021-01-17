@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\ORM\EntityManagerInterface;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueEmail;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueUsername;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\CreatePasswordType;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\AbstractType;
@@ -19,8 +17,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * Class UserType
- *
  * @package Themes\Rozier\Forms
  */
 class UserType extends AbstractType
@@ -33,14 +29,6 @@ class UserType extends AbstractType
                     new NotNull(),
                     new Email(),
                     new NotBlank(),
-                    new UniqueEmail([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['email'],
-                    ]),
-                    new UniqueUsername([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['username'],
-                    ]),
                     new Length([
                         'max' => 200,
                     ])
@@ -51,14 +39,6 @@ class UserType extends AbstractType
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
-                    new UniqueUsername([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['username'],
-                    ]),
-                    new UniqueEmail([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['email'],
-                    ]),
                     new Length([
                         'max' => 200
                     ])
@@ -86,14 +66,18 @@ class UserType extends AbstractType
             'attr' => [
                 'class' => 'uk-form user-form',
             ],
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => [
+                        'email'
+                    ]
+                ]),
+                new UniqueEntity([
+                    'fields' => [
+                        'username',
+                    ]
+                ])
+            ]
         ]);
-
-        $resolver->setRequired([
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', EntityManagerInterface::class);
-        $resolver->setAllowedTypes('email', 'string');
-        $resolver->setAllowedTypes('username', 'string');
     }
 }

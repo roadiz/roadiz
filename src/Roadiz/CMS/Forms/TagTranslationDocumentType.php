@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\DataTransformer\TagTranslationDocumentsTransformer;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\TagTranslationDocuments;
@@ -17,11 +15,23 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class NodeSourceDocumentType
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
 class TagTranslationDocumentType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -33,7 +43,7 @@ class TagTranslationDocumentType extends AbstractType
             [$this, 'onPostSubmit']
         );
         $builder->addModelTransformer(new TagTranslationDocumentsTransformer(
-            $options['entityManager'],
+            $this->entityManager,
             $options['tagTranslation']
         ));
     }
@@ -51,9 +61,7 @@ class TagTranslationDocumentType extends AbstractType
         ]);
 
         $resolver->setRequired('tagTranslation');
-        $resolver->setRequired('entityManager');
         $resolver->setAllowedTypes('tagTranslation', [TagTranslation::class]);
-        $resolver->setAllowedTypes('entityManager', [ObjectManager::class]);
     }
 
     /**
@@ -80,14 +88,15 @@ class TagTranslationDocumentType extends AbstractType
     public function onPostSubmit(FormEvent $event)
     {
         if ($event->getForm()->getConfig()->getOption('tagTranslation') instanceof TagTranslation) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
-
-            /** @var QueryBuilder $qb */
-            $qb = $entityManager->getRepository(TagTranslationDocuments::class)->createQueryBuilder('ttd');
+            $qb = $this->entityManager
+                ->getRepository(TagTranslationDocuments::class)
+                ->createQueryBuilder('ttd');
             $qb->delete()
                 ->andWhere($qb->expr()->eq('ttd.tagTranslation', ':tagTranslation'))
-                ->setParameter(':tagTranslation', $event->getForm()->getConfig()->getOption('tagTranslation'));
+                ->setParameter(
+                    ':tagTranslation',
+                    $event->getForm()->getConfig()->getOption('tagTranslation')
+                );
             $qb->getQuery()->execute();
         }
     }

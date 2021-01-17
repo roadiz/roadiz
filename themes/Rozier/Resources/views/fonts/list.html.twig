@@ -1,71 +1,85 @@
-{% extends '@Rozier/layout.html.twig' %}
+{% extends "admin/base.html.twig" %}
 
-{% block content %}
-<section class="content-global content-nav-and-filters">
+{%- block content_title -%}{% trans %}fonts{% endtrans %}{%- endblock -%}
 
-    <header class="content-header header-font header-font-list">
-        <h1 class="content-title font-list-title">{% trans %}fonts{% endtrans %}</h1>
-        {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
-        <div class="content-header-action-menu">
-            <a class="uk-button" href="{{ path('fontsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.font{% endtrans %}</a>
-        </div>
-    </header>
+{%- block content_header_actions -%}
+    <a class="uk-button" href="{{ path('fontsAddPage') }}">
+        <i class="uk-icon-rz-plus"></i> {% trans %}add.a.font{% endtrans %}
+    </a>
+{%- endblock -%}
 
+{%- block content_filters -%}
     {% include '@Rozier/widgets/filtersBar.html.twig' %}
+{%- endblock -%}
 
+{%- block content_body -%}
     <article class="content content-no-action-menu">
         <div class="content-table-cont">
             <table class="fonts content-table uk-table">
                 <thead>
-                    <tr>
-                        <th>
-                            {% trans %}name{% endtrans %}
-                            {% include 'includes/column_ordering.html.twig' with {
-                                'field': 'name',
-                                'filters': filters,
-                            } only %}
-                        </th>
-                        <th>
-                            {% trans %}font.variant{% endtrans %}
-                        </th>
-                        <th class="mobile-hidden">{% trans %}font.files{% endtrans %}</th>
-                        <th class="mobile-hidden">
-                            {% trans %}font.cssfamily{% endtrans %}
-                            {% include 'includes/column_ordering.html.twig' with {
-                                'field': 'hash',
-                                'filters': filters,
-                            } only %}
-                        </th>
-                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
-                    </tr>
+                <tr>
+                    <th>
+                        {% trans %}name{% endtrans %}
+                        {% include 'includes/column_ordering.html.twig' with {
+                            'field': 'name',
+                            'filters': filters,
+                        } only %}
+                    </th>
+                    <th>
+                        {% trans %}font.variant{% endtrans %}
+                    </th>
+                    <th class="mobile-hidden">{% trans %}font.files{% endtrans %}</th>
+                    <th class="mobile-hidden">
+                        {% trans %}font.cssfamily{% endtrans %}
+                        {% include 'includes/column_ordering.html.twig' with {
+                            'field': 'hash',
+                            'filters': filters,
+                        } only %}
+                    </th>
+                    <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+                </tr>
                 </thead>
                 <tbody>
-                    {% for font in fonts %}
+                {% for item in items %}
                     <tr>
                         <td>
-                            <a href="{{ path('fontsEditPage', { fontId: font.getId }) }}">{{ font.getName }}</a>
+                            <a href="{{ path('fontsEditPage', { id: item.id }) }}">{{ item.name }}</a>
                         </td>
-                        <td>{{ font.getReadableVariant|trans }}</td>
+                        <td>{{ item.getReadableVariant|trans }}</td>
                         <td class="mobile-hidden">
-                            {% if font.getEOTFilename %}<div class="uk-badge uk-badge-table">EOT</div>{% endif %}
-                            {% if font.getWOFFFilename %}<div class="uk-badge uk-badge-table">WOFF</div>{% endif %}
-                            {% if font.getWOFF2Filename %}<div class="uk-badge uk-badge-table">WOFF2</div>{% endif %}
-                            {% if font.getSVGFilename %}<div class="uk-badge uk-badge-table">SVG</div>{% endif %}
-                            {% if font.getOTFFilename %}<div class="uk-badge uk-badge-table">OTF</div>{% endif %}
+                            {% if item.getEOTFilename %}<div class="uk-badge uk-badge-table">EOT</div>{% endif %}
+                            {% if item.getWOFFFilename %}<div class="uk-badge uk-badge-table">WOFF</div>{% endif %}
+                            {% if item.getWOFF2Filename %}<div class="uk-badge uk-badge-table">WOFF2</div>{% endif %}
+                            {% if item.getSVGFilename %}<div class="uk-badge uk-badge-table">SVG</div>{% endif %}
+                            {% if item.getOTFFilename %}<div class="uk-badge uk-badge-table">OTF</div>{% endif %}
                         </td>
-                        <td class="mobile-hidden"><code>{{ font.getHash }}</code></td>
+                        <td class="mobile-hidden"><code>{{ item.getHash }}</code></td>
                         <td class="table-actions-row">
-                        {% apply spaceless %}
-                            <a class="uk-button uk-button-content uk-button-small" href="{{ path('fontsEditPage', { fontId: font.getId }) }}" title="{% trans %}edit{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link" href="{{ path('fontsDownloadPage', { fontId: font.getId }) }}" title="{% trans %}download{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-download"></i></a>
-                            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete" href="{{ path('fontsDeletePage', { fontId: font.getId }) }}" title="{% trans %}delete{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
-                        {% endapply %}
+                            {% apply spaceless %}
+                                <a class="uk-button uk-button-content uk-button-small"
+                                   href="{{ path('fontsEditPage', { id: item.id }) }}"
+                                   title="{% trans %}edit{% endtrans %}"
+                                   data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-pencil"></i>
+                                </a>
+                                <a class="uk-button uk-button-content uk-button-small rz-no-ajax-link"
+                                   href="{{ path('fontsDownloadPage', { id: item.id }) }}"
+                                   title="{% trans %}download{% endtrans %}"
+                                   data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-download"></i>
+                                </a>
+                                <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+                                   href="{{ path('fontsDeletePage', { id: item.id }) }}"
+                                   title="{% trans %}delete{% endtrans %}"
+                                   data-uk-tooltip="{animation:true}">
+                                    <i class="uk-icon-rz-trash-mini-o"></i>
+                                </a>
+                            {% endapply %}
                         </td>
                     </tr>
-                    {% endfor %}
+                {% endfor %}
                 </tbody>
             </table>
         </div>
     </article>
-</section>
-{% endblock %}
+{%- endblock -%}

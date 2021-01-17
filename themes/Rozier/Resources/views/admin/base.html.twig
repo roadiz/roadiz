@@ -1,0 +1,21 @@
+{% extends "@Rozier/layout.html.twig" %}
+
+{% block content %}
+    <section class="content-global">
+        <header class="content-header">
+            <h1 class="content-title">{%- block content_title -%}{%- endblock -%}</h1>
+            {%- block content_count_filters -%}
+                {%- include '@Rozier/widgets/countFiltersBar.html.twig' -%}
+            {%- endblock -%}
+
+            <div class="content-header-action-menu">
+                {%- block content_header_actions -%}{%- endblock -%}
+            </div>
+
+            {%- block content_header_nav -%}{%- endblock -%}
+        </header>
+        {%- block content_filters -%}{%- endblock -%}
+
+        {%- block content_body -%}{%- endblock -%}
+    </section>
+{% endblock %}

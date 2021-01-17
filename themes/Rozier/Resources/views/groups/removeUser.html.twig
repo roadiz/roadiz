@@ -16,7 +16,7 @@
         }) }}{{ form_widget(form) }}
             <fieldset data-uk-margin>
                 <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.remove.user.from.group{% endtrans %}</legend>
-                <a href="{{ path('groupsEditUsersPage', { groupId: group.getId }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <a href="{{ path('groupsEditUsersPage', { id: item.id }) }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
                 <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}unlink{% endtrans %}</button>
             </fieldset>
         {{ form_end(form) }}

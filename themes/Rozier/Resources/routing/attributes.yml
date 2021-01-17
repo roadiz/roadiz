@@ -26,7 +26,7 @@ attributesDeletePage:
 attributeGroupsHomePage:
     path:     /groups
     defaults:
-        _controller: Themes\Rozier\Controllers\Attributes\AttributeGroupController::listAction
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeGroupController::defaultAction
 attributeGroupsAddPage:
     path:     /groups/add
     defaults:

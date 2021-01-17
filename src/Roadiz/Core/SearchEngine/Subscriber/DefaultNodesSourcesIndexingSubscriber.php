@@ -20,8 +20,6 @@ final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInte
     private $handlerFactory;
 
     /**
-     * DefaultNodesSourcesIndexingSubscriber constructor.
-     *
      * @param HandlerFactory $handlerFactory
      */
     public function __construct(HandlerFactory $handlerFactory)

@@ -24,7 +24,7 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
      *
      * @return Response JSON response
      */
-    public function editAction(Request $request, $attributeValueId)
+    public function editAction(Request $request, int $attributeValueId)
     {
         /*
          * Validate

@@ -7,7 +7,6 @@ use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
 use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -27,25 +26,23 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
 /**
- * Class NodesTreesController
- *
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesTreesController extends RozierApp
 {
     /**
      * @param Request $request
-     * @param int     $nodeId
-     * @param int     $translationId
+     * @param int|null $nodeId
+     * @param int|null $translationId
      *
      * @return Response
      */
-    public function treeAction(Request $request, $nodeId = null, $translationId = null)
+    public function treeAction(Request $request, ?int $nodeId = null, ?int $translationId = null)
     {
-        if ($nodeId > 0) {
+        if (null !== $nodeId) {
             $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId, true);
             /** @var Node $node */
-            $node = $this->get('em')->find(Node::class, (int) $nodeId);
+            $node = $this->get('em')->find(Node::class, $nodeId);
 
             if (null === $node) {
                 throw new ResourceNotFoundException();
@@ -62,13 +59,13 @@ class NodesTreesController extends RozierApp
             /** @var Translation $translation */
             $translation = $this->get('em')
                                 ->getRepository(Translation::class)
-                                ->findOneBy(['id' => (int) $translationId]);
+                                ->findOneBy(['id' => $translationId]);
         } else {
             /** @var Translation $translation */
             $translation = $this->get('defaultTranslation');
         }
 
-        $widget = new NodeTreeWidget($request, $this, $node, $translation);
+        $widget = new NodeTreeWidget($request, $this->get('em'), $node, $translation);
 
         if ($request->get('tagId') &&
             $request->get('tagId') > 0) {
@@ -287,7 +284,7 @@ class NodesTreesController extends RozierApp
      *
      * @return string
      */
-    private function bulkDeleteNodes($data)
+    private function bulkDeleteNodes(array $data)
     {
         if (!empty($data['nodesIds'])) {
             $nodesIds = trim($data['nodesIds']);
@@ -321,7 +318,7 @@ class NodesTreesController extends RozierApp
      *
      * @return string
      */
-    private function bulkStatusNodes($data)
+    private function bulkStatusNodes(array $data)
     {
         if (!empty($data['nodesIds'])) {
             $nodesIds = trim($data['nodesIds']);
@@ -402,7 +399,7 @@ class NodesTreesController extends RozierApp
      * @param  array $data
      * @return string
      */
-    private function tagNodes($data)
+    private function tagNodes(array $data)
     {
         $msg = $this->getTranslator()->trans('nodes.bulk.not_tagged');
 
@@ -443,7 +440,7 @@ class NodesTreesController extends RozierApp
      * @param  array $data
      * @return string
      */
-    private function untagNodes($data)
+    private function untagNodes(array $data)
     {
         $msg = $this->getTranslator()->trans('nodes.bulk.not_untagged');
 

@@ -33,10 +33,7 @@ class LoginController extends RozierApp
             return $this->redirect($this->generateUrl('adminHomePage'));
         }
 
-        $form = $this->createForm(LoginType::class, null, [
-            'urlGenerator' => $this->get('urlGenerator'),
-            'requestStack' => $this->get('requestStack'),
-        ]);
+        $form = $this->createForm(LoginType::class);
         $this->assignation['form'] = $form->createView();
 
         $helper = $this->get('securityAuthenticationUtils');

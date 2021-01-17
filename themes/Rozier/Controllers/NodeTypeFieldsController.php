@@ -28,7 +28,7 @@ class NodeTypeFieldsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request, $nodeTypeId)
+    public function listAction(Request $request, int $nodeTypeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
@@ -55,7 +55,7 @@ class NodeTypeFieldsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editAction(Request $request, $nodeTypeFieldId)
+    public function editAction(Request $request, int $nodeTypeFieldId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
@@ -67,9 +67,6 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['field'] = $field;
 
             $form = $this->createForm(NodeTypeFieldType::class, $field, [
-                'em' => $this->get('em'),
-                'fieldName' => $field->getName(),
-                'nodeType' => $field->getNodeType(),
                 'inheritance_type' => $this->get('config')['inheritance']['type']
             ]);
             $form->handleRequest($request);
@@ -112,7 +109,7 @@ class NodeTypeFieldsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addAction(Request $request, $nodeTypeId)
+    public function addAction(Request $request, int $nodeTypeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
@@ -133,8 +130,6 @@ class NodeTypeFieldsController extends RozierApp
             $this->assignation['field'] = $field;
 
             $form = $this->createForm(NodeTypeFieldType::class, $field, [
-                'em' => $this->get('em'),
-                'nodeType' => $field->getNodeType(),
                 'inheritance_type' => $this->get('config')['inheritance']['type']
             ]);
             $form->handleRequest($request);
@@ -194,12 +189,12 @@ class NodeTypeFieldsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteAction(Request $request, $nodeTypeFieldId)
+    public function deleteAction(Request $request, int $nodeTypeFieldId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODEFIELDS_DELETE');
 
         /** @var NodeTypeField $field */
-        $field = $this->get('em')->find(NodeTypeField::class, (int) $nodeTypeFieldId);
+        $field = $this->get('em')->find(NodeTypeField::class, $nodeTypeFieldId);
 
         if ($field !== null) {
             $this->assignation['field'] = $field;

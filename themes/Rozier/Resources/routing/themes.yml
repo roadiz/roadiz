@@ -1,17 +1,4 @@
 
-themesSummaryPage:
-    path:      /summary
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::summaryAction
-themesSettingPage:
-    path:      /setting
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::settingAction
-themesImportPage:
-    path:     /import/{id}
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::importAction
-    requirements: { id : "[0-9]+" }
 themesClearCacheSchema:
     path:     /clear-cache
     methods: ["POST"]

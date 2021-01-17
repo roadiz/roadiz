@@ -1,14 +1,14 @@
 redirectionsEditPage:
-    path:     /edit/{redirectionId}
+    path:     /edit/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\RedirectionsController::editAction
-    requirements: { redirectionId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 redirectionsAddPage:
     path:     /add
     defaults:
         _controller: Themes\Rozier\Controllers\RedirectionsController::addAction
 redirectionsDeletePage:
-    path:     /delete/{redirectionId}
+    path:     /delete/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\RedirectionsController::deleteAction
-    requirements: { redirectionId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }

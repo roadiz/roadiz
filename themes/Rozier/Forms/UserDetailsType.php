@@ -14,9 +14,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Themes\Rozier\RozierApp;
 
-/**
- *
- */
 class UserDetailsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)

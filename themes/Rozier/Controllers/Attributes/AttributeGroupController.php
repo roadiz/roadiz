@@ -4,167 +4,108 @@ declare(strict_types=1);
 namespace Themes\Rozier\Controllers\Attributes;
 
 use RZ\Roadiz\Attribute\Form\AttributeGroupType;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\AttributeGroup;
+use RZ\Roadiz\Core\Entities\SettingGroup;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\String\UnicodeString;
+use Themes\Rozier\Controllers\AbstractAdminController;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class AttributeGroupController
- *
  * @package Themes\Rozier\Controllers\Attributes
  */
-class AttributeGroupController extends RozierApp
+class AttributeGroupController extends AbstractAdminController
 {
     /**
-     * @param Request $request
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function listAction(Request $request)
+    protected function supports(PersistableInterface $item): bool
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
-
-        $listManager = $this->createEntityListManager(
-            AttributeGroup::class,
-            [],
-            ['canonicalName' => 'ASC']
-        );
-        $listManager->handle();
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['items'] = $listManager->getEntities();
-
-        return $this->render('attributes/groups/list.html.twig', $this->assignation);
+        return $item instanceof AttributeGroup;
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @inheritDoc
      */
-    public function addAction(Request $request)
+    protected function getNamespace(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
-
-        $item = new AttributeGroup();
-
-        $form = $this->createForm(AttributeGroupType::class, $item, [
-            'entityManager' => $this->get('em'),
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->get('em')->persist($item);
-                $this->get('em')->flush();
-
-                $msg = $this->getTranslator()->trans(
-                    'attribute_group.%name%.created',
-                    ['%name%' => $item->getName()]
-                );
-                $this->publishConfirmMessage($request, $msg);
-            } catch (\RuntimeException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
-            }
-
-            /*
-             * Force redirect to avoid resending form when refreshing page
-             */
-            if ($request->query->has('referer') &&
-                (new UnicodeString($request->query->get('referer')))->startsWith('/')) {
-                return $this->redirect($request->query->get('referer'));
-            }
-            return $this->redirect($this->generateUrl('attributeGroupsEditPage', ['id' => $item->getId()]));
-        }
-
-        $this->assignation['form'] = $form->createView();
-
-        return $this->render('attributes/groups/add.html.twig', $this->assignation);
+        return 'attribute_group';
     }
 
     /**
-     * @param Request $request
-     * @param int     $id
-     *
-     * @return Response
+     * @inheritDoc
      */
-    public function editAction(Request $request, $id)
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES');
-
-        /** @var AttributeGroup $item */
-        $item = $this->get('em')->find(AttributeGroup::class, (int) $id);
-
-        if ($item === null) {
-            throw $this->createNotFoundException('AttributeGroup does not exist.');
-        }
-
-        $form = $this->createForm(AttributeGroupType::class, $item, [
-            'entityManager' => $this->get('em'),
-        ]);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->get('em')->flush();
-                $msg = $this->getTranslator()->trans(
-                    'attribute_group.%name%.updated',
-                    ['%name%' => $item->getName()]
-                );
-                $this->publishConfirmMessage($request, $msg);
-            } catch (\RuntimeException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
-            }
-            return $this->redirect($this->generateUrl('attributeGroupsEditPage', ['id' => $item->getId()]));
-        }
-
-        $this->assignation['item'] = $item;
-        $this->assignation['form'] = $form->createView();
-
-        return $this->render('attributes/groups/edit.html.twig', $this->assignation);
+        return new AttributeGroup();
     }
 
     /**
-     * @param Request $request
-     * @param int     $id
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @inheritDoc
      */
-    public function deleteAction(Request $request, $id)
+    protected function getTemplateFolder(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
+        return 'attributes/groups';
+    }
 
-        /** @var AttributeGroup $item */
-        $item = $this->get('em')->find(AttributeGroup::class, (int) $id);
+    /**
+     * @inheritDoc
+     */
+    protected function getRequiredRole(): string
+    {
+        return 'ROLE_ACCESS_ATTRIBUTES';
+    }
 
-        if ($item === null) {
-            throw $this->createNotFoundException('AttributeGroup does not exist.');
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityClass(): string
+    {
+        return AttributeGroup::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFormType(): string
+    {
+        return AttributeGroupType::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultRouteName(): string
+    {
+        return 'attributeGroupsHomePage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditRouteName(): string
+    {
+        return 'attributeGroupsEditPage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityName(PersistableInterface $item): string
+    {
+        if ($item instanceof AttributeGroup) {
+            return $item->getName();
         }
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
+    }
 
-        $form = $this->createForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $this->get('em')->remove($item);
-                $this->get('em')->flush();
-
-                $msg = $this->getTranslator()->trans(
-                    'attribute_group.%name%.deleted',
-                    ['%name%' => $item->getName()]
-                );
-                $this->publishConfirmMessage($request, $msg);
-            } catch (\RuntimeException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
-            }
-
-            return $this->redirect($this->generateUrl('attributeGroupsHomePage'));
-        }
-
-        $this->assignation['form'] = $form->createView();
-        $this->assignation['item'] = $item;
-
-        return $this->render('attributes/groups/delete.html.twig', $this->assignation);
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultOrder(): array
+    {
+        return ['canonicalName' => 'ASC'];
     }
 }

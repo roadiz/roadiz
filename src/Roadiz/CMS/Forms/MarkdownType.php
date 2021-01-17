@@ -47,6 +47,7 @@ class MarkdownType extends AbstractType
         $view->vars['attr']['allow_blockquote'] = $options['allow_blockquote'];
         $view->vars['attr']['allow_list'] = $options['allow_list'];
         $view->vars['attr']['allow_nbsp'] = $options['allow_nbsp'];
+        $view->vars['attr']['allow_nb_hyphen'] = $options['allow_nb_hyphen'];
         $view->vars['attr']['allow_image'] = $options['allow_image'];
         $view->vars['attr']['allow_return'] = $options['allow_return'];
         $view->vars['attr']['allow_link'] = $options['allow_link'];
@@ -69,6 +70,7 @@ class MarkdownType extends AbstractType
             'allow_image' => false,
             'allow_list' => true,
             'allow_nbsp' => true,
+            'allow_nb_hyphen' => true,
             'allow_return' => true,
             'allow_link' => true,
             'allow_hr' => true,
@@ -86,6 +88,7 @@ class MarkdownType extends AbstractType
         $resolver->setAllowedTypes('allow_image', ['boolean']);
         $resolver->setAllowedTypes('allow_list', ['boolean']);
         $resolver->setAllowedTypes('allow_nbsp', ['boolean']);
+        $resolver->setAllowedTypes('allow_nb_hyphen', ['boolean']);
         $resolver->setAllowedTypes('allow_return', ['boolean']);
         $resolver->setAllowedTypes('allow_link', ['boolean']);
         $resolver->setAllowedTypes('allow_hr', ['boolean']);

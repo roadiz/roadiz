@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -16,21 +16,30 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class TranslationsType extends AbstractType
 {
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([]);
-        $resolver->setRequired(['entityManager']);
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
 
         /*
          * Use normalizer to populate choices from ChoiceType
          */
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $options['entityManager'];
-            $translations = $entityManager->getRepository(Translation::class)->findAll();
+            $translations = $this->entityManager->getRepository(Translation::class)->findAll();
 
             /** @var Translation $translation */
             foreach ($translations as $translation) {

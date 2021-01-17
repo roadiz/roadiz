@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use Symfony\Component\Form\AbstractType;
@@ -20,6 +20,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class NodesType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->addModelTransformer(new CallbackTransformer(function ($mixedEntities) {
@@ -32,7 +45,7 @@ class NodesType extends AbstractType
             return $mixedEntities;
         }, function ($mixedIds) use ($options) {
             /** @var NodeRepository $repository */
-            $repository = $options['entityManager']
+            $repository = $this->entityManager
                 ->getRepository(Node::class)
                 ->setDisplayingAllNodesStatuses(true);
             if (is_array($mixedIds) && count($mixedIds) === 0) {
@@ -62,10 +75,6 @@ class NodesType extends AbstractType
             'nodes' => [],
         ]);
 
-        $resolver->setRequired([
-            'entityManager'
-        ]);
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
         $resolver->setAllowedTypes('multiple', ['boolean']);
     }
 

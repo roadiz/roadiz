@@ -18,7 +18,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\NodesTrait;
 
 /**
- * Class NodesTagsController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesTagsController extends RozierApp
@@ -33,7 +32,7 @@ class NodesTagsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editTagsAction(Request $request, $nodeId)
+    public function editTagsAction(Request $request, int $nodeId)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
@@ -43,7 +42,7 @@ class NodesTagsController extends RozierApp
                        ->setDisplayingAllNodesStatuses(true)
                        ->setDisplayingNotPublishedNodes(true)
                        ->findOneBy([
-                           'node.id' => (int) $nodeId,
+                           'node.id' => $nodeId,
                        ]);
 
         if (null !== $source) {
@@ -53,9 +52,7 @@ class NodesTagsController extends RozierApp
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $source;
 
-            $form = $this->createForm(NodeTagsType::class, $node, [
-                'entityManager' => $this->get('em'),
-            ]);
+            $form = $this->createForm(NodeTagsType::class, $node);
 
             $form->handleRequest($request);
 
@@ -95,14 +92,14 @@ class NodesTagsController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeTagAction(Request $request, $nodeId, $tagId)
+    public function removeTagAction(Request $request, int $nodeId, int $tagId)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
 
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
         /** @var Tag $tag */
-        $tag = $this->get('em')->find(Tag::class, (int) $tagId);
+        $tag = $this->get('em')->find(Tag::class, $tagId);
 
         if ($node !== null && $tag !== null) {
             $this->assignation['node'] = $node;
@@ -144,7 +141,7 @@ class NodesTagsController extends RozierApp
      * @param array $data
      * @param Node  $node
      */
-    protected function repopulateNodeTags($data, Node $node)
+    protected function repopulateNodeTags(array $data, Node $node)
     {
         $node->getTags()->clear();
 
@@ -171,7 +168,7 @@ class NodesTagsController extends RozierApp
      *
      * @return Tag
      */
-    protected function removeNodeTag($data, Node $node, Tag $tag)
+    protected function removeNodeTag(array $data, Node $node, Tag $tag)
     {
         if ($data['nodeId'] == $node->getId() &&
             $data['tagId'] == $tag->getId()) {

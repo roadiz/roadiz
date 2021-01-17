@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Controllers\Nodes;
 
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceSeoType;
-use RZ\Roadiz\CMS\Forms\TranslationsType;
+use RZ\Roadiz\CMS\Forms\UrlAliasType;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Redirection;
@@ -16,24 +16,15 @@ use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasDeletedEvent;
 use RZ\Roadiz\Core\Events\UrlAlias\UrlAliasUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
-use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\Forms\RedirectionType;
 use Themes\Rozier\RozierApp;
 
-/**
- * {@inheritdoc}
- */
 class UrlAliasesController extends RozierApp
 {
     /**
@@ -45,22 +36,21 @@ class UrlAliasesController extends RozierApp
      *
      * @return Response
      */
-    public function editAliasesAction(Request $request, $nodeId, $translationId = null)
+    public function editAliasesAction(Request $request, int $nodeId, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         if (null === $translationId && $translationId < 1) {
             $translation = $this->get('defaultTranslation');
         } else {
-            $translation = $this->get('em')
-                                ->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, $translationId);
         }
         /** @var NodesSources|null $source */
         $source = $this->get('em')
                        ->getRepository(NodesSources::class)
                        ->setDisplayingAllNodesStatuses(true)
                        ->setDisplayingNotPublishedNodes(true)
-                       ->findOneBy(['translation' => $translation, 'node.id' => (int) $nodeId]);
+                       ->findOneBy(['translation' => $translation, 'node.id' => $nodeId]);
 
         if ($source !== null && null !== $node = $source->getNode()) {
             $redirections = $this->get('em')
@@ -122,23 +112,32 @@ class UrlAliasesController extends RozierApp
             }
 
             /*
-             * =======================
              * Main ADD url alias form
              */
-            $addAliasForm = $this->buildAddUrlAliasForm($node);
+            /** @var FormFactory $formFactory */
+            $formFactory = $this->get('formFactory');
+            $alias = new UrlAlias();
+            $addAliasForm = $formFactory->createNamed(
+                'add_urlalias_'.$node->getId(),
+                UrlAliasType::class,
+                $alias,
+                [
+                    'with_translation' => true
+                ]
+            );
             $addAliasForm->handleRequest($request);
             if ($addAliasForm->isSubmitted() && $addAliasForm->isValid()) {
                 try {
-                    $ua = $this->addNodeUrlAlias($addAliasForm->getData(), $node);
+                    $alias = $this->addNodeUrlAlias($alias, $node, $addAliasForm->get('translation')->getData());
                     $msg = $this->getTranslator()->trans('url_alias.%alias%.created.%translation%', [
-                        '%alias%' => $ua->getAlias(),
-                        '%translation%' => $ua->getNodeSource()->getTranslation()->getName(),
+                        '%alias%' => $alias->getAlias(),
+                        '%translation%' => $alias->getNodeSource()->getTranslation()->getName(),
                     ]);
                     $this->publishConfirmMessage($request, $msg, $source);
                     /*
                      * Dispatch event
                      */
-                    $this->get('dispatcher')->dispatch(new UrlAliasCreatedEvent($ua));
+                    $this->get('dispatcher')->dispatch(new UrlAliasCreatedEvent($alias));
 
                     return $this->redirect($this->generateUrl(
                         'nodesEditSEOPage',
@@ -161,184 +160,32 @@ class UrlAliasesController extends RozierApp
     }
 
     /**
-     * @param array $data
-     * @param Node  $node
-     *
-     * @return UrlAlias|null
-     * @throws EntityAlreadyExistsException
-     * @throws NoTranslationAvailableException
-     */
-    private function addNodeUrlAlias($data, Node $node)
-    {
-        if ($data['nodeId'] == $node->getId()) {
-            /** @var Translation $translation */
-            $translation = $this->get('em')->find(Translation::class, (int) $data['translationId']);
-
-            /** @var NodesSources $nodeSource */
-            $nodeSource = $this->get('em')
-                               ->getRepository(NodesSources::class)
-                               ->setDisplayingAllNodesStatuses(true)
-                               ->setDisplayingNotPublishedNodes(true)
-                               ->findOneBy(['node' => $node, 'translation' => $translation]);
-
-            if ($translation !== null &&
-                $nodeSource !== null) {
-                $testingAlias = StringHandler::slugify($data['alias']);
-                if ($this->nodeNameExists($testingAlias) ||
-                    $this->urlAliasExists($testingAlias)) {
-                    $msg = $this->getTranslator()->trans('url_alias.%alias%.no_creation.already_exists', ['%alias%' => $data['alias']]);
-                    throw new EntityAlreadyExistsException($msg, 1);
-                }
-
-                try {
-                    $ua = new UrlAlias($nodeSource);
-                    $ua->setAlias($data['alias']);
-                    $this->get('em')->persist($ua);
-                    $this->get('em')->flush();
-
-                    return $ua;
-                } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('url_alias.%alias%.no_creation.already_exists', ['%alias%' => $testingAlias]);
-
-                    throw new EntityAlreadyExistsException($msg);
-                }
-            } else {
-                $msg = $this->getTranslator()->trans('url_alias.no_translation.%translation%', [
-                    '%translation%' => $translation->getName()
-                ]);
-
-                throw new NoTranslationAvailableException($msg);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param string $name
-     *
-     * @return boolean
-     */
-    private function urlAliasExists($name)
-    {
-        return (boolean) $this->get('em')
-                              ->getRepository(UrlAlias::class)
-                              ->exists($name);
-    }
-    /**
-     * @param string $name
-     *
-     * @return boolean
-     */
-    private function nodeNameExists($name)
-    {
-        return (boolean) $this->get('em')
-                              ->getRepository(Node::class)
-                              ->setDisplayingNotPublishedNodes(true)
-                              ->exists($name);
-    }
-
-    /**
-     * @param array    $data
-     * @param UrlAlias $ua
-     *
-     * @return bool
-     * @throws EntityAlreadyExistsException
-     */
-    private function editUrlAlias($data, UrlAlias $ua)
-    {
-        $testingAlias = StringHandler::slugify($data['alias']);
-        if ($testingAlias != $ua->getAlias() &&
-            ($this->nodeNameExists($testingAlias) ||
-                $this->urlAliasExists($testingAlias))) {
-            $msg = $this->getTranslator()->trans(
-                'url_alias.%alias%.no_update.already_exists',
-                ['%alias%' => $data['alias']]
-            );
-
-            throw new EntityAlreadyExistsException($msg, 1);
-        }
-
-        if ($data['urlaliasId'] == $ua->getId()) {
-            try {
-                $ua->setAlias($data['alias']);
-                $this->get('em')->flush();
-
-                return true;
-            } catch (\Exception $e) {
-                return false;
-            }
-        }
-
-        return false;
-    }
-
-    /**
+     * @param UrlAlias $alias
      * @param Node $node
-     *
-     * @return FormInterface
+     * @param Translation $translation
+     * @return UrlAlias
      */
-    private function buildAddUrlAliasForm(Node $node)
+    private function addNodeUrlAlias(UrlAlias $alias, Node $node, Translation $translation): UrlAlias
     {
-        $defaults = [
-            'nodeId' => $node->getId(),
-        ];
+        /** @var NodesSources $nodeSource */
+        $nodeSource = $this->get('em')
+                           ->getRepository(NodesSources::class)
+                           ->setDisplayingAllNodesStatuses(true)
+                           ->setDisplayingNotPublishedNodes(true)
+                           ->findOneBy(['node' => $node, 'translation' => $translation]);
 
-        $builder = $this->createNamedFormBuilder('add_url_alias', $defaults)
-                        ->add('nodeId', HiddenType::class, [
-                            'data' => $node->getId(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('alias', TextType::class, [
-                            'label' => false,
-                            'attr' => [
-                                'placeholder' => 'urlAlias',
-                            ],
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ]
-                        ])
-                        ->add('translationId', TranslationsType::class, [
-                            'label' => false,
-                            'entityManager' => $this->get('em'),
-                        ]);
+        if ($translation !== null && $nodeSource !== null) {
+            $alias->setNodeSource($nodeSource);
+            $this->get('em')->persist($alias);
+            $this->get('em')->flush();
 
-        return $builder->getForm();
-    }
-
-    /**
-     * @param UrlAlias $ua
-     *
-     * @return FormInterface
-     */
-    private function buildEditUrlAliasForm(UrlAlias $ua)
-    {
-        $defaults = [
-            'urlaliasId' => $ua->getId(),
-            'alias' => $ua->getAlias(),
-        ];
-
-        $builder = $this->createNamedFormBuilder('edit_urlalias_'.$ua->getId(), $defaults)
-                        ->add('urlaliasId', HiddenType::class, [
-                            'data' => $ua->getId(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('alias', TextType::class, [
-                            'label' => false,
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ]);
-
-        return $builder->getForm();
+            return $alias;
+        } else {
+            $msg = $this->getTranslator()->trans('url_alias.no_translation.%translation%', [
+                '%translation%' => $translation->getName()
+            ]);
+            throw new NoTranslationAvailableException($msg);
+        }
     }
 
     /**
@@ -349,14 +196,24 @@ class UrlAliasesController extends RozierApp
      */
     private function handleSingleUrlAlias(UrlAlias $alias, Request $request): ?RedirectResponse
     {
-        $editForm = $this->buildEditUrlAliasForm($alias);
-        $deleteForm = $this->createNamedFormBuilder('delete_urlalias_'.$alias->getId())->getForm();
+        /** @var FormFactory $formFactory */
+        $formFactory = $this->get('formFactory');
+        $editForm = $formFactory->createNamed(
+            'edit_urlalias_'.$alias->getId(),
+            UrlAliasType::class,
+            $alias
+        );
+        $deleteForm = $formFactory->createNamed('delete_urlalias_'.$alias->getId());
         // Match edit
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             try {
-                if ($this->editUrlAlias($editForm->getData(), $alias)) {
-                    $msg = $this->getTranslator()->trans('url_alias.%alias%.updated', ['%alias%' => $alias->getAlias()]);
+                try {
+                    $this->get('em')->flush();
+                    $msg = $this->getTranslator()->trans(
+                        'url_alias.%alias%.updated',
+                        ['%alias%' => $alias->getAlias()]
+                    );
                     $this->publishConfirmMessage($request, $msg, $alias->getNodeSource());
                     /*
                      * Dispatch event
@@ -370,12 +227,8 @@ class UrlAliasesController extends RozierApp
                             'translationId' => $alias->getNodeSource()->getTranslation()->getId()
                         ]
                     ).'#manage-aliases');
-                } else {
-                    $msg = $this->getTranslator()->trans(
-                        'url_alias.%alias%.no_update.already_exists',
-                        ['%alias%' => $alias->getAlias()]
-                    );
-                    $editForm->addError(new FormError($msg));
+                } catch (\RuntimeException $exception) {
+                    $editForm->addError(new FormError($exception->getMessage()));
                 }
             } catch (EntityAlreadyExistsException $e) {
                 $editForm->addError(new FormError($e->getMessage()));
@@ -413,6 +266,11 @@ class UrlAliasesController extends RozierApp
         return null;
     }
 
+    /**
+     * @param NodesSources $source
+     * @param Request $request
+     * @return RedirectResponse|null
+     */
     private function handleAddRedirection(NodesSources $source, Request $request): ?RedirectResponse
     {
         $redirection = new Redirection();
@@ -421,16 +279,15 @@ class UrlAliasesController extends RozierApp
 
         /** @var FormFactory $formFactory */
         $formFactory = $this->get('formFactory');
-        $addForm = $formFactory->createNamedBuilder(
+        $addForm = $formFactory->createNamed(
             'add_redirection',
             RedirectionType::class,
             $redirection,
             [
                 'placeholder' => $this->generateUrl($source),
-                'entityManager' => $this->get('em'),
                 'only_query' => true
             ]
-        )->getForm();
+        );
 
         $addForm->handleRequest($request);
         if ($addForm->isSubmitted() && $addForm->isValid()) {
@@ -450,21 +307,24 @@ class UrlAliasesController extends RozierApp
         return null;
     }
 
+    /**
+     * @param Redirection $redirection
+     * @param Request $request
+     * @return RedirectResponse|null
+     */
     private function handleSingleRedirection(Redirection $redirection, Request $request): ?RedirectResponse
     {
         /** @var FormFactory $formFactory */
         $formFactory = $this->get('formFactory');
-        /** @var FormInterface $editForm */
-        $editForm = $formFactory->createNamedBuilder(
+        $editForm = $formFactory->createNamed(
             'edit_redirection_'.$redirection->getId(),
             RedirectionType::class,
             $redirection,
             [
-                'entityManager' => $this->get('em'),
                 'only_query' => true
             ]
-        )->getForm();
-        $deleteForm = $this->createNamedFormBuilder('delete_redirection_'.$redirection->getId())->getForm();
+        );
+        $deleteForm = $formFactory->createNamed('delete_redirection_'.$redirection->getId());
 
         $editForm->handleRequest($request);
         if ($editForm->isSubmitted() && $editForm->isValid()) {

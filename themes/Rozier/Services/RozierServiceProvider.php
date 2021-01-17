@@ -5,14 +5,28 @@ namespace Themes\Rozier\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Kernel;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
-use Themes\AbstractApiTheme\Serialization\ChildrenApiSubscriber;
-use Themes\AbstractApiTheme\Serialization\EntityListManagerSubscriber;
-use Themes\AbstractApiTheme\Serialization\NodeSourceApiSubscriber;
-use Themes\AbstractApiTheme\Serialization\TagTranslationNameSubscriber;
-use Themes\AbstractApiTheme\Serialization\TokenSubscriber;
+use Themes\Rozier\Events\DocumentFilesizeSubscriber;
+use Themes\Rozier\Events\DocumentSizeSubscriber;
+use Themes\Rozier\Events\ExifDocumentSubscriber;
+use Themes\Rozier\Events\ImageColorDocumentSubscriber;
+use Themes\Rozier\Events\NodeDuplicationSubscriber;
+use Themes\Rozier\Events\NodeRedirectionSubscriber;
+use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
+use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
+use Themes\Rozier\Events\RawDocumentsSubscriber;
+use Themes\Rozier\Events\SvgDocumentSubscriber;
+use Themes\Rozier\Events\TranslationSubscriber;
+use Themes\Rozier\Forms\FolderCollectionType;
+use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\Forms\Node\AddNodeType;
+use Themes\Rozier\Forms\Node\TranslateNodeType;
+use Themes\Rozier\Forms\NodeTagsType;
+use Themes\Rozier\Forms\NodeTreeType;
 use Themes\Rozier\Forms\NodeType;
+use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\Serialization\DocumentThumbnailSerializeSubscriber;
 
 final class RozierServiceProvider implements ServiceProviderInterface
@@ -28,9 +42,142 @@ final class RozierServiceProvider implements ServiceProviderInterface
         $container['rozier.form_type.add_node'] = AddNodeType::class;
         $container['rozier.form_type.node'] = NodeType::class;
 
+        $container[NodeTreeType::class] = function (Container $c) {
+            return new NodeTreeType(
+                $c['securityAuthorizationChecker'],
+                $c['request_stack'],
+                $c['em'],
+            );
+        };
+
+        $container[LoginType::class] = function (Container $c) {
+            return new LoginType(
+                $c['router'],
+                $c['request_stack'],
+            );
+        };
+
+        $container[AddNodeType::class] = function (Container $c) {
+            return new AddNodeType($c['em']);
+        };
+
+        $container[TranslateNodeType::class] = function (Container $c) {
+            return new TranslateNodeType($c['em']);
+        };
+
+        $container[FolderCollectionType::class] = function (Container $c) {
+            return new FolderCollectionType($c['em']);
+        };
+
+        $container[NodeTagsType::class] = function (Container $c) {
+            return new NodeTagsType($c['em']);
+        };
+
+        $container[TranstypeType::class] = function (Container $c) {
+            return new TranstypeType($c['em']);
+        };
+
         $container->extend('serializer.subscribers', function (array $subscribers, $c) {
             $subscribers[] = new DocumentThumbnailSerializeSubscriber($c['document.url_generator']);
             return $subscribers;
+        });
+
+        $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+
+            if (!$kernel->isInstallMode()) {
+                /*
+             * Add custom event subscriber to empty NS Url cache
+             */
+                $dispatcher->addSubscriber(
+                    new NodesSourcesUrlSubscriber($c['nodesSourcesUrlCacheProvider'])
+                );
+                /*
+                 * Add custom event subscriber to Translation result cache
+                 */
+                $dispatcher->addSubscriber(
+                    new TranslationSubscriber($c['em']->getConfiguration()->getResultCacheImpl())
+                );
+                /*
+                 * Add custom event subscriber to manage universal node-type fields
+                 */
+                $dispatcher->addSubscriber(
+                    new NodesSourcesUniversalSubscriber($c['em'], $c['utils.universalDataDuplicator'])
+                );
+                /*
+                 * Add custom event subscriber to manage Svg document sanitizing
+                 */
+                $dispatcher->addSubscriber(
+                    new SvgDocumentSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                /*
+                 * Add custom event subscriber to manage image document size and color
+                 */
+                $dispatcher->addSubscriber(
+                    new DocumentSizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new DocumentFilesizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new ImageColorDocumentSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                /*
+                 * Add custom event subscriber to manage document EXIF
+                 */
+                $dispatcher->addSubscriber(
+                    new ExifDocumentSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+
+                /*
+                 * Add custom event subscriber to create a downscaled version for HD images.
+                 */
+                $dispatcher->addSubscriber(
+                    new RawDocumentsSubscriber(
+                        $c['em'],
+                        $c['assetPackages'],
+                        $c['logger'],
+                        $c['config']['assetsProcessing']['driver'],
+                        $c['config']['assetsProcessing']['maxPixelSize']
+                    )
+                );
+            }
+            /*
+             * Add custom event subscriber to manage node duplication
+             */
+            $dispatcher->addSubscriber(
+                new NodeDuplicationSubscriber(
+                    $c['em'],
+                    $c['factory.handler']
+                )
+            );
+
+            /*
+             * Add event to create redirection after renaming a node.
+             */
+            $dispatcher->addSubscriber(
+                new NodeRedirectionSubscriber($c['proxy.nodeMover'], $kernel)
+            );
+
+            return $dispatcher;
         });
 
         $container->extend('backoffice.entries', function (array $entries, $c) {
@@ -131,12 +278,6 @@ final class RozierServiceProvider implements ServiceProviderInterface
                         'path' => $urlGenerator->generate('translationsHomePage'),
                         'icon' => 'uk-icon-rz-translate',
                         'roles' => ['ROLE_ACCESS_TRANSLATIONS'],
-                    ],
-                    'manage.themes' => [
-                        'name' => 'manage.themes',
-                        'path' => $urlGenerator->generate('themesHomePage'),
-                        'icon' => 'uk-icon-rz-themes',
-                        'roles' => ['ROLE_ACCESS_THEMES'],
                     ],
                     'manage.fonts' => [
                         'name' => 'manage.fonts',

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -26,7 +26,7 @@ class EntityListManager
      */
     protected $request = null;
     /**
-     * @var EntityManager|null
+     * @var EntityManagerInterface|null
      */
     protected $entityManager = null;
     /**
@@ -84,14 +84,14 @@ class EntityListManager
 
     /**
      * @param Request|null  $request
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param string        $entityName
      * @param array         $preFilters
      * @param array         $preOrdering
      */
     public function __construct(
         ?Request $request,
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         string $entityName,
         $preFilters = [],
         $preOrdering = []

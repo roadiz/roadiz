@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Form;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Attribute\Form\DataTransformer\AttributeDocumentsTransformer;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Core\Entities\Attribute;
@@ -17,11 +16,23 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class NodeSourceDocumentType
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
 class AttributeDocumentType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -33,7 +44,7 @@ class AttributeDocumentType extends AbstractType
             [$this, 'onPostSubmit']
         );
         $builder->addModelTransformer(new AttributeDocumentsTransformer(
-            $options['entityManager'],
+            $this->entityManager,
             $options['attribute']
         ));
     }
@@ -51,9 +62,7 @@ class AttributeDocumentType extends AbstractType
         ]);
 
         $resolver->setRequired('attribute');
-        $resolver->setRequired('entityManager');
         $resolver->setAllowedTypes('attribute', [AttributeInterface::class]);
-        $resolver->setAllowedTypes('entityManager', [ObjectManager::class]);
     }
 
     /**
@@ -80,13 +89,11 @@ class AttributeDocumentType extends AbstractType
     public function onPostSubmit(FormEvent $event)
     {
         if ($event->getForm()->getConfig()->getOption('attribute') instanceof AttributeInterface) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
             /** @var AttributeInterface $attribute */
             $attribute = $event->getForm()->getConfig()->getOption('attribute');
 
             if ($attribute instanceof Attribute && $attribute->getId()) {
-                $qb = $entityManager->getRepository(AttributeDocuments::class)
+                $qb = $this->entityManager->getRepository(AttributeDocuments::class)
                     ->createQueryBuilder('ad');
                 $qb->delete()
                     ->andWhere($qb->expr()->eq('ad.attribute', ':attribute'))

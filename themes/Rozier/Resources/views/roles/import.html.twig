@@ -5,18 +5,22 @@
 
     <header class="content-header header-role header-role-add">
         <h1 class="content-title">{% trans %}import.role{% endtrans %}</h1>
-         <a class="content-header-nav-back uk-navbar-content" href="{{ path('rolesHomePage') }}" title="{% trans %}back_to.roles{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+         <a class="content-header-nav-back uk-navbar-content"
+            href="{{ path('rolesHomePage') }}"
+            title="{% trans %}back_to.roles{% endtrans %}"
+            data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
         {{ form_start(form) }}
             {{ form_widget(form) }}
-            <button type="submit" class="uk-button uk-button-primary"><i class="uk-icon-rz-upload"></i> {% trans %}import{% endtrans %}</button>
+            <button type="submit" class="uk-button uk-button-primary">
+                <i class="uk-icon-rz-upload"></i> {% trans %}import{% endtrans %}
+            </button>
         {{ form_end(form) }}
     </article>
 
     {% include '@Rozier/roles/actionsMenu.html.twig' %}
-
 </section>
 {% endblock %}

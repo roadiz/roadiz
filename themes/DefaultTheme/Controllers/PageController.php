@@ -132,9 +132,6 @@ class PageController extends DefaultThemeApp
             [
                 'class' => $this->node->getNodeType()->getSourceEntityFullQualifiedClassName(),
                 'nodeType' => $this->node->getNodeType(),
-                'controller' => $this,
-                'entityManager' => $this->get('em'),
-                'container' => $this->getContainer(),
                 'withVirtual' => false,
                 'withTitle' => false,
             ]

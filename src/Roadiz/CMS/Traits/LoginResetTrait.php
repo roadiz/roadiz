@@ -14,7 +14,7 @@ trait LoginResetTrait
      * @param string $token
      * @return null|User
      */
-    public function getUserByToken(EntityManager $entityManager, $token)
+    public function getUserByToken(EntityManager $entityManager, string $token)
     {
         /** @var User $user */
         return $entityManager->getRepository(User::class)

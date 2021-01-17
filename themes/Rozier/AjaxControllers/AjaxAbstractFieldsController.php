@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class AjaxAbstractFieldsController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxAbstractFieldsController extends AbstractAjaxController

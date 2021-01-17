@@ -1,0 +1,18 @@
+{% if not total %}
+    {% set total = 8 %}
+{% endif %}
+<div class="content-progress">
+    {% for item in 1..total %}
+        {% set classes = ['content-progress-item'] %}
+        {% if loop.first %}
+            {% set classes = classes|merge(['first']) %}
+        {% endif %}
+        {% if loop.last %}
+            {% set classes = classes|merge(['last']) %}
+        {% endif %}
+        {% if loop.index <= current %}
+            {% set classes = classes|merge(['active']) %}
+        {% endif %}
+        <div class="{{ classes|join(' ') }}"></div>
+    {% endfor %}
+</div>

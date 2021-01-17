@@ -36,6 +36,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -50,7 +51,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class DocumentsController
  * @package Themes\Rozier\Controllers\Documents
  */
 class DocumentsController extends RozierApp
@@ -66,11 +66,11 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param null    $folderId
+     * @param int|null    $folderId
      *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|Response
+     * @return RedirectResponse|Response
      */
-    public function indexAction(Request $request, $folderId = null)
+    public function indexAction(Request $request, ?int $folderId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
@@ -86,7 +86,7 @@ class DocumentsController extends RozierApp
         if (null !== $folderId &&
             $folderId > 0) {
             $folder = $this->get('em')
-                ->find(Folder::class, (int) $folderId);
+                ->find(Folder::class, $folderId);
 
             $prefilters['folders'] = [$folder];
             $this->assignation['folder'] = $folder;
@@ -164,13 +164,12 @@ class DocumentsController extends RozierApp
      * @param int $documentId
      * @return JsonResponse|Response
      */
-    public function adjustAction(Request $request, $documentId)
+    public function adjustAction(Request $request, int $documentId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
-        $document = $this->get('em')
-            ->find(Document::class, (int) $documentId);
+        $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
             // Assign document
@@ -253,12 +252,12 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function editAction(Request $request, $documentId)
+    public function editAction(Request $request, int $documentId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
-        $document = $this->get('em')->find(Document::class, (int) $documentId);
+        $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
             /*
@@ -266,9 +265,7 @@ class DocumentsController extends RozierApp
              */
             $form = $this->createForm(DocumentEditType::class, $document, [
                 'referer' => $this->get('requestStack')->getCurrentRequest()->get('referer'),
-                'assetPackages' => $this->get('assetPackages'),
                 'document_platforms' => $this->get('document.platforms'),
-                'entityManager' => $this->get('em'),
             ]);
             $form->handleRequest($request);
 
@@ -334,13 +331,12 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function previewAction(Request $request, $documentId)
+    public function previewAction(Request $request, int $documentId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
-        $document = $this->get('em')
-            ->find(Document::class, (int) $documentId);
+        $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
             /** @var Packages $packages */
@@ -409,12 +405,11 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function deleteAction(Request $request, $documentId)
+    public function deleteAction(Request $request, int $documentId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS_DELETE');
 
-        $document = $this->get('em')
-            ->find(Document::class, (int) $documentId);
+        $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -559,14 +554,12 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function embedAction(Request $request, $folderId = null)
+    public function embedAction(Request $request, ?int $folderId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        if (null !== $folderId &&
-            $folderId > 0) {
-            $folder = $this->get('em')
-                ->find(Folder::class, (int) $folderId);
+        if (null !== $folderId && $folderId > 0) {
+            $folder = $this->get('em')->find(Folder::class, $folderId);
 
             $this->assignation['folder'] = $folder;
         }
@@ -628,7 +621,7 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function randomAction(Request $request, $folderId = null)
+    public function randomAction(Request $request, ?int $folderId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
@@ -663,13 +656,12 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function downloadAction(Request $request, $documentId)
+    public function downloadAction(Request $request, int $documentId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Document $document */
-        $document = $this->get('em')
-            ->find(Document::class, (int) $documentId);
+        $document = $this->get('em')->find(Document::class, $documentId);
 
         /** @var DocumentHandler $handler */
         $handler = $this->get('document.handler');
@@ -684,18 +676,16 @@ class DocumentsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int $folderId
+     * @param int|null $folderId
      * @param string $_format
      * @return Response
      */
-    public function uploadAction(Request $request, $folderId = null, $_format = 'html')
+    public function uploadAction(Request $request, ?int $folderId = null, string $_format = 'html')
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
-        if (null !== $folderId &&
-            $folderId > 0) {
-            $folder = $this->get('em')
-                ->find(Folder::class, (int) $folderId);
+        if (null !== $folderId && $folderId > 0) {
+            $folder = $this->get('em')->find(Folder::class, $folderId);
 
             $this->assignation['folder'] = $folder;
         }
@@ -774,11 +764,11 @@ class DocumentsController extends RozierApp
      *
      * @return Response
      */
-    public function usageAction(Request $request, $documentId)
+    public function usageAction(Request $request, int $documentId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
         /** @var Document $document */
-        $document = $this->get('em')->find(Document::class, (int) $documentId);
+        $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
             $this->assignation['document'] = $document;
@@ -1108,7 +1098,7 @@ class DocumentsController extends RozierApp
      * @throws \Exception
      * @throws EntityAlreadyExistsException
      */
-    private function embedDocument($data, $folderId = null)
+    private function embedDocument($data, ?int $folderId = null)
     {
         $handlers = $this->get('document.platforms');
 
@@ -1130,7 +1120,7 @@ class DocumentsController extends RozierApp
                 $finder->setKey($this->get('settingsBag')->get('soundcloud_client_id'));
             }
             $finder->setEmbedId($data['embedId']);
-            return $this->createDocumentFromFinder($finder, (int) $folderId);
+            return $this->createDocumentFromFinder($finder, $folderId);
         } else {
             throw new \RuntimeException("bad.request", 1);
         }
@@ -1145,10 +1135,10 @@ class DocumentsController extends RozierApp
      * @throws \Exception
      * @throws EntityAlreadyExistsException
      */
-    private function randomDocument($folderId = null)
+    private function randomDocument(?int $folderId = null)
     {
         $finder = new SplashbasePictureFinder();
-        return $this->createDocumentFromFinder($finder, (int) $folderId);
+        return $this->createDocumentFromFinder($finder, $folderId);
     }
 
     /**
@@ -1189,13 +1179,12 @@ class DocumentsController extends RozierApp
      *
      * @return bool|DocumentInterface
      */
-    private function uploadDocument($data, $folderId = null)
+    private function uploadDocument($data, ?int $folderId = null)
     {
         $folder = null;
         if (null !== $folderId && $folderId > 0) {
             /** @var Folder $folder */
-            $folder = $this->get('em')
-                ->find(Folder::class, (int) $folderId);
+            $folder = $this->get('em')->find(Folder::class, $folderId);
         }
 
         if (!empty($data['attachment'])) {
@@ -1214,6 +1203,7 @@ class DocumentsController extends RozierApp
 
         return false;
     }
+
     /**
      * See unused documents.
      *

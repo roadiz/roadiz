@@ -382,13 +382,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new EncoderFactory($c['userImplementations']);
         };
 
-        $container['firewall'] = function (Container $c) {
-            $c['stopwatch']->start('firewall.build');
-            $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
-            $c['stopwatch']->stop('firewall.build');
-            return $firewall;
-        };
-
         /*
          * Default denied handler
          */

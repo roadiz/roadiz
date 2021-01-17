@@ -5,445 +5,302 @@ namespace Themes\Rozier\Controllers;
 
 use RZ\Roadiz\CMS\Forms\RolesType;
 use RZ\Roadiz\CMS\Forms\UsersType;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
-use Themes\Rozier\RozierApp;
+use Themes\Rozier\Forms\GroupType;
 
 /**
  * @package Themes\Rozier\Controllers
  */
-class GroupsController extends RozierApp
+class GroupsController extends AbstractAdminController
 {
     /**
-     * List groups action.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function indexAction(Request $request)
+    protected function supports(PersistableInterface $item): bool
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
-
-        /*
-         * Manage get request to filter list
-         */
-        $listManager = $this->createEntityListManager(
-            Group::class
-        );
-        $listManager->setDisplayingNotPublishedNodes(true);
-        $listManager->handle();
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['groups'] = $listManager->getEntities();
-
-        return $this->render('groups/list.html.twig', $this->assignation);
+        return $item instanceof Group;
     }
 
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function addAction(Request $request)
+    protected function getNamespace(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
-
-        $form = $this->buildAddForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            try {
-                $group = $this->addGroup($form->getData());
-                $msg = $this->getTranslator()->trans(
-                    'group.%name%.created',
-                    ['%name%' => $group->getName()]
-                );
-                $this->publishConfirmMessage($request, $msg);
-            } catch (EntityAlreadyExistsException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
-            } catch (\RuntimeException $e) {
-                $this->publishErrorMessage($request, $e->getMessage());
-            }
-
-            return $this->redirect($this->generateUrl('groupsHomePage'));
-        }
-
-        $this->assignation['form'] = $form->createView();
-
-        return $this->render('groups/add.html.twig', $this->assignation);
+        return 'group';
     }
 
     /**
-     * @param Request $request
-     * @param int     $groupId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function deleteAction(Request $request, $groupId)
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
-
-        /** @var Group|null $group */
-        $group = $this->get('em')
-                      ->find(Group::class, (int) $groupId);
-
-        if ($group !== null) {
-            if (!$this->isGranted($group)) {
-                throw $this->createAccessDeniedException();
-            }
-            $form = $this->buildDeleteForm($group);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['groupId'] == $group->getId()) {
-                try {
-                    $this->deleteGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans(
-                        'group.%name%.deleted',
-                        ['%name%' => $group->getName()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                } catch (\RuntimeException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                }
-
-                return $this->redirect($this->generateUrl('groupsHomePage'));
-            }
-
-            $this->assignation['group'] = $group;
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('groups/delete.html.twig', $this->assignation);
-        }
-
-        throw new ResourceNotFoundException();
+        return new Group();
     }
 
     /**
-     * @param Request $request
-     * @param int     $groupId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function editAction(Request $request, $groupId)
+    protected function getTemplateFolder(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
+        return 'groups';
+    }
 
-        /** @var Group|null $group */
-        $group = $this->get('em')
-                      ->find(Group::class, (int) $groupId);
+    /**
+     * @inheritDoc
+     */
+    protected function getRequiredRole(): string
+    {
+        return 'ROLE_ACCESS_GROUPS';
+    }
 
-        if ($group !== null) {
-            if (!$this->isGranted($group)) {
-                throw $this->createAccessDeniedException();
-            }
-            $this->assignation['group'] = $group;
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityClass(): string
+    {
+        return Group::class;
+    }
 
-            $form = $this->buildEditForm($group);
-            $form->handleRequest($request);
+    /**
+     * @inheritDoc
+     */
+    protected function getFormType(): string
+    {
+        return GroupType::class;
+    }
 
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['groupId'] == $group->getId()) {
-                try {
-                    $this->editGroup($form->getData(), $group);
-                    $msg = $this->getTranslator()->trans(
-                        'group.%name%.updated',
-                        ['%name%' => $group->getName()]
-                    );
-                    $this->publishConfirmMessage($request, $msg);
-                } catch (EntityAlreadyExistsException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                } catch (\RuntimeException $e) {
-                    $this->publishErrorMessage($request, $e->getMessage());
-                }
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultRouteName(): string
+    {
+        return 'groupsHomePage';
+    }
 
-                return $this->redirect($this->generateUrl('groupsHomePage'));
-            }
+    /**
+     * @inheritDoc
+     */
+    protected function getEditRouteName(): string
+    {
+        return 'groupsEditPage';
+    }
 
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('groups/edit.html.twig', $this->assignation);
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityName(PersistableInterface $item): string
+    {
+        if ($item instanceof Group) {
+            return $item->getName();
         }
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
+    }
 
-        throw new ResourceNotFoundException();
+    /**
+     * @inheritDoc
+     */
+    protected function denyAccessUnlessItemGranted(PersistableInterface $item): void
+    {
+        $this->denyAccessUnlessGranted($item);
     }
 
     /**
      * Return an edition form for requested group.
      *
      * @param Request $request
-     * @param int     $groupId
+     * @param int     $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editRolesAction(Request $request, $groupId)
+    public function editRolesAction(Request $request, int $id)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
 
-        /** @var Group|null $group */
-        $group = $this->get('em')
-                      ->find(Group::class, (int) $groupId);
+        /** @var Group|null $item */
+        $item = $this->get('em')->find($this->getEntityClass(), $id);
 
-        if ($group !== null) {
-            if (!$this->isGranted($group)) {
-                throw $this->createAccessDeniedException();
-            }
-            $this->assignation['group'] = $group;
-            $form = $this->buildEditRolesForm($group);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $role = $this->addRole($form->getData(), $group);
-
-                $msg = $this->getTranslator()->trans('role.%role%.linked_group.%group%', [
-                    '%group%' => $group->getName(),
-                    '%role%' => $role->getName(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                return $this->redirect($this->generateUrl(
-                    'groupsEditRolesPage',
-                    ['groupId' => $group->getId()]
-                ));
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('groups/roles.html.twig', $this->assignation);
+        if (null === $item || !($item instanceof Group)) {
+            throw $this->createNotFoundException();
         }
 
-        throw new ResourceNotFoundException();
+        $this->denyAccessUnlessItemGranted($item);
+
+        $this->assignation['item'] = $item;
+        $form = $this->buildEditRolesForm($item);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $role = $this->addRole($form->getData(), $item);
+
+            $msg = $this->getTranslator()->trans('role.%role%.linked_group.%group%', [
+                '%group%' => $item->getName(),
+                '%role%' => $role->getRole(),
+            ]);
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->generateUrl(
+                'groupsEditRolesPage',
+                ['groupId' => $item->getId()]
+            ));
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('groups/roles.html.twig', $this->assignation);
     }
 
     /**
      * @param Request $request
-     * @param int     $groupId
+     * @param int     $id
      * @param int     $roleId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeRolesAction(Request $request, $groupId, $roleId)
+    public function removeRolesAction(Request $request, int $id, int $roleId)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
 
-        /** @var Group|null $group */
-        $group = $this->get('em')
-                      ->find(Group::class, (int) $groupId);
+        /** @var Group|null $item */
+        $item = $this->get('em')->find($this->getEntityClass(), $id);
+
         /** @var Role|null $role */
-        $role = $this->get('em')
-                     ->find(Role::class, (int) $roleId);
+        $role = $this->get('em')->find(Role::class, $roleId);
 
-        if ($group !== null &&
-            $role !== null) {
-            if (!$this->isGranted($group)) {
-                throw $this->createAccessDeniedException();
-            }
-            $this->assignation['group'] = $group;
-            $this->assignation['role'] = $role;
-
-            $form = $this->buildRemoveRoleForm($group, $role);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->removeRole($form->getData(), $group, $role);
-                $msg = $this->getTranslator()->trans('role.%role%.removed_from_group.%group%', [
-                    '%role%' => $role->getRole(),
-                    '%group%' => $group->getName(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                return $this->redirect($this->generateUrl(
-                    'groupsEditRolesPage',
-                    ['groupId' => $group->getId()]
-                ));
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('groups/removeRole.html.twig', $this->assignation);
+        if (null === $item || !($item instanceof Group)) {
+            throw $this->createNotFoundException();
         }
 
-        throw new ResourceNotFoundException();
+        if (null === $role || !($role instanceof Role)) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->denyAccessUnlessItemGranted($item);
+
+        $this->assignation['item'] = $item;
+        $this->assignation['role'] = $role;
+
+        $form = $this->buildRemoveRoleForm($item, $role);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->removeRole($form->getData(), $item, $role);
+            $msg = $this->getTranslator()->trans('role.%role%.removed_from_group.%group%', [
+                '%role%' => $role->getRole(),
+                '%group%' => $item->getName(),
+            ]);
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->generateUrl(
+                'groupsEditRolesPage',
+                ['groupId' => $item->getId()]
+            ));
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('groups/removeRole.html.twig', $this->assignation);
     }
 
     /**
      * @param Request $request
-     * @param int     $groupId
+     * @param int     $id
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function editUsersAction(Request $request, $groupId)
+    public function editUsersAction(Request $request, int $id)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
 
-        /** @var Group $group */
-        $group = $this->get('em')
-                      ->find(Group::class, (int) $groupId);
+        /** @var Group|null $item */
+        $item = $this->get('em')->find($this->getEntityClass(), $id);
 
-        if ($group !== null) {
-            if (!$this->isGranted($group)) {
-                throw $this->createAccessDeniedException();
-            }
-            $this->assignation['group'] = $group;
-            $form = $this->buildEditUsersForm($group);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $user = $this->addUser($form->getData(), $group);
-
-                $msg = $this->getTranslator()->trans('user.%user%.linked.group.%group%', [
-                    '%group%' => $group->getName(),
-                    '%user%' => $user->getUserName(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                return $this->redirect($this->generateUrl(
-                    'groupsEditUsersPage',
-                    ['groupId' => $group->getId()]
-                ));
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('groups/users.html.twig', $this->assignation);
+        if (null === $item || !($item instanceof Group)) {
+            throw $this->createNotFoundException();
         }
 
-        throw new ResourceNotFoundException();
+        $this->denyAccessUnlessItemGranted($item);
+
+        $this->assignation['item'] = $item;
+        $form = $this->buildEditUsersForm($item);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->addUser($form->getData(), $item);
+
+            $msg = $this->getTranslator()->trans('user.%user%.linked.group.%group%', [
+                '%group%' => $item->getName(),
+                '%user%' => $user->getUserName(),
+            ]);
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->generateUrl(
+                'groupsEditUsersPage',
+                ['groupId' => $item->getId()]
+            ));
+        }
+
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('groups/users.html.twig', $this->assignation);
     }
 
     /**
      * @param Request $request
-     * @param int     $groupId
+     * @param int     $id
      * @param int     $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeUsersAction(Request $request, $groupId, $userId)
+    public function removeUsersAction(Request $request, int $id, int $userId)
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
 
-        /** @var Group|null $group */
-        $group = $this->get('em')
-                      ->find(Group::class, (int) $groupId);
+        /** @var Group|null $item */
+        $item = $this->get('em')->find($this->getEntityClass(), $id);
         /** @var User|null $user */
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, $userId);
 
-        if ($group !== null &&
-            $user !== null) {
-            if (!$this->isGranted($group)) {
-                throw $this->createAccessDeniedException();
-            }
-            $this->assignation['group'] = $group;
-            $this->assignation['user'] = $user;
-
-            $form = $this->buildRemoveUserForm($group, $user);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->removeUser($form->getData(), $group, $user);
-                $msg = $this->getTranslator()->trans('user.%user%.removed_from_group.%group%', [
-                    '%user%' => $user->getUserName(),
-                    '%group%' => $group->getName(),
-                ]);
-                $this->publishConfirmMessage($request, $msg);
-
-                return $this->redirect($this->generateUrl(
-                    'groupsEditUsersPage',
-                    ['groupId' => $group->getId(),
-                        'userId' => $user->getId()]
-                ));
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('groups/removeUser.html.twig', $this->assignation);
+        if (null === $item || !($item instanceof Group)) {
+            throw $this->createNotFoundException();
         }
 
-        throw new ResourceNotFoundException();
-    }
+        if (null === $user) {
+            throw $this->createNotFoundException();
+        }
 
-    /**
-     * Build add group form with name constraint.
-     *
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    protected function buildAddForm()
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('name', TextType::class, [
-                            'label' => 'group.name',
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ]);
+        $this->denyAccessUnlessItemGranted($item);
 
-        return $builder->getForm();
-    }
+        $this->assignation['item'] = $item;
+        $this->assignation['user'] = $user;
 
-    /**
-     * Build edit group form with name constraint.
-     *
-     * @param Group $group
-     *
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    protected function buildEditForm(Group $group)
-    {
-        $defaults = [
-            'name' => $group->getName(),
-        ];
-        $builder = $this->createFormBuilder($defaults)
-                        ->add('groupId', HiddenType::class, [
-                            'data' => $group->getId(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ])
-                        ->add('name', TextType::class, [
-                            'label' => 'group.name',
-                            'data' => $group->getName(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ]);
+        $form = $this->buildRemoveUserForm($item, $user);
+        $form->handleRequest($request);
 
-        return $builder->getForm();
-    }
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->removeUser($form->getData(), $item, $user);
+            $msg = $this->getTranslator()->trans('user.%user%.removed_from_group.%group%', [
+                '%user%' => $user->getUserName(),
+                '%group%' => $item->getName(),
+            ]);
+            $this->publishConfirmMessage($request, $msg);
 
-    /**
-     * Build delete group form with name constraint.
-     *
-     * @param Group $group
-     *
-     * @return \Symfony\Component\Form\FormInterface
-     */
-    protected function buildDeleteForm(Group $group)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('groupId', HiddenType::class, [
-                            'data' => $group->getId(),
-                            'constraints' => [
-                                new NotNull(),
-                                new NotBlank(),
-                            ],
-                        ]);
+            return $this->redirect($this->generateUrl(
+                'groupsEditUsersPage',
+                ['groupId' => $item->getId(),
+                    'userId' => $user->getId()]
+            ));
+        }
 
-        return $builder->getForm();
+        $this->assignation['form'] = $form->createView();
+
+        return $this->render('groups/removeUser.html.twig', $this->assignation);
     }
 
     /**
@@ -469,9 +326,7 @@ class GroupsController extends RozierApp
                             RolesType::class,
                             [
                                 'label' => 'choose.role',
-                                'entityManager' => $this->get('em'),
                                 'roles' => $group->getRolesEntities(),
-                                'authorizationChecker' => $this->get('securityAuthorizationChecker'),
                             ]
                         );
 
@@ -505,7 +360,6 @@ class GroupsController extends RozierApp
                                     new NotNull(),
                                     new NotBlank(),
                                 ],
-                                'entityManager' => $this->get('em'),
                                 'users' => $group->getUsers(),
                             ]
                         );
@@ -565,72 +419,6 @@ class GroupsController extends RozierApp
                         ]);
 
         return $builder->getForm();
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return Group
-     * @throws EntityAlreadyExistsException
-     */
-    protected function addGroup(array $data)
-    {
-        if (isset($data['name'])) {
-            $existing = $this->get('em')
-                             ->getRepository(Group::class)
-                             ->findOneBy(['name' => $data['name']]);
-
-            if ($existing !== null) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans("group.name.already.exists"), 1);
-            }
-
-            $group = new Group();
-            $group->setName($data['name']);
-            $this->get('em')->persist($group);
-            $this->get('em')->flush();
-
-            return $group;
-        } else {
-            throw new \RuntimeException("Group name is not defined", 1);
-        }
-    }
-
-    /**
-     * @param array $data
-     * @param Group $group
-     *
-     * @return Group
-     * @throws EntityAlreadyExistsException
-     */
-    protected function editGroup(array $data, Group $group)
-    {
-        if (isset($data['name'])) {
-            /** @var Group|null $existing */
-            $existing = $this->get('em')
-                             ->getRepository(Group::class)
-                             ->findOneBy(['name' => $data['name']]);
-            if ($existing !== null &&
-                $existing->getId() != $group->getId()) {
-                throw new EntityAlreadyExistsException($this->getTranslator()->trans("group.name.already.exists"), 1);
-            }
-
-            $group->setName($data['name']);
-            $this->get('em')->flush();
-
-            return $group;
-        } else {
-            throw new \RuntimeException("Group name is not defined", 1);
-        }
-    }
-
-    /**
-     * @param array $data
-     * @param Group $group
-     */
-    protected function deleteGroup(array $data, Group $group)
-    {
-        $this->get('em')->remove($group);
-        $this->get('em')->flush();
     }
 
     /**

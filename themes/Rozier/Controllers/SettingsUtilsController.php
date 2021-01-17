@@ -24,14 +24,14 @@ use Themes\Rozier\RozierApp;
 class SettingsUtilsController extends RozierApp
 {
     /**
-     * Export all settings in a Json file (.rzt).
+     * Export all settings in a Json file.
      *
      * @param Request $request
-     * @param int|null    $settingGroupId
+     * @param int|null $settingGroupId
      *
      * @return Response
      */
-    public function exportAllAction(Request $request, $settingGroupId = null)
+    public function exportAllAction(Request $request, ?int $settingGroupId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 

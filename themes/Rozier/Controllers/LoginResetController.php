@@ -21,7 +21,7 @@ class LoginResetController extends RozierApp
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function resetAction(Request $request, $token)
+    public function resetAction(Request $request, string $token)
     {
         /** @var User $user */
         $user = $this->getUserByToken($this->get('em'), $token);
@@ -30,7 +30,6 @@ class LoginResetController extends RozierApp
             $form = $this->createForm(LoginResetForm::class, null, [
                 'token' => $token,
                 'confirmationTtl' => User::CONFIRMATION_TTL,
-                'entityManager' => $this->get('em'),
             ]);
             $form->handleRequest($request);
 

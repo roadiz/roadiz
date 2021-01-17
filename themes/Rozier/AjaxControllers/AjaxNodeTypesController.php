@@ -12,8 +12,6 @@ use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Themes\Rozier\Models\NodeTypeModel;
 
 /**
- * Class AjaxNodeTypesController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodeTypesController extends AjaxAbstractFieldsController

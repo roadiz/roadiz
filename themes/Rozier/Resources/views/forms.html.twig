@@ -150,6 +150,14 @@
                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-space-forced"></i></a>
                         </li>
                     {% endif %}
+                    {% if attr.allow_nb_hyphen %}
+                        <li class="markdown-editor-button-cont-nb-hyphen">
+                            <a class="markdown-editor-button-nb-hyphen"
+                               data-markdowneditor-button="nb-hyphen"
+                               title="{% trans %}non_breaking.hyphen{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-minus"></i></a>
+                        </li>
+                    {% endif %}
                     {% if attr.allow_preview %}
                         <li class="markdown-editor-button-cont-preview">
                             <a class="markdown-editor-button-preview"

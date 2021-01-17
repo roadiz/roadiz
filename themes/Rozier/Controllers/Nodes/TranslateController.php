@@ -17,7 +17,6 @@ use Themes\Rozier\Forms\Node\TranslateNodeType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class TranslateController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class TranslateController extends RozierApp
@@ -28,12 +27,12 @@ class TranslateController extends RozierApp
      *
      * @return Response
      */
-    public function translateAction(Request $request, $nodeId)
+    public function translateAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null !== $node) {
             $availableTranslations = $this->get('em')
@@ -41,9 +40,7 @@ class TranslateController extends RozierApp
                                  ->findUnavailableTranslationsForNode($node);
 
             if (count($availableTranslations) > 0) {
-                /** @var Form $form */
                 $form = $this->createForm(TranslateNodeType::class, null, [
-                    'em' => $this->get('em'),
                     'node' => $node,
                 ]);
                 $form->handleRequest($request);
@@ -51,10 +48,10 @@ class TranslateController extends RozierApp
                 if ($form->isSubmitted() && $form->isValid()) {
                     /** @var Translation $translation */
                     $translation = $form->get('translation')->getData();
-                    $translateOffsprint = (boolean) $form->get('translate_offspring')->getData();
+                    $translateOffspring = (bool) $form->get('translate_offspring')->getData();
 
                     try {
-                        $this->doTranslate($translation, $node, $translateOffsprint);
+                        $this->doTranslate($translation, $node, $translateOffspring);
                         $msg = $this->getTranslator()->trans('node.%name%.translated', [
                             '%name%' => $node->getNodeName(),
                         ]);
@@ -123,7 +120,7 @@ class TranslateController extends RozierApp
      * @param Node $node
      * @param bool $translateChildren
      */
-    protected function doTranslate(Translation $translation, Node $node, $translateChildren = false)
+    protected function doTranslate(Translation $translation, Node $node, bool $translateChildren = false)
     {
         $this->translateNode($translation, $node);
 

@@ -18,7 +18,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class UsersController
  * @package Themes\Rozier\Controllers\Users
  */
 class UsersController extends RozierApp
@@ -64,7 +63,7 @@ class UsersController extends RozierApp
      *
      * @return Response
      */
-    public function editAction(Request $request, $userId)
+    public function editAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
@@ -74,7 +73,7 @@ class UsersController extends RozierApp
         )) {
             throw $this->createAccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
-        $user = $this->get('em')->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, $userId);
 
         if ($user !== null) {
             if (!$this->isGranted(Role::ROLE_SUPERADMIN) && $user->isSuperAdmin()) {
@@ -83,12 +82,7 @@ class UsersController extends RozierApp
 
             $this->assignation['user'] = $user;
 
-            $form = $this->createForm(UserType::class, $user, [
-                'em' => $this->get('em'),
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-            ]);
-
+            $form = $this->createForm(UserType::class, $user);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -124,7 +118,7 @@ class UsersController extends RozierApp
      *
      * @return Response
      */
-    public function editDetailsAction(Request $request, $userId)
+    public function editDetailsAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_BACKEND_USER');
 
@@ -192,11 +186,7 @@ class UsersController extends RozierApp
         $user->sendCreationConfirmationEmail(true);
         $this->assignation['user'] = $user;
 
-        $form = $this->createForm(AddUserType::class, $user, [
-            'em' => $this->get('em'),
-            'authorizationChecker' => $this->get('securityAuthorizationChecker')
-        ]);
-
+        $form = $this->createForm(AddUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -222,7 +212,7 @@ class UsersController extends RozierApp
      *
      * @return Response
      */
-    public function deleteAction(Request $request, $userId)
+    public function deleteAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS_DELETE');
         $user = $this->get('em')->find(User::class, (int) $userId);

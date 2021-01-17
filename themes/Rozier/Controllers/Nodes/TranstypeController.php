@@ -8,7 +8,6 @@ use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\NodeTranstyper;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,7 +16,6 @@ use Themes\Rozier\Forms\TranstypeType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class TranstypeController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class TranstypeController extends RozierApp
@@ -28,12 +26,12 @@ class TranstypeController extends RozierApp
      *
      * @return RedirectResponse|Response
      */
-    public function transtypeAction(Request $request, $nodeId)
+    public function transtypeAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
         $this->get('em')->refresh($node);
 
         if (null === $node) {
@@ -41,7 +39,6 @@ class TranstypeController extends RozierApp
         }
 
         $form = $this->createForm(TranstypeType::class, null, [
-            'em' => $this->get('em'),
             'currentType' => $node->getNodeType(),
         ]);
         $form->handleRequest($request);

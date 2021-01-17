@@ -57,16 +57,15 @@ class GroupsUtilsController extends RozierApp
      * Export a Group in a Json file (.json).
      *
      * @param Request $request
-     * @param int     $groupId
+     * @param int     $id
      *
      * @return Response
      */
-    public function exportAction(Request $request, $groupId)
+    public function exportAction(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
-        $existingGroup = $this->get('em')
-                              ->find(Group::class, (int) $groupId);
+        $existingGroup = $this->get('em')->find(Group::class, $id);
 
         if (null === $existingGroup) {
             throw $this->createNotFoundException();

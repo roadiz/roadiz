@@ -10,8 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class CustomFormFieldAttributesController
- *
  * @package Themes\Rozier\Controllers
  */
 class CustomFormFieldAttributesController extends RozierApp
@@ -24,7 +22,7 @@ class CustomFormFieldAttributesController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function listAction(Request $request, $customFormAnswerId)
+    public function listAction(Request $request, int $customFormAnswerId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
         /*

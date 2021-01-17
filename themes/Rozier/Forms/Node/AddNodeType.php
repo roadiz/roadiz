@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms\Node;
 
-use Doctrine\Persistence\ObjectManager;
-use RZ\Roadiz\CMS\Forms\NodeTypesType;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\DataTransformer\NodeTypeTransformer;
+use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -18,12 +18,23 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * Add node form type.
- *
  * @package Themes\Rozier\Forms\Node
  */
 class AddNodeType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -45,13 +56,12 @@ class AddNodeType extends AbstractType
         if ($options['showNodeType'] === true) {
             $builder->add('nodeType', NodeTypesType::class, [
                 'label' => 'nodeType',
-                'entityManager' => $options['em'],
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
                 ],
             ]);
-            $builder->get('nodeType')->addModelTransformer(new NodeTypeTransformer($options['em']));
+            $builder->get('nodeType')->addModelTransformer(new NodeTypeTransformer($this->entityManager));
         }
 
         $builder->add('dynamicNodeName', CheckboxType::class, [
@@ -106,11 +116,6 @@ class AddNodeType extends AbstractType
             ],
         ]);
 
-        $resolver->setRequired([
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('nodeName', 'string');
         $resolver->setAllowedTypes('showNodeType', 'boolean');
     }

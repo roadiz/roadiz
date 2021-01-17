@@ -11,8 +11,6 @@ use Themes\Rozier\Explorer\ExplorerItemInterface;
 use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 /**
- * Class AjaxExplorerProviderController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxExplorerProviderController extends AbstractAjaxController

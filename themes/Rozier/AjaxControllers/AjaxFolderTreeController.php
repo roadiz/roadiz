@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 
 /**
- * Class AjaxFolderTreeController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxFolderTreeController extends AbstractAjaxController
@@ -48,7 +45,7 @@ class AjaxFolderTreeController extends AbstractAjaxController
 
                 $folderTree = new FolderTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $folder
                 );
 
@@ -62,7 +59,7 @@ class AjaxFolderTreeController extends AbstractAjaxController
                 $parent = null;
                 $folderTree = new FolderTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $parent
                 );
                 $this->assignation['mainFolderTree'] = true;

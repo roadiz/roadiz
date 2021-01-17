@@ -54,7 +54,6 @@ class UniqueEntityValidator extends ConstraintValidator
         }
 
         $class = $this->entityManager->getClassMetadata(get_class($entity));
-        /* @var $class \Doctrine\Common\Persistence\Mapping\ClassMetadata */
 
         $criteria = [];
         $hasNullValue = false;

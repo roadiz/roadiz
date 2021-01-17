@@ -1,47 +1,47 @@
 groupsEditPage:
-    path:     /edit/{groupId}
+    path:     /edit/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsController::editAction
-    requirements: { groupId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 groupsEditRolesPage:
-    path:     /edit/{groupId}/roles
+    path:     /edit/{id}/roles
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsController::editRolesAction
-    requirements: { groupId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 groupsRemoveRolesPage:
-    path:     /edit/{groupId}/roles/{roleId}/remove
+    path:     /edit/{id}/roles/{roleId}/remove
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsController::removeRolesAction
-    requirements: { groupId : "[0-9]+", roleId : "[0-9]+" }
+    requirements: { id : "[0-9]+", roleId : "[0-9]+" }
 groupsAddPage:
     path:     /add
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsController::addAction
 groupsDeletePage:
-    path:     /delete/{groupId}
+    path:     /delete/{id}
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsController::deleteAction
-    requirements: { groupId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 groupsImportPage:
     path:     /import
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsUtilsController::importJsonFileAction
 groupsEditUsersPage:
-    path:     /edit/{groupId}/users
+    path:     /edit/{id}/users
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsController::editUsersAction
-    requirements: { groupId : "[0-9]+" }
+    requirements: { id : "[0-9]+" }
 groupsRemoveUsersPage:
-    path:     /edit/{groupId}/users/{userId}/remove
+    path:     /edit/{id}/users/{userId}/remove
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsController::removeUsersAction
-    requirements: { groupId : "[0-9]+", userId : "[0-9]+" }
+    requirements: { id : "[0-9]+", userId : "[0-9]+" }
 groupsExportAllPage:
     path:     /export
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAllAction
 groupsExportPage:
-    path:     /export/{groupId}
-    requirements: { groupId : "[0-9]+" }
+    path:     /export/{id}
+    requirements: { id : "[0-9]+" }
     defaults:
         _controller: Themes\Rozier\Controllers\GroupsUtilsController::exportAction

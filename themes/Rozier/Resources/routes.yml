@@ -84,7 +84,7 @@ settingsRoutes:
 settingGroupsHomePage:
     path:     /rz-admin/setting-groups
     defaults:
-        _controller: Themes\Rozier\Controllers\SettingGroupsController::indexAction
+        _controller: Themes\Rozier\Controllers\SettingGroupsController::defaultAction
 settingGroupsRoutes:
     resource: "routing/setting-groups.yml"
     prefix: /rz-admin/setting-groups
@@ -112,7 +112,7 @@ usersRoutes:
 attributesHomePage:
     path:     /rz-admin/attributes
     defaults:
-        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::indexAction
+        _controller: Themes\Rozier\Controllers\Attributes\AttributeController::defaultAction
 attributesRoutes:
     resource: "routing/attributes.yml"
     prefix: /rz-admin/attributes
@@ -121,7 +121,7 @@ attributesRoutes:
 fontsHomePage:
     path:     /rz-admin/fonts
     defaults:
-        _controller: Themes\Rozier\Controllers\FontsController::indexAction
+        _controller: Themes\Rozier\Controllers\FontsController::defaultAction
 fontsRoutes:
     resource: "routing/fonts.yml"
     prefix: /rz-admin/fonts
@@ -163,16 +163,12 @@ documentsRoutes:
 redirectionsHomePage:
     path:     /rz-admin/redirections
     defaults:
-        _controller: Themes\Rozier\Controllers\RedirectionsController::indexAction
+        _controller: Themes\Rozier\Controllers\RedirectionsController::defaultAction
 redirectionsRoutes:
     resource: "routing/redirections.yml"
     prefix: /rz-admin/redirections
 
 # THEMES
-themesHomePage:
-    path:     /rz-admin/themes
-    defaults:
-        _controller: Themes\Rozier\Controllers\ThemesController::indexAction
 themesRoutes:
     resource: "routing/themes.yml"
     prefix: /rz-admin/themes
@@ -182,7 +178,7 @@ themesRoutes:
 rolesHomePage:
     path:     /rz-admin/roles
     defaults:
-        _controller: Themes\Rozier\Controllers\RolesController::indexAction
+        _controller: Themes\Rozier\Controllers\RolesController::defaultAction
 rolesRoutes:
     resource: "routing/roles.yml"
     prefix: /rz-admin/roles
@@ -192,7 +188,7 @@ rolesRoutes:
 groupsHomePage:
     path:     /rz-admin/groups
     defaults:
-        _controller: Themes\Rozier\Controllers\GroupsController::indexAction
+        _controller: Themes\Rozier\Controllers\GroupsController::defaultAction
 groupsRoutes:
     resource: "routing/groups.yml"
     prefix: /rz-admin/groups
@@ -213,7 +209,7 @@ historyUserPage:
 customFormsHomePage:
     path:     /rz-admin/custom-forms
     defaults:
-        _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::indexAction
+        _controller: Themes\Rozier\Controllers\CustomForms\CustomFormsController::defaultAction
 customFormsRoutes:
     resource: "routing/custom-forms.yml"
     prefix: /rz-admin/custom-forms

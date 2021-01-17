@@ -18,8 +18,6 @@ use Themes\Rozier\Models\NodeModel;
 use Themes\Rozier\Models\NodeSourceModel;
 
 /**
- * Class AjaxNodesExplorerController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodesExplorerController extends AbstractAjaxController
@@ -93,7 +91,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
     /**
      * @param Request $request
-     *
+     * @param array $arrayFilter
      * @return array
      */
     protected function getNodeSearchResults(Request $request, array $arrayFilter): array
@@ -127,8 +125,11 @@ class AjaxNodesExplorerController extends AbstractAjaxController
      *
      * @return array
      */
-    protected function getSolrSearchResults(Request $request, NodeSourceSearchHandler $searchHandler, array $arrayFilter): array
-    {
+    protected function getSolrSearchResults(
+        Request $request,
+        NodeSourceSearchHandler $searchHandler,
+        array $arrayFilter
+    ): array {
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
 

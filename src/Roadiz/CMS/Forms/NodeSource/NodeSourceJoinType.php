@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\Proxy\Proxy;
+use Doctrine\Persistence\Proxy;
 use RZ\Roadiz\CMS\Forms\DataTransformer\JoinDataTransformer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -13,7 +13,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
+final class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 {
     /**
      * @inheritDoc
@@ -44,7 +44,7 @@ class NodeSourceJoinType extends AbstractConfigurableNodeSourceFieldType
 
         $builder->addModelTransformer(new JoinDataTransformer(
             $options['nodeTypeField'],
-            $options['entityManager'],
+            $this->entityManager,
             $configuration['classname']
         ));
     }

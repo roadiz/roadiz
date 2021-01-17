@@ -241,6 +241,9 @@ export default class MarkdownEditor {
             case 'nbsp':
                 this.editor.replaceSelections(this.nbspSelections(sel))
                 break
+            case 'nb-hyphen':
+                this.editor.replaceSelections(this.nbHyphenSelections(sel))
+                break
             case 'listUl':
                 this.editor.replaceSelections(this.listUlSelections(sel))
                 break
@@ -306,6 +309,13 @@ export default class MarkdownEditor {
     nbspSelections (selections) {
         for (let i in selections) {
             selections[i] = ' '
+        }
+        return selections
+    }
+
+    nbHyphenSelections (selections) {
+        for (let i in selections) {
+            selections[i] = '‑'
         }
         return selections
     }

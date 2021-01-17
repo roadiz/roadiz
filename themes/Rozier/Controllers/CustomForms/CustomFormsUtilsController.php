@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class CustomFormsUtilsController
  * @package Themes\Rozier\Controllers
  */
 class CustomFormsUtilsController extends RozierApp
@@ -22,14 +21,14 @@ class CustomFormsUtilsController extends RozierApp
      * Export all custom form's answer in a Xlsx file (.rzt).
      *
      * @param Request $request
-     * @param int     $customFormId
+     * @param int     $id
      *
      * @return Response
      */
-    public function exportAction(Request $request, $customFormId)
+    public function exportAction(Request $request, int $id)
     {
         /** @var CustomForm $customForm */
-        $customForm = $this->get("em")->find(CustomForm::class, $customFormId);
+        $customForm = $this->get("em")->find(CustomForm::class, $id);
         /** @var CustormFormAnswerSerializer $serializer */
         $serializer = $this->get(CustormFormAnswerSerializer::class);
         $answers = $customForm->getCustomFormAnswers();
@@ -77,15 +76,15 @@ class CustomFormsUtilsController extends RozierApp
      * Duplicate custom form by ID
      *
      * @param Request $request
-     * @param int $customFormId
+     * @param int $id
      *
      * @return Response
      */
-    public function duplicateAction(Request $request, $customFormId)
+    public function duplicateAction(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
         /** @var CustomForm $existingCustomForm */
-        $existingCustomForm = $this->get('em')->find(CustomForm::class, (int) $customFormId);
+        $existingCustomForm = $this->get('em')->find(CustomForm::class, $id);
         if (null === $existingCustomForm) {
             throw $this->createNotFoundException();
         }
@@ -112,18 +111,21 @@ class CustomFormsUtilsController extends RozierApp
             return $this->redirect($this->get('urlGenerator')
                     ->generate(
                         'customFormsEditPage',
-                        ["customFormId" => $newCustomForm->getId()]
+                        ["id" => $newCustomForm->getId()]
                     ));
         } catch (\Exception $e) {
-            $this->publishErrorMessage($request, $this->getTranslator()->trans("impossible.duplicate.custom.form.%name%", [
-                '%name%' => $existingCustomForm->getDisplayName(),
-            ]));
+            $this->publishErrorMessage(
+                $request,
+                $this->getTranslator()->trans("impossible.duplicate.custom.form.%name%", [
+                    '%name%' => $existingCustomForm->getDisplayName(),
+                ])
+            );
             $this->publishErrorMessage($request, $e->getMessage());
 
             return $this->redirect($this->get('urlGenerator')
                     ->generate(
                         'customFormsEditPage',
-                        ["customFormId" => $existingCustomForm->getId()]
+                        ["id" => $existingCustomForm->getId()]
                     ));
         }
     }

@@ -5,7 +5,7 @@ namespace RZ\Roadiz\CMS\Forms;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -19,6 +19,28 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class RolesType extends AbstractType
 {
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    protected $authorizationChecker;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param AuthorizationCheckerInterface $authorizationChecker
+     */
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        AuthorizationCheckerInterface $authorizationChecker
+    ) {
+        $this->entityManager = $entityManager;
+        $this->authorizationChecker = $authorizationChecker;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -28,10 +50,6 @@ class RolesType extends AbstractType
             'multiple' => false,
         ]);
 
-        $resolver->setRequired('authorizationChecker');
-        $resolver->setAllowedTypes('authorizationChecker', [AuthorizationCheckerInterface::class]);
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
         $resolver->setAllowedTypes('multiple', ['bool']);
         $resolver->setAllowedTypes('roles', [Collection::class]);
 
@@ -39,13 +57,11 @@ class RolesType extends AbstractType
          * Use normalizer to populate choices from ChoiceType
          */
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
-            /** @var EntityManager $entityManager */
-            $entityManager = $options['entityManager'];
-            $roles = $entityManager->getRepository(Role::class)->findAll();
+            $roles = $this->entityManager->getRepository(Role::class)->findAll();
 
             /** @var Role $role */
             foreach ($roles as $role) {
-                if ($options['authorizationChecker']->isGranted($role->getRole()) &&
+                if ($this->authorizationChecker->isGranted($role->getRole()) &&
                     !$options['roles']->contains($role)) {
                     $choices[$role->getRole()] = $role->getId();
                 }

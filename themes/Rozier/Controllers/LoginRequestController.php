@@ -22,10 +22,7 @@ class LoginRequestController extends RozierApp
      */
     public function indexAction(Request $request)
     {
-        $form = $this->createForm(LoginRequestForm::class, null, [
-            'entityManager' => $this->get('em'),
-        ]);
-
+        $form = $this->createForm(LoginRequestForm::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {

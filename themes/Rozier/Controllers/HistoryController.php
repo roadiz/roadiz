@@ -61,14 +61,14 @@ class HistoryController extends RozierApp
      * List user logs action.
      *
      * @param Request $request
-     * @param integer $userId
+     * @param int $userId
      *
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Doctrine\ORM\TransactionRequiredException
      */
-    public function userAction(Request $request, $userId)
+    public function userAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted(['ROLE_BACKEND_USER', 'ROLE_ACCESS_LOGS']);
 
@@ -77,7 +77,8 @@ class HistoryController extends RozierApp
             throw new AccessDeniedException("You don't have access to this page: ROLE_ACCESS_USERS");
         }
 
-        $user = $this->em()->find(User::class, (int) $userId);
+        /** @var User|null $user */
+        $user = $this->em()->find(User::class, $userId);
 
         if (null !== $user) {
             /*

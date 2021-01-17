@@ -7,7 +7,10 @@
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
         <div class="content-header-action-menu">
             <nav>
-                <a class="uk-button" href="{{ path('redirectionsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.redirection{% endtrans %}</a>
+                <a class="uk-button"
+                   href="{{ path('redirectionsAddPage') }}">
+                    <i class="uk-icon-rz-plus"></i> {% trans %}add.a.redirection{% endtrans %}
+                </a>
             </nav>
         </div>
     </header>
@@ -37,26 +40,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for redirection in redirections %}
-                        {% set url = path('redirectionsEditPage', { redirectionId: redirection.id }) %}
-                        {% if redirection.redirectNodeSource %}
+                    {% for item in items %}
+                        {% set url = path('redirectionsEditPage', { id: item.id }) %}
+                        {% if item.redirectNodeSource %}
                             {% set url = path('nodesEditSEOPage', {
-                                'nodeId': redirection.redirectNodeSource.node.id,
-                                'translationId': redirection.redirectNodeSource.translation.id
+                                'nodeId': item.redirectNodeSource.node.id,
+                                'translationId': item.redirectNodeSource.translation.id
                             }) ~ '#manage-redirections' %}
                         {% endif %}
                     <tr>
                         <td>
-                            <a href="{{ url }}">{{ redirection.query }}</a>
+                            <a href="{{ url }}">{{ item.query }}</a>
                         </td>
                         <td>
-                            {% if redirection.redirectNodeSource %}
-                                <i class="uk-icon uk-icon-magic"></i> {{ path(redirection.redirectNodeSource) }}
+                            {% if item.redirectNodeSource %}
+                                <i class="uk-icon uk-icon-magic"></i> {{ path(item.redirectNodeSource) }}
                             {% else %}
-                                {{ redirection.redirectUri }}
+                                {{ item.redirectUri }}
                             {% endif %}
                         </td>
-                        <td>{{ redirection.typeAsString|trans }}</td>
+                        <td>{{ item.typeAsString|trans }}</td>
                         <td class="table-actions-row">
                         {% apply spaceless %}
                             <a class="uk-button uk-button-content uk-button-small"
@@ -64,7 +67,7 @@
                                title="{% trans %}edit{% endtrans %}"
                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
                             <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
-                               href="{{ path('redirectionsDeletePage', { redirectionId: redirection.getId }) }}"
+                               href="{{ path('redirectionsDeletePage', { id: item.id }) }}"
                                title="{% trans %}delete{% endtrans %}"
                                data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-o"></i></a>
                         {% endapply %}

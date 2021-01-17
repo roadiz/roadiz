@@ -12,26 +12,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class TagsUtilsController
- *
  * @package Themes\Rozier\Controllers\Tags
  */
 class TagsUtilsController extends RozierApp
 {
-
     /**
-     * Export a Tag in a Json file (.rzn).
+     * Export a Tag in a Json file
      *
      * @param Request $request
      * @param int     $tagId
      *
      * @return Response
      */
-    public function exportAction(Request $request, $tagId)
+    public function exportAction(Request $request, int $tagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
-        $existingTag = $this->get('em')->find(Tag::class, (int) $tagId);
+        $existingTag = $this->get('em')->find(Tag::class, $tagId);
 
         /** @var Serializer $serializer */
         $serializer = $this->get('serializer');
@@ -54,14 +51,14 @@ class TagsUtilsController extends RozierApp
     }
 
     /**
-     * Export a Tag in a Json file (.rzn).
+     * Export a Tag in a Json file
      *
      * @param Request $request
-     * @param int     $tagId
+     * @param int $tagId
      *
      * @return Response
      */
-    public function exportAllAction(Request $request, $tagId)
+    public function exportAllAction(Request $request, int $tagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
