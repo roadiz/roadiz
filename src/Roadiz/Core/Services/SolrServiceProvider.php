@@ -147,6 +147,7 @@ class SolrServiceProvider implements ServiceProviderInterface
                 function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
                     $wrappedObject = $c['solr']; // instantiation logic here
                     $initializer = null; // turning off further lazy initialization
+                    return true;
                 }
             );
         };

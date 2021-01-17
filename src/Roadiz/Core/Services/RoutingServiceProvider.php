@@ -11,10 +11,8 @@ use RZ\Roadiz\Core\Routing\NodeRouter;
 use RZ\Roadiz\Core\Routing\RedirectionRouter;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
-use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\Controller\ControllerResolver;
@@ -35,7 +33,27 @@ class RoutingServiceProvider implements ServiceProviderInterface
     public function register(Container $container)
     {
         $container['httpKernel'] = function (Container $c) {
-            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack'], $c['argumentResolver']);
+            return new HttpKernel(
+                $c['dispatcher'],
+                $c['resolver'],
+                $c['requestStack'],
+                $c['argumentResolver']
+            );
+        };
+
+        /*
+         * Use a proxy for cyclic dependency issue with EventDispatcher
+         */
+        $container['proxy.httpKernel'] = function (Container $c) {
+            $factory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory();
+            return $factory->createProxy(
+                HttpKernel::class,
+                function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
+                    $wrappedObject = $c['httpKernel']; // instantiation logic here
+                    $initializer = null; // turning off further lazy initialization
+                    return true;
+                }
+            );
         };
 
         /*
@@ -77,17 +95,6 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return $router;
         };
 
-        $container['proxy.router'] = function (Container $c) {
-            $factory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory();
-            return $factory->createProxy(
-                ChainRouter::class,
-                function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
-                    $wrappedObject = $c['router']; // instantiation logic here
-                    $initializer = null; // turning off further lazy initialization
-                }
-            );
-        };
-
         $container['staticRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -116,7 +123,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['em'],
                 $c['themeResolver'],
                 $c['settingsBag'],
-                $c['dispatcher'],
+                $c['proxy.dispatcher'],
                 $c[PreviewResolverInterface::class],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
@@ -159,7 +166,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
         $container['routeListener'] = function (Container $c) {
             return new RouterListener(
-                $c['proxy.router'], // Proxy to avoid cyclic dependencies
+                $c['router'],
                 $c['requestStack'],
                 $c['requestContext'],
                 null

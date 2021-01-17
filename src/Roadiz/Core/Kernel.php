@@ -7,21 +7,8 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
-use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
-use RZ\Roadiz\Core\Events\DebugBarSubscriber;
-use RZ\Roadiz\Core\Events\ExceptionSubscriber;
-use RZ\Roadiz\Core\Events\LocaleSubscriber;
-use RZ\Roadiz\Core\Events\LoggableUsernameSubscriber;
-use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
-use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
-use RZ\Roadiz\Core\Events\RoleSubscriber;
-use RZ\Roadiz\Core\Events\SignatureListener;
-use RZ\Roadiz\Core\Events\ThemesSubscriber;
-use RZ\Roadiz\Core\Events\UpdateFontSubscriber;
-use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
-use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
@@ -32,6 +19,7 @@ use RZ\Roadiz\Core\Services\DoctrineFiltersServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
+use RZ\Roadiz\Core\Services\EventDispatcherServiceProvider;
 use RZ\Roadiz\Core\Services\FactoryServiceProvider;
 use RZ\Roadiz\Core\Services\FormServiceProvider;
 use RZ\Roadiz\Core\Services\ImporterServiceProvider;
@@ -51,29 +39,12 @@ use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
 use RZ\Roadiz\OpenId\OpenIdServiceProvider;
 use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Translation\Services\TranslationServiceProvider;
-use RZ\Roadiz\Utils\Clearer\EventListener\AnnotationsCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\CloudflareCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\MetadataCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\NodesSourcesUrlsCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\OPCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\ReverseProxyCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
-use RZ\Roadiz\Utils\Security\Firewall;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\EventListener\ResponseListener;
-use Symfony\Component\HttpKernel\EventListener\SessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\RebootableInterface;
@@ -83,8 +54,6 @@ use Themes\Install\InstallApp;
 use Themes\Rozier\Services\RozierServiceProvider;
 
 /**
- * Roadiz Kernel.
- *
  * @package RZ\Roadiz\Core
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
@@ -237,77 +206,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $stopWatch->openSection();
         $stopWatch->start('kernel.registerServices');
 
+        $container->register(new EventDispatcherServiceProvider());
         $container->register(new YamlConfigurationServiceProvider());
-
-        $container['dispatcher'] = function (Container $c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            $dispatcher = new EventDispatcher();
-            /*
-             * Firewall service is private
-             */
-            $dispatcher->addSubscriber(new Firewall(
-                $c['firewallMap'],
-                $dispatcher
-            ));
-            $dispatcher->addSubscriber($c['routeListener']);
-            $dispatcher->addSubscriber(new SessionListener(new \Pimple\Psr11\Container($c)));
-            $dispatcher->addSubscriber(new AppCacheEventSubscriber());
-            $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());
-            $dispatcher->addSubscriber(new AnnotationsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new MetadataCacheEventSubscriber());
-            $dispatcher->addSubscriber(new DoctrineCacheEventSubscriber());
-            $dispatcher->addSubscriber(new NodesSourcesUrlsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new OPCacheEventSubscriber());
-            $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
-            $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
-            $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
-            $dispatcher->addSubscriber(new CloudflareCacheEventSubscriber($c));
-            $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
-            $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
-            $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
-            $dispatcher->addSubscriber(new UpdateFontSubscriber($c));
-            $dispatcher->addSubscriber(new SignatureListener(
-                $c['settingsBag'],
-                $kernel::$cmsVersion,
-                $kernel->isDebug()
-            ));
-            if (!$kernel->isDebug()) {
-                /**
-                 * Do not prevent Symfony Debug tool to perform
-                 * in debug mode.
-                 */
-                $dispatcher->addSubscriber(new ExceptionSubscriber(
-                    $c,
-                    $c['themeResolver'],
-                    $c['logger'],
-                    $kernel->isDebug()
-                ));
-            }
-            $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));
-            $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
-
-            if (!$kernel->isInstallMode()) {
-                $dispatcher->addSubscriber(new LocaleSubscriber($kernel));
-                $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
-                $dispatcher->addSubscriber(new NodeSourcePathSubscriber($c[NodesSourcesPathAggregator::class]));
-                $dispatcher->addSubscriber(new RoleSubscriber(
-                    $c['em']->getConfiguration()->getResultCacheImpl(),
-                    $c['rolesBag']
-                ));
-            }
-            /*
-             * If debug, alter HTML responses to append Debug panel to view
-             */
-            if (!$kernel->isInstallMode() && $kernel->isDebug()) {
-                $dispatcher->addSubscriber(new DebugBarSubscriber($c));
-            }
-
-            return $dispatcher;
-        };
-
         $container->register(new ConsoleServiceProvider());
         $container->register(new AssetsServiceProvider());
         $container->register(new BackofficeServiceProvider());
@@ -475,8 +375,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         if (false === $this->booted) {
             return;
         }
-        if ($this->container['httpKernel'] instanceof TerminableInterface) {
-            $this->container['httpKernel']->terminate($request, $response);
+        if ($this->getHttpKernel() instanceof TerminableInterface) {
+            $this->getHttpKernel()->terminate($request, $response);
         }
     }
 

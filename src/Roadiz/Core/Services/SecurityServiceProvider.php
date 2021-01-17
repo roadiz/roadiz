@@ -20,7 +20,6 @@ use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
-use RZ\Roadiz\Utils\Security\Firewall;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
@@ -152,7 +151,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['userProviders'],
                 Kernel::SECURITY_DOMAIN,
                 $c['logger.security'],
-                $c['dispatcher']
+                $c['proxy.dispatcher']
             );
         };
 
@@ -247,7 +246,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['tokenBasedRememberMeServices'],
                 $c['authenticationManager'],
                 $c['logger.security'],
-                $c['dispatcher']
+                $c['proxy.dispatcher']
             );
         };
 
@@ -360,7 +359,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['logger.security'],
                 '_su',
                 Role::ROLE_SUPERADMIN,
-                $c['dispatcher']
+                $c['proxy.dispatcher']
             );
         };
 

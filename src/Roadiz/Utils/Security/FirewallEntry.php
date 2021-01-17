@@ -8,11 +8,11 @@ use RZ\Roadiz\Core\Authentication\AuthenticationFailureHandler;
 use RZ\Roadiz\Core\Authentication\AuthenticationSuccessHandler;
 use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
-use RZ\Roadiz\JWT\JwtConfigurationFactory;
-use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\JWT\JwtConfigurationFactory;
+use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\OpenId\Discovery;
 use RZ\Roadiz\OpenId\Logout\OpenIdLogoutHandler;
 use Symfony\Component\HttpFoundation\RequestMatcher;
@@ -113,8 +113,6 @@ class FirewallEntry
     protected $locked;
 
     /**
-     * FirewallEntry constructor.
-     *
      * @param Container $container
      * @param string $firewallBasePattern
      * @param string $firewallBasePath
@@ -252,7 +250,7 @@ class FirewallEntry
                         'roles' => $roles
                     ],
                     $this->container['logger.security'],
-                    $this->container['dispatcher']
+                    $this->container['proxy.dispatcher']
                 ),
                 20
             ];
@@ -346,7 +344,7 @@ class FirewallEntry
     {
         if (null === $this->authenticationFailureHandler) {
             $this->authenticationFailureHandler = new $this->authenticationFailureHandlerClass(
-                $this->container['httpKernel'],
+                $this->container['proxy.httpKernel'],
                 $this->container['httpUtils'],
                 [
                     'failure_path' => $this->firewallLogin,
@@ -380,7 +378,7 @@ class FirewallEntry
                 'check_path' => $this->firewallLoginCheck,
             ],
             $this->container['logger.security'],
-            $this->container['dispatcher'],
+            $this->container['proxy.dispatcher'],
             null
         );
     }
@@ -395,7 +393,7 @@ class FirewallEntry
             return null;
         }
         return new FormAuthenticationEntryPoint(
-            $this->container['httpKernel'],
+            $this->container['proxy.httpKernel'],
             $this->container['httpUtils'],
             $this->firewallLogin,
             $useForward

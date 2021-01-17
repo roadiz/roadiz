@@ -28,6 +28,14 @@ abstract class AbstractAdminController extends RozierApp
     }
 
     /**
+     * @return string
+     */
+    protected function getTemplateNamespace(): string
+    {
+        return '';
+    }
+
+    /**
      * @param Request $request
      * @return Response|null
      * @throws \Twig\Error\RuntimeError
@@ -54,7 +62,9 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/list.html.twig',
-            $this->assignation
+            $this->assignation,
+            null,
+            $this->getTemplateNamespace()
         );
     }
 
@@ -100,7 +110,9 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/add.html.twig',
-            $this->assignation
+            $this->assignation,
+            null,
+            $this->getTemplateNamespace()
         );
     }
 
@@ -154,7 +166,9 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/edit.html.twig',
-            $this->assignation
+            $this->assignation,
+            null,
+            $this->getTemplateNamespace()
         );
     }
 
@@ -238,7 +252,9 @@ abstract class AbstractAdminController extends RozierApp
 
         return $this->render(
             $this->getTemplateFolder() . '/delete.html.twig',
-            $this->assignation
+            $this->assignation,
+            null,
+            $this->getTemplateNamespace()
         );
     }
 
