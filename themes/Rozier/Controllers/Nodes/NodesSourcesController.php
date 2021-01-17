@@ -82,9 +82,6 @@ class NodesSourcesController extends RozierApp
                     [
                         'class' => $node->getNodeType()->getSourceEntityFullQualifiedClassName(),
                         'nodeType' => $node->getNodeType(),
-                        'controller' => $this,
-                        'entityManager' => $this->get('em'),
-                        'container' => $this->getContainer(),
                         'withVirtual' => true,
                         'withTitle' => true,
                         'disabled' => $this->isReadOnly,

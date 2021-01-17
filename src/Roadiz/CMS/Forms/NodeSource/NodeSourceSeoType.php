@@ -12,11 +12,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
- * Class NodeSourceSeoType
- *
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
-class NodeSourceSeoType extends AbstractType
+final class NodeSourceSeoType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
@@ -37,16 +35,6 @@ class NodeSourceSeoType extends AbstractType
                     ])
                 ]
             ])
-//            ->add('metaKeywords', TextType::class, [
-//                'label' => 'metaKeywords',
-//                'help' => 'nodeSource.metaKeywords.help',
-//                'required' => false,
-//                'constraints' => [
-//                    new Length([
-//                        'max' => 255
-//                    ])
-//                ]
-//            ])
             ->add('metaDescription', TextareaType::class, [
                 'label' => 'metaDescription',
                 'help' => 'nodeSource.metaDescription.help',

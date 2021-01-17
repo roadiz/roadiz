@@ -21,9 +21,7 @@ final class TagTreeWidget extends AbstractWidget
     protected $translation = null;
     protected $canReorder = true;
     protected $forceTranslation = false;
-    /**
-     * @var TagRepository
-     */
+    /** @var TagRepository */
     protected $tagRepository;
 
     /**
@@ -63,7 +61,6 @@ final class TagTreeWidget extends AbstractWidget
             $ordering = [
                 $this->parentTag->getChildrenOrder() => $this->parentTag->getChildrenOrderDirection(),
             ];
-
             $this->canReorder = false;
         }
         $criteria = [

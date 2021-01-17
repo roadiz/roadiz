@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -15,11 +15,25 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Class NodeSourceNodeType
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
-class NodeSourceNodeType extends AbstractNodeSourceFieldType
+final class NodeSourceNodeType extends AbstractNodeSourceFieldType
 {
+    /**
+     * @var NodeHandler
+     */
+    protected $nodeHandler;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param NodeHandler $nodeHandler
+     */
+    public function __construct(EntityManagerInterface $entityManager, NodeHandler $nodeHandler)
+    {
+        parent::__construct($entityManager);
+        $this->nodeHandler = $nodeHandler;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -51,9 +65,6 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
             'multiple' => true,
             'property' => 'id',
         ]);
-
-        $resolver->setRequired('nodeHandler');
-        $resolver->setAllowedTypes('nodeHandler', [NodeHandler::class]);
     }
 
     /**
@@ -69,9 +80,6 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
      */
     public function onPreSetData(FormEvent $event)
     {
-        /** @var EntityManager $entityManager */
-        $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
-
         /** @var NodesSources $nodeSource */
         $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
 
@@ -79,7 +87,7 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
         /** @var NodeRepository $nodeRepo */
-        $nodeRepo = $entityManager
+        $nodeRepo = $this->entityManager
             ->getRepository(Node::class)
             ->setDisplayingNotPublishedNodes(true);
         $event->setData($nodeRepo->findByNodeAndField(
@@ -96,26 +104,20 @@ class NodeSourceNodeType extends AbstractNodeSourceFieldType
         /** @var NodesSources $nodeSource */
         $nodeSource = $event->getForm()->getConfig()->getOption('nodeSource');
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $event->getForm()->getConfig()->getOption('entityManager');
-
-        /** @var NodeHandler $nodeHandler */
-        $nodeHandler = $event->getForm()->getConfig()->getOption('nodeHandler');
-
         /** @var NodeTypeField $nodeTypeField */
         $nodeTypeField = $event->getForm()->getConfig()->getOption('nodeTypeField');
 
-        $nodeHandler->setNode($nodeSource->getNode());
-        $nodeHandler->cleanNodesFromField($nodeTypeField, false);
+        $this->nodeHandler->setNode($nodeSource->getNode());
+        $this->nodeHandler->cleanNodesFromField($nodeTypeField, false);
 
         if (is_array($event->getData())) {
             $position = 0;
             foreach ($event->getData() as $nodeId) {
                 /** @var Node|null $tempNode */
-                $tempNode = $entityManager->find(Node::class, (int) $nodeId);
+                $tempNode = $this->entityManager->find(Node::class, (int) $nodeId);
 
                 if ($tempNode !== null) {
-                    $nodeHandler->addNodeForField($tempNode, $nodeTypeField, false, $position);
+                    $this->nodeHandler->addNodeForField($tempNode, $nodeTypeField, false, $position);
                     $position++;
                 } else {
                     throw new \RuntimeException('Node #'.$nodeId.' was not found during relationship creation.');

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Pimple\Container;
 use RZ\Roadiz\CMS\Forms\DataTransformer\ProviderDataTransformer;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
@@ -15,8 +16,23 @@ use Themes\Rozier\Explorer\AbstractExplorerItem;
 use Themes\Rozier\Explorer\AbstractExplorerProvider;
 use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
-class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
+final class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
 {
+    /**
+     * @var Container
+     */
+    protected $container;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param Container $container
+     */
+    public function __construct(EntityManagerInterface $entityManager, Container $container)
+    {
+        parent::__construct($entityManager);
+        $this->container = $container;
+    }
+
     /**
      * @inheritDoc
      */
@@ -25,8 +41,6 @@ class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
         parent::configureOptions($resolver);
 
         $resolver->setDefault('multiple', false);
-        $resolver->setRequired('container');
-        $resolver->setAllowedTypes('container', [Container::class]);
         $resolver->setAllowedTypes('multiple', ['bool']);
         $resolver->setNormalizer('multiple', function (Options $options) {
             /** @var NodeTypeField $nodeTypeField */
@@ -56,14 +70,12 @@ class NodeSourceProviderType extends AbstractConfigurableNodeSourceFieldType
 
     protected function getProvider(array $configuration, array $options): ExplorerProviderInterface
     {
-        /** @var Container $container */
-        $container = $options['container'];
-        if ($container->offsetExists($configuration['classname'])) {
-            return $container->offsetGet($configuration['classname']);
+        if ($this->container->offsetExists($configuration['classname'])) {
+            return $this->container->offsetGet($configuration['classname']);
         } else {
             /** @var AbstractExplorerProvider $provider */
             $provider = new $configuration['classname'];
-            $provider->setContainer($options['container']);
+            $provider->setContainer($this->container);
             return $provider;
         }
     }

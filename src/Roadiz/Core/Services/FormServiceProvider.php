@@ -19,6 +19,12 @@ use RZ\Roadiz\CMS\Forms\DocumentCollectionType;
 use RZ\Roadiz\CMS\Forms\Extension\ContainerFormExtension;
 use RZ\Roadiz\CMS\Forms\Extension\HelpAndGroupExtension;
 use RZ\Roadiz\CMS\Forms\GroupsType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceCustomFormType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceDocumentType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceJoinType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceNodeType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceProviderType;
+use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
 use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\CMS\Forms\NodeTypesType;
 use RZ\Roadiz\CMS\Forms\RolesType;
@@ -139,6 +145,30 @@ class FormServiceProvider implements ServiceProviderInterface
 
         $container[UrlAliasType::class] = function (Container $c) {
             return new UrlAliasType($c['em']);
+        };
+
+        $container[NodeSourceCustomFormType::class] = function (Container $c) {
+            return new NodeSourceCustomFormType($c['em'], $c['node.handler']);
+        };
+
+        $container[NodeSourceNodeType::class] = function (Container $c) {
+            return new NodeSourceNodeType($c['em'], $c['node.handler']);
+        };
+
+        $container[NodeSourceDocumentType::class] = function (Container $c) {
+            return new NodeSourceDocumentType($c['em'], $c['nodes_sources.handler']);
+        };
+
+        $container[NodeSourceJoinType::class] = function (Container $c) {
+            return new NodeSourceJoinType($c['em']);
+        };
+
+        $container[NodeSourceProviderType::class] = function (Container $c) {
+            return new NodeSourceProviderType($c['em'], $c);
+        };
+
+        $container[NodeSourceType::class] = function (Container $c) {
+            return new NodeSourceType($c['em']);
         };
 
         $container['formValidator'] = function (Container $c) {

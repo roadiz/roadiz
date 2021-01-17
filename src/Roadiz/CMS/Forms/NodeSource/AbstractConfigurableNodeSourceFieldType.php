@@ -6,8 +6,6 @@ namespace RZ\Roadiz\CMS\Forms\NodeSource;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class AbstractConfigurableNodeSourceFieldType
- *
  * @package RZ\Roadiz\CMS\Forms\NodeSource
  */
 abstract class AbstractConfigurableNodeSourceFieldType extends AbstractNodeSourceFieldType

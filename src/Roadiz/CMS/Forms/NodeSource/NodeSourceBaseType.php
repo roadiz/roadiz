@@ -12,7 +12,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
-class NodeSourceBaseType extends AbstractType
+final class NodeSourceBaseType extends AbstractType
 {
     /**
      * @param FormBuilderInterface $builder
