@@ -114,13 +114,13 @@ class QueryBuilderListManager extends AbstractEntityListManager
         }
         throw new \InvalidArgumentException('Call EntityListManagerInterface::handle before counting entities.');
     }
-    
+
     /**
      * @return int
      */
     public function getPageCount()
     {
-        (int) ceil($this->getItemCount() / $this->getItemPerPage());
+        return (int) ceil($this->getItemCount() / $this->getItemPerPage());
     }
 
     /**
