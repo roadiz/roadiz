@@ -21,18 +21,28 @@ class QueryBuilderListManager extends AbstractEntityListManager
      * @var string
      */
     protected $identifier;
+    /**
+     * @var bool
+     */
+    protected $debug = false;
 
     /**
      * @param Request|null $request
      * @param QueryBuilder $queryBuilder
      * @param string $identifier
+     * @param bool $debug
      */
-    public function __construct(?Request $request, QueryBuilder $queryBuilder, string $identifier = 'obj')
-    {
+    public function __construct(
+        ?Request $request,
+        QueryBuilder $queryBuilder,
+        string $identifier = 'obj',
+        bool $debug = false
+    ) {
         parent::__construct($request);
         $this->queryBuilder = $queryBuilder;
         $this->identifier = $identifier;
         $this->request = $request;
+        $this->debug = $debug;
     }
 
     /**
@@ -134,5 +144,18 @@ class QueryBuilderListManager extends AbstractEntityListManager
             return $this->paginator;
         }
         throw new \InvalidArgumentException('Call EntityListManagerInterface::handle before getting entities.');
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssignation()
+    {
+        if ($this->debug) {
+            return array_merge(parent::getAssignation(), [
+                'dql_query' => $this->queryBuilder->getDQL()
+            ]);
+        }
+        return parent::getAssignation();
     }
 }
