@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package RZ\Roadiz\Core\ListManagers
  */
-class EntityListManager
+class EntityListManager implements EntityListManagerInterface
 {
     const ITEM_PER_PAGE = 20;
 
@@ -405,7 +405,7 @@ class EntityListManager
     /**
      * @return float|int
      */
-    public function getPageCount()
+    protected function getPageCount()
     {
         if ($this->pagination === true &&
             null !== $this->paginator) {
@@ -442,7 +442,7 @@ class EntityListManager
     /**
      * @return int
      */
-    public function getItemPerPage()
+    protected function getItemPerPage()
     {
         return $this->itemPerPage;
     }
@@ -468,7 +468,7 @@ class EntityListManager
     /**
      * @return int
      */
-    public function getPage()
+    protected function getPage()
     {
         return $this->currentPage;
     }
