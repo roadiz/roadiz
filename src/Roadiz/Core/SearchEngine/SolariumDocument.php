@@ -44,8 +44,6 @@ class SolariumDocument extends AbstractSolarium
     }
 
     /**
-     * SolariumDocument constructor.
-     *
      * @param Document                 $rzDocument
      * @param SolariumFactoryInterface $solariumFactory
      * @param Client|null              $client

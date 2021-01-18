@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Exceptions\SolrServerNotConfiguredException;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
@@ -15,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 class SolariumFactory implements SolariumFactoryInterface
 {
     /**
-     * @var Client
+     * @var Client|null
      */
     protected $solr;
     /**
@@ -36,8 +37,6 @@ class SolariumFactory implements SolariumFactoryInterface
     protected $handlerFactory;
 
     /**
-     * SolariumFactory constructor.
-     *
      * @param Client|null              $solr
      * @param LoggerInterface          $logger
      * @param MarkdownInterface        $markdown
@@ -60,6 +59,9 @@ class SolariumFactory implements SolariumFactoryInterface
 
     public function createWithDocument(Document $document): SolariumDocument
     {
+        if (null === $this->solr) {
+            throw new SolrServerNotConfiguredException();
+        }
         return new SolariumDocument(
             $document,
             $this,
@@ -71,6 +73,9 @@ class SolariumFactory implements SolariumFactoryInterface
 
     public function createWithDocumentTranslation(DocumentTranslation $documentTranslation): SolariumDocumentTranslation
     {
+        if (null === $this->solr) {
+            throw new SolrServerNotConfiguredException();
+        }
         return new SolariumDocumentTranslation(
             $documentTranslation,
             $this->solr,
@@ -81,6 +86,9 @@ class SolariumFactory implements SolariumFactoryInterface
 
     public function createWithNodesSources(NodesSources $nodeSource): SolariumNodeSource
     {
+        if (null === $this->solr) {
+            throw new SolrServerNotConfiguredException();
+        }
         return new SolariumNodeSource(
             $nodeSource,
             $this->solr,

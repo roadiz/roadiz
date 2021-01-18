@@ -33,8 +33,6 @@ class SolariumDocumentTranslation extends AbstractSolarium
     protected $documentTranslation = null;
 
     /**
-     * Create a new SolariumDocument.
-     *
      * @param DocumentTranslation    $documentTranslation
      * @param Client|null            $client
      * @param LoggerInterface|null   $logger

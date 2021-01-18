@@ -51,7 +51,7 @@ class SolrServiceProvider implements ServiceProviderInterface
                 }
                 $solrService = new Client(
                     $c[AdapterInterface::class],
-                    $c['dispatcher'],
+                    $c['proxy.dispatcher'],
                     $options
                 );
                 $solrService->setDefaultEndpoint('localhost');
@@ -115,40 +115,11 @@ class SolrServiceProvider implements ServiceProviderInterface
          */
         $container[SolariumFactoryInterface::class] = function (Container $c) {
             return new SolariumFactory(
-                $c['proxy.solr'],
+                $c['solr'],
                 $c['logger'],
                 $c[MarkdownInterface::class],
-                $c['dispatcher'],
+                $c['proxy.dispatcher'],
                 $c['factory.handler']
-            );
-        };
-
-        /*
-         * Use a proxy for cyclic dependency issue with EventDispatcher
-         */
-        $container['proxy.solariumFactoryInterface'] = function (Container $c) {
-            $factory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory();
-            return $factory->createProxy(
-                SolariumFactoryInterface::class,
-                function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
-                    $wrappedObject = $c[SolariumFactoryInterface::class]; // instantiation logic here
-                    $initializer = null; // turning off further lazy initialization
-                }
-            );
-        };
-
-        /*
-         * Use a proxy for cyclic dependency issue with EventDispatcher
-         */
-        $container['proxy.solr'] = function (Container $c) {
-            $factory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory();
-            return $factory->createProxy(
-                Client::class,
-                function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
-                    $wrappedObject = $c['solr']; // instantiation logic here
-                    $initializer = null; // turning off further lazy initialization
-                    return true;
-                }
             );
         };
 
@@ -161,9 +132,9 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(
                 new SolariumSubscriber(
-                    $c['proxy.solr'],
+                    $c['solr'],
                     $c['logger'],
-                    $c['proxy.solariumFactoryInterface']
+                    $c[SolariumFactoryInterface::class]
                 )
             );
             return $dispatcher;
