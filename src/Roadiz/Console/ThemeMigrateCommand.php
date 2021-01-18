@@ -26,7 +26,7 @@ class ThemeMigrateCommand extends Command implements ContainerAwareInterface
             ->addArgument(
                 'classname',
                 InputArgument::REQUIRED,
-                'Main theme classname (Use / instead of \\ and do not forget starting slash)'
+                'Main theme classname (Use / instead of \\ and do not forget starting slash) or path to config.yml'
             )
             ->addOption(
                 'dry-run',
