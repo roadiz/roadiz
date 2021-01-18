@@ -61,8 +61,7 @@ class TagTranslation extends AbstractEntity
      * )
      * @ORM\OrderBy({"position" = "ASC"})
      * @var Collection<TagTranslationDocuments>
-     * @Serializer\Groups({"tag"})
-     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslationDocuments>")
+     * @Serializer\Exclude
      */
     protected $tagTranslationDocuments;
 
@@ -196,6 +195,10 @@ class TagTranslation extends AbstractEntity
 
     /**
      * @return array
+     *
+     * @Serializer\Groups({"tag"})
+     * @Serializer\VirtualProperty
+     * @Serializer\Type("array<RZ\Roadiz\Core\Entities\Document>")
      */
     public function getDocuments(): array
     {

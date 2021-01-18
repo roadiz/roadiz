@@ -81,6 +81,8 @@ class QueryBuilderListManager extends AbstractEntityListManager
              */
             $this->disablePagination();
         }
+
+        $this->paginator = new Paginator($this->queryBuilder);
     }
 
     /**
