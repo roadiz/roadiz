@@ -42,31 +42,18 @@ class NodeServiceProvider implements ServiceProviderInterface
                 $c['em'],
                 $c['router'],
                 $c['factory.handler'],
-                $c['dispatcher'],
+                $c['proxy.dispatcher'],
                 $c['nodesSourcesUrlCacheProvider'],
                 $c['logger.doctrine']
             );
         };
 
-        /*
-         * Use a proxy for cyclic dependency issue with EventDispatcher
-         */
-        $container['proxy.nodeMover'] = function (Container $c) {
-            $factory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory();
-            return $factory->createProxy(
-                NodeMover::class,
-                function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
-                    $wrappedObject = $c[NodeMover::class]; // instantiation logic here
-                    $initializer = null; // turning off further lazy initialization
-                }
-            );
-        };
 
         $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(new NodeNameSubscriber(
                 $c['logger.doctrine'],
                 $c['utils.nodeNameChecker'],
-                $c['proxy.nodeMover']
+                $c[NodeMover::class]
             ));
             $dispatcher->addSubscriber(
                 new DefaultNodesSourcesIndexingSubscriber(

@@ -6,6 +6,7 @@ namespace Themes\Rozier\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Utils\Node\NodeMover;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Themes\Rozier\Events\DocumentFilesizeSubscriber;
@@ -174,7 +175,7 @@ final class RozierServiceProvider implements ServiceProviderInterface
              * Add event to create redirection after renaming a node.
              */
             $dispatcher->addSubscriber(
-                new NodeRedirectionSubscriber($c['proxy.nodeMover'], $kernel)
+                new NodeRedirectionSubscriber($c[NodeMover::class], $kernel)
             );
 
             return $dispatcher;
