@@ -241,9 +241,9 @@ class EntityListManager extends AbstractEntityListManager
     }
 
     /**
-     * @return float|int
+     * @return int
      */
-    protected function getPageCount()
+    public function getPageCount()
     {
         if ($this->pagination === true &&
             null !== $this->paginator) {

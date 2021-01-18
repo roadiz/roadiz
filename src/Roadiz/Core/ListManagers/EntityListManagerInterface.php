@@ -82,6 +82,11 @@ interface EntityListManagerInterface
     public function getItemCount();
 
     /**
+     * @return int
+     */
+    public function getPageCount();
+
+    /**
      * Return filtered entities.
      *
      * @return array|\Doctrine\ORM\Tools\Pagination\Paginator
