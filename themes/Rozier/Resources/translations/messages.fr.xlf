@@ -2980,6 +2980,10 @@
           <source>non_breaking.space</source>
           <target state="final">Espace insécable</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="non_breaking.hyphen">
+          <source>non_breaking.hyphen</source>
+          <target state="translated">Trait d'union insécable</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="forbidden.page" approved="yes">
           <source>forbidden.page</source>
           <target state="final">Page non autorisée</target>
@@ -5158,6 +5162,21 @@
         <source>filter</source>
         <target state="translated">Filtrer</target>
         <note>Button label for a generic filtering action.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_created">
+        <source>%namespace%.%item%.was_created</source>
+        <target state="translated">%namespace% "%item%" a été créé.</target>
+        <note>Default controller addAction result message.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_updated">
+        <source>%namespace%.%item%.was_updated</source>
+        <target state="translated">%namespace% "%item%" a été mis à jour.</target>
+        <note>Default controller editAction result message.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_deleted">
+        <source>%namespace%.%item%.was_deleted</source>
+        <target state="translated">%namespace% "%item%" a été supprimé.</target>
+        <note>Default controller deleteAction result message.</note>
       </trans-unit>
     </body>
   </file>
