@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\ContactFormManager;
@@ -436,7 +437,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param array $criteria
      * @param array $ordering
      *
-     * @return EntityListManager
+     * @return EntityListManagerInterface
      */
     public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
     {

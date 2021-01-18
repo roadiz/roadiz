@@ -9,6 +9,7 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Utils\SessionListFilters;
 
@@ -182,7 +183,7 @@ final class NodeTreeWidget extends AbstractWidget
      * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @param array $additionalCriteria Default: []
-     * @return EntityListManager
+     * @return EntityListManagerInterface
      */
     protected function getListManager(Node $parent = null, $subRequest = false, array $additionalCriteria = [])
     {

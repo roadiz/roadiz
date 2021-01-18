@@ -41,7 +41,8 @@ trait AttributableTrait
      */
     public function getAttributesValuesTranslations(Translation $translation): Collection
     {
-        return $this->getAttributesValuesForTranslation($translation)
+        /** @var Collection<AttributeValueTranslationInterface> $values */
+        $values = $this->getAttributesValuesForTranslation($translation)
             ->map(function (AttributeValueInterface $attributeValue) use ($translation) {
                 /** @var AttributeValueTranslationInterface $attributeValueTranslation */
                 foreach ($attributeValue->getAttributeValueTranslations() as $attributeValueTranslation) {
@@ -51,7 +52,11 @@ trait AttributableTrait
                 }
                 return null;
             })
+            ->filter(function (?AttributeValueTranslationInterface $attributeValueTranslation) {
+                return null !== $attributeValueTranslation;
+            })
         ;
+        return $values; // phpstan does not understand return type after filtering
     }
 
     /**

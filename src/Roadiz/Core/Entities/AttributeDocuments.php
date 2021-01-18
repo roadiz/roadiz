@@ -62,7 +62,7 @@ class AttributeDocuments extends AbstractPositioned
     /**
      * Gets the value of document.
      *
-     * @return Document
+     * @return Document|null
      */
     public function getDocument(): ?Document
     {
@@ -72,7 +72,7 @@ class AttributeDocuments extends AbstractPositioned
     /**
      * Sets the value of document.
      *
-     * @param Document $document the document
+     * @param Document|null $document the document
      *
      * @return AttributeDocuments
      */
@@ -92,7 +92,7 @@ class AttributeDocuments extends AbstractPositioned
     }
 
     /**
-     * @param Attribute $attribute
+     * @param Attribute|null $attribute
      * @return AttributeDocuments
      */
     public function setAttribute(?Attribute $attribute): AttributeDocuments

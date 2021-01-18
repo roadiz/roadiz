@@ -166,8 +166,12 @@ class Attribute extends AbstractEntity implements AttributeInterface
      */
     public function getDocuments(): Collection
     {
-        return $this->attributeDocuments->map(function (AttributeDocuments $attributeDocuments) {
+        /** @var Collection<Document> $values */
+        $values = $this->attributeDocuments->map(function (AttributeDocuments $attributeDocuments) {
             return $attributeDocuments->getDocument();
+        })->filter(function (?Document $document) {
+            return null !== $document;
         });
+        return $values; // phpstan does not understand filtering null values
     }
 }

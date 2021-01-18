@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Utils;
 
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -36,9 +36,9 @@ class SessionListFilters
      * Handle item_per_page filter form session or from request query.
      *
      * @param Request $request
-     * @param EntityListManager $listManager
+     * @param EntityListManagerInterface $listManager
      */
-    public function handleItemPerPage(Request $request, EntityListManager $listManager)
+    public function handleItemPerPage(Request $request, EntityListManagerInterface $listManager)
     {
         /*
          * Check if item_per_page is available from session

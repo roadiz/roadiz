@@ -48,6 +48,11 @@ interface EntityListManagerInterface
     public function setPage($page);
 
     /**
+     * @return EntityListManagerInterface
+     */
+    public function disablePagination();
+
+    /**
      * Get Twig assignation to render list details.
      *
      * ** Fields:

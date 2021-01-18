@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Explorer;
 
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
@@ -29,9 +30,9 @@ abstract class AbstractDoctrineExplorerProvider extends AbstractExplorerProvider
     /**
      * @param array $options
      *
-     * @return EntityListManager
+     * @return EntityListManagerInterface
      */
-    protected function doFetchItems(array $options = []): EntityListManager
+    protected function doFetchItems(array $options = []): EntityListManagerInterface
     {
         $resolver = new OptionsResolver();
         $this->configureOptions($resolver);
