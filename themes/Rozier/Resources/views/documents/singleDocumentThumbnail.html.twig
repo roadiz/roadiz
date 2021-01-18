@@ -1,4 +1,4 @@
-<li class="document-item">
+<div class="document-item" data-uk-tooltip="{animation:true, pos:'bottom'}" title="{{ document.filename }}">
     <div class="document-border"></div>
     <figure class="document-image">
         {% if not document.private and (document.isImage or document.isSvg or document.hasThumbnails) %}
@@ -33,4 +33,4 @@
             {% endif %}
         {% endif %}
     </div>
-</li>
+</div>

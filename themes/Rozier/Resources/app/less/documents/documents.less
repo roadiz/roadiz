@@ -72,15 +72,14 @@ table.documents {
 
 .documents-list {
     margin:0;
-    padding: 0 30px;
-    list-style-type:none;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 128px);
+    grid-gap: 20px 15px;
     justify-content: center;
 
-    @media screen and (max-width: @screen-xs-max) {
-        padding: 0 5px;
+    @media screen and (min-width: @screen-sm-min) {
+        padding: 0 50px;
     }
 
     .document-checkbox {
@@ -88,7 +87,8 @@ table.documents {
         top: 8px;
         right: 5px;
         display: none;
-        width: 14px; height: 14px;
+        width: 14px;
+        height: 14px;
         line-height:12px;
         border: 1px solid #aaa;
         overflow: hidden;
@@ -118,30 +118,24 @@ table.documents {
 
     .document-item{
         position: relative;
-        display: inline-block;
+        display: block;
         vertical-align: top;
-        width:128px; height:128px;
-        margin:0 10px 39px;
-        background: #E2E2E2; // not white to see white PNG logotypes
-        //overflow: hidden;
+        width: 128px;
+        margin: 0 auto;
 
-        &:hover{
-
+        &:hover {
             .document-border{
                 background: #C8C8C8;
             }
-
             .document-links{
                 bottom:0px;
             }
-
             .document-mime-type{
                 top:4px;
             }
             .document-platform-icon {
                 .opacity(0);
             }
-
             .document-checkbox {
                 display: block;
             }
@@ -150,14 +144,18 @@ table.documents {
 
     .document-overflow{
         position: absolute;
-        top: 0; left: 0;
-        width:128px; height:128px;
+        top: 0;
+        left: 0;
+        width: 128px;
+        height: 128px;
         overflow: hidden;
     }
 
     .document-border{
         position: absolute;
-        top:0; right:0; left:0;
+        top:0;
+        right:0;
+        left:0;
         height:4px;
         background-color:#eaeaea;
         .transition(0.5s background-color @easeOutExpo);
@@ -165,7 +163,9 @@ table.documents {
     }
 
     .document-image{
-        width:128px; height:128px;
+        width:128px;
+        height:128px;
+        background: #E2E2E2; // not white to see white PNG logotypes
     }
 
     .document-name{

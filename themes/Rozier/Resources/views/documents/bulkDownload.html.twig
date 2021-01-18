@@ -22,7 +22,7 @@
         {{ form_end(form) }}
 
         {% apply spaceless %}
-        <ul class="documents-list">
+        <div class="documents-list">
         {% for document in documents %}
         {% include '@Rozier/documents/singleDocumentThumbnail.html.twig' with {
             document: document,
@@ -30,7 +30,7 @@
             controls: false
         } only %}
         {% endfor %}
-        </ul>
+        </div>
         {% endapply %}
 	</article>
 </section>
