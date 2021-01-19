@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\DebugBar;
 use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DebugBar;
 use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AccessMapCollector;
@@ -29,7 +30,7 @@ class RoadizDebugBar extends DebugBar
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->addCollector($container['messagescollector']);
+        $this->addCollector($container[MessagesCollector::class]);
         $this->addCollector(new ThemesCollector($container['themeResolver'], $container['requestStack']));
         $this->addCollector(new VersionsCollector());
         $this->addCollector(new StopwatchDataCollector($container['stopwatch'], $container['twig.profile']));

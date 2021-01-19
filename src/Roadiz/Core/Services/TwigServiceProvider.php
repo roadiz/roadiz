@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
+use DebugBar\DataCollector\MessagesCollector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Exception;
 use PDOException;
@@ -17,6 +18,7 @@ use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\TwigExtensions\BlockRenderExtension;
 use RZ\Roadiz\Utils\TwigExtensions\CentralTruncateExtension;
 use RZ\Roadiz\Utils\TwigExtensions\DocumentExtension;
+use RZ\Roadiz\Utils\TwigExtensions\DumpExtension;
 use RZ\Roadiz\Utils\TwigExtensions\FontExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HandlerExtension;
 use RZ\Roadiz\Utils\TwigExtensions\HttpKernelExtension;
@@ -25,7 +27,6 @@ use RZ\Roadiz\Utils\TwigExtensions\RoadizExtension;
 use RZ\Roadiz\Utils\TwigExtensions\RoutingExtension;
 use RZ\Roadiz\Utils\TwigExtensions\UrlExtension;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
-use Symfony\Bridge\Twig\Extension\DumpExtension;
 use Symfony\Bridge\Twig\Extension\FormExtension;
 use Symfony\Bridge\Twig\Extension\HttpFoundationExtension;
 use Symfony\Bridge\Twig\Extension\SecurityExtension;
@@ -197,7 +198,10 @@ class TwigServiceProvider implements ServiceProviderInterface
             $extensions->add($c['twig.routingExtension']);
             $extensions->add(new BlockRenderExtension($c['twig.fragmentHandler']));
             $extensions->add(new HttpKernelExtension($c['twig.fragmentHandler']));
-            $extensions->add(new DumpExtension(new VarCloner()));
+            $extensions->add(new DumpExtension(
+                $c[MessagesCollector::class],
+                new VarCloner()
+            ));
             $extensions->add(new UrlExtension(
                 $c['document.url_generator'],
                 $c['nodesSourcesUrlCacheProvider'],

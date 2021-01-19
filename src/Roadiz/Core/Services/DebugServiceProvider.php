@@ -22,7 +22,7 @@ class DebugServiceProvider implements ServiceProviderInterface
             return new TraceableEventDispatcher($dispatcher, $c['stopwatch']);
         });
 
-        $container['messagescollector'] = function () {
+        $container[MessagesCollector::class] = function () {
             return new MessagesCollector();
         };
 
