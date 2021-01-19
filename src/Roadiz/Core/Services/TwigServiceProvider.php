@@ -177,6 +177,10 @@ class TwigServiceProvider implements ServiceProviderInterface
             return new UrlHelper($c['requestStack'], $c['requestContext']);
         };
 
+        $container[MessagesCollector::class] = function () {
+            return new MessagesCollector();
+        };
+
         $container['twig.extensions'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
