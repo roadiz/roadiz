@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace src\Roadiz\Core\Routing;
+namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Translation;
