@@ -3,13 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\NodeType;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Routing\PathResolverInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -92,14 +87,17 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      */
     protected function matchNode($decodedUrl): array
     {
-        if (null === $this->theme) {
-            throw new ResourceNotFoundException();
-        }
+//        if (null === $this->theme) {
+//            throw new ResourceNotFoundException();
+//        }
 
         $resourceInfo = $this->pathResolver->resolvePath($decodedUrl, $this->getSupportedFormatExtensions());
         $nodeSource = $resourceInfo->getResource();
 
-        if ($nodeSource !== null && !$nodeSource->getNode()->isHome()) {
+        if ($nodeSource !== null &&
+            $nodeSource instanceof NodesSources &&
+            !$nodeSource->getNode()->isHome()
+        ) {
             $translation = $nodeSource->getTranslation();
             $nodeRouteHelper = new NodeRouteHelper(
                 $nodeSource->getNode(),
@@ -117,7 +115,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
             return [
                 '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
-                '_locale' => $resourceInfo->getFormat(),
+                '_locale' => $resourceInfo->getLocale(),
                 '_route' => RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
                 '_format' => $resourceInfo->getFormat(),
                 'node' => $nodeSource->getNode(),

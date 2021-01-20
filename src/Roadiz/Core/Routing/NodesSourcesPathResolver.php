@@ -47,6 +47,11 @@ final class NodesSourcesPathResolver implements PathResolverInterface
     {
         $resourceInfo = new ResourceInfo();
         $tokens = $this->tokenizePath($path);
+
+        if (count($tokens) === 0) {
+            throw new ResourceNotFoundException();
+        }
+
         $_format = 'html';
         $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
 
@@ -90,9 +95,9 @@ final class NodesSourcesPathResolver implements PathResolverInterface
         }
 
         $resourceInfo->setResource($nodeSource);
-        $resourceInfo->setTranslation($nodeSource->getTranslation());
+        $resourceInfo->setTranslation($translation);
         $resourceInfo->setFormat($_format);
-        $resourceInfo->setLocale($nodeSource->getTranslation()->getPreferredLocale());
+        $resourceInfo->setLocale($translation->getPreferredLocale());
         return $resourceInfo;
     }
 

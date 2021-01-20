@@ -46,8 +46,6 @@ final class ThemeInfo
     protected static $protectedThemeNames = ['DefaultTheme', 'Debug', 'BaseTheme', 'Install', 'Rozier'];
 
     /**
-     * ThemeInfo constructor.
-     *
      * @param string $name Short theme name or FQN classname
      * @param string $projectDir
      */

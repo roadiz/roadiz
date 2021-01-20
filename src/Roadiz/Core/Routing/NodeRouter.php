@@ -4,24 +4,21 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Config\NullLoader;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
-use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class NodeRouter extends Router implements VersatileGeneratorInterface
 {

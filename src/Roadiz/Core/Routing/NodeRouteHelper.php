@@ -11,33 +11,36 @@ use RZ\Roadiz\Utils\StringHandler;
 
 class NodeRouteHelper
 {
+    private Node $node;
+
+    private ?Theme $theme;
     /**
-     * @var Node
+     * @var class-string|null
      */
-    private $node;
+    private ?string $controller = null;
+
+    private PreviewResolverInterface $previewResolver;
     /**
-     * @var Theme
+     * @var class-string
      */
-    private $theme;
-    /**
-     * @var string
-     */
-    private $controller;
-    /**
-     * @var PreviewResolverInterface
-     */
-    private $previewResolver;
+    private string $defaultControllerClass;
 
     /**
      * @param Node $node
-     * @param Theme $theme
+     * @param Theme|null $theme
      * @param PreviewResolverInterface $previewResolver
+     * @param class-string $defaultControllerClass
      */
-    public function __construct(Node $node, Theme $theme, PreviewResolverInterface $previewResolver)
-    {
+    public function __construct(
+        Node $node,
+        ?Theme $theme,
+        PreviewResolverInterface $previewResolver,
+        string $defaultControllerClass = DefaultController::class
+    ) {
         $this->node = $node;
         $this->theme = $theme;
         $this->previewResolver = $previewResolver;
+        $this->defaultControllerClass = $defaultControllerClass;
     }
 
     /**
@@ -49,18 +52,22 @@ class NodeRouteHelper
     public function getController(): string
     {
         if (null === $this->controller) {
-            $refl = new \ReflectionClass($this->theme->getClassName());
-            $namespace = $refl->getNamespaceName() . '\\Controllers';
+            if (null !== $this->theme) {
+                $refl = new \ReflectionClass($this->theme->getClassName());
+                $namespace = $refl->getNamespaceName() . '\\Controllers';
 
-            $this->controller = $namespace . '\\' .
-            StringHandler::classify($this->node->getNodeType()->getName()) .
-            'Controller';
+                $this->controller = $namespace . '\\' .
+                    StringHandler::classify($this->node->getNodeType()->getName()) .
+                    'Controller';
 
-            /*
-             * Use a default controller if no controller was found in Theme.
-             */
-            if (!class_exists($this->controller) && $this->node->getNodeType()->isReachable()) {
-                $this->controller = DefaultController::class;
+                /*
+                 * Use a default controller if no controller was found in Theme.
+                 */
+                if (!class_exists($this->controller) && $this->node->getNodeType()->isReachable()) {
+                    $this->controller = $this->defaultControllerClass;
+                }
+            } else {
+                $this->controller = $this->defaultControllerClass;
             }
         }
 
