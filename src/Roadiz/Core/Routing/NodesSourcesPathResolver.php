@@ -8,7 +8,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -16,7 +15,6 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 final class NodesSourcesPathResolver implements PathResolverInterface
 {
-    private NodeRepository $repository;
     private EntityManagerInterface $entityManager;
     private ?Stopwatch $stopwatch;
     private static string $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
@@ -34,7 +32,6 @@ final class NodesSourcesPathResolver implements PathResolverInterface
     ) {
         $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
-        $this->repository = $entityManager->getRepository(Node::class);
         $this->previewResolver = $previewResolver;
     }
 
@@ -157,7 +154,8 @@ final class NodesSourcesPathResolver implements PathResolverInterface
             if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
                 $identifier = mb_strtolower(strip_tags($tokens[(int) (count($tokens) - 1)]));
                 if ($identifier !== null && $identifier != '') {
-                    $array = $this->repository
+                    $array = $this->entityManager
+                        ->getRepository(Node::class)
                         ->findNodeTypeNameAndSourceIdByIdentifier(
                             $identifier,
                             $translation,
