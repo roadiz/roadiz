@@ -33,6 +33,8 @@ class RoadizRouteCollection extends DeferredRouteCollection
      */
     protected $previewResolver;
 
+    protected bool $locked = false;
+
     /**
      * @param ThemeResolverInterface $themeResolver
      * @param Settings $settingsBag
@@ -61,7 +63,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
         }
 
         $resources = $this->getResources();
-        if (empty($resources)) {
+        if (!$this->locked) {
             /*
              * Adding Backend routes
              */
@@ -100,6 +102,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
              * return 'RZ\Roadiz\CMS\Controllers\FrontendController';
              */
             $this->addThemesCollections();
+            $this->locked = true;
         }
         if (null !== $this->stopwatch) {
             $this->stopwatch->stop('routeCollection');
