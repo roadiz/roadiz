@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\CMS\Controllers\DefaultController;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
@@ -22,6 +23,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @var PathResolverInterface
      */
     protected PathResolverInterface $pathResolver;
+    private string $defaultControllerClass;
 
     /**
      * @return array
@@ -46,6 +48,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param PreviewResolverInterface $previewResolver
      * @param Stopwatch|null $stopwatch
      * @param LoggerInterface|null $logger
+     * @param string $defaultControllerClass
      */
     public function __construct(
         PathResolverInterface $pathResolver,
@@ -53,10 +56,12 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         ThemeResolverInterface $themeResolver,
         PreviewResolverInterface $previewResolver,
         Stopwatch $stopwatch = null,
-        LoggerInterface $logger = null
+        LoggerInterface $logger = null,
+        string $defaultControllerClass = DefaultController::class
     ) {
         parent::__construct($context, $themeResolver, $previewResolver, $stopwatch, $logger);
         $this->pathResolver = $pathResolver;
+        $this->defaultControllerClass = $defaultControllerClass;
     }
 
     /**
@@ -98,7 +103,8 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $nodeRouteHelper = new NodeRouteHelper(
                 $nodeSource->getNode(),
                 $this->theme,
-                $this->previewResolver
+                $this->previewResolver,
+                $this->defaultControllerClass
             );
 
             if (!$this->previewResolver->isPreview() && !$translation->isAvailable()) {

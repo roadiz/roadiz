@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\CMS\Controllers\DefaultController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
@@ -126,6 +127,12 @@ class RoutingServiceProvider implements ServiceProviderInterface
             );
         };
 
+        /*
+         * Defines fallback controller class for nodes-sources
+         * when a dedicated controller is not found inside current theme
+         */
+        $container['nodeDefaultControllerClass'] = DefaultController::class;
+
         $container[NodeUrlMatcher::class] = function (Container $c) {
             return new NodeUrlMatcher(
                 $c[NodesSourcesPathResolver::class],
@@ -133,7 +140,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['themeResolver'],
                 $c[PreviewResolverInterface::class],
                 $c['stopwatch'],
-                $c['logger']
+                $c['logger'],
+                $c['nodeDefaultControllerClass']
             );
         };
 
