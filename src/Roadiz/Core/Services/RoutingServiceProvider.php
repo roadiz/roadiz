@@ -5,7 +5,6 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
@@ -120,7 +119,11 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         $container[NodesSourcesPathResolver::class] = function (Container $c) {
-            return new NodesSourcesPathResolver($c['em'], $c['stopwatch']);
+            return new NodesSourcesPathResolver(
+                $c['em'],
+                $c[PreviewResolverInterface::class],
+                $c['stopwatch']
+            );
         };
 
         $container[NodeUrlMatcher::class] = function (Container $c) {

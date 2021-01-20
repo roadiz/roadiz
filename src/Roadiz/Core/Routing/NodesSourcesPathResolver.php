@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManagerInterface;
-use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -20,21 +20,28 @@ final class NodesSourcesPathResolver implements PathResolverInterface
     private EntityManagerInterface $entityManager;
     private ?Stopwatch $stopwatch;
     private static string $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
+    private PreviewResolverInterface $previewResolver;
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param PreviewResolverInterface $previewResolver
      * @param Stopwatch|null $stopwatch
      */
-    public function __construct(EntityManagerInterface $entityManager, ?Stopwatch $stopwatch)
-    {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        PreviewResolverInterface $previewResolver,
+        ?Stopwatch $stopwatch
+    ) {
         $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->repository = $entityManager->getRepository(Node::class);
+        $this->previewResolver = $previewResolver;
     }
 
     /**
      * @param string $path
-     * @return NodesSources|null
+     * @param array $supportedFormatExtensions
+     * @return ResourceInfo
      */
     public function resolvePath(string $path, array $supportedFormatExtensions = ['html']): ResourceInfo
     {
@@ -46,7 +53,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
         /*
          * Prevent searching nodes with special characters.
          */
-        if (0 === preg_match('#'.$nodeNamePattern.'#', $identifier)) {
+        if (0 === preg_match('#'.static::$nodeNamePattern.'#', $identifier)) {
             throw new ResourceNotFoundException();
         }
 
@@ -54,10 +61,10 @@ final class NodesSourcesPathResolver implements PathResolverInterface
          * Look for any supported format extension after last token.
          */
         if (0 !== preg_match(
-            '#^('.$nodeNamePattern.')\.('.implode('|', $supportedFormatExtensions).')$#',
+            '#^('.static::$nodeNamePattern.')\.('.implode('|', $supportedFormatExtensions).')$#',
             $identifier,
             $matches
-            )) {
+        )) {
             $realIdentifier = $matches[1];
             $_format = $matches[2];
             // replace last token with real node-name without extension.

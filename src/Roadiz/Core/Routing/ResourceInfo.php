@@ -13,8 +13,8 @@ final class ResourceInfo
 {
     protected ?AbstractEntity $resource;
     protected ?Translation $translation;
-    protected string $_format;
-    protected string $_locale;
+    protected string $format;
+    protected string $locale;
 
     /**
      * @return AbstractEntity|null
@@ -57,7 +57,7 @@ final class ResourceInfo
      */
     public function getFormat(): string
     {
-        return $this->_format;
+        return $this->format;
     }
 
     /**
@@ -66,7 +66,7 @@ final class ResourceInfo
      */
     public function setFormat(string $format): ResourceInfo
     {
-        $this->_format = $format;
+        $this->format = $format;
         return $this;
     }
 
@@ -75,7 +75,7 @@ final class ResourceInfo
      */
     public function getLocale(): string
     {
-        return $this->_locale;
+        return $this->locale;
     }
 
     /**
@@ -84,7 +84,7 @@ final class ResourceInfo
      */
     public function setLocale(string $locale): ResourceInfo
     {
-        $this->_locale = $locale;
+        $this->locale = $locale;
         return $this;
     }
 }
