@@ -87,10 +87,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      */
     protected function matchNode($decodedUrl): array
     {
-//        if (null === $this->theme) {
-//            throw new ResourceNotFoundException();
-//        }
-
         $resourceInfo = $this->pathResolver->resolvePath($decodedUrl, $this->getSupportedFormatExtensions());
         $nodeSource = $resourceInfo->getResource();
 
