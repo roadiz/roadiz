@@ -393,7 +393,8 @@ EOD
         $builder = new TreeBuilder('themes');
         $node = $builder->getRootNode();
 
-        $node->isRequired()
+        $node
+            ->defaultValue([])
             ->prototype('array')
             ->children()
                 ->scalarNode('classname')
