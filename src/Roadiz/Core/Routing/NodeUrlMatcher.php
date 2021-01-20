@@ -3,12 +3,19 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Routing\PathResolverInterface;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Stopwatch\Stopwatch;
 
 /**
  * UrlMatcher which tries to grab Node and Translation
@@ -16,6 +23,11 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  */
 class NodeUrlMatcher extends DynamicUrlMatcher
 {
+    /**
+     * @var PathResolverInterface
+     */
+    protected PathResolverInterface $pathResolver;
+
     /**
      * @return array
      */
@@ -33,6 +45,26 @@ class NodeUrlMatcher extends DynamicUrlMatcher
     }
 
     /**
+     * @param PathResolverInterface $pathResolver
+     * @param RequestContext $context
+     * @param ThemeResolverInterface $themeResolver
+     * @param PreviewResolverInterface $previewResolver
+     * @param Stopwatch|null $stopwatch
+     * @param LoggerInterface|null $logger
+     */
+    public function __construct(
+        PathResolverInterface $pathResolver,
+        RequestContext $context,
+        ThemeResolverInterface $themeResolver,
+        PreviewResolverInterface $previewResolver,
+        Stopwatch $stopwatch = null,
+        LoggerInterface $logger = null
+    ) {
+        parent::__construct($context, $themeResolver, $previewResolver, $stopwatch, $logger);
+        $this->pathResolver = $pathResolver;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function match($pathinfo)
@@ -45,7 +77,6 @@ class NodeUrlMatcher extends DynamicUrlMatcher
             $this->stopwatch->stop('findTheme');
         }
 
-        $this->repository = $this->em->getRepository(Node::class);
         $decodedUrl = rawurldecode($pathinfo);
         /*
          * Try nodes routes
@@ -64,50 +95,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
         if (null === $this->theme) {
             throw new ResourceNotFoundException();
         }
-        $tokens = explode('/', $decodedUrl);
-        // Remove empty tokens (especially when a trailing slash is present)
-        $tokens = array_values(array_filter($tokens));
 
-        $_format = 'html';
-        $nodeNamePattern = '[a-zA-Z0-9\-\_\.]+';
-        $supportedFormats = $this->getSupportedFormatExtensions();
-        $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-
-        /*
-         * Prevent searching nodes with special characters.
-         */
-        if (0 === preg_match('#'.$nodeNamePattern.'#', $identifier)) {
-            throw new ResourceNotFoundException();
-        }
-
-        /*
-         * Look for any supported format extension after last token.
-         */
-        if (0 !== preg_match('#^('.$nodeNamePattern.')\.('.implode('|', $supportedFormats).')$#', $identifier, $matches)) {
-            $realIdentifier = $matches[1];
-            $_format = $matches[2];
-            // replace last token with real node-name without extension.
-            $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
-        }
-
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->start('parseTranslation');
-        }
-        $translation = $this->parseTranslation($tokens);
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->stop('parseTranslation');
-        }
-
-        /*
-         * Try with URL Aliases OR nodeName
-         */
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->start('parseFromIdentifier');
-        }
-        $nodeSource = $this->parseFromIdentifier($tokens, $translation);
-        if (null !== $this->stopwatch) {
-            $this->stopwatch->stop('parseFromIdentifier');
-        }
+        $resourceInfo = $this->pathResolver->resolvePath($decodedUrl, $this->getSupportedFormatExtensions());
+        $nodeSource = $resourceInfo->getResource();
 
         if ($nodeSource !== null && !$nodeSource->getNode()->isHome()) {
             $translation = $nodeSource->getTranslation();
@@ -127,54 +117,15 @@ class NodeUrlMatcher extends DynamicUrlMatcher
 
             return [
                 '_controller' => $nodeRouteHelper->getController() . '::' . $nodeRouteHelper->getMethod(),
-                '_locale' => $translation->getPreferredLocale(), //pass request locale to init translator
+                '_locale' => $resourceInfo->getFormat(),
                 '_route' => RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
-                '_format' => $_format,
+                '_format' => $resourceInfo->getFormat(),
                 'node' => $nodeSource->getNode(),
-                RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
-                'translation' => $translation,
+                RouteObjectInterface::ROUTE_OBJECT => $resourceInfo->getResource(),
+                'translation' => $resourceInfo->getTranslation(),
                 'theme' => $this->theme,
             ];
         }
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * @param array            $tokens
-     * @param Translation|null $translation
-     *
-     * @return NodesSources|null
-     */
-    protected function parseFromIdentifier(array &$tokens, ?Translation $translation = null): ?NodesSources
-    {
-        if (!empty($tokens[0])) {
-            /*
-             * If the only url token is not for language
-             */
-            if (count($tokens) > 1 || !in_array($tokens[0], Translation::getAvailableLocales())) {
-                $identifier = mb_strtolower(strip_tags($tokens[(int) (count($tokens) - 1)]));
-                if ($identifier !== null && $identifier != '') {
-                    $array = $this->repository
-                        ->findNodeTypeNameAndSourceIdByIdentifier(
-                            $identifier,
-                            $translation,
-                            !$this->previewResolver->isPreview()
-                        );
-                    if (null !== $array) {
-                        $fqcn = NodeType::getGeneratedEntitiesNamespace() . '\\NS' . ucwords($array['name']);
-                        if (!class_exists($fqcn)) {
-                            throw new ResourceNotFoundException($fqcn . ' entity does not exist.');
-                        }
-                        /** @var NodesSources|null $nodeSource */
-                        $nodeSource = $this->em->getRepository($fqcn)->findOneBy([
-                            'id' => $array['id']
-                        ]);
-                        return $nodeSource;
-                    }
-                }
-            }
-        }
-
-        return null;
     }
 }

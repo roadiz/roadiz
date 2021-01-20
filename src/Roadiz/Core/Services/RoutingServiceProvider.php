@@ -5,9 +5,12 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
+use RZ\Roadiz\Core\Routing\NodesSourcesPathResolver;
+use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
 use RZ\Roadiz\Core\Routing\RedirectionRouter;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
@@ -116,22 +119,35 @@ class RoutingServiceProvider implements ServiceProviderInterface
             );
         };
 
+        $container[NodesSourcesPathResolver::class] = function (Container $c) {
+            return new NodesSourcesPathResolver($c['em'], $c['stopwatch']);
+        };
+
+        $container[NodeUrlMatcher::class] = function (Container $c) {
+            return new NodeUrlMatcher(
+                $c[NodesSourcesPathResolver::class],
+                $c['requestContext'],
+                $c['themeResolver'],
+                $c[PreviewResolverInterface::class],
+                $c['stopwatch'],
+                $c['logger']
+            );
+        };
+
         $container['nodeRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $router = new NodeRouter(
-                $c['em'],
+                $c[NodeUrlMatcher::class],
                 $c['themeResolver'],
                 $c['settingsBag'],
                 $c['proxy.dispatcher'],
-                $c[PreviewResolverInterface::class],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
                 ],
                 $c['requestContext'],
-                $c['logger'],
-                $c['stopwatch']
+                $c['logger']
             );
             $router->setNodeSourceUrlCacheProvider($c['nodesSourcesUrlCacheProvider']);
             return $router;

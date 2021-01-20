@@ -22,8 +22,6 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
     private $cache;
 
     /**
-     * NodesSourcesPathResolver constructor.
-     *
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)

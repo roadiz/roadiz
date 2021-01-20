@@ -30,14 +30,6 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     const NO_CACHE_PARAMETER = '_no_cache';
     /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-    /**
-     * @var Stopwatch|null
-     */
-    protected $stopwatch;
-    /**
      * @var ThemeResolverInterface
      */
     private $themeResolver;
@@ -53,32 +45,24 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var EventDispatcherInterface
      */
     private $eventDispatcher;
-    /**
-     * @var PreviewResolverInterface
-     */
-    private $previewResolver;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param UrlMatcherInterface $matcher
      * @param ThemeResolverInterface $themeResolver
      * @param Settings $settingsBag
      * @param EventDispatcherInterface $eventDispatcher
-     * @param PreviewResolverInterface $previewResolver
      * @param array $options
      * @param RequestContext|null $context
      * @param LoggerInterface|null $logger
-     * @param Stopwatch|null $stopwatch
      */
     public function __construct(
-        EntityManagerInterface $em,
+        UrlMatcherInterface $matcher,
         ThemeResolverInterface $themeResolver,
         Settings $settingsBag,
         EventDispatcherInterface $eventDispatcher,
-        PreviewResolverInterface $previewResolver,
         array $options = [],
         RequestContext $context = null,
-        LoggerInterface $logger = null,
-        Stopwatch $stopwatch = null
+        LoggerInterface $logger = null
     ) {
         parent::__construct(
             new NullLoader(),
@@ -87,12 +71,10 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $context,
             $logger
         );
-        $this->em = $em;
-        $this->stopwatch = $stopwatch;
         $this->themeResolver = $themeResolver;
         $this->settingsBag = $settingsBag;
         $this->eventDispatcher = $eventDispatcher;
-        $this->previewResolver = $previewResolver;
+        $this->matcher = $matcher;
     }
 
     /**
@@ -126,17 +108,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     public function getMatcher(): UrlMatcherInterface
     {
-        if (null !== $this->matcher) {
-            return $this->matcher;
-        }
-        return $this->matcher = new NodeUrlMatcher(
-            $this->context,
-            $this->em,
-            $this->themeResolver,
-            $this->previewResolver,
-            $this->stopwatch,
-            $this->logger
-        );
+        return $this->matcher;
     }
 
     /**
