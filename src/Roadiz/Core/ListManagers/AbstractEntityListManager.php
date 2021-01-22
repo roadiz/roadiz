@@ -214,4 +214,12 @@ abstract class AbstractEntityListManager implements EntityListManagerInterface
 
         return $this;
     }
+
+    /**
+     * @return int
+     */
+    public function getPageCount()
+    {
+        return (int) ceil($this->getItemCount() / $this->getItemPerPage());
+    }
 }

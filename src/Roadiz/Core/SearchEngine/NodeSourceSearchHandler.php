@@ -94,9 +94,12 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
         if (!isset($args["fq"])) {
             $args["fq"] = [];
         }
-        if (isset($args['visible'])) {
-            $tmp = "node_visible_b:" . (($args['visible']) ? 'true' : 'false');
+
+        $visible = $args['visible'] ?? $args['node.visible'] ?? null;
+        if (isset($visible)) {
+            $tmp = "node_visible_b:" . (($visible) ? 'true' : 'false');
             unset($args['visible']);
+            unset($args['node.visible']);
             $args["fq"][] = $tmp;
         }
 
@@ -117,10 +120,11 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
         /*
          * Filter by Node type
          */
-        if (!empty($args['nodeType'])) {
-            if (is_array($args['nodeType']) || $args['nodeType'] instanceof Collection) {
+        $nodeType = $args['nodeType'] ?? $args['node.nodeType'] ?? null;
+        if (!empty($nodeType)) {
+            if (is_array($nodeType) || $nodeType instanceof Collection) {
                 $orQuery = [];
-                foreach ($args['nodeType'] as $nodeType) {
+                foreach ($nodeType as $nodeType) {
                     if ($nodeType instanceof NodeType) {
                         $orQuery[] = $nodeType->getName();
                     } else {
@@ -128,26 +132,29 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                     }
                 }
                 $args["fq"][] = "node_type_s:(" . implode(' OR ', $orQuery) . ')';
-            } elseif ($args['nodeType'] instanceof NodeType) {
-                $args["fq"][] = "node_type_s:" . $args['nodeType']->getName();
+            } elseif ($nodeType instanceof NodeType) {
+                $args["fq"][] = "node_type_s:" . $nodeType->getName();
             } else {
-                $args["fq"][] = "node_type_s:" . $args['nodeType'];
+                $args["fq"][] = "node_type_s:" . $nodeType;
             }
             unset($args['nodeType']);
+            unset($args['node.nodeType']);
         }
 
         /*
          * Filter by parent node
          */
-        if (!empty($args['parent'])) {
-            if ($args['parent'] instanceof Node) {
-                $args["fq"][] = "node_parent_i:" . $args['parent']->getId();
-            } elseif (is_string($args['parent'])) {
-                $args["fq"][] = "node_parent_s:" . trim($args['parent']);
-            } elseif (is_numeric($args['parent'])) {
-                $args["fq"][] = "node_parent_i:" . (int) $args['parent'];
+        $parent = $args['parent'] ?? $args['node.parent'] ?? null;
+        if (!empty($parent)) {
+            if ($parent instanceof Node) {
+                $args["fq"][] = "node_parent_i:" . $parent->getId();
+            } elseif (is_string($parent)) {
+                $args["fq"][] = "node_parent_s:" . trim($parent);
+            } elseif (is_numeric($parent)) {
+                $args["fq"][] = "node_parent_i:" . (int) $parent;
             }
             unset($args['parent']);
+            unset($args['node.parent']);
         }
 
         /*
@@ -172,16 +179,18 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
             $args["fq"][] = $tmp;
         }
 
-        if (isset($args['status'])) {
+        $status = $args['status'] ?? $args['node.status'] ?? null;
+        if (isset($status)) {
             $tmp = "node_status_i:";
-            if (!is_array($args['status'])) {
-                $tmp .= (string) $args['status'];
-            } elseif ($args['status'][0] == "<=") {
-                $tmp .= "[* TO " . (string) $args['status'][1] . "]";
-            } elseif ($args['status'][0] == ">=") {
-                $tmp .= "[" . (string) $args['status'][1] . " TO *]";
+            if (!is_array($status)) {
+                $tmp .= (string) $status;
+            } elseif ($status[0] == "<=") {
+                $tmp .= "[* TO " . (string) $status[1] . "]";
+            } elseif ($status[0] == ">=") {
+                $tmp .= "[" . (string) $status[1] . " TO *]";
             }
             unset($args['status']);
+            unset($args['node.status']);
             $args["fq"][] = $tmp;
         } else {
             $args["fq"][] = "node_status_i:" . (string) (Node::PUBLISHED);

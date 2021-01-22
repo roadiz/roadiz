@@ -128,14 +128,6 @@ class QueryBuilderListManager extends AbstractEntityListManager
     }
 
     /**
-     * @return int
-     */
-    public function getPageCount()
-    {
-        return (int) ceil($this->getItemCount() / $this->getItemPerPage());
-    }
-
-    /**
      * @inheritDoc
      */
     public function getEntities()
