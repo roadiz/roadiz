@@ -34,7 +34,9 @@ final class NodesSourcesNodeTypeFilter implements EventSubscriberInterface
             $event->getProperty() === 'node.nodeType' &&
             (
                 $event->getValue() instanceof NodeType ||
-                (is_array($event->getValue()) && $event->getValue()[0] instanceof NodeType)
+                (is_array($event->getValue()) &&
+                    count($event->getValue()) > 0 &&
+                    $event->getValue()[0] instanceof NodeType)
             );
     }
 
