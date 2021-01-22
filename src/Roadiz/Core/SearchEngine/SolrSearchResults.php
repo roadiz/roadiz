@@ -40,8 +40,6 @@ class SolrSearchResults implements \Iterator
     protected $resultItems;
 
     /**
-     * SolrSearchResults constructor.
-     *
      * @param array                  $response
      * @param EntityManagerInterface $entityManager
      */
