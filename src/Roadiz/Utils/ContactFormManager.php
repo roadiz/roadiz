@@ -69,6 +69,10 @@ class ContactFormManager extends EmailManager
      */
     protected $emailStrictMode = false;
     /**
+     * @var bool
+     */
+    protected $useRealResponseCode = false;
+    /**
      * @var array
      */
     protected $allowedMimeTypes = [
@@ -397,7 +401,13 @@ class ContactFormManager extends EmailManager
                     'errors' => (string) $this->form->getErrors(),
                     'errorsPerForm' => $errorPerForm,
                 ];
-                return new JsonResponse($responseArray);
+                /*
+                 * BC: Still return 200 if form is not valid for Ajax forms
+                 */
+                return new JsonResponse(
+                    $responseArray,
+                    $this->useRealResponseCode() ? Response::HTTP_BAD_REQUEST : Response::HTTP_OK
+                );
             }
         }
         return null;
@@ -688,6 +698,24 @@ class ContactFormManager extends EmailManager
     {
         $this->options = $options;
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function useRealResponseCode(): bool
+    {
+        return $this->useRealResponseCode;
+    }
+
+    /**
+     * @param bool $useRealResponseCode Return a real 400 response if form is not valid.
+     * @return ContactFormManager
+     */
+    public function setUseRealResponseCode(bool $useRealResponseCode): ContactFormManager
+    {
+        $this->useRealResponseCode = $useRealResponseCode;
         return $this;
     }
 }
