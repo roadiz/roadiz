@@ -147,7 +147,7 @@ class GroupsController extends AbstractAdminController
 
             return $this->redirect($this->generateUrl(
                 'groupsEditRolesPage',
-                ['groupId' => $item->getId()]
+                ['id' => $item->getId()]
             ));
         }
 
@@ -199,7 +199,7 @@ class GroupsController extends AbstractAdminController
 
             return $this->redirect($this->generateUrl(
                 'groupsEditRolesPage',
-                ['groupId' => $item->getId()]
+                ['id' => $item->getId()]
             ));
         }
 
@@ -242,7 +242,7 @@ class GroupsController extends AbstractAdminController
 
             return $this->redirect($this->generateUrl(
                 'groupsEditUsersPage',
-                ['groupId' => $item->getId()]
+                ['id' => $item->getId()]
             ));
         }
 
@@ -293,8 +293,9 @@ class GroupsController extends AbstractAdminController
 
             return $this->redirect($this->generateUrl(
                 'groupsEditUsersPage',
-                ['groupId' => $item->getId(),
-                    'userId' => $user->getId()]
+                [
+                    'id' => $item->getId()
+                ]
             ));
         }
 
