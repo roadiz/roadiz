@@ -18,7 +18,8 @@ use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\Controller\ContainerControllerResolver;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
@@ -38,7 +39,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         $container['httpKernel'] = function (Container $c) {
             return new HttpKernel(
                 $c['dispatcher'],
-                $c['resolver'],
+                $c[ControllerResolverInterface::class],
                 $c['requestStack'],
                 $c['argumentResolver']
             );
@@ -74,8 +75,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new RequestContext();
         };
 
-        $container['resolver'] = function () {
-            return new ControllerResolver();
+        $container[ControllerResolverInterface::class] = function (Container $c) {
+            return new ContainerControllerResolver(new \Pimple\Psr11\Container($c));
         };
 
         $container['argumentResolver'] = function () {
