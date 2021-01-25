@@ -201,7 +201,7 @@ class ExceptionViewer
             return new JsonResponse($data, $this->getHttpStatusCode($e));
         } else {
             $html = file_get_contents(CmsController::getViewsFolder() . '/emerg.html');
-            $html = str_replace('{{ http_code }}', $this->getHttpStatusCode($e), $html);
+            $html = str_replace('{{ http_code }}', (string) $this->getHttpStatusCode($e), $html);
             $html = str_replace('{{ human_message }}', $humanMessage, $html);
 
             if ($e instanceof MaintenanceModeException) {
