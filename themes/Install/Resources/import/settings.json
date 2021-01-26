@@ -562,5 +562,16 @@
             "inMenu": true
         },
         "type": 5
+    },
+    {
+        "name": "custom_preview_scheme",
+        "description": "custom_preview_scheme.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 0
     }
 ]

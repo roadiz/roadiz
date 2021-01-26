@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Core\Routing\NodeRouter;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
@@ -94,12 +96,25 @@ class NodesSourcesController extends RozierApp
                         $this->onPostUpdate($source, $request);
 
                         if ($request->isXmlHttpRequest()) {
-                            $url = $this->generateUrl($source);
-                            $previewUrl = '/preview.php' . str_replace('/dev.php', '', $url);
+                            if ($this->get('settingsBag')->get('custom_preview_scheme')) {
+                                $previewUrl = $this->generateUrl($source, [
+                                    'canonicalScheme' => $this->get('settingsBag')->get('custom_preview_scheme'),
+                                    NodeRouter::NO_CACHE_PARAMETER => true
+                                ], Router::ABSOLUTE_URL);
+                            } else {
+                                $previewUrl = $this->generateUrl($source, [
+                                    '_preview' => 1,
+                                    NodeRouter::NO_CACHE_PARAMETER => true
+                                ]);
+                            }
+                            $url = $this->generateUrl($source, [
+                                NodeRouter::NO_CACHE_PARAMETER => true
+                            ]);
 
                             return new JsonResponse([
                                 'status' => 'success',
-                                'public_url' => $source->getNode()->isPublished() ? $url : $previewUrl,
+                                'public_url' => $source->getNode()->isPublished() ? $url : null,
+                                'preview_url' => $previewUrl,
                                 'errors' => [],
                             ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }

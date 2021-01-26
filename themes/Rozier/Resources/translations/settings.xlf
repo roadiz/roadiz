@@ -131,6 +131,17 @@
                 <note>Setting description</note>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="custom_preview_scheme">
+                <source>custom_preview_scheme</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="custom_preview_scheme.help">
+                <source>custom_preview_scheme.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
             <trans-unit xml:space="preserve" id="openid_username_claim">
                 <source>openid_username_claim</source>
                 <target></target>

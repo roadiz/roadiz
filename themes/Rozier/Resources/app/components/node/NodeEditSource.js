@@ -176,12 +176,17 @@ export default class NodeEditSource {
             })
                 .done(data => {
                     this.cleanErrors()
-
-                    // Update preview or view url
+                    // Update preview or public url
                     if (data.public_url) {
                         let $publicUrlLinks = $('a.public-url-link')
                         if ($publicUrlLinks.length) {
                             $publicUrlLinks.attr('href', data.public_url)
+                        }
+                    }
+                    if (data.preview_url) {
+                        let $previewUrlLinks = $('a.preview-url-link')
+                        if ($previewUrlLinks.length) {
+                            $previewUrlLinks.attr('href', data.preview_url)
                         }
                     }
                 })

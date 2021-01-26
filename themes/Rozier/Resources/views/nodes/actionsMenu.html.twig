@@ -68,10 +68,33 @@
                     {# Only add preview/see button for Reachable node-types #}
                     {% if node.nodeType.reachable %}
                         {% if source and node.published %}
-                            <a class="uk-button public-url-link" target="_blank" href="{{ path(source) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}see.page{% endtrans %}</span></a>
+                            <a class="uk-button public-url-link"
+                               target="_blank"
+                               href="{{ path(source, {
+                                   '_no_cache': 1
+                               }) }}">
+                                <i class="uk-icon-rz-visibility"></i>
+                                <span class="label">{% trans %}see.page{% endtrans %}</span>
+                            </a>
                         {% endif %}
                         {% if source and (node.published or node.draft or node.pending) %}
-                            <a class="uk-button public-url-link" target="_blank" href="/preview.php{{ path(source)|replace({'/dev.php':''}) }}"><i class="uk-icon-rz-visibility"></i><span class="label">{% trans %}preview.page{% endtrans %}</span></a>
+                            {% if bags.settings.get('custom_preview_scheme') %}
+                                {% set previewUrl = url(source, {
+                                    'canonicalScheme': bags.settings.get('custom_preview_scheme'),
+                                    '_no_cache': 1
+                                }) %}
+                            {% else %}
+                                {% set previewUrl = path(source, {
+                                    '_preview': 1,
+                                    '_no_cache': 1
+                                }) %}
+                            {% endif %}
+                            <a class="uk-button preview-url-link"
+                               target="_blank"
+                               href="{{ previewUrl }}">
+                                <i class="uk-icon-rz-visibility"></i>
+                                <span class="label">{% trans %}preview.page{% endtrans %}</span>
+                            </a>
                         {% endif %}
                     {% endif %}
                 {% endblock %}

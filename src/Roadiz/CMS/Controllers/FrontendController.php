@@ -56,19 +56,19 @@ abstract class FrontendController extends AppController
     ];
 
     /**
-     * @var Node
+     * @var Node|null
      */
     protected $node = null;
     /**
-     * @var NodesSources
+     * @var NodesSources|null
      */
     protected $nodeSource = null;
     /**
-     * @var Translation
+     * @var Translation|null
      */
     protected $translation = null;
     /**
-     * @var Container
+     * @var Container|null
      */
     protected $themeContainer = null;
 
