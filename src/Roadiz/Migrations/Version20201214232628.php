@@ -52,4 +52,15 @@ final class Version20201214232628 extends AbstractMigration
         // Only available on MariaDB 10.5
         // $this->addSql('ALTER TABLE `groups` RENAME INDEX UNIQ_98972EB45E237E06 TO uniq_f06d39705e237e06');
     }
+
+    /**
+     * Temporary workaround
+     *
+     * @return bool
+     * @see https://github.com/doctrine/migrations/issues/1104
+     */
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }

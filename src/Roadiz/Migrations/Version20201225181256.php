@@ -375,4 +375,15 @@ final class Version20201225181256 extends AbstractMigration
     {
         $this->throwIrreversibleMigrationException();
     }
+
+    /**
+     * Temporary workaround
+     *
+     * @return bool
+     * @see https://github.com/doctrine/migrations/issues/1104
+     */
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }
