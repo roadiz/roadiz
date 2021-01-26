@@ -129,6 +129,16 @@
                 <target state="translated">Réduit la liste des scopes demandés. Lister les scopes séparés par un espace. Si la liste est laissée vide, OpenID tentera de se connecter avec tous les scopes disponibles depuis le document d’auto-découverte.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_preview_scheme">
+                <source>custom_preview_scheme</source>
+                <target state="translated">Système d'URL de prévisualisation personnalisé</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_preview_scheme.help">
+                <source>custom_preview_scheme.help</source>
+                <target state="translated">Remplace la query-string "?preview=1" des URL de prévisualisation par un nom de domaine personnalisé. Cela peut être utile avec la version *Headless* de Roadiz.</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="openid_username_claim">
                 <source>openid_username_claim</source>
                 <target state="translated">Claim du nom d’utilisateur Open ID</target>
