@@ -9,7 +9,7 @@ use JMS\Serializer\Serializer;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,8 +37,8 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         $arrayFilter = $this->parseFilterFromRequest($request);
-        /** @var NodeSourceSearchHandler|null $searchHandler */
-        $searchHandler = $this->get('solr.search.nodeSource');
+        /** @var NodeSourceSearchHandlerInterface|null $searchHandler */
+        $searchHandler = $this->get(NodeSourceSearchHandlerInterface::class);
         if ($request->get('search') !== '' && null !== $searchHandler) {
             $responseArray = $this->getSolrSearchResults($request, $searchHandler, $arrayFilter);
         } else {
@@ -120,14 +120,14 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
     /**
      * @param Request                 $request
-     * @param NodeSourceSearchHandler $searchHandler
+     * @param NodeSourceSearchHandlerInterface $searchHandler
      * @param array                   $arrayFilter
      *
      * @return array
      */
     protected function getSolrSearchResults(
         Request $request,
-        NodeSourceSearchHandler $searchHandler,
+        NodeSourceSearchHandlerInterface $searchHandler,
         array $arrayFilter
     ): array {
         $searchHandler->boostByUpdateDate();

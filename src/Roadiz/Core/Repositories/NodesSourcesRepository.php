@@ -14,7 +14,9 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Events\QueryNodesSourcesEvent;
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
+use RZ\Roadiz\Core\SearchEngine\SearchHandlerInterface;
+use RZ\Roadiz\Core\SearchEngine\SearchResultsInterface;
 use RZ\Roadiz\Core\SearchEngine\SolrSearchResults;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -421,8 +423,8 @@ class NodesSourcesRepository extends StatusAwareRepository
      */
     public function findBySearchQuery($query, $limit = 25)
     {
-        /** @var NodeSourceSearchHandler|null $service */
-        $service = $this->get('solr.search.nodeSource');
+        /** @var NodeSourceSearchHandlerInterface|null $service */
+        $service = $this->get(NodeSourceSearchHandlerInterface::class);
         if (null !== $service) {
             $service->boostByUpdateDate();
             $arguments = [];
@@ -449,12 +451,12 @@ class NodesSourcesRepository extends StatusAwareRepository
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
      * @param Translation $translation Current translation
      * @param int $limit
-     * @return SolrSearchResults
+     * @return SearchResultsInterface
      */
     public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
     {
-        /** @var NodeSourceSearchHandler|null $service */
-        $service = $this->get('solr.search.nodeSource');
+        /** @var SearchHandlerInterface|null $service */
+        $service = $this->get(NodeSourceSearchHandlerInterface::class);
         if (null !== $service) {
             $params = [
                 'translation' => $translation,

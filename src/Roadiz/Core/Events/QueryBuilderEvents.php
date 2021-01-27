@@ -8,8 +8,6 @@ use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
 
 /**
- * Class QueryBuilderEvents
- *
  * @package RZ\Roadiz\Core\Events
  * @deprecated
  */

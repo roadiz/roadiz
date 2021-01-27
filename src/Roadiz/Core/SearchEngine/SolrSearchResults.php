@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @package RZ\Roadiz\Core\SearchEngine
  */
-class SolrSearchResults implements \Iterator
+class SolrSearchResults implements SearchResultsInterface
 {
     /**
      * @var array

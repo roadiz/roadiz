@@ -13,7 +13,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 /**
  * @package RZ\Roadiz\Core\SearchEngine
  */
-class NodeSourceSearchHandler extends AbstractSearchHandler
+class NodeSourceSearchHandler extends AbstractSearchHandler implements NodeSourceSearchHandlerInterface
 {
     /**
      * @var bool

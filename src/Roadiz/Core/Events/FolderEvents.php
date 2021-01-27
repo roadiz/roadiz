@@ -8,8 +8,6 @@ use RZ\Roadiz\Core\Events\Folder\FolderDeletedEvent;
 use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
 
 /**
- * Class FolderEvents
- *
  * @package RZ\Roadiz\Core\Events
  * @deprecated
  */

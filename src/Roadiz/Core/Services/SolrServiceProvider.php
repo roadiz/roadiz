@@ -7,6 +7,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
@@ -86,10 +87,17 @@ class SolrServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * @deprecated
+         */
+        $container['solr.search.nodeSource'] = $container->factory(function (Container $c) {
+            return $c[NodeSourceSearchHandlerInterface::class];
+        });
+
+        /**
          * @param Container $c
          * @return null|NodeSourceSearchHandler
          */
-        $container['solr.search.nodeSource'] = $container->factory(function (Container $c) {
+        $container[NodeSourceSearchHandlerInterface::class] = $container->factory(function (Container $c) {
             if ($c['solr.ready']) {
                 return new NodeSourceSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {

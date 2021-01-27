@@ -6,7 +6,6 @@ namespace RZ\Roadiz\Config;
 use RZ\Roadiz\Core\Exceptions\NoYamlConfigurationFoundException;
 
 /**
- * Class YamlConfiguration
  * @package RZ\Roadiz\Console\Tools
  * @deprecated Use ConfigurationHandler with YamlConfigurationLoader
  */
