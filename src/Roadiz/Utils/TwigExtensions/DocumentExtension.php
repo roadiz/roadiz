@@ -108,12 +108,12 @@ class DocumentExtension extends AbstractExtension
 
     /**
      * @param DocumentInterface|null $document
-     * @param array $options
+     * @param array|null $options
      *
      * @return string
      * @throws RuntimeError
      */
-    public function display(DocumentInterface $document = null, array $options = [])
+    public function display(DocumentInterface $document = null, ?array $options = [])
     {
         if (null === $document) {
             if ($this->throwExceptions) {
@@ -121,6 +121,9 @@ class DocumentExtension extends AbstractExtension
             } else {
                 return "";
             }
+        }
+        if (null === $options) {
+            $options = [];
         }
         try {
             return $this->renderer->render($document, $options);
