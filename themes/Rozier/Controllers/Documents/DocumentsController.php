@@ -17,7 +17,10 @@ use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\QueryBuilderListManager;
 use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Core\Repositories\DocumentRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
@@ -1215,13 +1218,26 @@ class DocumentsController extends RozierApp
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $this->assignation['orphans'] = true;
-        $this->assignation['documents'] = $this->get('em')
-            ->getRepository(Document::class)
-            ->findAllUnused();
-        $this->assignation['filters'] = [
-            'itemCount' => count($this->assignation['documents']),
-            'itemPerPage' => false,
-        ];
+        /** @var DocumentRepository $documentRepository */
+        $documentRepository = $this->get('em')
+            ->getRepository(Document::class);
+
+        $listManager = new QueryBuilderListManager(
+            $request,
+            $documentRepository->getAllUnusedQueryBuilder()
+        );
+        $listManager->setItemPerPage(static::DEFAULT_ITEM_PER_PAGE);
+
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('unused_documents_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
+
+        $listManager->handle();
+
+        $this->assignation['filters'] = $listManager->getAssignation();
+        $this->assignation['documents'] = $listManager->getEntities();
         $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
         return $this->render('documents/list.html.twig', $this->assignation);

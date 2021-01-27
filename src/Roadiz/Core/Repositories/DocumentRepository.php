@@ -548,6 +548,14 @@ class DocumentRepository extends EntityRepository
      */
     public function findAllUnused()
     {
+        return $this->getAllUnusedQueryBuilder()->getQuery()->getResult();
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    public function getAllUnusedQueryBuilder(): QueryBuilder
+    {
         $qb = $this->createQueryBuilder('d');
         $qb2 = $this->_em->createQueryBuilder();
 
@@ -590,8 +598,6 @@ class DocumentRepository extends EntityRepository
             ));
         }
 
-        $query = $qb->getQuery();
-
-        return $query->getResult();
+        return $qb;
     }
 }
