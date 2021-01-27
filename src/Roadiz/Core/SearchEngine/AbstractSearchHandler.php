@@ -285,50 +285,36 @@ abstract class AbstractSearchHandler
         /*
          * Only escape exact query
          */
-        $q = $qHelper->escapeTerm($q);
+        $exactQuery = $qHelper->escapeTerm($q);
+        if (!$singleWord) {
+            /*
+             * adds quotes if multi word exact query
+             */
+            $exactQuery = '"' . $exactQuery . '"';
+        }
 
         /*
          * Search in node-sources tags name…
          */
         if ($searchTags) {
-            if ($singleWord) {
-                // Need to use Fuzzy search AND Exact search
-                return sprintf(
-                    '(' . $titleField . ':%s)^10 (' . $titleField . ':%s) (' . $collectionField . ':%s)  (' . $tagsField . ':%s) (' . $tagsField . ':%s)',
-                    $q,
-                    $fuzzyiedQuery,
-                    $fuzzyiedQuery,
-                    $q,
-                    $fuzzyiedQuery
-                );
-            } else {
-                // Need to use Fuzzy search AND Exact search
-                return sprintf(
-                    '(' . $titleField . ':"%s")^10 (' . $titleField . ':%s)^2 (' . $collectionField . ':%s) (' . $tagsField . ':"%s") (' . $tagsField . ':%s)',
-                    $q,
-                    $fuzzyiedQuery,
-                    $fuzzyiedQuery,
-                    $q,
-                    $fuzzyiedQuery
-                );
-            }
+            // Need to use Fuzzy search AND Exact search
+            return sprintf(
+                '(' . $titleField . ':%s)^10 (' . $titleField . ':%s) (' . $collectionField . ':%s)^2 (' . $collectionField . ':%s) (' . $tagsField . ':%s) (' . $tagsField . ':%s)',
+                $exactQuery,
+                $fuzzyiedQuery,
+                $exactQuery,
+                $fuzzyiedQuery,
+                $exactQuery,
+                $fuzzyiedQuery
+            );
         } else {
-            if ($singleWord) {
-                // Need to use Fuzzy Searches
-                return sprintf(
-                    '(' . $titleField . ':%s)^10 (' . $titleField . ':%s)^2 (' . $collectionField . ':%s)',
-                    $q,
-                    $fuzzyiedQuery,
-                    $fuzzyiedQuery
-                );
-            } else {
-                return sprintf(
-                    '(' . $titleField . ':"%s")^10 (' . $titleField . ':%s)^2 (' . $collectionField . ':%s)',
-                    $q,
-                    $fuzzyiedQuery,
-                    $fuzzyiedQuery
-                );
-            }
+            return sprintf(
+                '(' . $titleField . ':%s)^10 (' . $titleField . ':%s) (' . $collectionField . ':%s)^2 (' . $collectionField . ':%s)',
+                $exactQuery,
+                $fuzzyiedQuery,
+                $exactQuery,
+                $fuzzyiedQuery
+            );
         }
     }
 
