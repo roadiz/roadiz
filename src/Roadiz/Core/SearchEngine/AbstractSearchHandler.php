@@ -263,57 +263,70 @@ abstract class AbstractSearchHandler
     {
         $q = null !== $q ? trim($q) : '';
         $qHelper = new Helper();
-        $q = $qHelper->escapeTerm($q);
         $singleWord = $this->isQuerySingleWord($q);
         $titleField = $this->getTitleField($args);
         $collectionField = $this->getCollectionField($args);
         $tagsField = $this->getTagsField($args);
+
+        /**
+         * Generate a fuzzy query by appending proximity to each word
+         * @see https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches
+         */
+        $words = preg_split('#[\s,]+#', $q, -1, PREG_SPLIT_NO_EMPTY);
+        $fuzzyiedQuery = implode(' ', array_map(function (string $word) use ($proximity, $qHelper) {
+            /*
+             * Do not fuzz short words: Solr crashes
+             */
+            if (strlen($word) > 3) {
+                return $qHelper->escapeTerm($word) . '~' . $proximity;
+            }
+            return $qHelper->escapeTerm($word);
+        }, $words));
+        /*
+         * Only escape exact query
+         */
+        $q = $qHelper->escapeTerm($q);
+
         /*
          * Search in node-sources tags name…
          */
         if ($searchTags) {
-            /*
-             * @see https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches
-             */
             if ($singleWord) {
-                // Need to use Fuzzy Searches
+                // Need to use Fuzzy search AND Exact search
                 return sprintf(
-                    '(' . $titleField . ':%s~%d)^10 (' . $collectionField . ':%s~%d) (' . $tagsField . ':%s~%d)',
+                    '(' . $titleField . ':%s)^10 (' . $titleField . ':%s) (' . $collectionField . ':%s)  (' . $tagsField . ':%s) (' . $tagsField . ':%s)',
                     $q,
-                    $proximity,
+                    $fuzzyiedQuery,
+                    $fuzzyiedQuery,
                     $q,
-                    $proximity,
-                    $q,
-                    $proximity
+                    $fuzzyiedQuery
                 );
             } else {
+                // Need to use Fuzzy search AND Exact search
                 return sprintf(
-                    '(' . $titleField . ':"%s"~%d)^10 (' . $collectionField . ':"%s"~%d) (' . $tagsField . ':"%s"~%d)',
+                    '(' . $titleField . ':"%s")^10 (' . $titleField . ':%s)^2 (' . $collectionField . ':%s) (' . $tagsField . ':"%s") (' . $tagsField . ':%s)',
                     $q,
-                    $proximity,
+                    $fuzzyiedQuery,
+                    $fuzzyiedQuery,
                     $q,
-                    $proximity,
-                    $q,
-                    $proximity
+                    $fuzzyiedQuery
                 );
             }
         } else {
             if ($singleWord) {
                 // Need to use Fuzzy Searches
                 return sprintf(
-                    '(' . $titleField . ':%s~%d)^10 (' . $collectionField . ':%s~%d)',
+                    '(' . $titleField . ':%s)^10 (' . $titleField . ':%s)^2 (' . $collectionField . ':%s)',
                     $q,
-                    $proximity,
-                    $q,
-                    $proximity
+                    $fuzzyiedQuery,
+                    $fuzzyiedQuery
                 );
             } else {
                 return sprintf(
-                    '(' . $titleField . ':"%s"~%d)^10 (' . $collectionField . ':"%s"~%d)',
+                    '(' . $titleField . ':"%s")^10 (' . $titleField . ':%s)^2 (' . $collectionField . ':%s)',
                     $q,
-                    $proximity,
-                    $q,
-                    $proximity
+                    $fuzzyiedQuery,
+                    $fuzzyiedQuery
                 );
             }
         }
