@@ -44,4 +44,10 @@ interface SearchHandlerInterface
         $proximity = 10000000,
         $page = 1
     ): SearchResultsInterface;
+
+    /**
+     * @param int $highlightingFragmentSize
+     * @return SearchHandlerInterface
+     */
+    public function setHighlightingFragmentSize(int $highlightingFragmentSize): SearchHandlerInterface;
 }
