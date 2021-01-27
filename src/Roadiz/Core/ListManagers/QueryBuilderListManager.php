@@ -91,8 +91,17 @@ class QueryBuilderListManager extends AbstractEntityListManager
              */
             $this->disablePagination();
         }
+    }
 
-        $this->paginator = new Paginator($this->queryBuilder);
+    /**
+     * @return Paginator
+     */
+    protected function getPaginator(): Paginator
+    {
+        if (null === $this->paginator) {
+            $this->paginator = new Paginator($this->queryBuilder);
+        }
+        return $this->paginator;
     }
 
     /**
@@ -121,10 +130,7 @@ class QueryBuilderListManager extends AbstractEntityListManager
      */
     public function getItemCount()
     {
-        if (null !== $this->paginator) {
-            return $this->paginator->count();
-        }
-        throw new \InvalidArgumentException('Call EntityListManagerInterface::handle before counting entities.');
+        return $this->getPaginator()->count();
     }
 
     /**
@@ -132,10 +138,7 @@ class QueryBuilderListManager extends AbstractEntityListManager
      */
     public function getEntities()
     {
-        if (null !== $this->paginator) {
-            return $this->paginator;
-        }
-        throw new \InvalidArgumentException('Call EntityListManagerInterface::handle before getting entities.');
+        return $this->getPaginator();
     }
 
     /**
