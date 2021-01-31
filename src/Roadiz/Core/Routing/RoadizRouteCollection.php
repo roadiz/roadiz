@@ -3,10 +3,11 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -62,7 +63,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
             $this->stopwatch->start('routeCollection');
         }
 
-        $resources = $this->getResources();
+        $this->getResources();
         if (!$this->locked) {
             /*
              * Adding Backend routes
@@ -72,29 +73,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
             /*
              * Add Assets controller routes
              */
-            $assets = AssetsController::getRoutes();
-            $staticDomain = $this->settingsBag->get('static_domain_name');
-            if (false === $this->previewResolver->isPreview() &&
-                false !== $staticDomain &&
-                '' != $staticDomain) {
-                /*
-                 * Only use CDN if no preview mode and CDN domain is well set
-                 * Remove protocol (https, http and protocol-less) information from domain.
-                 */
-                $host = parse_url($staticDomain, PHP_URL_HOST);
-                if (false !== $host && null !== $host) {
-                    $assets->setHost($host);
-                } else {
-                    $assets->setHost($staticDomain);
-                }
-                /*
-                 * ~~Use same scheme as static domain.~~
-                 *
-                 * DO NOT use setSchemes method as it need a special UrlMatcher
-                 * only available on Symfony full-stack
-                 */
-            }
-            $this->addCollection($assets);
+            $this->addDomainAwareCollection();
 
             /*
              * Add Frontend routes
@@ -107,6 +86,43 @@ class RoadizRouteCollection extends DeferredRouteCollection
         if (null !== $this->stopwatch) {
             $this->stopwatch->stop('routeCollection');
         }
+    }
+
+    protected function addDomainAwareCollection(): void
+    {
+        /*
+         * Add Assets controller routes
+         */
+        $cmsResourcesDir = dirname(__DIR__) . '/../CMS/Resources';
+        $locator = new FileLocator([
+            $cmsResourcesDir,
+            $cmsResourcesDir . '/routing',
+            $cmsResourcesDir . '/config',
+        ]);
+        $loader = new YamlFileLoader($locator);
+        $assets = $loader->load('routes.yml');
+        $staticDomain = $this->settingsBag->get('static_domain_name');
+        if (false === $this->previewResolver->isPreview() &&
+            false !== $staticDomain &&
+            '' != $staticDomain) {
+            /*
+             * Only use CDN if no preview mode and CDN domain is well set
+             * Remove protocol (https, http and protocol-less) information from domain.
+             */
+            $host = parse_url($staticDomain, PHP_URL_HOST);
+            if (false !== $host && null !== $host) {
+                $assets->setHost($host);
+            } else {
+                $assets->setHost($staticDomain);
+            }
+            /*
+             * ~~Use same scheme as static domain.~~
+             *
+             * DO NOT use setSchemes method as it need a special UrlMatcher
+             * only available on Symfony full-stack
+             */
+        }
+        $this->addCollection($assets);
     }
 
     protected function addBackendCollection(): void

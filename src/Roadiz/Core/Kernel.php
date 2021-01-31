@@ -293,8 +293,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             if (0 === strpos($request->getPathInfo(), '/assets') &&
                 preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
             ) {
-                $ctrl = new AssetsController();
-                $ctrl->setContainer($this->getContainer());
+                $ctrl = $this->get(AssetsController::class);
                 $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
                 $response->headers->add(['X-ByPass-Kernel' => true]);
                 $response->prepare($request);

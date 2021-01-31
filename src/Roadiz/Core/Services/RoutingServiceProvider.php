@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\CMS\Controllers\DefaultController;
+use RZ\Roadiz\CMS\Controllers\RedirectionController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
@@ -32,7 +33,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container
-     * @return Container
+     * @return void
      */
     public function register(Container $container)
     {
@@ -224,6 +225,9 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 return $collection;
             }
         };
-        return $container;
+
+        $container[RedirectionController::class] = function (Container $c) {
+            return new RedirectionController($c['router']);
+        };
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Controllers;
 
 use RZ\Roadiz\Core\Entities\Redirection;
+use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -11,11 +12,20 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class RedirectionController
  * @package RZ\Roadiz\CMS\Controllers
  */
-class RedirectionController extends AppController
+final class RedirectionController
 {
+    private UrlGeneratorInterface $urlGenerator;
+
+    /**
+     * @param UrlGeneratorInterface $urlGenerator
+     */
+    public function __construct(UrlGeneratorInterface $urlGenerator)
+    {
+        $this->urlGenerator = $urlGenerator;
+    }
+
     /**
      * @param Request $request
      * @param Redirection $redirection
@@ -24,12 +34,18 @@ class RedirectionController extends AppController
     public function redirectAction(Request $request, Redirection $redirection)
     {
         if (null !== $redirection->getRedirectNodeSource()) {
-            return $this->redirect($this->generateUrl($redirection->getRedirectNodeSource()), $redirection->getType());
+            return new RedirectResponse(
+                $this->urlGenerator->generate(
+                    RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                    [RouteObjectInterface::ROUTE_OBJECT => $redirection->getRedirectNodeSource()],
+                ),
+                $redirection->getType()
+            );
         }
 
         if (null !== $redirection->getRedirectUri() &&
             strlen($redirection->getRedirectUri()) > 0) {
-            return $this->redirect($redirection->getRedirectUri(), $redirection->getType());
+            return new RedirectResponse($redirection->getRedirectUri(), $redirection->getType());
         }
 
         throw new ResourceNotFoundException();
@@ -53,8 +69,12 @@ class RedirectionController extends AppController
      *
      * @throws HttpException In case the route name is empty
      */
-    public function redirectToRouteAction(Request $request, $route, $permanent = false, $ignoreAttributes = false)
-    {
+    public function redirectToRouteAction(
+        Request $request,
+        string $route,
+        bool $permanent = false,
+        $ignoreAttributes = false
+    ) {
         if ('' == $route) {
             throw new HttpException($permanent ? 410 : 404);
         }
@@ -66,6 +86,13 @@ class RedirectionController extends AppController
                 $attributes = array_diff_key($attributes, array_flip($ignoreAttributes));
             }
         }
-        return new RedirectResponse($this->generateUrl($route, $attributes, UrlGeneratorInterface::ABSOLUTE_URL), $permanent ? 301 : 302);
+        return new RedirectResponse(
+            $this->urlGenerator->generate(
+                $route,
+                $attributes,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ),
+            $permanent ? 301 : 302
+        );
     }
 }
