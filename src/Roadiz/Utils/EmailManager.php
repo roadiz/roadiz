@@ -9,11 +9,10 @@ use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
- * Class EmailManager
  * @package RZ\Roadiz\Utils
  */
 class EmailManager
@@ -87,7 +86,6 @@ class EmailManager
 
 
     /**
-     * EmailManager constructor.
      *
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'emailManager' Factory Service

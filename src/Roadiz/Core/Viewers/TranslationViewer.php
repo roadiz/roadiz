@@ -5,7 +5,6 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -13,6 +12,7 @@ use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
@@ -20,7 +20,7 @@ use Symfony\Component\Routing\RouterInterface;
 class TranslationViewer
 {
     /**
-     * @var Settings
+     * @var ParameterBag
      */
     private $settingsBag;
     /**
@@ -42,13 +42,13 @@ class TranslationViewer
 
     /**
      * @param EntityManager $entityManager
-     * @param Settings $settingsBag
+     * @param ParameterBag $settingsBag
      * @param RouterInterface $router
      * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
         EntityManager $entityManager,
-        Settings $settingsBag,
+        ParameterBag $settingsBag,
         RouterInterface $router,
         PreviewResolverInterface $previewResolver
     ) {

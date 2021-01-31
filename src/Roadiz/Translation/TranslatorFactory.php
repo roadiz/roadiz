@@ -147,12 +147,6 @@ final class TranslatorFactory implements TranslatorFactoryInterface
 
         $this->addTranslatorResource(
             $translator,
-            dirname(__FILE__) . '/../Documentation/Resources/translations',
-            'xlf',
-            $locale
-        );
-        $this->addTranslatorResource(
-            $translator,
             CmsController::getTranslationsFolder(),
             'xlf',
             $locale,

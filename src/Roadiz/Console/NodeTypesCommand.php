@@ -53,7 +53,7 @@ class NodeTypesCommand extends Command
                         $field->getId(),
                         $field->getLabel(),
                         $field->getName(),
-                        str_replace('.type', '', NodeTypeField::$typeToHuman[$field->getType()]),
+                        str_replace('.type', '', $field->getTypeName()),
                         ($field->isVisible() ? 'X' : ''),
                         ($field->isIndexed() ? 'X' : ''),
                     ];

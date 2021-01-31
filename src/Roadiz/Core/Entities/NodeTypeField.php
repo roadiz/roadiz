@@ -216,7 +216,7 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getLabel() . ' ['.$this->getName().']' .
-        ' - ' . static::$typeToHuman[$this->getType()] .
+        ' - ' . $this->getTypeName() .
         ($this->isIndexed() ? ' - indexed' : '') .
         (!$this->isVisible() ? ' - hidden' : '') . PHP_EOL;
     }

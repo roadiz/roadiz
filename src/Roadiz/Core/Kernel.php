@@ -34,6 +34,7 @@ use RZ\Roadiz\Core\Services\ThemeServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Documentation\DocumentationServiceProvider;
 use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
 use RZ\Roadiz\OpenId\OpenIdServiceProvider;
@@ -238,6 +239,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new RozierServiceProvider());
         $container->register(new PreviewServiceProvider());
         $container->register(new EntityGeneratorServiceProvider());
+        $container->register(new DocumentationServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

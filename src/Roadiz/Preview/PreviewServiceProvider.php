@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Preview;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\KernelInterface;
 use RZ\Roadiz\Preview\EventSubscriber\PreviewModeSubscriber;
 use RZ\Roadiz\Preview\EventSubscriber\PreviewBarSubscriber;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -22,9 +22,9 @@ class PreviewServiceProvider implements ServiceProviderInterface
         };
 
         $container->extend('dispatcher', function (EventDispatcherInterface $dispatcher, Container $c) {
-            /** @var Kernel $kernel */
+            /** @var KernelInterface $kernel */
             $kernel = $c['kernel'];
-            if (!$kernel->isInstallMode()) {
+            if ($kernel->getEnvironment() !== 'install') {
                 $dispatcher->addSubscriber(new PreviewModeSubscriber($c[PreviewResolverInterface::class], $c));
                 $dispatcher->addSubscriber(new PreviewBarSubscriber($c[PreviewResolverInterface::class]));
             }

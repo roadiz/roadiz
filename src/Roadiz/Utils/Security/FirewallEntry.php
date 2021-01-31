@@ -130,7 +130,7 @@ class FirewallEntry
         ?string $firewallLogin = null,
         ?string $firewallLogout = null,
         ?string $firewallLoginCheck = null,
-        string $firewallBaseRole = 'ROLE_USER',
+        $firewallBaseRole = 'ROLE_USER',
         string $authenticationSuccessHandlerClass = AuthenticationSuccessHandler::class,
         string $authenticationFailureHandlerClass = AuthenticationFailureHandler::class
     ) {
