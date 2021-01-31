@@ -9,8 +9,8 @@ use Lcobucci\JWT\Signer\Key\InMemory;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Validation\Constraint;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;
+use Lcobucci\JWT\Validation\Constraint\LooseValidAt;
 use Lcobucci\JWT\Validation\Constraint\PermittedFor;
-use Lcobucci\JWT\Validation\Constraint\ValidAt;
 use RZ\Roadiz\JWT\JwtConfigurationFactory;
 use RZ\Roadiz\JWT\Validation\Constraint\HostedDomain;
 use RZ\Roadiz\JWT\Validation\Constraint\UserInfoEndpoint;
@@ -50,7 +50,7 @@ final class OpenIdJwtConfigurationFactory implements JwtConfigurationFactory
     {
         $hostedDomain = $this->settingsBag->get('openid_hd', false);
         $validators = [
-            new ValidAt(SystemClock::fromSystemTimezone()),
+            new LooseValidAt(SystemClock::fromSystemTimezone()),
         ];
 
         if (false !== $this->settingsBag->get('oauth_client_id', false)) {

@@ -24,8 +24,6 @@ class LoggerFactory
     protected $loggerConfig;
 
     /**
-     * LoggerFactory constructor.
-     *
      * @param KernelInterface $kernel
      * @param array           $loggerConfig
      */

@@ -20,8 +20,6 @@ use Symfony\Component\Security\Http\Firewall\ExceptionListener;
 class BasicFirewallEntry extends FirewallEntry
 {
     /**
-     * BasicFirewallEntry constructor.
-     *
      * @param Container $container
      * @param string $firewallBasePattern
      * @param string $firewallBasePath
@@ -29,9 +27,9 @@ class BasicFirewallEntry extends FirewallEntry
      */
     public function __construct(
         Container $container,
-        $firewallBasePattern,
-        $firewallBasePath,
-        $firewallBaseRole = 'ROLE_USER'
+        string $firewallBasePattern,
+        string $firewallBasePath,
+        string $firewallBaseRole = 'ROLE_USER'
     ) {
         parent::__construct(
             $container,

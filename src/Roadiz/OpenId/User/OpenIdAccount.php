@@ -9,7 +9,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * @package RZ\Roadiz\Core\Authentication
  * @see https://openid.net/specs/openid-connect-core-1_0.html#StandardClaims
  */
 class OpenIdAccount implements UserInterface, EquatableInterface
@@ -90,8 +89,6 @@ class OpenIdAccount implements UserInterface, EquatableInterface
     protected $jwtToken;
 
     /**
-     * OpenIdAccount constructor.
-     *
      * @param string $email
      * @param array  $roles
      * @param Token  $jwtToken

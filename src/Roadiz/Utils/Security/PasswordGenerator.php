@@ -13,13 +13,12 @@ class PasswordGenerator extends RandomGenerator implements PasswordGeneratorInte
      * The available characters in each set are user friendly - there are no ambiguous
      * characters such as i, l, 1, o, 0, etc.
      *
-     * @param  integer $length
-     *
+     * @param int $length
      * @return string
      *
      * @see https://gist.github.com/tylerhall/521810
      */
-    public function generatePassword($length = 9)
+    public function generatePassword(int $length = 12)
     {
         $sets = [];
         $sets[] = 'abcdefghjkmnpqrstuvwxyz';

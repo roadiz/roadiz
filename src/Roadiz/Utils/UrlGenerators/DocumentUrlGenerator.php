@@ -8,8 +8,6 @@ use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Class DocumentUrlGenerator
- *
  * @package RZ\Roadiz\Utils\UrlGenerators
  */
 final class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
@@ -20,8 +18,6 @@ final class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
     private $urlGenerator;
 
     /**
-     * DocumentUrlGenerator constructor.
-     *
      * @param Packages              $packages
      * @param UrlGeneratorInterface $urlGenerator
      * @param CacheProvider|null    $optionsCacheProvider
@@ -38,7 +34,7 @@ final class DocumentUrlGenerator extends AbstractDocumentUrlGenerator
     /**
      * @return string
      */
-    protected function getRouteName()
+    protected function getRouteName(): string
     {
         return 'interventionRequestProcess';
     }

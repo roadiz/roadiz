@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Log\Handler;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
 use RZ\Roadiz\Core\Entities\Log;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class DoctrineHandler extends AbstractProcessingHandler
 {
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $em;
     /**
@@ -36,7 +36,7 @@ class DoctrineHandler extends AbstractProcessingHandler
     protected $requestStack;
 
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         TokenStorageInterface $tokenStorage,
         RequestStack $requestStack,
         $level = Logger::DEBUG,

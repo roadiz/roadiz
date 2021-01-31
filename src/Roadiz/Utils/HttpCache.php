@@ -28,12 +28,10 @@ abstract class HttpCache extends BaseHttpCache
     protected $kernel;
 
     /**
-     * Constructor.
-     *
      * @param Kernel $kernel An Kernel instance
-     * @param string $cacheDir The cache directory (default used if null)
+     * @param string|null $cacheDir The cache directory (default used if null)
      */
-    public function __construct(Kernel $kernel, string $cacheDir = null)
+    public function __construct(Kernel $kernel, ?string $cacheDir = null)
     {
         $this->kernel = $kernel;
         $this->cacheDir = $cacheDir;

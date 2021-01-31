@@ -120,19 +120,19 @@ class FirewallEntry
      * @param string|null $firewallLogout
      * @param string|null $firewallLoginCheck
      * @param string|array $firewallBaseRole
-     * @param string $authenticationSuccessHandlerClass
-     * @param string $authenticationFailureHandlerClass
+     * @param class-string $authenticationSuccessHandlerClass
+     * @param class-string $authenticationFailureHandlerClass
      */
     public function __construct(
         Container $container,
-        $firewallBasePattern,
-        $firewallBasePath,
-        $firewallLogin = null,
-        $firewallLogout = null,
-        $firewallLoginCheck = null,
-        $firewallBaseRole = 'ROLE_USER',
-        $authenticationSuccessHandlerClass = AuthenticationSuccessHandler::class,
-        $authenticationFailureHandlerClass = AuthenticationFailureHandler::class
+        string $firewallBasePattern,
+        string $firewallBasePath,
+        ?string $firewallLogin = null,
+        ?string $firewallLogout = null,
+        ?string $firewallLoginCheck = null,
+        string $firewallBaseRole = 'ROLE_USER',
+        string $authenticationSuccessHandlerClass = AuthenticationSuccessHandler::class,
+        string $authenticationFailureHandlerClass = AuthenticationFailureHandler::class
     ) {
         $this->firewallBasePattern = $firewallBasePattern;
         $this->firewallBasePath = $firewallBasePath;

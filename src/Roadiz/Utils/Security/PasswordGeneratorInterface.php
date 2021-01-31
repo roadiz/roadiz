@@ -5,10 +5,9 @@ namespace RZ\Roadiz\Utils\Security;
 
 interface PasswordGeneratorInterface
 {
-
     /**
-     * @param  integer $length
+     * @param int $length
      * @return string
      */
-    public function generatePassword($length = 9);
+    public function generatePassword(int $length = 12);
 }

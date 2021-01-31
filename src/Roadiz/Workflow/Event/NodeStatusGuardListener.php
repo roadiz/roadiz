@@ -17,8 +17,6 @@ class NodeStatusGuardListener implements EventSubscriberInterface
     private $authorizationChecker;
 
     /**
-     * NodeStatusListener constructor.
-     *
      * @param AuthorizationCheckerInterface $authorizationChecker
      */
     public function __construct(AuthorizationCheckerInterface $authorizationChecker)

@@ -5,7 +5,6 @@ namespace RZ\Roadiz\Utils\Security;
 
 interface SaltGeneratorInterface
 {
-
     /**
      * @return string
      */

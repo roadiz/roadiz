@@ -21,8 +21,6 @@ class OpenIdLogoutHandler implements LogoutHandlerInterface
     protected $discovery;
 
     /**
-     * OpenIdLogoutHandler constructor.
-     *
      * @param Discovery $discovery
      */
     public function __construct(Discovery $discovery)
