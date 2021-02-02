@@ -142,7 +142,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="boolean", name="home", nullable=false, options={"default" = false})
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"nodes_sources_base", "nodes_sources", "node"})
      */
     private $home = false;
 
@@ -167,7 +167,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @Gedmo\Versioned
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"nodes_sources_base", "nodes_sources", "node"})
      */
     private $visible = true;
 
