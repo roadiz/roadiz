@@ -10,6 +10,7 @@ use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
 use RZ\Roadiz\Core\Routing\OptimizedNodesSourcesGraphPathAggregator;
 use RZ\Roadiz\Core\SearchEngine\Subscriber\DefaultNodesSourcesIndexingSubscriber;
 use RZ\Roadiz\Utils\Node\NodeMover;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\Node\NodeTranstyper;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
@@ -52,7 +53,7 @@ class NodeServiceProvider implements ServiceProviderInterface
         $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(new NodeNameSubscriber(
                 $c['logger.doctrine'],
-                $c['utils.nodeNameChecker'],
+                $c[NodeNamePolicyInterface::class],
                 $c[NodeMover::class]
             ));
             $dispatcher->addSubscriber(

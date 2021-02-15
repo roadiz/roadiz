@@ -17,17 +17,18 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class UniqueNodeGenerator
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
+
+    protected NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param NodeNamePolicyInterface $nodeNamePolicy
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, NodeNamePolicyInterface $nodeNamePolicy)
     {
         $this->entityManager = $entityManager;
+        $this->nodeNamePolicy = $nodeNamePolicy;
     }
 
     /**
@@ -50,12 +51,11 @@ class UniqueNodeGenerator
         Translation $translation,
         Node $parent = null,
         Tag $tag = null,
-        $pushToTop = false
+        bool $pushToTop = false
     ) {
         $name = $nodeType->getDisplayName() . " " . uniqid();
         $node = new Node($nodeType);
         $node->setTtl($node->getNodeType()->getDefaultTtl());
-        $node->setNodeName($name);
 
         if (null !== $tag) {
             $node->addTag($tag);
@@ -77,6 +77,7 @@ class UniqueNodeGenerator
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         $source->setPublishedAt(new \DateTime());
+        $node->setNodeName($this->nodeNamePolicy->getCanonicalNodeName($source));
 
         $this->entityManager->persist($node);
         $this->entityManager->persist($source);

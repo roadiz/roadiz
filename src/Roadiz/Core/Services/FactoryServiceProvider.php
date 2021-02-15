@@ -44,6 +44,7 @@ use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\Node\NodeFactory;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\Tag\TagFactory;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
@@ -78,7 +79,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
         });
 
         $container[NodeFactory::class] = function (Container $c) {
-            return new NodeFactory($c);
+            return new NodeFactory($c['em'], $c[NodeNamePolicyInterface::class]);
         };
         $container[TagFactory::class] = function (Container $c) {
             return new TagFactory($c);

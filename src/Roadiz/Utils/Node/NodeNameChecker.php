@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\UrlAliasRepository;
@@ -13,7 +14,7 @@ use RZ\Roadiz\Utils\StringHandler;
 /**
  * @package RZ\Roadiz\Utils\Node
  */
-class NodeNameChecker
+class NodeNameChecker implements NodeNamePolicyInterface
 {
     /**
      * @var EntityManagerInterface
@@ -28,6 +29,43 @@ class NodeNameChecker
         $this->entityManager = $entityManager;
     }
 
+    public function getCanonicalNodeName(NodesSources $nodeSource): string
+    {
+        if ($nodeSource->getTitle() !== '') {
+            if ($nodeSource->getNode()->getNodeType()->isReachable()) {
+                return StringHandler::slugify($nodeSource->getTitle());
+            }
+            return sprintf(
+                '%s-%s',
+                StringHandler::slugify($nodeSource->getTitle()),
+                StringHandler::slugify($nodeSource->getNodeTypeName()),
+            );
+        }
+        return sprintf(
+            '%s-%s',
+            StringHandler::slugify($nodeSource->getNodeTypeName()),
+            uniqid()
+        );
+    }
+
+    public function getSafeNodeName(NodesSources $nodeSource): string
+    {
+        return sprintf(
+            '%s-%s',
+            $this->getCanonicalNodeName($nodeSource),
+            uniqid()
+        );
+    }
+
+    public function getDatestampedNodeName(NodesSources $nodeSource): string
+    {
+        return sprintf(
+            '%s-%s',
+            $this->getCanonicalNodeName($nodeSource),
+            $nodeSource->getPublishedAt()->format('Y-m-d')
+        );
+    }
+
     /**
      * Test if current node name is suffixed with a 13 chars Unique ID (uniqid()).
      *
@@ -35,7 +73,7 @@ class NodeNameChecker
      * @param string $nodeName Node name to test
      * @return bool
      */
-    public function isNodeNameWithUniqId(string $canonicalNodeName, string $nodeName)
+    public function isNodeNameWithUniqId(string $canonicalNodeName, string $nodeName): bool
     {
         $pattern = '#^' . preg_quote($canonicalNodeName) . '\-[0-9a-z]{13}$#';
         $returnState = preg_match_all($pattern, $nodeName);
