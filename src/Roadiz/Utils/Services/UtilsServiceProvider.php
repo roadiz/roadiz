@@ -29,7 +29,7 @@ class UtilsServiceProvider implements ServiceProviderInterface
         /**
          * @param Container $container
          * @return mixed
-         * @deprecated 
+         * @deprecated
          */
         $container['utils.nodeNameChecker'] = function (Container $container) {
             return $container[NodeNamePolicyInterface::class];

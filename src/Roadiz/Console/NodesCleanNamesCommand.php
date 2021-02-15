@@ -104,7 +104,6 @@ class NodesCleanNamesCommand extends Command
                             } else {
                                 if ($input->getOption('use-date') &&
                                     null !== $nodeSource->getPublishedAt()) {
-
                                     $suffixedNameSlug = $nodeNameChecker->getDatestampedNodeName($nodeSource);
                                 } else {
                                     $suffixedNameSlug = $nodeNameChecker->getSafeNodeName($nodeSource);
