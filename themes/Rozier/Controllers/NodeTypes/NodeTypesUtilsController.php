@@ -21,8 +21,6 @@ use Themes\Rozier\RozierApp;
 use ZipArchive;
 
 /**
- * Class NodeTypesUtilsController
- *
  * @package Themes\Rozier\Controllers\NodeTypes
  */
 class NodeTypesUtilsController extends RozierApp
@@ -75,6 +73,7 @@ class NodeTypesUtilsController extends RozierApp
         $documentationGenerator = new DocumentationGenerator($this->get('nodeTypesBag'), $this->get('translator'));
 
         $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
+        unlink($tmpfname); // Deprecated: ZipArchive::open(): Using empty file as ZipArchive is deprecated
         $zipArchive = new ZipArchive();
         $zipArchive->open($tmpfname, ZipArchive::CREATE);
 
