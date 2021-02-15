@@ -123,6 +123,7 @@ class NodeTypesUtilsController extends RozierApp
         $serializer = $this->get('serializer');
         $zipArchive = new ZipArchive();
         $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
+        unlink($tmpfname); // Deprecated: ZipArchive::open(): Using empty file as ZipArchive is deprecated
         $zipArchive->open($tmpfname, ZipArchive::CREATE);
 
         /** @var NodeType $nodeType */
