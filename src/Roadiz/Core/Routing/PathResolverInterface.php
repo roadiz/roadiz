@@ -12,7 +12,8 @@ interface PathResolverInterface
      *
      * @param string $path
      * @param array<string> $supportedFormatExtensions
+     * @param bool $allowRootPaths Allow resolving / and /en, /fr paths to home pages
      * @return ResourceInfo
      */
-    public function resolvePath(string $path, array $supportedFormatExtensions = ['html']): ResourceInfo;
+    public function resolvePath(string $path, array $supportedFormatExtensions = ['html'], bool $allowRootPaths = false): ResourceInfo;
 }

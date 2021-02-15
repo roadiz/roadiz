@@ -38,39 +38,45 @@ final class NodesSourcesPathResolver implements PathResolverInterface
     /**
      * @param string $path
      * @param array $supportedFormatExtensions
+     * @param bool $allowRootPaths Allow resolving / and /en, /fr paths to home pages
      * @return ResourceInfo
      */
-    public function resolvePath(string $path, array $supportedFormatExtensions = ['html']): ResourceInfo
+    public function resolvePath(string $path, array $supportedFormatExtensions = ['html'], bool $allowRootPaths = false): ResourceInfo
     {
         $resourceInfo = new ResourceInfo();
         $tokens = $this->tokenizePath($path);
 
-        if (count($tokens) === 0) {
+        if (count($tokens) === 0 && !$allowRootPaths) {
             throw new ResourceNotFoundException();
         }
 
         $_format = 'html';
-        $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
-
-        /*
-         * Prevent searching nodes with special characters.
-         */
-        if (0 === preg_match('#'.static::$nodeNamePattern.'#', $identifier)) {
-            throw new ResourceNotFoundException();
+        $identifier = '';
+        if (count($tokens) > 0) {
+            $identifier = strip_tags($tokens[(int) (count($tokens) - 1)]);
         }
 
-        /*
-         * Look for any supported format extension after last token.
-         */
-        if (0 !== preg_match(
-            '#^('.static::$nodeNamePattern.')\.('.implode('|', $supportedFormatExtensions).')$#',
-            $identifier,
-            $matches
-        )) {
-            $realIdentifier = $matches[1];
-            $_format = $matches[2];
-            // replace last token with real node-name without extension.
-            $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
+        if ($identifier !== '') {
+            /*
+             * Prevent searching nodes with special characters.
+             */
+            if (0 === preg_match('#'.static::$nodeNamePattern.'#', $identifier)) {
+                throw new ResourceNotFoundException();
+            }
+
+            /*
+             * Look for any supported format extension after last token.
+             */
+            if (0 !== preg_match(
+                    '#^('.static::$nodeNamePattern.')\.('.implode('|', $supportedFormatExtensions).')$#',
+                    $identifier,
+                    $matches
+                )) {
+                $realIdentifier = $matches[1];
+                $_format = $matches[2];
+                // replace last token with real node-name without extension.
+                $tokens[(int) (count($tokens) - 1)] = $realIdentifier;
+            }
         }
 
         if (null !== $this->stopwatch) {
@@ -169,12 +175,23 @@ final class NodesSourcesPathResolver implements PathResolverInterface
                                 'id' => $array['id']
                             ]);
                         return $nodeSource;
+                    } else {
+                        return null;
                     }
+                } else {
+                    return null;
                 }
             }
         }
-
-        return null;
+        /*
+         * Resolve home page
+         */
+        return $this->entityManager
+            ->getRepository(NodesSources::class)
+            ->findOneBy([
+                'node.home' => true,
+                'translation' => $translation
+            ]);
     }
 
     /**
