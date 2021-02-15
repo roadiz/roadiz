@@ -68,10 +68,10 @@ final class NodesSourcesPathResolver implements PathResolverInterface
              * Look for any supported format extension after last token.
              */
             if (0 !== preg_match(
-                    '#^('.static::$nodeNamePattern.')\.('.implode('|', $supportedFormatExtensions).')$#',
-                    $identifier,
-                    $matches
-                )) {
+                '#^('.static::$nodeNamePattern.')\.('.implode('|', $supportedFormatExtensions).')$#',
+                $identifier,
+                $matches
+            )) {
                 $realIdentifier = $matches[1];
                 $_format = $matches[2];
                 // replace last token with real node-name without extension.

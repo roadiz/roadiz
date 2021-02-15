@@ -381,7 +381,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * to see unpublished nodes.
      *
      * @param array $criteria
-     * @param array $orderBy
+     * @param array|null $orderBy
      *
      * @return null|NodesSources
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -396,7 +396,6 @@ class NodesSourcesRepository extends StatusAwareRepository
             1,
             null
         );
-
         /*
          * Eagerly fetch UrlAliases
          * to limit SQL query count
