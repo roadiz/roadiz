@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Serializers;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -13,18 +13,19 @@ use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
+use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
  * Json Serialization handler for Node.
  */
 class NodeJsonSerializer extends AbstractJsonSerializer
 {
-    protected $em;
+    protected EntityManagerInterface $em;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -88,10 +89,10 @@ class NodeJsonSerializer extends AbstractJsonSerializer
      */
     protected function hasHome()
     {
-        if (null !== $this->em
-                ->getRepository(Node::class)
-                ->setDisplayingNotPublishedNodes(true)
-                ->findHomeWithDefaultTranslation()) {
+        /** @var NodeRepository $repository */
+        $repository = $this->em->getRepository(Node::class);
+        $repository->setDisplayingNotPublishedNodes(true);
+        if (null !== $repository->findHomeWithDefaultTranslation()) {
             return true;
         }
 

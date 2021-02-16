@@ -12,22 +12,10 @@ use Solarium\QueryType\Select\Query\Query;
 
 abstract class AbstractSearchHandler implements SearchHandlerInterface
 {
-    /**
-     * @var Client|null
-     */
-    protected $client = null;
-    /**
-     * @var EntityManagerInterface|null
-     */
-    protected $em = null;
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger = null;
-    /**
-     * @var int
-     */
-    protected $highlightingFragmentSize = 150;
+    protected ?Client $client = null;
+    protected ?EntityManagerInterface $em = null;
+    protected ?LoggerInterface $logger = null;
+    protected int $highlightingFragmentSize = 150;
 
     /**
      * @param Client $client

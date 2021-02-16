@@ -9,10 +9,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class SettingsRoleStrategy implements JwtRoleStrategy
 {
     const SETTING_NAME = 'openid_default_roles';
-    /**
-     * @var ParameterBag
-     */
-    protected $settingsBag;
+
+    protected ParameterBag $settingsBag;
 
     /**
      * @param ParameterBag $settingsBag

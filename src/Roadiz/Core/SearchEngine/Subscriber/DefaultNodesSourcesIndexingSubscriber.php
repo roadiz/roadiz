@@ -14,10 +14,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class DefaultNodesSourcesIndexingSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var HandlerFactory
-     */
-    private $handlerFactory;
+    private HandlerFactory $handlerFactory;
 
     /**
      * @param HandlerFactory $handlerFactory

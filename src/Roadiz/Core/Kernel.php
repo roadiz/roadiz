@@ -64,40 +64,29 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const CMS_VERSION = 'develop';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
-    public static $cmsBuild = null;
-    public static $cmsVersion = "1.5.18";
-
-    /**
-     * @var string
-     */
-    protected $environment;
-    /**
-     * @var bool
-     */
-    protected $debug;
+    public static ?string $cmsBuild = null;
+    public static string $cmsVersion = "1.5.18";
+    protected string $environment;
+    protected bool $debug;
     /**
      * @var bool
      * @deprecated Use request-time preview
      */
-    protected $preview;
-    /**
-     * @var bool
-     */
-    protected $booted = false;
-    protected $name;
-    protected $rootDir;
-    protected $startTime;
-
-    private $warmupDir;
-    private $projectDir;
-    private $requestStackSize = 0;
+    protected bool $preview = false;
+    protected bool $booted = false;
+    protected ?string $name = null;
+    protected ?string $rootDir = null;
+    protected ?string $warmupDir = null;
+    protected ?string $projectDir = null;
+    protected float $startTime;
+    protected int $requestStackSize = 0;
 
     /**
      * @param string $environment
      * @param bool $debug
      * @param bool $preview
      */
-    public function __construct($environment, $debug, $preview = false)
+    public function __construct(string $environment, bool $debug, bool $preview = false)
     {
         $this->environment = strtolower((string) $environment);
         $this->preview = (boolean) $preview;

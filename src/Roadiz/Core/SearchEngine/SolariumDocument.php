@@ -16,32 +16,7 @@ use Solarium\QueryType\Update\Query\Query;
  */
 class SolariumDocument extends AbstractSolarium
 {
-    /**
-     * @var array
-     */
-    protected $documentTranslationItems;
-
-    /**
-     * @deprecated
-     */
-    public function getDocument()
-    {
-        throw new \RuntimeException('Method getDocument cannot be called for SolariumDocument.');
-    }
-
-    /**
-     * @return array Each document translation Solr document
-     */
-    public function getDocuments()
-    {
-        $documents = [];
-        /** @var SolariumDocumentTranslation $documentTranslationItem */
-        foreach ($this->documentTranslationItems as $documentTranslationItem) {
-            $documents[] = $documentTranslationItem->getDocument();
-        }
-
-        return $documents;
-    }
+    protected array $documentTranslationItems;
 
     /**
      * @param Document                 $rzDocument
@@ -63,6 +38,28 @@ class SolariumDocument extends AbstractSolarium
         foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
             $this->documentTranslationItems[] = $solariumFactory->createWithDocumentTranslation($documentTranslation);
         }
+    }
+
+    /**
+     * @deprecated
+     */
+    public function getDocument()
+    {
+        throw new \RuntimeException('Method getDocument cannot be called for SolariumDocument.');
+    }
+
+    /**
+     * @return array Each document translation Solr document
+     */
+    public function getDocuments()
+    {
+        $documents = [];
+        /** @var SolariumDocumentTranslation $documentTranslationItem */
+        foreach ($this->documentTranslationItems as $documentTranslationItem) {
+            $documents[] = $documentTranslationItem->getDocument();
+        }
+
+        return $documents;
     }
 
     public function getDocumentId()

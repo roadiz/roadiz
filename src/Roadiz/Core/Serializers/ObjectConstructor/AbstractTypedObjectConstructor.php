@@ -12,18 +12,10 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 
 abstract class AbstractTypedObjectConstructor implements TypedObjectConstructorInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-    /**
-     * @var ObjectConstructorInterface
-     */
-    protected $fallbackConstructor;
+    protected EntityManagerInterface $entityManager;
+    protected ObjectConstructorInterface $fallbackConstructor;
 
     /**
-     * AttributeConstructor constructor.
-     *
      * @param EntityManagerInterface     $entityManager
      * @param ObjectConstructorInterface $fallbackConstructor
      */

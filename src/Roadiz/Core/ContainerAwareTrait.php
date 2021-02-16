@@ -7,10 +7,7 @@ use Pimple\Container;
 
 trait ContainerAwareTrait
 {
-    /**
-     * @var null|Container
-     */
-    protected $container = null;
+    protected ?Container $container = null;
 
     /**
      * {@inheritdoc}

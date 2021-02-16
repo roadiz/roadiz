@@ -26,22 +26,10 @@ class OAuth2AuthenticationListener extends AbstractAuthenticationListener
 {
     const OAUTH_STATE_TOKEN = 'openid_state';
 
-    /**
-     * @var CsrfTokenManagerInterface
-     */
-    protected $csrfTokenManager;
-    /**
-     * @var Client
-     */
-    protected $client;
-    /**
-     * @var ?Discovery
-     */
-    protected $discovery;
-    /**
-     * @var Configuration
-     */
-    protected $jwtConfiguration;
+    protected CsrfTokenManagerInterface $csrfTokenManager;
+    protected Client $client;
+    protected ?Discovery $discovery;
+    protected Configuration $jwtConfiguration;
 
     /**
      * @param TokenStorageInterface $tokenStorage

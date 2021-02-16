@@ -39,18 +39,9 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SolariumSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var null|Client
-     */
-    protected $solr;
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @var SolariumFactoryInterface
-     */
-    protected $solariumFactory;
+    protected ?Client $solr;
+    protected LoggerInterface $logger;
+    protected SolariumFactoryInterface $solariumFactory;
 
     /**
      * @param Client|null              $solr

@@ -12,23 +12,15 @@ use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 
 class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ?EntityManagerInterface $entityManager;
     /**
      * @var ArrayCollection<TypedObjectConstructorInterface>
      */
-    protected $typedObjectConstructors;
-    /**
-     * @var ObjectConstructorInterface
-     */
-    protected $fallbackConstructor;
+    protected ArrayCollection $typedObjectConstructors;
+    protected ObjectConstructorInterface $fallbackConstructor;
 
     /**
-     * ChainPersistableObjectConstructor constructor.
-     *
-     * @param EntityManagerInterface|null     $entityManager
+     * @param EntityManagerInterface|null $entityManager
      * @param ObjectConstructorInterface $fallbackConstructor
      */
     public function __construct(?EntityManagerInterface $entityManager, ObjectConstructorInterface $fallbackConstructor)

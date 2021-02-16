@@ -11,10 +11,7 @@ use Lcobucci\JWT\Validation\ConstraintViolation;
 
 class UserInfoEndpoint implements Constraint
 {
-    /**
-     * @var string
-     */
-    protected $userInfoEndpoint;
+    protected string $userInfoEndpoint;
 
     /**
      * @param string $userInfoEndpoint

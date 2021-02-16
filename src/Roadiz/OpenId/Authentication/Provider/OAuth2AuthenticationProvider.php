@@ -15,26 +15,14 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 
 class OAuth2AuthenticationProvider implements AuthenticationProviderInterface
 {
-    /**
-     * @var string
-     */
-    protected $providerKey;
-    /**
-     * @var bool
-     */
-    protected $hideUserNotFoundExceptions;
+    protected string $providerKey;
+    protected bool $hideUserNotFoundExceptions;
     /**
      * @var array|string[]
      */
-    protected $defaultRoles;
-    /**
-     * @var JwtRoleStrategy
-     */
-    protected $roleStrategy;
-    /**
-     * @var Configuration
-     */
-    protected $jwtConfiguration;
+    protected array $defaultRoles;
+    protected JwtRoleStrategy $roleStrategy;
+    protected Configuration $jwtConfiguration;
 
     /**
      * @param Configuration $jwtConfiguration

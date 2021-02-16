@@ -47,6 +47,6 @@ class RandomGenerator
             }
         }
 
-        return hash('sha256', uniqid(mt_rand(), true), true);
+        return hash('sha256', uniqid((string) mt_rand(), true), true);
     }
 }

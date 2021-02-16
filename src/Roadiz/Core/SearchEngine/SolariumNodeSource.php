@@ -19,20 +19,8 @@ class SolariumNodeSource extends AbstractSolarium
     const DOCUMENT_TYPE = 'NodesSources';
     const IDENTIFIER_KEY = 'node_source_id_i';
 
-    protected $nodeSource = null;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-    /**
-     * @var Client
-     */
-    protected $client;
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected NodesSources $nodeSource;
+    protected EventDispatcherInterface $dispatcher;
 
     /**
      * @param NodesSources             $nodeSource

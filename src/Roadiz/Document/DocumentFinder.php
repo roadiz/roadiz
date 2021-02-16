@@ -10,14 +10,9 @@ use RZ\Roadiz\Core\Repositories\DocumentRepository;
 
 final class DocumentFinder implements DocumentFinderInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
 
     /**
-     * DocumentFinder constructor.
-     *
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)

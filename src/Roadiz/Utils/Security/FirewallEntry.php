@@ -37,41 +37,25 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
 class FirewallEntry
 {
     protected string $firewallBasePattern;
-
     protected string $firewallBasePath;
-
     protected ?string $firewallLogin;
-
     protected ?string $firewallLogout;
-
     protected ?string $firewallAfterLogout;
-
     protected ?string $firewallLoginCheck;
     /**
      * @var array<string>
      */
     protected array $firewallBaseRole;
-
     protected Container $container;
-
-    protected ?AuthenticationSuccessHandler $authenticationSuccessHandler;
-
-    protected ?AuthenticationFailureHandler $authenticationFailureHandler;
-
+    protected ?AuthenticationSuccessHandler $authenticationSuccessHandler = null;
+    protected ?AuthenticationFailureHandler $authenticationFailureHandler = null;
     protected array $listeners;
-
     protected RequestMatcher $requestMatcher;
-
     protected bool $useReferer = false;
-
     protected string $authenticationSuccessHandlerClass;
-
     protected string $authenticationFailureHandlerClass;
-
-    protected ?AccessDeniedHandlerInterface $accessDeniedHandler;
-
+    protected ?AccessDeniedHandlerInterface $accessDeniedHandler = null;
     protected bool $locked = false;
-
     protected string $providerKey;
 
     /**

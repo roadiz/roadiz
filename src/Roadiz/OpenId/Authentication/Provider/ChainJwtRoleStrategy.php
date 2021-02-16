@@ -10,7 +10,7 @@ final class ChainJwtRoleStrategy implements JwtRoleStrategy
     /**
      * @var array<JwtRoleStrategy>
      */
-    private $strategies = [];
+    private array $strategies = [];
 
     /**
      * @param array $strategies

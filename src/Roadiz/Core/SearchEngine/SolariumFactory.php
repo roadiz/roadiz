@@ -15,26 +15,11 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class SolariumFactory implements SolariumFactoryInterface
 {
-    /**
-     * @var Client|null
-     */
-    protected $solr;
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @var MarkdownInterface
-     */
-    protected $markdown;
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
-    /**
-     * @var HandlerFactoryInterface
-     */
-    protected $handlerFactory;
+    protected ?Client $solr;
+    protected LoggerInterface $logger;
+    protected MarkdownInterface $markdown;
+    protected EventDispatcherInterface $dispatcher;
+    protected HandlerFactoryInterface $handlerFactory;
 
     /**
      * @param Client|null              $solr

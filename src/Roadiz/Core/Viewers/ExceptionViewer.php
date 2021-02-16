@@ -27,8 +27,8 @@ use Twig\Error\SyntaxError;
  */
 class ExceptionViewer
 {
-    private $foreground_colors = [];
-    private $background_colors = [];
+    private array $foreground_colors = [];
+    private array $background_colors = [];
 
     /**
      * ExceptionViewer constructor.

@@ -16,31 +16,24 @@ use JMS\Serializer\Annotation as JMS;
 class SolrSearchResults implements SearchResultsInterface
 {
     /**
-     * @var array
      * @JMS\Exclude()
      */
-    protected $response;
-
+    protected array $response;
     /**
-     * @var EntityManagerInterface
      * @JMS\Exclude()
      */
-    protected $entityManager;
-
+    protected EntityManagerInterface $entityManager;
     /**
-     * @var int
      * @JMS\Exclude()
      */
-    protected $position;
-
+    protected int $position;
     /**
-     * @var array|null
      * @JMS\Exclude()
      */
-    protected $resultItems;
+    protected ?array $resultItems;
 
     /**
-     * @param array                  $response
+     * @param array $response
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(array $response, EntityManagerInterface $entityManager)

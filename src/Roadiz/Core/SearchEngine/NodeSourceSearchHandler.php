@@ -15,18 +15,9 @@ use RZ\Roadiz\Core\Entities\Translation;
  */
 class NodeSourceSearchHandler extends AbstractSearchHandler implements NodeSourceSearchHandlerInterface
 {
-    /**
-     * @var bool
-     */
-    protected $boostByPublicationDate = false;
-    /**
-     * @var bool
-     */
-    protected $boostByUpdateDate = false;
-    /**
-     * @var bool
-     */
-    protected $boostByCreationDate = false;
+    protected bool $boostByPublicationDate = false;
+    protected bool $boostByUpdateDate = false;
+    protected bool $boostByCreationDate = false;
 
     /**
      * @param string  $q

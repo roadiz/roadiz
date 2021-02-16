@@ -9,10 +9,7 @@ use Lcobucci\JWT\Validation\ConstraintViolation;
 
 class HostedDomain implements Constraint
 {
-    /**
-     * @var string
-     */
-    protected $hostedDomain;
+    protected string $hostedDomain;
 
     /**
      * @param string $hostedDomain

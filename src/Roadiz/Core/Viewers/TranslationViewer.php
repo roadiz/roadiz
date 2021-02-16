@@ -17,28 +17,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
-class TranslationViewer
+final class TranslationViewer
 {
-    /**
-     * @var ParameterBag
-     */
-    private $settingsBag;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-    /**
-     * @var Translation
-     */
-    private $translation;
-    /**
-     * @var PreviewResolverInterface
-     */
-    private $previewResolver;
+    private ParameterBag $settingsBag;
+    private EntityManager $entityManager;
+    private RouterInterface $router;
+    private PreviewResolverInterface $previewResolver;
+    private ?Translation $translation = null;
 
     /**
      * @param EntityManager $entityManager
@@ -61,7 +46,7 @@ class TranslationViewer
     /**
      * @return TranslationRepository
      */
-    public function getRepository()
+    public function getRepository(): TranslationRepository
     {
         return $this->entityManager->getRepository(Translation::class);
     }
@@ -104,7 +89,7 @@ class TranslationViewer
      * @return array
      * @throws ORMException
      */
-    public function getTranslationMenuAssignation(Request $request, $absolute = false)
+    public function getTranslationMenuAssignation(Request $request, $absolute = false): array
     {
         $attr = $request->attributes->all();
         $query = $request->query->all();
@@ -244,18 +229,18 @@ class TranslationViewer
     }
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
-    public function getTranslation()
+    public function getTranslation(): ?Translation
     {
         return $this->translation;
     }
 
     /**
-     * @param Translation $translation
+     * @param Translation|null $translation
      * @return TranslationViewer
      */
-    public function setTranslation($translation)
+    public function setTranslation(?Translation $translation)
     {
         $this->translation = $translation;
         return $this;
