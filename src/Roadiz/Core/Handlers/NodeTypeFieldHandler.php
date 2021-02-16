@@ -12,21 +12,14 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
  */
 class NodeTypeFieldHandler extends AbstractHandler
 {
-    /**
-     * @var NodeTypeField
-     */
-    private $nodeTypeField;
+    private ?NodeTypeField $nodeTypeField = null;
+    private Container $container;
 
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @return NodeTypeField|null
-     */
-    public function getNodeTypeField()
+    public function getNodeTypeField(): NodeTypeField
     {
+        if (null === $this->nodeTypeField) {
+            throw new \BadMethodCallException('NodeTypeField is null');
+        }
         return $this->nodeTypeField;
     }
 
@@ -56,9 +49,9 @@ class NodeTypeFieldHandler extends AbstractHandler
      * Clean position for current node siblings.
      *
      * @param bool $setPosition
-     * @return int Return the next position after the **last** node
+     * @return float Return the next position after the **last** node
      */
-    public function cleanPositions($setPosition = false)
+    public function cleanPositions(bool $setPosition = false): float
     {
         if ($this->nodeTypeField->getNodeType() !== null) {
             /** @var NodeTypeHandler $nodeTypeHandler */

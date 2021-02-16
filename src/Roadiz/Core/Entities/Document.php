@@ -175,9 +175,6 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     private $original = null;
 
-    /**
-     * Document constructor.
-     */
     public function __construct()
     {
         parent::__construct();

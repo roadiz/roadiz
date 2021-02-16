@@ -20,10 +20,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 
 class HandlerFactory implements HandlerFactoryInterface
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
      * @param Container $container
@@ -37,7 +34,7 @@ class HandlerFactory implements HandlerFactoryInterface
      * @param AbstractEntity $entity
      * @return AbstractHandler
      */
-    public function getHandler(AbstractEntity $entity)
+    public function getHandler(AbstractEntity $entity): AbstractHandler
     {
         switch (true) {
             case ($entity instanceof Node):

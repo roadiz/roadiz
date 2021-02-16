@@ -11,15 +11,9 @@ use RZ\Roadiz\Core\Entities\CustomForm;
  */
 class CustomFormHandler extends AbstractHandler
 {
-    /**
-     * @var CustomForm|null
-     */
-    protected $customForm = null;
+    protected ?CustomForm $customForm = null;
 
-    /**
-     * @return CustomForm
-     */
-    public function getCustomForm()
+    public function getCustomForm(): ?CustomForm
     {
         return $this->customForm;
     }
@@ -38,10 +32,14 @@ class CustomFormHandler extends AbstractHandler
      * Reset current node-type fields positions.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** field
+     * @return float Return the next position after the **last** field
      */
-    public function cleanFieldsPositions($setPositions = true)
+    public function cleanFieldsPositions(bool $setPositions = true): float
     {
+        if (null === $this->customForm) {
+            throw new \BadMethodCallException('CustomForm is null');
+        }
+
         $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);
         $fields = $this->customForm->getFields()->matching($criteria);

@@ -21,28 +21,19 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class NodeTypeHandler extends AbstractHandler
 {
-    /**
-     * @var NodeType
-     */
-    private $nodeType;
-    /**
-     * @var Kernel
-     */
-    private $kernel;
-    /**
-     * @var EntityGeneratorFactory
-     */
-    private $entityGeneratorFactory;
-    /**
-     * @var HandlerFactory
-     */
-    private $handlerFactory;
+    private ?NodeType $nodeType = null;
+    private Kernel $kernel;
+    private EntityGeneratorFactory $entityGeneratorFactory;
+    private HandlerFactory $handlerFactory;
 
     /**
      * @return NodeType
      */
-    public function getNodeType()
+    public function getNodeType(): NodeType
     {
+        if (null === $this->nodeType) {
+            throw new \BadMethodCallException('NodeType is null');
+        }
         return $this->nodeType;
     }
 
@@ -79,7 +70,7 @@ class NodeTypeHandler extends AbstractHandler
     /**
      * @return string
      */
-    public function getGeneratedEntitiesFolder()
+    public function getGeneratedEntitiesFolder(): string
     {
         return $this->kernel->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
     }
@@ -88,7 +79,7 @@ class NodeTypeHandler extends AbstractHandler
      * Remove node type entity class file from server.
      *
      */
-    public function removeSourceEntityClass()
+    public function removeSourceEntityClass(): bool
     {
         $file = $this->getSourceClassPath();
         $fileSystem = new Filesystem();
@@ -106,7 +97,7 @@ class NodeTypeHandler extends AbstractHandler
      *
      * @return bool
      */
-    public function generateSourceEntityClass()
+    public function generateSourceEntityClass(): bool
     {
         $folder = $this->getGeneratedEntitiesFolder();
         $file = $this->getSourceClassPath();
@@ -244,10 +235,10 @@ class NodeTypeHandler extends AbstractHandler
     /**
      * Reset current node-type fields positions.
      *
-     * @param bool $setPosition
-     * @return int Return the next position after the **last** field
+     * @param bool $setPositions
+     * @return float Return the next position after the **last** field
      */
-    public function cleanPositions($setPosition = false)
+    public function cleanPositions(bool $setPositions = false): float
     {
         $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);

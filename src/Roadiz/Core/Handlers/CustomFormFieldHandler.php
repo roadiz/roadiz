@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Handlers;
 
 use Doctrine\Persistence\ObjectManager;
-use Pimple\Container;
 use RZ\Roadiz\Core\Entities\CustomFormField;
 
 /**
@@ -12,22 +11,18 @@ use RZ\Roadiz\Core\Entities\CustomFormField;
  */
 class CustomFormFieldHandler extends AbstractHandler
 {
-    /** @var null|CustomFormField  */
-    private $customFormField = null;
-
-    /** @var \Pimple\Container  */
-    private $container;
+    private ?CustomFormField $customFormField = null;
+    private CustomFormHandler $customFormHandler;
 
     /**
      * @return CustomFormField
      */
-    public function getCustomFormField()
+    public function getCustomFormField(): ?CustomFormField
     {
         return $this->customFormField;
     }
     /**
      * @param CustomFormField $customFormField
-     *
      * @return $this
      */
     public function setCustomFormField(CustomFormField $customFormField)
@@ -40,27 +35,29 @@ class CustomFormFieldHandler extends AbstractHandler
      * Create a new custom-form-field handler with custom-form-field to handle.
      *
      * @param ObjectManager $objectManager
-     * @param Container $container
+     * @param CustomFormHandler $customFormHandler
      */
-    public function __construct(ObjectManager $objectManager, Container $container)
+    public function __construct(ObjectManager $objectManager, CustomFormHandler $customFormHandler)
     {
         parent::__construct($objectManager);
-        $this->container = $container;
+        $this->customFormHandler = $customFormHandler;
     }
 
     /**
      * Clean position for current customForm siblings.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** customFormField
+     * @return float Return the next position after the **last** customFormField
      */
-    public function cleanPositions($setPositions = true)
+    public function cleanPositions(bool $setPositions = true): float
     {
+        if (null === $this->customFormField) {
+            throw new \BadMethodCallException('CustomForm is null');
+        }
+
         if ($this->customFormField->getCustomForm() !== null) {
-            /** @var CustomFormHandler $customFormHandler */
-            $customFormHandler = $this->container['custom_form.handler'];
-            $customFormHandler->setCustomForm($this->customFormField->getCustomForm());
-            return $customFormHandler->cleanFieldsPositions($setPositions);
+            $this->customFormHandler->setCustomForm($this->customFormField->getCustomForm());
+            return $this->customFormHandler->cleanFieldsPositions($setPositions);
         }
 
         return 1;

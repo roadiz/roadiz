@@ -107,7 +107,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new CustomFormHandler($c['em']);
         });
         $container['custom_form_field.handler'] = $container->factory(function (Container $c) {
-            return new CustomFormFieldHandler($c['em'], $c);
+            return new CustomFormFieldHandler($c['em'], $c['custom_form.handler']);
         });
         $container['folder.handler'] = $container->factory(function (Container $c) {
             return new FolderHandler($c['em']);

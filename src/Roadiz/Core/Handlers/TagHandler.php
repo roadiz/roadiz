@@ -13,16 +13,16 @@ use RZ\Roadiz\Core\Entities\Tag;
  */
 class TagHandler extends AbstractHandler
 {
-    /**
-     * @var Tag
-     */
-    private $tag;
+    private ?Tag $tag = null;
 
     /**
      * @return Tag
      */
-    public function getTag()
+    public function getTag(): Tag
     {
+        if (null === $this->tag) {
+            throw new \BadMethodCallException('Tag is null');
+        }
         return $this->tag;
     }
 
@@ -88,6 +88,7 @@ class TagHandler extends AbstractHandler
 
     /**
      * @return array Array of Translation
+     * @deprecated Do not query DB here
      */
     public function getAvailableTranslations()
     {
@@ -108,6 +109,7 @@ class TagHandler extends AbstractHandler
     }
     /**
      * @return array Array of Translation id
+     * @deprecated Do not query DB here
      */
     public function getAvailableTranslationsId()
     {
@@ -134,6 +136,7 @@ class TagHandler extends AbstractHandler
 
     /**
      * @return array Array of Translation
+     * @deprecated Do not query DB here
      */
     public function getUnavailableTranslations()
     {
@@ -152,6 +155,7 @@ class TagHandler extends AbstractHandler
 
     /**
      * @return array Array of Translation id
+     * @deprecated Do not query DB here
      */
     public function getUnavailableTranslationsId()
     {
@@ -191,7 +195,7 @@ class TagHandler extends AbstractHandler
      * @deprecated Use directly Tag::getFullPath
      * @return string
      */
-    public function getFullPath()
+    public function getFullPath(): string
     {
         return $this->tag->getFullPath();
     }
@@ -200,9 +204,9 @@ class TagHandler extends AbstractHandler
      * Clean position for current tag siblings.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** tag
+     * @return float Return the next position after the **last** tag
      */
-    public function cleanPositions($setPositions = true)
+    public function cleanPositions(bool $setPositions = true): float
     {
         if ($this->tag->getParent() !== null) {
             $tagHandler = new TagHandler($this->objectManager);
@@ -219,9 +223,9 @@ class TagHandler extends AbstractHandler
      * Warning, this method does not flush.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** tag
+     * @return float Return the next position after the **last** tag
      */
-    public function cleanChildrenPositions($setPositions = true)
+    public function cleanChildrenPositions(bool $setPositions = true): float
     {
         /*
          * Force collection to sort on position
@@ -250,9 +254,9 @@ class TagHandler extends AbstractHandler
      * Warning, this method does not flush.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** tag
+     * @return float Return the next position after the **last** tag
      */
-    public function cleanRootTagsPositions($setPositions = true)
+    public function cleanRootTagsPositions(bool $setPositions = true): float
     {
         $tags = $this->objectManager
             ->getRepository(Tag::class)

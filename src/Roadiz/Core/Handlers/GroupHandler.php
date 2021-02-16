@@ -11,16 +11,13 @@ use RZ\Roadiz\Core\Entities\Role;
  */
 class GroupHandler extends AbstractHandler
 {
-    /**
-     * @var Group
-     */
-    private $group;
+    private ?Group $group = null;
 
-    /**
-     * @return Group
-     */
-    public function getGroup()
+    public function getGroup(): Group
     {
+        if (null === $this->group) {
+            throw new \BadMethodCallException('Group is null');
+        }
         return $this->group;
     }
 
@@ -42,16 +39,16 @@ class GroupHandler extends AbstractHandler
     public function diff(Group $newGroup)
     {
         if ("" != $newGroup->getName()) {
-            $this->group->setName($newGroup->getName());
+            $this->getGroup()->setName($newGroup->getName());
         }
 
-        $existingRolesNames = $this->group->getRoles();
+        $existingRolesNames = $this->getGroup()->getRoles();
 
         foreach ($newGroup->getRolesEntities() as $newRole) {
             if (false === in_array($newRole->getName(), $existingRolesNames)) {
                 $role = $this->objectManager->getRepository(Role::class)
                                              ->findOneByName($newRole->getName());
-                $this->group->addRole($role);
+                $this->getGroup()->addRole($role);
             }
         }
     }
