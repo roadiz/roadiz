@@ -15,7 +15,6 @@ use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 class GlobalNodeSourceSearchHandler
 {
     private EntityManagerInterface $em;
-
     private NodesSourcesRepository $repository;
 
     /**
@@ -24,7 +23,6 @@ class GlobalNodeSourceSearchHandler
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        /** @var NodesSourcesRepository repository */
         $this->repository = $this->em->getRepository(NodesSources::class);
     }
 

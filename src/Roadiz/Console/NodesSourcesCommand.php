@@ -29,7 +29,6 @@ class NodesSourcesCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityManager entityManager */
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
         $io = new SymfonyStyle($input, $output);
 
