@@ -301,7 +301,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param string $namespace
      * @return string
      */
-    protected function getNamespacedView($view, $namespace = '')
+    protected function getNamespacedView(string $view, string $namespace = ''): string
     {
         if ($namespace !== "" && $namespace !== "/") {
             return '@' . $namespace . '/' . $view;

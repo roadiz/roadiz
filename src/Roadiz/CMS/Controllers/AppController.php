@@ -53,19 +53,61 @@ abstract class AppController extends Controller
     const AJAX_TOKEN_INTENTION = 'ajax';
     const SCHEMA_TOKEN_INTENTION = 'update_schema';
     const FONT_TOKEN_INTENTION = 'font_request';
-
     /**
-     * Theme entity.
-     *
-     * @var Theme
+     * @var int Theme priority to load templates and translation in the right order.
      */
-    protected $theme = null;
+    public static $priority = 0;
     /**
      * Theme name.
      *
      * @var string
      */
     protected static $themeName = '';
+    /**
+     * Theme author description.
+     *
+     * @var string
+     */
+    protected static $themeAuthor = '';
+    /**
+     * Theme copyright licence.
+     *
+     * @var string
+     */
+    protected static $themeCopyright = '';
+    /**
+     * Theme base directory name.
+     *
+     * Example: "MyTheme" will be located in "themes/MyTheme"
+     * @var string
+     */
+    protected static $themeDir = '';
+    /**
+     * Theme requires a minimal CMS version.
+     *
+     * Example: "*" will accept any CMS version. Or "3.0.*" will
+     * accept any build version of 3.0.
+     *
+     * @var string
+     */
+    protected static string $themeRequire = '*';
+    /**
+     * Is theme for backend?
+     *
+     * @var bool
+     */
+    protected static $backendTheme = false;
+    protected ?Theme $theme = null;
+    /**
+     * Assignation for twig template engine.
+     */
+    protected array $assignation = [];
+    /**
+     * @var Node|null
+     * @deprecated
+     */
+    private ?Node $homeNode = null;
+
     /**
      * @return string
      */
@@ -75,12 +117,6 @@ abstract class AppController extends Controller
     }
 
     /**
-     * Theme author description.
-     *
-     * @var string
-     */
-    protected static $themeAuthor = '';
-    /**
      * @return string
      */
     public static function getThemeAuthor()
@@ -89,39 +125,12 @@ abstract class AppController extends Controller
     }
 
     /**
-     * Theme copyright licence.
-     *
-     * @var string
-     */
-    protected static $themeCopyright = '';
-    /**
      * @return string
      */
     public static function getThemeCopyright()
     {
         return static::$themeCopyright;
     }
-
-    /**
-     * Theme base directory name.
-     *
-     * Example: "MyTheme" will be located in "themes/MyTheme"
-     * @var string
-     */
-    protected static $themeDir = '';
-
-    /**
-     * @return string
-     */
-    public static function getThemeDir()
-    {
-        return static::$themeDir;
-    }
-
-    /**
-     * @var int Theme priority to load templates and translation in the right order.
-     */
-    public static $priority = 0;
 
     /**
      * @return int
@@ -132,31 +141,6 @@ abstract class AppController extends Controller
     }
 
     /**
-     * @return string Main theme class name
-     */
-    public static function getThemeMainClassName()
-    {
-        return static::getThemeDir() . 'App';
-    }
-
-    /**
-     * @return string Main theme class (FQN class with namespace)
-     */
-    public static function getThemeMainClass()
-    {
-        return '\\Themes\\' . static::getThemeDir() . '\\' . static::getThemeMainClassName();
-    }
-
-    /**
-     * Theme requires a minimal CMS version.
-     *
-     * Example: "*" will accept any CMS version. Or "3.0.*" will
-     * accept any build version of 3.0.
-     *
-     * @var string
-     */
-    protected static $themeRequire = '*';
-    /**
      * @return string
      */
     public static function getThemeRequire()
@@ -164,12 +148,6 @@ abstract class AppController extends Controller
         return static::$themeRequire;
     }
 
-    /**
-     * Is theme for backend?
-     *
-     * @var boolean
-     */
-    protected static $backendTheme = false;
     /**
      * @return boolean
      */
@@ -179,31 +157,14 @@ abstract class AppController extends Controller
     }
 
     /**
-     * Assignation for twig template engine.
-     *
-     * @var array
+     * @return RouteCollection
+     * @throws ReflectionException
      */
-    protected $assignation = [];
-
-    /**
-     * @return array
-     */
-    public function getAssignation(): array
+    public static function getRoutes()
     {
-        return $this->assignation;
-    }
-
-    /**
-     * @var Node|null
-     */
-    private $homeNode = null;
-
-    /**
-     * Initialize controller with its twig environment.
-     */
-    public function __init()
-    {
-        $this->prepareBaseAssignation();
+        $locator = static::getFileLocator();
+        $loader = new YamlFileLoader($locator);
+        return $loader->load('routes.yml');
     }
 
     /**
@@ -224,14 +185,54 @@ abstract class AppController extends Controller
     }
 
     /**
-     * @return RouteCollection
+     * Return theme Resource folder according to
+     * main theme class inheriting AppController.
+     *
+     * Uses \ReflectionClass to resolve final theme class folder
+     * whether it’s located in project folder or in vendor folder.
+     *
+     * @return string
      * @throws ReflectionException
      */
-    public static function getRoutes()
+    public static function getResourcesFolder()
     {
-        $locator = static::getFileLocator();
-        $loader = new YamlFileLoader($locator);
-        return $loader->load('routes.yml');
+        return static::getThemeFolder() . '/Resources';
+    }
+
+    /**
+     * Return theme root folder.
+     *
+     * @return string
+     * @throws ReflectionException
+     */
+    public static function getThemeFolder()
+    {
+        $class_info = new ReflectionClass(static::getThemeMainClass());
+        return dirname($class_info->getFileName());
+    }
+
+    /**
+     * @return class-string Main theme class (FQN class with namespace)
+     */
+    public static function getThemeMainClass()
+    {
+        return '\\Themes\\' . static::getThemeDir() . '\\' . static::getThemeMainClassName();
+    }
+
+    /**
+     * @return string
+     */
+    public static function getThemeDir()
+    {
+        return static::$themeDir;
+    }
+
+    /**
+     * @return string Main theme class name
+     */
+    public static function getThemeMainClassName()
+    {
+        return static::getThemeDir() . 'App';
     }
 
     /**
@@ -253,42 +254,6 @@ abstract class AppController extends Controller
     }
 
     /**
-     * Return theme root folder.
-     *
-     * @return string
-     * @throws ReflectionException
-     */
-    public static function getThemeFolder()
-    {
-        $class_info = new ReflectionClass(static::getThemeMainClass());
-        return dirname($class_info->getFileName());
-    }
-
-    /**
-     * Return theme Resource folder according to
-     * main theme class inheriting AppController.
-     *
-     * Uses \ReflectionClass to resolve final theme class folder
-     * whether it’s located in project folder or in vendor folder.
-     *
-     * @return string
-     * @throws ReflectionException
-     */
-    public static function getResourcesFolder()
-    {
-        return static::getThemeFolder() . '/Resources';
-    }
-
-    /**
-     * @return string
-     * @throws ReflectionException
-     */
-    public static function getViewsFolder()
-    {
-        return static::getResourcesFolder() . '/views';
-    }
-
-    /**
      * @return string
      * @throws ReflectionException
      */
@@ -307,38 +272,66 @@ abstract class AppController extends Controller
     }
 
     /**
-     * @return string
-     */
-    public function getStaticResourcesUrl()
-    {
-        return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/');
-    }
-    /**
-     * @return string
-     */
-    public function getAbsoluteStaticResourceUrl()
-    {
-        return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/', Packages::ABSOLUTE);
-    }
-
-    /**
-     * Returns a fully qualified view path for Twig rendering.
+     * Append objects to the global dependency injection container.
      *
-     * @param string $view
-     * @param string $namespace
-     * @return string
+     * @param Container $container
+     *
+     * @throws ReflectionException
+     * @throws LoaderError
      */
-    protected function getNamespacedView($view, $namespace = '')
+    public static function setupDependencyInjection(Container $container)
     {
-        if ($namespace !== "" && $namespace !== "/") {
-            $view = '@' . $namespace . '/' . $view;
-        } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
-            // when no namespace is used
-            // use current theme directory
-            $view = '@' . static::getThemeDir() . '/' . $view;
-        }
+        static::addThemeTemplatesPath($container);
 
-        return $view;
+        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
+            'themes/' . static::getThemeDir() . '/static',
+            $container['versionStrategy'],
+            new RequestStackContext($container['requestStack'])
+        ));
+    }
+
+    /**
+     * @param Container $container
+     *
+     * @throws ReflectionException
+     * @throws LoaderError
+     */
+    public static function addThemeTemplatesPath(Container $container)
+    {
+        /** @var FilesystemLoader $loader */
+        $loader = $container['twig.loaderFileSystem'];
+        /*
+         * Enable theme templates in main namespace and in its own theme namespace.
+         */
+        $loader->prependPath(static::getViewsFolder());
+        // Add path into a namespaced loader to enable using same template name
+        // over different static themes.
+        $loader->prependPath(static::getViewsFolder(), static::getThemeDir());
+    }
+
+    /**
+     * @return string
+     * @throws ReflectionException
+     */
+    public static function getViewsFolder()
+    {
+        return static::getResourcesFolder() . '/views';
+    }
+
+    /**
+     * @return array
+     */
+    public function getAssignation(): array
+    {
+        return $this->assignation;
+    }
+
+    /**
+     * Initialize controller with its twig environment.
+     */
+    public function __init()
+    {
+        $this->prepareBaseAssignation();
     }
 
     /**
@@ -401,14 +394,19 @@ abstract class AppController extends Controller
     }
 
     /**
-     * Returns the current session.
-     *
-     * @return SessionInterface|null
+     * @return string
      */
-    public function getSession()
+    public function getStaticResourcesUrl()
     {
-        $request = $this->getRequest();
-        return null !== $request && $request->hasPreviousSession() ? $request->getSession() : null;
+        return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/');
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbsoluteStaticResourceUrl()
+    {
+        return $this->get('assetPackages')->getUrl('themes/' . static::$themeDir . '/static/', Packages::ABSOLUTE);
     }
 
     /**
@@ -466,76 +464,33 @@ abstract class AppController extends Controller
     }
 
     /**
-     * Append objects to the global dependency injection container.
+     * Publish a confirm message in Session flash bag and
+     * logger interface.
      *
-     * @param Container $container
-     *
-     * @throws ReflectionException
-     * @throws LoaderError
+     * @param Request $request
+     * @param string $msg
+     * @param NodesSources|null $source
      */
-    public static function setupDependencyInjection(Container $container)
+    public function publishConfirmMessage(Request $request, string $msg, ?NodesSources $source = null): void
     {
-        static::addThemeTemplatesPath($container);
-
-        $container['assetPackages']->addPackage(static::getThemeDir(), new PathPackage(
-            'themes/' . static::getThemeDir() . '/static',
-            $container['versionStrategy'],
-            new RequestStackContext($container['requestStack'])
-        ));
-    }
-
-    /**
-     * @param Container $container
-     *
-     * @throws ReflectionException
-     * @throws LoaderError
-     */
-    public static function addThemeTemplatesPath(Container $container)
-    {
-        /** @var FilesystemLoader $loader */
-        $loader = $container['twig.loaderFileSystem'];
-        /*
-         * Enable theme templates in main namespace and in its own theme namespace.
-         */
-        $loader->prependPath(static::getViewsFolder());
-        // Add path into a namespaced loader to enable using same template name
-        // over different static themes.
-        $loader->prependPath(static::getViewsFolder(), static::getThemeDir());
-    }
-
-    /**
-     * @param Translation|null $translation
-     * @return null|Node
-     */
-    protected function getHome(Translation $translation = null): ?Node
-    {
-        $this->container['stopwatch']->start('getHome');
-        if (null === $this->homeNode) {
-            /** @var NodeRepository $nodeRepository */
-            $nodeRepository = $this->get('em')->getRepository(Node::class);
-
-            if ($translation !== null) {
-                $this->homeNode = $nodeRepository->findHomeWithTranslation($translation);
-            } else {
-                $this->homeNode = $nodeRepository->findHomeWithDefaultTranslation();
-            }
-        }
-        $this->container['stopwatch']->stop('getHome');
-
-        return $this->homeNode;
+        $this->publishMessage($request, $msg, 'confirm', $source);
     }
 
     /**
      * Publish a message in Session flash bag and
      * logger interface.
      *
-     * @param Request      $request
-     * @param string       $msg
-     * @param string       $level
-     * @param NodesSources $source
+     * @param Request $request
+     * @param string $msg
+     * @param string $level
+     * @param NodesSources|null $source
      */
-    protected function publishMessage(Request $request, $msg, $level = "confirm", NodesSources $source = null)
-    {
+    protected function publishMessage(
+        Request $request,
+        string $msg,
+        string $level = "confirm",
+        ?NodesSources $source = null
+    ): void {
         $session = $this->getSession();
         if (null !== $session && $session instanceof Session) {
             $session->getFlashBag()->add($level, $msg);
@@ -550,28 +505,27 @@ abstract class AppController extends Controller
                 break;
         }
     }
+
     /**
-     * Publish a confirm message in Session flash bag and
-     * logger interface.
+     * Returns the current session.
      *
-     * @param Request      $request
-     * @param string       $msg
-     * @param NodesSources $source
+     * @return SessionInterface|null
      */
-    public function publishConfirmMessage(Request $request, $msg, NodesSources $source = null)
+    public function getSession(): ?SessionInterface
     {
-        $this->publishMessage($request, $msg, 'confirm', $source);
+        $request = $this->getRequest();
+        return null !== $request && $request->hasPreviousSession() ? $request->getSession() : null;
     }
 
     /**
      * Publish an error message in Session flash bag and
      * logger interface.
      *
-     * @param Request      $request
-     * @param string       $msg
-     * @param NodesSources $source
+     * @param Request $request
+     * @param string $msg
+     * @param NodesSources|null $source
      */
-    public function publishErrorMessage(Request $request, $msg, NodesSources $source = null)
+    public function publishErrorMessage(Request $request, string $msg, NodesSources $source = null)
     {
         $this->publishMessage($request, $msg, 'error', $source);
     }
@@ -581,13 +535,13 @@ abstract class AppController extends Controller
      * and check chroot
      * and throws an AccessDeniedException exception.
      *
-     * @param string $role
-     * @param integer|null $nodeId
-     * @param boolean|false $includeChroot
+     * @param mixed $attributes
+     * @param int|null $nodeId
+     * @param bool|false $includeChroot
      *
      * @throws AccessDeniedException
      */
-    public function validateNodeAccessForRole($role, $nodeId = null, $includeChroot = false)
+    public function validateNodeAccessForRole($attributes, ?int $nodeId = null, bool $includeChroot = false)
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -595,7 +549,7 @@ abstract class AppController extends Controller
         $chrootResolver = $this->get(NodeChrootResolver::class);
         $chroot = $chrootResolver->getChroot($user);
 
-        if ($this->isGranted($role) && $chroot === null) {
+        if ($this->isGranted($attributes) && $chroot === null) {
             /*
              * Already grant access if user is not chrooted.
              */
@@ -619,7 +573,7 @@ abstract class AppController extends Controller
             $parents = [];
         }
 
-        if (!$this->isGranted($role)) {
+        if (!$this->isGranted($attributes)) {
             throw new AccessDeniedException("You don't have access to this page");
         }
 
@@ -644,52 +598,6 @@ abstract class AppController extends Controller
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
         );
-    }
-
-    /**
-     * Return all Form errors as an array.
-     *
-     * @param FormInterface $form
-     * @return array
-     */
-    protected function getErrorsAsArray(FormInterface $form)
-    {
-        /** @var Translator $translator */
-        $translator = $this->get('translator');
-        $errors = [];
-        /** @var FormError $error */
-        foreach ($form->getErrors() as $error) {
-            $errorFieldName = $error->getOrigin()->getName();
-            if (count($error->getMessageParameters()) > 0) {
-                if (null !== $error->getMessagePluralization()) {
-                    $errors[$errorFieldName] = $translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters());
-                } else {
-                    $errors[$errorFieldName] = $translator->trans($error->getMessageTemplate(), $error->getMessageParameters());
-                }
-            } else {
-                $errors[$errorFieldName] = $error->getMessage();
-            }
-            $cause = $error->getCause();
-            if (null !== $cause) {
-                if ($cause instanceof ConstraintViolation) {
-                    $cause = $cause->getCause();
-                }
-                if (null !== $cause && is_object($cause)) {
-                    if ($cause instanceof Exception) {
-                        $errors[$errorFieldName . '_cause_message'] = $cause->getMessage();
-                    }
-                    $errors[$errorFieldName . '_cause'] = get_class($cause);
-                }
-            }
-        }
-
-        foreach ($form->all() as $key => $child) {
-            $err = $this->getErrorsAsArray($child);
-            if ($err) {
-                $errors[$key] = $err;
-            }
-        }
-        return $errors;
     }
 
     /**
@@ -748,5 +656,94 @@ abstract class AppController extends Controller
         }
 
         return $response;
+    }
+
+    /**
+     * Returns a fully qualified view path for Twig rendering.
+     *
+     * @param string $view
+     * @param string $namespace
+     * @return string
+     */
+    protected function getNamespacedView(string $view, string $namespace = ''): string
+    {
+        if ($namespace !== "" && $namespace !== "/") {
+            $view = '@' . $namespace . '/' . $view;
+        } elseif (static::getThemeDir() !== "" && $namespace !== "/") {
+            // when no namespace is used
+            // use current theme directory
+            $view = '@' . static::getThemeDir() . '/' . $view;
+        }
+
+        return $view;
+    }
+
+    /**
+     * @param Translation|null $translation
+     * @return null|Node
+     * @deprecated
+     */
+    protected function getHome(?Translation $translation = null): ?Node
+    {
+        $this->container['stopwatch']->start('getHome');
+        if (null === $this->homeNode) {
+            /** @var NodeRepository $nodeRepository */
+            $nodeRepository = $this->get('em')->getRepository(Node::class);
+
+            if ($translation !== null) {
+                $this->homeNode = $nodeRepository->findHomeWithTranslation($translation);
+            } else {
+                $this->homeNode = $nodeRepository->findHomeWithDefaultTranslation();
+            }
+        }
+        $this->container['stopwatch']->stop('getHome');
+
+        return $this->homeNode;
+    }
+
+    /**
+     * Return all Form errors as an array.
+     *
+     * @param FormInterface $form
+     * @return array
+     */
+    protected function getErrorsAsArray(FormInterface $form): array
+    {
+        /** @var Translator $translator */
+        $translator = $this->get('translator');
+        $errors = [];
+        /** @var FormError $error */
+        foreach ($form->getErrors() as $error) {
+            $errorFieldName = $error->getOrigin()->getName();
+            if (count($error->getMessageParameters()) > 0) {
+                if (null !== $error->getMessagePluralization()) {
+                    $errors[$errorFieldName] = $translator->transChoice($error->getMessageTemplate(), $error->getMessagePluralization(), $error->getMessageParameters());
+                } else {
+                    $errors[$errorFieldName] = $translator->trans($error->getMessageTemplate(), $error->getMessageParameters());
+                }
+            } else {
+                $errors[$errorFieldName] = $error->getMessage();
+            }
+            $cause = $error->getCause();
+            if (null !== $cause) {
+                if ($cause instanceof ConstraintViolation) {
+                    $cause = $cause->getCause();
+                }
+                if (null !== $cause && is_object($cause)) {
+                    if ($cause instanceof Exception) {
+                        $errors[$errorFieldName . '_cause_message'] = $cause->getMessage();
+                    }
+                    $errors[$errorFieldName . '_cause'] = get_class($cause);
+                }
+            }
+        }
+
+        foreach ($form->all() as $key => $child) {
+            $err = $this->getErrorsAsArray($child);
+            if ($err) {
+                $errors[$key] = $err;
+            }
+        }
+        return $errors;
     }
 }

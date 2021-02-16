@@ -31,7 +31,7 @@ final class RedirectionController
      * @param Redirection $redirection
      * @return RedirectResponse
      */
-    public function redirectAction(Request $request, Redirection $redirection)
+    public function redirectAction(Request $request, Redirection $redirection): RedirectResponse
     {
         if (null !== $redirection->getRedirectNodeSource()) {
             return new RedirectResponse(
@@ -74,7 +74,7 @@ final class RedirectionController
         string $route,
         bool $permanent = false,
         $ignoreAttributes = false
-    ) {
+    ): RedirectResponse {
         if ('' == $route) {
             throw new HttpException($permanent ? 410 : 404);
         }

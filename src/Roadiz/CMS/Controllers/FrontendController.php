@@ -49,28 +49,16 @@ abstract class FrontendController extends AppController
      * Put here your node which need a specific controller
      * instead of a node-type controller.
      *
-     * @var array
+     * @var array<string>
      */
-    protected static $specificNodesControllers = [
+    protected static array $specificNodesControllers = [
         'home',
     ];
 
-    /**
-     * @var Node|null
-     */
-    protected $node = null;
-    /**
-     * @var NodesSources|null
-     */
-    protected $nodeSource = null;
-    /**
-     * @var Translation|null
-     */
-    protected $translation = null;
-    /**
-     * @var Container|null
-     */
-    protected $themeContainer = null;
+    protected ?Node $node = null;
+    protected ?NodesSources $nodeSource = null;
+    protected ?Translation $translation = null;
+    protected ?Container $themeContainer = null;
 
     /**
      * Append objects to global container.
@@ -133,7 +121,7 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * @return Node
+     * @return Node|null
      */
     public function getNode(): ?Node
     {
@@ -141,7 +129,7 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * @return NodesSources
+     * @return NodesSources|null
      */
     public function getNodeSource(): ?NodesSources
     {
@@ -149,7 +137,7 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
     public function getTranslation(): ?Translation
     {
@@ -160,8 +148,8 @@ abstract class FrontendController extends AppController
      * Default action for any node URL.
      *
      * @param Request $request
-     * @param Node             $node
-     * @param Translation      $translation
+     * @param Node|null $node
+     * @param Translation|null $translation
      *
      * @return Response
      */
@@ -183,8 +171,8 @@ abstract class FrontendController extends AppController
      * for a node-based request.
      *
      * @param Request $request
-     * @param Node $node
-     * @param Translation $translation
+     * @param Node|null $node
+     * @param Translation|null $translation
      *
      * @return Response
      */
@@ -246,7 +234,7 @@ abstract class FrontendController extends AppController
      * in order to avoid initializing same component again.
      *
      * @param array $baseAssignation
-     * @param Container $themeContainer
+     * @param Container|null $themeContainer
      */
     public function __initFromOtherController(
         array &$baseAssignation = [],
@@ -286,8 +274,8 @@ abstract class FrontendController extends AppController
     /**
      * Store basic information for your theme from a Node object.
      *
-     * @param Node $node
-     * @param Translation $translation
+     * @param Node|null $node
+     * @param Translation|null $translation
      *
      * @return void
      */
@@ -326,8 +314,8 @@ abstract class FrontendController extends AppController
      *     * description
      *     * keywords
      *
-     * @param Node        $node
-     * @param Translation $translation
+     * @param Node|null $node
+     * @param Translation|null $translation
      */
     public function storeNodeAndTranslation(Node $node = null, Translation $translation = null)
     {
@@ -355,7 +343,7 @@ abstract class FrontendController extends AppController
      * * `description`
      * * `keywords`
      *
-     * @param NodesSources $fallbackNodeSource
+     * @param NodesSources|null $fallbackNodeSource
      *
      * @return array
      */
@@ -435,8 +423,8 @@ abstract class FrontendController extends AppController
     /**
      * Store basic information for your theme from a NodesSources object.
      *
-     * @param NodesSources $nodeSource
-     * @param Translation $translation
+     * @param NodesSources|null $nodeSource
+     * @param Translation|null $translation
      *
      * @return void
      */
@@ -444,6 +432,7 @@ abstract class FrontendController extends AppController
     {
         if (null === $this->themeContainer) {
             $this->storeNodeSourceAndTranslation($nodeSource, $translation);
+            /** @deprecated Should not fetch home at each request */
             $this->assignation['home'] = $this->getHome($translation);
             /*
              * Use a DI container to delay API requests
@@ -467,8 +456,8 @@ abstract class FrontendController extends AppController
      *     * description
      *     * keywords
      *
-     * @param NodesSources $nodeSource
-     * @param Translation $translation
+     * @param NodesSources|null $nodeSource
+     * @param Translation|null $translation
      */
     public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
     {

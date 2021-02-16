@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
 
 /**
- * Class DefaultThemeApp
  * @package Themes\DefaultTheme
  */
 class DefaultThemeApp extends FrontendController
