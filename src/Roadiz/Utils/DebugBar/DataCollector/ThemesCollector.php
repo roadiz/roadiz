@@ -9,20 +9,12 @@ use RZ\Roadiz\Core\HttpFoundation\Request;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-class ThemesCollector extends DataCollector implements Renderable
+final class ThemesCollector extends DataCollector implements Renderable
 {
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-    /**
-     * @var ThemeResolverInterface
-     */
-    private $themeResolver;
+    private RequestStack $requestStack;
+    private ThemeResolverInterface $themeResolver;
 
     /**
-     * ThemesCollector constructor.
-     *
      * @param ThemeResolverInterface $themeResolver
      * @param RequestStack           $requestStack
      */

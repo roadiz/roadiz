@@ -21,14 +21,9 @@ class PreviewModeSubscriber implements EventSubscriberInterface
 {
     const QUERY_PARAM_NAME = '_preview';
     const PREVIEW_ROLE = 'ROLE_BACKEND_USER';
-    /**
-     * @var PreviewResolverInterface
-     */
-    protected $previewResolver;
-    /**
-     * @var Container
-     */
-    protected $container;
+
+    protected PreviewResolverInterface $previewResolver;
+    protected Container $container;
 
     /**
      * @param PreviewResolverInterface $previewResolver

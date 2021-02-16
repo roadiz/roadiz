@@ -10,13 +10,9 @@ use Symfony\Component\Intl\Locale;
 
 final class LocaleCollector extends DataCollector implements Renderable
 {
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private RequestStack $requestStack;
 
     /**
-     * LocaleCollector constructor.
      * @param RequestStack $requestStack
      */
     public function __construct(RequestStack $requestStack)

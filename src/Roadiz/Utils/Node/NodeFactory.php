@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -15,7 +16,6 @@ use RZ\Roadiz\Core\Repositories\UrlAliasRepository;
 final class NodeFactory
 {
     private EntityManagerInterface $entityManager;
-
     private NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
@@ -38,7 +38,7 @@ final class NodeFactory
      * @param Node|null        $parent
      *
      * @return Node
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function create(
         string $title,
@@ -105,7 +105,7 @@ final class NodeFactory
      * @param Node|null        $parent
      *
      * @return Node
-     * @throws \Doctrine\ORM\ORMException
+     * @throws ORMException
      */
     public function createWithUrlAlias(
         string $urlAlias,

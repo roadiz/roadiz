@@ -15,13 +15,13 @@ class PreviewServiceProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
-        $container[PreviewResolverInterface::class] = function (Container $c) {
+        $pimple[PreviewResolverInterface::class] = function (Container $c) {
             return new KernelPreviewRevolver($c['kernel'], $c['requestStack']);
         };
 
-        $container->extend('dispatcher', function (EventDispatcherInterface $dispatcher, Container $c) {
+        $pimple->extend('dispatcher', function (EventDispatcherInterface $dispatcher, Container $c) {
             /** @var KernelInterface $kernel */
             $kernel = $c['kernel'];
             if ($kernel->getEnvironment() !== 'install') {

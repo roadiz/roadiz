@@ -11,10 +11,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 
 class PreviewBarSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var PreviewResolverInterface
-     */
-    protected $previewResolver;
+    protected PreviewResolverInterface $previewResolver;
 
     /**
      * @param PreviewResolverInterface $previewResolver

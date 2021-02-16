@@ -8,6 +8,8 @@ use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
+use Swift_Mailer;
+use Swift_Message;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -17,83 +19,36 @@ use Twig\Environment;
  */
 class EmailManager
 {
-    /** @var string|null */
-    protected $subject = null;
-
-    /** @var string|null */
-    protected $emailTitle = null;
-
-    /** @var string|null  */
-    protected $emailType = null;
-
+    protected ?string $subject = null;
+    protected ?string $emailTitle = null;
+    protected ?string $emailType = null;
     /** @var string|array|null  */
-    private $receiver = null;
-
+    protected $receiver = null;
     /** @var string|array|null  */
-    private $sender = null;
-
-    /** @var string|null  */
-    private $origin = null;
-
-    /** @var string  */
-    protected $successMessage = 'email.successfully.sent';
-
-    /** @var string  */
-    protected $failMessage = 'email.has.errors';
-
-    /** @var TranslatorInterface */
-    protected $translator;
-
-    /** @var Environment */
-    protected $templating;
-
-    /** @var \Swift_Mailer */
-    protected $mailer;
-
-    /** @var string|null */
-    protected $emailTemplate = null;
-
-    /** @var string|null */
-    protected $emailPlainTextTemplate = null;
-
-    /** @var string */
-    protected $emailStylesheet;
+    protected $sender = null;
+    protected ?string $origin = null;
+    protected string $successMessage = 'email.successfully.sent';
+    protected string $failMessage = 'email.has.errors';
+    protected TranslatorInterface $translator;
+    protected Environment $templating;
+    protected Swift_Mailer $mailer;
+    protected ?string $emailTemplate = null;
+    protected ?string $emailPlainTextTemplate = null;
+    protected string $emailStylesheet;
+    protected Request $request;
+    protected array $assignation;
+    protected ?Swift_Message $message;
+    protected ?Settings $settingsBag;
+    protected ?DocumentUrlGeneratorInterface $documentUrlGenerator;
 
     /**
-     * @var Request
-     */
-    protected $request;
-
-    /**
-     * @var array
-     */
-    protected $assignation;
-
-    /**
-     * @var \Swift_Message|null
-     */
-    protected $message;
-
-    /**
-     * @var null|Settings
-     */
-    protected $settingsBag;
-
-    /**
-     * @var null|DocumentUrlGeneratorInterface
-     */
-    private $documentUrlGenerator;
-
-
-    /**
-     *
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'emailManager' Factory Service
      *
      * @param Request                            $request
      * @param TranslatorInterface                $translator
      * @param Environment                        $templating
-     * @param \Swift_Mailer                      $mailer
+     * @param Swift_Mailer                      $mailer
      * @param Settings|null                      $settingsBag
      * @param DocumentUrlGeneratorInterface|null $documentUrlGenerator
      *
@@ -103,9 +58,9 @@ class EmailManager
         Request $request,
         TranslatorInterface $translator,
         Environment $templating,
-        \Swift_Mailer $mailer,
-        Settings $settingsBag = null,
-        DocumentUrlGeneratorInterface $documentUrlGenerator = null
+        Swift_Mailer $mailer,
+        ?Settings $settingsBag = null,
+        ?DocumentUrlGeneratorInterface $documentUrlGenerator = null
     ) {
         $this->request = $request;
         $this->translator = $translator;
@@ -187,13 +142,13 @@ class EmailManager
     }
 
     /**
-     * @return \Swift_Message
+     * @return Swift_Message
      */
     public function createMessage()
     {
         $this->appendWebsiteIcon();
 
-        $this->message = new \Swift_Message();
+        $this->message = new Swift_Message();
         $this->message->setSubject($this->getSubject())
             ->setFrom($this->getOrigin())
             ->setTo($this->getReceiver())
@@ -457,7 +412,7 @@ class EmailManager
     }
 
     /**
-     * @return \Swift_Mailer
+     * @return Swift_Mailer
      */
     public function getMailer()
     {
@@ -465,7 +420,7 @@ class EmailManager
     }
 
     /**
-     * @param \Swift_Mailer $mailer
+     * @param Swift_Mailer $mailer
      * @return EmailManager
      */
     public function setMailer($mailer)

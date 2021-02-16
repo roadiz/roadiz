@@ -18,22 +18,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class DoctrineHandler extends AbstractProcessingHandler
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
-    /**
-     * @var null|User
-     */
-    protected $user = null;
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
+    protected EntityManagerInterface $em;
+    protected TokenStorageInterface $tokenStorage;
+    protected ?User $user = null;
+    protected RequestStack $requestStack;
 
     public function __construct(
         EntityManagerInterface $em,

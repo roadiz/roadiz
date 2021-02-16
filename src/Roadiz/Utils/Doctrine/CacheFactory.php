@@ -26,8 +26,12 @@ class CacheFactory
      *
      * @return CacheProvider
      */
-    public static function fromConfig(array $cacheConfig, string $environment, string $cacheDir, $namespace = 'dc2'): CacheProvider
-    {
+    public static function fromConfig(
+        array $cacheConfig,
+        string $environment,
+        string $cacheDir,
+        string $namespace = 'dc2'
+    ): CacheProvider {
         if (empty($cacheConfig['type'])) {
             $cache = new ArrayCache();
         } elseif (extension_loaded('apcu') &&
@@ -87,8 +91,11 @@ class CacheFactory
      * @param string $environment
      * @return string
      */
-    public static function getNamespace($namespace = 'dc2', $isPreview = false, $environment = 'prod'): string
-    {
+    public static function getNamespace(
+        string $namespace = 'dc2',
+        bool $isPreview = false,
+        string $environment = 'prod'
+    ): string {
         $namespace = $namespace . "_" . $environment . "_";
         if ($isPreview) {
             $namespace .= 'preview_';

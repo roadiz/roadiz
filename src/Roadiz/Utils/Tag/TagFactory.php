@@ -3,27 +3,23 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Tag;
 
-use Doctrine\ORM\EntityManager;
-use Pimple\Container;
-use RZ\Roadiz\Core\ContainerAwareInterface;
-use RZ\Roadiz\Core\ContainerAwareTrait;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Repositories\TagRepository;
 use RZ\Roadiz\Utils\StringHandler;
 
-final class TagFactory implements ContainerAwareInterface
+final class TagFactory
 {
-    use ContainerAwareTrait;
+    private EntityManagerInterface $entityManager;
 
     /**
-     * TagFactory constructor.
-     *
-     * @param Container $container
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(Container $container)
+    public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->container = $container;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -45,16 +41,15 @@ final class TagFactory implements ContainerAwareInterface
             throw new \InvalidArgumentException(sprintf('Tag name "%s" is too long.', $tagName));
         }
 
-        /** @var EntityManager $entityManager */
-        $entityManager = $this->get('em');
-        $repository = $entityManager->getRepository(Tag::class);
+        /** @var TagRepository $repository */
+        $repository = $this->entityManager->getRepository(Tag::class);
 
         if (null !== $tag = $repository->findOneByTagName($tagName)) {
             return $tag;
         }
 
         if ($translation === null) {
-            $translation = $this->get('defaultTranslation');
+            $translation = $this->entityManager->getRepository(Translation::class)->findDefault();
         }
 
         if ($latestPosition <= 0) {
@@ -70,11 +65,11 @@ final class TagFactory implements ContainerAwareInterface
         $tag->setParent($parent);
         $tag->setPosition(++$latestPosition);
         $tag->setVisible(true);
-        $this->get('em')->persist($tag);
+        $this->entityManager->persist($tag);
 
         $translatedTag = new TagTranslation($tag, $translation);
         $translatedTag->setName($name);
-        $this->get('em')->persist($translatedTag);
+        $this->entityManager->persist($translatedTag);
 
         return $tag;
     }

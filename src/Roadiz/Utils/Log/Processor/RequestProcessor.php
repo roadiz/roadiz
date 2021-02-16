@@ -7,17 +7,14 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class RequestProcessor
 {
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
+    protected RequestStack $requestStack;
 
     public function __construct(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }
 
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         if (null !== $request = $this->requestStack->getMasterRequest()) {
             $record['context']['request'] = [

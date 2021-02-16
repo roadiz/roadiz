@@ -10,27 +10,13 @@ use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-/**
- * DoctrineCacheClearer.
- */
 class DoctrineCacheClearer extends Clearer
 {
-    /**
-     * @var bool
-     */
-    protected $recreateProxies;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    /**
-     * @var Kernel
-     */
-    private $kernel;
+    protected bool $recreateProxies;
+    protected EntityManagerInterface $entityManager;
+    protected Kernel $kernel;
 
     /**
-     * DoctrineCacheClearer constructor.
-     *
      * @param EntityManagerInterface $entityManager
      * @param Kernel                 $kernel
      * @param bool                   $recreateProxies
@@ -50,7 +36,7 @@ class DoctrineCacheClearer extends Clearer
      *
      * @return bool
      */
-    public function databaseAvailable()
+    public function databaseAvailable(): bool
     {
         return null !== $this->entityManager &&
             ($this->entityManager->getConnection()->isConnected() || $this->entityManager->getConnection()->connect());
@@ -59,7 +45,7 @@ class DoctrineCacheClearer extends Clearer
     /**
      * @return bool
      */
-    public function clear()
+    public function clear(): bool
     {
         if ($this->databaseAvailable()) {
             $conf = $this->entityManager->getConfiguration();

@@ -16,10 +16,7 @@ use RZ\Roadiz\Utils\StringHandler;
  */
 class NodeNameChecker implements NodeNamePolicyInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /**
      * @param EntityManagerInterface $entityManager

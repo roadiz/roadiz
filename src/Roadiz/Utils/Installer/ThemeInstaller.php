@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Installer;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Yaml\Yaml;
@@ -34,14 +34,14 @@ class ThemeInstaller
     /**
      * Install theme.
      *
-     * @param string                      $classname
-     * @param \Doctrine\ORM\EntityManager $em
+     * @param string $classname
+     * @param EntityManagerInterface $em
      *
      * @return bool
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public static function install(string $classname, EntityManager $em)
+    public static function install(string $classname, EntityManagerInterface $em)
     {
         $data = static::getThemeInformation($classname);
         $data["className"] = $classname;

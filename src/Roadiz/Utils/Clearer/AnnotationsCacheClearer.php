@@ -8,7 +8,7 @@ use Symfony\Component\Finder\Finder;
 
 class AnnotationsCacheClearer extends Clearer
 {
-    public function clear()
+    public function clear(): bool
     {
         $fs = new Filesystem();
         $finder = new Finder();

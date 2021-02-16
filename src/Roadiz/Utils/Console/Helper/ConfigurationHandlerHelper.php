@@ -8,10 +8,7 @@ use Symfony\Component\Console\Helper\Helper;
 
 class ConfigurationHandlerHelper extends Helper
 {
-    /**
-     * @var ConfigurationHandlerInterface
-     */
-    protected $configurationHandler;
+    protected ConfigurationHandlerInterface $configurationHandler;
 
     public function __construct(ConfigurationHandlerInterface $configurationHandler)
     {
@@ -29,7 +26,7 @@ class ConfigurationHandlerHelper extends Helper
     /**
      * @return ConfigurationHandlerInterface
      */
-    public function getConfigurationHandler()
+    public function getConfigurationHandler(): ConfigurationHandlerInterface
     {
         return $this->configurationHandler;
     }

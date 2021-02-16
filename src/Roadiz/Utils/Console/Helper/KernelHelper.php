@@ -6,12 +6,9 @@ namespace RZ\Roadiz\Utils\Console\Helper;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Helper\Helper;
 
-/**
- * KernelHelper.
- */
 class KernelHelper extends Helper
 {
-    private $kernel;
+    private Kernel $kernel;
 
     /**
      * @param Kernel $kernel
@@ -24,7 +21,7 @@ class KernelHelper extends Helper
     /**
      * @return Kernel
      */
-    public function getKernel()
+    public function getKernel(): Kernel
     {
         return $this->kernel;
     }

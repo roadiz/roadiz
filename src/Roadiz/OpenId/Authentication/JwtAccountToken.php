@@ -9,18 +9,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class JwtAccountToken extends AbstractToken
 {
-    /**
-     * @var Token
-     */
-    protected $jwt;
-    /**
-     * @var string
-     */
-    protected $providerKey;
-    /**
-     * @var string|null
-     */
-    protected $accessToken;
+    protected Token $jwt;
+    protected string $providerKey;
+    protected ?string $accessToken;
 
     /**
      * @param string|UserInterface $user

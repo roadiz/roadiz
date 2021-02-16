@@ -9,27 +9,12 @@ use Themes\Rozier\RozierApp;
 
 class StaticThemeResolver implements ThemeResolverInterface
 {
-    /**
-     * @var array
-     */
-    protected $themesConfig = [];
+    protected array $themesConfig = [];
+    protected array $frontendThemes = [];
+    protected Stopwatch $stopwatch;
+    protected bool $installMode = false;
 
     /**
-     * @var array
-     */
-    protected $frontendThemes = [];
-    /**
-     * @var Stopwatch
-     */
-    protected $stopwatch;
-    /**
-     * @var bool
-     */
-    protected $installMode = false;
-
-    /**
-     * StaticThemeResolver constructor.
-     *
      * @param array     $configuration
      * @param Stopwatch $stopwatch
      * @param bool      $installMode

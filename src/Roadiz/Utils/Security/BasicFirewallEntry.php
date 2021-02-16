@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Security;
 
 use Pimple\Container;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\EntryPoint\BasicAuthenticationEntryPoint;
 use Symfony\Component\Security\Http\Firewall\AbstractAuthenticationListener;
@@ -51,7 +50,7 @@ class BasicFirewallEntry extends FirewallEntry
         return new BasicAuthenticationListener(
             $this->container['securityTokenStorage'],
             $this->container['authenticationManager'],
-            Kernel::SECURITY_DOMAIN,
+            $this->providerKey,
             $this->getAuthenticationEntryPoint(),
             $this->container['logger']
         );
@@ -64,7 +63,7 @@ class BasicFirewallEntry extends FirewallEntry
     protected function getAuthenticationEntryPoint($useForward = false)
     {
         return new BasicAuthenticationEntryPoint(
-            Kernel::SECURITY_DOMAIN
+            $this->providerKey
         );
     }
 
@@ -91,7 +90,7 @@ class BasicFirewallEntry extends FirewallEntry
             $this->container['securityTokenStorage'],
             $this->container['securityAuthenticationTrustResolver'],
             $this->container['httpUtils'],
-            Kernel::SECURITY_DOMAIN,
+            $this->providerKey,
             $this->getAuthenticationEntryPoint(),
             null,
             $this->accessDeniedHandler,

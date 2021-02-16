@@ -14,7 +14,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Register Embed documents services for dependency injection container.
  */
-class TranslationServiceProvider implements ServiceProviderInterface
+final class TranslationServiceProvider implements ServiceProviderInterface
 {
     /**
      * Initialize translator services.

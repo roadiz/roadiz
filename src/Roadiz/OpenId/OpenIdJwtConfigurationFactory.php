@@ -18,18 +18,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 final class OpenIdJwtConfigurationFactory implements JwtConfigurationFactory
 {
-    /**
-     * @var Discovery|null
-     */
-    protected $discovery;
-    /**
-     * @var ParameterBag
-     */
-    protected $settingsBag;
-    /**
-     * @var bool
-     */
-    private $verifyUserInfo;
+    private ?Discovery $discovery;
+    private ParameterBag $settingsBag;
+    private bool $verifyUserInfo;
 
     /**
      * @param Discovery|null $discovery

@@ -15,35 +15,13 @@ use Themes\Rozier\RozierApp;
 
 final class ThemeInfo
 {
-    /**
-     * @var string
-     */
-    protected $name;
-    /**
-     * @var string
-     */
-    protected $themeName;
-    /**
-     * @var string|null
-     */
-    protected $classname = null;
-    /**
-     * @var Filesystem
-     */
-    protected $filesystem;
-    /**
-     * @var string
-     */
-    protected $projectDir;
-    /**
-     * @var null|string
-     */
-    protected $themePath = null;
-
-    /**
-     * @var string[]
-     */
-    protected static $protectedThemeNames = ['DefaultTheme', 'Debug', 'BaseTheme', 'Install', 'Rozier'];
+    private string $name;
+    private string $themeName;
+    private ?string $classname = null;
+    private Filesystem $filesystem;
+    private string $projectDir;
+    private ?string $themePath = null;
+    private static array $protectedThemeNames = ['DefaultTheme', 'Debug', 'BaseTheme', 'Install', 'Rozier'];
 
     /**
      * @param string $name Short theme name or FQN classname
@@ -69,7 +47,7 @@ final class ThemeInfo
 
     public function isProtected(): bool
     {
-        return in_array($this->getThemeName(), static::$protectedThemeNames);
+        return in_array($this->getThemeName(), self::$protectedThemeNames);
     }
 
     /**

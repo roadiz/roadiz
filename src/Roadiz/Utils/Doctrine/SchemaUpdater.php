@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Kernel;
@@ -16,25 +16,16 @@ use Symfony\Component\Console\Output\BufferedOutput;
 
 final class SchemaUpdater
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var Kernel
-     */
-    private $kernel;
-    /**
-     * @var LoggerInterface
-     */
+    private EntityManagerInterface $entityManager;
+    private Kernel $kernel;
     private LoggerInterface $logger;
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param Kernel $kernel
      * @param LoggerInterface $logger
      */
-    public function __construct(EntityManager $entityManager, Kernel $kernel, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;

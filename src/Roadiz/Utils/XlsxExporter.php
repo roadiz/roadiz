@@ -12,10 +12,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class XlsxExporter
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
+    protected TranslatorInterface $translator;
 
     /**
      * @param TranslatorInterface $translator

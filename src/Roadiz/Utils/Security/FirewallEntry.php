@@ -10,7 +10,6 @@ use RZ\Roadiz\Core\Authentication\LoginAttemptAwareInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use RZ\Roadiz\Core\Authorization\AccessDeniedHandler;
 use RZ\Roadiz\Core\Bags\Settings;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\JWT\JwtConfigurationFactory;
 use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\OpenId\Discovery;
@@ -37,80 +36,43 @@ use Symfony\Component\Security\Http\Session\SessionAuthenticationStrategy;
  */
 class FirewallEntry
 {
+    protected string $firewallBasePattern;
+
+    protected string $firewallBasePath;
+
+    protected ?string $firewallLogin;
+
+    protected ?string $firewallLogout;
+
+    protected ?string $firewallAfterLogout;
+
+    protected ?string $firewallLoginCheck;
     /**
-     * @var string
+     * @var array<string>
      */
-    protected $firewallBasePattern;
-    /**
-     * @var string
-     */
-    protected $firewallBasePath;
-    /**
-     * Login path.
-     *
-     * @var string
-     */
-    protected $firewallLogin;
-    /**
-     * Logout path.
-     *
-     * @var string
-     */
-    protected $firewallLogout;
-    /**
-     * Path where user is redirected after logout.
-     *
-     * @var string
-     */
-    protected $firewallAfterLogout;
-    /**
-     * @var string
-     */
-    protected $firewallLoginCheck;
-    /**
-     * @var array
-     */
-    protected $firewallBaseRole;
-    /**
-     * @var Container
-     */
-    protected $container;
-    /**
-     * @var AuthenticationSuccessHandler|null
-     */
-    protected $authenticationSuccessHandler;
-    /**
-     * @var AuthenticationFailureHandler|null
-     */
-    protected $authenticationFailureHandler;
-    /**
-     * @var array
-     */
-    protected $listeners;
-    /**
-     * @var RequestMatcher
-     */
-    protected $requestMatcher;
-    /**
-     * @var boolean
-     */
-    protected $useReferer = false;
-    /**
-     * @var string
-     */
-    protected $authenticationSuccessHandlerClass;
-    /**
-     * @var string
-     */
-    protected $authenticationFailureHandlerClass;
-    /**
-     * @var AccessDeniedHandlerInterface|null
-     */
-    protected $accessDeniedHandler;
-    /**
-     * @var boolean
-     */
-    protected $locked;
+    protected array $firewallBaseRole;
+
+    protected Container $container;
+
+    protected ?AuthenticationSuccessHandler $authenticationSuccessHandler;
+
+    protected ?AuthenticationFailureHandler $authenticationFailureHandler;
+
+    protected array $listeners;
+
+    protected RequestMatcher $requestMatcher;
+
+    protected bool $useReferer = false;
+
+    protected string $authenticationSuccessHandlerClass;
+
+    protected string $authenticationFailureHandlerClass;
+
+    protected ?AccessDeniedHandlerInterface $accessDeniedHandler;
+
+    protected bool $locked = false;
+
+    protected string $providerKey;
 
     /**
      * @param Container $container
@@ -120,8 +82,9 @@ class FirewallEntry
      * @param string|null $firewallLogout
      * @param string|null $firewallLoginCheck
      * @param string|array $firewallBaseRole
-     * @param class-string $authenticationSuccessHandlerClass
-     * @param class-string $authenticationFailureHandlerClass
+     * @param string $authenticationSuccessHandlerClass
+     * @param string $authenticationFailureHandlerClass
+     * @param string $providerKey
      */
     public function __construct(
         Container $container,
@@ -132,11 +95,13 @@ class FirewallEntry
         ?string $firewallLoginCheck = null,
         $firewallBaseRole = 'ROLE_USER',
         string $authenticationSuccessHandlerClass = AuthenticationSuccessHandler::class,
-        string $authenticationFailureHandlerClass = AuthenticationFailureHandler::class
+        string $authenticationFailureHandlerClass = AuthenticationFailureHandler::class,
+        string $providerKey = 'roadiz_domain'
     ) {
         $this->firewallBasePattern = $firewallBasePattern;
         $this->firewallBasePath = $firewallBasePath;
         $this->firewallLogin = $firewallLogin;
+        $this->providerKey = $providerKey;
         // Default, use login path to redirect user after logout.
         $this->firewallAfterLogout = $firewallLogin;
         $this->firewallLogout = $firewallLogout;
@@ -236,7 +201,7 @@ class FirewallEntry
                     $this->container['authenticationManager'],
                     new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
                     $this->container['httpUtils'],
-                    Kernel::SECURITY_DOMAIN,
+                    $this->providerKey,
                     $this->getAuthenticationSuccessHandler(),
                     $this->getAuthenticationFailureHandler(),
                     $this->container['csrfTokenManager'],
@@ -296,7 +261,6 @@ class FirewallEntry
             if ($this->hasAuthenticationEntryPoints()) {
                 // logout users
                 $this->listeners[] = [$this->getLogoutListener(), 1];
-
                 $this->listeners[] = [$this->getAuthenticationListener(), 20];
                 // Warning: this MUST be the last listener to work.
                 $this->listeners[] = [$this->container['securityAccessListener'], 9999];
@@ -371,7 +335,7 @@ class FirewallEntry
             $this->container['authenticationManager'],
             new SessionAuthenticationStrategy(SessionAuthenticationStrategy::MIGRATE),
             $this->container['httpUtils'],
-            Kernel::SECURITY_DOMAIN,
+            $this->providerKey,
             $this->getAuthenticationSuccessHandler(),
             $this->getAuthenticationFailureHandler(),
             [
@@ -411,7 +375,7 @@ class FirewallEntry
             $this->container['securityTokenStorage'],
             $this->container['securityAuthenticationTrustResolver'],
             $this->container['httpUtils'],
-            Kernel::SECURITY_DOMAIN,
+            $this->providerKey,
             $this->getAuthenticationEntryPoint($useForward),
             null,
             $this->accessDeniedHandler,

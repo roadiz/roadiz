@@ -23,30 +23,12 @@ use Themes\Rozier\RozierApp;
 
 final class TranslatorFactory implements TranslatorFactoryInterface
 {
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-    /**
-     * @var EntityManagerInterface|null
-     */
-    protected $entityManager;
-    /**
-     * @var Stopwatch
-     */
-    protected $stopwatch;
-    /**
-     * @var ThemeResolverInterface
-     */
-    protected $themeResolver;
-    /**
-     * @var PreviewResolverInterface
-     */
-    protected $previewResolver;
+    private KernelInterface $kernel;
+    private RequestStack $requestStack;
+    private ?EntityManagerInterface $entityManager;
+    private Stopwatch $stopwatch;
+    private ThemeResolverInterface $themeResolver;
+    private PreviewResolverInterface $previewResolver;
 
     /**
      * @param KernelInterface $kernel

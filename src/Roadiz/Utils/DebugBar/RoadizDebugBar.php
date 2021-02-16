@@ -8,6 +8,7 @@ use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MemoryCollector;
 use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DebugBar;
+use DebugBar\DebugBarException;
 use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AccessMapCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AuthCollector;
@@ -16,16 +17,13 @@ use RZ\Roadiz\Utils\DebugBar\DataCollector\LocaleCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\ThemesCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\VersionsCollector;
 
-class RoadizDebugBar extends DebugBar
+final class RoadizDebugBar extends DebugBar
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
-     * RoadizDebugBar constructor.
      * @param Container $container
+     * @throws DebugBarException
      */
     public function __construct(Container $container)
     {
@@ -44,7 +42,8 @@ class RoadizDebugBar extends DebugBar
     }
 
     /**
-     * Returns a JavascriptRenderer for this instance
+     * Returns a JavascriptRenderer for this instance.
+     *
      * @param string $baseUrl
      * @param string $basePath
      * @return JavascriptRenderer

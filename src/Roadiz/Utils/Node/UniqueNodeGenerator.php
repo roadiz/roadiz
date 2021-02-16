@@ -18,7 +18,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class UniqueNodeGenerator
 {
     protected EntityManagerInterface $entityManager;
-
     protected NodeNamePolicyInterface $nodeNamePolicy;
 
     /**

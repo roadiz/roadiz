@@ -9,14 +9,14 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class TokenStorageProcessor
 {
-    private $tokenStorage;
+    protected TokenStorageInterface $tokenStorage;
 
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
     }
 
-    public function __invoke(array $record)
+    public function __invoke(array $record): array
     {
         if (null !== $this->tokenStorage->getToken() &&
             null !== $user = $this->tokenStorage->getToken()->getUser()) {

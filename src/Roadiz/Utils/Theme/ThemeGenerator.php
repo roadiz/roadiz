@@ -19,45 +19,16 @@ class ThemeGenerator
     const METHOD_COPY = 'copy';
     const METHOD_ABSOLUTE_SYMLINK = 'absolute symlink';
     const METHOD_RELATIVE_SYMLINK = 'relative symlink';
-
-    /**
-     * @var Filesystem
-     */
-    protected $filesystem;
-
-    /**
-     * @var string
-     */
-    protected $projectDir;
-
-    /**
-     * @var string
-     */
-    protected $publicDir;
-
-    /**
-     * @var string
-     */
-    protected $cacheDir;
-
-    /**
-     * @var ConfigurationHandlerInterface
-     */
-    protected $configurationHandler;
-
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-
-    /**
-     * @var string
-     */
     const REPOSITORY = 'https://github.com/roadiz/BaseTheme.git';
 
+    protected Filesystem $filesystem;
+    protected string $projectDir;
+    protected string $publicDir;
+    protected string $cacheDir;
+    protected ConfigurationHandlerInterface $configurationHandler;
+    protected LoggerInterface $logger;
+
     /**
-     * ThemeGenerator constructor.
-     *
      * @param string $projectDir
      * @param string $publicDir
      * @param string $cacheDir

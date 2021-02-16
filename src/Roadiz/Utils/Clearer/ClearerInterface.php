@@ -6,18 +6,17 @@ namespace RZ\Roadiz\Utils\Clearer;
 interface ClearerInterface
 {
     /**
-     * @return boolean
+     * @return bool
      */
-    public function clear();
+    public function clear(): bool;
     /**
      * @return string
      */
-    public function getOutput();
-
+    public function getOutput(): string;
     /**
      * Get global cache directory.
      *
      * @return string
      */
-    public function getCacheDir();
+    public function getCacheDir(): string;
 }

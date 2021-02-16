@@ -15,10 +15,7 @@ use Symfony\Component\Security\Http\Logout\LogoutHandlerInterface;
 
 class OpenIdLogoutHandler implements LogoutHandlerInterface
 {
-    /**
-     * @var Discovery
-     */
-    protected $discovery;
+    protected Discovery $discovery;
 
     /**
      * @param Discovery $discovery

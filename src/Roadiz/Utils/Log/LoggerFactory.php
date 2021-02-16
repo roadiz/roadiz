@@ -14,14 +14,8 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class LoggerFactory
 {
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-    /**
-     * @var array
-     */
-    protected $loggerConfig;
+    protected KernelInterface $kernel;
+    protected array $loggerConfig;
 
     /**
      * @param KernelInterface $kernel
@@ -33,7 +27,7 @@ class LoggerFactory
         $this->loggerConfig = $loggerConfig;
     }
 
-    protected function getLoggerPath(string $name = null)
+    protected function getLoggerPath(string $name = null): string
     {
         return $this->kernel->getLogDir() . '/' .
             ($name ?: $this->kernel->getName()). '_' .

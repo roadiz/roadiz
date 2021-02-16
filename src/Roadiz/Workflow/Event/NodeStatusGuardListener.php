@@ -9,12 +9,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\TransitionBlocker;
 
-class NodeStatusGuardListener implements EventSubscriberInterface
+final class NodeStatusGuardListener implements EventSubscriberInterface
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
     /**
      * @param AuthorizationCheckerInterface $authorizationChecker

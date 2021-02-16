@@ -31,69 +31,30 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Twig\Environment;
 
 /**
- * Class ContactFormManager
  * @package RZ\Roadiz\Utils
  */
 class ContactFormManager extends EmailManager
 {
-    /**
-     * @var string
-     */
-    protected $formName = 'contact_form';
-    /**
-     * @var array|null
-     */
-    protected $uploadedFiles = null;
-    /**
-     * @var string
-     */
-    protected $redirectUrl = null;
-    /**
-     * @var FormBuilderInterface|null
-     */
-    protected $formBuilder = null;
-    /**
-     * @var FormInterface|null
-     */
-    protected $form = null;
-    /**
-     * @var array
-     */
-    protected $options = [];
-    /**
-     * @var string
-     */
-    protected $method = Request::METHOD_POST;
-    /**
-     * @var bool
-     */
-    protected $emailStrictMode = false;
-    /**
-     * @var bool
-     */
-    protected $useRealResponseCode = false;
-    /**
-     * @var array
-     */
-    protected $allowedMimeTypes = [
+    protected string $formName = 'contact_form';
+    protected ?array $uploadedFiles = null;
+    protected ?string $redirectUrl = null;
+    protected ?FormBuilderInterface $formBuilder = null;
+    protected ?FormInterface $form = null;
+    protected array $options = [];
+    protected string $method = Request::METHOD_POST;
+    protected bool $emailStrictMode = false;
+    protected bool $useRealResponseCode = false;
+    protected array $allowedMimeTypes = [
         'application/pdf',
         'application/x-pdf',
         'image/jpeg',
         'image/png',
         'image/gif',
     ];
-    /**
-     * @var int 5MB
-     */
-    protected $maxFileSize = 5242880;
-/**
-     * @var FormFactoryInterface
-     */
-    protected $formFactory;
+    protected int $maxFileSize = 5242880; // 5MB
+    protected FormFactoryInterface $formFactory;
 
     /**
-     * ContactFormManager constructor.
-     *
      * DO NOT DIRECTLY USE THIS CONSTRUCTOR
      * USE 'contactFormManager' Factory Service
      *

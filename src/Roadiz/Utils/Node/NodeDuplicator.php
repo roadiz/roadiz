@@ -6,27 +6,18 @@ namespace RZ\Roadiz\Utils\Node;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\Core\Entities\AttributeValue;
-use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodesToNodes;
-use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
  * Handle node duplication.
  */
-class NodeDuplicator
+final class NodeDuplicator
 {
-    /**
-     * @var ObjectManager|null
-     */
-    private $em = null;
-
-    /**
-     * @var null|Node
-     */
-    private $originalNode = null;
+    private Node $originalNode;
+    private ObjectManager $em;
 
     /**
      * @param Node $originalNode
@@ -45,38 +36,34 @@ class NodeDuplicator
      *
      * @return Node
      */
-    public function duplicate()
+    public function duplicate(): Node
     {
-        if (null !== $this->originalNode) {
-            $this->em->refresh($this->originalNode);
+        $this->em->refresh($this->originalNode);
 
-            if ($this->originalNode->isLocked()) {
-                throw new \RuntimeException('Locked node cannot be duplicated.');
-            }
-
-            $parent = $this->originalNode->getParent();
-            $node = clone $this->originalNode;
-
-            if ($this->em->contains($node)) {
-                $this->em->clear($node);
-            }
-
-            if ($parent !== null) {
-                /** @var Node $parent */
-                $parent = $this->em->find(Node::class, $parent->getId());
-                $node->setParent($parent);
-            }
-            // Demote cloned node to draft
-            $node->setStatus(Node::DRAFT);
-
-            $node = $this->doDuplicate($node);
-            $this->em->flush();
-            $this->em->refresh($node);
-
-            return $node;
+        if ($this->originalNode->isLocked()) {
+            throw new \RuntimeException('Locked node cannot be duplicated.');
         }
 
-        throw new \RuntimeException('Node to be duplicated can’t be null.');
+        $parent = $this->originalNode->getParent();
+        $node = clone $this->originalNode;
+
+        if ($this->em->contains($node)) {
+            $this->em->clear($node);
+        }
+
+        if ($parent !== null) {
+            /** @var Node $parent */
+            $parent = $this->em->find(Node::class, $parent->getId());
+            $node->setParent($parent);
+        }
+        // Demote cloned node to draft
+        $node->setStatus(Node::DRAFT);
+
+        $node = $this->doDuplicate($node);
+        $this->em->flush();
+        $this->em->refresh($node);
+
+        return $node;
     }
 
     /**
@@ -85,7 +72,7 @@ class NodeDuplicator
      * @param  Node $node
      * @return Node
      */
-    private function doDuplicate(Node &$node)
+    private function doDuplicate(Node &$node): Node
     {
         /** @var Node $child */
         foreach ($node->getChildren() as $child) {
@@ -139,7 +126,7 @@ class NodeDuplicator
      * @param Node $node
      * @return Node
      */
-    private function doDuplicateNodeRelations(Node $node)
+    private function doDuplicateNodeRelations(Node $node): Node
     {
         $nodeRelations = new ArrayCollection($node->getBNodes()->toArray());
         foreach ($nodeRelations as $position => $nodeRelation) {

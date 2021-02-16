@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\CustomForm;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\CMS\Forms\CustomFormsType;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\CustomForm;
@@ -18,35 +18,22 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * Class CustomFormHelper
  * @package RZ\Roadiz\Utils\CustomForm
  */
 class CustomFormHelper
 {
     const ARRAY_SEPARATOR = ', ';
-    /**
-     * @var AbstractDocumentFactory
-     */
-    protected $documentFactory;
+
+    protected AbstractDocumentFactory $documentFactory;
+    protected EntityManagerInterface $em;
+    protected CustomForm $customForm;
 
     /**
-     * @var EntityManager
-     */
-    private $em;
-
-    /**
-     * @var CustomForm
-     */
-    private $customForm;
-
-    /**
-     * CustomFormHelper constructor.
-     *
-     * @param EntityManager   $em
+     * @param EntityManagerInterface $em
      * @param CustomForm      $customForm
      * @param AbstractDocumentFactory $documentFactory
      */
-    public function __construct(EntityManager $em, CustomForm $customForm, AbstractDocumentFactory $documentFactory)
+    public function __construct(EntityManagerInterface $em, CustomForm $customForm, AbstractDocumentFactory $documentFactory)
     {
         $this->em = $em;
         $this->customForm = $customForm;

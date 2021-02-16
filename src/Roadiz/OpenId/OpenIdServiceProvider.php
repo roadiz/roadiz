@@ -6,8 +6,6 @@ namespace RZ\Roadiz\OpenId;
 use Doctrine\Common\Cache\CacheProvider;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Entities\Role;
-use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\JWT\JwtConfigurationFactory;
 use RZ\Roadiz\OpenId\Authentication\Provider\ChainJwtRoleStrategy;
 use RZ\Roadiz\OpenId\Authentication\Provider\JwtRoleStrategy;
@@ -15,7 +13,7 @@ use RZ\Roadiz\OpenId\Authentication\Provider\OAuth2AuthenticationProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\OpenIdAccountProvider;
 use RZ\Roadiz\OpenId\Authentication\Provider\SettingsRoleStrategy;
 
-class OpenIdServiceProvider implements ServiceProviderInterface
+final class OpenIdServiceProvider implements ServiceProviderInterface
 {
     /**
      * @inheritDoc
@@ -53,9 +51,9 @@ class OpenIdServiceProvider implements ServiceProviderInterface
             return new OAuth2AuthenticationProvider(
                 $factory->create(),
                 $c[JwtRoleStrategy::class],
-                Kernel::SECURITY_DOMAIN,
+                'roadiz_domain',
                 [
-                    Role::ROLE_DEFAULT
+                    'ROLE_USER'
                 ]
             );
         };

@@ -13,15 +13,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
  */
 final class KernelPreviewRevolver implements PreviewResolverInterface
 {
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
+    private KernelInterface $kernel;
+    private RequestStack $requestStack;
 
     /**
      * @param KernelInterface $kernel

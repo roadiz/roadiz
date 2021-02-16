@@ -12,18 +12,9 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class OAuth2LinkGenerator
 {
-    /**
-     * @var Discovery|null
-     */
-    protected $discovery;
-    /**
-     * @var CsrfTokenManagerInterface
-     */
-    protected $csrfTokenManager;
-    /**
-     * @var ParameterBag
-     */
-    protected $settingsBag;
+    protected ?Discovery $discovery;
+    protected CsrfTokenManagerInterface $csrfTokenManager;
+    protected ParameterBag $settingsBag;
 
     /**
      * @param Discovery|null $discovery

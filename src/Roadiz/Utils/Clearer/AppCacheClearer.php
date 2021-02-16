@@ -6,12 +6,9 @@ namespace RZ\Roadiz\Utils\Clearer;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
-/**
- * AppCacheClearer.
- */
 class AppCacheClearer extends Clearer
 {
-    public function clear()
+    public function clear(): bool
     {
         $fs = new Filesystem();
         $finder = new Finder();

@@ -82,9 +82,8 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new NodeFactory($c['em'], $c[NodeNamePolicyInterface::class]);
         };
         $container[TagFactory::class] = function (Container $c) {
-            return new TagFactory($c);
+            return new TagFactory($c['em']);
         };
-
         $container['factory.handler'] = function (Container $c) {
             return new HandlerFactory($c);
         };

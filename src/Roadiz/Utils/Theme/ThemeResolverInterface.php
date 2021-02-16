@@ -38,7 +38,7 @@ interface ThemeResolverInterface
     public function findAll(): array;
 
     /**
-     * @param integer $id
+     * @param int $id
      *
      * @return Theme|null
      */

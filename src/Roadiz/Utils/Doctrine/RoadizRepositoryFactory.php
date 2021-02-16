@@ -17,14 +17,8 @@ final class RoadizRepositoryFactory implements RepositoryFactory
      *
      * @var ObjectRepository[]
      */
-    private $repositoryList = [];
-    /**
-     * @var Container
-     */
-    private $container;
-    /**
-     * @var PreviewResolverInterface
-     */
+    private array $repositoryList = [];
+    private Container $container;
     private PreviewResolverInterface $previewResolver;
 
     /**
@@ -55,11 +49,11 @@ final class RoadizRepositoryFactory implements RepositoryFactory
      * Create a new repository instance for an entity class.
      *
      * @param EntityManagerInterface $entityManager The EntityManager instance.
-     * @param string $entityName    The name of the entity.
+     * @param class-string $entityName The name of the entity.
      *
      * @return ObjectRepository
      */
-    private function createRepository(EntityManagerInterface $entityManager, $entityName)
+    private function createRepository(EntityManagerInterface $entityManager, string $entityName)
     {
         $metadata = $entityManager->getClassMetadata($entityName);
         $repositoryClassName = $metadata->customRepositoryClassName

@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\OpenId;
 
+use CoderCat\JWKToPEM\Exception\Base64DecodeException;
+use CoderCat\JWKToPEM\Exception\JWKConverterException;
 use CoderCat\JWKToPEM\JWKConverter;
 use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use RZ\Roadiz\Core\Bags\LazyParameterBag;
 
@@ -17,18 +20,9 @@ class Discovery extends LazyParameterBag
 {
     const CACHE_KEY = Discovery::class . '_parameters';
 
-    /**
-     * @var string
-     */
-    protected $discoveryUri;
-    /**
-     * @var CacheProvider|null
-     */
-    protected $cacheProvider;
-    /**
-     * @var array|null
-     */
-    private $jwksData;
+    protected string $discoveryUri;
+    protected ?CacheProvider $cacheProvider;
+    protected ?array $jwksData = null;
 
     /**
      * @param string             $discoveryUri
@@ -79,9 +73,9 @@ class Discovery extends LazyParameterBag
 
     /**
      * @return array<string>|null
-     * @throws \CoderCat\JWKToPEM\Exception\Base64DecodeException
-     * @throws \CoderCat\JWKToPEM\Exception\JWKConverterException
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws Base64DecodeException
+     * @throws JWKConverterException
+     * @throws GuzzleException
      * @see https://auth0.com/docs/tokens/json-web-tokens/json-web-key-sets
      */
     public function getPems(): ?array
@@ -96,7 +90,7 @@ class Discovery extends LazyParameterBag
 
     /**
      * @return array|null
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     protected function getJwksData(): ?array
     {
