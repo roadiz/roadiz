@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Authentication;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Kernel;
@@ -14,26 +14,21 @@ use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationSuccessH
 use Symfony\Component\Security\Http\HttpUtils;
 use Symfony\Component\Security\Http\RememberMe\RememberMeServicesInterface;
 
-/**
- * {@inheritdoc}
- */
 class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler implements LoginAttemptAwareInterface
 {
-    protected $em;
-    protected $rememberMeServices;
-    private $loginAttemptManager;
+    protected EntityManagerInterface $em;
+    protected ?RememberMeServicesInterface $rememberMeServices;
+    protected ?LoginAttemptManager $loginAttemptManager = null;
 
     /**
-     * Constructor.
-     *
      * @param HttpUtils $httpUtils
-     * @param EntityManager $em
-     * @param RememberMeServicesInterface $rememberMeServices
+     * @param EntityManagerInterface $em
+     * @param ?RememberMeServicesInterface $rememberMeServices
      * @param array $options Options for processing a successful authentication attempt.
      */
     public function __construct(
         HttpUtils $httpUtils,
-        EntityManager $em,
+        EntityManagerInterface $em,
         RememberMeServicesInterface $rememberMeServices = null,
         array $options = []
     ) {
@@ -75,6 +70,9 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler i
      */
     public function getLoginAttemptManager(): LoginAttemptManager
     {
+        if (null === $this->loginAttemptManager) {
+            throw new \InvalidArgumentException('LoginAttemptManager should not be null');
+        }
         return $this->loginAttemptManager;
     }
 

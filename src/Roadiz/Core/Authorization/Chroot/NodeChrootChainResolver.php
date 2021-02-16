@@ -18,11 +18,9 @@ class NodeChrootChainResolver implements NodeChrootResolver
     /**
      * @var array<NodeChrootResolver>
      */
-    private $resolvers;
+    private array $resolvers;
 
     /**
-     * NodeChrootChainResolver constructor.
-     *
      * @param array $resolvers
      */
     public function __construct(array $resolvers)

@@ -11,10 +11,7 @@ use Symfony\Component\Security\Http\Authentication\DefaultAuthenticationFailureH
 
 class AuthenticationFailureHandler extends DefaultAuthenticationFailureHandler implements LoginAttemptAwareInterface
 {
-    /**
-     * @var LoginAttemptManager
-     */
-    private $loginAttemptManager;
+    private LoginAttemptManager $loginAttemptManager;
 
     /**
      * {@inheritdoc}

@@ -6,8 +6,6 @@ namespace RZ\Roadiz\Core;
 use Pimple\Container;
 
 /**
- * Interface ContainerAwareInterface.
- *
  * @package RZ\Roadiz\Core
  */
 interface ContainerAwareInterface

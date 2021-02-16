@@ -66,8 +66,8 @@ class FirewallEntry
      * @param string|null $firewallLogout
      * @param string|null $firewallLoginCheck
      * @param string|array $firewallBaseRole
-     * @param string $authenticationSuccessHandlerClass
-     * @param string $authenticationFailureHandlerClass
+     * @param class-string $authenticationSuccessHandlerClass
+     * @param class-string $authenticationFailureHandlerClass
      * @param string $providerKey
      */
     public function __construct(

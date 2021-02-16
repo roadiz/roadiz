@@ -7,10 +7,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 abstract class LazyParameterBag extends ParameterBag
 {
-    /**
-     * @var bool
-     */
-    protected $ready;
+    protected bool $ready;
 
     abstract protected function populateParameters();
 

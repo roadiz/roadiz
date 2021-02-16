@@ -11,17 +11,14 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class GroupVoter extends RoleVoter
 {
-    /**
-     * @var RoleHierarchyInterface
-     */
-    private $roleHierarchy;
+    private RoleHierarchyInterface $roleHierarchy;
 
-    public function __construct(RoleHierarchyInterface $roleHierarchy, $prefix = 'ROLE_')
+    public function __construct(RoleHierarchyInterface $roleHierarchy, string $prefix = 'ROLE_')
     {
         $this->roleHierarchy = $roleHierarchy;
         parent::__construct($prefix);
     }
-    
+
     protected function extractRoles(TokenInterface $token)
     {
         return $this->roleHierarchy->getReachableRoleNames($token->getRoleNames());

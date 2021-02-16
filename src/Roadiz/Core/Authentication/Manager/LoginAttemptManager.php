@@ -13,34 +13,14 @@ use Symfony\Component\HttpFoundation\Response;
 
 class LoginAttemptManager
 {
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-    /**
-     * @var int
-     */
-    protected $ipAttemptGraceTime = 20 * 60;
-    /**
-     * @var int
-     */
-    protected $ipAttemptCount = 20;
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-    /**
-     * @var LoginAttemptRepository
-     */
-    private $loginAttemptRepository;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    protected int $ipAttemptGraceTime = 20 * 60;
+    protected int $ipAttemptCount = 20;
+    protected RequestStack $requestStack;
+    protected EntityManagerInterface $entityManager;
+    protected LoggerInterface $logger;
+    protected ?LoginAttemptRepository $loginAttemptRepository = null;
 
     /**
-     * LoginAttemptManager constructor.
-     *
      * @param RequestStack           $requestStack
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface        $logger
@@ -57,6 +37,8 @@ class LoginAttemptManager
 
     /**
      * @param string $username
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function checkLoginAttempts(string $username): void
     {
