@@ -139,6 +139,16 @@
                 <target state="translated">Remplace la query-string "?preview=1" des URL de prévisualisation par un nom de domaine personnalisé. Cela peut être utile avec la version *Headless* de Roadiz.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="use_typed_node_names">
+                <source>use_typed_node_names</source>
+                <target state="translated">Utiliser des noms de nœuds typés</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="use_typed_node_names.help">
+                <source>use_typed_node_names.help</source>
+                <target state="translated">Une fois activée, cette option suffixera chaque nom des nœuds non-atteignables (blocs) avec leur type pour éviter les conflits de nom avec les nœud atteignables (pages).</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="openid_username_claim">
                 <source>openid_username_claim</source>
                 <target state="translated">Claim du nom d’utilisateur Open ID</target>
