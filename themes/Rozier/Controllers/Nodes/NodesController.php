@@ -139,17 +139,6 @@ class NodesController extends RozierApp
 
         if (null !== $node) {
             $this->get('em')->refresh($node);
-            $translation = $this->get('defaultTranslation');
-
-            $this->assignation['node'] = $node;
-            $this->assignation['source'] = $node->getNodeSources()->first();
-            $this->assignation['translation'] = $translation;
-
-            $this->assignation['available_translations'] = [];
-            foreach ($node->getNodeSources() as $ns) {
-                $this->assignation['available_translations'][] = $ns->getTranslation();
-            }
-
             /*
              * Handle StackTypes form
              */
@@ -175,7 +164,6 @@ class NodesController extends RozierApp
                         $stackTypesForm->addError(new FormError($e->getMessage()));
                     }
                 }
-
                 $this->assignation['stackTypesForm'] = $stackTypesForm->createView();
             }
 
@@ -204,9 +192,7 @@ class NodesController extends RozierApp
                         $this->get('dispatcher')->dispatch(new NodePathChangedEvent($node, $oldPaths));
                     }
                     $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
-
                     $this->get('em')->flush();
-
                     $msg = $this->getTranslator()->trans('node.%name%.updated', [
                         '%name%' => $node->getNodeName(),
                     ]);
@@ -219,6 +205,19 @@ class NodesController extends RozierApp
                     $form->addError(new FormError($e->getMessage()));
                 }
             }
+
+            $translation = $this->get('defaultTranslation');
+            $source = $node->getNodeSourcesByTranslation($translation)->first() ?: null;
+
+            if (null === $source) {
+                $availableTranslations = $this->get('em')
+                    ->getRepository(Translation::class)
+                    ->findAvailableTranslationsForNode($node);
+                $this->assignation['available_translations'] = $availableTranslations;
+            }
+            $this->assignation['node'] = $node;
+            $this->assignation['source'] = $source;
+            $this->assignation['translation'] = $translation;
             $this->assignation['form'] = $form->createView();
             $this->assignation['securityAuthorizationChecker'] = $this->get("securityAuthorizationChecker");
 

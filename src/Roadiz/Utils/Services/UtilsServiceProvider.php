@@ -15,46 +15,40 @@ class UtilsServiceProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function register(Container $container)
+    public function register(Container $pimple): void
     {
         /**
-         * @param Container $container
-         *
          * @return NodeNameChecker
          */
-        $container[NodeNamePolicyInterface::class] = function (Container $container) {
-            return new NodeNameChecker($container['em']);
+        $pimple[NodeNamePolicyInterface::class] = function (Container $c) {
+            return new NodeNameChecker(
+                $c['em'],
+                (bool) $c['settingsBag']->get('use_typed_node_names', true)
+            );
         };
 
         /**
-         * @param Container $container
          * @return mixed
          * @deprecated
          */
-        $container['utils.nodeNameChecker'] = function (Container $container) {
-            return $container[NodeNamePolicyInterface::class];
+        $pimple['utils.nodeNameChecker'] = function (Container $c) {
+            return $c[NodeNamePolicyInterface::class];
         };
-        
+
         /**
-         * @param Container $container
-         *
          * @return UniqueNodeGenerator
          */
-        $container['utils.uniqueNodeGenerator'] = function (Container $container) {
+        $pimple['utils.uniqueNodeGenerator'] = function (Container $c) {
             return new UniqueNodeGenerator(
-                $container['em'],
-                $container[NodeNamePolicyInterface::class]
+                $c['em'],
+                $c[NodeNamePolicyInterface::class]
             );
         };
         /**
-         * @param Container $container
-         *
          * @return UniversalDataDuplicator
          */
-        $container['utils.universalDataDuplicator'] = function (Container $container) {
-            return new UniversalDataDuplicator($container['em']);
+        $pimple['utils.universalDataDuplicator'] = function (Container $c) {
+            return new UniversalDataDuplicator($c['em']);
         };
-
-        return $container;
     }
 }

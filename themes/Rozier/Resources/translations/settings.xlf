@@ -142,6 +142,17 @@
                 <note>Setting description</note>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="use_typed_node_names">
+                <source>use_typed_node_names</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="use_typed_node_names.help">
+                <source>use_typed_node_names.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
             <trans-unit xml:space="preserve" id="openid_username_claim">
                 <source>openid_username_claim</source>
                 <target></target>

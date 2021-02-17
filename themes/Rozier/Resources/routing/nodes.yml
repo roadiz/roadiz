@@ -71,11 +71,6 @@ nodesEditTagsPage:
     defaults:
         _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::editTagsAction
     requirements: { nodeId : "[0-9]+" }
-nodesRemoveTagsPage:
-    path:     /edit/{nodeId}/tags/{tagId}/remove
-    defaults:
-        _controller: Themes\Rozier\Controllers\Nodes\NodesTagsController::removeTagAction
-    requirements: { nodeId : "[0-9]+", tagId : "[0-9]+" }
 nodesRemoveStackTypePage:
     path:     /edit/{nodeId}/stacktype/{typeId}/remove
     methods: [POST]

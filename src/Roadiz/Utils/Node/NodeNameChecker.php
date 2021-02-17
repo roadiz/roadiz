@@ -17,19 +17,22 @@ use RZ\Roadiz\Utils\StringHandler;
 class NodeNameChecker implements NodeNamePolicyInterface
 {
     protected EntityManagerInterface $entityManager;
+    protected bool $useTypedSuffix;
 
     /**
      * @param EntityManagerInterface $entityManager
+     * @param bool $useTypedSuffix
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, bool $useTypedSuffix = false)
     {
         $this->entityManager = $entityManager;
+        $this->useTypedSuffix = $useTypedSuffix;
     }
 
     public function getCanonicalNodeName(NodesSources $nodeSource): string
     {
         if ($nodeSource->getTitle() !== '') {
-            if ($nodeSource->getNode()->getNodeType()->isReachable()) {
+            if ($nodeSource->getNode()->getNodeType()->isReachable() || !$this->useTypedSuffix) {
                 return StringHandler::slugify($nodeSource->getTitle());
             }
             return sprintf(

@@ -1,5 +1,5 @@
-{% if node.getNodeSources.first.getTitle %}
-{% set currentTitle = node.getNodeSources.first.getTitle %}
+{% if source and source.title %}
+{% set currentTitle = source.title %}
 {% else %}
 {% set currentTitle = node.getNodeName %}
 {% endif %}

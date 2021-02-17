@@ -1,4 +1,4 @@
-{% set currentTitle = node.nodeSources.first.title|default(node.nodeName) %}
+{% set currentTitle = source.title|default(node.nodeName) %}
 {% set pageTitle = "edit.node.%name%.tags"|trans({'%name%': currentTitle})|u.truncate(25, '[…]', true) %}
 
 {% extends '@Rozier/layout.html.twig' %}

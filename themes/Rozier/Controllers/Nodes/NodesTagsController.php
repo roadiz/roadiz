@@ -36,6 +36,7 @@ class NodesTagsController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
+        $translation = $this->get('defaultTranslation');
         /** @var NodesSources $source */
         $source = $this->get('em')
                        ->getRepository(NodesSources::class)
@@ -43,17 +44,12 @@ class NodesTagsController extends RozierApp
                        ->setDisplayingNotPublishedNodes(true)
                        ->findOneBy([
                            'node.id' => $nodeId,
+                           'translation' => $translation
                        ]);
 
         if (null !== $source) {
             $node = $source->getNode();
-
-            $this->assignation['translation'] = $this->get('defaultTranslation');
-            $this->assignation['node'] = $node;
-            $this->assignation['source'] = $source;
-
             $form = $this->createForm(NodeTagsType::class, $node);
-
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -74,63 +70,14 @@ class NodesTagsController extends RozierApp
                 ));
             }
 
+            $this->assignation['translation'] = $translation;
+            $this->assignation['node'] = $node;
+            $this->assignation['source'] = $source;
             $this->assignation['form'] = $form->createView();
 
             return $this->render('nodes/editTags.html.twig', $this->assignation);
         }
 
-
-        throw new ResourceNotFoundException();
-    }
-
-    /**
-     * Return a deletion form for requested tag depending on the node.
-     *
-     * @param Request $request
-     * @param int     $nodeId
-     * @param int     $tagId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function removeTagAction(Request $request, int $nodeId, int $tagId)
-    {
-        $this->validateNodeAccessForRole('ROLE_ACCESS_NODES_DELETE', $nodeId);
-
-        /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, $nodeId);
-        /** @var Tag $tag */
-        $tag = $this->get('em')->find(Tag::class, $tagId);
-
-        if ($node !== null && $tag !== null) {
-            $this->assignation['node'] = $node;
-            $this->assignation['tag'] = $tag;
-
-            $form = $this->buildRemoveTagForm($node, $tag);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->removeNodeTag($form->getData(), $node, $tag);
-                /*
-                 * Dispatch event
-                 */
-                $this->get('dispatcher')->dispatch(new NodeTaggedEvent($node));
-
-                $msg = $this->getTranslator()->trans(
-                    'tag.%name%.removed',
-                    ['%name%' => $tag->getTranslatedTags()->first()->getName()]
-                );
-                $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-
-                return $this->redirect($this->generateUrl(
-                    'nodesEditTagsPage',
-                    ['nodeId' => $node->getId()]
-                ));
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('nodes/removeTag.html.twig', $this->assignation);
-        }
 
         throw new ResourceNotFoundException();
     }

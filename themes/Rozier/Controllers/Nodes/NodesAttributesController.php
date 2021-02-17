@@ -51,10 +51,6 @@ class NodesAttributesController extends RozierApp
             throw $this->createNotFoundException('Node-source does not exist');
         }
 
-        $availableTranslations = $this->get('em')
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsForNode($node);
-
         if (null !== $response = $this->handleAddAttributeForm($request, $node, $translation)) {
             return $response;
         }
@@ -131,6 +127,9 @@ class NodesAttributesController extends RozierApp
 
         $this->assignation['source'] = $nodeSource;
         $this->assignation['translation'] = $translation;
+        $availableTranslations = $this->get('em')
+            ->getRepository(Translation::class)
+            ->findAvailableTranslationsForNode($node);
         $this->assignation['available_translations'] = $availableTranslations;
         $this->assignation['node'] = $node;
 

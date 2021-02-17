@@ -24,6 +24,19 @@
         "defaultValues": ""
     },
     {
+        "name": "use_typed_node_names",
+        "value": "1",
+        "visible": true,
+        "encrypted": false,
+        "description": "use_typed_node_names.help",
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 5,
+        "defaultValues": ""
+    },
+    {
         "name": "force_locale_with_urlaliases",
         "description": "force_locale_with_urlaliases.help",
         "visible": true,
