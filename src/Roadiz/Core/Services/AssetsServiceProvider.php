@@ -66,7 +66,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 $c['versionStrategy'],
                 $c['requestStack'],
                 $kernel,
-                $c['settingsBag']->get('static_domain_name') ?? ''
+                $c['settingsBag']->get('static_domain_name', '') ?? ''
             );
         };
 
