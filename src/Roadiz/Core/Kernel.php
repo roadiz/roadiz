@@ -511,7 +511,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPublicFilesPath()
+    public function getPublicFilesPath(): string
     {
         return $this->getPublicDir() . $this->getPublicFilesBasePath();
     }
@@ -519,7 +519,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPublicFilesBasePath()
+    public function getPublicFilesBasePath(): string
     {
         return '/files';
     }
@@ -543,7 +543,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPrivateFilesPath()
+    public function getPrivateFilesPath(): string
     {
         return $this->getProjectDir() . $this->getPrivateFilesBasePath();
     }
@@ -551,7 +551,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPrivateFilesBasePath()
+    public function getPrivateFilesBasePath(): string
     {
         return '/files/private';
     }
@@ -559,7 +559,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getFontsFilesPath()
+    public function getFontsFilesPath(): string
     {
         return $this->getRootDir() . $this->getFontsFilesBasePath();
     }
@@ -567,7 +567,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getFontsFilesBasePath()
+    public function getFontsFilesBasePath(): string
     {
         return '/files/fonts';
     }

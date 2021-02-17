@@ -193,7 +193,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
         return $this->filename;
     }
@@ -213,7 +213,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
@@ -233,7 +233,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getFolder()
+    public function getFolder(): string
     {
         return $this->folder;
     }
@@ -253,7 +253,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getEmbedId()
+    public function getEmbedId(): ?string
     {
         return $this->embedId;
     }
@@ -271,7 +271,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getEmbedPlatform()
+    public function getEmbedPlatform(): ?string
     {
         return $this->embedPlatform;
     }
@@ -288,9 +288,9 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isPrivate()
+    public function isPrivate(): bool
     {
         return $this->private;
     }
@@ -299,7 +299,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @param boolean $private
      * @return $this
      */
-    public function setPrivate($private)
+    public function setPrivate(bool $private)
     {
         $this->private = (boolean) $private;
         if (null !== $raw = $this->getRawDocument()) {
@@ -350,7 +350,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return Collection<Folder>
      */
-    public function getFolders()
+    public function getFolders(): Collection
     {
         return $this->folders;
     }
@@ -426,7 +426,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      *
      * @return DocumentInterface|null
      */
-    public function getRawDocument()
+    public function getRawDocument(): ?DocumentInterface
     {
         return $this->rawDocument;
     }
@@ -450,9 +450,9 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * Is document a raw one.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isRaw()
+    public function isRaw(): bool
     {
         return $this->raw;
     }
@@ -460,11 +460,11 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * Sets the value of raw.
      *
-     * @param boolean $raw the raw
+     * @param bool $raw the raw
      *
      * @return self
      */
-    public function setRaw($raw)
+    public function setRaw(bool $raw)
     {
         $this->raw = (boolean) $raw;
 
@@ -476,7 +476,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      *
      * @return DocumentInterface|null
      */
-    public function getDownscaledDocument()
+    public function getDownscaledDocument(): ?DocumentInterface
     {
         return $this->downscaledDocument;
     }

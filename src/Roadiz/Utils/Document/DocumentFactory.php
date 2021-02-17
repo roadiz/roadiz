@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Document;
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * Create documents from UploadedFile.
@@ -17,7 +18,7 @@ class DocumentFactory extends AbstractDocumentFactory
     /**
      * @inheritDoc
      */
-    protected function createDocument()
+    protected function createDocument(): DocumentInterface
     {
         return new Document();
     }

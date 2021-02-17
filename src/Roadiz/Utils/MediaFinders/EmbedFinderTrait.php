@@ -16,7 +16,7 @@ trait EmbedFinderTrait
     /**
      * @inheritDoc
      */
-    protected function documentExists(ObjectManager $objectManager, $embedId, $embedPlatform)
+    protected function documentExists(ObjectManager $objectManager, $embedId, $embedPlatform): bool
     {
         $existingDocument = $objectManager->getRepository(Document::class)
             ->findOneBy([
