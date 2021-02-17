@@ -72,7 +72,7 @@ class AjaxAbstractFieldsController extends AbstractAjaxController
          * First, we set the new parent
          */
         if (!empty($parameters['newPosition']) && null !== $field) {
-            $field->setPosition($parameters['newPosition']);
+            $field->setPosition((float) $parameters['newPosition']);
             // Apply position update before cleaning
             $this->get('em')->flush();
             /** @var AbstractHandler $handler */

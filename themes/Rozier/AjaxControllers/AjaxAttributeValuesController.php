@@ -77,7 +77,7 @@ final class AjaxAttributeValuesController extends AbstractAjaxController
          * First, we set the new parent
          */
         if (!empty($parameters['newPosition'])) {
-            $attributeValue->setPosition($parameters['newPosition']);
+            $attributeValue->setPosition((float) $parameters['newPosition']);
             // Apply position update before cleaning
             $this->get('em')->flush();
             return [
