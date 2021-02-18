@@ -142,12 +142,8 @@ final class NodesSourcesPathResolver implements PathResolverInterface
                 $translation = $repository->findOneByLocaleOrOverrideLocale($locale);
                 if (null !== $translation) {
                     return $translation;
-                }
-                if (count($tokens) === 1) {
-                    /*
-                     * If locale was the only token in URL, do not return default translation.
-                     */
-                    return null;
+                } elseif (in_array($tokens[0], Translation::getAvailableLocales())) {
+                    throw new ResourceNotFoundException(sprintf('"%s" translation was not found.', $tokens[0]));
                 }
             }
         }
@@ -186,7 +182,7 @@ final class NodesSourcesPathResolver implements PathResolverInterface
                             ]);
                         return $nodeSource;
                     } else {
-                        throw new ResourceNotFoundException();
+                        throw new ResourceNotFoundException(sprintf('"%s" was not found.', $identifier));
                     }
                 } else {
                     throw new ResourceNotFoundException();
