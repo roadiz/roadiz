@@ -97,10 +97,14 @@ final class NodesSourcesPathResolver implements PathResolverInterface
             $this->stopwatch->stop('parseFromIdentifier');
         }
 
+        if (null === $nodeSource) {
+            throw new ResourceNotFoundException();
+        }
+
         $resourceInfo->setResource($nodeSource);
-        $resourceInfo->setTranslation($translation);
+        $resourceInfo->setTranslation($nodeSource->getTranslation());
         $resourceInfo->setFormat($_format);
-        $resourceInfo->setLocale($translation->getPreferredLocale());
+        $resourceInfo->setLocale($nodeSource->getTranslation()->getPreferredLocale());
         return $resourceInfo;
     }
 
@@ -139,6 +143,12 @@ final class NodesSourcesPathResolver implements PathResolverInterface
                 if (null !== $translation) {
                     return $translation;
                 }
+                if (count($tokens) === 1) {
+                    /*
+                     * If locale was the only token in URL, do not return default translation.
+                     */
+                    return null;
+                }
             }
         }
 
@@ -176,10 +186,10 @@ final class NodesSourcesPathResolver implements PathResolverInterface
                             ]);
                         return $nodeSource;
                     } else {
-                        return null;
+                        throw new ResourceNotFoundException();
                     }
                 } else {
-                    return null;
+                    throw new ResourceNotFoundException();
                 }
             }
         }
