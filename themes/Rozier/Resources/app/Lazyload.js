@@ -537,6 +537,8 @@ export default class Lazyload {
      * Resize
      */
     resize () {
-        this.$canvasLoaderContainer[0].style.left = window.Rozier.mainContentScrollableOffsetLeft + (window.Rozier.mainContentScrollableWidth / 2) + 'px'
+        if (this.$canvasLoaderContainer.length) {
+            this.$canvasLoaderContainer[0].style.left = window.Rozier.mainContentScrollableOffsetLeft + (window.Rozier.mainContentScrollableWidth / 2) + 'px'
+        }
     }
 }

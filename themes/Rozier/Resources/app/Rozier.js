@@ -188,8 +188,10 @@ export default class Rozier {
 
         // Tree element name
         this.$mainTreeElementName = this.$mainTrees.find('.tree-element-name')
-        this.$mainTreeElementName.off('contextmenu', this.maintreeElementNameRightClick)
-        this.$mainTreeElementName.on('contextmenu', this.maintreeElementNameRightClick)
+        if (this.$mainTreeElementName.length) {
+            this.$mainTreeElementName.off('contextmenu', this.maintreeElementNameRightClick)
+            this.$mainTreeElementName.on('contextmenu', this.maintreeElementNameRightClick)
+        }
     }
 
     /**
@@ -347,7 +349,7 @@ export default class Rozier {
                     this.lazyload.canvasLoader.hide()
                 })
         } else {
-            console.error('No main node-tree available.')
+            console.debug('No main node-tree available.')
         }
     }
 
@@ -391,7 +393,7 @@ export default class Rozier {
                 this.lazyload.canvasLoader.hide()
             })
         } else {
-            console.error('No main tag-tree available.')
+            console.debug('No main tag-tree available.')
         }
     }
 
@@ -434,7 +436,7 @@ export default class Rozier {
                 this.lazyload.canvasLoader.hide()
             })
         } else {
-            console.error('No main folder-tree available.')
+            console.debug('No main folder-tree available.')
         }
     }
 
@@ -782,6 +784,7 @@ export default class Rozier {
         // Close tree panel if small screen & first resize
         if (this.windowWidth >= 768 &&
             this.windowWidth <= 1200 &&
+            this.$mainTrees.length &&
             this.resizeFirst) {
             this.$mainTrees[0].style.display = 'none'
             this.$minifyTreePanelButton.trigger('click')
@@ -795,32 +798,36 @@ export default class Rozier {
             this.mobile = new RozierMobile()
         }
 
-        if (this.windowWidth >= 768) {
-            this.$mainContentScrollable.height(this.windowHeight)
-            this.$mainTreesContainer[0].style.height = ''
-        } else {
-            this.$mainContentScrollable[0].style.height = ''
-            this.$mainTreesContainer.height(this.windowHeight)
+        if (this.$mainTreesContainer.length && this.$mainContentScrollable.length) {
+            if (this.windowWidth >= 768) {
+                this.$mainContentScrollable.height(this.windowHeight)
+                this.$mainTreesContainer[0].style.height = ''
+            } else {
+                this.$mainContentScrollable[0].style.height = ''
+                this.$mainTreesContainer.height(this.windowHeight)
+            }
         }
 
         // Tree scroll height
-        this.$nodeTreeHead = this.$mainTrees.find('.nodetree-head')
-        this.$treeScrollCont = this.$mainTrees.find('.tree-scroll-cont')
-        this.$treeScroll = this.$mainTrees.find('.tree-scroll')
+        if (this.$mainTrees.length) {
+            this.$nodeTreeHead = this.$mainTrees.find('.nodetree-head')
+            this.$treeScrollCont = this.$mainTrees.find('.tree-scroll-cont')
+            this.$treeScroll = this.$mainTrees.find('.tree-scroll')
 
-        /*
-         * need actual to get tree height even when they are hidden.
-         */
-        this.nodesSourcesSearchHeight = this.$nodesSourcesSearch.actual('outerHeight')
-        this.nodeTreeHeadHeight = this.$nodeTreeHead.actual('outerHeight')
-        this.treeScrollHeight = this.windowHeight - (this.nodesSourcesSearchHeight + this.nodeTreeHeadHeight)
+            /*
+             * need actual to get tree height even when they are hidden.
+             */
+            this.nodesSourcesSearchHeight = this.$nodesSourcesSearch.actual('outerHeight')
+            this.nodeTreeHeadHeight = this.$nodeTreeHead.actual('outerHeight')
+            this.treeScrollHeight = this.windowHeight - (this.nodesSourcesSearchHeight + this.nodeTreeHeadHeight)
 
-        if (this.mobile !== null) {
-            this.treeScrollHeight = this.windowHeight - (50 + 50 + this.nodeTreeHeadHeight)
-        } // Menu + tree menu + tree head
+            if (this.mobile !== null) {
+                this.treeScrollHeight = this.windowHeight - (50 + 50 + this.nodeTreeHeadHeight)
+            } // Menu + tree menu + tree head
 
-        for (let i = 0; i < this.$treeScrollCont.length; i++) {
-            this.$treeScrollCont[i].style.height = this.treeScrollHeight + 'px'
+            for (let i = 0; i < this.$treeScrollCont.length; i++) {
+                this.$treeScrollCont[i].style.height = this.treeScrollHeight + 'px'
+            }
         }
 
         // Main content
