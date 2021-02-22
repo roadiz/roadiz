@@ -57,7 +57,7 @@ class GroupsType extends AbstractType
             }
             return null;
         }, function ($formToModels) {
-            if (null === $formToModels || count($formToModels) === 0) {
+            if (null === $formToModels || (is_array($formToModels) && count($formToModels) === 0)) {
                 return [];
             }
             return $this->entityManager->getRepository(Group::class)->findBy([

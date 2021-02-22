@@ -129,8 +129,13 @@ class UsersGroupsController extends RozierApp
     private function addUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->get('em')
-                          ->find(Group::class, $data['group']);
+            if (array_key_exists('group', $data) && $data['group'][0] instanceof Group) {
+                $group = $data['group'][0];
+            } elseif (array_key_exists('group', $data) && is_numeric($data['group'])) {
+                $group = $this->get('em')->find(Group::class, $data['group']);
+            } else {
+                $group = null;
+            }
 
             if ($group !== null) {
                 $user->addGroup($group);
