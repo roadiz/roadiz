@@ -182,9 +182,6 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      */
     private $locale = null;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->roles = new ArrayCollection();

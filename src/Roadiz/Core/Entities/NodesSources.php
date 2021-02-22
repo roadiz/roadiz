@@ -10,6 +10,7 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectManagerAware;
 use Gedmo\Loggable\Loggable;
+use RuntimeException;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use JMS\Serializer\Annotation as Serializer;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -40,10 +41,10 @@ use Doctrine\ORM\Mapping as ORM;
 class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggable
 {
     /**
-     * @var ObjectManager
+     * @var ObjectManager|null
      * @Serializer\Exclude
      */
-    protected $objectManager;
+    protected $objectManager = null;
 
     /**
      * @inheritDoc
@@ -60,7 +61,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @ORM\JoinColumn(name="node_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "log_sources"})
      */
-    private $node;
+    private $node = null;
 
     /**
      * @return Node|null
@@ -101,13 +102,16 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"nodes_sources", "log_sources"})
      */
-    private $translation;
+    private $translation = null;
 
     /**
      * @return Translation
      */
     public function getTranslation(): Translation
     {
+        if (null === $this->translation) {
+            throw new RuntimeException('Node source translation cannot be null.');
+        }
         return $this->translation;
     }
     /**

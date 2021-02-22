@@ -26,7 +26,7 @@ class Redirection extends AbstractDateTimed
      * @ORM\Column(type="string", nullable=true)
      * @var string|null
      */
-    private $redirectUri = "";
+    private $redirectUri = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources")

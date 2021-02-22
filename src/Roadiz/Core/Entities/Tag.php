@@ -44,7 +44,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @var Tag|null
      * @Serializer\Exclude
      */
-    protected $parent;
+    protected $parent = null;
     /**
      * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
@@ -75,12 +75,12 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @Serializer\Type("string")
      * @Serializer\Accessor(getter="getTagName", setter="setTagName")
      */
-    private $tagName;
+    private $tagName = '';
     /**
      * @var string
      * @Serializer\Exclude
      */
-    private $dirtyTagName;
+    private $dirtyTagName = '';
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @Serializer\Groups({"tag", "tag_base", "node", "nodes_sources"})

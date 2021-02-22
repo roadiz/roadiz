@@ -54,7 +54,7 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface
      * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
      * @Serializer\Exclude()
      */
-    private $nodeType;
+    private $nodeType = null;
 
     /**
      * @return NodeType|null

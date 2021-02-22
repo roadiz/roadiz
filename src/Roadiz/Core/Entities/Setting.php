@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * Settings entity are a simple key-value configuration system.
@@ -90,7 +91,7 @@ class Setting extends AbstractEntity
      * @Serializer\Groups({"setting", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    private $name;
+    private $name = '';
 
     /**
      * @return string
@@ -108,7 +109,9 @@ class Setting extends AbstractEntity
     public function setName($name)
     {
         $this->name = trim(strtolower($name ?? ''));
-        $this->name = StringHandler::removeDiacritics($this->name);
+        $this->name = (new UnicodeString($this->name))
+            ->ascii()
+            ->toString();
         $this->name = preg_replace('#([^a-z])#', '_', $this->name);
 
         return $this;
@@ -120,7 +123,7 @@ class Setting extends AbstractEntity
      * @Serializer\Groups({"setting"})
      * @Serializer\Type("string")
      */
-    private $description;
+    private $description = null;
 
     /**
      * @return string|null
@@ -147,17 +150,17 @@ class Setting extends AbstractEntity
      * @Serializer\Groups({"setting", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    private $value;
+    private $value = null;
 
     /**
      * Holds clear setting value after value is decoded by postLoad Doctrine event.
      *
      * READ ONLY: Not persisted value to hold clear value if setting is encrypted.
      *
-     * @var string
+     * @var string|null
      * @Serializer\Exclude()
      */
-    private $clearValue;
+    private $clearValue = null;
 
     /**
      * @return string|null
@@ -216,7 +219,7 @@ class Setting extends AbstractEntity
     /**
      * Holds clear setting value after value is decoded by postLoad Doctrine event.
      *
-     * @param string $clearValue
+     * @param string|null $clearValue
      *
      * @return Setting
      */

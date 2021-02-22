@@ -29,14 +29,14 @@ class TagTranslation extends AbstractEntity
      * @Serializer\Type("string")
      * @Gedmo\Versioned
      */
-    protected $name;
+    protected $name = '';
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"tag", "node", "nodes_sources"})
      * @Serializer\Type("string")
      * @Gedmo\Versioned
      */
-    protected $description;
+    protected $description = null;
     /**
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
      * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")

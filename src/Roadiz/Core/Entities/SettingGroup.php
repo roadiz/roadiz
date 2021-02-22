@@ -24,7 +24,7 @@ class SettingGroup extends AbstractEntity
      * @Serializer\Type("string")
      * @var string
      */
-    private $name;
+    private $name = '';
 
     /**
      * @return string

@@ -33,7 +33,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface
      * @Serializer\Groups({"node_type", "node", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    private $name;
+    private $name = '';
 
     /**
      * @return string

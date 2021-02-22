@@ -53,7 +53,7 @@ class Role implements PersistableInterface
      * @Serializer\Type("string")
      * @var string
      */
-    private $name;
+    private $name = '';
 
     /**
      * @param string $role
