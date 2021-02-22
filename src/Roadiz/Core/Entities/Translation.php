@@ -573,6 +573,7 @@ class Translation extends AbstractDateTimed
         $this->tagTranslations = new ArrayCollection();
         $this->folderTranslations = new ArrayCollection();
         $this->documentTranslations = new ArrayCollection();
+        $this->initAbstractDateTimed();
     }
 
     /**

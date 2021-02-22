@@ -815,6 +815,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
         $this->attributeValues = new ArrayCollection();
 
         $this->setNodeType($nodeType);
+        $this->initAbstractDateTimed();
     }
 
     /**

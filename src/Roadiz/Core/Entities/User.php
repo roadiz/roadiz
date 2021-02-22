@@ -190,6 +190,7 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->sendCreationConfirmationEmail(false);
+        $this->initAbstractDateTimed();
 
         $saltGenerator = new SaltGenerator();
         $this->setSalt($saltGenerator->generateSalt());

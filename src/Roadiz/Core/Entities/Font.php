@@ -147,6 +147,7 @@ class Font extends AbstractDateTimed
     public function __construct()
     {
         $this->folder = substr(hash("crc32b", date('YmdHi')), 0, 12);
+        $this->initAbstractDateTimed();
     }
 
     /**

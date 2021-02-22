@@ -83,6 +83,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
         $this->children = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->translatedFolders = new ArrayCollection();
+        $this->initAbstractDateTimed();
     }
 
     /**

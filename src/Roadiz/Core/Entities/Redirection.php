@@ -129,5 +129,6 @@ class Redirection extends AbstractDateTimed
     public function __construct()
     {
         $this->type = Response::HTTP_MOVED_PERMANENTLY;
+        $this->initAbstractDateTimed();
     }
 }

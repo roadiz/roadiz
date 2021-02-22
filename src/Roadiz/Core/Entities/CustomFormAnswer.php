@@ -42,7 +42,7 @@ class CustomFormAnswer extends AbstractEntity
      * @ORM\JoinColumn(name="custom_form_id", referencedColumnName="id", onDelete="CASCADE")
      * @var CustomForm|null
      **/
-    private $customForm;
+    private $customForm = null;
 
     /**
      * Create a new empty CustomFormAnswer according to given node-type.

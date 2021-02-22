@@ -123,6 +123,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
         $this->nodes = new ArrayCollection();
         $this->translatedTags = new ArrayCollection();
         $this->children = new ArrayCollection();
+        $this->initAbstractDateTimed();
     }
 
     /**
