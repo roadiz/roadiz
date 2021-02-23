@@ -20,14 +20,9 @@ use Twig\TwigTest;
 
 class AttributesExtension extends AbstractExtension
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
 
     /**
-     * AttributesExtension constructor.
-     *
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)

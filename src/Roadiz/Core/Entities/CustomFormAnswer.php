@@ -9,8 +9,6 @@ use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 
 /**
- * CustomFormAnswer entities.
- *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="custom_form_answers",  indexes={
  *     @ORM\Index(columns={"ip"}),

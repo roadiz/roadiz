@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 interface AttributeInterface extends PersistableInterface
 {
@@ -69,11 +69,11 @@ interface AttributeInterface extends PersistableInterface
     public function setCode(string $code);
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface|null $translation
      *
      * @return string
      */
-    public function getLabelOrCode(?Translation $translation = null): string;
+    public function getLabelOrCode(?TranslationInterface $translation = null): string;
 
     /**
      * @return Collection<AttributeTranslationInterface>
@@ -112,11 +112,11 @@ interface AttributeInterface extends PersistableInterface
     public function setSearchable(bool $searchable);
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return array|null
      */
-    public function getOptions(Translation $translation): ?array;
+    public function getOptions(TranslationInterface $translation): ?array;
 
     /**
      * @return int

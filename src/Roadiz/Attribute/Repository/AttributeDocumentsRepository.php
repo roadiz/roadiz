@@ -3,24 +3,22 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Repository;
 
-use RZ\Roadiz\Core\Entities\Attribute;
+use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 
 /**
- * Class AttributeDocumentsRepository
- *
  * @package RZ\Roadiz\Attribute\Repository
  */
 final class AttributeDocumentsRepository extends EntityRepository
 {
     /**
-     * @param Attribute $attribute
+     * @param AttributeInterface $attribute
      *
-     * @return integer
+     * @return int
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getLatestPosition(Attribute $attribute)
+    public function getLatestPosition(AttributeInterface $attribute)
     {
         $qb = $this->createQueryBuilder('ad');
         $qb->select($qb->expr()->max('ad.position'))

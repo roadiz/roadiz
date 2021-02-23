@@ -3,10 +3,46 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Model;
 
-use RZ\Roadiz\Core\Entities\Translation;
+use JMS\Serializer\Annotation as Serializer;
+use Doctrine\ORM\Mapping as ORM;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 trait AttributeTranslationTrait
 {
+    /**
+     * @var TranslationInterface|null
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\AbstractEntities\TranslationInterface")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("RZ\Roadiz\Core\AbstractEntities\TranslationInterface")
+     * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
+     */
+    protected ?TranslationInterface $translation = null;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", nullable=false, unique=false)
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("string")
+     */
+    protected string $label = '';
+
+    /**
+     * @var array|null
+     * @ORM\Column(type="simple_array", nullable=true, unique=false)
+     * @Serializer\Groups({"attribute"})
+     * @Serializer\Type("array")
+     */
+    protected ?array $options = [];
+
+    /**
+     * @var AttributeInterface|null
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Attribute\Model\AttributeInterface", inversedBy="attributeTranslations", cascade={"persist"})
+     * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
+     * @Serializer\Exclude
+     */
+    protected ?AttributeInterface $attribute = null;
+
     /**
      * @return string
      */
@@ -27,20 +63,20 @@ trait AttributeTranslationTrait
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return mixed
      */
-    public function setTranslation(Translation $translation)
+    public function setTranslation(TranslationInterface $translation)
     {
         $this->translation = $translation;
         return $this;
     }
 
     /**
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
-    public function getTranslation(): ?Translation
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }

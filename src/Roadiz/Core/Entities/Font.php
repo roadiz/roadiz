@@ -99,27 +99,27 @@ class Font extends AbstractDateTimed
      * @ORM\Column(type="string", nullable=true, name="eot_filename")
      * @var string|null
      */
-    private $eotFilename;
+    private $eotFilename = null;
     /**
      * @ORM\Column(type="string", nullable=true, name="woff_filename")
      * @var string|null
      */
-    private $woffFilename;
+    private $woffFilename = null;
     /**
      * @ORM\Column(type="string", nullable=true, name="woff2_filename")
      * @var string|null
      */
-    private $woff2Filename;
+    private $woff2Filename = null;
     /**
      * @ORM\Column(type="string", nullable=true, name="otf_filename")
      * @var string|null
      */
-    private $otfFilename;
+    private $otfFilename = null;
     /**
      * @ORM\Column(type="string", nullable=true, name="svg_filename")
      * @var string|null
      */
-    private $svgFilename;
+    private $svgFilename = null;
     /**
      * @ORM\Column(type="string", nullable=false, unique=false)
      * @var string
@@ -139,7 +139,7 @@ class Font extends AbstractDateTimed
      * @ORM\Column(type="text", nullable=true)
      * @var string|null
      */
-    private $description;
+    private $description = null;
 
     /**
      * Create a new Font and generate a random folder name.
@@ -353,7 +353,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getEOTRelativeUrl(): ?string
     {
@@ -369,7 +369,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getEOTFilename(): ?string
     {
@@ -377,7 +377,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @param string $eotFilename
+     * @param string|null $eotFilename
      * @return $this
      */
     public function setEOTFilename(?string $eotFilename): Font
@@ -387,7 +387,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getWOFFRelativeUrl(): ?string
     {
@@ -395,7 +395,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getWOFFFilename(): ?string
     {
@@ -403,7 +403,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @param string $woffFilename
+     * @param string|null $woffFilename
      * @return $this
      */
     public function setWOFFFilename(?string $woffFilename): Font
@@ -413,7 +413,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getWOFF2RelativeUrl(): ?string
     {
@@ -421,7 +421,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getWOFF2Filename(): ?string
     {
@@ -429,7 +429,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @param string $woff2Filename
+     * @param string|null $woff2Filename
      *
      * @return $this
      */
@@ -440,7 +440,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getOTFRelativeUrl(): ?string
     {
@@ -448,7 +448,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getOTFFilename(): ?string
     {
@@ -456,7 +456,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @param string $otfFilename
+     * @param string|null $otfFilename
      * @return $this
      */
     public function setOTFFilename(?string $otfFilename): Font
@@ -466,7 +466,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getSVGRelativeUrl(): ?string
     {
@@ -474,7 +474,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getSVGFilename(): ?string
     {
@@ -482,7 +482,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @param string $svgFilename
+     * @param string|null $svgFilename
      * @return $this
      */
     public function setSVGFilename(?string $svgFilename): Font
@@ -492,7 +492,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @return string
+     * @return string|null
      */
     public function getDescription(): ?string
     {
@@ -500,7 +500,7 @@ class Font extends AbstractDateTimed
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      *
      * @return $this
      */
@@ -513,7 +513,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of eotFile.
      *
-     * @return UploadedFile
+     * @return UploadedFile|null
      */
     public function getEotFile(): ?UploadedFile
     {
@@ -523,7 +523,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of eotFile.
      *
-     * @param UploadedFile $eotFile the eot file
+     * @param UploadedFile|null $eotFile the eot file
      * @return Font
      */
     public function setEotFile(?UploadedFile $eotFile): Font
@@ -535,7 +535,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of woffFile.
      *
-     * @return UploadedFile
+     * @return UploadedFile|null
      */
     public function getWoffFile(): ?UploadedFile
     {
@@ -545,7 +545,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of woffFile.
      *
-     * @param UploadedFile $woffFile the woff file
+     * @param UploadedFile|null $woffFile the woff file
      * @return Font
      */
     public function setWoffFile(?UploadedFile $woffFile): Font
@@ -557,7 +557,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of woff2File.
      *
-     * @return UploadedFile
+     * @return UploadedFile|null
      */
     public function getWoff2File(): ?UploadedFile
     {
@@ -567,7 +567,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of woff2File.
      *
-     * @param UploadedFile $woff2File the woff2 file
+     * @param UploadedFile|null $woff2File the woff2 file
      * @return Font
      */
     public function setWoff2File(?UploadedFile $woff2File): Font
@@ -579,7 +579,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of otfFile.
      *
-     * @return UploadedFile
+     * @return UploadedFile|null
      */
     public function getOtfFile(): ?UploadedFile
     {
@@ -589,7 +589,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of otfFile.
      *
-     * @param UploadedFile $otfFile the otf file
+     * @param UploadedFile|null $otfFile the otf file
      * @return Font
      */
     public function setOtfFile(?UploadedFile $otfFile): Font
@@ -601,7 +601,7 @@ class Font extends AbstractDateTimed
     /**
      * Gets the value of svgFile.
      *
-     * @return UploadedFile
+     * @return UploadedFile|null
      */
     public function getSvgFile(): ?UploadedFile
     {
@@ -611,7 +611,7 @@ class Font extends AbstractDateTimed
     /**
      * Sets the value of svgFile.
      *
-     * @param UploadedFile $svgFile the svg file
+     * @param UploadedFile|null $svgFile the svg file
      * @return Font
      */
     public function setSvgFile(?UploadedFile $svgFile): Font

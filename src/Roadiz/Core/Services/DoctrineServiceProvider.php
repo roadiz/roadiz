@@ -22,7 +22,20 @@ use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface;
+use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
+use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Entities\AttributeGroup;
+use RZ\Roadiz\Core\Entities\AttributeGroupTranslation;
+use RZ\Roadiz\Core\Entities\AttributeTranslation;
+use RZ\Roadiz\Core\Entities\AttributeValue;
+use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
@@ -33,6 +46,7 @@ use RZ\Roadiz\Core\Events\TablePrefixSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
@@ -153,11 +167,46 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return $c['em'];
         };
 
-        $container[ResolveTargetEntityListener::class] = function (Container $c) {
+        $container[ResolveTargetEntityListener::class] = function () {
             $resolveListener = new ResolveTargetEntityListener();
             $resolveListener->addResolveTargetEntity(
                 AttributeGroupInterface::class,
                 AttributeGroup::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeGroupTranslationInterface::class,
+                AttributeGroupTranslation::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeInterface::class,
+                Attribute::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeTranslationInterface::class,
+                AttributeTranslation::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeValueInterface::class,
+                AttributeValue::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeValueTranslationInterface::class,
+                AttributeValueTranslation::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                DocumentInterface::class,
+                Document::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                TranslationInterface::class,
+                Translation::class,
                 []
             );
             return $resolveListener;
