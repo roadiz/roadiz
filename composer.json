@@ -44,7 +44,7 @@
         "bin-dir": "bin"
     },
     "require": {
-        "php":                         ">=5.4.3",
+        "php":                         ">=5.4.3 <7.3",
         "doctrine/orm":                "2.*",
         "symfony/yaml":                "2.8.*",
         "symfony/console":             "2.8.*",

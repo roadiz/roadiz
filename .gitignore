@@ -2,6 +2,9 @@
 # Roadiz
 #
 /*.sql
+/*.zip
+/.env
+/.data
 /dev.php
 /install.php
 /clear_cache.php
