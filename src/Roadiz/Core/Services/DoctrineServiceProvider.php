@@ -14,11 +14,15 @@ use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
 use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Doctrine\ORM\Tools\Setup;
 use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
+use RZ\Roadiz\Core\Entities\AttributeGroup;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
@@ -149,15 +153,27 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return $c['em'];
         };
 
+        $container[ResolveTargetEntityListener::class] = function (Container $c) {
+            $resolveListener = new ResolveTargetEntityListener();
+            $resolveListener->addResolveTargetEntity(
+                AttributeGroupInterface::class,
+                AttributeGroup::class,
+                []
+            );
+            return $resolveListener;
+        };
+
         $container['em'] = function (Container $c) {
             $c['stopwatch']->start('initDoctrine');
 
             try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
-                /** @var EntityManager $em */
                 $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
                 $evm = $em->getEventManager();
+
+                // Add the ResolveTargetEntityListener
+                $evm->addEventListener(Events::loadClassMetadata, $c[ResolveTargetEntityListener::class]);
                 /*
                  * Inject doctrine event subscribers for
                  * a service to be able to add new ones from themes.

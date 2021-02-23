@@ -9,12 +9,12 @@ use RZ\Roadiz\Core\Entities\Translation;
 interface AttributeTranslationInterface extends PersistableInterface
 {
     /**
-     * @return string
+     * @return string|null
      */
     public function getLabel(): ?string;
 
     /**
-     * @param string $label
+     * @param string|null $label
      *
      * @return mixed
      */

@@ -30,7 +30,7 @@ class AttributeGroup extends AbstractEntity implements AttributeGroupInterface
      * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    protected $canonicalName;
+    protected string $canonicalName = '';
 
     /**
      * @var Collection<Attribute>
@@ -38,7 +38,7 @@ class AttributeGroup extends AbstractEntity implements AttributeGroupInterface
      * @Serializer\Groups({"attribute_group"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\Attribute>")
      */
-    protected $attributes;
+    protected Collection $attributes;
 
     /**
      * @var Collection<AttributeGroupTranslation>

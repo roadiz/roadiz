@@ -7,35 +7,24 @@ use RZ\Roadiz\Core\Entities\Translation;
 
 trait AttributeGroupTranslationTrait
 {
-    /**
-     * @var string|null
-     */
-    protected $name;
+    protected string $name = '';
+    protected ?Translation $translation = null;
+    protected ?AttributeGroupInterface $attributeGroup = null;
 
     /**
-     * @var Translation|null
+     * @return string
      */
-    protected $translation;
-
-    /**
-     * @var AttributeGroupInterface|null
-     */
-    protected $attributeGroup;
-
-    /**
-     * @return string|null
-     */
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
     /**
-     * @param string|null $value
+     * @param string $value
      *
      * @return self
      */
-    public function setName(?string $value)
+    public function setName(string $value)
     {
         $this->name = $value;
         return $this;

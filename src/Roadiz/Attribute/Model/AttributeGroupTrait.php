@@ -17,11 +17,11 @@ trait AttributeGroupTrait
     /**
      * @var string
      */
-    protected $canonicalName;
+    protected string $canonicalName = '';
     /**
      * @var Collection<AttributeInterface>
      */
-    protected $attributes;
+    protected Collection $attributes;
 
     public function getName(): ?string
     {

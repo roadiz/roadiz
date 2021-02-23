@@ -30,7 +30,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @Serializer\Groups({"attribute", "node", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    protected $label;
+    protected string $label = '';
 
     /**
      * @var array|null
@@ -38,7 +38,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @Serializer\Groups({"attribute"})
      * @Serializer\Type("array")
      */
-    protected $options = [];
+    protected ?array $options = [];
 
     /**
      * @var Attribute|null
@@ -46,7 +46,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id")
      * @Serializer\Exclude
      */
-    protected $attribute;
+    protected ?Attribute $attribute = null;
 
     /**
      * @var Translation|null
@@ -56,7 +56,7 @@ class AttributeTranslation extends AbstractEntity implements AttributeTranslatio
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
      * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
      */
-    protected $translation;
+    protected ?Translation $translation = null;
 
     /**
      * @param AttributeInterface $attribute

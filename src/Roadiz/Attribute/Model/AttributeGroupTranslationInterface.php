@@ -9,16 +9,16 @@ use RZ\Roadiz\Core\Entities\Translation;
 interface AttributeGroupTranslationInterface extends PersistableInterface
 {
     /**
-     * @return string|null
+     * @return string
      */
-    public function getName(): ?string;
+    public function getName(): string;
 
     /**
-     * @param string|null $value
+     * @param string $value
      *
      * @return mixed
      */
-    public function setName(?string $value);
+    public function setName(string $value);
 
     /**
      * @param Translation $translation

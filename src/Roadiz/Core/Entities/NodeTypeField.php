@@ -85,7 +85,7 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface
      */
     public function getNodeTypeName(): string
     {
-        return $this->getNodeType()->getName();
+        return $this->getNodeType() ? $this->getNodeType()->getName() : '';
     }
 
     /**

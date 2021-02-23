@@ -115,9 +115,6 @@ class Attribute extends AbstractEntity implements AttributeInterface
      */
     protected $attributeDocuments;
 
-    /**
-     * Attribute constructor.
-     */
     public function __construct()
     {
         $this->attributeTranslations = new ArrayCollection();

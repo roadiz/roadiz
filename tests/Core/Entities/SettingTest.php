@@ -30,9 +30,21 @@
 
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Tests\SchemaDependentCase;
+use RZ\Roadiz\Tests\SerializedEntityTestTrait;
 
 class SettingTest extends SchemaDependentCase
 {
+    use SerializedEntityTestTrait;
+
+    /*
+     * Test empty object serialization
+     */
+    public function testSerialize()
+    {
+        $a = new Setting();
+        $this->assertJson($this->getSerializer()->serialize($a, 'json'));
+    }
+
     /**
      * @dataProvider settingsProvider
      * @param $name
