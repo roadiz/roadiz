@@ -60,13 +60,16 @@ class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
 
         // Locate possible ClassMetadata
         $classMetadataFactory = $this->entityManager->getMetadataFactory();
-        $doctrineMetadata = $classMetadataFactory->getMetadataFor($metadata->name);
-
-        if ($doctrineMetadata->getName() !== $metadata->name) {
-            /*
-             * Doctrine resolveTargetEntity has found an alternative class
-             */
-            $metadata = new ClassMetadata($doctrineMetadata->getName());
+        try {
+            $doctrineMetadata = $classMetadataFactory->getMetadataFor($metadata->name);
+            if ($doctrineMetadata->getName() !== $metadata->name) {
+                /*
+                 * Doctrine resolveTargetEntity has found an alternative class
+                 */
+                $metadata = new ClassMetadata($doctrineMetadata->getName());
+            }
+        } catch (\Doctrine\ORM\Mapping\MappingException $e) {
+            // Object class is not a valid doctrine entity
         }
 
         if ($classMetadataFactory->isTransient($metadata->name)) {
