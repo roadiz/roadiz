@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Preview\EventSubscriber;
 
-use Pimple\Container;
 use RZ\Roadiz\Preview\Exception\PreviewNotAllowedException;
 use RZ\Roadiz\Preview\PreviewAwareInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
@@ -12,7 +11,9 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @package RZ\Roadiz\Core\Events
@@ -23,16 +24,22 @@ class PreviewModeSubscriber implements EventSubscriberInterface
     const PREVIEW_ROLE = 'ROLE_BACKEND_USER';
 
     protected PreviewResolverInterface $previewResolver;
-    protected Container $container;
+    protected TokenStorageInterface $tokenStorage;
+    protected AuthorizationCheckerInterface $authorizationChecker;
 
     /**
      * @param PreviewResolverInterface $previewResolver
-     * @param Container $container
+     * @param TokenStorageInterface $tokenStorage
+     * @param AuthorizationCheckerInterface $authorizationChecker
      */
-    public function __construct(PreviewResolverInterface $previewResolver, Container $container)
-    {
-        $this->container = $container;
+    public function __construct(
+        PreviewResolverInterface $previewResolver,
+        TokenStorageInterface $tokenStorage,
+        AuthorizationCheckerInterface $authorizationChecker
+    ) {
         $this->previewResolver = $previewResolver;
+        $this->tokenStorage = $tokenStorage;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     /**
@@ -82,11 +89,11 @@ class PreviewModeSubscriber implements EventSubscriberInterface
     {
         if ($this->supports() && $event->isMasterRequest()) {
             /** @var TokenInterface|null $token */
-            $token = $this->container['securityTokenStorage']->getToken();
+            $token = $this->tokenStorage->getToken();
             if (null === $token || !$token->isAuthenticated()) {
                 throw new PreviewNotAllowedException('You are not authenticated to use preview mode.');
             }
-            if (!$this->container['securityAuthorizationChecker']->isGranted(static::PREVIEW_ROLE)) {
+            if (!$this->authorizationChecker->isGranted(static::PREVIEW_ROLE)) {
                 throw new PreviewNotAllowedException('You are not granted to use preview mode.');
             }
         }
