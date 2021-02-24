@@ -35,7 +35,7 @@ class Settings extends LazyParameterBag
         return $this->repository;
     }
 
-    protected function populateParameters()
+    protected function populateParameters(): void
     {
         try {
             $settings = $this->getRepository()->findAll();

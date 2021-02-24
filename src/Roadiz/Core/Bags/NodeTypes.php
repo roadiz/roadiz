@@ -35,7 +35,7 @@ class NodeTypes extends LazyParameterBag implements NodeTypeResolverInterface
         return $this->repository;
     }
 
-    protected function populateParameters()
+    protected function populateParameters(): void
     {
         try {
             $nodeTypes = $this->getRepository()->findAll();

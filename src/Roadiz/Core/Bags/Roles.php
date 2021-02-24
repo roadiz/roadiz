@@ -34,7 +34,7 @@ class Roles extends LazyParameterBag
         return $this->repository;
     }
 
-    protected function populateParameters()
+    protected function populateParameters(): void
     {
         try {
             $roles = $this->getRepository()->findAll();

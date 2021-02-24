@@ -35,7 +35,7 @@ class Discovery extends LazyParameterBag
         $this->cacheProvider = $cacheProvider;
     }
 
-    protected function populateParameters()
+    protected function populateParameters(): void
     {
         if (null !== $this->cacheProvider && $this->cacheProvider->contains(static::CACHE_KEY)) {
             $parameters = $this->cacheProvider->fetch(static::CACHE_KEY);
