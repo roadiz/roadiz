@@ -60,6 +60,14 @@ class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
 
         // Locate possible ClassMetadata
         $classMetadataFactory = $this->entityManager->getMetadataFactory();
+        $doctrineMetadata = $classMetadataFactory->getMetadataFor($metadata->name);
+
+        if ($doctrineMetadata->getName() !== $metadata->name) {
+            /*
+             * Doctrine resolveTargetEntity has found an alternative class
+             */
+            $metadata = new ClassMetadata($doctrineMetadata->getName());
+        }
 
         if ($classMetadataFactory->isTransient($metadata->name)) {
             // No ClassMetadata found, proceed with normal deserialization

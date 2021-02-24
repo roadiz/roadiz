@@ -5,12 +5,12 @@ namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 interface AttributeGroupInterface extends PersistableInterface
 {
     public function getName(): ?string;
-    public function getTranslatedName(Translation $translation): ?string;
+    public function getTranslatedName(TranslationInterface $translation): ?string;
     public function setName(string $name);
 
     public function getCanonicalName(): ?string;

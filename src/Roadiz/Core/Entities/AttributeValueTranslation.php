@@ -4,11 +4,9 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationTrait;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @package RZ\Roadiz\Core\Entities
@@ -22,41 +20,4 @@ use JMS\Serializer\Annotation as Serializer;
 class AttributeValueTranslation extends AbstractEntity implements AttributeValueTranslationInterface
 {
     use AttributeValueTranslationTrait;
-
-    /**
-     * @var string|null
-     * @ORM\Column(type="string", nullable=true, unique=false, length=255)
-     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
-     * @Serializer\Type("string")
-     */
-    protected $value;
-
-    /**
-     * @var Translation|null
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Translation")
-     * @ORM\JoinColumn(name="translation_id", onDelete="CASCADE", referencedColumnName="id")
-     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
-     * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
-     * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
-     */
-    protected $translation;
-
-    /**
-     * @var AttributeValue|null
-     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\AttributeValue", inversedBy="attributeValueTranslations", cascade={"persist"})
-     * @ORM\JoinColumn(name="attribute_value", onDelete="CASCADE", referencedColumnName="id")
-     * @Serializer\Exclude
-     */
-    protected $attributeValue;
-
-    /**
-     * @inheritDoc
-     */
-    public function setAttributeValue(AttributeValueInterface $attributeValue)
-    {
-        if ($attributeValue instanceof AttributeValue) {
-            $this->attributeValue = $attributeValue;
-        }
-        return $this;
-    }
 }

@@ -57,7 +57,6 @@ class Group extends AbstractEntity
     {
         $this->roles = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->rolesNames = null;
     }
 
     /**

@@ -9,8 +9,6 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Log Entity
- *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\LogRepository")
  * @ORM\Table(name="log", indexes={
  *     @ORM\Index(columns={"datetime"}),

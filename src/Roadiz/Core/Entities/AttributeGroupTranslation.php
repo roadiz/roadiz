@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as Serializer;
-use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationTrait;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
@@ -24,43 +22,4 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 class AttributeGroupTranslation extends AbstractEntity implements AttributeGroupTranslationInterface
 {
     use AttributeGroupTranslationTrait;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", nullable=false, unique=false)
-     * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
-     * @Serializer\Type("string")
-     */
-    protected $name;
-
-    /**
-     * @var AttributeGroup|null
-     * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\AttributeGroup", inversedBy="attributeGroupTranslations", cascade={"persist"})
-     * @ORM\JoinColumn(onDelete="CASCADE", referencedColumnName="id", name="attribute_group_id")
-     * @Serializer\Exclude
-     */
-    protected $attributeGroup;
-
-    /**
-     * @var Translation|null
-     * @ORM\ManyToOne(targetEntity="\RZ\Roadiz\Core\Entities\Translation")
-     * @ORM\JoinColumn(onDelete="CASCADE", name="translation_id")
-     * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
-     * @Serializer\Type("RZ\Roadiz\Core\Entities\Translation")
-     * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
-     */
-    protected $translation;
-
-    /**
-     * @param AttributeGroupInterface $attributeGroup
-     *
-     * @return $this|mixed
-     */
-    public function setAttributeGroup(AttributeGroupInterface $attributeGroup)
-    {
-        if ($attributeGroup instanceof AttributeGroup) {
-            $this->attributeGroup = $attributeGroup;
-        }
-        return $this;
-    }
 }

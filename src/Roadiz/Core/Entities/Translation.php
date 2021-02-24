@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -25,7 +26,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"available", "override_locale"})
  * })
  */
-class Translation extends AbstractDateTimed
+class Translation extends AbstractDateTimed implements TranslationInterface
 {
     /**
      * Associates locales to pretty languages names.
@@ -564,9 +565,6 @@ class Translation extends AbstractDateTimed
      */
     private $tagTranslations;
 
-    /**
-     * Create a new Translation
-     */
     public function __construct()
     {
         $this->nodeSources = new ArrayCollection();

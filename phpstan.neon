@@ -5,7 +5,7 @@ parameters:
         - */static/*
     doctrine:
         repositoryClass: RZ\Roadiz\Core\Repositories\EntityRepository
-        objectManagerLoader: tests/object-manager.php
+        objectManagerLoader: ./tests/object-manager.php
     ignoreErrors:
         - '#Class GeneratedNodeSources\\NS([a-zA-Z]+) not found#'
         - '#Call to method ([a-zA-Z]+)\(\) on an unknown class GeneratedNodeSources\\NS([a-zA-Z]+)#'
@@ -26,6 +26,9 @@ parameters:
         - '#does not have a field named \$node\.home#'
         - '#Raven_Client#'
         - '#Raven_ErrorHandler#'
+        # PHPStan Doctrine does not support ResolveTargetEntityListener
+        - '#Property ([a-zA-Z\\\:\$]+) type mapping mismatch: property can contain ([a-zA-Z\\\&\>\<]+)Interface\>?\|null but database expects ([a-zA-Z\\\&\>\<]+)\|null#'
+        - '#Property ([a-zA-Z\\\:\$]+) type mapping mismatch: property can contain ([a-zA-Z\\\&\>\<]+)Interface\>? but database expects ([a-zA-Z\\\&\>\<]+)#'
 
     reportUnmatchedIgnoredErrors: false
     checkGenericClassInNonGenericObjectType: false

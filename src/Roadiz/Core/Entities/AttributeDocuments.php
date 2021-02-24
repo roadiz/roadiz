@@ -25,7 +25,7 @@ class AttributeDocuments extends AbstractPositioned
      * @var Attribute|null
      * @Serializer\Exclude()
      */
-    protected $attribute = null;
+    protected ?Attribute $attribute = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="attributeDocuments", fetch="EAGER", cascade={"persist", "merge"})
@@ -34,11 +34,9 @@ class AttributeDocuments extends AbstractPositioned
      * @Serializer\Groups({"attribute"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      */
-    protected $document = null;
+    protected ?Document $document = null;
 
     /**
-     * Create a new relation between NodeSource, a Document and a NodeTypeField.
-     *
      * @param Attribute|null $attribute
      * @param Document|null $document
      */

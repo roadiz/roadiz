@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Repository;
 
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 
 final class AttributeValueRepository extends EntityRepository
@@ -42,13 +42,13 @@ final class AttributeValueRepository extends EntityRepository
 
     /**
      * @param AttributableInterface $attributable
-     * @param Translation           $translation
+     * @param TranslationInterface  $translation
      *
      * @return array
      */
     public function findByAttributableAndTranslation(
         AttributableInterface $attributable,
-        Translation $translation
+        TranslationInterface $translation
     ): array {
         $qb = $this->createQueryBuilder('av');
         return $qb->addSelect('avt')

@@ -99,14 +99,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @Serializer\Type("string")
      * @var string|null
      */
-    private $filename;
+    private $filename = null;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
      * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      * @var string|null
      */
-    private $mimeType;
+    private $mimeType = null;
     /**
      * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
      * @Serializer\Exclude
@@ -119,7 +119,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @Serializer\Type("string")
      * @var string
      */
-    private $folder;
+    private $folder = '';
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
@@ -133,28 +133,28 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $imageWidth;
+    private $imageWidth = 0;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
      * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $imageHeight;
+    private $imageHeight = 0;
     /**
      * @var string|null
      * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
      * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
-    private $imageAverageColor;
+    private $imageAverageColor = null;
     /**
      * @var int|null The filesize in bytes.
      * @ORM\Column(type="integer", nullable=true, unique=false)
      * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $filesize;
+    private $filesize = null;
 
     /**
      * @var Collection<Document>
@@ -186,8 +186,6 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
         $this->attributeDocuments = new ArrayCollection();
         $this->customFormFieldAttributes = new ArrayCollection();
         $this->thumbnails = new ArrayCollection();
-        $this->imageWidth = 0;
-        $this->imageHeight = 0;
     }
 
     /**
@@ -195,7 +193,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     public function getFilename(): string
     {
-        return $this->filename;
+        return $this->filename ?? '';
     }
 
     /**
@@ -203,7 +201,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      *
      * @return $this
      */
-    public function setFilename($filename)
+    public function setFilename(string $filename)
     {
         $this->filename = StringHandler::cleanForFilename($filename ?? '');
 

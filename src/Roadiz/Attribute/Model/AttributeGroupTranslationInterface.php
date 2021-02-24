@@ -4,33 +4,33 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 interface AttributeGroupTranslationInterface extends PersistableInterface
 {
     /**
-     * @return string|null
+     * @return string
      */
-    public function getName(): ?string;
+    public function getName(): string;
 
     /**
-     * @param string|null $value
+     * @param string $value
      *
      * @return mixed
      */
-    public function setName(?string $value);
+    public function setName(string $value);
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return mixed
      */
-    public function setTranslation(Translation $translation);
+    public function setTranslation(TranslationInterface $translation);
 
     /**
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
-    public function getTranslation(): ?Translation;
+    public function getTranslation(): ?TranslationInterface;
 
     /**
      * @return AttributeGroupInterface

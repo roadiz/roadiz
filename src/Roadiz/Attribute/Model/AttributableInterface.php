@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 interface AttributableInterface extends PersistableInterface
 {
@@ -15,18 +15,18 @@ interface AttributableInterface extends PersistableInterface
     public function getAttributeValues(): Collection;
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return Collection<AttributeValueInterface>
      */
-    public function getAttributesValuesForTranslation(Translation $translation): Collection;
+    public function getAttributesValuesForTranslation(TranslationInterface $translation): Collection;
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return Collection<AttributeValueTranslationInterface>
      */
-    public function getAttributesValuesTranslations(Translation $translation): Collection;
+    public function getAttributesValuesTranslations(TranslationInterface $translation): Collection;
 
     /**
      * @param Collection $attributes
