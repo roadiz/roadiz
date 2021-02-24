@@ -27,6 +27,7 @@ use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
 use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Attribute;
 use RZ\Roadiz\Core\Entities\AttributeGroup;
@@ -35,6 +36,7 @@ use RZ\Roadiz\Core\Entities\AttributeTranslation;
 use RZ\Roadiz\Core\Entities\AttributeValue;
 use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
@@ -202,6 +204,11 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             $resolveListener->addResolveTargetEntity(
                 DocumentInterface::class,
                 Document::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                NodeTypeInterface::class,
+                NodeType::class,
                 []
             );
             $resolveListener->addResolveTargetEntity(

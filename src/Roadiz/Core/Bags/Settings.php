@@ -8,10 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
+use RZ\Roadiz\Bag\LazyParameterBag;
 
-/**
- * @package RZ\Roadiz\Core\Bags
- */
 class Settings extends LazyParameterBag
 {
     private EntityManagerInterface $entityManager;

@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier;
 
-use Pimple\Container;
-use Pimple\Exception\FrozenServiceException;
 use RZ\Roadiz\CMS\Controllers\BackendController;
 use RZ\Roadiz\Console\Tools\Requirements;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
@@ -13,8 +11,6 @@ use RZ\Roadiz\Core\Entities\SettingGroup;
 use RZ\Roadiz\Core\Entities\Tag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Generator\UrlGenerator;
-use Symfony\Component\Translation\Translator;
 use Themes\Rozier\Widgets\FolderTreeWidget;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 use Themes\Rozier\Widgets\TagTreeWidget;

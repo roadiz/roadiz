@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Contracts\NodeType\NodeTypeResolverInterface;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
+use RZ\Roadiz\Bag\LazyParameterBag;
 
 class NodeTypes extends LazyParameterBag implements NodeTypeResolverInterface
 {

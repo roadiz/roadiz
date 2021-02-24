@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\Core\Bags\LazyParameterBag;
+use RZ\Roadiz\Bag\LazyParameterBag;
 use RZ\Roadiz\Core\Events\Role\PreCreatedRoleEvent;
 use RZ\Roadiz\Core\Events\Role\PreDeletedRoleEvent;
 use RZ\Roadiz\Core\Events\Role\PreUpdatedRoleEvent;

@@ -10,7 +10,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use RZ\Roadiz\Core\Bags\LazyParameterBag;
+use RZ\Roadiz\Bag\LazyParameterBag;
 
 /**
  * @package RZ\Roadiz\OpenId

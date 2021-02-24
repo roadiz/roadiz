@@ -7,6 +7,7 @@ use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Repositories\RoleRepository;
+use RZ\Roadiz\Bag\LazyParameterBag;
 
 class Roles extends LazyParameterBag
 {
