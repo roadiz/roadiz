@@ -5,7 +5,7 @@ namespace RZ\Roadiz\OpenId;
 
 use RZ\Roadiz\OpenId\Authentication\OAuth2AuthenticationListener;
 use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
-use RZ\Roadiz\Utils\Security\TokenGenerator;
+use RZ\Roadiz\Random\TokenGenerator;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;

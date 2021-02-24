@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Utils\Composer\InstallFiles;
 
 use Composer\Script\Event;
 use RZ\Roadiz\Config\DotEnvConfigurationHandler;
-use RZ\Roadiz\Utils\Security\TokenGenerator;
+use RZ\Roadiz\Random\TokenGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;

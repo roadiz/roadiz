@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Security;
 
-class TokenGenerator extends RandomGenerator implements TokenGeneratorInterface
+/**
+ * @deprecated Use \RZ\Roadiz\Random\TokenGenerator
+ * @package RZ\Roadiz\Utils\Security
+ */
+class TokenGenerator extends \RZ\Roadiz\Random\RandomGenerator implements \RZ\Roadiz\Random\TokenGeneratorInterface
 {
     public function generateToken()
     {

@@ -3,6 +3,13 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Security;
 
+use RZ\Roadiz\Random\PasswordGeneratorInterface;
+use RZ\Roadiz\Random\RandomGenerator;
+
+/**
+ * @deprecated Use \RZ\Roadiz\Random\PasswordGenerator
+ * @package RZ\Roadiz\Utils\Security
+ */
 class PasswordGenerator extends RandomGenerator implements PasswordGeneratorInterface
 {
     /**

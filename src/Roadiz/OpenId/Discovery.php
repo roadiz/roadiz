@@ -31,7 +31,6 @@ class Discovery extends LazyParameterBag
     public function __construct(string $discoveryUri, ?CacheProvider $cacheProvider = null)
     {
         parent::__construct();
-        $this->ready = false;
         $this->discoveryUri = $discoveryUri;
         $this->cacheProvider = $cacheProvider;
     }

@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Viewers\UserViewer;
-use RZ\Roadiz\Utils\Security\TokenGenerator;
+use RZ\Roadiz\Random\TokenGenerator;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;

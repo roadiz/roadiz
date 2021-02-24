@@ -5,6 +5,10 @@ namespace RZ\Roadiz\Utils\Security;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * @deprecated Use \RZ\Roadiz\Random\RandomGenerator
+ * @package RZ\Roadiz\Utils\Security
+ */
 class RandomGenerator
 {
     protected ?LoggerInterface $logger;
