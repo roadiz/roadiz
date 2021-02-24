@@ -1,4 +1,4 @@
-FROM mariadb:10.2
+FROM mariadb:10.5
 MAINTAINER Ambroise Maupate <ambroise@rezo-zero.com>
 
 ARG USER_UID=1000

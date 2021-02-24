@@ -40,6 +40,9 @@ sub vcl_recv {
     #
     # Typically you clean up the request here, removing cookies you don't need,
     # rewriting the request, etc.
+    if (req.url ~ "(\?|\&)_preview=") {
+        return(pass);
+    }
     if (req.url ~ "^/(rz-admin|preview\.php|clear_cache\.php|install\.php|dev\.php)") {
         return(pass);
     } else {
@@ -81,7 +84,7 @@ sub vcl_backend_response {
     # and other mistakes your backend does.
 
     # Clean backend responses only on public pages.
-    if (bereq.url !~ "^/(rz-admin|preview\.php|clear_cache\.php|install\.php|dev\.php)") {
+    if (bereq.url !~ "^/(rz-admin|preview\.php|clear_cache\.php|install\.php|dev\.php)" && bereq.url !~ "(\?|\&)_preview=") {
         # Remove the cookie header to enable caching
         unset beresp.http.Set-Cookie;
     }
