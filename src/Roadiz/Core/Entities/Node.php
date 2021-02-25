@@ -13,6 +13,7 @@ use RZ\Roadiz\Attribute\Model\AttributableTrait;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -709,10 +710,10 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * Get node-sources using a given translation.
      *
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return Collection
      */
-    public function getNodeSourcesByTranslation(Translation $translation)
+    public function getNodeSourcesByTranslation(TranslationInterface $translation)
     {
         return $this->nodeSources->filter(function (NodesSources $nodeSource) use ($translation) {
             return $nodeSource->getTranslation()->getLocale() === $translation->getLocale();

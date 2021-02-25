@@ -69,8 +69,14 @@ sub vcl_recv {
     if (req.method == "BAN") {
         # Same ACL check as above:
         if (client.ip ~ local) {
-            ban("req.http.host ~ " + req.http.host);
-            return(synth(200, "Ban domain"));
+            if (req.http.X-Cache-Tags) {
+                ban("obj.http.X-Cache-Tags ~ " + req.http.X-Cache-Tags);
+                return(synth(200, "Ban using cache-tags"));
+            }
+            else {
+                ban("req.http.host ~ " + req.http.host);
+                return(synth(200, "Ban domain"));
+            }
         } else {
             return(synth(403, "Access denied."));
         }
@@ -95,5 +101,8 @@ sub vcl_deliver {
     # response to the client.
     #
     # You can do accounting or modifying the final object here.
+
+    # Remove cache-tags, unless you want Cloudflare or other to see them
+    unset resp.http.X-Cache-Tags;
 }
 
