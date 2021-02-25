@@ -6,6 +6,7 @@ Following versions are eligible for security updates, we encourage you to upgrad
 
 | Version   | Supported          |
 | --------- | ------------------ |
+| 1.6.x     | :white_check_mark: |
 | 1.5.x     | :white_check_mark: |
 | 1.4.x     | :white_check_mark: |
 | 1.3.x     | :white_check_mark: |
