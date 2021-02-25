@@ -60,6 +60,7 @@
         "roadiz/entity-generator":                 "~1.6.0 || dev-main",
         "roadiz/random":                           "~1.6.0 || dev-main",
         "roadiz/jwt":                              "~1.6.0 || dev-main",
+        "roadiz/openid":                           "~1.6.0 || dev-main",
         "roadiz/doc-generator":                    "~1.6.0 || dev-main",
         "roadiz/nodetype-contracts":               "~1.0.0",
         "rollerworks/password-strength-validator": "^1.3.2",
