@@ -15,13 +15,9 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
-/**
- * @package RZ\Roadiz\Core\Events
- */
 class PreviewModeSubscriber implements EventSubscriberInterface
 {
     const QUERY_PARAM_NAME = '_preview';
-    const PREVIEW_ROLE = 'ROLE_BACKEND_USER';
 
     protected PreviewResolverInterface $previewResolver;
     protected TokenStorageInterface $tokenStorage;
@@ -93,7 +89,7 @@ class PreviewModeSubscriber implements EventSubscriberInterface
             if (null === $token || !$token->isAuthenticated()) {
                 throw new PreviewNotAllowedException('You are not authenticated to use preview mode.');
             }
-            if (!$this->authorizationChecker->isGranted(static::PREVIEW_ROLE)) {
+            if (!$this->authorizationChecker->isGranted($this->previewResolver->getRequiredRole())) {
                 throw new PreviewNotAllowedException('You are not granted to use preview mode.');
             }
         }

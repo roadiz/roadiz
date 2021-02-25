@@ -18,7 +18,12 @@ class PreviewServiceProvider implements ServiceProviderInterface
     public function register(Container $pimple)
     {
         $pimple[PreviewResolverInterface::class] = function (Container $c) {
-            return new KernelPreviewRevolver($c['kernel'], $c['requestStack']);
+            return new KernelPreviewRevolver(
+                $c['kernel'],
+                $c['requestStack'],
+                // You can change required role for previewing
+                'ROLE_BACKEND_USER'
+            );
         };
 
         $pimple->extend('dispatcher', function (EventDispatcherInterface $dispatcher, Container $c) {

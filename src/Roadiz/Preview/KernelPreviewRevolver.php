@@ -15,15 +15,21 @@ final class KernelPreviewRevolver implements PreviewResolverInterface
 {
     private KernelInterface $kernel;
     private RequestStack $requestStack;
+    private string $requiredRole;
 
     /**
      * @param KernelInterface $kernel
      * @param RequestStack $requestStack
+     * @param string $requiredRole
      */
-    public function __construct(KernelInterface $kernel, RequestStack $requestStack)
-    {
+    public function __construct(
+        KernelInterface $kernel,
+        RequestStack $requestStack,
+        string $requiredRole
+    ) {
         $this->kernel = $kernel;
         $this->requestStack = $requestStack;
+        $this->requiredRole = $requiredRole;
     }
 
     /**
@@ -36,5 +42,10 @@ final class KernelPreviewRevolver implements PreviewResolverInterface
             return $request->isPreview() || $this->kernel->isPreview();
         }
         return $this->kernel->isPreview();
+    }
+
+    public function getRequiredRole(): string
+    {
+        return $this->requiredRole;
     }
 }

@@ -6,4 +6,6 @@ namespace RZ\Roadiz\Preview;
 interface PreviewResolverInterface
 {
     public function isPreview(): bool;
+
+    public function getRequiredRole(): string;
 }

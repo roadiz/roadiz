@@ -96,7 +96,7 @@ class StatusAwareRepository extends EntityRepository
         try {
             return $this->previewResolver->isPreview() &&
                 null !== $checker &&
-                $checker->isGranted(Role::ROLE_BACKEND_USER);
+                $checker->isGranted($this->previewResolver->getRequiredRole());
         } catch (AuthenticationCredentialsNotFoundException $e) {
             return false;
         }
