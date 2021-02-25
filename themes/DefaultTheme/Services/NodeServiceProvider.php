@@ -11,23 +11,21 @@ namespace Themes\DefaultTheme\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 /**
- * Class NodeServiceProvider
  * @package Themes\DefaultTheme\Services
  */
 class NodeServiceProvider implements ServiceProviderInterface
 {
-    protected $translation;
-    protected $coreServices;
+    protected ?TranslationInterface $translation;
+    protected Container $coreServices;
 
     /**
-     * NodeServiceProvider constructor.
      * @param Container $coreServices
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      */
-    public function __construct(Container $coreServices, Translation $translation = null)
+    public function __construct(Container $coreServices, TranslationInterface $translation = null)
     {
         $this->coreServices = $coreServices;
         $this->translation = $translation;

@@ -29,10 +29,9 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
-use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -49,7 +48,7 @@ class ContactController extends DefaultThemeApp
     /**
      * @param Request          $request
      * @param Node|null        $node
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @param string           $_locale
      * @param null             $_route
      *
@@ -58,7 +57,7 @@ class ContactController extends DefaultThemeApp
     public function indexAction(
         Request $request,
         Node $node = null,
-        Translation $translation = null,
+        TranslationInterface $translation = null,
         $_locale = "en",
         $_route = null
     ) {

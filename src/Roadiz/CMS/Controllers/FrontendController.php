@@ -150,14 +150,14 @@ abstract class FrontendController extends AppController
      *
      * @param Request $request
      * @param Node|null $node
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return Response
      */
     public function indexAction(
         Request $request,
         Node $node = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $this->get('stopwatch')->start('handleNodeController');
         $this->node = $node;
@@ -173,14 +173,14 @@ abstract class FrontendController extends AppController
      *
      * @param Request $request
      * @param Node|null $node
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return Response
      */
     protected function handle(
         Request $request,
         Node $node = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $this->get('stopwatch')->start('handleNodeController');
 
@@ -276,11 +276,11 @@ abstract class FrontendController extends AppController
      * Store basic information for your theme from a Node object.
      *
      * @param Node|null $node
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return void
      */
-    protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
+    protected function prepareThemeAssignation(Node $node = null, TranslationInterface $translation = null)
     {
         if (null === $this->themeContainer) {
             $this->container['stopwatch']->start('prepareThemeAssignation');
@@ -316,9 +316,9 @@ abstract class FrontendController extends AppController
      *     * keywords
      *
      * @param Node|null $node
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      */
-    public function storeNodeAndTranslation(Node $node = null, Translation $translation = null)
+    public function storeNodeAndTranslation(Node $node = null, TranslationInterface $translation = null)
     {
         $this->node = $node;
         $this->translation = $translation;
@@ -425,12 +425,14 @@ abstract class FrontendController extends AppController
      * Store basic information for your theme from a NodesSources object.
      *
      * @param NodesSources|null $nodeSource
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return void
      */
-    protected function prepareNodeSourceAssignation(NodesSources $nodeSource = null, Translation $translation = null)
-    {
+    protected function prepareNodeSourceAssignation(
+        NodesSources $nodeSource = null,
+        TranslationInterface $translation = null
+    ) {
         if (null === $this->themeContainer) {
             $this->storeNodeSourceAndTranslation($nodeSource, $translation);
             /** @deprecated Should not fetch home at each request */
@@ -458,10 +460,12 @@ abstract class FrontendController extends AppController
      *     * keywords
      *
      * @param NodesSources|null $nodeSource
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      */
-    public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
-    {
+    public function storeNodeSourceAndTranslation(
+        NodesSources $nodeSource = null,
+        TranslationInterface $translation = null
+    ) {
         $this->nodeSource = $nodeSource;
 
         if (null !== $this->nodeSource) {

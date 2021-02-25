@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Controllers;
 
 use JMS\Serializer\SerializationContext;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +18,7 @@ final class DefaultController extends FrontendController
     /**
      * @param Request $request
      * @param Node|null $node
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @param string $_format
      * @param Theme|null $theme
      *
@@ -28,7 +28,7 @@ final class DefaultController extends FrontendController
     public function indexAction(
         Request $request,
         Node $node = null,
-        Translation $translation = null,
+        TranslationInterface $translation = null,
         $_format = 'html',
         Theme $theme = null
     ) {

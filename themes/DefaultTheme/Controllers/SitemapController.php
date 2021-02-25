@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
- * Class SitemapController
  * @package Themes\DefaultTheme\Controllers
  */
 class SitemapController extends DefaultThemeApp
