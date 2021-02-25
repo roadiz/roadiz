@@ -57,8 +57,8 @@ services:
         build:
             #context: ./docker/php72-nginx-alpine
             #context: ./docker/php73-nginx-alpine
-            context: ./docker/php74-nginx-alpine
-            #context: ./docker/php80-nginx-alpine
+            #context: ./docker/php74-nginx-alpine
+            context: ./docker/php80-nginx-alpine
             args:
                 USER_UID: ${USER_UID}
         ports:
