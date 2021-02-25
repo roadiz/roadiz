@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -202,10 +203,10 @@ abstract class Controller implements ContainerAwareInterface
      * @param Request $request
      * @param string $_locale
      *
-     * @return Translation
+     * @return TranslationInterface
      * @throws NoTranslationAvailableException
      */
-    protected function bindLocaleFromRoute(Request $request, $_locale = null)
+    protected function bindLocaleFromRoute(Request $request, $_locale = null): TranslationInterface
     {
         /*
          * If you use a static route for Home page
@@ -221,9 +222,9 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * @param string|null $_locale
      *
-     * @return Translation
+     * @return TranslationInterface
      */
-    protected function findTranslationForLocale($_locale = null)
+    protected function findTranslationForLocale($_locale = null): TranslationInterface
     {
         if (null === $_locale) {
             return $this->get('defaultTranslation');

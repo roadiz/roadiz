@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
@@ -33,19 +33,16 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var PreviewResolverInterface
-     */
-    protected $previewResolver;
+    protected PreviewResolverInterface $previewResolver;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param Mapping\ClassMetadata $class
      * @param Container $container
      * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         Mapping\ClassMetadata $class,
         Container $container,
         PreviewResolverInterface $previewResolver

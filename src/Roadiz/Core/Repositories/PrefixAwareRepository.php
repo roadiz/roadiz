@@ -9,7 +9,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 
 /**
- * Class PrefixAwareRepository for defining join-qeuries prefixes.
+ * Class PrefixAwareRepository for defining join-queries prefixes.
  *
  * @package RZ\Roadiz\Core\Repositories
  * @template T
@@ -151,7 +151,7 @@ class PrefixAwareRepository extends EntityRepository
      * Count entities using a Criteria object or a simple filter array.
      *
      * @param array $criteria
-     * @param array $order
+     * @param array|null $order
      * @param int|null $limit
      * @param int|null $offset
      * @return array|Paginator

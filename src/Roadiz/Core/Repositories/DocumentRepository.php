@@ -7,13 +7,13 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 
 /**
@@ -247,11 +247,11 @@ class DocumentRepository extends EntityRepository
      * Bind translation parameter to final query
      *
      * @param QueryBuilder $qb
-     * @param null|Translation $translation
+     * @param null|TranslationInterface $translation
      */
     protected function applyTranslationByFolder(
         QueryBuilder $qb,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         if (null !== $translation) {
             $qb->setParameter('translation', $translation);
@@ -263,9 +263,9 @@ class DocumentRepository extends EntityRepository
      *
      * @param array        $criteria
      * @param QueryBuilder $qb
-     * @param Translation  $translation
+     * @param TranslationInterface|null $translation
      */
-    protected function filterByTranslation(&$criteria, QueryBuilder $qb, &$translation = null)
+    protected function filterByTranslation(&$criteria, QueryBuilder $qb, TranslationInterface $translation = null)
     {
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
@@ -306,7 +306,7 @@ class DocumentRepository extends EntityRepository
      * @param array|null $orderBy
      * @param integer|null $limit
      * @param integer|null $offset
-     * @param Translation $translation
+     * @param TranslationInterface|null $translation
      *
      * @return QueryBuilder
      */
@@ -315,7 +315,7 @@ class DocumentRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->createQueryBuilder('d');
         $qb->andWhere($qb->expr()->eq('d.raw', ':raw'))
@@ -349,13 +349,13 @@ class DocumentRepository extends EntityRepository
      * This method allows to pre-filter Documents with a given translation.
      *
      * @param array $criteria
-     * @param Translation $translation
+     * @param TranslationInterface|null $translation
      *
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
         array &$criteria,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->getContextualQueryWithTranslation($criteria, null, null, null, $translation);
         return $qb->select($qb->expr()->countDistinct('d.id'));
@@ -368,7 +368,7 @@ class DocumentRepository extends EntityRepository
      * @param array|null $orderBy
      * @param integer|null $limit
      * @param integer|null $offset
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return array|Paginator
      */
@@ -377,7 +377,7 @@ class DocumentRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->getContextualQueryWithTranslation(
             $criteria,
@@ -410,7 +410,7 @@ class DocumentRepository extends EntityRepository
      *
      * @param array            $criteria
      * @param array|null       $orderBy
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return Document|null
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -418,7 +418,7 @@ class DocumentRepository extends EntityRepository
     public function findOneBy(
         array $criteria,
         array $orderBy = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->getContextualQueryWithTranslation(
             $criteria,
@@ -441,13 +441,13 @@ class DocumentRepository extends EntityRepository
      * Just like the countBy method but with relational criteria.
      *
      * @param array $criteria
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return int
      */
     public function countBy(
         $criteria,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $query = $this->getCountContextualQueryWithTranslation(
             $criteria,
@@ -468,7 +468,7 @@ class DocumentRepository extends EntityRepository
      * @return array
      */
     public function findByNodeSourceAndField(
-        $nodeSource,
+        NodesSources $nodeSource,
         NodeTypeField $field
     ) {
         $qb = $this->createQueryBuilder('d');
@@ -497,8 +497,8 @@ class DocumentRepository extends EntityRepository
      * @return array
      */
     public function findByNodeSourceAndFieldName(
-        $nodeSource,
-        $fieldName
+        NodesSources $nodeSource,
+        string $fieldName
     ) {
         trigger_error(
             'Method ' . __METHOD__ . ' is deprecated. Use findByNodeSourceAndField because relying on field name **is not safe**.',

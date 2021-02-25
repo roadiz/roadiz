@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -57,7 +58,7 @@ abstract class FrontendController extends AppController
 
     protected ?Node $node = null;
     protected ?NodesSources $nodeSource = null;
-    protected ?Translation $translation = null;
+    protected ?TranslationInterface $translation = null;
     protected ?Container $themeContainer = null;
 
     /**
@@ -137,9 +138,9 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
-    public function getTranslation(): ?Translation
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }

@@ -6,11 +6,11 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Events\QueryNodesSourcesEvent;
@@ -417,7 +417,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * Search nodes sources by using Solr search engine.
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
-     * @param integer $limit Result number to fetch (default: all)
+     * @param int $limit Result number to fetch (default: all)
      * @return array
      */
     public function findBySearchQuery($query, $limit = 25)
@@ -448,11 +448,11 @@ class NodesSourcesRepository extends StatusAwareRepository
      * and a specific translation.
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
-     * @param Translation $translation Current translation
+     * @param TranslationInterface $translation Current translation
      * @param int $limit
      * @return SearchResultsInterface
      */
-    public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
+    public function findBySearchQueryAndTranslation($query, TranslationInterface $translation, $limit = 25)
     {
         /** @var SearchHandlerInterface|null $service */
         $service = $this->get(NodeSourceSearchHandlerInterface::class);
@@ -534,7 +534,7 @@ class NodesSourcesRepository extends StatusAwareRepository
     /**
      * Find latest updated NodesSources using Log table.
      *
-     * @param integer $maxResult
+     * @param int $maxResult
      * @return Paginator
      */
     public function findByLatestUpdated($maxResult = 5)
@@ -580,10 +580,10 @@ class NodesSourcesRepository extends StatusAwareRepository
 
     /**
      * @param Node $node
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return mixed|null
      */
-    public function findOneByNodeAndTranslation(Node $node, Translation $translation)
+    public function findOneByNodeAndTranslation(Node $node, TranslationInterface $translation)
     {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
 

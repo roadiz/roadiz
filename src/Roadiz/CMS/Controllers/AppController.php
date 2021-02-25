@@ -9,12 +9,12 @@ use Pimple\Container;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
 use ReflectionException;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Entities\User;
 use RZ\Roadiz\Core\Events\CachableResponseSubscriber;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
@@ -679,11 +679,11 @@ abstract class AppController extends Controller
     }
 
     /**
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @return null|Node
      * @deprecated
      */
-    protected function getHome(?Translation $translation = null): ?Node
+    protected function getHome(?TranslationInterface $translation = null): ?Node
     {
         $this->container['stopwatch']->start('getHome');
         if (null === $this->homeNode) {

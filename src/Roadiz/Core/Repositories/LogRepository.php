@@ -15,7 +15,7 @@ class LogRepository extends EntityRepository
     /**
      * Find latest Log with NodesSources.
      *
-     * @param integer $maxResult
+     * @param int $maxResult
      * @return Paginator
      */
     public function findLatestByNodesSources($maxResult = 5)

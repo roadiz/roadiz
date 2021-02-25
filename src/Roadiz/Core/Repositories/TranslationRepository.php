@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Repositories;
 
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\Translation;
 
 /**
  * @package RZ\Roadiz\Core\Repositories
@@ -17,7 +17,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get single default translation.
      *
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
     public function findDefault()
     {
@@ -38,7 +38,7 @@ class TranslationRepository extends EntityRepository
     /**
      * Get all available translations.
      *
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findAllAvailable()
     {
@@ -155,7 +155,7 @@ class TranslationRepository extends EntityRepository
      *
      * @param string $locale
      *
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findByLocaleAndAvailable($locale)
     {
@@ -179,7 +179,7 @@ class TranslationRepository extends EntityRepository
      * Get all available translations by overrideLocale.
      *
      * @param string $overrideLocale
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findByOverrideLocaleAndAvailable($overrideLocale)
     {
@@ -205,12 +205,12 @@ class TranslationRepository extends EntityRepository
      * @param string $locale
      * @param string $alias
      *
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
     public function findOneByLocaleOrOverrideLocale(
         $locale,
         string $alias = TranslationRepository::TRANSLATION_ALIAS
-    ): ?Translation {
+    ): ?TranslationInterface {
         $qb = $this->createQueryBuilder($alias);
         $qb->andWhere($qb->expr()->orX(
             $qb->expr()->eq($alias . '.locale', ':locale'),
@@ -227,11 +227,11 @@ class TranslationRepository extends EntityRepository
     }
 
     /**
-     * Get one available translation by locale or override locqle.
+     * Get one available translation by locale or override locale.
      *
      * @param string $locale
      *
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
     public function findOneAvailableByLocaleOrOverrideLocale($locale)
     {
@@ -257,7 +257,7 @@ class TranslationRepository extends EntityRepository
      *
      * @param string $locale
      *
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
     public function findOneByLocaleAndAvailable($locale)
     {
@@ -280,7 +280,7 @@ class TranslationRepository extends EntityRepository
      *
      * @param string $overrideLocale
      *
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
     public function findOneByOverrideLocaleAndAvailable($overrideLocale)
     {
@@ -303,7 +303,7 @@ class TranslationRepository extends EntityRepository
 
     /**
      * @param Node $node
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findAvailableTranslationsForNode(Node $node)
     {
@@ -320,7 +320,7 @@ class TranslationRepository extends EntityRepository
 
     /**
      * @param Tag $tag
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findAvailableTranslationsForTag(Tag $tag)
     {
@@ -336,7 +336,7 @@ class TranslationRepository extends EntityRepository
 
     /**
      * @param Folder $folder
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findAvailableTranslationsForFolder(Folder $folder)
     {
@@ -354,7 +354,7 @@ class TranslationRepository extends EntityRepository
      * Find available node translations which are available too.
      *
      * @param Node $node
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findStrictlyAvailableTranslationsForNode(Node $node)
     {
@@ -374,7 +374,7 @@ class TranslationRepository extends EntityRepository
 
     /**
      * @param Node $node
-     * @return Translation[]
+     * @return TranslationInterface[]
      */
     public function findUnavailableTranslationsForNode(Node $node)
     {

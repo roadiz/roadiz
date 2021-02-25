@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\QueryBuilder;
 use Pimple\Container;
@@ -33,7 +33,7 @@ class StatusAwareRepository extends EntityRepository
      * @inheritDoc
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         Mapping\ClassMetadata $class,
         Container $container,
         PreviewResolverInterface $previewResolver
