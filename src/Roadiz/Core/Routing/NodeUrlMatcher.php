@@ -23,6 +23,9 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @var PathResolverInterface
      */
     protected PathResolverInterface $pathResolver;
+    /**
+     * @var class-string
+     */
     private string $defaultControllerClass;
 
     /**
@@ -48,7 +51,7 @@ class NodeUrlMatcher extends DynamicUrlMatcher
      * @param PreviewResolverInterface $previewResolver
      * @param Stopwatch|null $stopwatch
      * @param LoggerInterface|null $logger
-     * @param string $defaultControllerClass
+     * @param class-string $defaultControllerClass
      */
     public function __construct(
         PathResolverInterface $pathResolver,

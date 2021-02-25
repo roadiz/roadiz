@@ -277,7 +277,8 @@ class FirewallEntry
                     'login_path' => $this->firewallLogin,
                     'target_path_parameter' => '_target_path',
                     'use_referer' => $this->useReferer,
-                ]
+                ],
+                $this->providerKey
             );
             if ($this->authenticationSuccessHandler instanceof LoginAttemptAwareInterface) {
                 $this->authenticationSuccessHandler->setLoginAttemptManager(

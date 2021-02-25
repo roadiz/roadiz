@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -26,7 +26,7 @@ class RoadizRouteCollection extends DeferredRouteCollection
      */
     protected $themeResolver;
     /**
-     * @var Settings
+     * @var ParameterBag
      */
     protected $settingsBag;
     /**
@@ -38,13 +38,13 @@ class RoadizRouteCollection extends DeferredRouteCollection
 
     /**
      * @param ThemeResolverInterface $themeResolver
-     * @param Settings $settingsBag
+     * @param ParameterBag $settingsBag
      * @param PreviewResolverInterface $previewResolver
      * @param Stopwatch|null $stopwatch
      */
     public function __construct(
         ThemeResolverInterface $themeResolver,
-        Settings $settingsBag,
+        ParameterBag $settingsBag,
         PreviewResolverInterface $previewResolver,
         Stopwatch $stopwatch = null
     ) {

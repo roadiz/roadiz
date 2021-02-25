@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManagerInterface;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractEntityListManager implements EntityListManagerInterface

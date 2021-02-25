@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 
 /**
@@ -14,12 +14,12 @@ use RZ\Roadiz\Core\Repositories\NodeRepository;
 class NodePaginator extends Paginator
 {
     /**
-     * @var Translation|null
+     * @var TranslationInterface|null
      */
     protected $translation = null;
 
     /**
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
     public function getTranslation()
     {
@@ -27,11 +27,11 @@ class NodePaginator extends Paginator
     }
 
     /**
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return $this
      */
-    public function setTranslation(Translation $translation = null)
+    public function setTranslation(TranslationInterface $translation = null)
     {
         $this->translation = $translation;
         return $this;

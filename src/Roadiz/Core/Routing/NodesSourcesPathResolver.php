@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\ORM\EntityManagerInterface;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -41,8 +42,11 @@ final class NodesSourcesPathResolver implements PathResolverInterface
      * @param bool $allowRootPaths Allow resolving / and /en, /fr paths to home pages
      * @return ResourceInfo
      */
-    public function resolvePath(string $path, array $supportedFormatExtensions = ['html'], bool $allowRootPaths = false): ResourceInfo
-    {
+    public function resolvePath(
+        string $path,
+        array $supportedFormatExtensions = ['html'],
+        bool $allowRootPaths = false
+    ): ResourceInfo {
         $resourceInfo = new ResourceInfo();
         $tokens = $this->tokenizePath($path);
 
@@ -127,9 +131,9 @@ final class NodesSourcesPathResolver implements PathResolverInterface
      *
      * @param array<string> $tokens
      *
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
-    private function parseTranslation(array &$tokens): ?Translation
+    private function parseTranslation(array &$tokens): ?TranslationInterface
     {
         /** @var TranslationRepository $repository */
         $repository = $this->entityManager->getRepository(Translation::class);
@@ -153,11 +157,11 @@ final class NodesSourcesPathResolver implements PathResolverInterface
 
     /**
      * @param array<string> $tokens
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return NodesSources|null
      */
-    private function parseFromIdentifier(array &$tokens, ?Translation $translation = null): ?NodesSources
+    private function parseFromIdentifier(array &$tokens, ?TranslationInterface $translation = null): ?NodesSources
     {
         if (!empty($tokens[0])) {
             /*

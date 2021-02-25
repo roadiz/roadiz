@@ -12,13 +12,11 @@ use RZ\Roadiz\Utils\StringHandler;
 class NodeRouteHelper
 {
     private Node $node;
-
     private ?Theme $theme;
     /**
      * @var class-string|null
      */
     private ?string $controller = null;
-
     private PreviewResolverInterface $previewResolver;
     /**
      * @var class-string

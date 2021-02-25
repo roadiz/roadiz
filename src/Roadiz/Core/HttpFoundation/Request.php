@@ -16,12 +16,12 @@ class Request extends BaseRequest implements PreviewAwareInterface
     /**
      * @var null|Theme
      */
-    protected $theme = null;
+    protected ?Theme $theme = null;
 
     /**
      * @var bool Preview mode, override Kernel-wide parameter
      */
-    protected $preview = false;
+    protected bool $preview = false;
 
     /**
      * @param Theme|null $theme

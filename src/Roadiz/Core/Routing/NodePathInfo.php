@@ -5,22 +5,10 @@ namespace RZ\Roadiz\Core\Routing;
 
 class NodePathInfo implements \Serializable
 {
-    /**
-     * @var string
-     */
-    protected $path;
-    /**
-     * @var array
-     */
-    protected $parameters = [];
-    /**
-     * @var bool
-     */
-    protected $isComplete = false;
-    /**
-     * @var bool
-     */
-    protected $containsScheme = false;
+    protected ?string $path = null;
+    protected array $parameters = [];
+    protected bool $isComplete = false;
+    protected bool $containsScheme = false;
 
     /**
      * @return string|null

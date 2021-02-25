@@ -6,13 +6,13 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\Common\Cache\CacheProvider;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Config\NullLoader;
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
@@ -26,27 +26,15 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var string
      */
     const NO_CACHE_PARAMETER = '_no_cache';
-    /**
-     * @var ThemeResolverInterface
-     */
-    private $themeResolver;
-    /**
-     * @var CacheProvider
-     */
-    private $nodeSourceUrlCacheProvider;
-    /**
-     * @var Settings
-     */
-    private $settingsBag;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
+    private ThemeResolverInterface $themeResolver;
+    private ?CacheProvider $nodeSourceUrlCacheProvider = null;
+    private ParameterBag $settingsBag;
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
      * @param UrlMatcherInterface $matcher
      * @param ThemeResolverInterface $themeResolver
-     * @param Settings $settingsBag
+     * @param ParameterBag $settingsBag
      * @param EventDispatcherInterface $eventDispatcher
      * @param array $options
      * @param RequestContext|null $context
@@ -55,7 +43,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     public function __construct(
         UrlMatcherInterface $matcher,
         ThemeResolverInterface $themeResolver,
-        Settings $settingsBag,
+        ParameterBag $settingsBag,
         EventDispatcherInterface $eventDispatcher,
         array $options = [],
         RequestContext $context = null,
@@ -83,9 +71,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     }
 
     /**
-     * @return CacheProvider
+     * @return CacheProvider|null
      */
-    public function getNodeSourceUrlCacheProvider(): CacheProvider
+    public function getNodeSourceUrlCacheProvider(): ?CacheProvider
     {
         return $this->nodeSourceUrlCacheProvider;
     }

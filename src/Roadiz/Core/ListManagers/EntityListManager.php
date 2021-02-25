@@ -69,7 +69,6 @@ class EntityListManager extends AbstractEntityListManager
         parent::__construct($request);
         $this->entityName = $entityName;
         $this->entityManager = $entityManager;
-
         $this->orderingArray = $preOrdering;
         $this->filteringArray = $preFilters;
         $this->assignation = [];

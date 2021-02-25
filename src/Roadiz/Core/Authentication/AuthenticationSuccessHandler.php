@@ -6,7 +6,6 @@ namespace RZ\Roadiz\Core\Authentication;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Authentication\Manager\LoginAttemptManager;
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -25,12 +24,14 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler i
      * @param EntityManagerInterface $em
      * @param ?RememberMeServicesInterface $rememberMeServices
      * @param array $options Options for processing a successful authentication attempt.
+     * @param string $providerKey
      */
     public function __construct(
         HttpUtils $httpUtils,
         EntityManagerInterface $em,
         RememberMeServicesInterface $rememberMeServices = null,
-        array $options = []
+        array $options = [],
+        string $providerKey = 'roadiz_domain'
     ) {
         parent::__construct($httpUtils, $options);
         $this->em = $em;
@@ -39,7 +40,7 @@ class AuthenticationSuccessHandler extends DefaultAuthenticationSuccessHandler i
         /*
          * Enable session based _target_url
          */
-        $this->setProviderKey(Kernel::SECURITY_DOMAIN);
+        $this->setProviderKey($providerKey);
     }
 
     /**

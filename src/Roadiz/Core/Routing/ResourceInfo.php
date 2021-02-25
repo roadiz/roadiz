@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 /**
  * @package src\Roadiz\Core\Routing
@@ -12,7 +12,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 final class ResourceInfo
 {
     protected ?AbstractEntity $resource;
-    protected ?Translation $translation;
+    protected ?TranslationInterface $translation;
     protected string $format;
     protected string $locale;
 
@@ -35,18 +35,18 @@ final class ResourceInfo
     }
 
     /**
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
-    public function getTranslation(): ?Translation
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }
 
     /**
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @return ResourceInfo
      */
-    public function setTranslation(?Translation $translation): ResourceInfo
+    public function setTranslation(?TranslationInterface $translation): ResourceInfo
     {
         $this->translation = $translation;
         return $this;

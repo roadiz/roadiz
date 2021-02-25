@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Config\NullLoader;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
@@ -15,24 +15,18 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class RedirectionRouter extends Router implements VersatileGeneratorInterface
 {
-    /**
-     * @var EntityManager
-     */
-    protected $em;
-    /**
-     * @var Stopwatch|null
-     */
-    protected $stopwatch;
+    protected EntityManagerInterface $em;
+    protected ?Stopwatch $stopwatch;
 
     /**
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param array $options
      * @param RequestContext|null $context
      * @param LoggerInterface|null $logger
      * @param Stopwatch|null $stopwatch
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         array $options = [],
         RequestContext $context = null,
         LoggerInterface $logger = null,

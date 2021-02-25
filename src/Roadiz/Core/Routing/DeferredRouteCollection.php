@@ -19,6 +19,8 @@ class DeferredRouteCollection extends RouteCollection
      *
      * Useful if you want to use a caching system on your Router
      * and parse Yaml file only when cache is not available.
+     *
+     * @return void
      */
     public function parseResources()
     {

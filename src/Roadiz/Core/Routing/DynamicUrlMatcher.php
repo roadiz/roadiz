@@ -3,12 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Theme;
-use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Repositories\NodeRepository;
-use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
@@ -22,26 +18,11 @@ use Symfony\Component\Stopwatch\Stopwatch;
  */
 abstract class DynamicUrlMatcher extends UrlMatcher
 {
-    /**
-     * @var Theme
-     */
-    protected $theme;
-    /**
-     * @var Stopwatch
-     */
-    protected $stopwatch;
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @var ThemeResolverInterface
-     */
-    protected $themeResolver;
-    /**
-     * @var PreviewResolverInterface
-     */
-    protected $previewResolver;
+    protected ?Theme $theme;
+    protected ?Stopwatch $stopwatch;
+    protected ?LoggerInterface $logger;
+    protected ThemeResolverInterface $themeResolver;
+    protected PreviewResolverInterface $previewResolver;
 
     /**
      * @param RequestContext $context

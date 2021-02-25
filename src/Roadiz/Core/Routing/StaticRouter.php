@@ -14,10 +14,7 @@ use Symfony\Component\Routing\Router;
  */
 class StaticRouter extends Router
 {
-    /**
-     * @var DeferredRouteCollection
-     */
-    protected $routeCollection;
+    protected DeferredRouteCollection $routeCollection;
 
     /**
      * @param DeferredRouteCollection $routeCollection
