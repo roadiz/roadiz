@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Translation\Twig;
 
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\Intl\Countries;
 use Symfony\Component\Intl\Locales;
@@ -34,7 +35,7 @@ class TranslationExtension extends AbstractExtension
      */
     public function isLocaleRtl($mixed)
     {
-        if ($mixed instanceof Translation) {
+        if ($mixed instanceof TranslationInterface) {
             return $mixed->isRtl();
         }
 
