@@ -83,6 +83,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
         $this->children = new ArrayCollection();
         $this->documents = new ArrayCollection();
         $this->translatedFolders = new ArrayCollection();
+        $this->initAbstractDateTimed();
     }
 
     /**
@@ -138,7 +139,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection<FolderTranslation>
      */
     public function getTranslatedFolders(): Collection
     {
@@ -146,7 +147,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * @param Collection $translatedFolders
+     * @param Collection<FolderTranslation> $translatedFolders
      * @return Folder
      */
     public function setTranslatedFolders(Collection $translatedFolders)
@@ -157,7 +158,7 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
 
     /**
      * @param Translation $translation
-     * @return Collection
+     * @return Collection<FolderTranslation>
      */
     public function getTranslatedFoldersByTranslation(Translation $translation): Collection
     {
@@ -165,15 +166,6 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
         $criteria->where(Criteria::expr()->eq('translation', $translation));
 
         return $this->translatedFolders->matching($criteria);
-    }
-
-    /**
-     * @return string
-     * @deprecated Use getFolderName() method instead to differenciate from FolderTranslation’ name.
-     */
-    public function getName()
-    {
-        return $this->getFolderName();
     }
 
     /**
@@ -196,13 +188,15 @@ class Folder extends AbstractDateTimedPositioned implements FolderInterface
     }
 
     /**
-     * @param string $folderName
-     * @return Folder
-     * @deprecated Use setFolderName() method instead to differentiate from FolderTranslation’ name.
+     * @return string|null
+     * @Serializer\VirtualProperty
+     * @Serializer\Groups({"folder"})
      */
-    public function setName($folderName)
+    public function getName(): ?string
     {
-        return $this->setFolderName($folderName);
+        return $this->getTranslatedFolders()->first() ?
+            $this->getTranslatedFolders()->first()->getName() :
+            $this->getFolderName();
     }
 
     /**

@@ -129,6 +129,26 @@
                 <target state="translated">Réduit la liste des scopes demandés. Lister les scopes séparés par un espace. Si la liste est laissée vide, OpenID tentera de se connecter avec tous les scopes disponibles depuis le document d’auto-découverte.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_preview_scheme">
+                <source>custom_preview_scheme</source>
+                <target state="translated">Système d'URL de prévisualisation personnalisé</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_preview_scheme.help">
+                <source>custom_preview_scheme.help</source>
+                <target state="translated">Remplace la query-string "?preview=1" des URL de prévisualisation par un nom de domaine personnalisé. Cela peut être utile avec la version *Headless* de Roadiz.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="use_typed_node_names">
+                <source>use_typed_node_names</source>
+                <target state="translated">Utiliser des noms de nœuds typés</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="use_typed_node_names.help">
+                <source>use_typed_node_names.help</source>
+                <target state="translated">Une fois activée, cette option suffixera chaque nom des nœuds non-atteignables (blocs) avec leur type pour éviter les conflits de nom avec les nœud atteignables (pages).</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="openid_username_claim">
                 <source>openid_username_claim</source>
                 <target state="translated">Claim du nom d’utilisateur Open ID</target>
@@ -138,6 +158,37 @@
                 <source>openid_username_claim.help</source>
                 <target state="translated">Si vide, Roadiz utilisera le claim “email” comme nom d’utilisateur Open ID</target>
                 <note>Setting description</note>
+            </trans-unit>
+      <!-- Setting groups names -->
+      <trans-unit xml:space="preserve" id="APIs">
+                <source>APIs</source>
+                <target state="translated">API</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Development">
+                <source>Development</source>
+                <target state="translated">Développement</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Emailings">
+                <source>Emailings</source>
+                <target state="translated">Envoi d'e-mails</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="OpenId">
+                <source>OpenId</source>
+                <target state="translated">OpenID</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Site informations">
+                <source>Site informations</source>
+                <target state="translated">Informations du site</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Social networks">
+                <source>Social networks</source>
+                <target state="translated">Réseaux sociaux</target>
+                <note>Setting group name</note>
             </trans-unit>
     </body>
   </file>

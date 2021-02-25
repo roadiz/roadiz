@@ -11,14 +11,30 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class DocumentCollectionType extends AbstractType
+final class DocumentCollectionType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->addModelTransformer(new DocumentCollectionTransformer($options['entityManager'], true));
+        $builder->addModelTransformer(new DocumentCollectionTransformer(
+            $this->entityManager,
+            true
+        ));
     }
 
     /**
@@ -27,15 +43,12 @@ class DocumentCollectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
+            'label' => false,
             'required' => false,
             'class' => Document::class,
             'multiple' => true,
             'property' => 'id',
         ]);
-        $resolver->setRequired([
-            'entityManager'
-        ]);
-        $resolver->setAllowedTypes('entityManager', EntityManagerInterface::class);
     }
 
     /**

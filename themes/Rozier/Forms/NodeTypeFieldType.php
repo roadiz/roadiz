@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\NodeTypeField as NodeTypeFieldConstraint;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeFieldName;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Config\Configuration;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -23,7 +21,6 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * Class NodeTypeFieldType
  * @package Themes\Rozier\Forms
  */
 class NodeTypeFieldType extends AbstractType
@@ -36,11 +33,6 @@ class NodeTypeFieldType extends AbstractType
             'constraints' => [
                 new NotNull(),
                 new NotBlank(),
-                new UniqueNodeTypeFieldName([
-                    'entityManager' => $options['em'],
-                    'nodeType' => $options['nodeType'],
-                    'currentValue' => $options['fieldName'],
-                ]),
                 new NonSqlReservedWord(),
                 new SimpleLatinString(),
                 new Length([
@@ -136,17 +128,18 @@ class NodeTypeFieldType extends AbstractType
             ],
             'constraints' => [
                 new NodeTypeFieldConstraint(),
+                new UniqueEntity([
+                    'fields' => [
+                        'name',
+                        'nodeType'
+                    ]
+                ])
             ]
         ]);
 
         $resolver->setRequired([
-            'nodeType',
-            'em',
             'inheritance_type'
         ]);
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('inheritance_type', 'string');
-        $resolver->setAllowedTypes('fieldName', 'string');
-        $resolver->setAllowedTypes('nodeType', NodeType::class);
     }
 }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Form;
 
-use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
 use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
@@ -39,8 +38,7 @@ class AttributeType extends AbstractType
                 'label' => 'attributes.form.group',
                 'required' => false,
                 'help' => 'attributes.form_help.group',
-                'placeholder' => 'attributes.form.group.placeholder',
-                'entityManager' => $options['entityManager']
+                'placeholder' => 'attributes.form.group.placeholder'
             ])
             ->add('color', ColorType::class, [
                 'label' => 'attributes.form.color',
@@ -78,7 +76,6 @@ class AttributeType extends AbstractType
                 'by_reference' => false,
                 'entry_options' => [
                     'label' => false,
-                    'entityManager' => $options['entityManager'],
                     'attr' => [
                         'class' => 'uk-form uk-form-horizontal'
                     ]
@@ -91,8 +88,7 @@ class AttributeType extends AbstractType
                 'label' => 'attributes.form.documents',
                 'help' => 'attributes.form_help.documents',
                 'required' => false,
-                'attribute' => $builder->getForm()->getData(),
-                'entityManager' => $options['entityManager'],
+                'attribute' => $builder->getForm()->getData()
             ])
         ;
     }
@@ -104,14 +100,11 @@ class AttributeType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefault('data_class', Attribute::class);
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
 
         $resolver->setNormalizer('constraints', function (Options $options) {
             return [
                 new UniqueEntity([
                     'fields' => ['code'],
-                    'entityManager' => $options['entityManager'],
                 ])
             ];
         });

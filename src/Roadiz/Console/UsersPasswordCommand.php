@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\User;
-use RZ\Roadiz\Utils\Security\PasswordGenerator;
+use RZ\Roadiz\Random\PasswordGenerator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

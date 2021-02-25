@@ -13,7 +13,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Themes\Rozier\Explorer\ExplorerProviderInterface;
 
 /**
- * Class ExplorerProviderItemType
  * @package RZ\Roadiz\CMS\Forms
  */
 class ExplorerProviderItemType extends AbstractType

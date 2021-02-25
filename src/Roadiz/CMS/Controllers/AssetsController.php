@@ -3,31 +3,52 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Controllers;
 
+use AM\InterventionRequest\InterventionRequest;
 use AM\InterventionRequest\ShortUrlExpander;
+use Doctrine\ORM\EntityManagerInterface;
+use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Font;
+use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Repositories\FontRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Twig\Environment;
 
 /**
  * Special controller app file for assets management with InterventionRequest lib.
  */
-class AssetsController extends CmsController
+final class AssetsController
 {
-    /**
-     * Initialize controller with NO twig environment.
-     */
-    public function __init()
-    {
-    }
+    private Kernel $kernel;
+    private InterventionRequest $interventionRequest;
+    private EntityManagerInterface $entityManager;
+    private Environment $templating;
+    private Settings $settingsBag;
+    private Packages $packages;
 
     /**
-     * {@inheritdoc}
+     * @param Kernel $kernel
+     * @param InterventionRequest $interventionRequest
+     * @param EntityManagerInterface $entityManager
+     * @param Environment $templating
+     * @param Settings $settingsBag
+     * @param Packages $packages
      */
-    public function prepareBaseAssignation()
-    {
-        return $this;
+    public function __construct(
+        Kernel $kernel,
+        InterventionRequest $interventionRequest,
+        EntityManagerInterface $entityManager,
+        Environment $templating,
+        Settings $settingsBag,
+        Packages $packages
+    ) {
+        $this->kernel = $kernel;
+        $this->interventionRequest = $interventionRequest;
+        $this->entityManager = $entityManager;
+        $this->templating = $templating;
+        $this->settingsBag = $settingsBag;
+        $this->packages = $packages;
     }
 
     /**
@@ -37,23 +58,19 @@ class AssetsController extends CmsController
      *
      * @return Response
      */
-    public function interventionRequestAction(Request $request, $queryString, $filename)
+    public function interventionRequestAction(Request $request, string $queryString, string $filename)
     {
         try {
             /*
              * Handle short url with Url rewriting
              */
             $expander = new ShortUrlExpander($request);
-            $expander->setIgnorePath($this->get('kernel')->getPublicCacheBasePath());
+            $expander->setIgnorePath($this->kernel->getPublicCacheBasePath());
             $expander->injectParamsToRequest($queryString, $filename);
 
-            /*
-             * Handle main image request
-             */
-            $interventionRequest = $this->get('interventionRequest');
-            $interventionRequest->handleRequest($request);
+            $this->interventionRequest->handleRequest($request);
 
-            return $interventionRequest->getResponse($request);
+            return $this->interventionRequest->getResponse($request);
         } catch (\ReflectionException $e) {
             $message = '[Configuration] ' . $e->getMessage();
 
@@ -85,39 +102,36 @@ class AssetsController extends CmsController
     public function fontFileAction(Request $request, string $filename, int $variant, string $extension)
     {
         /** @var FontRepository $repository */
-        $repository = $this->get('em')->getRepository(Font::class);
+        $repository = $this->entityManager->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
         /** @var Font $font */
         $font = $repository->findOneBy(['hash' => $filename, 'variant' => $variant]);
 
-        /** @var Packages $packages */
-        $packages = $this->get('assetPackages');
-
         if (null !== $font) {
             switch ($extension) {
                 case 'eot':
-                    $fontpath = $packages->getFontsPath($font->getEOTRelativeUrl());
+                    $fontpath = $this->packages->getFontsPath($font->getEOTRelativeUrl());
                     $mime = Font::MIME_EOT;
                     break;
                 case 'woff':
-                    $fontpath = $packages->getFontsPath($font->getWOFFRelativeUrl());
+                    $fontpath = $this->packages->getFontsPath($font->getWOFFRelativeUrl());
                     $mime = Font::MIME_WOFF;
                     break;
                 case 'woff2':
-                    $fontpath = $packages->getFontsPath($font->getWOFF2RelativeUrl());
+                    $fontpath = $this->packages->getFontsPath($font->getWOFF2RelativeUrl());
                     $mime = Font::MIME_WOFF2;
                     break;
                 case 'svg':
-                    $fontpath = $packages->getFontsPath($font->getSVGRelativeUrl());
+                    $fontpath = $this->packages->getFontsPath($font->getSVGRelativeUrl());
                     $mime = Font::MIME_SVG;
                     break;
                 case 'otf':
                     $mime = Font::MIME_OTF;
-                    $fontpath = $packages->getFontsPath($font->getOTFRelativeUrl());
+                    $fontpath = $this->packages->getFontsPath($font->getOTFRelativeUrl());
                     break;
                 case 'ttf':
                     $mime = Font::MIME_TTF;
-                    $fontpath = $packages->getFontsPath($font->getOTFRelativeUrl());
+                    $fontpath = $this->packages->getFontsPath($font->getOTFRelativeUrl());
                     break;
                 default:
                     $fontpath = null;
@@ -169,7 +183,7 @@ class AssetsController extends CmsController
     public function fontFacesAction(Request $request)
     {
         /** @var FontRepository $repository */
-        $repository = $this->get('em')->getRepository(Font::class);
+        $repository = $this->entityManager->getRepository(Font::class);
         $lastMod = $repository->getLatestUpdateDate();
 
         $response = new Response(
@@ -200,13 +214,13 @@ class AssetsController extends CmsController
             $variantHash = $font->getHash() . $font->getVariant();
             $assignation['fonts'][] = [
                 'font' => $font,
-                'site' => $this->get('settingsBag')->get('site_name'),
-                'fontFolder' => $this->get('kernel')->getFontsFilesBasePath(),
+                'site' => $this->settingsBag->get('site_name'),
+                'fontFolder' => $this->kernel->getFontsFilesBasePath(),
                 'variantHash' => $variantHash,
             ];
         }
         $response->setContent(
-            $this->get('twig.environment')->render(
+            $this->templating->render(
                 'fonts/fontfamily.css.twig',
                 $assignation
             )

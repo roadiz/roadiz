@@ -29,8 +29,7 @@
         {% for subsource in children %}
             {% include '@DefaultTheme/common/nav-item.html.twig' with {
                 'source' : subsource,
-                'active' : active,
-                'home' : home
+                'active' : active
             } only %}
         {% endfor %}
     </ul>

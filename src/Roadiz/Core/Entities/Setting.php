@@ -22,6 +22,7 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\String\UnicodeString;
 
 /**
  * Settings entity are a simple key-value configuration system.
@@ -90,7 +91,7 @@ class Setting extends AbstractEntity
      * @Serializer\Groups({"setting", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    private $name;
+    private $name = '';
 
     /**
      * @return string
@@ -108,7 +109,9 @@ class Setting extends AbstractEntity
     public function setName($name)
     {
         $this->name = trim(strtolower($name ?? ''));
-        $this->name = StringHandler::removeDiacritics($this->name);
+        $this->name = (new UnicodeString($this->name))
+            ->ascii()
+            ->toString();
         $this->name = preg_replace('#([^a-z])#', '_', $this->name);
 
         return $this;
@@ -120,7 +123,7 @@ class Setting extends AbstractEntity
      * @Serializer\Groups({"setting"})
      * @Serializer\Type("string")
      */
-    private $description;
+    private $description = null;
 
     /**
      * @return string|null
@@ -147,17 +150,17 @@ class Setting extends AbstractEntity
      * @Serializer\Groups({"setting", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    private $value;
+    private $value = null;
 
     /**
      * Holds clear setting value after value is decoded by postLoad Doctrine event.
      *
      * READ ONLY: Not persisted value to hold clear value if setting is encrypted.
      *
-     * @var string
+     * @var string|null
      * @Serializer\Exclude()
      */
-    private $clearValue;
+    private $clearValue = null;
 
     /**
      * @return string|null
@@ -170,7 +173,7 @@ class Setting extends AbstractEntity
     /**
      * Getter for setting value OR clear value, if encrypted.
      *
-     * @return bool|\DateTime|int
+     * @return bool|\DateTime|int|null
      * @throws \Exception
      */
     public function getValue()
@@ -184,11 +187,14 @@ class Setting extends AbstractEntity
         if ($this->getType() == NodeTypeField::BOOLEAN_T) {
             return (boolean) $value;
         }
-        if ($this->getType() == NodeTypeField::DATETIME_T) {
-            return new \DateTime($value);
-        }
-        if ($this->getType() == NodeTypeField::DOCUMENTS_T) {
-            return (int) $value;
+
+        if (null !== $value) {
+            if ($this->getType() == NodeTypeField::DATETIME_T) {
+                return new \DateTime($value);
+            }
+            if ($this->getType() == NodeTypeField::DOCUMENTS_T) {
+                return (int) $value;
+            }
         }
 
         return $value;
@@ -202,7 +208,7 @@ class Setting extends AbstractEntity
     {
         if (($this->getType() === NodeTypeField::DATETIME_T || $this->getType() === NodeTypeField::DATE_T) &&
             $value instanceof \DateTime) {
-            $this->value = $value->format('Y-m-d H:i:s'); // $value is instance of \DateTime
+            $this->value = $value->format('c'); // $value is instance of \DateTime
         } else {
             $this->value = $value;
         }
@@ -213,7 +219,7 @@ class Setting extends AbstractEntity
     /**
      * Holds clear setting value after value is decoded by postLoad Doctrine event.
      *
-     * @param string $clearValue
+     * @param string|null $clearValue
      *
      * @return Setting
      */
@@ -315,6 +321,7 @@ class Setting extends AbstractEntity
      * @Serializer\Type("int")
      */
     private $type = NodeTypeField::STRING_T;
+
     /**
      * @return integer
      */
@@ -322,6 +329,7 @@ class Setting extends AbstractEntity
     {
         return $this->type;
     }
+
     /**
      * @param integer $type
      *

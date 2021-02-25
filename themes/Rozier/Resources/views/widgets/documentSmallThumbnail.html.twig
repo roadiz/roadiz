@@ -30,7 +30,12 @@
     {% if document.isSvg and not document.private %}
         <object class="document-image" type="image/svg+xml" width="80" height="80" data="{{ document|url }}"></object>
     {% elseif document.isImage and not document.private %}
-        <img class="document-image" width="80" height="80" src="{{ document|url({"width":80, "crop":"1x1", "quality":50}) }}" />
+        {{- document|display({
+            "fit":"80x80",
+            "quality":50,
+            "picture": true,
+            "class": "document-image"
+        }) -}}
     {% elseif document.private %}
         <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
     {% else %}

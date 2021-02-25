@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\NodeSource;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use Symfony\Component\Form\AbstractType;
@@ -14,6 +14,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class AbstractNodeSourceFieldType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * Pass nodeSource to form twig template.
      *
@@ -39,12 +52,10 @@ abstract class AbstractNodeSourceFieldType extends AbstractType
         $resolver->setRequired([
             'nodeSource',
             'nodeTypeField',
-            'entityManager',
         ]);
 
         $resolver->setAllowedTypes('nodeSource', [NodesSources::class]);
         $resolver->setAllowedTypes('nodeTypeField', [NodeTypeField::class]);
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
     }
 
 

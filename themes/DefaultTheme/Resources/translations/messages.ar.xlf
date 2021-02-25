@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="none" source-language="en" datatype="plaintext" target-language="ar">
+    <body>
+      <trans-unit id="hello.world">
+        <source>hello.world</source>
+        <target state="translated">مرحبا بالعالم</target>
+      </trans-unit>
+      <trans-unit id="contact">
+        <source>contact</source>
+        <target state="translated">اتصل</target>
+      </trans-unit>
+      <trans-unit id="contact.us">
+        <source>contact.us</source>
+        <target state="translated">اتصل بنا</target>
+      </trans-unit>
+      <trans-unit id="your.email">
+        <source>your.email</source>
+        <target state="translated">بريدك الالكتروني</target>
+      </trans-unit>
+      <trans-unit id="your.name">
+        <source>your.name</source>
+        <target state="translated">اسمك</target>
+      </trans-unit>
+      <trans-unit id="your.message">
+        <source>your.message</source>
+        <target state="translated">رسالتك</target>
+      </trans-unit>
+      <trans-unit id="call.me.back">
+        <source>call.me.back</source>
+        <target state="translated">اعد الإتصال بي</target>
+      </trans-unit>
+      <trans-unit id="send.contact.form">
+        <source>send.contact.form</source>
+        <target state="translated">إرسال نموذج الاتصال</target>
+      </trans-unit>
+      <trans-unit id="document">
+        <source><![CDATA[document]]></source>
+        <target state="translated"><![CDATA[وثيقة]]></target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.consent_message">
+        <source>cookie_choice.consent_message</source>
+        <target state="translated">كوكي اختيار رسالة الموافقة</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.close_message">
+        <source>cookie_choice.close_message</source>
+        <target state="translated">كوكي اختيار رسالة وثيقة</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.find_out_more_message">
+        <source>cookie_choice.find_out_more_message</source>
+        <target state="translated">اختيار ملف تعريف الارتباط معرفة المزيد من الرسالة</target>
+      </trans-unit>
+      <trans-unit id="no_javascript_message">
+        <source>no_javascript_message</source>
+        <target state="translated">لا توجد رسالة جافا سكريبت</target>
+      </trans-unit>
+      <trans-unit id="browser_update.message">
+        <source>browser_update.message</source>
+        <target state="translated">رسالة تحديث المتصفح</target>
+      </trans-unit>
+      <trans-unit id="browser_update.link">
+        <source>browser_update.link</source>
+        <target state="translated">رابط تحديث المتصفح</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

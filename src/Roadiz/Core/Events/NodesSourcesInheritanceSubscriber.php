@@ -13,8 +13,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 
 /**
- * Class NodesSourcesInheritanceSubscriber
- *
  * @package RZ\Roadiz\Core\Events
  */
 class NodesSourcesInheritanceSubscriber implements EventSubscriber
@@ -48,7 +46,6 @@ class NodesSourcesInheritanceSubscriber implements EventSubscriber
     public function loadClassMetadata(LoadClassMetadataEventArgs $eventArgs)
     {
         // the $metadata is all the mapping info for this class
-        /** @var ClassMetadataInfo $metadata */
         $metadata = $eventArgs->getClassMetadata();
         // the annotation reader accepts a ReflectionClass, which can be
         // obtained from the $metadata

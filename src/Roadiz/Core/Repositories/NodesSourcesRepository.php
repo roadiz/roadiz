@@ -6,21 +6,24 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Log;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Events\QueryNodesSourcesEvent;
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
+use RZ\Roadiz\Core\SearchEngine\SearchHandlerInterface;
+use RZ\Roadiz\Core\SearchEngine\SearchResultsInterface;
 use RZ\Roadiz\Core\SearchEngine\SolrSearchResults;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * EntityRepository that implements search engine query with Solr.
+ *
  * @extends StatusAwareRepository<\RZ\Roadiz\Core\Entities\NodesSources>
  */
 class NodesSourcesRepository extends StatusAwareRepository
@@ -183,7 +186,7 @@ class NodesSourcesRepository extends StatusAwareRepository
             return $qb;
         }
 
-        if (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
+        if (true === $this->isDisplayingNotPublishedNodes() || $this->previewResolver->isPreview()) {
             /*
              * Forbid deleted node for backend user when authorizationChecker not null.
              */
@@ -378,7 +381,7 @@ class NodesSourcesRepository extends StatusAwareRepository
      * to see unpublished nodes.
      *
      * @param array $criteria
-     * @param array $orderBy
+     * @param array|null $orderBy
      *
      * @return null|NodesSources
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -393,7 +396,6 @@ class NodesSourcesRepository extends StatusAwareRepository
             1,
             null
         );
-
         /*
          * Eagerly fetch UrlAliases
          * to limit SQL query count
@@ -415,13 +417,13 @@ class NodesSourcesRepository extends StatusAwareRepository
      * Search nodes sources by using Solr search engine.
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
-     * @param integer $limit Result number to fetch (default: all)
+     * @param int $limit Result number to fetch (default: all)
      * @return array
      */
     public function findBySearchQuery($query, $limit = 25)
     {
-        /** @var NodeSourceSearchHandler|null $service */
-        $service = $this->get('solr.search.nodeSource');
+        /** @var NodeSourceSearchHandlerInterface|null $service */
+        $service = $this->get(NodeSourceSearchHandlerInterface::class);
         if (null !== $service) {
             $service->boostByUpdateDate();
             $arguments = [];
@@ -446,14 +448,14 @@ class NodesSourcesRepository extends StatusAwareRepository
      * and a specific translation.
      *
      * @param string $query Solr query string (for example: `text:Lorem Ipsum`)
-     * @param Translation $translation Current translation
+     * @param TranslationInterface $translation Current translation
      * @param int $limit
-     * @return SolrSearchResults
+     * @return SearchResultsInterface
      */
-    public function findBySearchQueryAndTranslation($query, Translation $translation, $limit = 25)
+    public function findBySearchQueryAndTranslation($query, TranslationInterface $translation, $limit = 25)
     {
-        /** @var NodeSourceSearchHandler|null $service */
-        $service = $this->get('solr.search.nodeSource');
+        /** @var SearchHandlerInterface|null $service */
+        $service = $this->get(NodeSourceSearchHandlerInterface::class);
         if (null !== $service) {
             $params = [
                 'translation' => $translation,
@@ -532,7 +534,7 @@ class NodesSourcesRepository extends StatusAwareRepository
     /**
      * Find latest updated NodesSources using Log table.
      *
-     * @param integer $maxResult
+     * @param int $maxResult
      * @return Paginator
      */
     public function findByLatestUpdated($maxResult = 5)
@@ -578,10 +580,10 @@ class NodesSourcesRepository extends StatusAwareRepository
 
     /**
      * @param Node $node
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return mixed|null
      */
-    public function findOneByNodeAndTranslation(Node $node, Translation $translation)
+    public function findOneByNodeAndTranslation(Node $node, TranslationInterface $translation)
     {
         $qb = $this->createQueryBuilder(static::NODESSOURCES_ALIAS);
 

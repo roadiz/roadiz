@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
+use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Validator\Constraint;
@@ -10,6 +11,19 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class UniqueTagNameValidator extends ConstraintValidator
 {
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param string $value
      * @param Constraint $constraint
@@ -43,26 +57,21 @@ class UniqueTagNameValidator extends ConstraintValidator
             return;
         }
 
-        if (null !== $constraint->entityManager) {
-            if (true === $this->tagNameExists($value, $constraint->entityManager)) {
-                $this->context->addViolation($constraint->message, [
-                    '%name%' => $value,
-                ]);
-            }
-        } else {
-            $this->context->addViolation('UniqueTagNameValidator constraint requires a valid EntityManager');
+        if (true === $this->tagNameExists($value)) {
+            $this->context->addViolation($constraint->message, [
+                '%name%' => $value,
+            ]);
         }
     }
 
     /**
      * @param string $name
-     * @param \Doctrine\ORM\EntityManager $entityManager
      *
      * @return bool
      */
-    protected function tagNameExists($name, $entityManager)
+    protected function tagNameExists($name)
     {
-        $entity = $entityManager->getRepository(Tag::class)->findOneByTagName($name);
+        $entity = $this->entityManager->getRepository(Tag::class)->findOneByTagName($name);
 
         return (null !== $entity);
     }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\FontVariantsType;
 use RZ\Roadiz\Core\Entities\Font;
 use Symfony\Component\Form\AbstractType;
@@ -92,13 +92,16 @@ class FontType extends AbstractType
             'attr' => [
                 'class' => 'uk-form font-form',
             ],
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => [
+                        'name',
+                        'variant'
+                    ]
+                ])
+            ]
         ]);
 
-        $resolver->setRequired([
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
         $resolver->setAllowedTypes('variant', 'integer');
     }

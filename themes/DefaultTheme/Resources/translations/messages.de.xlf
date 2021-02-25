@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="none" source-language="en" datatype="plaintext" target-language="de">
+    <body>
+      <trans-unit id="hello.world">
+        <source>hello.world</source>
+        <target state="translated">Hallo Welt</target>
+      </trans-unit>
+      <trans-unit id="nodeName">
+        <source>node.name.is.%name%</source>
+        <target state="translated">Das ist der Knoten %name%</target>
+      </trans-unit>
+      <trans-unit id="translationName">
+        <source>translation.is.%name%</source>
+        <target state="translated">Die Sprache ist %name%</target>
+      </trans-unit>
+      <trans-unit id="contact">
+        <source>contact</source>
+        <target state="translated">Kontakt</target>
+      </trans-unit>
+      <trans-unit id="contact.us">
+        <source>contact.us</source>
+        <target state="translated">Kontaktiere uns</target>
+      </trans-unit>
+      <trans-unit id="your.email">
+        <source>your.email</source>
+        <target state="translated">Deine E-Mail</target>
+      </trans-unit>
+      <trans-unit id="your.name">
+        <source>your.name</source>
+        <target state="translated">Dein Name</target>
+      </trans-unit>
+      <trans-unit id="your.message">
+        <source>your.message</source>
+        <target state="translated">Deine Nachricht</target>
+      </trans-unit>
+      <trans-unit id="call.me.back">
+        <source>call.me.back</source>
+        <target state="translated">Rufen sie mich zurück</target>
+      </trans-unit>
+      <trans-unit id="send.contact.form">
+        <source>send.contact.form</source>
+        <target state="translated">Kontaktformular absenden</target>
+      </trans-unit>
+      <trans-unit id="document">
+        <source><![CDATA[document]]></source>
+        <target state="translated"><![CDATA[Dokument]]></target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.consent_message">
+        <source>cookie_choice.consent_message</source>
+        <target state="translated">Zustimmen</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.close_message">
+        <source>cookie_choice.close_message</source>
+        <target state="translated">Schließen</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.find_out_more_message">
+        <source>cookie_choice.find_out_more_message</source>
+        <target state="translated">Mehr herausfinden</target>
+      </trans-unit>
+      <trans-unit id="no_javascript_message">
+        <source>no_javascript_message</source>
+        <target state="translated">Kein_Javascript_Nachricht</target>
+      </trans-unit>
+      <trans-unit id="browser_update.message">
+        <source>browser_update.message</source>
+        <target state="translated">browser_update.Message</target>
+      </trans-unit>
+      <trans-unit id="browser_update.link">
+        <source>browser_update.link</source>
+        <target state="translated">Browser_Update.link</target>
+      </trans-unit>
+      <trans-unit id="error404.title">
+        <source>error404.title</source>
+        <target state="translated">Fehler404.Titel</target>
+      </trans-unit>
+      <trans-unit id="error404.message">
+        <source>error404.message</source>
+        <target state="translated">Fehler404.Nachricht</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

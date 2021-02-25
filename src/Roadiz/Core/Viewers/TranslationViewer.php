@@ -5,67 +5,48 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Core\Routing\RouteHandler;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Routing\RouterInterface;
 
-/**
- * TranslationViewer
- */
-class TranslationViewer
+final class TranslationViewer
 {
-    /**
-     * @var bool
-     */
-    private $preview;
-    /**
-     * @var Settings
-     */
-    private $settingsBag;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var RouterInterface
-     */
-    private $router;
-    /**
-     * @var Translation
-     */
-    private $translation;
+    private ParameterBag $settingsBag;
+    private EntityManager $entityManager;
+    private RouterInterface $router;
+    private PreviewResolverInterface $previewResolver;
+    private ?Translation $translation = null;
 
     /**
-     * TranslationViewer constructor.
-     *
      * @param EntityManager $entityManager
-     * @param Settings $settingsBag
+     * @param ParameterBag $settingsBag
      * @param RouterInterface $router
-     * @param boolean $preview
+     * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
         EntityManager $entityManager,
-        Settings $settingsBag,
+        ParameterBag $settingsBag,
         RouterInterface $router,
-        $preview = false
+        PreviewResolverInterface $previewResolver
     ) {
         $this->settingsBag = $settingsBag;
         $this->entityManager = $entityManager;
         $this->router = $router;
-        $this->preview = $preview;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
      * @return TranslationRepository
      */
-    public function getRepository()
+    public function getRepository(): TranslationRepository
     {
         return $this->entityManager->getRepository(Translation::class);
     }
@@ -108,7 +89,7 @@ class TranslationViewer
      * @return array
      * @throws ORMException
      */
-    public function getTranslationMenuAssignation(Request $request, $absolute = false)
+    public function getTranslationMenuAssignation(Request $request, $absolute = false): array
     {
         $attr = $request->attributes->all();
         $query = $request->query->all();
@@ -145,7 +126,7 @@ class TranslationViewer
             /*
              * If using dynamic routing…
              */
-            if ($this->preview === true) {
+            if ($this->previewResolver->isPreview()) {
                 $translations = $this->getRepository()->findAvailableTranslationsForNode($node);
             } else {
                 $translations = $this->getRepository()->findStrictlyAvailableTranslationsForNode($node);
@@ -248,18 +229,18 @@ class TranslationViewer
     }
 
     /**
-     * @return Translation
+     * @return Translation|null
      */
-    public function getTranslation()
+    public function getTranslation(): ?Translation
     {
         return $this->translation;
     }
 
     /**
-     * @param Translation $translation
+     * @param Translation|null $translation
      * @return TranslationViewer
      */
-    public function setTranslation($translation)
+    public function setTranslation(?Translation $translation)
     {
         $this->translation = $translation;
         return $this;

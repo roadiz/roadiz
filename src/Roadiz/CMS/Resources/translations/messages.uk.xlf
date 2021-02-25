@@ -1,128 +1,145 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="uk">
     <body>
       <!-- welcome.user.email -->
       <trans-unit id="welcome.user.email.%site%" approved="yes">
         <source>welcome.user.email.%site%</source>
-        <target xml:lang="uk">&#x41E;&#x431;&#x43B;&#x456;&#x43A;&#x43E;&#x432;&#x438;&#x439; &#x437;&#x430;&#x43F;&#x438;&#x441; &#x431;&#x443;&#x432; &#x441;&#x442;&#x432;&#x43E;&#x440;&#x435;&#x43D;&#x438;&#x439; &#x434;&#x43B;&#x44F; &#x432;&#x430;&#x441; &#x43D;&#x430; &#x441;&#x430;&#x439;&#x442;&#x456; %site%</target>
+        <target state="final">Обліковий запис був створений для вас на сайті %site%</target>
       </trans-unit>
       <trans-unit id="your.user.account" approved="yes">
         <source>your.user.account</source>
-        <target xml:lang="uk">&#x412;&#x430;&#x448; &#x43E;&#x431;&#x43B;&#x456;&#x43A;&#x43E;&#x432;&#x438;&#x439; &#x437;&#x430;&#x43F;&#x438;&#x441;</target>
+        <target state="final">Ваш обліковий запис</target>
       </trans-unit>
       <trans-unit id="username" approved="yes">
         <source>username</source>
-        <target xml:lang="uk">&#x406;&#x43C;'&#x44F; &#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x443;&#x432;&#x430;&#x447;&#x430;</target>
+        <target state="final">Ім'я користувача</target>
       </trans-unit>
       <trans-unit id="email" approved="yes">
         <source>email</source>
-        <target xml:lang="uk">&#x415;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x430; &#x43F;&#x43E;&#x448;&#x442;&#x430;</target>
+        <target state="final">Електронна пошта</target>
       </trans-unit>
       <trans-unit id="password" approved="yes">
         <source>password</source>
-        <target xml:lang="uk">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
+        <target state="final">Пароль</target>
       </trans-unit>
       <trans-unit id="for.questions.email" approved="yes">
         <source>for.questions.email</source>
-        <target xml:lang="uk">&#x42F;&#x43A;&#x456;&#x441;&#x44C; &#x43F;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44F;? &#x41D;&#x430;&#x43F;&#x438;&#x448;&#x456;&#x442;&#x44C; &#x43D;&#x430;&#x43C; &#x43B;&#x438;&#x441;&#x442;:</target>
+        <target state="final">Якісь питання? Напишіть нам лист:</target>
       </trans-unit>
       <!-- Contact forms -->
       <trans-unit id="contact.form" approved="yes">
         <source>contact.form</source>
-        <target xml:lang="uk">&#x41A;&#x43E;&#x43D;&#x442;&#x430;&#x43A;&#x442;&#x43D;&#x430; &#x456;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x456;&#x44F;</target>
+        <target state="final">Контактна інформація</target>
       </trans-unit>
       <trans-unit id="new.contact.form.%site%" approved="yes">
         <source>new.contact.form.%site%</source>
-        <target xml:lang="uk">&#x417;&#x430;&#x43F;&#x438;&#x442;&#x443;&#x454;&#x442;&#x44C;&#x441;&#x44F; &#x43D;&#x43E;&#x432;&#x438;&#x439; &#x43A;&#x43E;&#x43D;&#x442;&#x430;&#x43A;&#x442; &#x43D;&#x430; &#x441;&#x430;&#x439;&#x442;&#x456; %site%</target>
+        <target state="final">Запитується новий контакт на сайті %site%</target>
       </trans-unit>
       <trans-unit id="form.successfully.sent" approved="yes">
         <source>form.successfully.sent</source>
-        <target xml:lang="uk">&#x412;&#x430;&#x448; &#x437;&#x430;&#x43F;&#x438;&#x442; &#x431;&#x443;&#x432; &#x443;&#x441;&#x43F;&#x456;&#x448;&#x43D;&#x43E; &#x43D;&#x430;&#x434;&#x456;&#x441;&#x43B;&#x430;&#x43D;&#x438;&#x439;</target>
+        <target state="final">Ваш запит був успішно надісланий</target>
+      </trans-unit>
+      <trans-unit id="form.has.errors">
+        <source>form.has.errors</source>
+        <target state="translated">В формі допущено помилки</target>
       </trans-unit>
       <trans-unit id="%field%.is.mandatory" approved="yes">
         <source>%field%.is.mandatory</source>
-        <target xml:lang="uk">&#x41F;&#x43E;&#x43B;&#x435; %field% &#x43D;&#x435; &#x437;&#x430;&#x43F;&#x43E;&#x432;&#x43D;&#x435;&#x43D;&#x43E;</target>
+        <target state="final">Поле %field% не заповнено</target>
       </trans-unit>
       <trans-unit id="email.not.valid" approved="yes">
         <source>email.not.valid</source>
-        <target xml:lang="uk">&#x410;&#x434;&#x440;&#x435;&#x441;&#x430; &#x435;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x457; &#x43F;&#x43E;&#x448;&#x442;&#x438; &#x43D;&#x435;&#x432;&#x456;&#x440;&#x43D;&#x43E; &#x432;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x430;</target>
+        <target state="final">Адреса електронної пошти невірно вказана</target>
       </trans-unit>
       <trans-unit id="date" approved="yes">
         <source>date</source>
-        <target xml:lang="uk">&#x414;&#x430;&#x442;&#x430;</target>
+        <target state="final">Дата</target>
       </trans-unit>
       <trans-unit id="ip.address" approved="yes">
         <source>ip.address</source>
-        <target xml:lang="uk">IP &#x430;&#x434;&#x440;&#x435;&#x441;&#x430;</target>
+        <target state="final">IP адреса</target>
       </trans-unit>
       <trans-unit id="submittedAt" approved="yes">
         <source>submittedAt</source>
-        <target xml:lang="uk">&#x412;&#x456;&#x434;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E; &#x434;&#x43E;</target>
+        <target state="final">Відправлено до</target>
       </trans-unit>
       <trans-unit id="form.submit" approved="yes">
         <source>form.submit</source>
-        <target xml:lang="uk">&#x412;&#x456;&#x434;&#x43F;&#x440;&#x430;&#x432;&#x438;&#x442;&#x438;</target>
+        <target state="final">Відправити</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="answer.form" approved="yes">
                 <source>answer.form</source>
-                <target xml:lang="uk">&#x424;&#x43E;&#x440;&#x43C;&#x430; &#x434;&#x43B;&#x44F; &#x437;&#x430;&#x43F;&#x438;&#x442;&#x430;&#x43D;&#x44C;</target>
+                <target state="final">Форма для запитань</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.send" approved="yes">
                 <source>customForm.%name%.send</source>
-                <target xml:lang="uk">&#x417;&#x430;&#x43F;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44F; %name% &#x432;&#x456;&#x434;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E;</target>
+                <target state="final">Запитання %name% відправлено</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="new.answer.form.%site%" approved="yes">
                 <source>new.answer.form.%site%</source>
-                <target xml:lang="uk">&#x41D;&#x43E;&#x432;&#x435; &#x437;&#x430;&#x43F;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44F; &#x432;&#x456;&#x434; %site%</target>
+                <target state="final">Нове запитання від %site%</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="file.not.accepted" approved="yes">
                 <source>file.not.accepted</source>
-                <target xml:lang="uk">&#x41F;&#x440;&#x438;&#x43A;&#x440;&#x456;&#x43F;&#x43B;&#x435;&#x43D;&#x438;&#x439; &#x444;&#x430;&#x439;&#x43B; &#x43D;&#x435; &#x43C;&#x43E;&#x436;&#x435; &#x431;&#x443;&#x442;&#x438; &#x43F;&#x440;&#x438;&#x439;&#x43D;&#x44F;&#x442;&#x438;&#x43C;</target>
+                <target state="final">Прикріплений файл не може бути прийнятим</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.answer.sent" approved="yes">
                 <source>customForm.answer.sent</source>
-                <target xml:lang="uk">&#x412;&#x430;&#x448;&#x435; &#x437;&#x430;&#x43F;&#x438;&#x442;&#x430;&#x43D;&#x43D;&#x44F; &#x443;&#x441;&#x43F;&#x456;&#x448;&#x43D;&#x43E; &#x432;&#x456;&#x434;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E;</target>
+                <target state="final">Ваше запитання успішно відправлено</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="none" approved="yes">
                 <source>none</source>
-                <target xml:lang="uk">&#x43D;&#x435;&#x43C;&#x430;&#x454;</target>
+                <target state="final">немає</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="reset.password.request" approved="yes">
               <source>reset.password.request</source>
-              <target xml:lang="uk">&#x417;&#x430;&#x43F;&#x438;&#x442; &#x43D;&#x430; &#x441;&#x43A;&#x438;&#x434;&#x430;&#x43D;&#x43D;&#x44F; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44F;</target>
+              <target state="final">Запит на скидання пароля</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%" approved="yes">
                 <source>you.asked.for.a.password.reset.on.%site%</source>
-                <target xml:lang="uk">&#x412;&#x438; &#x437;&#x430;&#x43F;&#x438;&#x442;&#x443;&#x432;&#x430;&#x43B;&#x438; &#x441;&#x43A;&#x438;&#x434;&#x430;&#x43D;&#x43D;&#x44F; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44E; &#x43D;&#x430; %site%</target>
+                <target state="final">Ви запитували скидання паролю на %site%</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link" approved="yes">
                 <source>you.need.to.choose.a.new.password.using.following.link</source>
-                <target xml:lang="uk">&#x412;&#x430;&#x43C; &#x43F;&#x43E;&#x442;&#x440;&#x456;&#x431;&#x43D;&#x43E; &#x441;&#x442;&#x432;&#x43E;&#x440;&#x438;&#x442;&#x438; &#x43D;&#x43E;&#x432;&#x438;&#x439; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44C; &#x434;&#x43E; &#x432;&#x430;&#x448;&#x43E;&#x433;&#x43E; &#x43E;&#x431;&#x43B;&#x456;&#x43A;&#x43E;&#x432;&#x43E;&#x433;&#x43E; &#x437;&#x430;&#x43F;&#x438;&#x441;&#x443;, &#x432;&#x438;&#x43A;&#x43E;&#x440;&#x438;&#x441;&#x442;&#x43E;&#x432;&#x443;&#x44E;&#x447;&#x438; &#x43F;&#x43E;&#x441;&#x438;&#x43B;&#x430;&#x43D;&#x43D;&#x44F;, &#x449;&#x43E; &#x43D;&#x438;&#x436;&#x447;&#x435;</target>
+                <target state="final">Вам потрібно створити новий пароль до вашого облікового запису, використовуючи посилання, що нижче</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials" approved="yes">
                 <source>as.a.reminder.here.are.your.credentials</source>
-                <target xml:lang="uk">&#x42F;&#x43A; &#x43D;&#x430;&#x433;&#x430;&#x434;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x44F;, &#x43E;&#x441;&#x44C; &#x432;&#x43E;&#x448;&#x456; &#x43E;&#x431;&#x43B;&#x456;&#x43A;&#x43E;&#x432;&#x456; &#x434;&#x430;&#x43D;&#x456;</target>
+                <target state="final">Як нагадування, ось воші облікові дані</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
-                <target xml:lang="uk">&#x42F;&#x43A;&#x449;&#x43E; &#x432;&#x438; &#x43D;&#x435; &#x437;&#x430;&#x43F;&#x438;&#x442;&#x443;&#x432;&#x430;&#x43B;&#x438; &#x437;&#x43C;&#x456;&#x43D;&#x443; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44F;, &#x43F;&#x440;&#x43E;&#x441;&#x442;&#x43E; &#x456;&#x433;&#x43D;&#x43E;&#x440;&#x443;&#x439;&#x442;&#x435; &#x446;&#x435;&#x439; &#x43B;&#x438;&#x441;&#x442;</target>
+                <target state="final">Якщо ви не запитували зміну пароля, просто ігноруйте цей лист</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target state="translated">Скинути пароль</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
                 <source>you.need.to.fill.this.required.field</source>
-                <target xml:lang="uk">&#x426;&#x435; &#x43F;&#x43E;&#x43B;&#x435; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x456;&#x434;&#x43D;&#x43E; &#x437;&#x430;&#x43F;&#x43E;&#x432;&#x43D;&#x438;&#x442;&#x438;</target>
+                <target state="final">Це поле необхідно заповнити</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="*.required.fields" approved="yes">
                 <source>*.required.fields</source>
-                <target xml:lang="uk">* &#x41E;&#x431;&#x43E;&#x432;'&#x44F;&#x437;&#x43A;&#x43E;&#x432;&#x435; &#x43F;&#x43E;&#x43B;&#x435;</target>
+                <target state="final">* Обов'язкове поле</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance" approved="yes">
                 <source>website.is.under.maintenance</source>
-                <target xml:lang="uk">&#x421;&#x430;&#x439;&#x442; &#x437;&#x43D;&#x430;&#x445;&#x43E;&#x434;&#x438;&#x442;&#x44C;&#x441;&#x44F; &#x43D;&#x430; &#x43E;&#x431;&#x441;&#x43B;&#x443;&#x433;&#x43E;&#x432;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x456;</target>
+                <target state="final">Сайт знаходиться на обслуговуванні</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon" approved="yes">
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
-                <target xml:lang="uk">&#x421;&#x430;&#x439;&#x442; &#x437;&#x43D;&#x430;&#x445;&#x43E;&#x434;&#x438;&#x442;&#x44C;&#x441;&#x44F; &#x43D;&#x430; &#x43E;&#x431;&#x441;&#x43B;&#x443;&#x433;&#x43E;&#x432;&#x443;&#x432;&#x430;&#x43D;&#x43D;&#x456; &#x442;&#x430; &#x441;&#x43A;&#x43E;&#x440;&#x43E; &#x43F;&#x43E;&#x432;&#x435;&#x440;&#x43D;&#x435;&#x442;&#x44C;&#x441;&#x44F;!</target>
+                <target state="final">Сайт знаходиться на обслуговуванні та скоро повернеться!</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target state="translated">YAML-код містить помилки ({{ error }}).</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target state="translated">Це значення вже використовується.</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
             </trans-unit>
     </body>
   </file>

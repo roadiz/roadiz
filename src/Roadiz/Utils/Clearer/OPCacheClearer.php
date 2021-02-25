@@ -5,9 +5,9 @@ namespace RZ\Roadiz\Utils\Clearer;
 
 class OPCacheClearer implements ClearerInterface
 {
-    protected $output;
+    protected string $output;
 
-    public function clear()
+    public function clear(): bool
     {
         if (function_exists('opcache_reset') &&
             true === opcache_reset()) {
@@ -20,12 +20,12 @@ class OPCacheClearer implements ClearerInterface
         return false;
     }
 
-    public function getOutput()
+    public function getOutput(): string
     {
         return $this->output;
     }
 
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return '';
     }

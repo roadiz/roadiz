@@ -3,20 +3,12 @@ declare(strict_types=1);
 
 namespace Themes\DefaultTheme;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Pimple\Container;
 use RZ\Roadiz\CMS\Controllers\FrontendController;
-use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesIndexingEvent;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Themes\DefaultTheme\Event\LinkPathSubscriber;
-use Themes\DefaultTheme\Serialization\DocumentUriSubscriber;
 use Themes\DefaultTheme\Services\NodeServiceProvider;
-use Themes\DefaultTheme\Twig\ImageFormatsExtension;
 
 /**
- * Class DefaultThemeApp
  * @package Themes\DefaultTheme
  */
 class DefaultThemeApp extends FrontendController
@@ -131,57 +123,6 @@ class DefaultThemeApp extends FrontendController
             $this->renderView('@DefaultTheme/pages/maintenance.html.twig', $this->assignation),
             Response::HTTP_SERVICE_UNAVAILABLE,
             ['content-type' => 'text/html']
-        );
-    }
-
-    /**
-     * @param Container $container
-     */
-    public static function setupDependencyInjection(Container $container)
-    {
-        parent::setupDependencyInjection($container);
-
-        $container->extend('twig.extensions', function (ArrayCollection $extensions, $c) {
-            $extensions->add(new ImageFormatsExtension());
-            return $extensions;
-        });
-
-        $container->extend('serializer.subscribers', function ($subscribers, $c) {
-            $subscribers[] = new DocumentUriSubscriber($c);
-            return $subscribers;
-        });
-
-        $container->extend('backoffice.entries', function (array $entries, $c) {
-            /*
-             * Add a test entry in your Backoffice
-             * Remove this in your theme if you don’t
-             * want to extend Back-office
-             */
-            $entries['test'] = [
-                'name' => 'test',
-                'path' => $c['urlGenerator']->generate('adminTestPage'),
-                'icon' => 'uk-icon-cube',
-                'roles' => null,
-                'subentries' => null,
-            ];
-
-            return $entries;
-        });
-
-        /*
-         * Example:
-         * Alter Solr indexing with custom data.
-         */
-        /** @var EventDispatcher $dispatcher */
-        $dispatcher = $container['dispatcher'];
-        $dispatcher->addSubscriber(new LinkPathSubscriber());
-        $dispatcher->addListener(
-            NodesSourcesIndexingEvent::class,
-            function (NodesSourcesIndexingEvent $event) {
-                $assoc = $event->getAssociations();
-                $assoc['defaulttheme_txt'] = 'This is injected by Default theme during indexing.';
-                $event->setAssociations($assoc);
-            }
         );
     }
 }

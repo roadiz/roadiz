@@ -1,5 +1,5 @@
-{% if node.getNodeSources.first.getTitle %}
-{% set currentTitle = node.getNodeSources.first.getTitle %}
+{% if source and source.title %}
+{% set currentTitle = source.title %}
 {% else %}
 {% set currentTitle = node.getNodeName %}
 {% endif %}
@@ -14,9 +14,9 @@
             {{ "edit.node.%name%"|trans({'%name%': currentTitle})|u.truncate(25, '[…]', true) }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
-        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'edit'} %}
-        {% include '@Rozier/nodes/translationBar.html.twig' with {"current": null} %}
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'edit'} %}
+        {% include 'nodes/translationBar.html.twig' with {"current": null} %}
     </header>
 
     <article class="content content-node-edit">
@@ -106,6 +106,6 @@
         {% endif %}
     </article>
 
-    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

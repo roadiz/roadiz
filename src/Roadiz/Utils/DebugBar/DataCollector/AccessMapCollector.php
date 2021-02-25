@@ -8,16 +8,10 @@ use DebugBar\DataCollector\Renderable;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\AccessMap;
 
-class AccessMapCollector extends DataCollector implements Renderable
+final class AccessMapCollector extends DataCollector implements Renderable
 {
-    /**
-     * @var AccessMap
-     */
-    private $accessMap;
-    /**
-     * @var RequestStack
-     */
-    private $requestStack;
+    private AccessMap $accessMap;
+    private RequestStack $requestStack;
 
     /**
      * @param AccessMap $accessMap
@@ -30,7 +24,7 @@ class AccessMapCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function collect()
     {
@@ -44,7 +38,7 @@ class AccessMapCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function getName()
     {
@@ -52,7 +46,7 @@ class AccessMapCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function getWidgets()
     {

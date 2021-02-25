@@ -13,14 +13,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class AttemptAwareDaoAuthenticationProvider extends DaoAuthenticationProvider implements LoginAttemptAwareInterface
 {
-    /**
-     * @var LoginAttemptManager
-     */
-    protected $loginAttemptManager;
+    protected LoginAttemptManager $loginAttemptManager;
 
     /**
-     * AttemptAwareDaoAuthenticationProvider constructor.
-     *
      * @param LoginAttemptManager     $loginAttemptManager
      * @param UserProviderInterface   $userProvider
      * @param UserCheckerInterface    $userChecker

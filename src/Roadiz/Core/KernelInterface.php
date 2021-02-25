@@ -42,7 +42,29 @@ interface KernelInterface extends HttpKernelInterface, \Serializable
     public function isDebug();
 
     /**
-     * Gets the application root dir (path of the project's Kernel class).
+     * Checks if preview mode is enabled.
+     *
+     * @return bool true if preview mode is enabled, false otherwise
+     * @deprecated Use request-time preview
+     */
+    public function isPreview();
+
+    /**
+     * Gets the application root dir (path of the project's composer file).
+     *
+     * @return string The project root dir
+     */
+    public function getProjectDir();
+
+    /**
+     * Gets the application vendor dir (path of the project's composer folder).
+     *
+     * @return string The vendor dir
+     */
+    public function getVendorDir();
+
+    /**
+     * Gets the application root dir (path of the project's AppKernel class).
      *
      * @return string The Kernel root dir
      */

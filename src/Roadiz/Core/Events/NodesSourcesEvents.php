@@ -72,7 +72,6 @@ final class NodesSourcesEvents
      * is being indexed in a Solr server.
      *
      * Event listener will be given a:
-     * \RZ\Roadiz\Core\Events\FilterSolariumNodeSourceEvent instance
      *
      * @var string
      * @deprecated

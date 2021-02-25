@@ -6,16 +6,13 @@ namespace RZ\Roadiz\Core\Handlers;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Pimple\Container;
-use RuntimeException;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\EntityGenerator\EntityGeneratorFactory;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
-use RZ\Roadiz\Utils\Doctrine\Generators\AbstractFieldGenerator;
-use RZ\Roadiz\Utils\Doctrine\Generators\EntityGenerator;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -24,24 +21,19 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class NodeTypeHandler extends AbstractHandler
 {
-    /**
-     * @var NodeType
-     */
-    private $nodeType;
-    /**
-     * @var Container
-     */
-    private $container;
-    /**
-     * @var Kernel
-     */
-    private $kernel;
+    private ?NodeType $nodeType = null;
+    private Kernel $kernel;
+    private EntityGeneratorFactory $entityGeneratorFactory;
+    private HandlerFactory $handlerFactory;
 
     /**
      * @return NodeType
      */
-    public function getNodeType()
+    public function getNodeType(): NodeType
     {
+        if (null === $this->nodeType) {
+            throw new \BadMethodCallException('NodeType is null');
+        }
         return $this->nodeType;
     }
 
@@ -59,20 +51,26 @@ class NodeTypeHandler extends AbstractHandler
      * Create a new node-type handler with node-type to handle.
      *
      * @param ObjectManager $objectManager
-     * @param Container $container
      * @param Kernel $kernel
+     * @param EntityGeneratorFactory $entityGeneratorFactory
+     * @param HandlerFactory $handlerFactory
      */
-    public function __construct(ObjectManager $objectManager, Container $container, Kernel $kernel)
-    {
+    public function __construct(
+        ObjectManager $objectManager,
+        Kernel $kernel,
+        EntityGeneratorFactory $entityGeneratorFactory,
+        HandlerFactory $handlerFactory
+    ) {
         parent::__construct($objectManager);
-        $this->container = $container;
         $this->kernel = $kernel;
+        $this->entityGeneratorFactory = $entityGeneratorFactory;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
      * @return string
      */
-    public function getGeneratedEntitiesFolder()
+    public function getGeneratedEntitiesFolder(): string
     {
         return $this->kernel->getRootDir() . '/gen-src/' . NodeType::getGeneratedEntitiesNamespace();
     }
@@ -81,7 +79,7 @@ class NodeTypeHandler extends AbstractHandler
      * Remove node type entity class file from server.
      *
      */
-    public function removeSourceEntityClass()
+    public function removeSourceEntityClass(): bool
     {
         $file = $this->getSourceClassPath();
         $fileSystem = new Filesystem();
@@ -99,7 +97,7 @@ class NodeTypeHandler extends AbstractHandler
      *
      * @return bool
      */
-    public function generateSourceEntityClass()
+    public function generateSourceEntityClass(): bool
     {
         $folder = $this->getGeneratedEntitiesFolder();
         $file = $this->getSourceClassPath();
@@ -110,11 +108,7 @@ class NodeTypeHandler extends AbstractHandler
         }
 
         if (!$fileSystem->exists($file)) {
-            $options = [
-                AbstractFieldGenerator::USE_NATIVE_JSON => $this->container['settingsBag']
-                    ->get(AbstractFieldGenerator::USE_NATIVE_JSON, false)
-            ];
-            $classGenerator = new EntityGenerator($this->nodeType, $this->container['nodeTypesBag'], $options);
+            $classGenerator = $this->entityGeneratorFactory->create($this->nodeType);
             $content = $classGenerator->getClassContent();
 
             if (false === @file_put_contents($file, $content)) {
@@ -220,8 +214,7 @@ class NodeTypeHandler extends AbstractHandler
         /** @var Node $node */
         foreach ($nodes as $node) {
             /** @var NodeHandler $nodeHandler */
-            $nodeHandler = $this->container['node.handler'];
-            $nodeHandler->setNode($node);
+            $nodeHandler = $this->handlerFactory->getHandler($node);
             $nodeHandler->removeWithChildrenAndAssociations();
         }
 
@@ -240,105 +233,12 @@ class NodeTypeHandler extends AbstractHandler
     }
 
     /**
-     * Update current node-type using a new one.
-     *
-     * Update diff will update only non-critical fields such as :
-     *
-     * * description
-     * * displayName
-     *
-     * It will only create absent node-type fields won't delete fields
-     * not to lose any data.
-     *
-     * This method does not flush ORM. You'll need to manually call it.
-     *
-     * @param NodeType $newNodeType
-     * @deprecated Use deserialization and denormalization.
-     *
-     * @throws RuntimeException If newNodeType param is null
-     */
-    public function diff(NodeType $newNodeType)
-    {
-        /*
-         * Override display name
-         */
-        if ("" != $newNodeType->getDisplayName()) {
-            $this->nodeType->setDisplayName($newNodeType->getDisplayName());
-        }
-        /*
-         * Override description
-         */
-        if ("" != $newNodeType->getDescription()) {
-            $this->nodeType->setDescription($newNodeType->getDescription());
-        }
-        /*
-         * Override color
-         */
-        if ("" != $newNodeType->getColor()) {
-            $this->nodeType->setColor($newNodeType->getColor());
-        }
-        /*
-         * Override booleans
-         */
-        $this->nodeType->setVisible($newNodeType->isVisible());
-        $this->nodeType->setHidingNodes($newNodeType->isHidingNodes());
-        $this->nodeType->setPublishable($newNodeType->isPublishable());
-        $this->nodeType->setReachable($newNodeType->isReachable());
-
-        /*
-         * make fields diff
-         */
-        $existingFieldsNames = $this->nodeType->getFieldsNames();
-        $position = 1;
-        /** @var NodeTypeField $newField */
-        foreach ($newNodeType->getFields() as $newField) {
-            if (false === in_array($newField->getName(), $existingFieldsNames)) {
-                /*
-                 * Field does not exist in type,
-                 * creating it.
-                 */
-                $newField->setNodeType($this->nodeType);
-                $newField->setPosition($position);
-                $this->objectManager->persist($newField);
-            } else {
-                /*
-                 * Field already exists.
-                 * Updating it.
-                 */
-                /** @var NodeTypeField $oldField */
-                $oldField = $this->objectManager
-                    ->getRepository(NodeTypeField::class)
-                    ->findOneBy([
-                        'nodeType' => $this->nodeType,
-                        'name' => $newField->getName(),
-                    ]);
-                if (null !== $oldField) {
-                    $oldField->setVisible($newField->isVisible());
-                    $oldField->setIndexed($newField->isIndexed());
-                    $oldField->setUniversal($newField->isUniversal());
-                    $oldField->setDefaultValues($newField->getDefaultValues());
-                    $oldField->setDescription($newField->getDescription());
-                    $oldField->setLabel($newField->getLabel());
-                    $oldField->setGroupName($newField->getGroupName());
-                    $oldField->setMinLength($newField->getMinLength());
-                    $oldField->setMaxLength($newField->getMaxLength());
-                    $oldField->setExpanded($newField->isExpanded());
-                    $oldField->setPlaceholder($newField->getPlaceholder());
-                    $oldField->setPosition($position);
-                }
-            }
-
-            $position++;
-        }
-    }
-
-    /**
      * Reset current node-type fields positions.
      *
-     * @param bool $setPosition
-     * @return int Return the next position after the **last** field
+     * @param bool $setPositions
+     * @return float Return the next position after the **last** field
      */
-    public function cleanPositions($setPosition = false)
+    public function cleanPositions(bool $setPositions = false): float
     {
         $criteria = Criteria::create();
         $criteria->orderBy(['position' => 'ASC']);

@@ -41,12 +41,12 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="force_locale_with_urlaliases">
                 <source>force_locale_with_urlaliases</source>
-                <target state="needs-translation">force_locale_with_urlaliases</target>
+                <target state="translated">使用网址别名时显示区域代码</target>
                 <note>Setting name</note>
             </trans-unit>
       <trans-unit xml:space="preserve" id="force_locale_with_urlaliases.help">
                 <source>force_locale_with_urlaliases.help</source>
-                <target state="needs-translation">force_locale_with_urlaliases.help</target>
+                <target state="translated">这将在节点源路径中强制显示区域代码，即使网址别名已经存在。</target>
                 <note>Setting description</note>
             </trans-unit>
       <trans-unit xml:space="preserve" id="use_native_json">
@@ -66,7 +66,7 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="oauth_client_id.help">
                 <source>oauth_client_id.help</source>
-                <target state="needs-translation">oauth_client_id.help</target>
+                <target state="translated">粘贴从您的 OpenID 身份验证提供者(OAuth2)取得的 Client ID</target>
                 <note>Setting description</note>
             </trans-unit>
       <trans-unit xml:space="preserve" id="oauth_client_secret">
@@ -76,58 +76,44 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="oauth_client_secret.help">
                 <source>oauth_client_secret.help</source>
-                <target state="needs-translation">oauth_client_secret.help</target>
+                <target state="translated">粘贴从您的 OpenID 身份验证提供者(OAuth2)取得的密钥</target>
                 <note>Setting description</note>
             </trans-unit>
       <trans-unit xml:space="preserve" id="openid_hd">
                 <source>openid_hd</source>
-                <target state="needs-translation">openid_hd</target>
+                <target state="translated">限制为域名</target>
                 <note>Setting name</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_hd.help">
-                <source>openid_hd.help</source>
-                <target state="needs-translation">openid_hd.help</target>
-                <note>Setting description</note>
+      <!-- Setting groups names -->
+      <trans-unit xml:space="preserve" id="APIs">
+                <source>APIs</source>
+                <target state="translated">API</target>
+                <note>Setting group name</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_button_label">
-                <source>openid_button_label</source>
-                <target state="needs-translation">openid_button_label</target>
-                <note>Setting name</note>
+      <trans-unit xml:space="preserve" id="Development">
+                <source>Development</source>
+                <target state="translated">开发</target>
+                <note>Setting group name</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_button_label.help">
-                <source>openid_button_label.help</source>
-                <target state="needs-translation">openid_button_label.help</target>
-                <note>Setting description</note>
+      <trans-unit xml:space="preserve" id="Emailings">
+                <source>Emailings</source>
+                <target state="translated">电子邮件</target>
+                <note>Setting group name</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_discovery">
-                <source>openid_discovery</source>
-                <target state="needs-translation">openid_discovery</target>
-                <note>Setting name</note>
+      <trans-unit xml:space="preserve" id="OpenId">
+                <source>OpenId</source>
+                <target state="translated">OpenID</target>
+                <note>Setting group name</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_discovery.help">
-                <source>openid_discovery.help</source>
-                <target state="needs-translation">openid_discovery.help</target>
-                <note>Setting description</note>
+      <trans-unit xml:space="preserve" id="Site informations">
+                <source>Site informations</source>
+                <target state="translated">站点信息</target>
+                <note>Setting group name</note>
             </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_default_roles">
-                <source>openid_default_roles</source>
-                <target state="needs-translation">openid_default_roles</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_default_roles.help">
-                <source>openid_default_roles.help</source>
-                <target state="needs-translation">openid_default_roles.help</target>
-                <note>Setting description</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_scopes">
-                <source>openid_scopes</source>
-                <target state="needs-translation">openid_scopes</target>
-                <note>Setting name</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="openid_scopes.help">
-                <source>openid_scopes.help</source>
-                <target state="needs-translation">openid_scopes.help</target>
-                <note>Setting description</note>
+      <trans-unit xml:space="preserve" id="Social networks">
+                <source>Social networks</source>
+                <target state="translated">社交网络</target>
+                <note>Setting group name</note>
             </trans-unit>
     </body>
   </file>

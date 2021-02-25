@@ -6,38 +6,34 @@ namespace RZ\Roadiz\Core\SearchEngine;
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * Wrapper over Solr search results and metas.
  *
  * @package RZ\Roadiz\Core\SearchEngine
  */
-class SolrSearchResults implements \Iterator
+class SolrSearchResults implements SearchResultsInterface
 {
     /**
-     * @var array
+     * @JMS\Exclude()
      */
-    protected $response;
+    protected array $response;
+    /**
+     * @JMS\Exclude()
+     */
+    protected EntityManagerInterface $entityManager;
+    /**
+     * @JMS\Exclude()
+     */
+    protected int $position;
+    /**
+     * @JMS\Exclude()
+     */
+    protected ?array $resultItems;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @var int
-     */
-    protected $position;
-
-    /**
-     * @var array|null
-     */
-    protected $resultItems;
-
-    /**
-     * SolrSearchResults constructor.
-     *
-     * @param array                  $response
+     * @param array $response
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(array $response, EntityManagerInterface $entityManager)
@@ -50,6 +46,8 @@ class SolrSearchResults implements \Iterator
 
     /**
      * @return int
+     * @JMS\Groups({"search_results"})
+     * @JMS\VirtualProperty()
      */
     public function getResultCount(): int
     {
@@ -62,6 +60,8 @@ class SolrSearchResults implements \Iterator
 
     /**
      * @return array
+     * @JMS\Groups({"search_results"})
+     * @JMS\VirtualProperty()
      */
     public function getResultItems(): array
     {

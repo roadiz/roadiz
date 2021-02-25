@@ -19,14 +19,10 @@ class LoginRequestController extends RozierApp
      * @return Response
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
-        $form = $this->createForm(LoginRequestForm::class, null, [
-            'entityManager' => $this->get('em'),
-        ]);
-
+        $form = $this->createForm(LoginRequestForm::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
@@ -54,7 +50,6 @@ class LoginRequestController extends RozierApp
 
     /**
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function confirmAction()
     {

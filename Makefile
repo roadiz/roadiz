@@ -27,9 +27,12 @@ ngrok:
 	ngrok http ${DEV_DOMAIN}
 
 test:
-	php bin/phpcs --report=full --report-file=./report.txt -p ./
-	php bin/phpstan analyse -c phpstan.neon -l 4 src
-	php bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install themes/DefaultTheme
+	bin/phpcs --report=full --report-file=./report.txt -p ./
+	bin/phpstan analyse -c phpstan.neon -l 4 src
+	bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install themes/DefaultTheme
+	bin/roadiz lint:twig
+	bin/roadiz lint:twig themes/Install/Resources/views
+	bin/roadiz lint:twig themes/Rozier/Resources/views
 
 unit:
 	php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src tests/

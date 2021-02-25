@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\Clearer\EventListener;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\RequestException;
 use Pimple\Container;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
@@ -15,14 +16,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class CloudflareCacheEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected Container $container;
 
     /**
-     * ReverseProxyCacheEventSubscriber constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)
@@ -43,7 +39,7 @@ class CloudflareCacheEventSubscriber implements EventSubscriberInterface
     /**
      * @return bool
      */
-    protected function supportConfig()
+    protected function supportConfig(): bool
     {
         return isset($this->container['config']['reverseProxyCache']['cloudflare']) &&
             isset($this->container['config']['reverseProxyCache']['cloudflare']['zone']) &&
@@ -73,7 +69,7 @@ class CloudflareCacheEventSubscriber implements EventSubscriberInterface
                 static::class,
                 'Cloudflare proxy cache'
             );
-        } catch (ClientException $e) {
+        } catch (RequestException $e) {
             if (null !== $e->getResponse()) {
                 $data = json_decode($e->getResponse()->getBody()->getContents(), true);
                 $event->addError(

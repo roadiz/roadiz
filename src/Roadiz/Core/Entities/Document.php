@@ -44,13 +44,13 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     protected $raw = false;
     /**
      * @ORM\Column(type="string", name="embedId", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedId = null;
     /**
      * @ORM\Column(type="string", name="embedPlatform", unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
     protected $embedPlatform = null;
@@ -99,14 +99,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @Serializer\Type("string")
      * @var string|null
      */
-    private $filename;
+    private $filename = null;
     /**
      * @ORM\Column(name="mime_type", type="string", nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      * @var string|null
      */
-    private $mimeType;
+    private $mimeType = null;
     /**
      * @ORM\OneToOne(targetEntity="Document", mappedBy="rawDocument")
      * @Serializer\Exclude
@@ -119,7 +119,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @Serializer\Type("string")
      * @var string
      */
-    private $folder;
+    private $folder = '';
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
@@ -130,31 +130,31 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $imageWidth;
+    private $imageWidth = 0;
     /**
      * @var integer
      * @ORM\Column(type="integer", nullable=false, options={"default" = 0})
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $imageHeight;
+    private $imageHeight = 0;
     /**
      * @var string|null
      * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("string")
      */
-    private $imageAverageColor;
+    private $imageAverageColor = null;
     /**
      * @var int|null The filesize in bytes.
      * @ORM\Column(type="integer", nullable=true, unique=false)
-     * @Serializer\Groups({"document", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
      * @Serializer\Type("int")
      */
-    private $filesize;
+    private $filesize = null;
 
     /**
      * @var Collection<Document>
@@ -175,9 +175,6 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      */
     private $original = null;
 
-    /**
-     * Document constructor.
-     */
     public function __construct()
     {
         parent::__construct();
@@ -189,16 +186,14 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
         $this->attributeDocuments = new ArrayCollection();
         $this->customFormFieldAttributes = new ArrayCollection();
         $this->thumbnails = new ArrayCollection();
-        $this->imageWidth = 0;
-        $this->imageHeight = 0;
     }
 
     /**
      * @return string
      */
-    public function getFilename()
+    public function getFilename(): string
     {
-        return $this->filename;
+        return $this->filename ?? '';
     }
 
     /**
@@ -206,7 +201,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      *
      * @return $this
      */
-    public function setFilename($filename)
+    public function setFilename(string $filename)
     {
         $this->filename = StringHandler::cleanForFilename($filename ?? '');
 
@@ -216,7 +211,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getMimeType()
+    public function getMimeType(): ?string
     {
         return $this->mimeType;
     }
@@ -236,7 +231,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getFolder()
+    public function getFolder(): string
     {
         return $this->folder;
     }
@@ -256,7 +251,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getEmbedId()
+    public function getEmbedId(): ?string
     {
         return $this->embedId;
     }
@@ -274,7 +269,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return string
      */
-    public function getEmbedPlatform()
+    public function getEmbedPlatform(): ?string
     {
         return $this->embedPlatform;
     }
@@ -291,9 +286,9 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isPrivate()
+    public function isPrivate(): bool
     {
         return $this->private;
     }
@@ -302,7 +297,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @param boolean $private
      * @return $this
      */
-    public function setPrivate($private)
+    public function setPrivate(bool $private)
     {
         $this->private = (boolean) $private;
         if (null !== $raw = $this->getRawDocument()) {
@@ -344,6 +339,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     {
         if (!$this->getFolders()->contains($folder)) {
             $this->folders->add($folder);
+            $folder->addDocument($this);
         }
 
         return $this;
@@ -352,9 +348,20 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * @return Collection<Folder>
      */
-    public function getFolders()
+    public function getFolders(): Collection
     {
         return $this->folders;
+    }
+
+    /**
+     * @param Collection<Folder> $folders
+     * @return $this
+     */
+    public function setFolders(Collection $folders)
+    {
+        $this->folders = $folders;
+
+        return $this;
     }
 
     /**
@@ -364,7 +371,8 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     public function removeFolder(FolderInterface $folder)
     {
         if ($this->getFolders()->contains($folder)) {
-            $this->folders->remove($folder);
+            $this->folders->removeElement($folder);
+            $folder->removeDocument($this);
         }
 
         return $this;
@@ -416,7 +424,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      *
      * @return DocumentInterface|null
      */
-    public function getRawDocument()
+    public function getRawDocument(): ?DocumentInterface
     {
         return $this->rawDocument;
     }
@@ -440,9 +448,9 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * Is document a raw one.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isRaw()
+    public function isRaw(): bool
     {
         return $this->raw;
     }
@@ -450,11 +458,11 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     /**
      * Sets the value of raw.
      *
-     * @param boolean $raw the raw
+     * @param bool $raw the raw
      *
      * @return self
      */
-    public function setRaw($raw)
+    public function setRaw(bool $raw)
     {
         $this->raw = (boolean) $raw;
 
@@ -466,7 +474,7 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      *
      * @return DocumentInterface|null
      */
-    public function getDownscaledDocument()
+    public function getDownscaledDocument(): ?DocumentInterface
     {
         return $this->downscaledDocument;
     }

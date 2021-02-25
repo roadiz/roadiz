@@ -13,7 +13,7 @@ use JMS\Serializer\Annotation as Serializer;
  * A group gather User and Roles.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="groups")
+ * @ORM\Table(name="usergroups")
  */
 class Group extends AbstractEntity
 {
@@ -57,7 +57,6 @@ class Group extends AbstractEntity
     {
         $this->roles = new ArrayCollection();
         $this->users = new ArrayCollection();
-        $this->rolesNames = null;
     }
 
     /**
@@ -132,7 +131,7 @@ class Group extends AbstractEntity
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Role $role
+     * @param Role $role
      *
      * @return $this
      */
@@ -146,7 +145,7 @@ class Group extends AbstractEntity
     }
 
     /**
-     * @param \RZ\Roadiz\Core\Entities\Role $role
+     * @param Role $role
      *
      * @return $this
      */

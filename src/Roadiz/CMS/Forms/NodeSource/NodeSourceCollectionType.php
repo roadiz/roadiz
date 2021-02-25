@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 
-class NodeSourceCollectionType extends CollectionType
+final class NodeSourceCollectionType extends CollectionType
 {
     /**
      * @inheritDoc

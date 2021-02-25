@@ -4,9 +4,14 @@
 <section class="content-global edit-group">
 
     <header class="content-header header-group header-group-users">
-        <h1 class="content-title group-add-title">{{ "edit.group.%name%.users"|trans({'%name%': group.getName})|u.truncate(25, '[…]', true) }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('groupsHomePage') }}" title="{% trans %}back_to.groups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
-        {% include '@Rozier/groups/navBar.html.twig' with {'group':group, current:'users'} %}
+        <h1 class="content-title group-add-title">
+            {{- "edit.group.%name%.users"|trans({'%name%': item.getName})|u.truncate(25, '[…]', true) -}}
+        </h1>
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('groupsHomePage') }}"
+           title="{% trans %}back_to.groups{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+        {% include '@Rozier/groups/navBar.html.twig' with {'item':item, current:'users'} %}
     </header>
 
     <article class="content content-edit">
@@ -19,11 +24,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for user in group.getUsers %}
+                    {% for user in item.getUsers %}
                     <tr>
                         <td>{{ user.getUserName }}</td>
                         <td>
-                            <a class="uk-button uk-button-small uk-button-danger" href="{{ path('groupsRemoveUsersPage', { groupId: group.getId, userId: user.getId }) }}"><i class='uk-icon-trash-o'></i> {% trans %}unlink.user{% endtrans %}</a>
+                            <a class="uk-button uk-button-small uk-button-danger"
+                               href="{{ path('groupsRemoveUsersPage', { id: item.getId, userId: user.getId }) }}">
+                                <i class='uk-icon-trash-o'></i> {% trans %}unlink.user{% endtrans %}
+                            </a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -41,9 +49,11 @@
             }
         }) }}{{ form_widget(form) }}
             <fieldset data-uk-margin>
-                <button class="uk-button uk-button-primary" type="submit"><i class="uk-icon-rz-plus"></i> {% trans %}add.user{% endtrans %}</button>
+                <button class="uk-button uk-button-primary" type="submit">
+                    <i class="uk-icon-rz-plus"></i> {% trans %}add.user{% endtrans %}
+                </button>
             </fieldset>
-        </form>
+        {{ form_end(form) }}
     </article>
     {% include '@Rozier/groups/actionsMenu.html.twig' %}
 </section>

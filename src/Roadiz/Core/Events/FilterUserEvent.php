@@ -7,8 +7,6 @@ use RZ\Roadiz\Core\Entities\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterUserEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterUserEvent extends Event
@@ -19,7 +17,6 @@ abstract class FilterUserEvent extends Event
     private $user;
 
     /**
-     * FilterUserEvent constructor.
      * @param User $user
      */
     public function __construct(User $user)

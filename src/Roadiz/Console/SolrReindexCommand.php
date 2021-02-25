@@ -5,12 +5,13 @@ namespace RZ\Roadiz\Console;
 
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\SearchEngine\SolariumDocumentTranslation;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
+use RZ\Roadiz\Core\SearchEngine\SolariumNodeSource;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -38,30 +39,39 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
 
         if (null !== $this->solr) {
             if (true === $this->getHelper('solr')->ready()) {
-                $confirmation = new ConfirmationQuestion(
-                    '<question>Are you sure to reindex your Node and Document database?</question>',
-                    false
-                );
-                if (!$input->isInteractive() ||
-                    $this->io->askQuestion($confirmation)
-                ) {
+                if ($this->io->confirm(
+                    'Are you sure to reindex your Node and Document database?',
+                    !$input->isInteractive()
+                )) {
                     $stopwatch = new Stopwatch();
                     $stopwatch->start('global');
-                    // Empty first
-                    $this->emptySolr();
 
                     if ($input->getOption('documents')) {
+                        // Empty first
+                        $this->emptySolr(SolariumDocumentTranslation::DOCUMENT_TYPE);
                         $this->reindexDocuments();
-                    } elseif ($input->getOption('nodes')) {
-                        $this->reindexNodeSources();
-                    } else {
-                        $this->reindexDocuments();
-                        $this->reindexNodeSources();
-                    }
 
-                    $stopwatch->stop('global');
-                    $duration = $stopwatch->getEvent('global')->getDuration();
-                    $this->io->success(sprintf('Node and document database has been re-indexed in %.2d ms.', $duration));
+                        $stopwatch->stop('global');
+                        $duration = $stopwatch->getEvent('global')->getDuration();
+                        $this->io->success(sprintf('Document database has been re-indexed in %.2d ms.', $duration));
+                    } elseif ($input->getOption('nodes')) {
+                        // Empty first
+                        $this->emptySolr(SolariumNodeSource::DOCUMENT_TYPE);
+                        $this->reindexNodeSources();
+
+                        $stopwatch->stop('global');
+                        $duration = $stopwatch->getEvent('global')->getDuration();
+                        $this->io->success(sprintf('Node database has been re-indexed in %.2d ms.', $duration));
+                    } else {
+                        // Empty first
+                        $this->emptySolr();
+                        $this->reindexDocuments();
+                        $this->reindexNodeSources();
+
+                        $stopwatch->stop('global');
+                        $duration = $stopwatch->getEvent('global')->getDuration();
+                        $this->io->success(sprintf('Node and document database has been re-indexed in %.2d ms.', $duration));
+                    }
                 }
             } else {
                 $this->io->error('Solr search engine server does not respond…');
@@ -69,7 +79,7 @@ class SolrReindexCommand extends SolrCommand implements ThemeAwareCommandInterfa
                 return 1;
             }
         } else {
-            $this->io->note($this->displayBasicConfig());
+            $this->displayBasicConfig();
         }
         return 0;
     }

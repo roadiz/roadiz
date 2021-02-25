@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="ar">
+    <body>
+      <trans-unit id="1">
+        <source>Node name</source>
+        <target state="translated">اسم العقدة</target>
+      </trans-unit>
+      <trans-unit id="2">
+        <source>See tree</source>
+        <target state="translated">انظر شجرة</target>
+      </trans-unit>
+      <trans-unit id="3">
+        <source>_username</source>
+        <target state="translated">_اسم المستخدم</target>
+      </trans-unit>
+      <trans-unit id="4">
+        <source>_password</source>
+        <target state="translated">_كلمه السر</target>
+      </trans-unit>
+      <trans-unit id="password.verify">
+        <source>password.verify</source>
+        <target state="translated">كلمة المرور التحقق</target>
+      </trans-unit>
+      <trans-unit id="delete">
+        <source>delete</source>
+        <target state="translated">حذف</target>
+      </trans-unit>
+      <trans-unit id="status">
+        <source>status</source>
+        <target state="translated">الحالة</target>
+      </trans-unit>
+      <!-- Welcome -->
+      <trans-unit id="welcome.title">
+        <source>welcome.title</source>
+        <target state="translated">عنوان الترحيب</target>
+      </trans-unit>
+      <!-- Requirements -->
+      <!-- Database -->
+      <!-- Database done -->
+      <!-- Database fail -->
+      <!-- Import -->
+      <!-- User -->
+      <!-- User summary -->
+      <!-- Themes -->
+      <!-- Import node type -->
+      <!-- Success -->
+      <!-- Goto -->
+    </body>
+  </file>
+</xliff>

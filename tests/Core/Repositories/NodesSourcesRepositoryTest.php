@@ -1,13 +1,12 @@
 <?php
 
-
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeWithNodesDependentCase;
 
-class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
+class NodesSourcesRepositoryTest extends DefaultThemeWithNodesDependentCase
 {
     /**
      * @return NodeRepository
@@ -27,70 +26,79 @@ class NodesSourcesRepositoryTest extends DefaultThemeDependentCase
 
     public function testFindByNodeName()
     {
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.nodeName' => 'home'
         ]);
+        $this->assertNotEmpty($result);
     }
 
     public function testFindByNodeTypeName()
     {
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.nodeType.name' => 'Neutral'
         ]);
+        $this->assertNotEmpty($result);
     }
 
     public function testFindByNodeType()
     {
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.nodeType' => $this->get('nodeTypesBag')->get('Neutral'),
         ]);
+        $this->assertNotEmpty($result);
     }
 
     public function testFindByANodes()
     {
         $home = $this->getNodeRepository()->findHomeWithDefaultTranslation();
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.aNodes.nodeA' => $home,
         ]);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodes()
     {
         $home = $this->getNodeRepository()->findHomeWithDefaultTranslation();
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.bNodes.nodeB' => $home,
         ]);
+        $this->assertEmpty($result);
     }
 
     public function testFindByANodesFieldName()
     {
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.aNodes.field.name' => 'related_node',
         ]);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodesFieldName()
     {
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.bNodes.field.name' => 'related_node',
         ]);
+        $this->assertEmpty($result);
     }
 
     public function testFindByANodesAndFieldName()
     {
         $home = $this->getNodeRepository()->findHomeWithDefaultTranslation();
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.aNodes.nodeA' => $home,
             'node.aNodes.field.name' => 'related_node',
         ]);
+        $this->assertEmpty($result);
     }
 
     public function testFindByBNodesAndFieldName()
     {
         $home = $this->getNodeRepository()->findHomeWithDefaultTranslation();
-        $this->getNodesSourcesRepository()->findBy([
+        $result = $this->getNodesSourcesRepository()->findBy([
             'node.bNodes.nodeB' => $home,
             'node.bNodes.field.name' => 'related_node',
         ]);
+        $this->assertEmpty($result);
     }
 }

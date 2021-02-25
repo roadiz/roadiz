@@ -47,38 +47,46 @@ class SolrCommand extends Command
                 return 1;
             }
         } else {
-            $this->io->note($this->displayBasicConfig());
+            $this->displayBasicConfig();
         }
         return 0;
     }
 
-    protected function displayBasicConfig()
+    protected function displayBasicConfig(): void
     {
-        $text = '<error>No Solr search engine server has been configured…</error>' . PHP_EOL;
-        $text .= 'Personnalize your config.yml file to enable Solr (sample):' . PHP_EOL;
-        $text .= '
+        if (null !== $this->io) {
+            $this->io->error('No Solr search engine server has been configured…');
+            $this->io->note(<<<EOD
+Edit your app/config.yml file to enable Solr (example):
+
 solr:
     endpoint:
         localhost:
             host: "localhost"
             port: "8983"
-            path: "/solr"
-            core: "mycore"
+            path: "/"
+            core: "roadiz"
             timeout: 3
             username: ""
             password: ""
-            ';
-
-        return $text;
+EOD);
+        }
     }
 
     /**
      * Empty Solr index.
+     *
+     * @param string|null $documentType
      */
-    protected function emptySolr(): void
+    protected function emptySolr(?string $documentType = null): void
     {
         $update = $this->solr->createUpdate();
-        $update->addDeleteQuery('*:*');
+        if (null !== $documentType) {
+            $update->addDeleteQuery('document_type_s:' . trim($documentType));
+        } else {
+            // Delete ALL index
+            $update->addDeleteQuery('*:*');
+        }
         $update->addCommit();
         $this->solr->update($update);
     }

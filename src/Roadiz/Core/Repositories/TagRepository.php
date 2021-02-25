@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Repositories;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\TagTranslation;
@@ -14,8 +15,6 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * Class TagRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Tag>
  */
@@ -92,11 +91,11 @@ class TagRepository extends EntityRepository
     /**
      * Create filters according to any translation criteria OR argument.
      *
-     * @param array        $criteria
+     * @param array $criteria
      * @param QueryBuilder $qb
-     * @param Translation  $translation
+     * @param TranslationInterface|null $translation
      */
-    protected function filterByTranslation($criteria, QueryBuilder $qb, Translation $translation = null)
+    protected function filterByTranslation($criteria, QueryBuilder $qb, TranslationInterface $translation = null)
     {
         if (isset($criteria['translation']) ||
             isset($criteria['translation.locale']) ||
@@ -133,11 +132,11 @@ class TagRepository extends EntityRepository
      * Bind translation parameter to final query
      *
      * @param QueryBuilder $qb
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      */
     protected function applyTranslationByTag(
         QueryBuilder $qb,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         if (null !== $translation) {
             $qb->setParameter('translation', $translation);
@@ -151,7 +150,7 @@ class TagRepository extends EntityRepository
      * @param array|null       $orderBy
      * @param integer|null     $limit
      * @param integer|null     $offset
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return QueryBuilder
      */
@@ -160,7 +159,7 @@ class TagRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->createQueryBuilder(EntityRepository::TAG_ALIAS);
         $qb->addSelect('tt');
@@ -187,14 +186,14 @@ class TagRepository extends EntityRepository
     /**
      * This method allows to pre-filter Nodes with a given translation.
      *
-     * @param array                                   $criteria
-     * @param Translation|null $translation
+     * @param array $criteria
+     * @param TranslationInterface|null $translation
      *
      * @return QueryBuilder
      */
     protected function getCountContextualQueryWithTranslation(
         array &$criteria,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->createQueryBuilder(EntityRepository::TAG_ALIAS);
         $this->filterByNodes($criteria, $qb);
@@ -211,7 +210,7 @@ class TagRepository extends EntityRepository
      * @param array|string[]|null                     $orderBy
      * @param integer|null                            $limit
      * @param integer|null                            $offset
-     * @param Translation|null                        $translation
+     * @param TranslationInterface|null               $translation
      *
      * @return array|Paginator
      */
@@ -220,7 +219,7 @@ class TagRepository extends EntityRepository
         array $orderBy = null,
         $limit = null,
         $offset = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->getContextualQueryWithTranslation(
             $criteria,
@@ -253,14 +252,14 @@ class TagRepository extends EntityRepository
      *
      * @param array $criteria
      * @param array|null $orderBy
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return Tag|null
      */
     public function findOneBy(
         array $criteria,
         array $orderBy = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $qb = $this->getContextualQueryWithTranslation(
             $criteria,
@@ -282,13 +281,13 @@ class TagRepository extends EntityRepository
     /**
      * Just like the countBy method but with relational criteria.
      *
-     * @param array            $criteria
-     * @param Translation|null $translation
+     * @param array $criteria
+     * @param TranslationInterface|null $translation
      * @return int
      */
     public function countBy(
         $criteria,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $query = $this->getCountContextualQueryWithTranslation(
             $criteria,
@@ -304,12 +303,12 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param integer     $tagId
-     * @param Translation $translation
+     * @param int $tagId
+     * @param TranslationInterface $translation
      *
      * @return Tag|null
      */
-    public function findWithTranslation($tagId, Translation $translation)
+    public function findWithTranslation($tagId, TranslationInterface $translation)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t, tt')
@@ -325,10 +324,10 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return Tag[]
      */
-    public function findAllWithTranslation(Translation $translation)
+    public function findAllWithTranslation(TranslationInterface $translation)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t, tt')
@@ -341,7 +340,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param integer $tagId
+     * @param int $tagId
      *
      * @return Tag|null
      */
@@ -379,12 +378,32 @@ class TagRepository extends EntityRepository
     }
 
     /**
+     * @return Tag[]
+     */
+    public function findAllColored()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb
+            ->andWhere($qb->expr()->isNotNull('t.color'))
+            ->andWhere($qb->expr()->notIn('t.color', ':colored'))
+            ->addOrderBy('t.position', 'DESC')
+            ->setParameter(':colored', [
+                '#000000',
+                '#000',
+                '#fff',
+                '#ffffff',
+            ])
+        ;
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
      * @param Node             $parentNode
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      *
      * @return mixed
      */
-    public function findAllLinkedToNodeChildren(Node $parentNode, ?Translation $translation = null)
+    public function findAllLinkedToNodeChildren(Node $parentNode, ?TranslationInterface $translation = null)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t')
@@ -405,12 +424,12 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @param Tag $parent
      *
      * @return Tag[]
      */
-    public function findByParentWithTranslation(Translation $translation, Tag $parent = null)
+    public function findByParentWithTranslation(TranslationInterface $translation, Tag $parent = null)
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t, tt')
@@ -431,7 +450,7 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * @param Tag $parent
+     * @param Tag|null $parent
      *
      * @return Tag[]
      */
@@ -486,11 +505,11 @@ class TagRepository extends EntityRepository
     }
 
     /**
-     * Create a Criteria object from a search pattern and additionnal fields.
+     * Create a Criteria object from a search pattern and additional fields.
      *
      * @param string $pattern Search pattern
      * @param QueryBuilder $qb QueryBuilder to pass
-     * @param array $criteria Additionnal criteria
+     * @param array $criteria Additional criteria
      * @param string $alias SQL query table alias
      *
      * @return QueryBuilder
@@ -594,14 +613,14 @@ class TagRepository extends EntityRepository
     /**
      * Find a tag according to the given path or create it.
      *
-     * @param string           $tagPath
-     * @param Translation|null $translation
+     * @param string $tagPath
+     * @param TranslationInterface|null $translation
      *
      * @return Tag|null
      * @throws \Doctrine\ORM\ORMException
      * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function findOrCreateByPath(string $tagPath, ?Translation $translation = null)
+    public function findOrCreateByPath(string $tagPath, ?TranslationInterface $translation = null)
     {
         $tagPath = trim($tagPath);
         $tags = explode('/', $tagPath);

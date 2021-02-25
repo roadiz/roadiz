@@ -19,19 +19,18 @@ class UsersSecurityController extends RozierApp
      * @param int     $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
-    public function securityAction(Request $request, $userId)
+    public function securityAction(Request $request, int $userId)
     {
         // Only user managers can review security
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
-        $user = $this->get('em')->find(User::class, (int) $userId);
+        /** @var User|null $user */
+        $user = $this->get('em')->find(User::class, $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
             $form = $this->createForm(UserSecurityType::class, $user, [
-                'canChroot' => $this->isGranted("ROLE_SUPERADMIN"),
-                'entityManager' => $this->get('em'),
+                'canChroot' => $this->isGranted("ROLE_SUPERADMIN")
             ]);
             $form->handleRequest($request);
 

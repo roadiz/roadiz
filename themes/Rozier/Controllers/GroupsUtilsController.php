@@ -17,8 +17,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class GroupsUtilsController
- *
  * @package Themes\Rozier\Controllers
  */
 class GroupsUtilsController extends RozierApp
@@ -59,16 +57,15 @@ class GroupsUtilsController extends RozierApp
      * Export a Group in a Json file (.json).
      *
      * @param Request $request
-     * @param int     $groupId
+     * @param int     $id
      *
      * @return Response
      */
-    public function exportAction(Request $request, $groupId)
+    public function exportAction(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_GROUPS');
 
-        $existingGroup = $this->get('em')
-                              ->find(Group::class, (int) $groupId);
+        $existingGroup = $this->get('em')->find(Group::class, $id);
 
         if (null === $existingGroup) {
             throw $this->createNotFoundException();
@@ -79,7 +76,7 @@ class GroupsUtilsController extends RozierApp
 
         return new JsonResponse(
             $serializer->serialize(
-                $existingGroup,
+                [$existingGroup], // need to wrap in array
                 'json',
                 SerializationContext::create()->setGroups(['group'])
             ),

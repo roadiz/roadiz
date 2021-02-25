@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="sr">
+    <body>
+      <!-- welcome.user.email -->
+      <trans-unit id="welcome.user.email.%site%" approved="yes">
+        <source>welcome.user.email.%site%</source>
+        <target state="final">Ваш кориснички налог је направљен на сајту %site%</target>
+      </trans-unit>
+      <trans-unit id="your.user.account" approved="yes">
+        <source>your.user.account</source>
+        <target state="final">Ваш кориснички налог</target>
+      </trans-unit>
+      <trans-unit id="username" approved="yes">
+        <source>username</source>
+        <target state="final">Корисничко име</target>
+      </trans-unit>
+      <trans-unit id="email" approved="yes">
+        <source>email</source>
+        <target state="final">Електронска пошта</target>
+      </trans-unit>
+      <trans-unit id="password" approved="yes">
+        <source>password</source>
+        <target state="final">Лозинка</target>
+      </trans-unit>
+      <trans-unit id="for.questions.email" approved="yes">
+        <source>for.questions.email</source>
+        <target state="final">Ако имате додатна питања, пишите нам на email:</target>
+      </trans-unit>
+      <!-- Contact forms -->
+      <trans-unit id="contact.form">
+        <source>contact.form</source>
+        <target state="translated">Контакт форма</target>
+      </trans-unit>
+      <trans-unit id="new.contact.form.%site%" approved="yes">
+        <source>new.contact.form.%site%</source>
+        <target state="final">Нови захтев за контакт за сајт %site%</target>
+      </trans-unit>
+      <trans-unit id="form.successfully.sent" approved="yes">
+        <source>form.successfully.sent</source>
+        <target state="final">Формулар је успешно послат</target>
+      </trans-unit>
+      <trans-unit id="form.has.errors" approved="yes">
+        <source>form.has.errors</source>
+        <target state="final">Формулар није добро попуњен. Молимо Вас да попуните тражена поља.</target>
+      </trans-unit>
+      <trans-unit id="%field%.is.mandatory" approved="yes">
+        <source>%field%.is.mandatory</source>
+        <target state="final">Поље %field% је обавезно</target>
+      </trans-unit>
+      <trans-unit id="email.not.valid" approved="yes">
+        <source>email.not.valid</source>
+        <target state="final">Ваша email адреса није валидна</target>
+      </trans-unit>
+      <trans-unit id="date" approved="yes">
+        <source>date</source>
+        <target state="final">Датум</target>
+      </trans-unit>
+      <trans-unit id="ip.address" approved="yes">
+        <source>ip.address</source>
+        <target state="final">IP Адреса</target>
+      </trans-unit>
+      <trans-unit id="submittedAt" approved="yes">
+        <source>submittedAt</source>
+        <target state="final">Послато на</target>
+      </trans-unit>
+      <trans-unit id="form.submit" approved="yes">
+        <source>form.submit</source>
+        <target state="final">Пошаљи</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="answer.form" approved="yes">
+                <source>answer.form</source>
+                <target state="final">Формулар за одговор.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.send" approved="yes">
+                <source>customForm.%name%.send</source>
+                <target state="final">Одговор %name% је послат</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%" approved="yes">
+                <source>new.answer.form.%site%</source>
+                <target state="final">Нови одговор са сајта %site%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="file.not.accepted" approved="yes">
+                <source>file.not.accepted</source>
+                <target state="final">Фајл који сте закачили није прихваћен</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.answer.sent" approved="yes">
+                <source>customForm.answer.sent</source>
+                <target state="final">Ваш одговор је успешно послат</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target state="translated">Ништа</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.password.request" approved="yes">
+              <source>reset.password.request</source>
+              <target state="final">Захтев за промену лозинке</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%" approved="yes">
+                <source>you.asked.for.a.password.reset.on.%site%</source>
+                <target state="final">Затражили сте промену лозинке за сајт %site%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link" approved="yes">
+                <source>you.need.to.choose.a.new.password.using.following.link</source>
+                <target state="final">Морате да креирате нову лозинку за свој налог и за то ћете користити следећи линк:</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials" approved="yes">
+                <source>as.a.reminder.here.are.your.credentials</source>
+                <target state="final">Подсећања ради, ово су Ваше акредитације:</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email" approved="yes">
+                <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+                <target state="final">Ако нисте планирали да мењате нешто у вези овог email-а, игноришите ову поруку и лозинка неће бити промењена.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target state="translated">Ресетујте своју лозинку</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field" approved="yes">
+                <source>you.need.to.fill.this.required.field</source>
+                <target state="final">Морате да попуните тражено поље.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="*.required.fields" approved="yes">
+                <source>*.required.fields</source>
+                <target state="final">* Тражена поља</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance" approved="yes">
+                <source>website.is.under.maintenance</source>
+                <target state="final">У току је одржавање веб-сајта</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon" approved="yes">
+                <source>website.is.under.maintenance.we.will.be.back.soon</source>
+                <target state="final">У току је одржавање веб-сајта, ускоро ће поново радити!</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid" approved="yes">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target state="final">YAML код је неисправан ({{ error }}).</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used" approved="yes">
+                <source>value.is.already.used</source>
+                <target state="final">Ова вредност је већ употребљена.</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_should_contains_at_least_one_capital_one_digit">
+                <source>password_should_contains_at_least_one_capital_one_digit</source>
+                <target state="translated">Лозинка мора садржати најмање једно велико слово, и барем један број</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_blacklisted">
+                <source>password_blacklisted</source>
+                <target state="translated">Лозинка коју сте предложили се често употребљава и недовољно је сигурна</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_should_be_at_least_characters_long">
+                <source>password_should_be_at_least_{{length}}_characters_long</source>
+                <target state="translated">Лозинка мора бити дугачка најмање {{length}} карактера</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

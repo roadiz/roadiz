@@ -7,8 +7,6 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterNodesSourcesEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterNodesSourcesEvent extends Event

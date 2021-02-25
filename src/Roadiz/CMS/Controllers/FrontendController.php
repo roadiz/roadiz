@@ -4,11 +4,12 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Pimple\Container;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Handlers\NodesSourcesHandler;
 use RZ\Roadiz\Core\Routing\NodeRouteHelper;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Security\FirewallEntry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,28 +49,16 @@ abstract class FrontendController extends AppController
      * Put here your node which need a specific controller
      * instead of a node-type controller.
      *
-     * @var array
+     * @var array<string>
      */
-    protected static $specificNodesControllers = [
+    protected static array $specificNodesControllers = [
         'home',
     ];
 
-    /**
-     * @var Node
-     */
-    protected $node = null;
-    /**
-     * @var NodesSources
-     */
-    protected $nodeSource = null;
-    /**
-     * @var Translation
-     */
-    protected $translation = null;
-    /**
-     * @var Container
-     */
-    protected $themeContainer = null;
+    protected ?Node $node = null;
+    protected ?NodesSources $nodeSource = null;
+    protected ?TranslationInterface $translation = null;
+    protected ?Container $themeContainer = null;
 
     /**
      * Append objects to global container.
@@ -132,7 +121,7 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * @return Node
+     * @return Node|null
      */
     public function getNode(): ?Node
     {
@@ -140,7 +129,7 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * @return NodesSources
+     * @return NodesSources|null
      */
     public function getNodeSource(): ?NodesSources
     {
@@ -148,9 +137,9 @@ abstract class FrontendController extends AppController
     }
 
     /**
-     * @return Translation
+     * @return TranslationInterface|null
      */
-    public function getTranslation(): ?Translation
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }
@@ -159,15 +148,15 @@ abstract class FrontendController extends AppController
      * Default action for any node URL.
      *
      * @param Request $request
-     * @param Node             $node
-     * @param Translation      $translation
+     * @param Node|null $node
+     * @param TranslationInterface|null $translation
      *
      * @return Response
      */
     public function indexAction(
         Request $request,
         Node $node = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $this->get('stopwatch')->start('handleNodeController');
         $this->node = $node;
@@ -182,15 +171,15 @@ abstract class FrontendController extends AppController
      * for a node-based request.
      *
      * @param Request $request
-     * @param Node $node
-     * @param Translation $translation
+     * @param Node|null $node
+     * @param TranslationInterface|null $translation
      *
      * @return Response
      */
     protected function handle(
         Request $request,
         Node $node = null,
-        Translation $translation = null
+        TranslationInterface $translation = null
     ) {
         $this->get('stopwatch')->start('handleNodeController');
 
@@ -198,7 +187,7 @@ abstract class FrontendController extends AppController
             $nodeRouteHelper = new NodeRouteHelper(
                 $node,
                 $this->getTheme(),
-                $this->get('kernel')->isPreview()
+                $this->get(PreviewResolverInterface::class)
             );
             $controllerPath = $nodeRouteHelper->getController();
             $method = $nodeRouteHelper->getMethod();
@@ -245,7 +234,7 @@ abstract class FrontendController extends AppController
      * in order to avoid initializing same component again.
      *
      * @param array $baseAssignation
-     * @param Container $themeContainer
+     * @param Container|null $themeContainer
      */
     public function __initFromOtherController(
         array &$baseAssignation = [],
@@ -285,12 +274,12 @@ abstract class FrontendController extends AppController
     /**
      * Store basic information for your theme from a Node object.
      *
-     * @param Node $node
-     * @param Translation $translation
+     * @param Node|null $node
+     * @param TranslationInterface|null $translation
      *
      * @return void
      */
-    protected function prepareThemeAssignation(Node $node = null, Translation $translation = null)
+    protected function prepareThemeAssignation(Node $node = null, TranslationInterface $translation = null)
     {
         if (null === $this->themeContainer) {
             $this->container['stopwatch']->start('prepareThemeAssignation');
@@ -325,10 +314,10 @@ abstract class FrontendController extends AppController
      *     * description
      *     * keywords
      *
-     * @param Node        $node
-     * @param Translation $translation
+     * @param Node|null $node
+     * @param TranslationInterface|null $translation
      */
-    public function storeNodeAndTranslation(Node $node = null, Translation $translation = null)
+    public function storeNodeAndTranslation(Node $node = null, TranslationInterface $translation = null)
     {
         $this->node = $node;
         $this->translation = $translation;
@@ -354,7 +343,7 @@ abstract class FrontendController extends AppController
      * * `description`
      * * `keywords`
      *
-     * @param NodesSources $fallbackNodeSource
+     * @param NodesSources|null $fallbackNodeSource
      *
      * @return array
      */
@@ -434,15 +423,18 @@ abstract class FrontendController extends AppController
     /**
      * Store basic information for your theme from a NodesSources object.
      *
-     * @param NodesSources $nodeSource
-     * @param Translation $translation
+     * @param NodesSources|null $nodeSource
+     * @param TranslationInterface|null $translation
      *
      * @return void
      */
-    protected function prepareNodeSourceAssignation(NodesSources $nodeSource = null, Translation $translation = null)
-    {
+    protected function prepareNodeSourceAssignation(
+        NodesSources $nodeSource = null,
+        TranslationInterface $translation = null
+    ) {
         if (null === $this->themeContainer) {
             $this->storeNodeSourceAndTranslation($nodeSource, $translation);
+            /** @deprecated Should not fetch home at each request */
             $this->assignation['home'] = $this->getHome($translation);
             /*
              * Use a DI container to delay API requests
@@ -466,11 +458,13 @@ abstract class FrontendController extends AppController
      *     * description
      *     * keywords
      *
-     * @param NodesSources $nodeSource
-     * @param Translation $translation
+     * @param NodesSources|null $nodeSource
+     * @param TranslationInterface|null $translation
      */
-    public function storeNodeSourceAndTranslation(NodesSources $nodeSource = null, Translation $translation = null)
-    {
+    public function storeNodeSourceAndTranslation(
+        NodesSources $nodeSource = null,
+        TranslationInterface $translation = null
+    ) {
         $this->nodeSource = $nodeSource;
 
         if (null !== $this->nodeSource) {
@@ -501,7 +495,7 @@ abstract class FrontendController extends AppController
     {
         if (null !== $this->nodeSource) {
             if ($this->nodeSource->getPublishedAt() > new \DateTime() &&
-                !$this->get('kernel')->isPreview()) {
+                !$this->get(PreviewResolverInterface::class)->isPreview()) {
                 throw $this->createNotFoundException();
             }
         }

@@ -131,6 +131,28 @@
                 <note>Setting description</note>
             </trans-unit>
 
+            <trans-unit xml:space="preserve" id="custom_preview_scheme">
+                <source>custom_preview_scheme</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="custom_preview_scheme.help">
+                <source>custom_preview_scheme.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
+            <trans-unit xml:space="preserve" id="use_typed_node_names">
+                <source>use_typed_node_names</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="use_typed_node_names.help">
+                <source>use_typed_node_names.help</source>
+                <target></target>
+                <note>Setting description</note>
+            </trans-unit>
+
             <trans-unit xml:space="preserve" id="openid_username_claim">
                 <source>openid_username_claim</source>
                 <target></target>
@@ -140,6 +162,37 @@
                 <source>openid_username_claim.help</source>
                 <target></target>
                 <note>Setting description</note>
+            </trans-unit>
+            <!-- Setting groups names -->
+            <trans-unit xml:space="preserve" id="APIs">
+                <source>APIs</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Development">
+                <source>Development</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Emailings">
+                <source>Emailings</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="OpenId">
+                <source>OpenId</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Site informations">
+                <source>Site informations</source>
+                <target></target>
+                <note>Setting group name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="Social networks">
+                <source>Social networks</source>
+                <target></target>
+                <note>Setting group name</note>
             </trans-unit>
         </body>
     </file>

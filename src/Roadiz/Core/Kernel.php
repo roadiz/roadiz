@@ -7,25 +7,8 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\AttributesServiceProvider;
 use RZ\Roadiz\CMS\Controllers\AssetsController;
-use RZ\Roadiz\Core\Events\ControllerMatchedSubscriber;
-use RZ\Roadiz\Core\Events\DebugBarSubscriber;
-use RZ\Roadiz\Core\Events\ExceptionSubscriber;
-use RZ\Roadiz\Core\Events\LocaleSubscriber;
-use RZ\Roadiz\Core\Events\LoggableUsernameSubscriber;
-use RZ\Roadiz\Core\Events\MaintenanceModeSubscriber;
-use RZ\Roadiz\Core\Events\NodeNameSubscriber;
-use RZ\Roadiz\Core\Events\NodeSourcePathSubscriber;
-use RZ\Roadiz\Core\Events\PreviewBarSubscriber;
-use RZ\Roadiz\Core\Events\PreviewModeSubscriber;
-use RZ\Roadiz\Core\Events\SignatureListener;
-use RZ\Roadiz\Core\Events\ThemesSubscriber;
-use RZ\Roadiz\Core\Events\UserLocaleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Models\FileAwareInterface;
-use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
-use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
-use RZ\Roadiz\Core\SearchEngine\Subscriber\DefaultNodesSourcesIndexingSubscriber;
-use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
 use RZ\Roadiz\Core\Services\AssetsServiceProvider;
 use RZ\Roadiz\Core\Services\BackofficeServiceProvider;
 use RZ\Roadiz\Core\Services\BagsServiceProvider;
@@ -36,6 +19,7 @@ use RZ\Roadiz\Core\Services\DoctrineFiltersServiceProvider;
 use RZ\Roadiz\Core\Services\DoctrineServiceProvider;
 use RZ\Roadiz\Core\Services\EmbedDocumentsServiceProvider;
 use RZ\Roadiz\Core\Services\EntityApiServiceProvider;
+use RZ\Roadiz\Core\Services\EventDispatcherServiceProvider;
 use RZ\Roadiz\Core\Services\FactoryServiceProvider;
 use RZ\Roadiz\Core\Services\FormServiceProvider;
 use RZ\Roadiz\Core\Services\ImporterServiceProvider;
@@ -47,56 +31,30 @@ use RZ\Roadiz\Core\Services\SecurityServiceProvider;
 use RZ\Roadiz\Core\Services\SerializationServiceProvider;
 use RZ\Roadiz\Core\Services\SolrServiceProvider;
 use RZ\Roadiz\Core\Services\ThemeServiceProvider;
-use RZ\Roadiz\Core\Services\TranslationServiceProvider;
 use RZ\Roadiz\Core\Services\TwigServiceProvider;
 use RZ\Roadiz\Core\Services\YamlConfigurationServiceProvider;
 use RZ\Roadiz\Core\Viewers\ExceptionViewer;
+use RZ\Roadiz\Documentation\DocumentationServiceProvider;
+use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
 use RZ\Roadiz\OpenId\OpenIdServiceProvider;
-use RZ\Roadiz\Utils\Clearer\EventListener\AnnotationsCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\AppCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\AssetsCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\CloudflareCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\ConfigurationCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\DoctrineCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\MetadataCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\NodesSourcesUrlsCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\OPCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\ReverseProxyCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\RoutingCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\TemplatesCacheEventSubscriber;
-use RZ\Roadiz\Utils\Clearer\EventListener\TranslationsCacheEventSubscriber;
+use RZ\Roadiz\Preview\PreviewServiceProvider;
+use RZ\Roadiz\Translation\Services\TranslationServiceProvider;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
-use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\EventListener\ResponseListener;
-use Symfony\Component\HttpKernel\EventListener\SessionListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\RebootableInterface;
 use Symfony\Component\HttpKernel\TerminableInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Themes\Install\InstallApp;
-use Themes\Rozier\Events\DocumentFilesizeSubscriber;
-use Themes\Rozier\Events\DocumentSizeSubscriber;
-use Themes\Rozier\Events\ExifDocumentSubscriber;
-use Themes\Rozier\Events\ImageColorDocumentSubscriber;
-use Themes\Rozier\Events\NodeDuplicationSubscriber;
-use Themes\Rozier\Events\NodeRedirectionSubscriber;
-use Themes\Rozier\Events\NodesSourcesUniversalSubscriber;
-use Themes\Rozier\Events\NodesSourcesUrlSubscriber;
-use Themes\Rozier\Events\RawDocumentsSubscriber;
-use Themes\Rozier\Events\SvgDocumentSubscriber;
-use Themes\Rozier\Events\TranslationSubscriber;
+use Themes\Rozier\Services\RozierServiceProvider;
 
 /**
- * Roadiz Kernel.
- *
  * @package RZ\Roadiz\Core
  */
 class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInterface, TerminableInterface, ContainerAwareInterface, FileAwareInterface
@@ -106,29 +64,31 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     const CMS_VERSION = 'master';
     const SECURITY_DOMAIN = 'roadiz_domain';
     const INSTALL_CLASSNAME = InstallApp::class;
-    public static $cmsBuild = null;
-    public static $cmsVersion = "1.5.19";
-
-    protected $environment;
-    protected $debug;
-    protected $preview;
-    protected $booted = false;
-    protected $name;
-    protected $rootDir;
-    protected $startTime;
-
-    private $warmupDir;
-    private $projectDir;
-    private $requestStackSize = 0;
+    public static ?string $cmsBuild = null;
+    public static string $cmsVersion = "1.6.0";
+    protected string $environment;
+    protected bool $debug;
+    /**
+     * @var bool
+     * @deprecated Use request-time preview
+     */
+    protected bool $preview = false;
+    protected bool $booted = false;
+    protected ?string $name = null;
+    protected ?string $rootDir = null;
+    protected ?string $warmupDir = null;
+    protected ?string $projectDir = null;
+    protected float $startTime;
+    protected int $requestStackSize = 0;
 
     /**
      * @param string $environment
-     * @param boolean $debug
+     * @param bool $debug
      * @param bool $preview
      */
-    public function __construct($environment, $debug, $preview = false)
+    public function __construct(string $environment, bool $debug, bool $preview = false)
     {
-        $this->environment = $environment;
+        $this->environment = strtolower((string) $environment);
         $this->preview = (boolean) $preview;
         $this->debug = (boolean) $debug;
         $this->rootDir = $this->getRootDir();
@@ -162,7 +122,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
 
         try {
             $this->initializeContainer();
-            $this->initEvents();
             $this->booted = true;
         } catch (InvalidConfigurationException $e) {
             $view = new ExceptionViewer();
@@ -181,9 +140,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $this->boot();
     }
 
-    /**
-     *
-     */
     public function initializeContainer()
     {
         foreach (['cache' => $this->warmupDir ?: $this->getCacheDir(), 'logs' => $this->getLogDir()] as $name => $dir) {
@@ -240,145 +196,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $stopWatch->openSection();
         $stopWatch->start('kernel.registerServices');
 
+        $container->register(new EventDispatcherServiceProvider());
         $container->register(new YamlConfigurationServiceProvider());
-
-        $container['dispatcher'] = function (Container $c) {
-            /** @var Kernel $kernel */
-            $kernel = $c['kernel'];
-            $dispatcher = new EventDispatcher();
-            $dispatcher->addSubscriber(new SessionListener(new \Pimple\Psr11\Container($c)));
-            $dispatcher->addSubscriber(new AppCacheEventSubscriber());
-            $dispatcher->addSubscriber(new AssetsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new ConfigurationCacheEventSubscriber());
-            $dispatcher->addSubscriber(new AnnotationsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new MetadataCacheEventSubscriber());
-            $dispatcher->addSubscriber(new DoctrineCacheEventSubscriber());
-            $dispatcher->addSubscriber(new NodesSourcesUrlsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new OPCacheEventSubscriber());
-            $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
-            $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
-            $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c));
-            $dispatcher->addSubscriber(new CloudflareCacheEventSubscriber($c));
-            $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
-            $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
-            $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));
-            $dispatcher->addSubscriber(new SignatureListener(
-                $c['settingsBag'],
-                $kernel::$cmsVersion,
-                $kernel->isDebug()
-            ));
-            if (!$kernel->isDebug()) {
-                /**
-                 * Do not prevent Symfony Debug tool to perform
-                 * in debug mode.
-                 */
-                $dispatcher->addSubscriber(new ExceptionSubscriber(
-                    $c,
-                    $c['themeResolver'],
-                    $c['logger'],
-                    $kernel->isDebug()
-                ));
-            }
-            $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));
-            $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
-
-            if (!$kernel->isInstallMode()) {
-                $dispatcher->addSubscriber(new LocaleSubscriber($kernel));
-                $dispatcher->addSubscriber(new UserLocaleSubscriber($c));
-
-                /*
-                 * Add custom event subscriber to empty NS Url cache
-                 */
-                $dispatcher->addSubscriber(
-                    new NodesSourcesUrlSubscriber($c['nodesSourcesUrlCacheProvider'])
-                );
-
-                $dispatcher->addSubscriber(new NodeSourcePathSubscriber($c[NodesSourcesPathAggregator::class]));
-                /*
-                 * Add custom event subscriber to Translation result cache
-                 */
-                $dispatcher->addSubscriber(
-                    new TranslationSubscriber($c['em']->getConfiguration()->getResultCacheImpl())
-                );
-                /*
-                 * Add custom event subscriber to manage universal node-type fields
-                 */
-                $dispatcher->addSubscriber(
-                    new NodesSourcesUniversalSubscriber($c['em'], $c['utils.universalDataDuplicator'])
-                );
-
-                /*
-                 * Add custom event subscriber to manage Svg document sanitizing
-                 */
-                $dispatcher->addSubscriber(
-                    new SvgDocumentSubscriber(
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                /*
-                 * Add custom event subscriber to manage image document size and color
-                 */
-                $dispatcher->addSubscriber(
-                    new DocumentSizeSubscriber(
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                $dispatcher->addSubscriber(
-                    new DocumentFilesizeSubscriber(
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                $dispatcher->addSubscriber(
-                    new ImageColorDocumentSubscriber(
-                        $c['em'],
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-                /*
-                 * Add custom event subscriber to manage document EXIF
-                 */
-                $dispatcher->addSubscriber(
-                    new ExifDocumentSubscriber(
-                        $c['em'],
-                        $c['assetPackages'],
-                        $c['logger']
-                    )
-                );
-
-                /*
-                 * Add custom event subscriber to create a downscaled version for HD images.
-                 */
-                $dispatcher->addSubscriber(
-                    new RawDocumentsSubscriber(
-                        $c['em'],
-                        $c['assetPackages'],
-                        $c['logger'],
-                        $c['config']['assetsProcessing']['driver'],
-                        $c['config']['assetsProcessing']['maxPixelSize']
-                    )
-                );
-
-
-                if ($kernel->isPreview()) {
-                    $dispatcher->addSubscriber(new PreviewModeSubscriber($c));
-                    $dispatcher->addSubscriber(new PreviewBarSubscriber($c));
-                }
-            }
-            /*
-             * If debug, alter HTML responses to append Debug panel to view
-             */
-            if (!$kernel->isInstallMode() && $kernel->isDebug()) {
-                $dispatcher->addSubscriber(new DebugBarSubscriber($c));
-            }
-
-            return $dispatcher;
-        };
-
         $container->register(new ConsoleServiceProvider());
         $container->register(new AssetsServiceProvider());
         $container->register(new BackofficeServiceProvider());
@@ -406,6 +225,10 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new NodeServiceProvider());
         $container->register(new MarkdownServiceProvider());
         $container->register(new OpenIdServiceProvider());
+        $container->register(new RozierServiceProvider());
+        $container->register(new PreviewServiceProvider());
+        $container->register(new EntityGeneratorServiceProvider());
+        $container->register(new DocumentationServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());
@@ -459,8 +282,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
             if (0 === strpos($request->getPathInfo(), '/assets') &&
                 preg_match('#^/assets/(?P<queryString>[a-zA-Z:0-9\\-]+)/(?P<filename>[a-zA-Z0-9\\-_\\./]+)$#s', $request->getPathInfo(), $matches)
             ) {
-                $ctrl = new AssetsController();
-                $ctrl->setContainer($this->getContainer());
+                $ctrl = $this->get(AssetsController::class);
                 $response = $ctrl->interventionRequestAction($request, $matches['queryString'], $matches['filename']);
                 $response->headers->add(['X-ByPass-Kernel' => true]);
                 $response->prepare($request);
@@ -475,65 +297,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         } finally {
             --$this->requestStackSize;
         }
-    }
-
-    /**
-     * Register additional subscribers, especially those which need
-     * dispatcher to be woken up.
-     */
-    protected function initEvents()
-    {
-        $this->get('stopwatch')->start('kernel.initEvents');
-
-        if (!$this->isInstallMode()) {
-            $this->get('dispatcher')->addSubscriber($this->get('firewall'));
-        }
-
-        $this->get('dispatcher')->addSubscriber($this->get('routeListener'));
-        /*
-         * Add custom event subscribers to the general dispatcher.
-         *
-         * Important: do not check here if Solr respond, not to request
-         * solr server at each HTTP request.
-         */
-        $this->get('dispatcher')->addSubscriber(
-            new SolariumSubscriber(
-                $this->get('solr'),
-                $this->get('logger'),
-                $this->get(SolariumFactoryInterface::class)
-            )
-        );
-        $this->get('dispatcher')->addSubscriber(
-            new DefaultNodesSourcesIndexingSubscriber(
-                $this->get('factory.handler')
-            )
-        );
-        /*
-         * Add custom event subscriber to manage node duplication
-         */
-        $this->get('dispatcher')->addSubscriber(
-            new NodeDuplicationSubscriber(
-                $this->get('em'),
-                $this->get('factory.handler')
-            )
-        );
-
-        $this->get('dispatcher')->addSubscriber(
-            new NodeNameSubscriber(
-                $this->get('logger.doctrine'),
-                $this->get('utils.nodeNameChecker'),
-                $this->get(NodeMover::class)
-            )
-        );
-        /*
-         * Add event to create redirection after renaming a node.
-         */
-        if ($this->isProdMode() && !$this->isPreview()) {
-            $this->get('dispatcher')->addSubscriber(
-                new NodeRedirectionSubscriber($this->get(NodeMover::class), $this)
-            );
-        }
-        $this->get('stopwatch')->stop('kernel.initEvents');
     }
 
     /**
@@ -556,11 +319,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function isInstallMode()
     {
-        return $this->environment == 'install';
+        return $this->environment === 'install';
     }
 
     /**
      * @return boolean
+     * @deprecated Use request-time preview
      */
     public function isPreview()
     {
@@ -568,11 +332,21 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     }
 
     /**
+     * @param bool $preview
+     * @return Kernel
+     */
+    public function setPreview(bool $preview): Kernel
+    {
+        $this->preview = $preview;
+        return $this;
+    }
+
+    /**
      * @return boolean
      */
     public function isDevMode()
     {
-        return $this->environment == 'dev';
+        return $this->environment === 'dev';
     }
 
     /**
@@ -580,7 +354,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
      */
     public function isProdMode()
     {
-        return $this->environment == 'prod';
+        return $this->environment === 'prod';
     }
 
     /**
@@ -591,8 +365,8 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         if (false === $this->booted) {
             return;
         }
-        if ($this->container['httpKernel'] instanceof TerminableInterface) {
-            $this->container['httpKernel']->terminate($request, $response);
+        if ($this->getHttpKernel() instanceof TerminableInterface) {
+            $this->getHttpKernel()->terminate($request, $response);
         }
     }
 
@@ -737,7 +511,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPublicFilesPath()
+    public function getPublicFilesPath(): string
     {
         return $this->getPublicDir() . $this->getPublicFilesBasePath();
     }
@@ -745,7 +519,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPublicFilesBasePath()
+    public function getPublicFilesBasePath(): string
     {
         return '/files';
     }
@@ -769,7 +543,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPrivateFilesPath()
+    public function getPrivateFilesPath(): string
     {
         return $this->getProjectDir() . $this->getPrivateFilesBasePath();
     }
@@ -777,7 +551,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getPrivateFilesBasePath()
+    public function getPrivateFilesBasePath(): string
     {
         return '/files/private';
     }
@@ -785,7 +559,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getFontsFilesPath()
+    public function getFontsFilesPath(): string
     {
         return $this->getRootDir() . $this->getFontsFilesBasePath();
     }
@@ -793,7 +567,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
     /**
      * {@inheritdoc}
      */
-    public function getFontsFilesBasePath()
+    public function getFontsFilesBasePath(): string
     {
         return '/files/fonts';
     }

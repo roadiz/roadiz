@@ -3,16 +3,14 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Console\Helper;
 
+use Swift_Mailer;
 use Symfony\Component\Console\Helper\Helper;
 
-/**
- * MailerHelper.
- */
 class MailerHelper extends Helper
 {
-    protected $mailer;
+    protected Swift_Mailer $mailer;
 
-    public function __construct(\Swift_Mailer $mailer)
+    public function __construct(Swift_Mailer $mailer)
     {
         $this->mailer = $mailer;
     }

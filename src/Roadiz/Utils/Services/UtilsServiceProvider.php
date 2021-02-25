@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 
@@ -14,33 +15,40 @@ class UtilsServiceProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function register(Container $container)
+    public function register(Container $pimple): void
     {
         /**
-         * @param Container $container
-         *
          * @return NodeNameChecker
          */
-        $container['utils.nodeNameChecker'] = function (Container $container) {
-            return new NodeNameChecker($container['em']);
-        };
-        /**
-         * @param Container $container
-         *
-         * @return UniqueNodeGenerator
-         */
-        $container['utils.uniqueNodeGenerator'] = function (Container $container) {
-            return new UniqueNodeGenerator($container['em']);
-        };
-        /**
-         * @param Container $container
-         *
-         * @return UniversalDataDuplicator
-         */
-        $container['utils.universalDataDuplicator'] = function (Container $container) {
-            return new UniversalDataDuplicator($container['em']);
+        $pimple[NodeNamePolicyInterface::class] = function (Container $c) {
+            return new NodeNameChecker(
+                $c['em'],
+                (bool) $c['settingsBag']->get('use_typed_node_names', true)
+            );
         };
 
-        return $container;
+        /**
+         * @return mixed
+         * @deprecated
+         */
+        $pimple['utils.nodeNameChecker'] = function (Container $c) {
+            return $c[NodeNamePolicyInterface::class];
+        };
+
+        /**
+         * @return UniqueNodeGenerator
+         */
+        $pimple['utils.uniqueNodeGenerator'] = function (Container $c) {
+            return new UniqueNodeGenerator(
+                $c['em'],
+                $c[NodeNamePolicyInterface::class]
+            );
+        };
+        /**
+         * @return UniversalDataDuplicator
+         */
+        $pimple['utils.universalDataDuplicator'] = function (Container $c) {
+            return new UniversalDataDuplicator($c['em']);
+        };
     }
 }

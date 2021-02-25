@@ -1,36 +1,13 @@
 <?php
-/**
- * Copyright © 2015, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- * @file NodeTypeTest.php
- * @author Ambroise Maupate
- */
-use RZ\Roadiz\Core\Entities\NodeType;
+declare(strict_types=1);
 
-class NodeTypeTest extends PHPUnit_Framework_TestCase
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Tests\SerializedEntityTestTrait;
+
+class NodeTypeTest extends \PHPUnit\Framework\TestCase
 {
+    use SerializedEntityTestTrait;
+
     /**
      * @dataProvider sourceEntityClassNameProvider
      * @param $sourceName
@@ -59,6 +36,17 @@ class NodeTypeTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $a->getSourceEntityTableName());
     }
 
+    /*
+     * Test empty object serialization
+     */
+    public function testSerialize()
+    {
+        // Arrange
+        $a = new NodeType();
+        // Assert
+        $this->assertJson($this->getSerializer()->serialize($a, 'json'));
+    }
+
     /**
      * @dataProvider setNameProvider
      * @param $sourceName
@@ -76,26 +64,26 @@ class NodeTypeTest extends PHPUnit_Framework_TestCase
 
     public function setNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "LigulaEgestasMattisNullam"),
-            array("Véèsti buœlum_Rïsus", "VeestiBuoelumRisus"),
-            array("J'aime les sushis", "JAimeLesSushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "LigulaEgestasMattisNullam"],
+            ["Véèsti buœlum_Rïsus", "VeestiBuoelumRisus"],
+            ["J'aime les sushis", "JAimeLesSushis"],
+        ];
     }
     public function sourceEntityClassNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "NSLigulaEgestasMattisNullam"),
-            array("Véèsti buœlum Rïsus", "NSVeestiBuoelumRisus"),
-            array("J'aime les sushis", "NSJAimeLesSushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "NSLigulaEgestasMattisNullam"],
+            ["Véèsti buœlum Rïsus", "NSVeestiBuoelumRisus"],
+            ["J'aime les sushis", "NSJAimeLesSushis"],
+        ];
     }
     public function sourceEntityTableNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "ns_ligulaegestasmattisnullam"),
-            array("Véèsti buœlum Rïsus", "ns_veestibuoelumrisus"),
-            array("J'aime les sushis", "ns_jaimelessushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "ns_ligulaegestasmattisnullam"],
+            ["Véèsti buœlum Rïsus", "ns_veestibuoelumrisus"],
+            ["J'aime les sushis", "ns_jaimelessushis"],
+        ];
     }
 }

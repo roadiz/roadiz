@@ -14,8 +14,6 @@ use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class UsersRolesController
- *
  * @package Themes\Rozier\Controllers\Users
  */
 class UsersRolesController extends RozierApp
@@ -27,15 +25,13 @@ class UsersRolesController extends RozierApp
      * @param int     $userId
      *
      * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
-    public function editRolesAction(Request $request, $userId)
+    public function editRolesAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User|null $user */
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -78,17 +74,15 @@ class UsersRolesController extends RozierApp
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function removeRoleAction(Request $request, $userId, $roleId)
+    public function removeRoleAction(Request $request, int $userId, int $roleId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
         /** @var User|null $user */
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        $user = $this->get('em')->find(User::class, $userId);
 
         /** @var Role|null $role */
-        $role = $this->get('em')
-                     ->find(Role::class, (int) $roleId);
+        $role = $this->get('em')->find(Role::class, $roleId);
 
         if ($user !== null && $role !== null) {
             if (!$this->isGranted($role->getRole())) {
@@ -175,10 +169,8 @@ class UsersRolesController extends RozierApp
                             'roleId',
                             RolesType::class,
                             [
-                                'label' => 'Role',
-                                'entityManager' => $this->get('em'),
+                                'label' => 'choose.role',
                                 'roles' => $user->getRolesEntities(),
-                                'authorizationChecker' => $this->get('securityAuthorizationChecker'),
                             ]
                         );
 

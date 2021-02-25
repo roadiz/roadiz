@@ -6,8 +6,8 @@
         <h1 class="content-title manage-history-title">{{ "history.for.%name%"|trans({"%name%":node.nodeName}) }}</h1>
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
 
-        {% include '@Rozier/nodes/navBack.html.twig' %}
-        {% include '@Rozier/nodes/navBar.html.twig' with {current:'history'} %}
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {current:'history'} %}
     </header>
     {% include '@Rozier/widgets/filtersBar.html.twig' %}
 
@@ -23,6 +23,6 @@
         </div>
         {% endapply %}
     </article>
-    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

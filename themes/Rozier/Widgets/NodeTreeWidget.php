@@ -3,18 +3,20 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use RZ\Roadiz\CMS\Controllers\Controller;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
  * Prepare a Node tree according to Node hierarchy and given options.
  */
-class NodeTreeWidget extends AbstractWidget
+final class NodeTreeWidget extends AbstractWidget
 {
     const SESSION_ITEM_PER_PAGE = 'nodetree_item_per_page';
 
@@ -56,27 +58,29 @@ class NodeTreeWidget extends AbstractWidget
     protected $additionalCriteria = [];
 
     /**
-     * @param Request     $request           Current kernel request
-     * @param Controller  $refereeController Calling controller
-     * @param Node        $parent            Entry point of NodeTreeWidget, set null if it's root
-     * @param Translation $translation       NodeTree translation
+     * @param Request $request Current kernel request
+     * @param EntityManagerInterface $entityManager
+     * @param Node|null $parent Entry point of NodeTreeWidget, set null if it's root
+     * @param Translation|null $translation NodeTree translation
      */
     public function __construct(
         Request $request,
-        Controller $refereeController,
+        EntityManagerInterface $entityManager,
         Node $parent = null,
         Translation $translation = null
     ) {
-        parent::__construct($request, $refereeController);
+        parent::__construct($request, $entityManager);
 
         $this->parentNode = $parent;
         $this->translation = $translation;
 
         if ($this->translation === null) {
-            $this->translation = $this->getController()->get('defaultTranslation');
+            $this->translation = $this->entityManager
+                ->getRepository(Translation::class)
+                ->findOneBy(['defaultTranslation' => true]);
         }
 
-        $this->availableTranslations = $this->getController()->get('em')
+        $this->availableTranslations = $this->entityManager
              ->getRepository(Translation::class)
              ->findBy([], [
                  'defaultTranslation' => 'DESC',
@@ -179,7 +183,7 @@ class NodeTreeWidget extends AbstractWidget
      * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @param array $additionalCriteria Default: []
-     * @return \RZ\Roadiz\Core\ListManagers\EntityListManager
+     * @return EntityListManagerInterface
      */
     protected function getListManager(Node $parent = null, $subRequest = false, array $additionalCriteria = [])
     {
@@ -205,7 +209,9 @@ class NodeTreeWidget extends AbstractWidget
         /*
          * Manage get request to filter list
          */
-        $listManager = $this->controller->createEntityListManager(
+        $listManager = new EntityListManager(
+            $this->request,
+            $this->entityManager,
             Node::class,
             $criteria,
             $ordering
@@ -235,7 +241,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param Node $parent
+     * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @return array|Paginator
      */
@@ -245,7 +251,7 @@ class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @param Node $parent
+     * @param Node|null $parent
      * @param bool $subRequest Default: false
      * @return array|Paginator
      */

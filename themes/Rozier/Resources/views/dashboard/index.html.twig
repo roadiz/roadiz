@@ -30,10 +30,12 @@
                             {% set thumbnail = source.documentsByFields.first.document %}
                             <figure>
                                 {% if thumbnail and thumbnail.image %}
-                                <img width="150"
-                                     height="150"
-                                     class="source-image"
-                                     src="{{ thumbnail|url({"width":150, "crop":"1x1", "quality":80}) }}" alt="{{ source.title }}">
+                                    {{ thumbnail|display({
+                                        "fit":'150x150',
+                                        "quality":70,
+                                        "picture": true,
+                                        "class": 'source-image'
+                                    }) }}
                                 {% else %}
                                 <span class="no-thumb"></span>
                                 {% endif %}

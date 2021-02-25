@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Routing;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\CMS\Controllers\RedirectionController;
@@ -18,35 +18,22 @@ use Symfony\Component\Stopwatch\Stopwatch;
  * UrlMatcher which tries to grab Node and Translation
  * information for a route.
  */
-class RedirectionMatcher extends UrlMatcher
+final class RedirectionMatcher extends UrlMatcher
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var EntityRepository
-     */
-    private $repository;
+    private EntityManagerInterface $entityManager;
+    private Stopwatch $stopwatch;
+    private LoggerInterface $logger;
+    private EntityRepository $repository;
 
     /**
-     * RedirectionMatcher constructor.
      * @param RequestContext $context
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param Stopwatch $stopwatch
      * @param LoggerInterface $logger
      */
     public function __construct(
         RequestContext $context,
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         Stopwatch $stopwatch,
         LoggerInterface $logger
     ) {
@@ -54,6 +41,7 @@ class RedirectionMatcher extends UrlMatcher
         $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
         $this->logger = $logger;
+        $this->repository = $this->entityManager->getRepository(Redirection::class);
     }
     /**
      * {@inheritdoc}
@@ -64,7 +52,6 @@ class RedirectionMatcher extends UrlMatcher
             $this->stopwatch->start('findRedirection');
         }
 
-        $this->repository = $this->entityManager->getRepository(Redirection::class);
         $decodedUrl = rawurldecode($pathinfo);
 
         /*

@@ -14,12 +14,12 @@ vcl 4.0;
 
 # Default backend definition. Set this to point to your content server.
 backend default {
-    .host = "app_roadiz";
+    .host = "app";
     .port = "80";
 }
 
 acl local {
-    "app_roadiz";
+    "app";
     "varnish";
     "localhost";
 }
@@ -40,6 +40,9 @@ sub vcl_recv {
     #
     # Typically you clean up the request here, removing cookies you don't need,
     # rewriting the request, etc.
+    if (req.url ~ "(\?|\&)_preview=") {
+        return(pass);
+    }
     if (req.url ~ "^/(rz-admin|preview\.php|clear_cache\.php|install\.php|dev\.php)") {
         return(pass);
     } else {
@@ -66,8 +69,14 @@ sub vcl_recv {
     if (req.method == "BAN") {
         # Same ACL check as above:
         if (client.ip ~ local) {
-            ban("req.http.host ~ " + req.http.host);
-            return(synth(200, "Ban domain"));
+            if (req.http.X-Cache-Tags) {
+                ban("obj.http.X-Cache-Tags ~ " + req.http.X-Cache-Tags);
+                return(synth(200, "Ban using cache-tags"));
+            }
+            else {
+                ban("req.http.host ~ " + req.http.host);
+                return(synth(200, "Ban domain"));
+            }
         } else {
             return(synth(403, "Access denied."));
         }
@@ -81,7 +90,7 @@ sub vcl_backend_response {
     # and other mistakes your backend does.
 
     # Clean backend responses only on public pages.
-    if (bereq.url !~ "^/(rz-admin|preview\.php|clear_cache\.php|install\.php|dev\.php)") {
+    if (bereq.url !~ "^/(rz-admin|preview\.php|clear_cache\.php|install\.php|dev\.php)" && bereq.url !~ "(\?|\&)_preview=") {
         # Remove the cookie header to enable caching
         unset beresp.http.Set-Cookie;
     }
@@ -92,5 +101,8 @@ sub vcl_deliver {
     # response to the client.
     #
     # You can do accounting or modifying the final object here.
+
+    # Remove cache-tags, unless you want Cloudflare or other to see them
+    unset resp.http.X-Cache-Tags;
 }
 

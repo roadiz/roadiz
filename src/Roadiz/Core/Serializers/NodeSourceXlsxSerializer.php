@@ -18,19 +18,12 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
 {
-    /** @var EntityManagerInterface */
-    protected $em;
-
-    /** @var Request */
-    protected $request;
-
-    protected $forceLocale = false;
-    protected $addUrls = false;
-    protected $onlyTexts = false;
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $urlGenerator;
+    protected EntityManagerInterface $em;
+    protected Request $request;
+    protected UrlGeneratorInterface $urlGenerator;
+    protected bool $forceLocale = false;
+    protected bool $addUrls = false;
+    protected bool $onlyTexts = false;
 
     /**
      *
@@ -161,9 +154,9 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
     /**
      * Serialize only texts.
      *
-     * @param boolean $onlyTexts
+     * @param bool $onlyTexts
      */
-    public function setOnlyTexts($onlyTexts = true)
+    public function setOnlyTexts(bool $onlyTexts = true)
     {
         $this->onlyTexts = (boolean) $onlyTexts;
     }
@@ -172,7 +165,7 @@ class NodeSourceXlsxSerializer extends AbstractXlsxSerializer
      * @param Request $request
      * @param bool $forceLocale
      */
-    public function addUrls(Request $request, $forceLocale = false)
+    public function addUrls(Request $request, bool $forceLocale = false)
     {
         $this->addUrls = true;
         $this->request = $request;

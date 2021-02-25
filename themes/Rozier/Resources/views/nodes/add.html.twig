@@ -7,7 +7,7 @@
         <h1 class="content-title">{% trans %}add.a.node{% endtrans %}</h1>
         {% if type %}<h2><em>{{ type.getDisplayName }}</em></h2>{% endif %}
         {% if parentNode %}<h2><em>{% trans %}In{% endtrans %}</em> {{ parentNode.getNodeName }}</h2>{% endif %}
-        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include 'nodes/navBack.html.twig' %}
     </header>
 
     <article class="content">
@@ -36,6 +36,6 @@
             </div>
         {% endif %}
     </article>
-    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

@@ -8,6 +8,7 @@ use AM\InterventionRequest\InterventionRequest;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Log\LoggerInterface;
+use RZ\Roadiz\CMS\Controllers\AssetsController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Log\LoggerFactory;
@@ -19,11 +20,22 @@ use Symfony\Component\Asset\VersionStrategy\EmptyVersionStrategy;
 class AssetsServiceProvider implements ServiceProviderInterface
 {
     /**
-     * @param Container $container [description]
+     * @param Container $container
      * @return Container
      */
     public function register(Container $container)
     {
+        $container[AssetsController::class] = function (Container $c) {
+            return new AssetsController(
+                $c['kernel'],
+                $c['interventionRequest'],
+                $c['em'],
+                $c['twig.environment'],
+                $c['settingsBag'],
+                $c['assetPackages']
+            );
+        };
+
         $container['versionStrategy'] = function () {
             return new EmptyVersionStrategy();
         };
@@ -54,8 +66,7 @@ class AssetsServiceProvider implements ServiceProviderInterface
                 $c['versionStrategy'],
                 $c['requestStack'],
                 $kernel,
-                $c['settingsBag']->get('static_domain_name'),
-                $kernel->isPreview()
+                $c['settingsBag']->get('static_domain_name', '') ?? ''
             );
         };
 

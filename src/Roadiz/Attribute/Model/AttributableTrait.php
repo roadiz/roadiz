@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
 trait AttributableTrait
 {
@@ -17,11 +17,11 @@ trait AttributableTrait
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return Collection<AttributeValueInterface>
      */
-    public function getAttributesValuesForTranslation(Translation $translation): Collection
+    public function getAttributesValuesForTranslation(TranslationInterface $translation): Collection
     {
         return $this->getAttributeValues()->filter(function (AttributeValueInterface $attributeValue) use ($translation) {
             /** @var AttributeValueTranslationInterface $attributeValueTranslation */
@@ -35,13 +35,14 @@ trait AttributableTrait
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return Collection<AttributeValueTranslationInterface>
      */
-    public function getAttributesValuesTranslations(Translation $translation): Collection
+    public function getAttributesValuesTranslations(TranslationInterface $translation): Collection
     {
-        return $this->getAttributesValuesForTranslation($translation)
+        /** @var Collection<AttributeValueTranslationInterface> $values */
+        $values = $this->getAttributesValuesForTranslation($translation)
             ->map(function (AttributeValueInterface $attributeValue) use ($translation) {
                 /** @var AttributeValueTranslationInterface $attributeValueTranslation */
                 foreach ($attributeValue->getAttributeValueTranslations() as $attributeValueTranslation) {
@@ -51,7 +52,11 @@ trait AttributableTrait
                 }
                 return null;
             })
+            ->filter(function (?AttributeValueTranslationInterface $attributeValueTranslation) {
+                return null !== $attributeValueTranslation;
+            })
         ;
+        return $values; // phpstan does not understand return type after filtering
     }
 
     /**

@@ -4,22 +4,18 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Console\Helper;
 
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
+use RZ\Roadiz\Core\Handlers\AbstractHandler;
 use RZ\Roadiz\Core\Handlers\HandlerFactory;
 use Symfony\Component\Console\Helper\Helper;
 
 /**
- * Class HandlerFactoryHelper
  * @package RZ\Roadiz\Utils\Console\Helper
  */
 class HandlerFactoryHelper extends Helper
 {
-    /**
-     * @var HandlerFactory
-     */
-    private $handlerFactory;
+    protected HandlerFactory $handlerFactory;
 
     /**
-     * HandlerFactoryHelper constructor.
      * @param HandlerFactory $handlerFactory
      */
     public function __construct(HandlerFactory $handlerFactory)
@@ -37,9 +33,9 @@ class HandlerFactoryHelper extends Helper
 
     /**
      * @param AbstractEntity $entity
-     * @return \RZ\Roadiz\Core\Handlers\AbstractHandler
+     * @return AbstractHandler
      */
-    public function getHandler(AbstractEntity $entity)
+    public function getHandler(AbstractEntity $entity): AbstractHandler
     {
         return $this->handlerFactory->getHandler($entity);
     }
@@ -47,7 +43,7 @@ class HandlerFactoryHelper extends Helper
     /**
      * @return HandlerFactory
      */
-    public function getHandlerFactory()
+    public function getHandlerFactory(): HandlerFactory
     {
         return $this->handlerFactory;
     }

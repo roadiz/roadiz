@@ -55,11 +55,13 @@
                     <a href="{{ nodePath }}">
                         {% set thumbnail = log.nodeSource.getDocumentsByFields.first.getDocument %}
                         {% if thumbnail and thumbnail.image %}
-                            <figure>
-                                <img src="{{ thumbnail|url({"width":60, "crop":"1x1", "quality":80}) }}"
-                                     alt="{{ log.nodeSource.title }}"
-                                     title="{{ log.nodeSource.title }}"
-                                     data-uk-tooltip="{animation:true}" />
+                            <figure title="{{ log.nodeSource.title }}" data-uk-tooltip="{animation:true}" >
+                                {{ thumbnail|display({
+                                    "fit":"60x60",
+                                    "quality":80,
+                                    "picture": true,
+                                    "alt": log.nodeSource.title,
+                                }) }}
                             </figure>
                         {% else %}
                             <span class="no-thumb"

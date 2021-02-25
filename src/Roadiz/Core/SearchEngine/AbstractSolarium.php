@@ -13,7 +13,6 @@ use Solarium\QueryType\Update\Query\Document;
 use Solarium\QueryType\Update\Query\Query;
 
 /**
- * Class AbstractSolarium
  * @package RZ\Roadiz\Core\SearchEngine
  */
 abstract class AbstractSolarium
@@ -22,7 +21,7 @@ abstract class AbstractSolarium
     const IDENTIFIER_KEY = 'abstract_id_i';
     const TYPE_DISCRIMINATOR = 'document_type_s';
 
-    public static $availableLocalizedTextFields = [
+    public static array $availableLocalizedTextFields = [
         'en',
         'ar',
         'bg',
@@ -55,24 +54,13 @@ abstract class AbstractSolarium
         'tr',
     ];
 
-    /** @var Client|null */
-    protected $client = null;
-
-    /** @var bool */
-    protected $indexed = false;
-
-    /** @var Document|DocumentInterface|null */
-    protected $document = null;
-
-    /** @var LoggerInterface|null */
-    protected $logger = null;
-
-    /** @var MarkdownInterface|null  */
-    protected $markdown = null;
+    protected ?Client $client = null;
+    protected bool $indexed = false;
+    protected ?DocumentInterface $document = null;
+    protected ?LoggerInterface $logger = null;
+    protected ?MarkdownInterface $markdown = null;
 
     /**
-     * AbstractSolarium constructor.
-     *
      * @param Client|null            $client
      * @param LoggerInterface|null   $logger
      * @param MarkdownInterface|null $markdown

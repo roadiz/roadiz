@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="ar">
+    <body>
+      <!-- welcome.user.email -->
+      <trans-unit id="welcome.user.email.%site%">
+        <source>welcome.user.email.%site%</source>
+        <target state="translated">تم إنشاء حساب مستخدم لك على %site%</target>
+      </trans-unit>
+      <trans-unit id="your.user.account">
+        <source>your.user.account</source>
+        <target state="translated">حساب المستخدم الخاص بك</target>
+      </trans-unit>
+      <trans-unit id="username">
+        <source>username</source>
+        <target state="translated">اسم المستخدم</target>
+      </trans-unit>
+      <trans-unit id="email">
+        <source>email</source>
+        <target state="translated">البريد الإلكتروني</target>
+      </trans-unit>
+      <trans-unit id="password">
+        <source>password</source>
+        <target state="translated">كلمة المرور</target>
+      </trans-unit>
+      <trans-unit id="for.questions.email">
+        <source>for.questions.email</source>
+        <target state="translated">للأسئلة، اتصل بنا على البريد الإلكتروني:</target>
+      </trans-unit>
+      <!-- Contact forms -->
+      <trans-unit id="contact.form">
+        <source>contact.form</source>
+        <target state="translated">نموذج الاتصال</target>
+      </trans-unit>
+      <trans-unit id="new.contact.form.%site%">
+        <source>new.contact.form.%site%</source>
+        <target state="translated">نموذج اتصال جديد %site%</target>
+      </trans-unit>
+      <trans-unit id="form.successfully.sent">
+        <source>form.successfully.sent</source>
+        <target state="translated">تم إرسال نموذجك بنجاح</target>
+      </trans-unit>
+      <trans-unit id="form.has.errors">
+        <source>form.has.errors</source>
+        <target state="translated">النموذج يحتوي على أخطاء</target>
+      </trans-unit>
+      <trans-unit id="%field%.is.mandatory">
+        <source>%field%.is.mandatory</source>
+        <target state="translated">%field% إلزامي</target>
+      </trans-unit>
+      <trans-unit id="email.not.valid">
+        <source>email.not.valid</source>
+        <target state="translated">عنوان البريد الإلكتروني الخاص بك غير صالح</target>
+      </trans-unit>
+      <trans-unit id="date">
+        <source>date</source>
+        <target state="translated">التاريخ</target>
+      </trans-unit>
+      <trans-unit id="ip.address">
+        <source>ip.address</source>
+        <target state="translated">ip address (عنوان بروتوكول الإنترنت الخاص بك)</target>
+      </trans-unit>
+      <trans-unit id="submittedAt">
+        <source>submittedAt</source>
+        <target state="translated">تم تقديمه في</target>
+      </trans-unit>
+      <trans-unit id="form.submit">
+        <source>form.submit</source>
+        <target state="translated">نموذج التقديم</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="answer.form">
+                <source>answer.form</source>
+                <target state="translated">نموذج الإجابة</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.%name%.send">
+                <source>customForm.%name%.send</source>
+                <target state="translated">الإجابة %name% أُرسِلت.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="new.answer.form.%site%">
+                <source>new.answer.form.%site%</source>
+                <target state="translated">نموذج إجابة جديدة من %site%</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="file.not.accepted">
+                <source>file.not.accepted</source>
+                <target state="translated">لم نتمكن من قبول الملف المرفق.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="customForm.answer.sent">
+                <source>customForm.answer.sent</source>
+                <target state="translated">تم إرسال إجابتك بنجاح.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="none">
+                <source>none</source>
+                <target state="translated">لا شيء</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset.password.request">
+              <source>reset.password.request</source>
+              <target state="translated">طلب إعادة تعيين كلمة المرور</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
+                <source>you.asked.for.a.password.reset.on.%site%</source>
+                <target state="translated">لقد طلبت إعادة تعيين كلمة المرور في %site% </target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
+                <source>you.need.to.choose.a.new.password.using.following.link</source>
+                <target state="translated">عليك أن تقوم بإنشاء كلمة مرور جديدة لحسابك بواسطة استخدام الرابط التالي.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
+                <source>as.a.reminder.here.are.your.credentials</source>
+                <target state="translated">كتذكير لك، ها هي أوراق اعتمادك العامة.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
+                <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
+                <target state="translated">إن لم تطلب رسالة البريد الإلكتروني هذه، تجاهلها فقط ولن يتم تغيير كلمة المرور الخاصة بك.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target state="translated">قم بإعادة تعيين كلمة المرور الخاصة بك</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
+                <source>you.need.to.fill.this.required.field</source>
+                <target state="translated">عليك بكتابة هذا الحقل المطلوب.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="*.required.fields">
+                <source>*.required.fields</source>
+                <target state="translated">* حقول مطلوبة</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance">
+                <source>website.is.under.maintenance</source>
+                <target state="translated">الموقع تحت الصيانة</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon">
+                <source>website.is.under.maintenance.we.will.be.back.soon</source>
+                <target state="translated">الموقع تحت الصيانة، وسيتم الانتهاء قريبًا!</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target state="translated">يمل غير صالح {{ error }}</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target state="translated">القيمة المستخدمة بالفعل</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

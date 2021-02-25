@@ -10,30 +10,17 @@ use Solarium\Core\Client\Client;
 use Solarium\Core\Query\Helper;
 use Solarium\QueryType\Select\Query\Query;
 
-abstract class AbstractSearchHandler
+abstract class AbstractSearchHandler implements SearchHandlerInterface
 {
-    /**
-     * @var Client|null
-     */
-    protected $client = null;
-    /**
-     * @var EntityManagerInterface|null
-     */
-    protected $em = null;
-    /**
-     * @var LoggerInterface|null
-     */
-    protected $logger = null;
-
-    /**
-     * @var int
-     */
-    protected $highlightingFragmentSize = 150;
+    protected ?Client $client = null;
+    protected ?EntityManagerInterface $em = null;
+    protected ?LoggerInterface $logger = null;
+    protected int $highlightingFragmentSize = 150;
 
     /**
      * @param Client $client
      * @param EntityManagerInterface $em
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         Client $client,
@@ -60,8 +47,7 @@ abstract class AbstractSearchHandler
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away.
      * @param int $page
      *
-     * @return SolrSearchResults Return a SolrSearchResults iterable object.
-     * [document, highlighting] for Documents and [nodeSource, highlighting]
+     * @return SearchResultsInterface Return a SearchResultsInterface iterable object.
      */
     public function searchWithHighlight(
         $q,
@@ -70,7 +56,7 @@ abstract class AbstractSearchHandler
         $searchTags = false,
         $proximity = 10000000,
         $page = 1
-    ): SolrSearchResults {
+    ): SearchResultsInterface {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
         $args = array_merge($this->getHighlightingOptions(), $args);
@@ -189,7 +175,7 @@ abstract class AbstractSearchHandler
      * @param int $proximity Proximity matching: Lucene supports finding words are a within a specific distance away. Default 10000000
      * @param int $page Retrieve a specific page
      *
-     * @return SolrSearchResults Return an array of doctrine Entities (Document, NodesSources)
+     * @return SearchResultsInterface Return an array of doctrine Entities (Document, NodesSources)
      */
     public function search(
         $q,
@@ -198,7 +184,7 @@ abstract class AbstractSearchHandler
         $searchTags = false,
         $proximity = 10000000,
         $page = 1
-    ): SolrSearchResults {
+    ): SearchResultsInterface {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
         $tmp = [];

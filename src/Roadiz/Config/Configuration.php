@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Config;
 
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use RZ\Roadiz\Core\KernelInterface;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -13,6 +13,20 @@ class Configuration implements ConfigurationInterface
 {
     const INHERITANCE_TYPE_JOINED = 'joined';
     const INHERITANCE_TYPE_SINGLE_TABLE = 'single_table';
+
+    /**
+     * @var KernelInterface
+     */
+    protected $kernel;
+
+    /**
+     * Configuration constructor.
+     * @param KernelInterface $kernel
+     */
+    public function __construct(KernelInterface $kernel)
+    {
+        $this->kernel = $kernel;
+    }
 
     public function getConfigTreeBuilder()
     {
@@ -40,6 +54,7 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('application_name')->end()
                     ->scalarNode('dbname')->end()
                     ->scalarNode('unix_socket')->end()
+                    ->scalarNode('server_version')->defaultValue('5.7')->end()
                     ->scalarNode('port')->defaultValue(null)->end()
                     ->scalarNode('path')->end()
                     ->booleanNode('logging')->defaultValue(false)->end()
@@ -85,6 +100,12 @@ class Configuration implements ConfigurationInterface
                         ->info('When using sha512 or pbkdf2 algorithm')
                     ->end()
                     ->scalarNode('private_key_path')
+                        ->beforeNormalization()
+                            ->ifString()
+                            ->then(function ($v) {
+                                return $this->resolveKernelVars($v);
+                            })
+                        ->end()
                         ->defaultValue('conf/default.key')
                         ->info('Asymmetric cryptographic key location.')
                     ->end()
@@ -372,7 +393,8 @@ EOD
         $builder = new TreeBuilder('themes');
         $node = $builder->getRootNode();
 
-        $node->isRequired()
+        $node
+            ->defaultValue([])
             ->prototype('array')
             ->children()
                 ->scalarNode('classname')
@@ -414,6 +436,7 @@ EOD
                                 ->values([
                                     'default',
                                     'stream',
+                                    'rotating_file',
                                     'syslog',
                                     'gelf',
                                     'sentry',
@@ -423,6 +446,12 @@ EOD
                                 ->defaultValue('default')
                             ->end()
                             ->enumNode('level')
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(function ($v) {
+                                        return strtoupper($v);
+                                    })
+                                ->end()
                                 ->values([
                                     'DEBUG',
                                     'INFO',
@@ -438,12 +467,47 @@ EOD
                             ->end()
                             ->scalarNode('url')->end()
                             ->scalarNode('ident')->end()
-                            ->scalarNode('path')->end()
+                            ->scalarNode('path')
+                                ->beforeNormalization()
+                                    ->ifString()
+                                    ->then(function ($v) {
+                                        return $this->resolveKernelVars($v);
+                                    })
+                                ->end()
+                            ->end()
+                            ->scalarNode('max_files')
+                                ->defaultValue(10)
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
             ->end();
 
         return $node;
+    }
+
+    /**
+     * @param string $resolvable
+     * @return string
+     */
+    protected function resolveKernelVars(string $resolvable): string
+    {
+        return str_replace([
+            '%kernel.name%',
+            '%kernel.project_dir%',
+            '%kernel.cache_dir%',
+            '%kernel.root_dir%',
+            '%kernel.log_dir%',
+            '%kernel.logs_dir%',
+            '%kernel.environment%',
+        ], [
+            $this->kernel->getName(),
+            $this->kernel->getProjectDir(),
+            $this->kernel->getCacheDir(),
+            $this->kernel->getRootDir(),
+            $this->kernel->getLogDir(),
+            $this->kernel->getLogDir(),
+            $this->kernel->getEnvironment(),
+        ], $resolvable);
     }
 }

@@ -4,23 +4,21 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Config\NullLoader;
-use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPathGeneratingEvent;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Cmf\Component\Routing\VersatileGeneratorInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router;
-use Symfony\Component\Stopwatch\Stopwatch;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class NodeRouter extends Router implements VersatileGeneratorInterface
 {
@@ -28,59 +26,28 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      * @var string
      */
     const NO_CACHE_PARAMETER = '_no_cache';
+    private ThemeResolverInterface $themeResolver;
+    private ?CacheProvider $nodeSourceUrlCacheProvider = null;
+    private ParameterBag $settingsBag;
+    private EventDispatcherInterface $eventDispatcher;
 
     /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
-    /**
-     * @var Stopwatch|null
-     */
-    protected $stopwatch;
-    /**
-     * @var bool
-     */
-    protected $preview;
-    /**
-     * @var ThemeResolverInterface
-     */
-    private $themeResolver;
-    /**
-     * @var CacheProvider
-     */
-    private $nodeSourceUrlCacheProvider;
-    /**
-     * @var Settings
-     */
-    private $settingsBag;
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
-
-    /**
-     * NodeRouter constructor.
-     *
-     * @param EntityManagerInterface   $em
-     * @param ThemeResolverInterface   $themeResolver
-     * @param Settings                 $settingsBag
+     * @param UrlMatcherInterface $matcher
+     * @param ThemeResolverInterface $themeResolver
+     * @param ParameterBag $settingsBag
      * @param EventDispatcherInterface $eventDispatcher
-     * @param array                    $options
-     * @param RequestContext|null      $context
-     * @param LoggerInterface|null     $logger
-     * @param Stopwatch|null           $stopwatch
-     * @param bool                     $preview
+     * @param array $options
+     * @param RequestContext|null $context
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
-        EntityManagerInterface $em,
+        UrlMatcherInterface $matcher,
         ThemeResolverInterface $themeResolver,
-        Settings $settingsBag,
+        ParameterBag $settingsBag,
         EventDispatcherInterface $eventDispatcher,
         array $options = [],
         RequestContext $context = null,
-        LoggerInterface $logger = null,
-        Stopwatch $stopwatch = null,
-        $preview = false
+        LoggerInterface $logger = null
     ) {
         parent::__construct(
             new NullLoader(),
@@ -89,12 +56,10 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
             $context,
             $logger
         );
-        $this->em = $em;
-        $this->stopwatch = $stopwatch;
-        $this->preview = $preview;
         $this->themeResolver = $themeResolver;
         $this->settingsBag = $settingsBag;
         $this->eventDispatcher = $eventDispatcher;
+        $this->matcher = $matcher;
     }
 
     /**
@@ -106,9 +71,9 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
     }
 
     /**
-     * @return CacheProvider
+     * @return CacheProvider|null
      */
-    public function getNodeSourceUrlCacheProvider(): CacheProvider
+    public function getNodeSourceUrlCacheProvider(): ?CacheProvider
     {
         return $this->nodeSourceUrlCacheProvider;
     }
@@ -128,17 +93,7 @@ class NodeRouter extends Router implements VersatileGeneratorInterface
      */
     public function getMatcher(): UrlMatcherInterface
     {
-        if (null !== $this->matcher) {
-            return $this->matcher;
-        }
-        return $this->matcher = new NodeUrlMatcher(
-            $this->context,
-            $this->em,
-            $this->themeResolver,
-            $this->stopwatch,
-            $this->logger,
-            $this->preview
-        );
+        return $this->matcher;
     }
 
     /**

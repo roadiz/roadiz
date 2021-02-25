@@ -14,8 +14,6 @@ use RZ\Roadiz\Utils\Log\Processor\TokenStorageProcessor;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
- * Class LoggerServiceProvider.
- *
  * @package RZ\Roadiz\Core\Services
  */
 class LoggerServiceProvider implements ServiceProviderInterface

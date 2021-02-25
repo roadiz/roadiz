@@ -4,7 +4,7 @@
 <section class="content-global content-nav-and-filters">
     {% if settingGroup %}
         <header class="content-header header-setting header-setting-add">
-           <h1 class="content-title setting-list-title">{{ "%group%.settings"|trans({'%group%':settingGroup.name}) }}</h1>
+           <h1 class="content-title setting-list-title">{{ settingGroup.name|trans }}</h1>
             <div class="content-header-action-menu">
                 <nav>
                     <a class="uk-button" href="{{ path('settingsAddPage') }}"><i class="uk-icon-rz-plus"></i> {% trans %}add.a.setting{% endtrans %}</a>

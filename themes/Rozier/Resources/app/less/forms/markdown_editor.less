@@ -124,6 +124,10 @@
             display: inline-block;
             .box-sizing();
 
+            &:first-child {
+                margin-left: 0;
+            }
+
             & > a {
                 position: relative;
                 display: block;
@@ -147,6 +151,10 @@
                 &.markdown-editor-button-preview,
                 &.markdown-editor-button-link-fullscreen{
                     border-left: 1px solid @grey-form-border;
+                }
+
+                &.markdown-editor-button-nb-hyphen {
+                    padding: 0 0 0 10px;
                 }
 
                 &:before {
@@ -284,13 +292,11 @@
         padding:25px 60px 30px 30px;
     }
 
-    .markdown-editor-navbar{
+    .markdown-editor-navbar {
         margin:14px 20px;
 
-        .markdown-editor-navbar-nav>li{
-
+        .markdown-editor-navbar-nav > li {
             &.markdown-editor-button-fullscreen{
-
                 &>a {
                     background: #666;
                     color: #F2F2F2;

@@ -11,8 +11,6 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodesSourcesNodeTypeFilter
- *
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter
  */
 final class NodesSourcesNodeTypeFilter implements EventSubscriberInterface
@@ -36,7 +34,9 @@ final class NodesSourcesNodeTypeFilter implements EventSubscriberInterface
             $event->getProperty() === 'node.nodeType' &&
             (
                 $event->getValue() instanceof NodeType ||
-                (is_array($event->getValue()) && $event->getValue()[0] instanceof NodeType)
+                (is_array($event->getValue()) &&
+                    count($event->getValue()) > 0 &&
+                    $event->getValue()[0] instanceof NodeType)
             );
     }
 

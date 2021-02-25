@@ -12,7 +12,6 @@ use Themes\Rozier\RozierApp;
 use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class HistoryController
  * @package Themes\Rozier\Controllers\Nodes
  */
 class HistoryController extends RozierApp
@@ -22,12 +21,11 @@ class HistoryController extends RozierApp
      * @param int $nodeId
      * @return Response
      */
-    public function historyAction(Request $request, $nodeId)
+    public function historyAction(Request $request, int $nodeId)
     {
         $this->denyAccessUnlessGranted(['ROLE_ACCESS_NODES', 'ROLE_ACCESS_LOGS']);
         /** @var Node $node */
-        $node = $this->get('em')
-            ->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $node) {
             throw new ResourceNotFoundException();

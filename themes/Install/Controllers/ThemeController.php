@@ -14,7 +14,6 @@ use Themes\Install\Forms\SiteInformationType;
 use Themes\Install\InstallApp;
 
 /**
- * Class ThemeController
  * @package Themes\Install\Controllers
  */
 class ThemeController extends InstallApp
@@ -26,7 +25,6 @@ class ThemeController extends InstallApp
      * @param int     $id
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function importThemeAction(Request $request, $id)
     {
@@ -79,7 +77,6 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function themeSummaryAction(Request $request)
     {
@@ -94,7 +91,7 @@ class ThemeController extends InstallApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function themesAction(Request $request)
     {
@@ -125,7 +122,7 @@ class ThemeController extends InstallApp
              */
             try {
                 $fixtures = $this->getFixtures($request);
-                $fixtures->saveInformations($informationData);
+                $fixtures->saveInformation($informationData);
 
                 if (!empty($informationData["install_theme"])) {
                     /*

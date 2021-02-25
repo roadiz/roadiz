@@ -3,10 +3,38 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Attribute\Model;
 
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 trait AttributeValueTranslationTrait
 {
+    /**
+     * @var TranslationInterface|null
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\AbstractEntities\TranslationInterface")
+     * @ORM\JoinColumn(name="translation_id", onDelete="CASCADE", referencedColumnName="id")
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("RZ\Roadiz\Core\AbstractEntities\TranslationInterface")
+     * @Serializer\Accessor(getter="getTranslation", setter="setTranslation")
+     */
+    protected ?TranslationInterface $translation = null;
+
+    /**
+     * @var string|null
+     * @ORM\Column(type="string", nullable=true, unique=false, length=255)
+     * @Serializer\Groups({"attribute", "node", "nodes_sources"})
+     * @Serializer\Type("string")
+     */
+    protected ?string $value = null;
+
+    /**
+     * @var AttributeValueInterface|null
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Attribute\Model\AttributeValueInterface", inversedBy="attributeValueTranslations", cascade={"persist"})
+     * @ORM\JoinColumn(name="attribute_value", onDelete="CASCADE", referencedColumnName="id")
+     * @Serializer\Exclude
+     */
+    protected ?AttributeValueInterface $attributeValue = null;
+
     /**
      * @return mixed
      * @throws \Exception
@@ -57,20 +85,20 @@ trait AttributeValueTranslationTrait
     }
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return mixed
      */
-    public function setTranslation(Translation $translation)
+    public function setTranslation(TranslationInterface $translation)
     {
         $this->translation = $translation;
         return $this;
     }
 
     /**
-     * @return Translation|null
+     * @return TranslationInterface|null
      */
-    public function getTranslation(): ?Translation
+    public function getTranslation(): ?TranslationInterface
     {
         return $this->translation;
     }

@@ -3,27 +3,24 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Clearer;
 
-/**
- * Clearer.
- */
 class Clearer implements ClearerInterface
 {
-    protected $output;
-    protected $cacheDir;
+    protected ?string $output = null;
+    protected string $cacheDir;
 
     public function __construct($cacheDir)
     {
         $this->cacheDir = $cacheDir;
     }
 
-    public function clear()
+    public function clear(): bool
     {
         return false;
     }
 
-    public function getOutput()
+    public function getOutput(): string
     {
-        return $this->output;
+        return $this->output ?? '';
     }
 
     /**
@@ -31,7 +28,7 @@ class Clearer implements ClearerInterface
      *
      * @return string
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
         return $this->cacheDir;
     }

@@ -35,7 +35,6 @@ class AttributeGroupType extends AbstractType
                 'by_reference' => false,
                 'entry_options' => [
                     'label' => false,
-                    'entityManager' => $options['entityManager'],
                     'attr' => [
                         'class' => 'uk-form uk-form-horizontal'
                     ]
@@ -50,16 +49,10 @@ class AttributeGroupType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefault('data_class', AttributeGroup::class);
-        $resolver->setRequired('entityManager')
-            ->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
-
-        $resolver->addNormalizer('constraints', function (Options $options) {
-            return [
-                new UniqueEntity([
-                    'fields' => ['canonicalName'],
-                    'entityManager' => $options['entityManager']
-                ])
-            ];
-        });
+        $resolver->setDefault('constraints', [
+            new UniqueEntity([
+                'fields' => ['canonicalName'],
+            ])
+        ]);
     }
 }

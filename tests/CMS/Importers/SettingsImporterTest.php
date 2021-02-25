@@ -22,7 +22,7 @@ class SettingsImporterTest extends SchemaDependentCase
     /**
      * @return \RZ\Roadiz\Core\Repositories\TagRepository
      */
-    public function getSettingRepository()
+    protected function getSettingRepository()
     {
         return $this->get('em')->getRepository(Setting::class);
     }
@@ -30,7 +30,7 @@ class SettingsImporterTest extends SchemaDependentCase
     /**
      * @return int
      */
-    public function countSettings()
+    protected function countSettings()
     {
         return $this->getSettingRepository()
             ->createQueryBuilder('t')

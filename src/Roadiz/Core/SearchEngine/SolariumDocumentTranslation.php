@@ -22,19 +22,10 @@ class SolariumDocumentTranslation extends AbstractSolarium
     const DOCUMENT_TYPE = 'DocumentTranslation';
     const IDENTIFIER_KEY = 'document_translation_id_i';
 
-    /**
-     * @var DocumentInterface
-     */
-    protected $rzDocument = null;
+    protected ?DocumentInterface $rzDocument = null;
+    protected ?DocumentTranslation $documentTranslation = null;
 
     /**
-     * @var DocumentTranslation
-     */
-    protected $documentTranslation = null;
-
-    /**
-     * Create a new SolariumDocument.
-     *
      * @param DocumentTranslation    $documentTranslation
      * @param Client|null            $client
      * @param LoggerInterface|null   $logger

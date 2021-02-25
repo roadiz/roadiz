@@ -51,7 +51,29 @@ class JoinNodeTypeFieldConfiguration implements ConfigurationInterface
                         ->scalarNode('direction')->end()
                     ->end()
                 ->end()
-            ->end();
+            ->end()
+            ->arrayNode('proxy')
+                ->children()
+                    ->scalarNode('classname')
+                        ->info('Full qualified class name for Doctrine proxy entity.')
+                    ->end()
+                    ->scalarNode('relation')
+                        ->info('Field name to link external entity.')
+                    ->end()
+                    ->scalarNode('self')
+                        ->info('Field name to link self entity.')
+                    ->end()
+                    ->arrayNode('orderBy')
+                        ->prototype('array')
+                            ->children()
+                                ->scalarNode('field')->end()
+                                ->scalarNode('direction')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
+        ;
 
         return $builder;
     }

@@ -8,14 +8,9 @@ use Symfony\Component\Console\Helper\Helper;
 
 class ThemeResolverHelper extends Helper
 {
-    /**
-     * @var ThemeResolverInterface
-     */
-    protected $themeResolver;
+    protected ThemeResolverInterface $themeResolver;
 
     /**
-     * ThemeResolverHelper constructor.
-     *
      * @param ThemeResolverInterface $themeResolver
      */
     public function __construct(ThemeResolverInterface $themeResolver)

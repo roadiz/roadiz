@@ -4,26 +4,21 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeResolverInterface;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Repositories\NodeTypeRepository;
+use RZ\Roadiz\Bag\LazyParameterBag;
 
-class NodeTypes extends LazyParameterBag
+class NodeTypes extends LazyParameterBag implements NodeTypeResolverInterface
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var NodeTypeRepository
-     */
-    private $repository;
+    private EntityManagerInterface $entityManager;
+    private ?NodeTypeRepository $repository = null;
 
     /**
-     * SettingsBag constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -40,7 +35,7 @@ class NodeTypes extends LazyParameterBag
         return $this->repository;
     }
 
-    protected function populateParameters()
+    protected function populateParameters(): void
     {
         try {
             $nodeTypes = $this->getRepository()->findAll();

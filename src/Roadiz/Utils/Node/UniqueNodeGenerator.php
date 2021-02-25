@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -12,20 +13,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Class UniqueNodeGenerator
  * @package RZ\Roadiz\Utils\Node
  */
 class UniqueNodeGenerator
 {
-    protected $entityManager;
+    protected EntityManagerInterface $entityManager;
+    protected NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
-     * UniqueNodeGenerator constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
+     * @param NodeNamePolicyInterface $nodeNamePolicy
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, NodeNamePolicyInterface $nodeNamePolicy)
     {
         $this->entityManager = $entityManager;
+        $this->nodeNamePolicy = $nodeNamePolicy;
     }
 
     /**
@@ -33,25 +35,26 @@ class UniqueNodeGenerator
      *
      * This method flush entity-manager.
      *
-     * @param  NodeType    $nodeType
-     * @param  Translation $translation
-     * @param  Node|null   $parent
-     * @param  Tag|null    $tag
-     * @param  boolean     $pushToTop
+     * @param NodeType $nodeType
+     * @param Translation $translation
+     * @param Node|null $parent
+     * @param Tag|null $tag
+     * @param bool $pushToTop
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function generate(
         NodeType $nodeType,
         Translation $translation,
         Node $parent = null,
         Tag $tag = null,
-        $pushToTop = false
+        bool $pushToTop = false
     ) {
         $name = $nodeType->getDisplayName() . " " . uniqid();
         $node = new Node($nodeType);
         $node->setTtl($node->getNodeType()->getDefaultTtl());
-        $node->setNodeName($name);
 
         if (null !== $tag) {
             $node->addTag($tag);
@@ -69,10 +72,11 @@ class UniqueNodeGenerator
 
         $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $nodeType->getSourceEntityClassName();
 
-        /** @var \RZ\Roadiz\Core\Entities\NodesSources $source */
+        /** @var NodesSources $source */
         $source = new $sourceClass($node, $translation);
         $source->setTitle($name);
         $source->setPublishedAt(new \DateTime());
+        $node->setNodeName($this->nodeNamePolicy->getCanonicalNodeName($source));
 
         $this->entityManager->persist($node);
         $this->entityManager->persist($source);
@@ -84,9 +88,11 @@ class UniqueNodeGenerator
     /**
      * Try to generate a unique node from request variables.
      *
-     * @param  Request $request
+     * @param Request $request
      *
-     * @return \RZ\Roadiz\Core\Entities\NodesSources
+     * @return NodesSources
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function generateFromRequest(Request $request)
     {

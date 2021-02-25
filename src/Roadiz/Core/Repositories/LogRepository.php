@@ -7,8 +7,6 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
 /**
- * Class LogRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Log>
  */
@@ -17,7 +15,7 @@ class LogRepository extends EntityRepository
     /**
      * Find latest Log with NodesSources.
      *
-     * @param integer $maxResult
+     * @param int $maxResult
      * @return Paginator
      */
     public function findLatestByNodesSources($maxResult = 5)

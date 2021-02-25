@@ -36,12 +36,15 @@ use RZ\Roadiz\Document\Renderer\RendererInterface;
 use RZ\Roadiz\Document\Renderer\SvgRenderer;
 use RZ\Roadiz\Document\Renderer\ThumbnailRenderer;
 use RZ\Roadiz\Document\Renderer\VideoRenderer;
+use RZ\Roadiz\EntityGenerator\EntityGeneratorFactory;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\Document\PrivateDocumentFactory;
 use RZ\Roadiz\Utils\EmailManager;
 use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\Node\NodeFactory;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\Tag\TagFactory;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGenerator;
 
@@ -76,12 +79,11 @@ class FactoryServiceProvider implements ServiceProviderInterface
         });
 
         $container[NodeFactory::class] = function (Container $c) {
-            return new NodeFactory($c);
+            return new NodeFactory($c['em'], $c[NodeNamePolicyInterface::class]);
         };
         $container[TagFactory::class] = function (Container $c) {
-            return new TagFactory($c);
+            return new TagFactory($c['em']);
         };
-
         $container['factory.handler'] = function (Container $c) {
             return new HandlerFactory($c);
         };
@@ -93,7 +95,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new NodesSourcesHandler($c['em'], $c['settingsBag'], $c['tagApi']);
         });
         $container['node_type.handler'] = $container->factory(function (Container $c) {
-            return new NodeTypeHandler($c['em'], $c, $c['kernel']);
+            return new NodeTypeHandler($c['em'], $c['kernel'], $c[EntityGeneratorFactory::class], $c['factory.handler']);
         });
         $container['node_type_field.handler'] = $container->factory(function (Container $c) {
             return new NodeTypeFieldHandler($c['em'], $c);
@@ -105,7 +107,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return new CustomFormHandler($c['em']);
         });
         $container['custom_form_field.handler'] = $container->factory(function (Container $c) {
-            return new CustomFormFieldHandler($c['em'], $c);
+            return new CustomFormFieldHandler($c['em'], $c['custom_form.handler']);
         });
         $container['folder.handler'] = $container->factory(function (Container $c) {
             return new FolderHandler($c['em']);
@@ -130,28 +132,28 @@ class FactoryServiceProvider implements ServiceProviderInterface
             return [
                 new ImageRenderer(
                     $c[EmbedFinderFactory::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new PictureRenderer(
                     $c[EmbedFinderFactory::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new VideoRenderer(
                     $c['assetPackages'],
                     $c[DocumentFinderInterface::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new AudioRenderer(
                     $c['assetPackages'],
                     $c[DocumentFinderInterface::class],
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new PdfRenderer(
-                    $c['twig.environment'],
+                    $c['twig.environment_class'],
                     $c['document.url_generator']
                 ),
                 new SvgRenderer($c['assetPackages']),
@@ -174,8 +176,14 @@ class FactoryServiceProvider implements ServiceProviderInterface
         };
 
         $container['translation.viewer'] = $container->factory(function (Container $c) {
-            return new TranslationViewer($c['em'], $c['settingsBag'], $c['router'], $c['kernel']->isPreview());
+            return new TranslationViewer(
+                $c['em'],
+                $c['settingsBag'],
+                $c['router'],
+                $c[PreviewResolverInterface::class]
+            );
         });
+
         $container['user.viewer'] = $container->factory(function (Container $c) {
             return new UserViewer(
                 $c['em'],
@@ -194,7 +202,7 @@ class FactoryServiceProvider implements ServiceProviderInterface
             if ($cacheProvider instanceof ArrayCache) {
                 $cacheProvider = null;
             }
-            return new DocumentUrlGenerator($c['assetPackages'], $c['urlGenerator'], $cacheProvider);
+            return new DocumentUrlGenerator($c['assetPackages'], $c['staticRouter'], $cacheProvider);
         });
 
         /*

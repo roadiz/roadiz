@@ -6,12 +6,6 @@ use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\HttpFoundation\Request;
 use Symfony\Component\ErrorHandler\Debug;
 
-if (PHP_VERSION_ID < 70200) {
-    echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least PHP version 7.2.0.' . PHP_EOL;
-    exit(1);
-}
-
 $allowedIp = [
     '10.0.2.2',     // vagrant host (forwarded)
     '192.168.33.1', // vagrant host (private)
@@ -29,15 +23,13 @@ if (isset($_SERVER['HTTP_CLIENT_IP'])
 }
 /** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(__FILE__));
-// Include Composer Autoload (relative to project root).
-require("vendor/autoload.php");
+require dirname(realpath(__FILE__)) . "/bootstrap.php";
 
 Debug::enable();
 
 // Use DevKernel on Vagrant box to use a cache dir not
 // in the shared folder.
 //$kernel = new DevKernel('dev', true, false, 'my_site');
-
 $kernel = new Kernel('dev', true, false);
 $request = Request::createFromGlobals();
 

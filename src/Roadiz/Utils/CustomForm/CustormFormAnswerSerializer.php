@@ -13,11 +13,9 @@ class CustormFormAnswerSerializer
     /**
      * @var UrlGeneratorInterface
      */
-    protected $urlGenerator;
+    protected UrlGeneratorInterface $urlGenerator;
 
     /**
-     * CustormFormAnswerSerializer constructor.
-     *
      * @param UrlGeneratorInterface $urlGenerator
      */
     public function __construct(UrlGeneratorInterface $urlGenerator)

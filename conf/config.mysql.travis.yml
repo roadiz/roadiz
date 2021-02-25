@@ -7,11 +7,12 @@ doctrine:
     user: "root"
     password: ""
     dbname: "roadiz_tests"
+    server_version: '%env(string:MYSQL_VERSION)%'
     # Do not use utf8mb4 before MySQL 5.7
-    charset: utf8
+    charset: utf8mb4
     default_table_options:
-        charset: utf8
-        collate: utf8_unicode_ci
+        charset: utf8mb4
+        collate: utf8mb4_unicode_ci
 security:
     secret: "mysql_travis_test"
 cacheDriver:
@@ -29,13 +30,10 @@ themes:
     - classname: \Themes\DefaultTheme\DefaultThemeApp
       hostname: '*'
       routePrefix: ''
-entities:
-    - "src/Roadiz/Core/Entities"
-    - "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities"
-    - "gen-src/GeneratedNodeSources"
 # Lifetime of remember-me cookie in seconds (30 days)
 rememberMeLifetime: 2592000
-additionalServiceProviders: []
+additionalServiceProviders:
+    - \Themes\DefaultTheme\Services\DefaultThemeServiceProvider
 additionalCommands:
     - \Themes\DefaultTheme\Commands\DefaultThemeCommand
 assetsProcessing:

@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Tests;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
+use PHPUnit\Framework\RiskyTestError;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -24,7 +25,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
     /**
      * @throws \Doctrine\ORM\Tools\ToolsException
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -34,7 +35,7 @@ abstract class SchemaDependentCase extends KernelDependentCase
         // Drop and recreate tables for all entities
         $dropSQL = $schemaTool->getDropDatabaseSQL();
         if (count($dropSQL) > 0) {
-            throw new \PHPUnit_Framework_RiskyTestError('Test database is not empty! Do not execute tests on a running Roadiz db.');
+            throw new RiskyTestError('Test database is not empty!');
         }
 
         static::runCommand('orm:schema-tool:create');
@@ -43,16 +44,16 @@ abstract class SchemaDependentCase extends KernelDependentCase
     /**
      * @inheritDoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         parent::tearDown();
 
         static::runCommand('cache:clear');
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
-        static::runCommand('orm:schema-tool:drop --force');
+        static::runCommand('orm:schema-tool:drop --force --full-database');
 
         parent::tearDownAfterClass();
     }
@@ -91,16 +92,16 @@ abstract class SchemaDependentCase extends KernelDependentCase
 
     /**
      * @param string $command
+     * @return int
      * @throws \Exception
      */
-    protected static function runCommand($command): void
+    protected static function runCommand($command): int
     {
         $command = sprintf('%s --quiet --no-interaction --env=test', $command);
         $kernel = new Kernel('test', true, false);
         $kernel->boot();
         $application = new RoadizApplication($kernel);
         $application->setAutoExit(false);
-        $application->setCatchExceptions(false);
-        $application->run(new StringInput($command));
+        return $application->run(new StringInput($command));
     }
 }

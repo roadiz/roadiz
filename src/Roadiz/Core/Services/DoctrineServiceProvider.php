@@ -9,13 +9,35 @@ use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\EventSubscriber;
+use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
+use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
+use Doctrine\Migrations\DependencyFactory;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
+use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Doctrine\ORM\Tools\Setup;
 use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
+use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface;
+use RZ\Roadiz\Attribute\Model\AttributeInterface;
+use RZ\Roadiz\Attribute\Model\AttributeTranslationInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
+use RZ\Roadiz\Attribute\Model\AttributeValueTranslationInterface;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
+use RZ\Roadiz\Core\Entities\Attribute;
+use RZ\Roadiz\Core\Entities\AttributeGroup;
+use RZ\Roadiz\Core\Entities\AttributeGroupTranslation;
+use RZ\Roadiz\Core\Entities\AttributeTranslation;
+use RZ\Roadiz\Core\Entities\AttributeValue;
+use RZ\Roadiz\Core\Entities\AttributeValueTranslation;
+use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Entities\NodeType;
+use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\CustomFormFieldLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\DocumentLifeCycleSubscriber;
 use RZ\Roadiz\Core\Events\FontLifeCycleSubscriber;
@@ -26,9 +48,14 @@ use RZ\Roadiz\Core\Events\TablePrefixSubscriber;
 use RZ\Roadiz\Core\Events\UserLifeCycleSubscriber;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
+use RZ\Roadiz\Core\Models\DocumentInterface;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
+use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
+use RZ\Roadiz\Utils\Theme\ThemeInfo;
+use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
 use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -124,7 +151,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
                  * Override default repository factory
                  * to inject Container into Doctrine repositories!
                  */
-                $config->setRepositoryFactory(new RoadizRepositoryFactory($c, $kernel->isPreview()));
+
+                /** @var PreviewResolverInterface $previewResolver */
+                $previewResolver = $c[PreviewResolverInterface::class];
+                $config->setRepositoryFactory(new RoadizRepositoryFactory($c, $previewResolver));
 
                 return $config;
             } catch (NoConfigurationFoundException $e) {
@@ -139,15 +169,67 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return $c['em'];
         };
 
+        $container[ResolveTargetEntityListener::class] = function () {
+            $resolveListener = new ResolveTargetEntityListener();
+            $resolveListener->addResolveTargetEntity(
+                AttributeGroupInterface::class,
+                AttributeGroup::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeGroupTranslationInterface::class,
+                AttributeGroupTranslation::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeInterface::class,
+                Attribute::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeTranslationInterface::class,
+                AttributeTranslation::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeValueInterface::class,
+                AttributeValue::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                AttributeValueTranslationInterface::class,
+                AttributeValueTranslation::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                DocumentInterface::class,
+                Document::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                NodeTypeInterface::class,
+                NodeType::class,
+                []
+            );
+            $resolveListener->addResolveTargetEntity(
+                TranslationInterface::class,
+                Translation::class,
+                []
+            );
+            return $resolveListener;
+        };
+
         $container['em'] = function (Container $c) {
             $c['stopwatch']->start('initDoctrine');
 
             try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
-                /** @var EntityManager $em */
                 $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
                 $evm = $em->getEventManager();
+
+                // Add the ResolveTargetEntityListener
+                $evm->addEventListener(Events::loadClassMetadata, $c[ResolveTargetEntityListener::class]);
                 /*
                  * Inject doctrine event subscribers for
                  * a service to be able to add new ones from themes.
@@ -198,18 +280,14 @@ class DoctrineServiceProvider implements ServiceProviderInterface
         };
 
         $container[CacheProvider::class] = $container->factory(function (Container $c) {
-            if ($c['config']['cacheDriver']['type'] !== null &&
-                !$c['kernel']->isPreview() &&
-                !$c['kernel']->isDebug()) {
-                $cache = CacheFactory::fromConfig(
-                    $c['config']['cacheDriver'],
-                    $c['kernel'],
-                    $c['config']["appNamespace"]
-                );
-            } else {
-                $cache = new ArrayCache();
-            }
-            return $cache;
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return CacheFactory::fromConfig(
+                $c['config']['cacheDriver'],
+                $kernel->getEnvironment(),
+                $kernel->getCacheDir(),
+                $c['config']["appNamespace"]
+            );
         });
 
         $container[LoggableListener::class] = function (Container $c) {
@@ -227,8 +305,49 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             );
         };
 
+        $container[SchemaUpdater::class] = function (Container $c) {
+            return new SchemaUpdater(
+                $c['em'],
+                $c['kernel'],
+                $c['logger.doctrine']
+            );
+        };
+
         $container[CachedReader::class] = function (Container $c) {
             return new CachedReader(new AnnotationReader(), $c[CacheProvider::class]);
+        };
+
+        $container['doctrine.migrations_paths'] = function (Container $c) {
+            /** @var ThemeResolverInterface $themeResolver */
+            $themeResolver = $c['themeResolver'];
+            $paths = [
+                'RZ\Roadiz\Migrations' => realpath(dirname(__DIR__) . '/../Migrations'),
+            ];
+
+            foreach ($themeResolver->getFrontendThemes() as $frontendTheme) {
+                $themeInfo = new ThemeInfo($frontendTheme->getClassName(), $c['kernel']->getProjectDir());
+                if (\file_exists($themeInfo->getThemePath() . '/Migrations')) {
+                    $themeNamespace = $themeInfo->getThemeReflectionClass()->getNamespaceName();
+                    $paths[$themeNamespace . '\Migrations'] = $themeInfo->getThemePath() . '/Migrations';
+                }
+            }
+
+            $appMigrationsPath = $c['kernel']->getRootDir() . '/migrations';
+            if (\file_exists($appMigrationsPath)) {
+                $paths['App\Migrations'] = $appMigrationsPath;
+            }
+
+            return array_reverse($paths);
+        };
+
+        $container[DependencyFactory::class] = function (Container $c) {
+            return DependencyFactory::fromEntityManager(
+                new ConfigurationArray([
+                    'migrations_paths' => $c['doctrine.migrations_paths']
+                ]),
+                new ExistingEntityManager($c['em']),
+                $c['logger.cli']
+            );
         };
 
         return $container;

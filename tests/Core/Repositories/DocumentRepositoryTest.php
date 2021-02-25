@@ -47,7 +47,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
     private static $folderCollection;
 
     /**
-     * @dataProvider testDocumentFoldersProvider
+     * @dataProvider documentFoldersProvider
      * @param $documentFilename
      * @param $expectedFolderCount
      */
@@ -61,7 +61,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
         $this->assertEquals($expectedFolderCount, count($document->getFolders()));
     }
 
-    public function testDocumentFoldersProvider()
+    public function documentFoldersProvider()
     {
         return [
             ["unittest_document1", 2],
@@ -142,7 +142,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
      * fixtures
      * ============================================================================
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -217,7 +217,7 @@ class DocumentRepositoryTest extends SchemaDependentCase
                     $document->addFolder($folder);
                     $folder->addDocument($document);
                 } else {
-                    throw new \PHPUnit_Framework_Exception("Folder does not exist: " . $folderName, 1);
+                    throw new \PHPUnit\Framework\Exception("Folder does not exist: " . $folderName, 1);
                 }
             }
         }

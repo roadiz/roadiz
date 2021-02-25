@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="" source-language="en" datatype="plaintext" target-language="tr">
+    <body>
+      <trans-unit xml:space="preserve" id="email_sender.description">
+                <source>Default sender email, used as origin for every system email sent. This email **must be allowed by your SMTP server.**</source>
+                <target state="translated">
+Gönderilen her sistem e-postası için kaynak olarak kullanılan varsayılan gönderen e-postası. Bu e-postaya ** SMTP sunucunuz tarafından izin verilmelidir. **</target>
+            </trans-unit>
+      <!-- Setting groups names -->
+    </body>
+  </file>
+</xliff>

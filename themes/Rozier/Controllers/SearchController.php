@@ -33,10 +33,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
- * Class SearchController
  * @package Themes\Rozier\Controllers
  */
 class SearchController extends RozierApp
@@ -86,7 +84,7 @@ class SearchController extends RozierApp
      * @param string $prefix
      * @return mixed
      */
-    protected function processCriteria($data, $prefix = "")
+    protected function processCriteria($data, string $prefix = "")
     {
         if (!empty($data[$prefix . "nodeName"])) {
             if (isset($data[$prefix . "nodeName_exact"]) && $data[$prefix . "nodeName_exact"] === true) {
@@ -194,7 +192,6 @@ class SearchController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function searchNodeAction(Request $request)
     {
@@ -251,7 +248,6 @@ class SearchController extends RozierApp
      * @param int $nodetypeId
      *
      * @return null|RedirectResponse|Response
-     * @throws Twig_Error_Runtime
      */
     public function searchNodeSourceAction(Request $request, int $nodetypeId)
     {
@@ -290,7 +286,7 @@ class SearchController extends RozierApp
      * @param int|null $nodetypeId
      * @return FormBuilder
      */
-    protected function buildNodeTypeForm($nodetypeId = null)
+    protected function buildNodeTypeForm(?int $nodetypeId = null)
     {
         /** @var FormBuilder $builderNodeType */
         $builderNodeType = $this->get('formFactory')
@@ -308,7 +304,6 @@ class SearchController extends RozierApp
                 'placeholder' => "ignore",
                 'required' => false,
                 'data' => $nodetypeId,
-                'entityManager' => $this->get('em'),
                 'showInvisible' => true,
             ]
         );
@@ -322,7 +317,7 @@ class SearchController extends RozierApp
      *
      * @return FormBuilder
      */
-    protected function addButtons(FormBuilder $builder, $exportXlsx = false)
+    protected function addButtons(FormBuilder $builder, bool $exportXlsx = false)
     {
         $builder->add('search', SubmitType::class, [
             'label' => 'search.a.node',
@@ -478,7 +473,7 @@ class SearchController extends RozierApp
      * @param string $prefix
      * @return FormBuilder
      */
-    protected function buildSimpleForm($prefix)
+    protected function buildSimpleForm(string $prefix = '')
     {
         /** @var FormBuilder $builder */
         $builder = $this->createFormBuilder([], ["method" => "get"]);

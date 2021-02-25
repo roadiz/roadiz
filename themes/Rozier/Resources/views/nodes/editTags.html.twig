@@ -1,4 +1,4 @@
-{% set currentTitle = node.nodeSources.first.title|default(node.nodeName) %}
+{% set currentTitle = source.title|default(node.nodeName) %}
 {% set pageTitle = "edit.node.%name%.tags"|trans({'%name%': currentTitle})|u.truncate(25, '[…]', true) %}
 
 {% extends '@Rozier/layout.html.twig' %}
@@ -15,8 +15,8 @@
             {{ pageTitle }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
-        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tags'} %}
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'tags'} %}
     </header>
     <article class="content content-node-edit-tags">
         {% form_theme form '@Rozier/forms.html.twig' %}
@@ -32,6 +32,6 @@
             </fieldset>
         {{ form_end(form) }}
     </article>
-    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

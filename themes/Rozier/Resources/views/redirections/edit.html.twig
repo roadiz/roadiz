@@ -5,7 +5,10 @@
 
     <header class="content-header header-redirection header-redirection-add">
         <h1 class="content-title">{{ "edit.redirection"|trans }}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('redirectionsHomePage') }}" title="{% trans %}back_to.redirections{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('redirectionsHomePage') }}"
+           title="{% trans %}back_to.redirections{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content">
@@ -14,7 +17,9 @@
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
                 {% apply spaceless %}
-                <button data-action-save="#edit-redirection-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <button data-action-save="#edit-redirection-form"
+                        class="uk-button uk-button-primary rz-action-save"
+                        type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
                 </button>

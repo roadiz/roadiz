@@ -3,139 +3,104 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers;
 
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\Redirection;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\Forms\RedirectionType;
-use Themes\Rozier\RozierApp;
-use Themes\Rozier\Utils\SessionListFilters;
 
 /**
- * Class RedirectionsController
- *
  * @package Themes\Rozier\Controllers
  */
-class RedirectionsController extends RozierApp
+class RedirectionsController extends AbstractAdminController
 {
     /**
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @inheritDoc
      */
-    public function indexAction(Request $request)
+    protected function supports(PersistableInterface $item): bool
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
-
-        $listManager = $this->createEntityListManager(
-            Redirection::class,
-            [],
-            ['query' => 'ASC']
-        );
-        $listManager->setDisplayingNotPublishedNodes(true);
-        /*
-         * Stored in session
-         */
-        $sessionListFilter = new SessionListFilters('redirections_item_per_page');
-        $sessionListFilter->handleItemPerPage($request, $listManager);
-        $listManager->handle();
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['redirections'] = $listManager->getEntities();
-
-        return $this->render('redirections/list.html.twig', $this->assignation);
+        return $item instanceof Redirection;
     }
 
     /**
-     * @param Request $request
-     * @param int $redirectionId
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function editAction(Request $request, $redirectionId)
+    protected function getNamespace(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
-
-        /** @var Redirection|null $redirection */
-        $redirection = $this->get('em')->find(Redirection::class, $redirectionId);
-
-        if (null === $redirection) {
-            throw new ResourceNotFoundException();
-        }
-
-        $form = $this->createForm(RedirectionType::class, $redirection, [
-            'entityManager' => $this->get('em')
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('em')->flush();
-
-            return $this->redirect($this->generateUrl('redirectionsEditPage', [
-                'redirectionId' => $redirectionId
-            ]));
-        }
-
-        $this->assignation['form'] = $form->createView();
-        $this->assignation['redirection'] = $redirection;
-
-        return $this->render('redirections/edit.html.twig', $this->assignation);
+        return 'redirection';
     }
 
     /**
-     * @param Request $request
-     * @param integer $redirectionId
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function deleteAction(Request $request, $redirectionId)
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
-
-        /** @var Redirection|null $redirection */
-        $redirection = $this->get('em')->find(Redirection::class, $redirectionId);
-
-        if (null === $redirection) {
-            throw new ResourceNotFoundException();
-        }
-
-        $form = $this->createForm(FormType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('em')->remove($redirection);
-            $this->get('em')->flush();
-
-            return $this->redirect($this->generateUrl('redirectionsHomePage'));
-        }
-        $this->assignation['form'] = $form->createView();
-        $this->assignation['redirection'] = $redirection;
-
-        return $this->render('redirections/delete.html.twig', $this->assignation);
+        return new Redirection();
     }
 
     /**
-     * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function addAction(Request $request)
+    protected function getTemplateFolder(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_REDIRECTIONS');
+        return 'redirections';
+    }
 
-        $redirection = new Redirection();
-        $form = $this->createForm(RedirectionType::class, $redirection, [
-            'entityManager' => $this->get('em')
-        ]);
-        $form->handleRequest($request);
+    /**
+     * @inheritDoc
+     */
+    protected function getRequiredRole(): string
+    {
+        return 'ROLE_ACCESS_REDIRECTIONS';
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->get('em')->persist($redirection);
-            $this->get('em')->flush();
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityClass(): string
+    {
+        return Redirection::class;
+    }
 
-            return $this->redirect($this->generateUrl('redirectionsHomePage'));
+    /**
+     * @inheritDoc
+     */
+    protected function getFormType(): string
+    {
+        return RedirectionType::class;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultRouteName(): string
+    {
+        return 'redirectionsHomePage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditRouteName(): string
+    {
+        return 'redirectionsEditPage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityName(PersistableInterface $item): string
+    {
+        if ($item instanceof Redirection) {
+            return (string) $item->getQuery();
         }
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
+    }
 
-        $this->assignation['form'] = $form->createView();
-
-        return $this->render('redirections/add.html.twig', $this->assignation);
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultOrder(): array
+    {
+        return ['query' => 'ASC'];
     }
 }

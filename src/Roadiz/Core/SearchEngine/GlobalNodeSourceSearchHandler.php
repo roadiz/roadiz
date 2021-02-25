@@ -3,36 +3,26 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\SearchEngine;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
 
 /**
- * Class GlobalNodeSourceSearchHandler
  * @package RZ\Roadiz\Core\SearchEngine
  */
 class GlobalNodeSourceSearchHandler
 {
-    /**
-     * @var EntityManager
-     */
-    private $em;
+    private EntityManagerInterface $em;
+    private NodesSourcesRepository $repository;
 
     /**
-     * @var NodesSourcesRepository
+     * @param EntityManagerInterface $em
      */
-    private $repository;
-
-    /**
-     * GlobalNodeSourceSearchHandler constructor.
-     * @param EntityManager $em
-     */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        /** @var NodesSourcesRepository repository */
         $this->repository = $this->em->getRepository(NodesSources::class);
     }
 

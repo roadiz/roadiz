@@ -25,8 +25,6 @@ class NodeRedirectionSubscriber implements EventSubscriberInterface
     protected $kernel;
 
     /**
-     * NodeRedirectionSubscriber constructor.
-     *
      * @param NodeMover $nodeMover
      * @param Kernel    $kernel
      */
@@ -52,7 +50,9 @@ class NodeRedirectionSubscriber implements EventSubscriberInterface
      */
     public function redirectOldPaths(NodePathChangedEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
-        if (null !== $event->getNode() &&
+        if ($this->kernel->isProdMode() &&
+            !$this->kernel->isPreview() &&
+            null !== $event->getNode() &&
             $event->getNode()->isPublished() &&
             $event->getNode()->getNodeType()->isReachable() &&
             count($event->getPaths()) > 0) {

@@ -20,11 +20,11 @@ use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Handlers\UserProvider;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Security\DoctrineRoleHierarchy;
-use RZ\Roadiz\Utils\Security\Firewall;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 use Symfony\Component\HttpFoundation\Session\Storage\NativeSessionStorage;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
 use Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver;
 use Symfony\Component\Security\Core\Authentication\Provider\AnonymousAuthenticationProvider;
@@ -113,6 +113,20 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return $session;
         };
 
+        /*
+         * Required for HttpKernel AbstractSessionListener
+         */
+        $container['initialized_session'] = function (Container $c) {
+            /** @var RequestStack $requestStack */
+            $requestStack = $c['requestStack'];
+            $request = $requestStack->getMasterRequest();
+            if (null !== $request && $request->hasSession()) {
+                return $request->getSession();
+            }
+
+            return null;
+        };
+
         $container['sessionTokenStorage'] = function (Container $c) {
             return new SessionTokenStorage(
                 $c['session'],
@@ -137,7 +151,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['userProviders'],
                 Kernel::SECURITY_DOMAIN,
                 $c['logger.security'],
-                $c['dispatcher']
+                $c['proxy.dispatcher']
             );
         };
 
@@ -196,21 +210,19 @@ class SecurityServiceProvider implements ServiceProviderInterface
         };
 
         $container['cookieClearingLogoutHandler'] = function (Container $c) {
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $request = $requestStack->getMasterRequest();
+            /** @var RequestContext $requestContext */
+            $requestContext = $c['requestContext'];
             return new CookieClearingLogoutHandler([
                 $c['rememberMeCookieName'] => [
-                    'path' => $request->getBasePath(),
-                    'domain' => $request->getHost(),
+                    'path' => $requestContext->getBaseUrl(),
+                    'domain' => $requestContext->getHost(),
                 ],
             ]);
         };
 
         $container['tokenBasedRememberMeServices'] = function (Container $c) {
-            /** @var RequestStack $requestStack */
-            $requestStack = $c['requestStack'];
-            $request = $requestStack->getMasterRequest();
+            /** @var RequestContext $requestContext */
+            $requestContext = $c['requestContext'];
             return new TokenBasedRememberMeServices(
                 [$c['userProvider']],
                 $c['config']["security"]['secret'],
@@ -219,8 +231,8 @@ class SecurityServiceProvider implements ServiceProviderInterface
                     'name' => $c['rememberMeCookieName'],
                     'lifetime' => $c['rememberMeCookieLifetime'],
                     'remember_me_parameter' => '_remember_me',
-                    'path' => $request->getBasePath(),
-                    'domain' => $request->getHost(),
+                    'path' => $requestContext->getBaseUrl(),
+                    'domain' => $requestContext->getHost(),
                     'always_remember_me' => false,
                     'httponly' => $c['config']["security"]['session_cookie_httponly'],
                 ],
@@ -234,7 +246,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['tokenBasedRememberMeServices'],
                 $c['authenticationManager'],
                 $c['logger.security'],
-                $c['dispatcher']
+                $c['proxy.dispatcher']
             );
         };
 
@@ -347,7 +359,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
                 $c['logger.security'],
                 '_su',
                 Role::ROLE_SUPERADMIN,
-                $c['dispatcher']
+                $c['proxy.dispatcher']
             );
         };
 
@@ -367,13 +379,6 @@ class SecurityServiceProvider implements ServiceProviderInterface
 
         $container['userEncoderFactory'] = function (Container $c) {
             return new EncoderFactory($c['userImplementations']);
-        };
-
-        $container['firewall'] = function (Container $c) {
-            $c['stopwatch']->start('firewall.build');
-            $firewall = new Firewall($c['firewallMap'], $c['dispatcher']);
-            $c['stopwatch']->stop('firewall.build');
-            return $firewall;
         };
 
         /*

@@ -13,8 +13,8 @@
                 {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|u.truncate(30, '[…]', false) }}
                 {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
             </h1>
-            {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'attributes'} %}
-            {% include '@Rozier/nodes/attributes/translationBar.html.twig' with {"current": translation.id} %}
+            {% include 'nodes/navBar.html.twig' with {"current": 'attributes'} %}
+            {% include 'nodes/attributes/translationBar.html.twig' with {"current": translation.id} %}
         </header>
 
         <article class="content content-settings-list">

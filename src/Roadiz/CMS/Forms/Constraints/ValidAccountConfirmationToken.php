@@ -8,11 +8,6 @@ use Symfony\Component\Validator\Constraint;
 class ValidAccountConfirmationToken extends Constraint
 {
     /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    public $entityManager = null;
-
-    /**
      * Confirmation token time to live, in seconds
      *
      * @var integer

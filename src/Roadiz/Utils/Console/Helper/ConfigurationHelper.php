@@ -5,12 +5,9 @@ namespace RZ\Roadiz\Utils\Console\Helper;
 
 use Symfony\Component\Console\Helper\Helper;
 
-/**
- * ConfigurationHelper.
- */
 class ConfigurationHelper extends Helper
 {
-    private $configuration;
+    private array $configuration;
 
     /**
      * @param array $configuration
@@ -23,7 +20,7 @@ class ConfigurationHelper extends Helper
     /**
      * @return array
      */
-    public function getConfiguration()
+    public function getConfiguration(): array
     {
         return $this->configuration;
     }

@@ -3,35 +3,37 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\Tags;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Events\Tag\TagCreatedEvent;
 use RZ\Roadiz\Utils\Tag\TagFactory;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\NotNull;
+use Themes\Rozier\Forms\MultiTagType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class TagMultiCreationController
- *
  * @package Themes\Rozier\Controllers\Tags
  */
 class TagMultiCreationController extends RozierApp
 {
-    public function addChildAction(Request $request, $parentTagId)
+    /**
+     * @param Request $request
+     * @param int $parentTagId
+     * @return RedirectResponse|Response|null
+     * @throws \Twig\Error\RuntimeError
+     */
+    public function addChildAction(Request $request, int $parentTagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
-        $parentTag = $this->get('em')->find(Tag::class, (int) $parentTagId);
+        $parentTag = $this->get('em')->find(Tag::class, $parentTagId);
 
         if (null !== $parentTag) {
-            $form = $this->buildAddForm();
+            $form = $this->createForm(MultiTagType::class);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -84,28 +86,5 @@ class TagMultiCreationController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * @return FormInterface
-     */
-    private function buildAddForm()
-    {
-        $builder = $this->createFormBuilder()
-            ->add('names', TextareaType::class, [
-                'label' => 'tags.names',
-                'attr' => [
-                    'placeholder' => 'write.every.tags.names.comma.separated',
-                ],
-                'constraints' => [
-                    new NotNull(),
-                    new NotBlank(),
-                    new UniqueTagName([
-                        'entityManager' => $this->get('em'),
-                    ]),
-                ],
-            ]);
-
-        return $builder->getForm();
     }
 }

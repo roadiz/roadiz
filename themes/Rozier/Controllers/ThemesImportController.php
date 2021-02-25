@@ -6,8 +6,6 @@ namespace Themes\Rozier\Controllers;
 use RZ\Roadiz\CMS\Controllers\ImportController;
 
 /**
- * Class ThemesImportController
- *
  * @package Themes\Rozier\Controllers
  */
 class ThemesImportController extends ImportController

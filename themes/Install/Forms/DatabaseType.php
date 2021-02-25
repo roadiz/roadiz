@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -76,15 +77,18 @@ class DatabaseType extends AbstractType
                     new NotBlank(),
                 ],
             ])
-            ->add('password', PasswordType::class, [
+        ;
+        if ($options['disabled'] === false) {
+            $builder->add('password', PasswordType::class, [
                 "required" => false,
                 'label' => 'password',
                 'attr' => [
                     "autocomplete" => "off",
                     'id' => 'password',
                 ],
-            ])
-            ->add('dbname', TextType::class, [
+            ]);
+        }
+        $builder->add('dbname', TextType::class, [
                 "required" => false,
                 'label' => 'dbname',
                 'attr' => [
@@ -109,5 +113,16 @@ class DatabaseType extends AbstractType
                 'mapped' => false,
             ])
         ;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'disabled' => false
+        ]);
+        $resolver->setAllowedTypes('disabled', ['boolean']);
     }
 }

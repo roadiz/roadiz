@@ -47,8 +47,17 @@
         z-index: 0;
         background-size: cover;
         background-position: 50% 50%;
-    }
 
+        img {
+            display: block;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            position: relative;
+            object-fit: cover;
+            object-position: 50% 50%;
+        }
+    }
 
     & > .names {
         padding: 7px 0 6px 15px;

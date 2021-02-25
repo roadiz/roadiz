@@ -5,7 +5,8 @@ namespace Themes\Install\Controllers;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
-use RZ\Roadiz\Config\YamlConfigurationHandler;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
+use RZ\Roadiz\Config\DotEnvConfigurationHandler;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
@@ -50,39 +51,51 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function databaseAction(Request $request)
     {
-        $databaseForm = $this->createForm(DatabaseType::class, $this->get('config')['doctrine']);
+        /** @var ConfigurationHandlerInterface $configurationHandler */
+        $configurationHandler = $this->get(ConfigurationHandlerInterface::class);
+        $tempConf = $configurationHandler->load();
+
+        /*
+         * Build database form only if configuration does not contain any DotEnv
+         */
+        $databaseForm = $this->createForm(DatabaseType::class, $tempConf['doctrine'], [
+            'disabled' => $configurationHandler instanceof DotEnvConfigurationHandler &&
+                $configurationHandler->containsDotEnv()
+        ]);
         if ($databaseForm->has('inheritance_type')) {
-            $databaseForm->get('inheritance_type')->setData($this->get('config')['inheritance']['type']);
+            $databaseForm->get('inheritance_type')->setData($tempConf['inheritance']['type']);
         }
-        /** @var YamlConfigurationHandler $yamlConfigHandler */
-        $yamlConfigHandler = $this->get('config.handler');
         $databaseForm->handleRequest($request);
 
         if ($databaseForm->isSubmitted() && $databaseForm->isValid()) {
             try {
                 if (false !== $this->testDoctrineConnection($databaseForm->getData())) {
-                    $tempConf = $yamlConfigHandler->getConfiguration();
-                    foreach ($databaseForm->getData() as $key => $value) {
-                        $tempConf['doctrine'][$key] = $value;
+                    if ($configurationHandler instanceof DotEnvConfigurationHandler &&
+                        $configurationHandler->containsDotEnv()) {
+                        /*
+                         * do nothing to preserve DotEnv configuration
+                         */
+                    } else {
+                        foreach ($databaseForm->getData() as $key => $value) {
+                            if ($key !== 'server_version') {
+                                $tempConf['doctrine'][$key] = $value;
+                            }
+                        }
+
+                        if ($databaseForm->has('inheritance_type')) {
+                            $tempConf['inheritance']['type'] = $databaseForm->get('inheritance_type')->getData();
+                        }
+
+                        $configurationHandler->setConfiguration($tempConf);
+                        $configurationHandler->writeConfiguration();
                     }
 
-                    if ($databaseForm->has('inheritance_type')) {
-                        $tempConf['inheritance']['type'] = $databaseForm->get('inheritance_type')->getData();
-                    }
-
-                    $yamlConfigHandler->setConfiguration($tempConf);
-
-                    /*
-                     * Test connection
-                     */
                     $fixtures = $this->getFixtures($request);
-
                     $fixtures->createFolders();
-                    $yamlConfigHandler->writeConfiguration();
 
                     /*
                      * Need to clear configuration cache.
@@ -110,8 +123,8 @@ class DatabaseController extends InstallApp
                 $databaseForm->addError(new FormError($e->getMessage()));
             }
         }
-        $this->assignation['databaseForm'] = $databaseForm->createView();
 
+        $this->assignation['databaseForm'] = $databaseForm->createView();
 
         return $this->render('steps/database.html.twig', $this->assignation);
     }
@@ -122,7 +135,7 @@ class DatabaseController extends InstallApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
+     * @throws \Twig\Error\RuntimeError
      */
     public function databaseSchemaAction(Request $request)
     {
@@ -133,12 +146,14 @@ class DatabaseController extends InstallApp
             $this->assignation['error'] = true;
         } else {
             try {
-                /*
+                /**
                  * Very important !
                  * Use updateSchema instead of create to enable upgrading
                  * Roadiz database using Install theme.
+                 *
+                 * @var SchemaUpdater $updater
                  */
-                $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
+                $updater = $this->get(SchemaUpdater::class);
                 $updater->updateSchema();
 
                 /*
@@ -172,7 +187,6 @@ class DatabaseController extends InstallApp
      *
      * @return Response
      * @throws \ReflectionException
-     * @throws \Twig_Error_Runtime
      */
     public function databaseFixturesAction(Request $request)
     {
@@ -199,8 +213,9 @@ class DatabaseController extends InstallApp
      */
     public function updateSchemaAction(Request $request)
     {
-        $updater = new SchemaUpdater($this->get('em'), $this->get('kernel'));
-        $updater->updateSchema();
+        /** @var SchemaUpdater $updater */
+        $updater = $this->get(SchemaUpdater::class);
+        $updater->updateNodeTypesSchema();
 
         return new JsonResponse(['status' => true]);
     }

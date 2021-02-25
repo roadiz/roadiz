@@ -44,7 +44,7 @@ class TagsImporterTest extends SchemaDependentCase
     /**
      * @return TagRepository
      */
-    public function getTagRepository()
+    protected function getTagRepository()
     {
         return $this->get('em')->getRepository(Tag::class);
     }
@@ -52,7 +52,7 @@ class TagsImporterTest extends SchemaDependentCase
     /**
      * @return EntityRepository
      */
-    public function getTagTranslationRepository()
+    protected function getTagTranslationRepository()
     {
         return $this->get('em')->getRepository(TagTranslation::class);
     }

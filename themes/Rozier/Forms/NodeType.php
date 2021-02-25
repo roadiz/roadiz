@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeName;
 use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Component\Form\AbstractType;
@@ -18,9 +17,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-/**
- *
- */
 class NodeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -32,7 +28,6 @@ class NodeType extends AbstractType
                     new NotNull(),
                     new NotBlank(),
                     new UniqueNodeName([
-                        'entityManager' => $options['em'],
                         'currentValue' => $options['nodeName'],
                     ]),
                     new Length([
@@ -98,11 +93,6 @@ class NodeType extends AbstractType
             ],
         ]);
 
-        $resolver->setRequired([
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('nodeName', 'string');
     }
 }

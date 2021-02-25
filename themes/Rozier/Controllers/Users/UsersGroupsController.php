@@ -7,7 +7,6 @@ use RZ\Roadiz\CMS\Forms\GroupsType;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,11 +14,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
- * Class UsersGroupsController
- *
  * @package Themes\Rozier\Controllers\Users
  */
 class UsersGroupsController extends RozierApp
@@ -29,14 +25,13 @@ class UsersGroupsController extends RozierApp
      * @param int     $userId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function editGroupsAction(Request $request, $userId)
+    public function editGroupsAction(Request $request, int $userId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
-        $user = $this->get('em')
-                     ->find(User::class, (int) $userId);
+        /** @var User|null $user */
+        $user = $this->get('em')->find(User::class, $userId);
 
         if ($user !== null) {
             $this->assignation['user'] = $user;
@@ -79,12 +74,14 @@ class UsersGroupsController extends RozierApp
      *
      * @return Response
      */
-    public function removeGroupAction(Request $request, $userId, $groupId)
+    public function removeGroupAction(Request $request, int $userId, int $groupId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_USERS');
 
-        $user = $this->get('em')->find(User::class, (int) $userId);
-        $group = $this->get('em')->find(Group::class, (int) $groupId);
+        /** @var User|null $user */
+        $user = $this->get('em')->find(User::class, $userId);
+        /** @var Group|null $group */
+        $group = $this->get('em')->find(Group::class, $groupId);
 
         if (!$this->isGranted($group)) {
             throw $this->createAccessDeniedException();
@@ -132,8 +129,13 @@ class UsersGroupsController extends RozierApp
     private function addUserGroup($data, User $user)
     {
         if ($data['userId'] == $user->getId()) {
-            $group = $this->get('em')
-                          ->find(Group::class, $data['group']);
+            if (array_key_exists('group', $data) && $data['group'][0] instanceof Group) {
+                $group = $data['group'][0];
+            } elseif (array_key_exists('group', $data) && is_numeric($data['group'])) {
+                $group = $this->get('em')->find(Group::class, $data['group']);
+            } else {
+                $group = null;
+            }
 
             if ($group !== null) {
                 $user->addGroup($group);
@@ -195,9 +197,7 @@ class UsersGroupsController extends RozierApp
                 'group',
                 GroupsType::class,
                 [
-                    'label' => 'Group',
-                    'entityManager' => $this->get('em'),
-                    'authorizationChecker' => $this->get('securityAuthorizationChecker'),
+                    'label' => 'Group'
                 ]
             )
         ;

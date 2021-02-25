@@ -7,12 +7,15 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
+use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
 use RZ\Roadiz\Markdown\MarkdownInterface;
 use Solarium\Client;
 use Solarium\Core\Client\Adapter\AdapterInterface;
 use Solarium\Core\Client\Adapter\Curl;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
  * Register Solr services for dependency injection container.
@@ -49,7 +52,7 @@ class SolrServiceProvider implements ServiceProviderInterface
                 }
                 $solrService = new Client(
                     $c[AdapterInterface::class],
-                    $c['dispatcher'],
+                    $c['proxy.dispatcher'],
                     $options
                 );
                 $solrService->setDefaultEndpoint('localhost');
@@ -84,10 +87,17 @@ class SolrServiceProvider implements ServiceProviderInterface
         };
 
         /**
+         * @deprecated
+         */
+        $container['solr.search.nodeSource'] = $container->factory(function (Container $c) {
+            return $c[NodeSourceSearchHandlerInterface::class];
+        });
+
+        /**
          * @param Container $c
          * @return null|NodeSourceSearchHandler
          */
-        $container['solr.search.nodeSource'] = $container->factory(function (Container $c) {
+        $container[NodeSourceSearchHandlerInterface::class] = $container->factory(function (Container $c) {
             if ($c['solr.ready']) {
                 return new NodeSourceSearchHandler($c['solr'], $c['em'], $c['logger']);
             } else {
@@ -116,10 +126,27 @@ class SolrServiceProvider implements ServiceProviderInterface
                 $c['solr'],
                 $c['logger'],
                 $c[MarkdownInterface::class],
-                $c['dispatcher'],
+                $c['proxy.dispatcher'],
                 $c['factory.handler']
             );
         };
+
+        /*
+         * Add custom event subscribers to the general dispatcher.
+         *
+         * Important: do not check here if Solr respond, not to request
+         * solr server at each HTTP request.
+         */
+        $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
+            $dispatcher->addSubscriber(
+                new SolariumSubscriber(
+                    $c['solr'],
+                    $c['logger'],
+                    $c[SolariumFactoryInterface::class]
+                )
+            );
+            return $dispatcher;
+        });
 
         return $container;
     }

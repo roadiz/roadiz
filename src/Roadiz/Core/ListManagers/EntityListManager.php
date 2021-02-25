@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
@@ -17,31 +17,20 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @package RZ\Roadiz\Core\ListManagers
  */
-class EntityListManager
+class EntityListManager extends AbstractEntityListManager
 {
-    const ITEM_PER_PAGE = 20;
-
     /**
-     * @var null|Request
-     */
-    protected $request = null;
-    /**
-     * @var EntityManager|null
+     * @var EntityManagerInterface|null
      */
     protected $entityManager = null;
     /**
      * @var string
      */
     protected $entityName;
-
     /**
      * @var Paginator
      */
     protected $paginator = null;
-    /**
-     * @var bool
-     */
-    protected $pagination = true;
     /**
      * @var array|null
      */
@@ -51,113 +40,38 @@ class EntityListManager
      */
     protected $filteringArray = null;
     /**
-     * @var array|null
-     */
-    protected $queryArray = null;
-    /**
      * @var string|null
      */
     protected $searchPattern = null;
     /**
-     * @var int|null
-     */
-    protected $currentPage = null;
-    /**
      * @var array|null
      */
     protected $assignation = null;
-    /**
-     * @var int|null
-     */
-    protected $itemPerPage = null;
     /**
      * @var Translation|null
      */
     protected $translation = null;
 
     /**
-     * @var bool
-     */
-    protected $displayNotPublishedNodes;
-
-    /**
-     * @var bool
-     */
-    protected $displayAllNodesStatuses;
-
-    /**
-     * @param Request       $request
-     * @param EntityManager $entityManager
+     * @param Request|null  $request
+     * @param EntityManagerInterface $entityManager
      * @param string        $entityName
      * @param array         $preFilters
      * @param array         $preOrdering
      */
     public function __construct(
-        Request $request,
-        EntityManager $entityManager,
-        $entityName,
+        ?Request $request,
+        EntityManagerInterface $entityManager,
+        string $entityName,
         $preFilters = [],
         $preOrdering = []
     ) {
-        $this->request = $request;
+        parent::__construct($request);
         $this->entityName = $entityName;
         $this->entityManager = $entityManager;
-        $this->displayNotPublishedNodes = false;
-        $this->displayAllNodesStatuses = false;
-
         $this->orderingArray = $preOrdering;
         $this->filteringArray = $preFilters;
         $this->assignation = [];
-        $this->queryArray = array_filter($request->query->all());
-        $this->itemPerPage = static::ITEM_PER_PAGE;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisplayingNotPublishedNodes()
-    {
-        return $this->displayNotPublishedNodes;
-    }
-
-    /**
-     * @param bool $displayNotPublishedNodes
-     * @return EntityListManager
-     */
-    public function setDisplayingNotPublishedNodes($displayNotPublishedNodes)
-    {
-        $this->displayNotPublishedNodes = $displayNotPublishedNodes;
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isDisplayingAllNodesStatuses()
-    {
-        return $this->displayAllNodesStatuses;
-    }
-
-    /**
-     * Switch repository to disable any security on Node status. To use ONLY in order to
-     * view deleted and archived nodes.
-     *
-     * @param bool $displayAllNodesStatuses
-     * @return $this
-     */
-    public function setDisplayingAllNodesStatuses($displayAllNodesStatuses)
-    {
-        $this->displayAllNodesStatuses = $displayAllNodesStatuses;
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function enablePagination()
-    {
-        $this->pagination = true;
-        return $this;
     }
 
     /**
@@ -169,12 +83,12 @@ class EntityListManager
     }
 
     /**
-     * @param Translation $newtranslation
+     * @param Translation|null $translation
      * @return $this
      */
-    public function setTranslation(Translation $newtranslation = null)
+    public function setTranslation(Translation $translation = null)
     {
-        $this->translation = $newtranslation;
+        $this->translation = $translation;
 
         return $this;
     }
@@ -223,7 +137,7 @@ class EntityListManager
             unset($this->filteringArray["chroot"]); // remove placeholder
         }
 
-        if (false === $disabled) {
+        if (false === $disabled && null !== $this->request) {
             if ($this->request->query->get('field') &&
                 $this->request->query->get('ordering')) {
                 $this->orderingArray = [
@@ -258,39 +172,11 @@ class EntityListManager
 
         $this->createPaginator();
 
-        if (false === $disabled) {
+        if (false === $disabled && null !== $this->request) {
             if ($this->request->query->get('search') != "") {
                 $this->paginator->setSearchPattern($this->request->query->get('search'));
             }
         }
-    }
-
-    /**
-     * Configure a custom current page.
-     *
-     * @param integer $page
-     *
-     * @return $this
-     */
-    public function setPage($page)
-    {
-        if ($page < 1) {
-            throw new \RuntimeException("Page cannot be lesser than 1.", 1);
-        }
-        $this->currentPage = (int) $page;
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function disablePagination()
-    {
-        $this->setPage(1);
-        $this->pagination = false;
-
-        return $this;
     }
 
     protected function createPaginator()
@@ -331,65 +217,13 @@ class EntityListManager
     }
 
     /**
-     * Get Twig assignation to render list details.
-     *
-     * ** Fields:
-     *
-     * * description [string]
-     * * search [string]
-     * * currentPage [int]
-     * * pageCount [int]
-     * * itemPerPage [int]
-     * * itemCount [int]
-     * * previousPage [int]
-     * * nextPage [int]
-     * * nextPageQuery [string]
-     * * previousPageQuery [string]
-     * * previousQueryArray [array]
-     * * nextQueryArray [array]
-     *
      * @return array
      */
     public function getAssignation()
     {
-        $assign = [
-            'description' => '',
+        return array_merge(parent::getAssignation(), [
             'search' => $this->searchPattern,
-            'currentPage' => $this->currentPage,
-            'pageCount' => $this->getPageCount(),
-            'itemPerPage' => $this->itemPerPage,
-            'itemCount' => $this->getItemCount(),
-            'nextPageQuery' => null,
-            'previousPageQuery' => null,
-        ];
-
-        if ($this->getPageCount() > 1) {
-            $assign['firstPageQuery'] = http_build_query(array_merge(
-                $this->queryArray,
-                ['page' => 1]
-            ));
-            $assign['lastPageQuery'] = http_build_query(array_merge(
-                $this->queryArray,
-                ['page' => $this->getPageCount()]
-            ));
-        }
-
-        // compute next and prev page URL
-        if ($this->currentPage > 1) {
-            $this->queryArray['page'] = $this->currentPage - 1;
-            $assign['previousPageQuery'] = http_build_query($this->queryArray);
-            $assign['previousQueryArray'] = $this->queryArray;
-            $assign['previousPage'] = $this->currentPage - 1;
-        }
-        // compute next and prev page URL
-        if ($this->currentPage < $this->getPageCount()) {
-            $this->queryArray['page'] = $this->currentPage + 1;
-            $assign['nextPageQuery'] = http_build_query($this->queryArray);
-            $assign['nextQueryArray'] = $this->queryArray;
-            $assign['nextPage'] = $this->currentPage + 1;
-        }
-
-        return $assign;
+        ]);
     }
 
     /**
@@ -406,7 +240,7 @@ class EntityListManager
     }
 
     /**
-     * @return float|int
+     * @return int
      */
     public function getPageCount()
     {
@@ -440,39 +274,5 @@ class EntityListManager
                 $this->itemPerPage
             );
         }
-    }
-
-    /**
-     * @return int
-     */
-    public function getItemPerPage()
-    {
-        return $this->itemPerPage;
-    }
-
-    /**
-     * Configure a custom item count per page.
-     *
-     * @param integer $itemPerPage
-     *
-     * @return $this
-     */
-    public function setItemPerPage($itemPerPage)
-    {
-        if ($itemPerPage < 1) {
-            throw new \RuntimeException("Item count per page cannot be lesser than 1.", 1);
-        }
-
-        $this->itemPerPage = (int) $itemPerPage;
-
-        return $this;
-    }
-
-    /**
-     * @return int
-     */
-    public function getPage()
-    {
-        return $this->currentPage;
     }
 }

@@ -6,29 +6,29 @@ namespace RZ\Roadiz\Utils\DebugBar;
 use DebugBar\Bridge\DoctrineCollector;
 use DebugBar\DataCollector\ConfigCollector;
 use DebugBar\DataCollector\MemoryCollector;
+use DebugBar\DataCollector\MessagesCollector;
 use DebugBar\DebugBar;
+use DebugBar\DebugBarException;
 use Pimple\Container;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AccessMapCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\AuthCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\DispatcherCollector;
+use RZ\Roadiz\Utils\DebugBar\DataCollector\LocaleCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\ThemesCollector;
 use RZ\Roadiz\Utils\DebugBar\DataCollector\VersionsCollector;
 
-class RoadizDebugBar extends DebugBar
+final class RoadizDebugBar extends DebugBar
 {
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
-     * RoadizDebugBar constructor.
      * @param Container $container
+     * @throws DebugBarException
      */
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->addCollector($container['messagescollector']);
+        $this->addCollector($container[MessagesCollector::class]);
         $this->addCollector(new ThemesCollector($container['themeResolver'], $container['requestStack']));
         $this->addCollector(new VersionsCollector());
         $this->addCollector(new StopwatchDataCollector($container['stopwatch'], $container['twig.profile']));
@@ -38,10 +38,12 @@ class RoadizDebugBar extends DebugBar
         $this->addCollector(new AuthCollector($container['securityTokenStorage']));
         $this->addCollector(new DispatcherCollector($container['dispatcher']));
         $this->addCollector(new AccessMapCollector($container['accessMap'], $container['requestStack']));
+        $this->addCollector(new LocaleCollector($container['requestStack']));
     }
 
     /**
-     * Returns a JavascriptRenderer for this instance
+     * Returns a JavascriptRenderer for this instance.
+     *
      * @param string $baseUrl
      * @param string $basePath
      * @return JavascriptRenderer

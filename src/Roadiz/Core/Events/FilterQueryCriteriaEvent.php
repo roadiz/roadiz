@@ -26,8 +26,6 @@ abstract class FilterQueryCriteriaEvent extends Event
     protected $query;
 
     /**
-     * FilterQueryBuilderEvent constructor.
-     *
      * @param Query $query
      * @param string $entityClass
      * @param string $property

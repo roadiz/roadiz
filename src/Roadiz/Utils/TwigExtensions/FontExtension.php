@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\TwigExtensions;
 
-use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Font;
+use RZ\Roadiz\Utils\Asset\Packages;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
@@ -15,17 +15,16 @@ use Twig\TwigFilter;
 class FontExtension extends AbstractExtension
 {
     /**
-     * @var Container
+     * @var Packages
      */
-    private $container;
+    protected $assetPackages;
 
     /**
-     * DocumentExtension constructor.
-     * @param Container $container
+     * @param Packages $assetPackages
      */
-    public function __construct(Container $container)
+    public function __construct(Packages $assetPackages)
     {
-        $this->container = $container;
+        $this->assetPackages = $assetPackages;
     }
 
     /**
@@ -53,7 +52,7 @@ class FontExtension extends AbstractExtension
         if (null === $font) {
             throw new RuntimeError('Font can’t be null.');
         }
-        return $this->container['assetPackages']->getFontsPath($font->getEOTRelativeUrl());
+        return $this->assetPackages->getFontsPath($font->getEOTRelativeUrl());
     }
 
     /**
@@ -66,7 +65,7 @@ class FontExtension extends AbstractExtension
         if (null === $font) {
             throw new RuntimeError('Font can’t be null.');
         }
-        return $this->container['assetPackages']->getFontsPath($font->getOTFRelativeUrl());
+        return $this->assetPackages->getFontsPath($font->getOTFRelativeUrl());
     }
 
     /**
@@ -79,7 +78,7 @@ class FontExtension extends AbstractExtension
         if (null === $font) {
             throw new RuntimeError('Font can’t be null.');
         }
-        return $this->container['assetPackages']->getFontsPath($font->getSVGRelativeUrl());
+        return $this->assetPackages->getFontsPath($font->getSVGRelativeUrl());
     }
 
     /**
@@ -92,7 +91,7 @@ class FontExtension extends AbstractExtension
         if (null === $font) {
             throw new RuntimeError('Font can’t be null.');
         }
-        return $this->container['assetPackages']->getFontsPath($font->getWOFFRelativeUrl());
+        return $this->assetPackages->getFontsPath($font->getWOFFRelativeUrl());
     }
 
     /**
@@ -105,6 +104,6 @@ class FontExtension extends AbstractExtension
         if (null === $font) {
             throw new RuntimeError('Font can’t be null.');
         }
-        return $this->container['assetPackages']->getFontsPath($font->getWOFF2RelativeUrl());
+        return $this->assetPackages->getFontsPath($font->getWOFF2RelativeUrl());
     }
 }

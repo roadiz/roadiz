@@ -1,101 +1,205 @@
-# Roadiz travis setup
-# Ambroise Maupate
 node_js:
-  - "lts/*"
-  - "12"
-  - "10"
-
+    - "lts/*"
+    - "12"
+    - "10"
 php:
-  - 7.2
-  - 7.3
-  - 7.4
+    - 7.4
+    - 8.0
+    - nightly
+dist: bionic
+stages:
+    - "PHP lint tests"
+    - "PHP unit tests"
+    - "Install assets tests"
+    - "Backoffice assets tests"
+    - "Default theme assets tests"
+branches:
+    except:
+        - l10n_develop
 
 jobs:
+    allow_failures:
+        -   php: nightly
+
     include:
-        - stage: "Default theme assets tests"
-          language: node_js
-          node_js:
-              - "lts/*"
-              - "12"
-              - "10"
-          script:
-              - cd themes/DefaultTheme/static
-              - yarn install --pure-lockfile
-              - yarn run build
+        -   stage: "Default theme assets tests"
+            language: node_js
+            node_js: "lts/*"
+            script: sh .travis/default_theme_assets.sh
+        -   stage: "Default theme assets tests"
+            language: node_js
+            node_js: "12"
+            script: sh .travis/default_theme_assets.sh
+        -   stage: "Default theme assets tests"
+            language: node_js
+            node_js: "10"
+            script: sh .travis/default_theme_assets.sh
 
-        - stage: "Install assets tests"
-          language: node_js
-          node_js:
-              - "lts/*"
-              - "12"
-              - "10"
-          script:
-              - cd themes/Install/static
-              - yarn install --pure-lockfile
-              - yarn run build
+        -   stage: "Install assets tests"
+            language: node_js
+            node_js: "lts/*"
+            script: sh .travis/install_assets.sh
+        -   stage: "Install assets tests"
+            language: node_js
+            node_js: "12"
+            script: sh .travis/install_assets.sh
+        -   stage: "Install assets tests"
+            language: node_js
+            node_js: "10"
+            script: sh .travis/install_assets.sh
 
-        - stage: "Backoffice assets tests"
-          language: node_js
-          node_js:
-              - "lts/*"
-              - "12"
-              - "10"
-          script:
-              - cd themes/Rozier
-              - yarn install --pure-lockfile
-              - yarn run install
-              - yarn run build
+        -   stage: "Backoffice assets tests"
+            language: node_js
+            node_js: "lts/*"
+            script: sh .travis/backoffice_assets.sh
+        -   stage: "Backoffice assets tests"
+            language: node_js
+            node_js: "12"
+            script: sh .travis/backoffice_assets.sh
+        -   stage: "Backoffice assets tests"
+            language: node_js
+            node_js: "10"
+            script: sh .travis/backoffice_assets.sh
 
-        - stage: "PHP lint tests"
-          language: php
-          sudo: required
-          php:
-            - 7.2
-            - 7.3
-            - 7.4
-          install:
-            - curl -s http://getcomposer.org/installer | php
-            - php composer.phar install --dev --no-interaction
-          script:
-            - bin/phpcs --report=full --report-file=./report.txt -p ./
+        -   stage: "PHP lint tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            env:
+                - DB=mysql
+                - MYSQL_VERSION=5.7
+            php: 7.4
+            install: sh .travis/composer_install.sh
+            script: sh .travis/php_lint.sh
+        -   stage: "PHP lint tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            env:
+                - DB=mysql
+                - MYSQL_VERSION=5.7
+            php: 8.0
+            install: sh .travis/composer_install.sh
+            script: sh .travis/php_lint.sh
+        -   stage: "PHP lint tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            env:
+                - DB=mysql
+                - MYSQL_VERSION=5.7
+            php: nightly
+            install: sh .travis/composer_install.sh
+            script: sh .travis/php_lint.sh
 
-        - stage: "PHP unit tests"
-          language: php
-          sudo: required
-          services:
-            - postgresql
-            - mysql
-          php:
-            - 7.2
-            - 7.3
-            - 7.4
-          env:
-            - DB=mysql
-            - DB=pgsql
-          before_script:
-            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests;' -U postgres; fi"
-            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'DROP DATABASE IF EXISTS roadiz_tests_tmp;' -U postgres; fi"
-            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests;' -U postgres; fi"
-            - sh -c "if [ '$DB' = 'pgsql' ]; then psql -c 'create database roadiz_tests_tmp;' -U postgres; fi"
-            - sh -c "if [ '$DB' = 'pgsql' ]; then cp conf/config.pgsql.travis.yml conf/config.yml; fi"
-            - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS roadiz_tests_tmp;create database IF NOT EXISTS roadiz_tests;'; fi"
-            - sh -c "if [ '$DB' = 'mysql' ]; then cp conf/config.mysql.travis.yml conf/config.yml; fi"
-            - curl -s http://getcomposer.org/installer | php
-            - php composer.phar install --dev --no-interaction
-          script:
-            - php bin/roadiz orm:schema-tool:create -n --env=install
-            - php bin/roadiz install -n --env=install
-            - php bin/roadiz themes:install -n "/Themes/DefaultTheme/DefaultThemeApp"
-            - php bin/roadiz themes:install -n --data "/Themes/DefaultTheme/DefaultThemeApp"
-            - php bin/roadiz cache:clear --env=install
-            - php bin/roadiz orm:schema-tool:update -n --force
-            - php bin/roadiz themes:install -n --nodes "/Themes/DefaultTheme/DefaultThemeApp"
-            - php bin/roadiz cache:clear --env=install
-            - php bin/roadiz cache:clear --env=test
-            - php bin/roadiz users:create -n --email=test@test.com --password=secret --super-admin test
-            - php bin/roadiz users:create -n --email=test2@test.com --password=secret2 --back-end test2
-            - php bin/roadiz orm:schema-tool:drop --force
-            - php bin/phpunit -v --bootstrap=tests/bootstrap.php --whitelist ./src --coverage-clover ./build/logs/clover.xml tests/
-            - php bin/phpstan analyse -c phpstan.neon -l 4 src
-            - php bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install
+        # php 7.4
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            php: 7.4
+            env:
+                - DB=mysql
+                - MYSQL_VERSION=5.7
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            addons:
+                mariadb: '10.2'
+            php: 7.4
+            env:
+                - DB=mariadb
+                - MYSQL_VERSION=10.2.31
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - postgresql
+            php: 7.4
+            env:
+                - DB=pgsql
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+
+        # php 8.0
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            php: 8.0
+            env:
+                - DB=mysql
+                - MYSQL_VERSION=5.7
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            addons:
+                mariadb: '10.2'
+            php: 8.0
+            env:
+                - DB=mariadb
+                - MYSQL_VERSION=10.2.31
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - postgresql
+            php: 8.0
+            env:
+                - DB=pgsql
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+
+        # php nightly
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            php: nightly
+            env:
+                - DB=mysql
+                - MYSQL_VERSION=5.7
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - mysql
+            addons:
+                mariadb: '10.2'
+            php: nightly
+            env:
+                - DB=mariadb
+                - MYSQL_VERSION=10.2.31
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
+        -   stage: "PHP unit tests"
+            language: php
+            sudo: required
+            services:
+                - postgresql
+            php: nightly
+            env:
+                - DB=pgsql
+            before_script: sh .travis/php_unit_install.sh
+            script: sh .travis/php_unit.sh
 

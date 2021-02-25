@@ -18,12 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 use ZipArchive;
 
 /**
- * Class NodeTypesUtilsController
- *
  * @package Themes\Rozier\Controllers\NodeTypes
  */
 class NodeTypesUtilsController extends RozierApp
@@ -36,12 +33,12 @@ class NodeTypesUtilsController extends RozierApp
      *
      * @return Response
      */
-    public function exportJsonFileAction(Request $request, $nodeTypeId)
+    public function exportJsonFileAction(Request $request, int $nodeTypeId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
 
         /** @var NodeType $nodeType */
-        $nodeType = $this->get('em')->find(NodeType::class, (int) $nodeTypeId);
+        $nodeType = $this->get('em')->find(NodeType::class, $nodeTypeId);
 
         if (null === $nodeType) {
             throw $this->createNotFoundException();
@@ -76,6 +73,7 @@ class NodeTypesUtilsController extends RozierApp
         $documentationGenerator = new DocumentationGenerator($this->get('nodeTypesBag'), $this->get('translator'));
 
         $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
+        unlink($tmpfname); // Deprecated: ZipArchive::open(): Using empty file as ZipArchive is deprecated
         $zipArchive = new ZipArchive();
         $zipArchive->open($tmpfname, ZipArchive::CREATE);
 
@@ -84,7 +82,6 @@ class NodeTypesUtilsController extends RozierApp
             $documentationGenerator->getNavBar()
         );
 
-        /** @var NodeTypeGenerator $reachableTypeGenerator */
         foreach ($documentationGenerator->getReachableTypeGenerators() as $reachableTypeGenerator) {
             $zipArchive->addFromString(
                 $reachableTypeGenerator->getPath(),
@@ -92,7 +89,6 @@ class NodeTypesUtilsController extends RozierApp
             );
         }
 
-        /** @var NodeTypeGenerator $nonReachableTypeGenerator */
         foreach ($documentationGenerator->getNonReachableTypeGenerators() as $nonReachableTypeGenerator) {
             $zipArchive->addFromString(
                 $nonReachableTypeGenerator->getPath(),
@@ -127,6 +123,7 @@ class NodeTypesUtilsController extends RozierApp
         $serializer = $this->get('serializer');
         $zipArchive = new ZipArchive();
         $tmpfname = tempnam(sys_get_temp_dir(), date('Y-m-d-H-i-s') . '.zip');
+        unlink($tmpfname); // Deprecated: ZipArchive::open(): Using empty file as ZipArchive is deprecated
         $zipArchive->open($tmpfname, ZipArchive::CREATE);
 
         /** @var NodeType $nodeType */
@@ -158,7 +155,6 @@ class NodeTypesUtilsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {

@@ -3,14 +3,10 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 use RZ\Roadiz\Core\Entities\Setting;
-use RZ\Roadiz\Core\Entities\SettingGroup;
-use RZ\Roadiz\Utils\Asset\Packages;
-use RZ\Roadiz\Utils\Document\AbstractDocumentFactory;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -30,13 +26,6 @@ class SettingType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $groups = $options['entityManager']->getRepository(SettingGroup::class)->findAll();
-        $choices = [];
-        /** @var SettingGroup $group */
-        foreach ($groups as $group) {
-            $choices[$group->getName()] = $group->getId();
-        }
-
         if ($options['shortEdit'] === false) {
             $builder
                 ->add('name', TextType::class, [
@@ -63,11 +52,9 @@ class SettingType extends AbstractType
                     'required' => true,
                     'choices' => array_flip(Setting::$typeToHuman),
                 ])
-                ->add('settingGroup', ChoiceType::class, [
+                ->add('settingGroup', SettingGroupType::class, [
                     'label' => 'setting.group',
-                    'choices' => $choices,
                     'required' => false,
-                    'placeholder' => '---------',
                 ])
                 ->add('defaultValues', TextType::class, [
                     'label' => 'defaultValues',
@@ -77,23 +64,6 @@ class SettingType extends AbstractType
                     'required' => false,
                 ])
             ;
-
-            $builder->get('settingGroup')->addModelTransformer(new CallbackTransformer(
-                function (SettingGroup $settingGroup = null) {
-                    if (null !== $settingGroup) {
-                        // transform the array to a string
-                        return $settingGroup->getId();
-                    }
-                    return null;
-                },
-                function ($id) use ($options) {
-                    if (null !== $id) {
-                        $group = $options['entityManager']->find(SettingGroup::class, $id);
-                        return $group;
-                    }
-                    return null;
-                }
-            ));
         }
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options) {
@@ -108,9 +78,6 @@ class SettingType extends AbstractType
                         SettingDocumentType::class,
                         [
                             'label' => (!$options['shortEdit']) ? 'value' : false,
-                            'entityManager' => $options['entityManager'],
-                            'documentFactory' => $options['documentFactory'],
-                            'assetPackages' => $options['assetPackages'],
                             'required' => false,
                         ]
                     );
@@ -137,15 +104,11 @@ class SettingType extends AbstractType
     {
         $resolver->setDefault('data_class', Setting::class);
         $resolver->setDefault('shortEdit', false);
-        $resolver->setRequired([
-            'entityManager',
-            'documentFactory',
-            'assetPackages',
+        $resolver->setDefault('constraints', [
+            new UniqueEntity([
+                'fields' => ['name'],
+            ])
         ]);
-
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
-        $resolver->setAllowedTypes('documentFactory', [AbstractDocumentFactory::class]);
-        $resolver->setAllowedTypes('assetPackages', [Packages::class]);
         $resolver->setAllowedTypes('shortEdit', ['boolean']);
     }
 
@@ -165,7 +128,7 @@ class SettingType extends AbstractType
                     'placeholder' => 'choose.value',
                     'required' => false,
                     'choices' => array_combine($values, $values),
-                    'multiple' => $setting->getType() === AbstractField::MULTIPLE_T ? true : false,
+                    'multiple' => $setting->getType() === AbstractField::MULTIPLE_T
                 ];
             case AbstractField::EMAIL_T:
                 return [

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine\ORM\Filter;
 
-use Doctrine\ORM\Query;
 use RZ\Roadiz\Core\Bags\NodeTypes;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Events\FilterNodesSourcesQueryBuilderCriteriaEvent;
@@ -11,12 +10,9 @@ use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderNodesSourcesBuildEvent;
 use RZ\Roadiz\Core\Events\QueryNodesSourcesEvent;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
-use RZ\Roadiz\Utils\Doctrine\ORM\SqlWalker;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodesSourcesNodeTypeFilter
- *
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter
  */
 final class NodesSourcesReachableFilter implements EventSubscriberInterface

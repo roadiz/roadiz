@@ -32,7 +32,7 @@ use GeneratedNodeSources\NSPage;
 use RZ\Roadiz\CMS\Utils\NodeSourceApi;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +48,6 @@ class SearchController extends DefaultThemeApp
      * @param string  $_locale
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function defaultAction(
         Request $request,
@@ -75,8 +74,8 @@ class SearchController extends DefaultThemeApp
             $callable
         );
 
-        /** @var NodeSourceSearchHandler|null $searchHandler */
-        $searchHandler = $this->get('solr.search.nodeSource');
+        /** @var NodeSourceSearchHandlerInterface|null $searchHandler */
+        $searchHandler = $this->get(NodeSourceSearchHandlerInterface::class);
         if (null !== $searchHandler) {
             /*
              * Use Apache Solr when available

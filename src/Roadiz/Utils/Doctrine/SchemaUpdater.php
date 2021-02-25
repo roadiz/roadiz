@@ -3,43 +3,36 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Doctrine;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ClearerInterface;
 use RZ\Roadiz\Utils\Clearer\DoctrineCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Output\BufferedOutput;
 
-/**
- * SchemaUpdater.
- */
-class SchemaUpdater
+final class SchemaUpdater
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
+    private Kernel $kernel;
+    private LoggerInterface $logger;
 
     /**
-     * @var Kernel
-     */
-    private $kernel;
-
-    /**
-     * SchemaUpdater constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param Kernel $kernel
+     * @param LoggerInterface $logger
      */
-    public function __construct(EntityManager $entityManager, Kernel $kernel)
+    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;
+        $this->logger = $logger;
     }
 
-    /**
-     *
-     */
-    public function clearMetadata()
+    public function clearMetadata(): void
     {
         $clearers = [
             new DoctrineCacheClearer($this->entityManager, $this->kernel),
@@ -52,39 +45,85 @@ class SchemaUpdater
         }
     }
 
+    protected function createApplication(): Application
+    {
+        /*
+         * Very important, when using standard-edition,
+         * Kernel class is AppKernel or DevAppKernel.
+         */
+        /** @var class-string<Kernel> $kernelClass */
+        $kernelClass = get_class($this->kernel);
+        $application = new RoadizApplication(new $kernelClass('dev', true));
+        $application->setAutoExit(false);
+        return $application;
+    }
+
     /**
-     * Update database schema.
+     * Update database schema using doctrine migration.
      *
-     * @param boolean $delete Enable DELETE and DROP statements
-     *
-     * @return boolean
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function updateSchema($delete = false)
+    public function updateSchema(): void
     {
         $this->clearMetadata();
 
-        $tool = new SchemaTool($this->entityManager);
-        $meta = $this->entityManager->getMetadataFactory()->getAllMetadata();
+        /*
+         * Execute pending application migrations
+         */
+        $input = new ArrayInput([
+            'command' => 'migrations:migrate',
+            '--no-interaction' => true,
+            '--allow-no-migration' => true
+        ]);
+        $output = new BufferedOutput();
+        $exitCode = $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
+        if ($exitCode === 0) {
+            $this->logger->info('Executed pending migrations.', ['migration' => $content]);
+        } else {
+            throw new \RuntimeException('Migrations failed: ' . $content);
+        }
+    }
 
-        $sql = $tool->getUpdateSchemaSql($meta, true);
-        $deletions = [];
-
-        foreach ($sql as $statement) {
-            if (substr($statement, 0, 6) == 'DELETE' ||
-                strpos($statement, 'DROP')) {
-                $deletions[] = $statement;
-            } else {
-                $this->entityManager->getConnection()->exec($statement);
-            }
+    /**
+     * @throws \Exception
+     */
+    public function updateNodeTypesSchema(): void
+    {
+        /*
+         * Execute pending application migrations
+         */
+        $input = new ArrayInput([
+            'command' => 'migrations:migrate',
+            '--no-interaction' => true,
+            '--allow-no-migration' => true
+        ]);
+        $output = new BufferedOutput();
+        $exitCode = $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
+        if ($exitCode === 0) {
+            $this->logger->info('Executed pending migrations.', ['migration' => $content]);
+        } else {
+            throw new \RuntimeException('Migrations failed: ' . $content);
         }
 
-        if (true === $delete) {
-            foreach ($deletions as $statement) {
-                $this->entityManager->getConnection()->exec($statement);
-            }
-        }
+        /*
+         * Update schema with new node-types
+         * without creating any migration
+         */
+        $input = new ArrayInput([
+            'command' => 'orm:schema-tool:update',
+            '--dump-sql' => true,
+            '--force' => true,
+        ]);
+        $output = new BufferedOutput();
+        $exitCode = $this->createApplication()->run($input, $output);
+        $content = $output->fetch();
 
-        return true;
+        if ($exitCode === 0) {
+            $this->logger->info('DB schema has been updated.', ['sql' => $content]);
+        } else {
+            throw new \RuntimeException('DB schema update failed: ' . $content);
+        }
     }
 }

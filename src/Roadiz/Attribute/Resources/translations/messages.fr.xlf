@@ -307,11 +307,11 @@
                 <target state="translated">Êtes-vous sûr·e de vouloir réinitialiser la valeur de l'attribut pour cette langue ?</target>
                 <note/>
             </trans-unit>
-        <trans-unit xml:space="preserve" id="attribute_value.%attributeValueId%.not_exists">
-            <source>attribute_value.%attributeValueId%.not_exists</source>
-            <target state="translated">La valeur de l’attribut %attributeValueId% n’existe pas</target>
-             <note></note>
-        </trans-unit>
+      <trans-unit xml:space="preserve" id="attribute_value.%attributeValueId%.not_exists">
+                <source>attribute_value.%attributeValueId%.not_exists</source>
+                <target state="translated">La valeur de l’attribut %attributeValueId% n’existe pas</target>
+                <note/>
+            </trans-unit>
     </body>
   </file>
 </xliff>

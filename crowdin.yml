@@ -1,0 +1,8 @@
+files:
+  - source: /**/*.xlf
+    ignore:
+      - /**/*.%two_letters_code%.xlf
+      - /**/*.%locale_with_underscore%.xlf
+      - /**/*.%locale%.xlf
+      - /**/*.sr_Cyrl.xlf
+    translation: /%original_path%/%file_name%.%two_letters_code%.%file_extension%

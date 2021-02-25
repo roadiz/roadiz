@@ -12,23 +12,15 @@ use JMS\Serializer\Visitor\DeserializationVisitorInterface;
 
 class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected ?EntityManagerInterface $entityManager;
     /**
      * @var ArrayCollection<TypedObjectConstructorInterface>
      */
-    protected $typedObjectConstructors;
-    /**
-     * @var ObjectConstructorInterface
-     */
-    protected $fallbackConstructor;
+    protected ArrayCollection $typedObjectConstructors;
+    protected ObjectConstructorInterface $fallbackConstructor;
 
     /**
-     * ChainPersistableObjectConstructor constructor.
-     *
-     * @param EntityManagerInterface|null     $entityManager
+     * @param EntityManagerInterface|null $entityManager
      * @param ObjectConstructorInterface $fallbackConstructor
      */
     public function __construct(?EntityManagerInterface $entityManager, ObjectConstructorInterface $fallbackConstructor)
@@ -68,6 +60,17 @@ class ChainDoctrineObjectConstructor implements ObjectConstructorInterface
 
         // Locate possible ClassMetadata
         $classMetadataFactory = $this->entityManager->getMetadataFactory();
+        try {
+            $doctrineMetadata = $classMetadataFactory->getMetadataFor($metadata->name);
+            if ($doctrineMetadata->getName() !== $metadata->name) {
+                /*
+                 * Doctrine resolveTargetEntity has found an alternative class
+                 */
+                $metadata = new ClassMetadata($doctrineMetadata->getName());
+            }
+        } catch (\Doctrine\ORM\Mapping\MappingException $e) {
+            // Object class is not a valid doctrine entity
+        }
 
         if ($classMetadataFactory->isTransient($metadata->name)) {
             // No ClassMetadata found, proceed with normal deserialization

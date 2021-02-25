@@ -46,40 +46,32 @@ class RoleRepositoryTest extends SchemaDependentCase
             ->findOneByName($name);
 
         // Assert
-        $this->assertEquals($expected, $role->getName());
+        $this->assertEquals($expected, $role->getRole());
     }
 
     public function rolesProvider()
     {
-        return array(
-            array("role___test", "ROLE_TEST"),
-            array("role___test", "ROLE_TEST"),
-            array("tèst tèst", "ROLE_TEST_TEST"),
-        );
+        return [
+            ["role___test", "ROLE_TEST"],
+            ["role___test", "ROLE_TEST"],
+            ["tèst tèst", "ROLE_TEST_TEST"],
+        ];
     }
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
-        $roles = array(
-            array("role___test", "ROLE_TEST"),
-            array("role___test", "ROLE_TEST"),
-            array("tèst tèst", "ROLE_TEST_TEST"),
-        );
+        $roles = [
+            ["role___test", "ROLE_TEST"],
+            ["role___test", "ROLE_TEST"],
+            ["tèst tèst", "ROLE_TEST_TEST"],
+        ];
 
         foreach ($roles as $value) {
-            $role = static::getManager()
-                        ->getRepository(Role::class)
-                        ->findOneByName($value[1]);
-
-            if (null === $role) {
-                $a = new Role();
-                $a->setName($value[0]);
-                static::getManager()->persist($a);
-            }
+            static::getManager()
+                ->getRepository(Role::class)
+                ->findOneByName($value[1]);
         }
-
-        static::getManager()->flush();
     }
 }

@@ -15,39 +15,15 @@ use Themes\Rozier\RozierApp;
 
 final class ThemeInfo
 {
-    /**
-     * @var string
-     */
-    protected $name;
-    /**
-     * @var string
-     */
-    protected $themeName;
-    /**
-     * @var string|null
-     */
-    protected $classname = null;
-    /**
-     * @var Filesystem
-     */
-    protected $filesystem;
-    /**
-     * @var string
-     */
-    protected $projectDir;
-    /**
-     * @var null|string
-     */
-    protected $themePath = null;
+    private string $name;
+    private string $themeName;
+    private ?string $classname = null;
+    private Filesystem $filesystem;
+    private string $projectDir;
+    private ?string $themePath = null;
+    private static array $protectedThemeNames = ['DefaultTheme', 'Debug', 'BaseTheme', 'Install', 'Rozier'];
 
     /**
-     * @var string[]
-     */
-    protected static $protectedThemeNames = ['DefaultTheme', 'Debug', 'BaseTheme', 'Install', 'Rozier'];
-
-    /**
-     * ThemeInfo constructor.
-     *
      * @param string $name Short theme name or FQN classname
      * @param string $projectDir
      */
@@ -71,7 +47,7 @@ final class ThemeInfo
 
     public function isProtected(): bool
     {
-        return in_array($this->getThemeName(), static::$protectedThemeNames);
+        return in_array($this->getThemeName(), self::$protectedThemeNames);
     }
 
     /**
@@ -189,13 +165,16 @@ final class ThemeInfo
     }
 
     /**
-     * @param string $className
+     * @param string|null $className
      *
      * @return null|ReflectionClass
      */
-    public function getThemeReflectionClass(string $className): ?ReflectionClass
+    public function getThemeReflectionClass(string $className = null): ?ReflectionClass
     {
         try {
+            if (null === $className) {
+                $className = $this->getClassname();
+            }
             $reflection = new ReflectionClass($className);
             if ($reflection->isSubclassOf(AppController::class)) {
                 return $reflection;

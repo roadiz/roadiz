@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" datatype="plaintext" original="file.ext" target-language="sr">
+    <body>
+      <trans-unit id="1">
+        <source>Node name</source>
+        <target state="translated">Име чвора</target>
+      </trans-unit>
+      <trans-unit id="2">
+        <source>See tree</source>
+        <target state="translated">Приказ стабла</target>
+      </trans-unit>
+      <trans-unit id="3">
+        <source>_username</source>
+        <target state="translated">_корисничко име</target>
+      </trans-unit>
+      <trans-unit id="4">
+        <source>_password</source>
+        <target state="translated">_лозинка</target>
+      </trans-unit>
+      <trans-unit id="password.verify">
+        <source>password.verify</source>
+        <target state="translated">Верификација лозинке</target>
+      </trans-unit>
+      <trans-unit id="delete">
+        <source>delete</source>
+        <target state="translated">Избриши</target>
+      </trans-unit>
+      <trans-unit id="status">
+        <source>status</source>
+        <target state="translated">Статус</target>
+      </trans-unit>
+      <!-- Welcome -->
+      <trans-unit id="welcome.title">
+        <source>welcome.title</source>
+        <target state="translated">Инсталација Roadiz-а</target>
+      </trans-unit>
+      <trans-unit id="welcome.subtitle">
+        <source>welcome.subtitle</source>
+        <target state="translated">Добродошли у Roadiz CMS!</target>
+      </trans-unit>
+      <trans-unit id="welcome.message">
+        <source>welcome.message</source>
+        <target state="translated">&lt;p&gt;Пре него што почнемо, неопходно је да извршимо нека подешавања. Палимо машину и полећемо!&lt;/p&gt;</target>
+      </trans-unit>
+      <!-- Requirements -->
+      <trans-unit id="requirements.title">
+        <source>requirements.title</source>
+        <target state="translated">Шта је неопходно</target>
+      </trans-unit>
+      <trans-unit id="requirements.message">
+        <source>requirements.message</source>
+        <target state="translated">&lt;p&gt;Како бисте користили Roadiz, потребно је испунити минимум услова који се односе на сервер, а то се нарочито односи на PHP. Ако имате приступ фајлу за конфигурисање (php.ini), бићете у могућности да извршите подешавања.&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="requirements.spec">
+        <source>requirements.spec</source>
+        <target state="translated">Спецификација</target>
+      </trans-unit>
+      <trans-unit id="requirements.requirement">
+        <source>requirements.requirement</source>
+        <target state="translated">Захтевано</target>
+      </trans-unit>
+      <trans-unit id="requirements.actual_value">
+        <source>requirements.actual_value</source>
+        <target state="translated">Стварна вредност</target>
+      </trans-unit>
+      <!-- Database -->
+      <trans-unit id="database.title">
+        <source>database.title</source>
+        <target state="translated">База података</target>
+      </trans-unit>
+      <trans-unit id="database.message">
+        <source>database.message</source>
+        <target state="translated">&lt;p&gt;Roadiz-у је потребна база података како би у оквиру ње чувао садржај. Можете селектовати свој омиљени драјвер базе података и затим га можете конфигурисати.&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="database.cannot_connect">
+        <source>database.cannot_connect</source>
+        <target state="translated">Није могуће повезати се са базом података</target>
+      </trans-unit>
+      <trans-unit id="database.build">
+        <source>database.build</source>
+        <target state="translated">Направи базу података</target>
+      </trans-unit>
+      <!-- Database done -->
+      <trans-unit id="database_done.title">
+        <source>database_done.title</source>
+        <target state="translated">База података је инсталирана</target>
+      </trans-unit>
+      <trans-unit id="database_done.message">
+        <source>database_done.message</source>
+        <target state="translated">&lt;p&gt;Ваша база података је успешно инсталирана. Сада ћемо извршити увоз свих садржаја и параметара који су потребни за Ваш веб-сајт.&lt;/p&gt;</target>
+      </trans-unit>
+      <!-- Database fail -->
+      <trans-unit id="database_fail.title">
+        <source>database_fail.title</source>
+        <target state="translated">База података се не може инсталирати</target>
+      </trans-unit>
+      <trans-unit id="database_fail.message">
+        <source>database_fail.message</source>
+        <target state="translated">&lt;p&gt;Ваша база података се није могла инсталирати, јер је дошло до грешке. Проверите акредитације везане за базу података ако је нека друга база података претходно већ инсталирана.&lt;/p&gt;</target>
+      </trans-unit>
+      <!-- Import -->
+      <trans-unit id="import.title">
+        <source>import.title</source>
+        <target state="translated">Увези подразумеване податке</target>
+      </trans-unit>
+      <trans-unit id="import.message">
+        <source>import.message</source>
+        <target state="translated">&lt;p&gt;Увозе се подразумевани подаци који се односе на подешавања, улоге и групе&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="import.step_name">
+        <source>import.step_name</source>
+        <target state="translated">Корак</target>
+      </trans-unit>
+      <!-- User -->
+      <trans-unit id="user.title">
+        <source>user.title</source>
+        <target state="translated">Направи корисника</target>
+      </trans-unit>
+      <trans-unit id="user.message">
+        <source>user.message</source>
+        <target state="translated">&lt;p&gt;Креирај корисника са администраторским овлашћењима.&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="user.create">
+        <source>user.create</source>
+        <target state="translated">Направи корисника</target>
+      </trans-unit>
+      <trans-unit id="user.name">
+        <source>user.name</source>
+        <target state="translated">Корисничко име</target>
+      </trans-unit>
+      <trans-unit id="user.email">
+        <source>user.email</source>
+        <target state="translated">Email корисника</target>
+      </trans-unit>
+      <trans-unit id="user.create_another">
+        <source>user.create_another</source>
+        <target state="translated">Направи још једног корисника</target>
+      </trans-unit>
+      <!-- User summary -->
+      <trans-unit id="user_summary.title">
+        <source>user_summary.title</source>
+        <target state="translated">Корисник је направљен</target>
+      </trans-unit>
+      <!-- Themes -->
+      <trans-unit id="themes.title">
+        <source>themes.title</source>
+        <target state="translated">Информације</target>
+      </trans-unit>
+      <trans-unit id="themes.message">
+        <source>themes.message</source>
+        <target state="translated">&lt;p&gt;Упишите базичне информације о свом сајту&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="themes.save_informations">
+        <source>themes.save_informations</source>
+        <target state="translated">Сачувај информације</target>
+      </trans-unit>
+      <trans-unit id="themes.frontend.description">
+        <source>themes.frontend.description</source>
+        <target state="translated">Можете инсталирати неке од подразумеваних тема и садржаја за свој сајт.</target>
+      </trans-unit>
+      <!-- Import node type -->
+      <trans-unit id="import_node_type.title">
+        <source>import_node_type.title</source>
+        <target state="translated">Увези тип чвора</target>
+      </trans-unit>
+      <trans-unit id="import_node_type.message">
+        <source>import_node_type.message</source>
+        <target state="translated">Тип чвора</target>
+      </trans-unit>
+      <trans-unit id="import_node_type.node_type">
+        <source>import_node_type.node_type</source>
+        <target state="translated">Увези тип чвора</target>
+      </trans-unit>
+      <trans-unit id="import_node_type.node">
+        <source>import_node_type.node</source>
+        <target state="translated">Тип чвора</target>
+      </trans-unit>
+      <trans-unit id="import_tags">
+        <source>import_tags</source>
+        <target state="translated">Тагови</target>
+      </trans-unit>
+      <!-- Success -->
+      <trans-unit id="success.title">
+        <source>success.title</source>
+        <target state="translated">Успели сте</target>
+      </trans-unit>
+      <trans-unit id="success.message">
+        <source>success.message</source>
+        <target state="translated">&lt;p&gt;Roadiz је успешно инсталиран&lt;/p&gt;</target>
+      </trans-unit>
+      <trans-unit id="success.quit_install">
+        <source>success.quit_install</source>
+        <target state="translated">Напусти инсталацију</target>
+      </trans-unit>
+      <!-- Goto -->
+      <trans-unit id="goto.requirements">
+        <source>goto.requirements</source>
+        <target state="translated">Захтеви</target>
+      </trans-unit>
+      <trans-unit id="goto.welcome">
+        <source>goto.welcome</source>
+        <target state="translated">Натраг на почетну</target>
+      </trans-unit>
+      <trans-unit id="goto.database">
+        <source>goto.database</source>
+        <target state="translated">База података</target>
+      </trans-unit>
+      <trans-unit id="goto.import">
+        <source>goto.import</source>
+        <target state="translated">Увези</target>
+      </trans-unit>
+      <trans-unit id="goto.user">
+        <source>goto.user</source>
+        <target state="translated">Корисник</target>
+      </trans-unit>
+      <trans-unit id="goto.theme">
+        <source>goto.theme</source>
+        <target state="translated">Тема</target>
+      </trans-unit>
+      <trans-unit id="goto.informations">
+        <source>goto.informations</source>
+        <target state="translated">Информације</target>
+      </trans-unit>
+      <trans-unit id="skip.user.goto.theme">
+        <source>skip.user.goto.theme</source>
+        <target state="translated">Прескочи</target>
+      </trans-unit>
+      <trans-unit id="skip.user.goto.done">
+        <source>skip.user.goto.done</source>
+        <target state="translated">О кориснику</target>
+      </trans-unit>
+      <trans-unit id="skip.database.goto.import">
+        <source>skip.database.goto.import</source>
+        <target state="translated">Прескочи</target>
+      </trans-unit>
+      <trans-unit id="choose.language">
+        <source>choose.language</source>
+        <target state="translated">Одаберите језик</target>
+      </trans-unit>
+      <trans-unit id="choose.a.language">
+        <source>choose.a.language</source>
+        <target state="translated">Одаберите свој главни језик</target>
+      </trans-unit>
+      <trans-unit id="skip.database.goto.theme">
+        <source>skip.database.goto.theme</source>
+        <target state="translated">Прескочи</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.summary.title">
+                <source>theme.summary.title</source>
+                <target state="translated">О подешавањима теме</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="check.version">
+                <source>check.version</source>
+                <target state="translated">Верзија</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.name">
+                <source>theme.name</source>
+                <target state="translated">Име</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.version">
+                <source>theme.version</source>
+                <target state="translated">Верзија</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="cms.version">
+                <source>cms.version</source>
+                <target state="translated">CMS верзија</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.supportedLocale">
+                <source>theme.supportedLocale</source>
+                <target state="translated">Подржана локална подешавања</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="cms.locale">
+                <source>cms.locale</source>
+                <target state="translated">CMS, ознака земље</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="name">
+                <source>name</source>
+                <target state="translated">Име</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="filename">
+                <source>filename</source>
+                <target state="translated">Име фајла</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodetypes">
+                <source>nodetypes</source>
+                <target state="translated">Чвор-типови</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodes">
+                <source>nodes</source>
+                <target state="translated">Чворови</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="install.theme">
+                <source>install.theme</source>
+                <target state="translated">Инсталирање теме</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="import.theme.content.title">
+                <source>import.theme.content.title</source>
+                <target state="translated">Увези садржај теме</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="step.name">
+                <source>step.name</source>
+                <target state="translated">Корак</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="goto.done">
+                <source>goto.done</source>
+                <target state="translated">Завршено</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="import_roles">
+                <source>import_roles</source>
+                <target state="translated">Улоге</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="import_groups">
+                <source>import_groups</source>
+                <target state="translated">Групе улога</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="import_settings">
+                <source>import_settings</source>
+                <target state="translated">Подешавања</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="theme.selector">
+                <source>theme.selector</source>
+                <target state="translated">Доступне теме</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="check.locale">
+                <source>check.locale</source>
+                <target state="translated">Локална подешавања</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="check.import.files">
+                <source>check.import.files</source>
+                <target state="translated">Фајлови који ће бити увежени</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password.must_match">
+                <source>password.must_match</source>
+                <target state="translated">Лозинке се морају поклапати</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="site_name">
+                <source>site_name</source>
+                <target state="translated">Име Вашег веб-сајта</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender">
+                <source>email_sender</source>
+                <target state="translated">Главни email</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="email_sender_name">
+                <source>email_sender_name</source>
+                <target state="translated">Име налога главног email-а</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="meta_description">
+                <source>meta_description</source>
+                <target state="translated">SEO Описи</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="timezone">
+                <source>timezone</source>
+                <target state="translated">Временска зона</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="install_theme">
+                <source>install_theme</source>
+                <target state="translated">Желите да инсталирате тему?</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="driver">
+                <source>driver</source>
+                <target state="translated">Драјвер</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="host">
+                <source>host</source>
+                <target state="translated">Host</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="port">
+                <source>port</source>
+                <target state="translated">Port</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="unix_socket">
+                <source>unix_socket</source>
+                <target state="translated">UNIX socket</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="path">
+                <source>path</source>
+                <target state="translated">Путања</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="user">
+                <source>user</source>
+                <target state="translated">Корисничко име</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password">
+                <source>password</source>
+                <target state="translated">Лозинка</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="dbname">
+                <source>dbname</source>
+                <target state="translated">Име базе података</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="error.locale.message">
+                <source>error.locale.message</source>
+                <target state="translated">Локална подешавања теме не постоје на Вашем систему.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="error.modal.title">
+                <source>error.modal.title</source>
+                <target state="translated">Молимо Вас да исправите наведене грешке пре него што инсталирате тему.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="error.version.message">
+                <source>error.version.message</source>
+                <target state="translated">Ова тема захтева новију верзију Roadiz-а.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="warning.theme.continue">
+                <source>warning.theme.continue</source>
+                <target state="translated">Ове поруке можете игнорисати и наставити без обзира на њих.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="now_you_can_delete_install_file_and_use_roadiz">
+                <source>now_you_can_delete_install_file_and_use_roadiz</source>
+                <target state="translated">Сада када је инсталација Roadiz-а завршена, можете уклонити install.php скрипту из Roadiz фолдера и приступити свом освеженом веб-сајту без ње.</target>
+            </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -13,42 +13,19 @@ use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
-use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * Handle operations with node-sources entities.
  */
 class NodesSourcesHandler extends AbstractHandler
 {
+    protected ?NodesSources $nodeSource = null;
     /**
-     * @var NodesSources
+     * @var array<NodesSources>|null
      */
-    protected $nodeSource;
-
-    /**
-     * @var array<NodesSources>
-     */
-    protected $parentsNodeSources = null;
-
-    /**
-     * @var AuthorizationChecker
-     */
-    protected $authorizationChecker;
-
-    /**
-     * @var bool
-     */
-    protected $isPreview = false;
-
-    /**
-     * @var Settings
-     */
-    protected $settingsBag;
-
-    /**
-     * @var TagApi
-     */
-    protected $tagApi;
+    protected ?array $parentsNodeSources = null;
+    protected Settings $settingsBag;
+    protected TagApi $tagApi;
 
     /**
      * Create a new node-source handler with node-source to handle.
@@ -68,7 +45,7 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * @return NodesSourcesRepository
      */
-    protected function getRepository()
+    protected function getRepository(): NodesSourcesRepository
     {
         return $this->objectManager->getRepository(NodesSources::class);
     }
@@ -76,8 +53,11 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * @return NodesSources
      */
-    public function getNodeSource()
+    public function getNodeSource(): NodesSources
     {
+        if (null === $this->nodeSource) {
+            throw new \BadMethodCallException('NodesSources is null');
+        }
         return $this->nodeSource;
     }
 
@@ -94,11 +74,11 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Remove every node-source documents associations for a given field.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
+     * @param NodeTypeField $field
      * @param bool $flush
      * @return $this
      */
-    public function cleanDocumentsFromField(NodeTypeField $field, $flush = true)
+    public function cleanDocumentsFromField(NodeTypeField $field, bool $flush = true)
     {
         $nsDocuments = $this->objectManager
             ->getRepository(NodesSourcesDocuments::class)
@@ -123,11 +103,15 @@ class NodesSourcesHandler extends AbstractHandler
      * @param Document $document
      * @param NodeTypeField $field
      * @param bool $flush
-     * @param null|integer $position
+     * @param null|float $position
      * @return $this
      */
-    public function addDocumentForField(Document $document, NodeTypeField $field, $flush = true, $position = null)
-    {
+    public function addDocumentForField(
+        Document $document,
+        NodeTypeField $field,
+        bool $flush = true,
+        ?float $position = null
+    ) {
         $nsDoc = new NodesSourcesDocuments($this->nodeSource, $document, $field);
 
         if (null === $position) {
@@ -149,12 +133,12 @@ class NodesSourcesHandler extends AbstractHandler
     }
 
     /**
-     * Get documents linked to current node-source for a given fieldname.
+     * Get documents linked to current node-source for a given field name.
      *
      * @param string $fieldName Name of the node-type field
      * @return array<Document>
      */
-    public function getDocumentsFromFieldName($fieldName)
+    public function getDocumentsFromFieldName(string $fieldName): array
     {
         return $this->objectManager
             ->getRepository(Document::class)
@@ -171,7 +155,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @deprecated Use directly NodesSources::getIdentifier
      * @return string
      */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         $urlalias = $this->nodeSource->getUrlAliases()->first();
         if (is_object($urlalias)) {
@@ -187,7 +171,7 @@ class NodesSourcesHandler extends AbstractHandler
      * @deprecated Use directly NodesSources::getParent
      * @return NodesSources|null
      */
-    public function getParent()
+    public function getParent(): ?NodesSources
     {
         return $this->nodeSource->getParent();
     }
@@ -195,14 +179,13 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get every nodeSources parents from direct parent to farest ancestor.
      *
-     * @param array $criteria
-     *
+     * @param array|null $criteria
      * @return array<NodesSources>
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getParents(
         array $criteria = null
-    ) {
+    ): array {
         if (null === $this->parentsNodeSources) {
             $this->parentsNodeSources = [];
 
@@ -239,7 +222,7 @@ class NodesSourcesHandler extends AbstractHandler
     /**
      * Get children nodes sources to lock with current translation.
      *
-     * @param array|null $criteria Additionnal criteria
+     * @param array|null $criteria Additional criteria
      * @param array|null $order Non default ordering
      *
      * @return array<object|NodesSources>
@@ -247,7 +230,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getChildren(
         array $criteria = null,
         array $order = null
-    ) {
+    ): array {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
             'translation' => $this->nodeSource->getTranslation(),
@@ -265,14 +248,10 @@ class NodesSourcesHandler extends AbstractHandler
             $defaultCrit = array_merge($defaultCrit, $criteria);
         }
 
-        return $this->objectManager
-            ->getRepository(NodesSources::class)
-            ->findBy(
-                $defaultCrit,
-                $defaultOrder,
-                null,
-                null
-            );
+        return $this->getRepository()->findBy(
+            $defaultCrit,
+            $defaultOrder
+        );
     }
 
     /**
@@ -286,7 +265,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getFirstChild(
         array $criteria = null,
         array $order = null
-    ) {
+    ): ?NodesSources {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
             'translation' => $this->nodeSource->getTranslation()
@@ -320,7 +299,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getLastChild(
         array $criteria = null,
         array $order = null
-    ) {
+    ): ?NodesSources {
         $defaultCrit = [
             'node.parent' => $this->nodeSource->getNode(),
             'translation' => $this->nodeSource->getTranslation(),
@@ -355,7 +334,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getFirstSibling(
         array $criteria = null,
         array $order = null
-    ) {
+    ): ?NodesSources {
         if (null !== $this->nodeSource->getParent()) {
             $parentHandler = new NodesSourcesHandler($this->objectManager, $this->settingsBag, $this->tagApi);
             $parentHandler->setNodeSource($this->nodeSource->getParent());
@@ -377,7 +356,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getLastSibling(
         array $criteria = null,
         array $order = null
-    ) {
+    ): ?NodesSources {
         if (null !== $this->nodeSource->getParent()) {
             $parentHandler = new NodesSourcesHandler($this->objectManager, $this->settingsBag, $this->tagApi);
             $parentHandler->setNodeSource($this->nodeSource->getParent());
@@ -399,7 +378,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getPrevious(
         array $criteria = null,
         array $order = null
-    ) {
+    ): ?NodesSources {
         if ($this->nodeSource->getNode()->getPosition() <= 1) {
             return null;
         }
@@ -428,11 +407,7 @@ class NodesSourcesHandler extends AbstractHandler
 
         $order['node.position'] = 'DESC';
 
-        /** @var NodesSourcesRepository $repo */
-        $repo = $this->objectManager
-            ->getRepository(NodesSources::class);
-
-        return $repo->findOneBy(
+        return $this->getRepository()->findOneBy(
             $defaultCriteria,
             $order
         );
@@ -449,7 +424,7 @@ class NodesSourcesHandler extends AbstractHandler
     public function getNext(
         array $criteria = null,
         array $order = null
-    ) {
+    ): ?NodesSources {
         $defaultCrit = [
             /*
              * Use > operator to get first next nodeSource
@@ -504,7 +479,7 @@ class NodesSourcesHandler extends AbstractHandler
      *
      * @return array<string>
      */
-    public function getSEO()
+    public function getSEO(): array
     {
         return [
             'title' => ($this->nodeSource->getMetaTitle() != "") ?
@@ -524,7 +499,7 @@ class NodesSourcesHandler extends AbstractHandler
      *
      * @return array<Node> Collection of nodes
      */
-    public function getNodesFromFieldName($fieldName)
+    public function getNodesFromFieldName(string $fieldName)
     {
         return $this->objectManager
             ->getRepository(Node::class)
@@ -542,7 +517,7 @@ class NodesSourcesHandler extends AbstractHandler
      *
      * @return array<Node> Collection of nodes
      */
-    public function getReverseNodesFromFieldName($fieldName)
+    public function getReverseNodesFromFieldName(string $fieldName)
     {
         return $this->objectManager
             ->getRepository(Node::class)

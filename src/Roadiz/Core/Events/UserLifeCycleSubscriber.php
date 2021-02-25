@@ -17,7 +17,7 @@ use RZ\Roadiz\Core\Events\User\UserPasswordChangedEvent;
 use RZ\Roadiz\Core\Events\User\UserUpdatedEvent;
 use RZ\Roadiz\Core\Viewers\UserViewer;
 use RZ\Roadiz\Utils\MediaFinders\FacebookPictureFinder;
-use RZ\Roadiz\Utils\Security\TokenGenerator;
+use RZ\Roadiz\Random\TokenGenerator;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserLifeCycleSubscriber implements EventSubscriber
@@ -28,7 +28,6 @@ class UserLifeCycleSubscriber implements EventSubscriber
     private $container;
 
     /**
-     * UserLifeCycleSubscriber constructor.
      * @param Container $container
      */
     public function __construct(Container $container)

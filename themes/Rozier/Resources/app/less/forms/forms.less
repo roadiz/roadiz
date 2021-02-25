@@ -406,27 +406,21 @@
         display: none;
     }
 }
-.form-col-color,
-.form-col-checkbox {
-    max-width: 500px;
-    display: inline-flex;
-    flex-direction: column;
-    margin-right: 2em;
 
-    .form-row-desc {
-        max-width: 250px;
-    }
-}
 .uk-form-row {
     position: relative;
     margin: 1em 0;
 
-    &:not(.form-col-nodesourcebase):first-child {
-        margin-top: 0;
-    }
+    &.form-col-color,
+    &.form-col-checkbox {
+        max-width: 500px;
+        display: inline-flex;
+        flex-direction: column;
+        margin-right: 2em;
 
-    & + .uk-form-row {
-        margin-top: 1em;
+        .form-row-desc {
+            max-width: 250px;
+        }
     }
 
     &.required {

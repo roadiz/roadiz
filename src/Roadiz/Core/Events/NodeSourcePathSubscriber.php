@@ -16,8 +16,6 @@ class NodeSourcePathSubscriber implements EventSubscriberInterface
     protected $pathAggregator;
 
     /**
-     * NodeSourcePathSubscriber constructor.
-     *
      * @param NodesSourcesPathAggregator $pathAggregator
      */
     public function __construct(NodesSourcesPathAggregator $pathAggregator)

@@ -1,0 +1,14 @@
+{
+    "name": "vendor_name/Events",
+    "description": "description",
+    "minimum-stability": "stable",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "ambroisemaupate",
+            "email": "email@example.com"
+        }
+    ],
+    "require": {
+    }
+}

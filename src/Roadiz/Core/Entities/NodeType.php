@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
 
@@ -24,7 +25,7 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"reachable"})
  * })
  */
-class NodeType extends AbstractEntity
+class NodeType extends AbstractEntity implements NodeTypeInterface
 {
     /**
      * @var string
@@ -32,7 +33,7 @@ class NodeType extends AbstractEntity
      * @Serializer\Groups({"node_type", "node", "nodes_sources"})
      * @Serializer\Type("string")
      */
-    private $name;
+    private $name = '';
 
     /**
      * @return string
@@ -65,6 +66,11 @@ class NodeType extends AbstractEntity
     public function getDisplayName(): string
     {
         return $this->displayName;
+    }
+
+    public function getLabel(): string
+    {
+        return $this->getDisplayName();
     }
 
     /**
@@ -290,9 +296,9 @@ class NodeType extends AbstractEntity
     private $fields;
 
     /**
-     * @return ArrayCollection<NodeTypeField>
+     * @return Collection<NodeTypeField>
      */
-    public function getFields()
+    public function getFields(): Collection
     {
         return $this->fields;
     }

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Forms\Constraints;
 
 use Doctrine\Persistence\Mapping\ClassMetadata;
-use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Constraint;
@@ -20,6 +19,19 @@ use Symfony\Component\Validator\Exception\ConstraintDefinitionException;
  */
 class UniqueEntityValidator extends ConstraintValidator
 {
+    /**
+     * @var EntityManager
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManager $entityManager
+     */
+    public function __construct(EntityManager $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param object     $entity
      * @param Constraint $constraint
@@ -41,11 +53,7 @@ class UniqueEntityValidator extends ConstraintValidator
             throw new ConstraintDefinitionException('At least one field has to be specified.');
         }
 
-        /** @var EntityManager $em */
-        $em = $constraint->entityManager;
-
-        $class = $em->getClassMetadata(get_class($entity));
-        /* @var $class \Doctrine\Common\Persistence\Mapping\ClassMetadata */
+        $class = $this->entityManager->getClassMetadata(get_class($entity));
 
         $criteria = [];
         $hasNullValue = false;
@@ -67,7 +75,7 @@ class UniqueEntityValidator extends ConstraintValidator
                  * read its identifiers. This is necessary because the wrapped
                  * getter methods in the Proxy are being bypassed.
                  */
-                $em->initializeObject($criteria[$fieldName]);
+                $this->entityManager->initializeObject($criteria[$fieldName]);
             }
         }
         // validation doesn't fail if one of the fields is null and if null values should be ignored
@@ -84,13 +92,13 @@ class UniqueEntityValidator extends ConstraintValidator
              * We ensure the retrieved repository can handle the entity
              * by checking the entity is the same, or subclass of the supported entity.
              */
-            $repository = $em->getRepository($constraint->entityClass);
+            $repository = $this->entityManager->getRepository($constraint->entityClass);
             $supportedClass = $repository->getClassName();
             if (!$entity instanceof $supportedClass) {
                 throw new ConstraintDefinitionException(sprintf('The "%s" entity repository does not support the "%s" entity. The entity should be an instance of or extend "%s".', $constraint->entityClass, $class->getName(), $supportedClass));
             }
         } else {
-            $repository = $em->getRepository(get_class($entity));
+            $repository = $this->entityManager->getRepository(get_class($entity));
         }
         $result = $repository->{$constraint->repositoryMethod}($criteria);
         if ($result instanceof \IteratorAggregate) {
@@ -118,21 +126,21 @@ class UniqueEntityValidator extends ConstraintValidator
 
         $this->context->buildViolation($constraint->message)
             ->atPath($errorPath)
-            ->setParameter('{{ value }}', $this->formatWithIdentifiers($em, $class, $invalidValue))
+            ->setParameter('{{ value }}', $this->formatWithIdentifiers($class, $invalidValue))
             ->setInvalidValue($invalidValue)
             ->setCode(UniqueEntity::NOT_UNIQUE_ERROR)
             ->addViolation();
     }
 
-    private function formatWithIdentifiers(ObjectManager $em, ClassMetadata $class, $value)
+    private function formatWithIdentifiers(ClassMetadata $class, $value)
     {
         if (!is_object($value) || $value instanceof \DateTimeInterface) {
             return $this->formatValue($value, self::PRETTY_DATE);
         }
         if ($class->getName() !== $idClass = get_class($value)) {
             // non unique value might be a composite PK that consists of other entity objects
-            if ($em->getMetadataFactory()->hasMetadataFor($idClass)) {
-                $identifiers = $em->getClassMetadata($idClass)->getIdentifierValues($value);
+            if ($this->entityManager->getMetadataFactory()->hasMetadataFor($idClass)) {
+                $identifiers = $this->entityManager->getClassMetadata($idClass)->getIdentifierValues($value);
             } else {
                 // this case might happen if the non unique column has a custom doctrine type and its value is an object
                 // in which case we cannot get any identifiers for it

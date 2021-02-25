@@ -4,15 +4,12 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Config;
 
 use RZ\Roadiz\Config\Configuration as Config;
-use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
+use RZ\Roadiz\Config\Loader\ConfigurationLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Config\Resource\FileResource;
 
-/**
- * Configuration class
- */
-abstract class ConfigurationHandler
+class ConfigurationHandler implements ConfigurationHandlerInterface
 {
     /**
      * @var array
@@ -22,42 +19,39 @@ abstract class ConfigurationHandler
     /**
      * @var string
      */
-    protected $cacheDir;
-
-    /**
-     * @var string
-     */
     protected $path;
 
     /**
-     * @var string
-     */
-    protected $cachePath;
-
-    /**
-     * @var ConfigCache
+     * @var ConfigCache|null
      */
     protected $confCache;
 
     /**
-     * @param string $cacheDir
-     * @param boolean $debug
-     * @param string $path
+     * @var Config
      */
-    public function __construct(string $cacheDir, bool $debug, string $path)
-    {
-        $this->cacheDir = $cacheDir;
-        $this->path = $path;
-        $this->cachePath = $this->cacheDir . '/configuration.php';
-        $this->confCache = new ConfigCache($this->cachePath, $debug);
-    }
+    protected $configurationTree;
 
     /**
-     * @return string
+     * @var ConfigurationLoader
      */
-    public function getCacheDir(): string
-    {
-        return $this->cacheDir;
+    protected $configurationLoader;
+
+    /**
+     * @param Config $configurationTree
+     * @param string $path
+     * @param ConfigurationLoader $configurationLoader
+     * @param ConfigCache|null $confCache
+     */
+    public function __construct(
+        Config $configurationTree,
+        string $path,
+        ConfigurationLoader $configurationLoader,
+        ?ConfigCache $confCache = null
+    ) {
+        $this->path = $path;
+        $this->confCache = $confCache;
+        $this->configurationTree = $configurationTree;
+        $this->configurationLoader = $configurationLoader;
     }
 
     /**
@@ -67,20 +61,33 @@ abstract class ConfigurationHandler
      */
     public function load(): array
     {
-        if (!$this->confCache->isFresh()) {
-            $this->setConfiguration($this->loadFromFile($this->path));
+        if (null !== $this->confCache) {
+            if (!$this->confCache->isFresh()) {
+                $rawConfiguration = $this->configurationLoader->loadFromFile($this->path);
+                $this->setConfiguration($rawConfiguration);
 
-            $resources = [
-                new FileResource($this->path),
-            ];
+                $resources = [
+                    new FileResource($this->path),
+                ];
 
-            $code = '<?php return ' . var_export($this->configuration, true) . ';' . PHP_EOL;
-            $this->confCache->write($code, $resources);
+                $this->confCache->write($this->generateConfigurationCacheSource($rawConfiguration), $resources);
+            } else {
+                $this->setConfiguration(require $this->confCache->getPath());
+            }
         } else {
-            $this->configuration = require $this->cachePath;
+            $this->setConfiguration($this->configurationLoader->loadFromFile($this->path));
         }
 
         return $this->configuration;
+    }
+
+    /**
+     * @param string|array|\stdClass $rawConfiguration
+     * @return string
+     */
+    protected function generateConfigurationCacheSource($rawConfiguration): string
+    {
+        return '<?php return ' . var_export($rawConfiguration, true) . ';' . PHP_EOL;
     }
 
     /**
@@ -104,21 +111,16 @@ abstract class ConfigurationHandler
             $configuration,
         ];
         $processor = new Processor();
-        $roadizConfiguration = new Config();
-        $this->configuration = $processor->processConfiguration($roadizConfiguration, $configs);
+        $this->configuration = $processor->processConfiguration($this->configurationTree, $configs);
 
         return $this;
     }
 
     /**
-     * @param string $file Absolute path to conf file
-     * @return string|array|\stdClass
-     * @throws NoConfigurationFoundException
+     * @deprecated Use your configuration loader independently from handler
      */
-    abstract protected function loadFromFile(string $file);
-
-    /**
-     * @return bool
-     */
-    abstract public function writeConfiguration(): bool;
+    public function writeConfiguration(): void
+    {
+        $this->configurationLoader->saveToFile($this->path, $this->configuration);
+    }
 }

@@ -1,12 +1,14 @@
 {% extends '@Rozier/layout.html.twig' %}
 
-
 {% block content %}
 <section class="content-global">
 
     <header class="content-header header-role-types header-role-types-add">
         <h1 class="content-title">{% trans %}add.a.role{% endtrans %}</h1>
-        <a class="content-header-nav-back uk-navbar-content" href="{{ path('rolesHomePage') }}" title="{% trans %}back_to.roles{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('rolesHomePage') }}"
+           title="{% trans %}back_to.roles{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content">

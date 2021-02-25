@@ -2,12 +2,11 @@
 
 {% block content %}
 <section class="content-global">
-
     <header class="content-header header-node header-node-delete">
         <h1 class="content-title node-delete-title">{{ "delete.translation"|trans|u.truncate(25, '[…]', true) }}</h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
+        <p>{{ nodeSource.title }} – {{ nodeSource.translation.name }}</p>
+        {% include 'nodes/navBack.html.twig' %}
     </header>
-
     <article class="content content-delete content-node-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
         {{ form_start(form, {

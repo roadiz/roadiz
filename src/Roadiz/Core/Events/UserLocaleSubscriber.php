@@ -22,8 +22,6 @@ class UserLocaleSubscriber implements EventSubscriberInterface
     private $container;
 
     /**
-     * UserLocaleSubscriber constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)

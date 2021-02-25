@@ -3,21 +3,19 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Security;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Role;
 use Symfony\Component\Security\Core\Role\RoleHierarchy;
 
 /**
- * Class DoctrineRoleHierarchy
  * @package RZ\Roadiz\Utils\Security
  */
 class DoctrineRoleHierarchy extends RoleHierarchy
 {
     /**
-     * DoctrineRoleHierarchy constructor.
-     * @param EntityManager|null $em
+     * @param EntityManagerInterface|null $em
      */
-    public function __construct(EntityManager $em = null)
+    public function __construct(EntityManagerInterface $em = null)
     {
         if (null !== $em) {
             $roleRepository = $em->getRepository(Role::class);

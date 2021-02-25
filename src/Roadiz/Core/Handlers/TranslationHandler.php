@@ -12,16 +12,16 @@ use RZ\Roadiz\Core\Entities\Translation;
  */
 class TranslationHandler extends AbstractHandler
 {
-    /**
-     * @var Translation
-     */
-    private $translation;
+    private ?Translation $translation = null;
 
     /**
      * @return Translation
      */
     public function getTranslation()
     {
+        if (null === $this->translation) {
+            throw new \BadMethodCallException('Translation is null');
+        }
         return $this->translation;
     }
 

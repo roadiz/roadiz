@@ -8,7 +8,6 @@
         <meta name="description" content="{% block description %}{% trans %}back_office{% endtrans %}{% endblock %}">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
         {% include 'admin/meta-icon.html.twig' %}
-
         {# CSS scripts inclusions / Using webpack #}
         {% include '@Rozier/partials/css-inject.html.twig' %}
         <style>
@@ -39,13 +38,11 @@
             };
             var RozierRoot = temp;
         </script>
-
         {% if head.devMode %}
             <script src="{{ asset('vendor/jquery.js', 'Rozier') }}"></script>
         {% else %}
             <script src="{{ asset('vendor/jquery.min.js', 'Rozier') }}"></script>
         {% endif %}
-
         {# JS scripts inclusions / Using webpack #}
         {% include '@Rozier/partials/simple-js-inject.html.twig' %}
         {% block customScripts %}{% endblock %}

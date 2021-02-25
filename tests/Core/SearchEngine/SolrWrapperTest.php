@@ -41,6 +41,7 @@ class SolrWrapperTest extends KernelDependentCase
 
     public function testIndex()
     {
+        /** @var \Solarium\Client $solr */
         $solr = $this->get('solr');
 
         if (null !== $solr) {
@@ -51,7 +52,7 @@ class SolrWrapperTest extends KernelDependentCase
             // execute the ping query
             try {
                 $result = $solr->ping($ping);
-            } catch (\Solarium\Exception $e) {
+            } catch (\Solarium\Exception\ExceptionInterface $e) {
                 $this->markTestSkipped('Solr is not available.');
             } catch (HttpException $e) {
                 $this->markTestSkipped('Solr is not available.');
@@ -96,7 +97,7 @@ class SolrWrapperTest extends KernelDependentCase
      * Nothing special to do except init collection
      * array.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
         static::$entityCollection = array();
@@ -104,7 +105,7 @@ class SolrWrapperTest extends KernelDependentCase
     /**
      * Remove test entities.
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         $solr = static::$kernel->get('solr');
 

@@ -22,10 +22,10 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 
 /**
- * Class ExceptionSubscriber
  * @package RZ\Roadiz\Core\Events
  */
 class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInterface
@@ -52,8 +52,6 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
     private $themeResolver;
 
     /**
-     * ExceptionSubscriber constructor.
-     *
      * @param Container              $container
      * @param ThemeResolverInterface $themeResolver
      * @param LoggerInterface        $logger
@@ -108,11 +106,15 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
              */
             if ($exception instanceof MaintenanceModeException &&
                 null !== $ctrl = $exception->getController()) {
-                $response = $ctrl->maintenanceAction($event->getRequest());
-                // Set http code according to status
-                $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
-                $event->setResponse($response);
-                return;
+                try {
+                    $response = $ctrl->maintenanceAction($event->getRequest());
+                    // Set http code according to status
+                    $response->setStatusCode($this->viewer->getHttpStatusCode($exception));
+                    $event->setResponse($response);
+                    return;
+                } catch (LoaderError $error) {
+                    // Twig template does not exist
+                }
             } elseif (null !== $theme = $this->isNotFoundExceptionWithTheme($event)) {
                 $event->setResponse($this->createThemeNotFoundResponse($theme, $exception, $event));
                 return;
@@ -151,11 +153,23 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
          * Log error before displaying a fallback page.
          */
         $class = get_class($e);
-
-        $this->logger->emergency($e->getMessage(), [
-            'trace' => $e->getTraceAsString(),
-            'exception' => $class,
-        ]);
+        /*
+         * Do not flood logs with not-found errors
+         */
+        if (!($e instanceof NotFoundHttpException) && !($e instanceof ResourceNotFoundException)) {
+            if ($e instanceof HttpExceptionInterface) {
+                // If HTTP exception do not log to critical
+                $this->logger->notice($e->getMessage(), [
+                    'trace' => $e->getTraceAsString(),
+                    'exception' => $class,
+                ]);
+            } else {
+                $this->logger->emergency($e->getMessage(), [
+                    'trace' => $e->getTraceAsString(),
+                    'exception' => $class,
+                ]);
+            }
+        }
 
         return $this->viewer->getResponse($e, $request, $this->debug);
     }

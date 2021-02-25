@@ -10,12 +10,9 @@ use RZ\Roadiz\OpenId\User\OpenIdAccount;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class AuthCollector extends DataCollector implements Renderable
+final class AuthCollector extends DataCollector implements Renderable
 {
-    /**
-     * @var TokenStorage
-     */
-    private $tokenStorage;
+    private TokenStorage $tokenStorage;
 
     /**
      * @param TokenStorage $tokenStorage
@@ -26,7 +23,7 @@ class AuthCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function collect()
     {
@@ -87,7 +84,7 @@ class AuthCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function getName()
     {
@@ -95,7 +92,7 @@ class AuthCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function getWidgets()
     {

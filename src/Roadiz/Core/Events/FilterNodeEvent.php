@@ -7,8 +7,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterNodeEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterNodeEvent extends Event
@@ -19,8 +17,6 @@ abstract class FilterNodeEvent extends Event
     protected $node;
 
     /**
-     * FilterNodeEvent constructor.
-     *
      * @param Node $node
      */
     public function __construct(Node $node)

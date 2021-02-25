@@ -21,15 +21,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
  */
 class DocumentHandler extends AbstractHandler
 {
-    /**
-     * @var Document
-     */
-    protected $document;
-
-    /**
-     * @var Packages
-     */
-    protected $packages;
+    protected ?Document $document = null;
+    protected Packages $packages;
 
     /**
      * Create a new document handler with document to handle.
@@ -52,6 +45,9 @@ class DocumentHandler extends AbstractHandler
      */
     public function makePrivate()
     {
+        if (null === $this->document) {
+            throw new \BadMethodCallException('Document is null');
+        }
         $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativePath());
         $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativePath());
 
@@ -96,6 +92,9 @@ class DocumentHandler extends AbstractHandler
      */
     public function makePublic()
     {
+        if (null === $this->document) {
+            throw new \BadMethodCallException('Document is null');
+        }
         $documentPublicPath = $this->packages->getPublicFilesPath($this->document->getRelativePath());
         $documentPrivatePath = $this->packages->getPrivateFilesPath($this->document->getRelativePath());
 
@@ -158,10 +157,10 @@ class DocumentHandler extends AbstractHandler
      * Return documents folders with the same translation as
      * current document.
      *
-     * @param Translation $translation
+     * @param Translation|null $translation
      * @return array
      */
-    public function getFolders(Translation $translation = null)
+    public function getFolders(Translation $translation = null): array
     {
         /** @var FolderRepository $repository */
         $repository = $this->objectManager->getRepository(Folder::class);
@@ -178,10 +177,7 @@ class DocumentHandler extends AbstractHandler
         return $repository->findByDocumentAndTranslation($this->document);
     }
 
-    /**
-     * @return Document
-     */
-    public function getDocument()
+    public function getDocument(): ?Document
     {
         return $this->document;
     }

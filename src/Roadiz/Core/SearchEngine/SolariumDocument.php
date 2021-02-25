@@ -16,10 +16,29 @@ use Solarium\QueryType\Update\Query\Query;
  */
 class SolariumDocument extends AbstractSolarium
 {
+    protected array $documentTranslationItems;
+
     /**
-     * @var array
+     * @param Document                 $rzDocument
+     * @param SolariumFactoryInterface $solariumFactory
+     * @param Client|null              $client
+     * @param LoggerInterface|null     $logger
+     * @param MarkdownInterface|null   $markdown
      */
-    protected $documentTranslationItems;
+    public function __construct(
+        Document $rzDocument,
+        SolariumFactoryInterface $solariumFactory,
+        Client $client = null,
+        LoggerInterface $logger = null,
+        MarkdownInterface $markdown = null
+    ) {
+        parent::__construct($client, $logger, $markdown);
+        $this->documentTranslationItems = [];
+
+        foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
+            $this->documentTranslationItems[] = $solariumFactory->createWithDocumentTranslation($documentTranslation);
+        }
+    }
 
     /**
      * @deprecated
@@ -41,30 +60,6 @@ class SolariumDocument extends AbstractSolarium
         }
 
         return $documents;
-    }
-
-    /**
-     * SolariumDocument constructor.
-     *
-     * @param Document                 $rzDocument
-     * @param SolariumFactoryInterface $solariumFactory
-     * @param Client|null              $client
-     * @param LoggerInterface|null     $logger
-     * @param MarkdownInterface|null   $markdown
-     */
-    public function __construct(
-        Document $rzDocument,
-        SolariumFactoryInterface $solariumFactory,
-        Client $client = null,
-        LoggerInterface $logger = null,
-        MarkdownInterface $markdown = null
-    ) {
-        parent::__construct($client, $logger, $markdown);
-        $this->documentTranslationItems = [];
-
-        foreach ($rzDocument->getDocumentTranslations() as $documentTranslation) {
-            $this->documentTranslationItems[] = $solariumFactory->createWithDocumentTranslation($documentTranslation);
-        }
     }
 
     public function getDocumentId()

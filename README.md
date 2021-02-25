@@ -11,7 +11,7 @@
 
 Roadiz is a modern CMS based on a polymorphic content-schema system which can handle many types of services.
 Its back-office has been developed with a high sense of design and user experience.
-Its theming system is built to live independently from back-office allowing easy switching
+Roadiz theming system is built to live independently of back-office allowing easy switching
 and multiple themes for one content repository.
 Roadiz is released under *MIT license*, so you can reuse
 and distribute its code for personal and commercial projects.

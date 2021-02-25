@@ -13,9 +13,7 @@ use RZ\Roadiz\Core\Events\Folder\FolderUpdatedEvent;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\StringHandler;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -24,8 +22,6 @@ use Themes\Rozier\Forms\FolderType;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class FoldersController
- *
  * @package Themes\Rozier\Controllers
  */
 class FoldersController extends RozierApp
@@ -34,7 +30,6 @@ class FoldersController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -56,27 +51,23 @@ class FoldersController extends RozierApp
      * Return an creation form for requested folder.
      *
      * @param Request $request
-     * @param int $parentFolderId
+     * @param int|null $parentFolderId
      *
      * @return Response
      */
-    public function addAction(Request $request, $parentFolderId = null)
+    public function addAction(Request $request, ?int $parentFolderId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         $folder = new Folder();
 
         if (null !== $parentFolderId) {
-            $parentFolder = $this->get('em')
-                                 ->find(Folder::class, (int) $parentFolderId);
+            $parentFolder = $this->get('em')->find(Folder::class, $parentFolderId);
             if (null !== $parentFolder) {
                 $folder->setParent($parentFolder);
             }
         }
-        /** @var Form $form */
-        $form = $this->createForm(FolderType::class, $folder, [
-            'em' => $this->get('em'),
-        ]);
+        $form = $this->createForm(FolderType::class, $folder);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -121,23 +112,21 @@ class FoldersController extends RozierApp
      *
      * @return Response
      */
-    public function deleteAction(Request $request, $folderId)
+    public function deleteAction(Request $request, int $folderId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Folder $folder */
-        $folder = $this->get('em')
-                       ->find(Folder::class, (int) $folderId);
+        $folder = $this->get('em')->find(Folder::class, $folderId);
 
         if (null !== $folder) {
-            $form = $this->buildDeleteForm($folder);
+            $form = $this->createForm(FormType::class, $folder);
             $form->handleRequest($request);
 
-            if ($form->isSubmitted() &&
-                $form->isValid() &&
-                $form->getData()['folder_id'] == $folder->getId()) {
+            if ($form->isSubmitted() && $form->isValid()) {
                 try {
-                    $this->deleteFolder($folder);
+                    $this->get('em')->remove($folder);
+                    $this->get('em')->flush();
                     $msg = $this->getTranslator()->trans(
                         'folder.%name%.deleted',
                         ['%name%' => $folder->getFolderName()]
@@ -174,13 +163,12 @@ class FoldersController extends RozierApp
      *
      * @return Response
      */
-    public function editAction(Request $request, $folderId)
+    public function editAction(Request $request, int $folderId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Folder $folder */
-        $folder = $this->get('em')
-                       ->find(Folder::class, (int) $folderId);
+        $folder = $this->get('em')->find(Folder::class, $folderId);
 
         /** @var Translation $translation */
         $translation = $this->get('em')
@@ -188,11 +176,7 @@ class FoldersController extends RozierApp
             ->findDefault();
 
         if ($folder !== null) {
-            /** @var Form $form */
-            $form = $this->createForm(FolderType::class, $folder, [
-                'em' => $this->get('em'),
-                'name' => $folder->getFolderName(),
-            ]);
+            $form = $this->createForm(FolderType::class, $folder);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -232,9 +216,8 @@ class FoldersController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
-    public function editTranslationAction(Request $request, $folderId, $translationId)
+    public function editTranslationAction(Request $request, int $folderId, int $translationId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
@@ -242,12 +225,10 @@ class FoldersController extends RozierApp
         $translationRepository = $this->get('em')->getRepository(Translation::class);
 
         /** @var Folder $folder */
-        $folder = $this->get('em')
-            ->find(Folder::class, (int) $folderId);
+        $folder = $this->get('em')->find(Folder::class, $folderId);
 
         /** @var Translation $translation */
-        $translation = $this->get('em')
-            ->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
 
         /** @var FolderTranslation $folderTranslation */
         $folderTranslation = $this->get('em')
@@ -263,7 +244,6 @@ class FoldersController extends RozierApp
         }
 
         if (null !== $folder && null !== $translation) {
-            /** @var Form $form */
             $form = $this->createForm(FolderTranslationType::class, $folderTranslation);
             $form->handleRequest($request);
 
@@ -311,13 +291,12 @@ class FoldersController extends RozierApp
      *
      * @return Response
      */
-    public function downloadAction(Request $request, $folderId)
+    public function downloadAction(Request $request, int $folderId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
 
         /** @var Folder $folder */
-        $folder = $this->get('em')
-                       ->find(Folder::class, (int) $folderId);
+        $folder = $this->get('em')->find(Folder::class, $folderId);
 
         if ($folder !== null) {
             // Prepare File
@@ -358,33 +337,5 @@ class FoldersController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
-    }
-
-    /**
-     * Build delete folder form with name constraint.
-     *
-     * @param Folder $folder
-     *
-     * @return FormInterface
-     */
-    protected function buildDeleteForm(Folder $folder)
-    {
-        $builder = $this->createFormBuilder()
-                        ->add('folder_id', HiddenType::class, [
-                            'data' => $folder->getId(),
-                        ]);
-
-        return $builder->getForm();
-    }
-
-    /**
-     * @param Folder $folder
-     *
-     * @return void
-     */
-    protected function deleteFolder(Folder $folder)
-    {
-        $this->get('em')->remove($folder);
-        $this->get('em')->flush();
     }
 }

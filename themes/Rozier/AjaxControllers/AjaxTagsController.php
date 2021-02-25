@@ -16,8 +16,6 @@ use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Themes\Rozier\Models\TagModel;
 
 /**
- * Class AjaxTagsController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxTagsController extends AbstractAjaxController
@@ -200,14 +198,14 @@ class AjaxTagsController extends AbstractAjaxController
 
     /**
      * Handle AJAX edition requests for Tag
-     * such as comming from tagtree widgets.
+     * such as coming from tag-tree widgets.
      *
      * @param Request $request
      * @param int     $tagId
      *
      * @return Response JSON response
      */
-    public function editAction(Request $request, $tagId)
+    public function editAction(Request $request, int $tagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 

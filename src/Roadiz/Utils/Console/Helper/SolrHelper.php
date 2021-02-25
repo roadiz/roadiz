@@ -6,15 +6,12 @@ namespace RZ\Roadiz\Utils\Console\Helper;
 use Solarium\Client;
 use Symfony\Component\Console\Helper\Helper;
 
-/**
- * SolrHelper.
- */
 class SolrHelper extends Helper
 {
-    private $solr;
+    private ?Client $solr;
 
     /**
-     * @param \Solarium\Client|null $solr
+     * @param Client|null $solr
      */
     public function __construct(Client $solr = null)
     {
@@ -22,9 +19,9 @@ class SolrHelper extends Helper
     }
 
     /**
-     * @return \Solarium\Client
+     * @return Client|null
      */
-    public function getSolr()
+    public function getSolr(): ?Client
     {
         return $this->solr;
     }

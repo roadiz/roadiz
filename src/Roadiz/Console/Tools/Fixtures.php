@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Console\Tools;
 
 use Doctrine\Common\Cache\CacheProvider;
-use Doctrine\ORM\EntityManager;
-use RZ\Roadiz\Config\YamlConfigurationHandler;
+use Doctrine\ORM\EntityManagerInterface;
+use RZ\Roadiz\Config\Configuration;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Core\Entities\Group;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Role;
@@ -20,15 +21,38 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class Fixtures
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $entityManager;
+    /**
+     * @var Request|null
+     */
     protected $request;
+    /**
+     * @var string
+     */
     protected $cacheDir;
+    /**
+     * @var bool
+     */
     protected $debug;
+    /**
+     * @var string
+     */
     protected $configPath;
-    private $rootDir;
+    /**
+     * @var string
+     */
+    protected $rootDir;
+    /**
+     * @var Configuration
+     */
+    protected $configurationTree;
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
+     * @param Configuration $configurationTree
      * @param string $cacheDir
      * @param string $configPath
      * @param string $rootDir
@@ -36,11 +60,12 @@ class Fixtures
      * @param Request|null $request
      */
     public function __construct(
-        EntityManager $entityManager,
-        $cacheDir,
-        $configPath,
-        $rootDir,
-        $debug = true,
+        EntityManagerInterface $entityManager,
+        Configuration $configurationTree,
+        string $cacheDir,
+        string $configPath,
+        string $rootDir,
+        bool $debug = true,
         Request $request = null
     ) {
         $this->entityManager = $entityManager;
@@ -49,6 +74,7 @@ class Fixtures
         $this->debug = $debug;
         $this->configPath = $configPath;
         $this->rootDir = $rootDir;
+        $this->configurationTree = $configurationTree;
     }
 
     /**
@@ -78,7 +104,6 @@ class Fixtures
 
         $folders = [
             $this->rootDir . '/cache',
-            $this->rootDir . '/gen-src/Compiled',
             $this->rootDir . '/gen-src/Proxies',
             $this->rootDir . '/gen-src/GeneratedNodeSources',
         ];
@@ -123,9 +148,8 @@ class Fixtures
     /**
      * @param array $data
      * @return boolean
-     * @throws \Doctrine\ORM\OptimisticLockException
      */
-    public function createDefaultUser($data)
+    public function createDefaultUser(array $data)
     {
         $existing = $this->entityManager
                          ->getRepository(User::class)
@@ -152,11 +176,11 @@ class Fixtures
 
     /**
      * Get role by name, and create it if does not exist.
-     * @param string $roleName
      *
+     * @param string $roleName
      * @return Role
      */
-    protected function getRole($roleName = Role::ROLE_SUPERADMIN)
+    protected function getRole(string $roleName = Role::ROLE_SUPERADMIN)
     {
         $role = $this->entityManager
                      ->getRepository(Role::class)
@@ -174,9 +198,9 @@ class Fixtures
      * Get role by name, and create it if does not exist.
      * @param string $name
      *
-     * @return \RZ\Roadiz\Core\Entities\Setting
+     * @return Setting
      */
-    protected function getSetting($name)
+    protected function getSetting(string $name)
     {
         $setting = $this->entityManager
                         ->getRepository(Setting::class)
@@ -194,10 +218,9 @@ class Fixtures
 
     /**
      * @param array $data
-     *
      * @return void
      */
-    public function saveInformations($data)
+    public function saveInformation(array $data)
     {
         /*
          * Save settings
@@ -223,22 +246,5 @@ class Fixtures
         $set2->setType(NodeTypeField::BOOLEAN_T);
 
         $this->entityManager->flush();
-
-        /*
-         * Update timezone
-         */
-        if (!empty($data['timezone'])) {
-            $conf = new YamlConfigurationHandler(
-                $this->cacheDir,
-                $this->debug,
-                $this->configPath
-            );
-
-            $config = $conf->load();
-            $config['timezone'] = $data['timezone'];
-
-            $conf->setConfiguration($config);
-            $conf->writeConfiguration();
-        }
     }
 }

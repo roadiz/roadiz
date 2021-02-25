@@ -8,7 +8,6 @@ use RZ\Roadiz\Core\Entities\Folder;
 use RZ\Roadiz\Core\Entities\Translation;
 
 /**
- * Class DocumentSearchHandler
  * @package RZ\Roadiz\Core\SearchEngine
  */
 class DocumentSearchHandler extends AbstractSearchHandler

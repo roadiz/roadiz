@@ -8,7 +8,6 @@ use Doctrine\DBAL\Exception\TableNotFoundException;
 use RZ\Roadiz\CMS\Controllers\CmsController;
 use RZ\Roadiz\Core\Exceptions\MaintenanceModeException;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
-use RZ\Roadiz\Core\Exceptions\PreviewNotAllowedException;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,8 +27,8 @@ use Twig\Error\SyntaxError;
  */
 class ExceptionViewer
 {
-    private $foreground_colors = [];
-    private $background_colors = [];
+    private array $foreground_colors = [];
+    private array $background_colors = [];
 
     /**
      * ExceptionViewer constructor.
@@ -90,6 +89,10 @@ class ExceptionViewer
      */
     public function getHumanExceptionTitle(\Exception $e): string
     {
+        if ($e instanceof MaintenanceModeException) {
+            return "Website is under maintenance.";
+        }
+
         if ($e instanceof NoConfigurationFoundException) {
             return "No configuration file has been found. Did you run composer install before using Roadiz?";
         }
@@ -198,15 +201,16 @@ class ExceptionViewer
             return new JsonResponse($data, $this->getHttpStatusCode($e));
         } else {
             $html = file_get_contents(CmsController::getViewsFolder() . '/emerg.html');
-            $html = str_replace('{{ http_code }}', $this->getHttpStatusCode($e), $html);
+            $html = str_replace('{{ http_code }}', (string) $this->getHttpStatusCode($e), $html);
             $html = str_replace('{{ human_message }}', $humanMessage, $html);
 
-            if ($this->getHttpStatusCode($e) === Response::HTTP_FORBIDDEN) {
+            if ($e instanceof MaintenanceModeException) {
+                $html = str_replace('{{ smiley }}', '🏗', $html);
+            } elseif ($this->getHttpStatusCode($e) === Response::HTTP_FORBIDDEN) {
                 $html = str_replace('{{ smiley }}', '🤔', $html);
             } elseif ($this->getHttpStatusCode($e) === Response::HTTP_NOT_FOUND) {
                 $html = str_replace('{{ smiley }}', '🧐', $html);
-            }
-            {
+            } else {
                 $html = str_replace('{{ smiley }}', '🤕', $html);
             }
 

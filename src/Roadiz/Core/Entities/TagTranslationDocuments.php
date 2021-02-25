@@ -25,7 +25,7 @@ class TagTranslationDocuments extends AbstractPositioned
      * @var TagTranslation|null
      * @Serializer\Exclude()
      */
-    protected $tagTranslation;
+    protected $tagTranslation = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Document", inversedBy="tagTranslations", fetch="EAGER", cascade={"persist", "merge"})
@@ -34,13 +34,13 @@ class TagTranslationDocuments extends AbstractPositioned
      * @Serializer\Groups({"tag"})
      * @Serializer\Type("RZ\Roadiz\Core\Entities\Document")
      */
-    protected $document;
+    protected $document = null;
 
     /**
      * Create a new relation between NodeSource, a Document and a NodeTypeField.
      *
-     * @param TagTranslation $tagTranslation
-     * @param Document $document
+     * @param TagTranslation|null $tagTranslation
+     * @param Document|null $document
      */
     public function __construct(TagTranslation $tagTranslation = null, Document $document = null)
     {

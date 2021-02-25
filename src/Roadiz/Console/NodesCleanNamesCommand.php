@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Utils\Node\NodeNameChecker;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,7 +17,6 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 /**
- * Class NodesCleanNamesCommand
  * @package RZ\Roadiz\Console
  */
 class NodesCleanNamesCommand extends Command
@@ -73,56 +73,61 @@ class NodesCleanNamesCommand extends Command
                 $io->note('Renaming ' . count($nodes) . ' nodes…');
                 $renameCount = 0;
                 $names = [];
+                /** @var NodeNamePolicyInterface $nodeNameChecker */
+                $nodeNameChecker = $this->getHelper('kernel')
+                    ->getKernel()
+                    ->get(NodeNamePolicyInterface::class);
 
                 /** @var Node $node */
                 foreach ($nodes as $node) {
-                    $nodeSource = $node->getNodeSources()->first();
-                    $prefixName = $nodeSource->getTitle() != "" ?
-                        $nodeSource->getTitle() :
-                        $node->getNodeName();
+                    $nodeSource = $node->getNodeSources()->first() ?: null;
+                    if ($nodeSource !== null) {
+                        $prefixName = $nodeSource->getTitle() != "" ?
+                            $nodeSource->getTitle() :
+                            $node->getNodeName();
 
-                    $prefixNameSlug = StringHandler::slugify($prefixName);
-                    /*
-                     * Proceed to rename only if best name is not the current
-                     * node-name AND if it is not ALREADY suffixed with a unique ID.
-                     */
-                    /** @var NodeNameChecker $nodeNameChecker */
-                    $nodeNameChecker = $this->getHelper('kernel')->getKernel()->get('utils.nodeNameChecker');
-                    if ($prefixNameSlug != $node->getNodeName() &&
-                        $nodeNameChecker->isNodeNameValid($prefixNameSlug) &&
-                        !$nodeNameChecker->isNodeNameWithUniqId($prefixNameSlug, $nodeSource->getNode()->getNodeName())) {
-                        $alreadyUsed = $nodeNameChecker->isNodeNameAlreadyUsed($prefixName);
-                        if (!$alreadyUsed) {
-                            $names[] = [
-                                $node->getNodeName(),
-                                $prefixNameSlug
-                            ];
-                            $node->setNodeName($prefixName);
-                        } else {
-                            if ($input->getOption('use-date') && $node->getNodeSources()->first() && null !== $node->getNodeSources()->first()->getPublishedAt()) {
-                                $suffixedNameSlug = $prefixNameSlug . '-' . $node->getNodeSources()->first()->getPublishedAt()->format('Y-m-d');
-                            } else {
-                                $suffixedNameSlug = $prefixNameSlug . '-' . uniqid();
-                            }
-                            if (!$nodeNameChecker->isNodeNameAlreadyUsed($suffixedNameSlug)) {
+                        $prefixNameSlug = $nodeNameChecker->getCanonicalNodeName($nodeSource);
+                        /*
+                         * Proceed to rename only if best name is not the current
+                         * node-name AND if it is not ALREADY suffixed with a unique ID.
+                         */
+                        if ($prefixNameSlug != $node->getNodeName() &&
+                            $nodeNameChecker->isNodeNameValid($prefixNameSlug) &&
+                            !$nodeNameChecker->isNodeNameWithUniqId($prefixNameSlug, $nodeSource->getNode()->getNodeName())) {
+                            $alreadyUsed = $nodeNameChecker->isNodeNameAlreadyUsed($prefixNameSlug);
+                            if (!$alreadyUsed) {
                                 $names[] = [
                                     $node->getNodeName(),
-                                    $suffixedNameSlug
+                                    $prefixNameSlug
                                 ];
-                                $node->setNodeName($suffixedNameSlug);
+                                $node->setNodeName($prefixNameSlug);
                             } else {
-                                $suffixedNameSlug = $prefixNameSlug . '-' . uniqid();
-                                $names[] = [
-                                    $node->getNodeName(),
-                                    $suffixedNameSlug
-                                ];
-                                $node->setNodeName($suffixedNameSlug);
+                                if ($input->getOption('use-date') &&
+                                    null !== $nodeSource->getPublishedAt()) {
+                                    $suffixedNameSlug = $nodeNameChecker->getDatestampedNodeName($nodeSource);
+                                } else {
+                                    $suffixedNameSlug = $nodeNameChecker->getSafeNodeName($nodeSource);
+                                }
+                                if (!$nodeNameChecker->isNodeNameAlreadyUsed($suffixedNameSlug)) {
+                                    $names[] = [
+                                        $node->getNodeName(),
+                                        $suffixedNameSlug
+                                    ];
+                                    $node->setNodeName($suffixedNameSlug);
+                                } else {
+                                    $suffixedNameSlug = $nodeNameChecker->getSafeNodeName($nodeSource);
+                                    $names[] = [
+                                        $node->getNodeName(),
+                                        $suffixedNameSlug
+                                    ];
+                                    $node->setNodeName($suffixedNameSlug);
+                                }
                             }
+                            if (!$input->getOption('dry-run')) {
+                                $this->entityManager->flush();
+                            }
+                            $renameCount++;
                         }
-                        if (!$input->getOption('dry-run')) {
-                            $this->entityManager->flush();
-                        }
-                        $renameCount++;
                     }
                 }
 

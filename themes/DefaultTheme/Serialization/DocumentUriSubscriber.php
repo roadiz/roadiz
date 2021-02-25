@@ -18,8 +18,6 @@ class DocumentUriSubscriber implements EventSubscriberInterface, ContainerAwareI
     use ContainerAwareTrait;
 
     /**
-     * DocumentUriSubscriber constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)

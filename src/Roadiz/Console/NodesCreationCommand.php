@@ -5,9 +5,9 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Utils\Node\NodeFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,12 +20,9 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  */
 class NodesCreationCommand extends Command
 {
-    /** @var SymfonyStyle */
-    protected $io;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    protected SymfonyStyle $io;
+    private EntityManagerInterface $entityManager;
+    private NodeFactory $nodeFactory;
 
     protected function configure()
     {
@@ -51,6 +48,7 @@ class NodesCreationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
+        $this->nodeFactory = $this->getHelper('kernel')->getKernel()->get(NodeFactory::class);
         $nodeName = $input->getArgument('node-name');
         $typeName = $input->getArgument('node-type');
         $locale = $input->getArgument('locale');
@@ -102,16 +100,11 @@ class NodesCreationCommand extends Command
         NodeType $type,
         Translation $translation
     ) {
-        $node = new Node($type);
-        $node->setTtl($node->getNodeType()->getDefaultTtl());
-        $node->setNodeName($nodeName);
-        $this->entityManager->persist($node);
-
-        // Source
-        $sourceClass = NodeType::getGeneratedEntitiesNamespace() . "\\" . $type->getSourceEntityClassName();
-        /** @var NodesSources $source */
-        $source = new $sourceClass($node, $translation);
-        $source->setTitle($nodeName);
+        $node = $this->nodeFactory->create($nodeName, $type, $translation);
+        $source = $node->getNodeSources()->first() ?: null;
+        if (null === $source) {
+            throw new \InvalidArgumentException('Node source is null');
+        }
         $fields = $type->getFields();
 
         foreach ($fields as $field) {
@@ -123,7 +116,6 @@ class NodesCreationCommand extends Command
             }
         }
 
-        $this->entityManager->persist($source);
         $this->entityManager->flush();
         $this->io->success('Node “' . $nodeName . '” created at root level.');
     }

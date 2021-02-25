@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\ColorType;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueCustomFormName;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\CustomForm;
 use Symfony\Component\Form\AbstractType;
@@ -20,9 +19,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-/**
- *
- */
 class CustomFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -34,10 +30,6 @@ class CustomFormType extends AbstractType
                     new NotBlank(),
                     new Length([
                         'max' => 255,
-                    ]),
-                    new UniqueCustomFormName([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['name'],
                     ]),
                 ],
             ])
@@ -89,12 +81,12 @@ class CustomFormType extends AbstractType
             'attr' => [
                 'class' => 'uk-form custom-form-form',
             ],
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => ['name']
+                ])
+            ]
         ]);
-
-        $resolver->setRequired([
-            'em',
-        ]);
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('name', 'string');
     }
 }

@@ -8,6 +8,10 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Attribute\Event\AttributeValueIndexingSubscriber;
 use RZ\Roadiz\Attribute\Event\AttributeValueLifeCycleSubscriber;
+use RZ\Roadiz\Attribute\Form\AttributeDocumentType;
+use RZ\Roadiz\Attribute\Form\AttributeGroupsType;
+use RZ\Roadiz\Attribute\Form\AttributeGroupTranslationType;
+use RZ\Roadiz\Attribute\Form\AttributeTranslationType;
 use RZ\Roadiz\Attribute\Importer\AttributeImporter;
 use RZ\Roadiz\Attribute\Serializer\AttributeGroupObjectConstructor;
 use RZ\Roadiz\Attribute\Serializer\AttributeGroupTranslationObjectConstructor;
@@ -25,6 +29,18 @@ class AttributesServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $container)
     {
+        $container[AttributeDocumentType::class] = function (Container $c) {
+            return new AttributeDocumentType($c['em']);
+        };
+        $container[AttributeTranslationType::class] = function (Container $c) {
+            return new AttributeTranslationType($c['em']);
+        };
+        $container[AttributeGroupTranslationType::class] = function (Container $c) {
+            return new AttributeGroupTranslationType($c['em']);
+        };
+        $container[AttributeGroupsType::class] = function (Container $c) {
+            return new AttributeGroupsType($c['em']);
+        };
         $container[AttributeImporter::class] = $container->factory(function ($c) {
             return new AttributeImporter($c);
         });

@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Core\Repositories;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
@@ -21,12 +21,11 @@ use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderApplyEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderBuildEvent;
 use RZ\Roadiz\Core\Events\QueryBuilder\QueryBuilderSelectEvent;
 use RZ\Roadiz\Core\Events\QueryEvent;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 /**
- * EntityRepository that implements a simple countBy method.
- *
  * @template T
  * @extends \Doctrine\ORM\EntityRepository<T>
  */
@@ -34,27 +33,23 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var bool
-     */
-    protected $isPreview;
+    protected PreviewResolverInterface $previewResolver;
 
     /**
-     * EntityRepository constructor.
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      * @param Mapping\ClassMetadata $class
      * @param Container $container
-     * @param bool $isPreview
+     * @param PreviewResolverInterface $previewResolver
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         Mapping\ClassMetadata $class,
         Container $container,
-        $isPreview = false
+        PreviewResolverInterface $previewResolver
     ) {
         parent::__construct($em, $class);
-        $this->isPreview = $isPreview;
         $this->container = $container;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -89,7 +84,7 @@ class EntityRepository extends \Doctrine\ORM\EntityRepository implements Contain
 
     /**
      * Doctrine column types that can be search
-     * with LIKE feature.
+     * with LIKE feature.
      *
      * @var array
      */

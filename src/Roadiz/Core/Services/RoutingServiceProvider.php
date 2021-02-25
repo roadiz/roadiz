@@ -5,16 +5,22 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\CMS\Controllers\DefaultController;
+use RZ\Roadiz\CMS\Controllers\RedirectionController;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Core\Routing\InstallRouteCollection;
 use RZ\Roadiz\Core\Routing\NodeRouter;
+use RZ\Roadiz\Core\Routing\NodesSourcesPathResolver;
+use RZ\Roadiz\Core\Routing\NodeUrlMatcher;
 use RZ\Roadiz\Core\Routing\RedirectionRouter;
 use RZ\Roadiz\Core\Routing\RoadizRouteCollection;
 use RZ\Roadiz\Core\Routing\StaticRouter;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Cmf\Component\Routing\ChainRouter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
+use Symfony\Component\HttpKernel\Controller\ContainerControllerResolver;
+use Symfony\Component\HttpKernel\Controller\ControllerResolverInterface;
 use Symfony\Component\HttpKernel\EventListener\RouterListener;
 use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Routing\RequestContext;
@@ -27,12 +33,39 @@ class RoutingServiceProvider implements ServiceProviderInterface
 {
     /**
      * @param Container $container
-     * @return Container
+     * @return void
      */
     public function register(Container $container)
     {
         $container['httpKernel'] = function (Container $c) {
-            return new HttpKernel($c['dispatcher'], $c['resolver'], $c['requestStack'], $c['argumentResolver']);
+            return new HttpKernel(
+                $c['dispatcher'],
+                $c[ControllerResolverInterface::class],
+                $c['requestStack'],
+                $c['argumentResolver']
+            );
+        };
+
+        /*
+         * Use a proxy for cyclic dependency issue with EventDispatcher
+         */
+        $container['proxy.httpKernel'] = function (Container $c) {
+            $factory = new \ProxyManager\Factory\LazyLoadingValueHolderFactory();
+            return $factory->createProxy(
+                HttpKernel::class,
+                function (&$wrappedObject, $proxy, $method, $parameters, &$initializer) use ($c) {
+                    $wrappedObject = $c['httpKernel']; // instantiation logic here
+                    $initializer = null; // turning off further lazy initialization
+                    return true;
+                }
+            );
+        };
+
+        /*
+         * Required for HttpKernel AbstractSessionListener
+         */
+        $container['request_stack'] = function (Container $c) {
+            return $c['requestStack'];
         };
 
         $container['requestStack'] = function () {
@@ -43,8 +76,8 @@ class RoutingServiceProvider implements ServiceProviderInterface
             return new RequestContext();
         };
 
-        $container['resolver'] = function () {
-            return new ControllerResolver();
+        $container[ControllerResolverInterface::class] = function (Container $c) {
+            return new ContainerControllerResolver(new \Pimple\Psr11\Container($c));
         };
 
         $container['argumentResolver'] = function () {
@@ -66,6 +99,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
 
             return $router;
         };
+
         $container['staticRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
@@ -86,22 +120,47 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $c['logger']
             );
         };
+
+        $container[NodesSourcesPathResolver::class] = function (Container $c) {
+            return new NodesSourcesPathResolver(
+                $c['em'],
+                $c[PreviewResolverInterface::class],
+                $c['stopwatch']
+            );
+        };
+
+        /*
+         * Defines fallback controller class for nodes-sources
+         * when a dedicated controller is not found inside current theme
+         */
+        $container['nodeDefaultControllerClass'] = DefaultController::class;
+
+        $container[NodeUrlMatcher::class] = function (Container $c) {
+            return new NodeUrlMatcher(
+                $c[NodesSourcesPathResolver::class],
+                $c['requestContext'],
+                $c['themeResolver'],
+                $c[PreviewResolverInterface::class],
+                $c['stopwatch'],
+                $c['logger'],
+                $c['nodeDefaultControllerClass']
+            );
+        };
+
         $container['nodeRouter'] = function (Container $c) {
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             $router = new NodeRouter(
-                $c['em'],
+                $c[NodeUrlMatcher::class],
                 $c['themeResolver'],
                 $c['settingsBag'],
-                $c['dispatcher'],
+                $c['proxy.dispatcher'],
                 [
                     'cache_dir' => $kernel->getCacheDir() . '/routing',
                     'debug' => $kernel->isDebug(),
                 ],
                 $c['requestContext'],
-                $c['logger'],
-                $c['stopwatch'],
-                $kernel->isPreview()
+                $c['logger']
             );
             $router->setNodeSourceUrlCacheProvider($c['nodesSourcesUrlCacheProvider']);
             return $router;
@@ -123,7 +182,7 @@ class RoutingServiceProvider implements ServiceProviderInterface
         };
 
         /*
-         * As we are using CMF ChainRouter, it take responsability for
+         * As we are using CMF ChainRouter, it takes responsibility for
          * URL generation.
          */
         $container['urlGenerator'] = function (Container $c) {
@@ -159,13 +218,16 @@ class RoutingServiceProvider implements ServiceProviderInterface
                 $collection = new RoadizRouteCollection(
                     $c['themeResolver'],
                     $c['settingsBag'],
-                    $c['stopwatch'],
-                    $kernel->isPreview()
+                    $c[PreviewResolverInterface::class],
+                    $c['stopwatch']
                 );
 
                 return $collection;
             }
         };
-        return $container;
+
+        $container[RedirectionController::class] = function (Container $c) {
+            return new RedirectionController($c['router']);
+        };
     }
 }

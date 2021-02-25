@@ -16,18 +16,10 @@ use RZ\Roadiz\Core\Entities\UrlAlias;
 
 final class NodeTranstyper
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
+    private LoggerInterface $logger;
 
     /**
-     * NodeTranstyper constructor.
-     *
      * @param EntityManagerInterface $entityManager
      * @param LoggerInterface        $logger
      */

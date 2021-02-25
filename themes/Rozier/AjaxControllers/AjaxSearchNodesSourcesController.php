@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
- * Class AjaxSearchNodesSourcesController
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxSearchNodesSourcesController extends AbstractAjaxController

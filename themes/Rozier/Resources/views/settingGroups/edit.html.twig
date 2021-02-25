@@ -4,8 +4,13 @@
 <section class="content-global">
 
     <header class="content-header header-settingGroup header-settingGroup-add">
-       <h1 class="content-title settingGroup-list-title">{{ "edit.settingGroup.%name%"|trans({'%name%': settingGroup.getName })|u.truncate(25, '[…]', true) }}</h1>
-       <a class="content-header-nav-back uk-navbar-content" href="{{ path('settingGroupsHomePage') }}" title="{% trans %}back_to.settingGroups{% endtrans %}" data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+       <h1 class="content-title settingGroup-list-title">
+           {{- "edit.settingGroup.%name%"|trans({'%name%': item.name })|u.truncate(25, '[…]', true) -}}
+       </h1>
+       <a class="content-header-nav-back uk-navbar-content"
+          href="{{ path('settingGroupsHomePage') }}"
+          title="{% trans %}back_to.settingGroups{% endtrans %}"
+          data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
     </header>
 
     <article class="content content-settingGroup-edit">
@@ -13,7 +18,9 @@
         {{ form_start(form, { attr: { id: 'edit-settingGroup-form'}}) }}
             {{ form_widget(form) }}
             <fieldset data-uk-margin>
-                <button data-action-save="#edit-settingGroup-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                <button data-action-save="#edit-settingGroup-form"
+                        class="uk-button uk-button-primary rz-action-save"
+                        type="submit">
                     <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
                     <span class="label"><span class="label-text">{% trans %}save.settingGroup{% endtrans %}</span></span>
                 </button>

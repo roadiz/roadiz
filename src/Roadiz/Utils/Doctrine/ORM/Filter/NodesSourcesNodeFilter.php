@@ -9,8 +9,6 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Class NodeTypeFilter.
- *
  * Filter on nodeType fields when criteria contains nodeType. prefix.
  *
  * @package RZ\Roadiz\Utils\Doctrine\ORM\Filter

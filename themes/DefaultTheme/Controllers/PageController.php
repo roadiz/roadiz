@@ -32,6 +32,7 @@ namespace Themes\DefaultTheme\Controllers;
 
 use JMS\Serializer\SerializationContext;
 use RZ\Roadiz\CMS\Forms\NodeSource\NodeSourceType;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -66,17 +67,17 @@ class PageController extends DefaultThemeApp
     /**
      * Default action for any Page node.
      *
-     * @param Request     $request
-     * @param Node        $node
-     * @param Translation $translation
-     * @param string      $_format
+     * @param Request $request
+     * @param Node|null $node
+     * @param TranslationInterface|null $translation
+     * @param string $_format
      *
      * @return Response
      */
     public function indexAction(
         Request $request,
         Node $node = null,
-        Translation $translation = null,
+        TranslationInterface $translation = null,
         $_format = 'html'
     ) {
         $this->prepareThemeAssignation($node, $translation);
@@ -93,7 +94,7 @@ class PageController extends DefaultThemeApp
         /*
          * You can add a NodeSourceType form to edit it
          * right into your front page.
-         * Awesome isn’t it ?
+         * Awesome isn’t it?
          */
         if ($request->getRequestFormat() === 'json') {
             $response = new JsonResponse(
@@ -132,9 +133,6 @@ class PageController extends DefaultThemeApp
             [
                 'class' => $this->node->getNodeType()->getSourceEntityFullQualifiedClassName(),
                 'nodeType' => $this->node->getNodeType(),
-                'controller' => $this,
-                'entityManager' => $this->get('em'),
-                'container' => $this->getContainer(),
                 'withVirtual' => false,
                 'withTitle' => false,
             ]

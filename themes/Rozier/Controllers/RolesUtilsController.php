@@ -16,58 +16,24 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class RolesUtilsController
- *
  * @package Themes\Rozier\Controllers
  */
 class RolesUtilsController extends RozierApp
 {
     /**
-     * Export all Roles data in a Json file
+     * Export a Role in a Json file
      *
      * @param Request $request
+     * @param int $id
      *
      * @return Response
      */
-    public function exportAllAction(Request $request)
+    public function exportAction(Request $request, int $id)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
 
-        $existingRole = $this->get('em')
-                             ->getRepository(Role::class)
-                             ->findAll();
-
-        /** @var Serializer $serializer */
-        $serializer = $this->get('serializer');
-
-        return new JsonResponse(
-            $serializer->serialize(
-                $existingRole,
-                'json',
-                SerializationContext::create()->setGroups(['role'])
-            ),
-            JsonResponse::HTTP_OK,
-            [
-                'Content-Disposition' => sprintf('attachment; filename="%s"', 'role-all-' . date("YmdHis") . '.json'),
-            ],
-            true
-        );
-    }
-
-    /**
-     * Export a Role in a Json file (.rzt).
-     *
-     * @param Request $request
-     * @param int     $roleId
-     *
-     * @return Response
-     */
-    public function exportAction(Request $request, $roleId)
-    {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_ROLES');
-
-        $existingRole = $this->get('em')
-                             ->find(Role::class, (int) $roleId);
+        /** @var Role|null $existingRole */
+        $existingRole = $this->get('em')->find(Role::class, $id);
 
         if (null === $existingRole) {
             throw $this->createNotFoundException();
@@ -91,12 +57,11 @@ class RolesUtilsController extends RozierApp
     }
 
     /**
-     * Import a Json file (.rzt) containing Roles.
+     * Import a Json file containing Roles.
      *
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function importJsonFileAction(Request $request)
     {

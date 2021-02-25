@@ -5,153 +5,78 @@
       <trans-unit id="hello.world">
         <source>hello.world</source>
         <target state="translated">Ciao mondo!</target>
-        <alt-trans>
-          <target>ciao mondo</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="nodeName">
         <source>node.name.is.%name%</source>
         <target state="translated">Il nome del nodo è %name%</target>
-        <alt-trans>
-          <target>il nome del nodo è %name%</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="translationName">
         <source>translation.is.%name%</source>
         <target state="translated">Questa è la traduzione di "%name%"</target>
-        <alt-trans>
-          <target>siamo in %name%</target>
-        </alt-trans>
-        <alt-trans>
-          <target>la traduzione è %name%</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="contact">
         <source>contact</source>
         <target state="translated">Contatto</target>
-        <alt-trans>
-          <target>contatto</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="contact.us">
         <source>contact.us</source>
         <target state="translated">Contattaci</target>
-        <alt-trans>
-          <target>contattaci</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="your.email">
         <source>your.email</source>
         <target state="translated">La tua email</target>
-        <alt-trans>
-          <target>la tua email</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="your.name">
         <source>your.name</source>
         <target state="translated">Il tuo nome</target>
-        <alt-trans>
-          <target>il tuo nome</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="your.message">
         <source>your.message</source>
         <target state="translated">Il tuo messaggio</target>
-        <alt-trans>
-          <target>il tuo messaggio</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="call.me.back">
         <source>call.me.back</source>
         <target state="translated">Richiamami</target>
-        <alt-trans>
-          <target>richiamami</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="send.contact.form">
         <source>send.contact.form</source>
         <target state="translated">Manda modulo </target>
-        <alt-trans>
-          <target>manda modulo di contatto</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="document">
         <source><![CDATA[document]]></source>
         <target state="translated"><![CDATA[Allega un immagine un PDF (<5 MB)]]></target>
-        <alt-trans>
-          <target><![CDATA[allegare un documento]]></target>
-        </alt-trans>
-        <alt-trans>
-          <target><![CDATA[documento]]></target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="cookie_choice.consent_message">
         <source>cookie_choice.consent_message</source>
         <target state="translated">continuando la navigazione su questo sito, accetto l'utilizzo dei cookies</target>
-        <alt-trans>
-          <target>accetto</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="cookie_choice.close_message">
         <source>cookie_choice.close_message</source>
         <target state="translated">Va bene</target>
-        <alt-trans>
-          <target>va bene</target>
-        </alt-trans>
-        <alt-trans>
-          <target>rifiuto</target>
-        </alt-trans>
-        <alt-trans>
-          <target>rifiuta</target>
-        </alt-trans>
-        <alt-trans>
-          <target>accetto</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="cookie_choice.find_out_more_message">
         <source>cookie_choice.find_out_more_message</source>
         <target state="translated">Scopri di più</target>
-        <alt-trans>
-          <target>scopri di più</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="no_javascript_message">
         <source>no_javascript_message</source>
         <target state="translated">JavaScript è disabilitato sul tuo browser o non supporta questa tecnologia. Per favore accetta o aggiorna il tuo browser per una navigazione migliore.</target>
-        <alt-trans>
-          <target>javaScript è disabilitato sul tuo browser o non supporta questa tecnologia. Per favore accetta o aggiorna il tuo browser per una navigazione migliore</target>
-        </alt-trans>
-        <alt-trans>
-          <target>JavaScript è disabilitato sul tuo browser o non supporta questa tecnologia. Perfavore accetta o aggiorna il tuo browser per ricevere una navigazione migliore.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="browser_update.message">
         <source>browser_update.message</source>
         <target state="translated">Il tuo browser è datato. Ha dei problemi di sicurezza e potrebbe non far vedere alcuni dettagli del sito</target>
-        <alt-trans>
-          <target>il tuo browser è datato. Ha dei problemi di sicurezza e potrebbe non far vedere alcuni dettagli del sito</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="browser_update.link">
         <source>browser_update.link</source>
         <target state="translated">Guarda come aggiornare il tuo browser</target>
-        <alt-trans>
-          <target>guarda come aggiornare il tuo browser</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="error404.title">
         <source>error404.title</source>
         <target state="translated">Errore 404 </target>
-        <alt-trans>
-          <target>errore 404 </target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="error404.message">
         <source>error404.message</source>
         <target state="translated">La pagina richiesta non può essere trovata.</target>
-        <alt-trans>
-          <target>la pagina richiesta non può essere trovata</target>
-        </alt-trans>
       </trans-unit>
     </body>
   </file>

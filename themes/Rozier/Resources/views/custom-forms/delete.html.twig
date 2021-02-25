@@ -1,23 +1,34 @@
-{% extends '@Rozier/layout.html.twig' %}
+{% extends "admin/base.html.twig" %}
 
-{% block content %}
-<section class="content-global">
+{%- block content_title -%}
+    {{- "delete.customForm.%name%"|trans({'%name%': item.displayName})|u.truncate(30, '[…]', true) -}}
+{%- endblock -%}
 
-    <header class="content-header header-node-types header-node-types-delete">
-        <h1 class="content-title node-delete-title">{{ "delete.customForm.%name%"|trans({'%name%': customForm.getDisplayName})|u.truncate(25, '[…]', true) }}</h1>
-    </header>
+{%- block content_header_nav -%}
+    <a class="content-header-nav-back uk-navbar-content"
+       href="{{ path('customFormsHomePage') }}"
+       title="{% trans %}back_to.customForms{% endtrans %}"
+       data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+{%- endblock -%}
 
-    <article class="content content-delete content-node-types-delete content-no-action-menu">
+{%- block content_body -%}
+    <article class="content content-delete content-no-action-menu">
         {% form_theme form '@Rozier/forms.html.twig' %}
         {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <fieldset data-uk-margin>
-                <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.customForm{% endtrans %}</legend>
-                <a href="{{ path('customFormsHomePage') }}" class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
-                <button class="uk-button uk-button-danger" type="submit"><i class="uk-icon-trash-o"></i> {% trans %}delete{% endtrans %}</button>
-            </fieldset>
+        {{ form_widget(form) }}
+        <fieldset data-uk-margin>
+            <legend class="uk-alert uk-alert-danger"><i class="uk-icon uk-icon-warning"></i> {% trans %}are_you_sure.delete.customForm{% endtrans %}</legend>
+            {% apply spaceless %}
+                <a href="{{ path('customFormsHomePage') }}"
+                   class="uk-button"><i class="uk-icon-rz-back-parent"></i> {% trans %}cancel{% endtrans %}</a>
+                <button class="uk-button uk-button-danger" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-trash-o"></i></span>
+                    <span class="label"><span class="label-text">{% block content_form_submit_label %}
+                                {%- trans -%}delete{%- endtrans -%}
+                            {% endblock %}</span></span>
+                </button>
+            {% endapply %}
+        </fieldset>
         {{ form_end(form) }}
     </article>
-
-</section>
-{% endblock %}
+{%- endblock -%}

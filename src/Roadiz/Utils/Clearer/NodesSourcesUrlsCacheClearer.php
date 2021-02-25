@@ -5,12 +5,9 @@ namespace RZ\Roadiz\Utils\Clearer;
 
 use Doctrine\Common\Cache\CacheProvider;
 
-/**
- * NodesSourcesUrlsCacheClearer.
- */
 class NodesSourcesUrlsCacheClearer extends Clearer
 {
-    private $cacheProvider;
+    private CacheProvider $cacheProvider;
 
     public function __construct(CacheProvider $cacheProvider)
     {
@@ -18,7 +15,7 @@ class NodesSourcesUrlsCacheClearer extends Clearer
         $this->cacheProvider = $cacheProvider;
     }
 
-    public function clear()
+    public function clear(): bool
     {
         $this->output .= 'Node-sources URLs cache ' . $this->cacheProvider->getNamespace() . ': ';
 

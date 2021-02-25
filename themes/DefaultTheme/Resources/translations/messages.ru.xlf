@@ -4,47 +4,79 @@
     <body>
       <trans-unit id="hello.world">
         <source>hello.world</source>
-        <target xml:lang="ru" state="translated">Привет мир!</target>
+        <target state="translated">Привет мир!</target>
       </trans-unit>
       <trans-unit id="nodeName">
         <source>node.name.is.%name%</source>
-        <target xml:lang="ru" state="translated">Это узел %name%</target>
+        <target state="translated">Это узел %name%</target>
       </trans-unit>
       <trans-unit id="translationName">
         <source>translation.is.%name%</source>
-        <target xml:lang="ru" state="translated">Это перевод "%name%"</target>
+        <target state="translated">Это перевод "%name%"</target>
       </trans-unit>
       <trans-unit id="contact">
         <source>contact</source>
-        <target xml:lang="ru" state="translated">Контакты</target>
+        <target state="translated">Контакты</target>
       </trans-unit>
       <trans-unit id="contact.us">
         <source>contact.us</source>
-        <target xml:lang="ru" state="translated">Свяжитесь с нами</target>
+        <target state="translated">Свяжитесь с нами</target>
       </trans-unit>
       <trans-unit id="your.email">
         <source>your.email</source>
-        <target xml:lang="ru" state="translated">Ваш адрес электронной почты</target>
+        <target state="translated">Ваш адрес электронной почты</target>
       </trans-unit>
       <trans-unit id="your.name">
         <source>your.name</source>
-        <target xml:lang="ru" state="translated">Ваше имя</target>
+        <target state="translated">Ваше имя</target>
       </trans-unit>
       <trans-unit id="your.message">
         <source>your.message</source>
-        <target xml:lang="ru" state="translated">Ваше сообщение</target>
+        <target state="translated">Ваше сообщение</target>
       </trans-unit>
       <trans-unit id="call.me.back">
         <source>call.me.back</source>
-        <target xml:lang="ru" state="translated">Перезвоните мне</target>
+        <target state="translated">Перезвоните мне</target>
       </trans-unit>
       <trans-unit id="send.contact.form">
         <source>send.contact.form</source>
-        <target xml:lang="ru" state="translated">Отправить форму</target>
+        <target state="translated">Отправить форму</target>
       </trans-unit>
       <trans-unit id="document">
-        <source>document</source>
-        <target xml:lang="ru" state="translated">Прикрепите картинку или PDF (не больше 5 Мб)</target>
+        <source><![CDATA[document]]></source>
+        <target state="translated"><![CDATA[Прикрепите картинку или PDF (не больше 5 Мб)]]></target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.consent_message">
+        <source>cookie_choice.consent_message</source>
+        <target state="translated">Мы используем файлы cookie, чтобы улучшить ваш опыт работы на нашем веб-сайте. Продолжая работу на нашем веб-сайте, вы даете нам свое согласие на установку этих файлов cookie.</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.close_message">
+        <source>cookie_choice.close_message</source>
+        <target state="translated">Всё хорошо</target>
+      </trans-unit>
+      <trans-unit id="cookie_choice.find_out_more_message">
+        <source>cookie_choice.find_out_more_message</source>
+        <target state="translated">Узнать больше</target>
+      </trans-unit>
+      <trans-unit id="no_javascript_message">
+        <source>no_javascript_message</source>
+        <target state="translated">JavaScript отключен в вашем браузере или не поддерживает эту технологию. Включите или обновите браузер, чтобы получить лучший обзор.</target>
+      </trans-unit>
+      <trans-unit id="browser_update.message">
+        <source>browser_update.message</source>
+        <target state="translated">Ваш браузер устарел. У него есть некоторые погрешности в системе безопасности, и он не смог правильно показать некоторые функции этого веб-сайта.</target>
+      </trans-unit>
+      <trans-unit id="browser_update.link">
+        <source>browser_update.link</source>
+        <target state="translated">Узнайте, как обновить браузер</target>
+      </trans-unit>
+      <trans-unit id="error404.title">
+        <source>error404.title</source>
+        <target state="translated">Ошибка 404</target>
+      </trans-unit>
+      <trans-unit id="error404.message">
+        <source>error404.message</source>
+        <target state="translated">Запрошенная страница не найдена.</target>
       </trans-unit>
     </body>
   </file>

@@ -16,11 +16,8 @@ use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Themes\Rozier\Forms\LoginType;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
 /**
- * Class LoginController
- *
  * @package Themes\Rozier\Controllers
  */
 class LoginController extends RozierApp
@@ -29,7 +26,6 @@ class LoginController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -37,10 +33,7 @@ class LoginController extends RozierApp
             return $this->redirect($this->generateUrl('adminHomePage'));
         }
 
-        $form = $this->createForm(LoginType::class, null, [
-            'urlGenerator' => $this->get('urlGenerator'),
-            'requestStack' => $this->get('requestStack'),
-        ]);
+        $form = $this->createForm(LoginType::class);
         $this->assignation['form'] = $form->createView();
 
         $helper = $this->get('securityAuthenticationUtils');
@@ -69,7 +62,6 @@ class LoginController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function checkAction(Request $request)
     {
@@ -80,7 +72,6 @@ class LoginController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function logoutAction(Request $request)
     {
@@ -95,7 +86,6 @@ class LoginController extends RozierApp
     public function imageAction(Request $request)
     {
         $response = new JsonResponse();
-
         if (null !== $document = $this->get('settingsBag')->getDocument('login_image')) {
             if ($document instanceof Document && $document->isProcessable()) {
                 /** @var DocumentUrlGeneratorInterface $documentUrlGenerator */
@@ -110,7 +100,7 @@ class LoginController extends RozierApp
                 $response->setData([
                     'url' => $documentUrlGenerator->getUrl()
                 ]);
-                return $this->makeResponseCachable($request, $response, 60);
+                return $this->makeResponseCachable($request, $response, 60, true);
             }
         }
         $splash = new SplashbasePictureFinder();
@@ -119,6 +109,6 @@ class LoginController extends RozierApp
             throw new ResourceNotFoundException();
         }
         $response->setData($feed);
-        return $this->makeResponseCachable($request, $response, 60);
+        return $this->makeResponseCachable($request, $response, 60, true);
     }
 }

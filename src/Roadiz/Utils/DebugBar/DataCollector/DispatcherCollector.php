@@ -9,13 +9,9 @@ use Symfony\Component\EventDispatcher\Debug\WrappedListener;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DispatcherCollector extends DataCollector implements Renderable
+final class DispatcherCollector extends DataCollector implements Renderable
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $dispatcher;
-
+    private EventDispatcherInterface $dispatcher;
 
     /**
      * @param EventDispatcherInterface $dispatcher
@@ -26,7 +22,7 @@ class DispatcherCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function collect()
     {
@@ -60,7 +56,7 @@ class DispatcherCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function getName()
     {
@@ -68,7 +64,7 @@ class DispatcherCollector extends DataCollector implements Renderable
     }
 
     /**
-     * @{inheritDoc}
+     * @inheritDoc
      */
     public function getWidgets()
     {

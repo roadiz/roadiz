@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
-use RZ\Roadiz\CMS\Controllers\Controller;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -12,8 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class AbstractWidget
 {
-    protected $controller;
+    /**
+     * @var Request
+     */
     protected $request;
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
 
     /**
      * @return Request
@@ -22,21 +28,14 @@ abstract class AbstractWidget
     {
         return $this->request;
     }
-    /**
-     * @return Controller
-     */
-    protected function getController()
-    {
-        return $this->controller;
-    }
 
     /**
-     * @param Request    $request           Current kernel request
-     * @param Controller $refereeController Referee controller to get Twig, security context from.
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(Request $request, Controller $refereeController)
+    public function __construct(Request $request, EntityManagerInterface $entityManager)
     {
-        $this->controller = $refereeController;
         $this->request = $request;
+        $this->entityManager = $entityManager;
     }
 }

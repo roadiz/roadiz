@@ -43,9 +43,6 @@
       <trans-unit id="form.has.errors">
         <source>form.has.errors</source>
         <target state="translated">Il tuo modulo non è valido, per favore completa correttamente i campi obbligatori.</target>
-        <alt-trans>
-          <target>Il tuo modulo non è valido, perfavore completa correttamente i campi obbligatori.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="%field%.is.mandatory">
         <source>%field%.is.mandatory</source>
@@ -86,7 +83,7 @@
       <trans-unit xml:space="preserve" id="file.not.accepted">
                 <source>file.not.accepted</source>
                 <target state="translated">Il file allegato non può essere accettato.</target>
-            <alt-trans><target>file non accettato</target></alt-trans></trans-unit>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.answer.sent">
                 <source>customForm.answer.sent</source>
                 <target state="translated">La sua risposta è stata inviata con successo.</target>
@@ -130,31 +127,19 @@
       <trans-unit xml:space="preserve" id="website.is.under.maintenance">
                 <source>website.is.under.maintenance</source>
                 <target state="translated">Il sito è in manutenzione</target>
-            <alt-trans><target>il sito è in manutenzione</target></alt-trans></trans-unit>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon">
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
                 <target state="translated">il sito è in manutenzione, sarà pronto a breve!</target>
-            <alt-trans><target>il sito è in manutenzione, sarà pronto a breve</target></alt-trans></trans-unit>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="yaml.is.not.valid">
                 <source>yaml.is.not.valid.{{ error }}</source>
                 <target state="translated">Il codice YAML non è valido ({{ error }}).</target>
-            <alt-trans><target>yaml non è valido {{ error }}</target></alt-trans></trans-unit>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="value.is.already.used">
                 <source>value.is.already.used</source>
                 <target state="translated">Valore già utilizzato.</target>
                 <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="password_should_contains_at_least_one_capital_one_digit">
-                <source>password_should_contains_at_least_one_capital_one_digit</source>
-                <target state="needs-translation">password_should_contains_at_least_one_capital_one_digit</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="password_blacklisted">
-                <source>password_blacklisted</source>
-                <target state="needs-translation">password_blacklisted</target>
-            </trans-unit>
-      <trans-unit xml:space="preserve" id="password_should_be_at_least_characters_long">
-                <source>password_should_be_at_least_{{length}}_characters_long</source>
-                <target state="needs-translation">password_should_be_at_least_{{length}}_characters_long</target>
             </trans-unit>
     </body>
   </file>

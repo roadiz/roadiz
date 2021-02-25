@@ -5,13 +5,21 @@ namespace RZ\Roadiz\Console;
 
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper;
+use Doctrine\Migrations\Configuration\Connection\ExistingConnection;
+use Doctrine\Migrations\Configuration\EntityManager\EntityManagerLoader;
+use Doctrine\Migrations\Configuration\EntityManager\ExistingEntityManager;
+use Doctrine\Migrations\Configuration\Migration\ConfigurationArray;
+use Doctrine\Migrations\DependencyFactory;
+use Doctrine\Migrations\Tools\Console\ConsoleRunner;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Console\Command\InfoCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\CreateCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\DropCommand;
 use Doctrine\ORM\Tools\Console\Command\SchemaTool\UpdateCommand;
 use Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand;
 use Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper;
+use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\Exceptions\NoConfigurationFoundException;
 use RZ\Roadiz\Core\Kernel;
@@ -43,7 +51,6 @@ class RoadizApplication extends Application
     protected $kernel;
 
     /**
-     * RoadizApplication constructor.
      * @param Kernel $kernel
      */
     public function __construct(Kernel $kernel)
@@ -104,13 +111,14 @@ class RoadizApplication extends Application
 
     protected function addDoctrineCommands()
     {
-        $this->addCommands([
-            new CreateCommand(),
-            new UpdateCommand(),
-            new DropCommand(),
-            new ValidateSchemaCommand(),
-            new InfoCommand(),
-        ]);
+        try {
+            /** @var EntityManagerInterface $entityManager */
+            $entityManager = $this->kernel->get('em');
+            \Doctrine\ORM\Tools\Console\ConsoleRunner::addCommands($this);
+            ConsoleRunner::addCommands($this, $this->kernel->get(DependencyFactory::class));
+        } catch (ConnectionException $exception) {
+        } catch (\PDOException $exception) {
+        }
     }
 
     /**
@@ -163,7 +171,7 @@ class RoadizApplication extends Application
         $helperSet->set(new KernelHelper($this->kernel));
         $helperSet->set(new LoggerHelper($this->kernel));
         $helperSet->set(new ThemeResolverHelper($this->kernel->get('themeResolver')));
-        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get('config.handler')));
+        $helperSet->set(new ConfigurationHandlerHelper($this->kernel->get(ConfigurationHandlerInterface::class)));
         $helperSet->set(new AssetPackagesHelper($this->kernel->getContainer()));
         $helperSet->set(new CacheProviderHelper($this->kernel->get('nodesSourcesUrlCacheProvider')));
 

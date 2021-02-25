@@ -24,6 +24,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -60,7 +61,7 @@ class ThemeInstallCommand extends Command implements ContainerAwareInterface
             ->addArgument(
                 'classname',
                 InputArgument::REQUIRED,
-                'Main theme classname (Use / instead of \\ and do not forget starting slash)'
+                'Main theme classname (Use / instead of \\ and do not forget starting slash) or path to config.yml'
             )
             ->addOption(
                 'data',
@@ -90,20 +91,34 @@ class ThemeInstallCommand extends Command implements ContainerAwareInterface
         $this->io = new SymfonyStyle($input, $output);
 
         /*
-         * Replace slash by anti-slashes
+         * Test if Classname is not a valid yaml file before using Theme
          */
-        $classname = str_replace('/', '\\', $input->getArgument('classname'));
-        $this->themeInfo = new ThemeInfo($classname, $this->get('kernel')->getProjectDir());
-        $this->themeConfigPath = $this->themeInfo->getThemePath() . '/config.yml';
-        if (!$this->themeInfo->isValid()) {
-            throw new RuntimeException($this->themeInfo->getClassname() . ' is not a valid Roadiz theme.');
-        }
-        if (!file_exists($this->themeConfigPath)) {
-            $this->io->warning($this->themeInfo->getName() .' theme does not have any configuration.');
-            return 1;
+        if ((new UnicodeString($input->getArgument('classname')))->endsWith('config.yml')) {
+            $classname = realpath($input->getArgument('classname'));
+            if (file_exists($classname)) {
+                $this->io->note('Install assets directly from file: '. $classname);
+                $this->themeConfigPath = $classname;
+            } else {
+                $this->io->error($classname .' configuration file is not readable.');
+                return 1;
+            }
+        } else {
+            /*
+             * Replace slash by anti-slashes
+             */
+            $classname = str_replace('/', '\\', $input->getArgument('classname'));
+            $this->themeInfo = new ThemeInfo($classname, $this->get('kernel')->getProjectDir());
+            $this->themeConfigPath = $this->themeInfo->getThemePath() . '/config.yml';
+            if (!$this->themeInfo->isValid()) {
+                throw new RuntimeException($this->themeInfo->getClassname() . ' is not a valid Roadiz theme.');
+            }
+            if (!file_exists($this->themeConfigPath)) {
+                $this->io->warning($this->themeInfo->getName() .' theme does not have any configuration.');
+                return 1;
+            }
         }
 
-        if ($output->isVeryVerbose()) {
+        if ($output->isVeryVerbose() && null !== $this->themeInfo) {
             $this->io->writeln('Theme name is: <info>'. $this->themeInfo->getName() .'</info>.');
             $this->io->writeln('Theme assets are located in <info>'. $this->themeInfo->getThemePath() .'/static</info>.');
         }
@@ -165,7 +180,7 @@ class ThemeInstallCommand extends Command implements ContainerAwareInterface
                 );
             }
         } else {
-            $this->io->warning('Theme class ' . $this->themeInfo->getClassname() . ' has no data to import.');
+            $this->io->warning('Config file "' . $this->themeConfigPath . '" has no data to import.');
         }
     }
 
@@ -175,7 +190,11 @@ class ThemeInstallCommand extends Command implements ContainerAwareInterface
      */
     protected function importFile(string $filename, EntityImporterInterface $importer): void
     {
-        $file = new File($this->themeInfo->getThemePath() . "/" . $filename);
+        if (null !== $this->themeInfo) {
+            $file = new File($this->themeInfo->getThemePath() . "/" . $filename);
+        } else {
+            $file = new File(realpath($filename));
+        }
         if (!$this->dryRun) {
             try {
                 $importer->import(file_get_contents($file->getPathname()));
@@ -211,7 +230,7 @@ class ThemeInstallCommand extends Command implements ContainerAwareInterface
                 }
             }
         } else {
-            $this->io->warning('Theme class ' . $this->themeInfo->getThemeName() . ' has no nodes to import.');
+            $this->io->warning('Config file "' . $this->themeConfigPath . '" has no nodes to import.');
         }
     }
 

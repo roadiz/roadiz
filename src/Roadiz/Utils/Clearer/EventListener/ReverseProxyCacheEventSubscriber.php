@@ -16,14 +16,9 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Container
-     */
-    protected $container;
+    protected Container $container;
 
     /**
-     * ReverseProxyCacheEventSubscriber constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)
@@ -44,7 +39,7 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
     /**
      * @return bool
      */
-    protected function supportConfig()
+    protected function supportConfig(): bool
     {
         return isset($this->container['config']['reverseProxyCache']) &&
             count($this->container['config']['reverseProxyCache']['frontend']) > 0;

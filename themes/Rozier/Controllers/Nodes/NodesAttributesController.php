@@ -26,16 +26,15 @@ class NodesAttributesController extends RozierApp
      * @param int     $translationId
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
-    public function editAction(Request $request, $nodeId, $translationId)
+    public function editAction(Request $request, int $nodeId, int $translationId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODE_ATTRIBUTES');
 
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');
@@ -51,10 +50,6 @@ class NodesAttributesController extends RozierApp
         if (null === $nodeSource) {
             throw $this->createNotFoundException('Node-source does not exist');
         }
-
-        $availableTranslations = $this->get('em')
-            ->getRepository(Translation::class)
-            ->findAvailableTranslationsForNode($node);
 
         if (null !== $response = $this->handleAddAttributeForm($request, $node, $translation)) {
             return $response;
@@ -132,6 +127,9 @@ class NodesAttributesController extends RozierApp
 
         $this->assignation['source'] = $nodeSource;
         $this->assignation['translation'] = $translation;
+        $availableTranslations = $this->get('em')
+            ->getRepository(Translation::class)
+            ->findAvailableTranslationsForNode($node);
         $this->assignation['available_translations'] = $availableTranslations;
         $this->assignation['node'] = $node;
 
@@ -176,21 +174,20 @@ class NodesAttributesController extends RozierApp
      * @param int     $attributeValueId
      *
      * @return RedirectResponse|Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteAction(Request $request, $nodeId, $translationId, $attributeValueId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
         /** @var AttributeValue $item */
-        $item = $this->get('em')->find(AttributeValue::class, (int) $attributeValueId);
+        $item = $this->get('em')->find(AttributeValue::class, $attributeValueId);
         if ($item === null) {
             throw $this->createNotFoundException('AttributeValue does not exist.');
         }
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');
@@ -248,7 +245,7 @@ class NodesAttributesController extends RozierApp
      * @param int     $translationId
      * @param int     $attributeValueId
      */
-    public function resetAction(Request $request, $nodeId, $translationId, $attributeValueId)
+    public function resetAction(Request $request, int $nodeId, int $translationId, int $attributeValueId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_ATTRIBUTES_DELETE');
 
@@ -263,9 +260,9 @@ class NodesAttributesController extends RozierApp
             throw $this->createNotFoundException('AttributeValueTranslation does not exist.');
         }
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /** @var Node $node */
-        $node = $this->get('em')->find(Node::class, (int) $nodeId);
+        $node = $this->get('em')->find(Node::class, $nodeId);
 
         if (null === $translation || null === $node) {
             throw $this->createNotFoundException('Node-source does not exist');

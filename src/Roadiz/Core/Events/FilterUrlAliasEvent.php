@@ -7,8 +7,6 @@ use RZ\Roadiz\Core\Entities\UrlAlias;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterUrlAliasEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterUrlAliasEvent extends Event

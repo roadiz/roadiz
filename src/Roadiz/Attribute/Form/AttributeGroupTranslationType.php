@@ -11,12 +11,24 @@ use RZ\Roadiz\Core\Entities\AttributeGroupTranslation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 class AttributeGroupTranslationType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @inheritDoc
      */
@@ -30,14 +42,13 @@ class AttributeGroupTranslationType extends AbstractType
             ->add('translation', TranslationsType::class, [
                 'label' => false,
                 'required' => true,
-                'entityManager' => $options['entityManager'],
                 'constraints' => [
                     new NotNull()
                 ]
             ])
         ;
 
-        $builder->get('translation')->addModelTransformer(new TranslationTransformer($options['entityManager']));
+        $builder->get('translation')->addModelTransformer(new TranslationTransformer($this->entityManager));
     }
 
     /**
@@ -47,17 +58,11 @@ class AttributeGroupTranslationType extends AbstractType
     {
         parent::configureOptions($resolver);
         $resolver->setDefault('data_class', AttributeGroupTranslation::class);
-        $resolver->setRequired('entityManager');
-        $resolver->setAllowedTypes('entityManager', [EntityManagerInterface::class]);
-
-        $resolver->setNormalizer('constraints', function (Options $options) {
-            return [
-                new UniqueEntity([
-                    'fields' => ['name', 'translation'],
-                    'entityManager' => $options['entityManager'],
-                ])
-            ];
-        });
+        $resolver->setDefault('constraints', [
+            new UniqueEntity([
+                'fields' => ['name', 'translation'],
+            ])
+        ]);
     }
 
     /**

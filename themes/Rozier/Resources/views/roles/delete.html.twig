@@ -4,7 +4,7 @@
 {% block content %}
 <section class="content-global">
     <header class="content-header header-role header-role-add">
-        <h1 class="content-title">{{ "delete.role.%name%"|trans({'%name%': role.name })|u.truncate(25, '[…]', true) }}</h1>
+        <h1 class="content-title">{{ "delete.role.%name%"|trans({'%name%': item.name })|u.truncate(25, '[…]', true) }}</h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">

@@ -13,14 +13,9 @@ use Scienta\DoctrineJsonFunctions\Query\AST\Functions\Mysql\JsonContains;
 
 class SimpleQueryBuilder
 {
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
+    protected QueryBuilder $queryBuilder;
 
     /**
-     * SimpleQueryBuilder constructor.
-     *
      * @param QueryBuilder $queryBuilder
      */
     public function __construct(QueryBuilder $queryBuilder)
@@ -55,7 +50,7 @@ class SimpleQueryBuilder
      * @param mixed $value
      * @param string $prefix
      * @param string $key
-     * @param string $baseKey
+     * @param string|null $baseKey
      *
      * @return Comparison|Func|string
      */

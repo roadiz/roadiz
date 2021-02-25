@@ -29,81 +29,143 @@
             <textarea {{ block('widget_attributes') }} data-rz-markdowneditor>{{- value -}}</textarea>
             <nav class="markdown-editor-navbar">
                 <ul class="markdown-editor-navbar-nav">
-                    <li class="markdown-editor-button-cont-h2"><a class="markdown-editor-button-h2"
-                                                                  data-markdowneditor-button="h2"
-                                                                  title="{% trans %}headline.2{% endtrans %}"
-                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h2"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-h3"><a class="markdown-editor-button-h3"
-                                                                  data-markdowneditor-button="h3"
-                                                                  title="{% trans %}headline.3{% endtrans %}"
-                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h3"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-h4"><a class="markdown-editor-button-h4"
-                                                                  data-markdowneditor-button="h4"
-                                                                  title="{% trans %}headline.4{% endtrans %}"
-                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h4"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-h5"><a class="markdown-editor-button-h5"
-                                                                  data-markdowneditor-button="h5"
-                                                                  title="{% trans %}headline.5{% endtrans %}"
-                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h5"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-h6"><a class="markdown-editor-button-h6"
-                                                                  data-markdowneditor-button="h6"
-                                                                  title="{% trans %}headline.6{% endtrans %}"
-                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h6"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-bold"><a class="markdown-editor-button-bold"
-                                                                    data-markdowneditor-button="bold"
-                                                                    title="{% trans %}bold{% endtrans %}"
-                                                                    data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-bold"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-italic"><a class="markdown-editor-button-italic"
-                                                                      data-markdowneditor-button="italic"
-                                                                      title="{% trans %}italic{% endtrans %}"
-                                                                      data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-italic"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-blockquote"><a class="markdown-editor-button-blockquote"
-                                                                          data-markdowneditor-button="blockquote"
-                                                                          title="{% trans %}blockquote{% endtrans %}"
-                                                                          data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-quote"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-link"><a class="markdown-editor-button-link"
-                                                                    data-markdowneditor-button="link"
-                                                                    title="{% trans %}link{% endtrans %}"
-                                                                    data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-link"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-image"><a class="markdown-editor-button-image"
-                                                                     data-markdowneditor-button="image"
-                                                                     title="{% trans %}image{% endtrans %}"
-                                                                     data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-image"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-listUl"><a class="markdown-editor-button-listUl"
-                                                                      data-markdowneditor-button="listUl"
-                                                                      title="{% trans %}unordered.list{% endtrans %}"
-                                                                      data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-unordered-list"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-back"><a class="markdown-editor-button-back"
-                                                                    data-markdowneditor-button="back"
-                                                                    title="{% trans %}back{% endtrans %}"
-                                                                    data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-hr"><a class="markdown-editor-button-hr"
-                                                                  data-markdowneditor-button="hr"
-                                                                  title="{% trans %}separator{% endtrans %}"
-                                                                  data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-hr"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-nbsp"><a class="markdown-editor-button-nbsp"
-                                                                    data-markdowneditor-button="nbsp"
-                                                                    title="{% trans %}non_breaking.space{% endtrans %}"
-                                                                    data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-space-forced"></i></a></li>
-
-                    <li class="markdown-editor-button-cont-preview"><a class="markdown-editor-button-preview"
-                                                                       data-markdowneditor-button="preview"
-                                                                       title="{% trans %}markdown.preview{% endtrans %}"
-                                                                       data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a></li>
-
+                    {% if attr.allow_h2 %}
+                        <li class="markdown-editor-button-cont-h2">
+                            <a class="markdown-editor-button-h2"
+                               data-markdowneditor-button="h2"
+                               title="{% trans %}headline.2{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h2"></i></a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_h3 %}
+                        <li class="markdown-editor-button-cont-h3">
+                            <a class="markdown-editor-button-h3"
+                               data-markdowneditor-button="h3"
+                               title="{% trans %}headline.3{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h3"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_h4 %}
+                        <li class="markdown-editor-button-cont-h4">
+                            <a class="markdown-editor-button-h4"
+                               data-markdowneditor-button="h4"
+                               title="{% trans %}headline.4{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h4"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_h5 %}
+                        <li class="markdown-editor-button-cont-h5">
+                            <a class="markdown-editor-button-h5"
+                               data-markdowneditor-button="h5"
+                               title="{% trans %}headline.5{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h5"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_h6 %}
+                        <li class="markdown-editor-button-cont-h6">
+                            <a class="markdown-editor-button-h6"
+                               data-markdowneditor-button="h6"
+                               title="{% trans %}headline.6{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-h6"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_bold %}
+                        <li class="markdown-editor-button-cont-bold">
+                            <a class="markdown-editor-button-bold"
+                               data-markdowneditor-button="bold"
+                               title="{% trans %}bold{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-bold"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_italic %}
+                        <li class="markdown-editor-button-cont-italic">
+                            <a class="markdown-editor-button-italic"
+                               data-markdowneditor-button="italic"
+                               title="{% trans %}italic{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-italic"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_blockquote %}
+                        <li class="markdown-editor-button-cont-blockquote">
+                            <a class="markdown-editor-button-blockquote"
+                               data-markdowneditor-button="blockquote"
+                               title="{% trans %}blockquote{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-quote"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_link %}
+                        <li class="markdown-editor-button-cont-link">
+                            <a class="markdown-editor-button-link"
+                               data-markdowneditor-button="link"
+                               title="{% trans %}link{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-link"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_image %}
+                        <li class="markdown-editor-button-cont-image">
+                            <a class="markdown-editor-button-image"
+                               data-markdowneditor-button="image"
+                               title="{% trans %}image{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-image"></i></a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_list %}
+                        <li class="markdown-editor-button-cont-listUl">
+                            <a class="markdown-editor-button-listUl"
+                               data-markdowneditor-button="listUl"
+                               title="{% trans %}unordered.list{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-unordered-list"></i>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_return %}
+                        <li class="markdown-editor-button-cont-back">
+                            <a class="markdown-editor-button-back"
+                               data-markdowneditor-button="back"
+                               title="{% trans %}back{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back"></i></a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_hr %}
+                        <li class="markdown-editor-button-cont-hr">
+                            <a class="markdown-editor-button-hr"
+                               data-markdowneditor-button="hr"
+                               title="{% trans %}separator{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-hr"></i></a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_nbsp %}
+                        <li class="markdown-editor-button-cont-nbsp">
+                            <a class="markdown-editor-button-nbsp"
+                               data-markdowneditor-button="nbsp"
+                               title="{% trans %}non_breaking.space{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-space-forced"></i></a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_nb_hyphen %}
+                        <li class="markdown-editor-button-cont-nb-hyphen">
+                            <a class="markdown-editor-button-nb-hyphen"
+                               data-markdowneditor-button="nb-hyphen"
+                               title="{% trans %}non_breaking.hyphen{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-minus"></i></a>
+                        </li>
+                    {% endif %}
+                    {% if attr.allow_preview %}
+                        <li class="markdown-editor-button-cont-preview">
+                            <a class="markdown-editor-button-preview"
+                               data-markdowneditor-button="preview"
+                               title="{% trans %}markdown.preview{% endtrans %}"
+                               data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-visibility"></i></a>
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
             <div class="markdown-editor-count"><span class="count-current"></span>/<span class="count-limit"></span></div>
@@ -180,6 +242,15 @@
     } %}
 {% endblock documents_widget %}
 
+{% block folders_widget %}
+    {% include '@Rozier/widgets/drawer.html.twig' with {
+        widget_attributes: block('widget_attributes'),
+        enableDropzone: false,
+        entity: 'explorer-provider',
+        icon: 'uk-icon-folder-o'
+    } %}
+{% endblock folders_widget %}
+
 {% block nodes_widget %}
     {% include '@Rozier/widgets/drawer.html.twig' with {
         widget_attributes: block('widget_attributes'),
@@ -226,7 +297,12 @@
 {% endblock custom_forms_widget %}
 
 {% block checkbox_widget -%}
-    <input class="rz-boolean-checkbox" type="checkbox" data-on-text="I" data-off-text="O" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    <input class="rz-boolean-checkbox"
+           type="checkbox"
+           data-on-text="I"
+           data-off-text="O"
+        {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}
+        {% if checked %} checked="checked"{% endif %} />
 {%- endblock checkbox_widget %}
 
 {%- block choice_widget_expanded -%}

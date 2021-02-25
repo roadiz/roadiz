@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\CMS\Controllers;
 
 use Doctrine\ORM\EntityManager;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -11,7 +12,9 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\ForceResponseException;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use RZ\Roadiz\Core\ListManagers\EntityListManager;
+use RZ\Roadiz\Core\ListManagers\EntityListManagerInterface;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\ContactFormManager;
 use RZ\Roadiz\Utils\EmailManager;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -200,10 +203,10 @@ abstract class Controller implements ContainerAwareInterface
      * @param Request $request
      * @param string $_locale
      *
-     * @return Translation
+     * @return TranslationInterface
      * @throws NoTranslationAvailableException
      */
-    protected function bindLocaleFromRoute(Request $request, $_locale = null)
+    protected function bindLocaleFromRoute(Request $request, $_locale = null): TranslationInterface
     {
         /*
          * If you use a static route for Home page
@@ -219,9 +222,9 @@ abstract class Controller implements ContainerAwareInterface
     /**
      * @param string|null $_locale
      *
-     * @return Translation
+     * @return TranslationInterface
      */
-    protected function findTranslationForLocale($_locale = null)
+    protected function findTranslationForLocale($_locale = null): TranslationInterface
     {
         if (null === $_locale) {
             return $this->get('defaultTranslation');
@@ -229,7 +232,7 @@ abstract class Controller implements ContainerAwareInterface
         /** @var TranslationRepository $repository */
         $repository = $this->get('em')->getRepository(Translation::class);
 
-        if ($this->get('kernel')->isPreview()) {
+        if ($this->get(PreviewResolverInterface::class)->isPreview()) {
             $translation = $repository->findOneByLocaleOrOverrideLocale($_locale);
         } else {
             $translation = $repository->findOneAvailableByLocaleOrOverrideLocale($_locale);
@@ -299,7 +302,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param string $namespace
      * @return string
      */
-    protected function getNamespacedView($view, $namespace = '')
+    protected function getNamespacedView(string $view, string $namespace = ''): string
     {
         if ($namespace !== "" && $namespace !== "/") {
             return '@' . $namespace . '/' . $view;
@@ -435,7 +438,7 @@ abstract class Controller implements ContainerAwareInterface
      * @param array $criteria
      * @param array $ordering
      *
-     * @return EntityListManager
+     * @return EntityListManagerInterface
      */
     public function createEntityListManager($entity, array $criteria = [], array $ordering = [])
     {

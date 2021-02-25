@@ -11,6 +11,7 @@ use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Core\Routing\NodeRouter;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Rozier\RozierApp;
@@ -25,8 +27,6 @@ use Themes\Rozier\Traits\VersionedControllerTrait;
 use Twig\Error\RuntimeError;
 
 /**
- * Class NodesSourcesController
- *
  * @package Themes\Rozier\Controllers\Nodes
  */
 class NodesSourcesController extends RozierApp
@@ -43,19 +43,19 @@ class NodesSourcesController extends RozierApp
      * @return Response
      * @throws RuntimeError
      */
-    public function editSourceAction(Request $request, $nodeId, $translationId)
+    public function editSourceAction(Request $request, int $nodeId, int $translationId)
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
         /** @var Translation $translation */
-        $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+        $translation = $this->get('em')->find(Translation::class, $translationId);
         /*
          * Here we need to directly select nodeSource
          * if not doctrine will grab a cache tag because of NodeTreeWidget
          * that is initialized before calling route method.
          */
         /** @var Node $gnode */
-        $gnode = $this->get('em')->find(Node::class, (int) $nodeId);
+        $gnode = $this->get('em')->find(Node::class, $nodeId);
 
         if ($translation !== null && $gnode !== null) {
             /** @var NodesSources $source */
@@ -84,9 +84,6 @@ class NodesSourcesController extends RozierApp
                     [
                         'class' => $node->getNodeType()->getSourceEntityFullQualifiedClassName(),
                         'nodeType' => $node->getNodeType(),
-                        'controller' => $this,
-                        'entityManager' => $this->get('em'),
-                        'container' => $this->getContainer(),
                         'withVirtual' => true,
                         'withTitle' => true,
                         'disabled' => $this->isReadOnly,
@@ -99,12 +96,25 @@ class NodesSourcesController extends RozierApp
                         $this->onPostUpdate($source, $request);
 
                         if ($request->isXmlHttpRequest()) {
-                            $url = $this->generateUrl($source);
-                            $previewUrl = '/preview.php' . str_replace('/dev.php', '', $url);
+                            if ($this->get('settingsBag')->get('custom_preview_scheme')) {
+                                $previewUrl = $this->generateUrl($source, [
+                                    'canonicalScheme' => $this->get('settingsBag')->get('custom_preview_scheme'),
+                                    NodeRouter::NO_CACHE_PARAMETER => true
+                                ], Router::ABSOLUTE_URL);
+                            } else {
+                                $previewUrl = $this->generateUrl($source, [
+                                    '_preview' => 1,
+                                    NodeRouter::NO_CACHE_PARAMETER => true
+                                ]);
+                            }
+                            $url = $this->generateUrl($source, [
+                                NodeRouter::NO_CACHE_PARAMETER => true
+                            ]);
 
                             return new JsonResponse([
                                 'status' => 'success',
-                                'public_url' => $source->getNode()->isPublished() ? $url : $previewUrl,
+                                'public_url' => $source->getNode()->isPublished() ? $url : null,
+                                'preview_url' => $previewUrl,
                                 'errors' => [],
                             ], JsonResponse::HTTP_PARTIAL_CONTENT);
                         }
@@ -156,7 +166,7 @@ class NodesSourcesController extends RozierApp
      * @return Response
      * @throws RuntimeError
      */
-    public function removeAction(Request $request, $nodeSourceId)
+    public function removeAction(Request $request, int $nodeSourceId)
     {
         /** @var NodesSources $ns */
         $ns = $this->get("em")->find(NodesSources::class, $nodeSourceId);

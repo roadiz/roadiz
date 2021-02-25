@@ -12,11 +12,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
+use Symfony\Component\String\UnicodeString;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * Class AjaxEntitiesExplorerController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxEntitiesExplorerController extends AbstractAjaxController
@@ -158,10 +157,11 @@ class AjaxEntitiesExplorerController extends AbstractAjaxController
             if (!empty($configuration['alt_displayable'])) {
                 $alt = call_user_func([$entity, $configuration['alt_displayable']]);
             }
+            $displayable = call_user_func([$entity, $configuration['displayable']]);
             $entitiesArray[] = [
                 'id' => $entity->getId(),
-                'classname' => $alt,
-                'displayable' => call_user_func([$entity, $configuration['displayable']]),
+                'classname' => (new UnicodeString($alt ?? ''))->truncate(30, '…')->toString(),
+                'displayable' => (new UnicodeString($displayable ?? ''))->truncate(30, '…')->toString(),
             ];
         }
 

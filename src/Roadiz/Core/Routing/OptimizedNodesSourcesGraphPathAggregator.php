@@ -6,24 +6,15 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\QueryBuilder;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 
 final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPathAggregator
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
-    /**
-     * @var ArrayCache
-     */
-    private $cache;
+    private EntityManagerInterface $entityManager;
+    private ArrayCache $cache;
 
     /**
-     * NodesSourcesPathResolver constructor.
-     *
      * @param EntityManagerInterface $entityManager
      */
     public function __construct(EntityManagerInterface $entityManager)
@@ -88,7 +79,6 @@ final class OptimizedNodesSourcesGraphPathAggregator implements NodesSourcesPath
             $parentIds = $this->getParentsIds($parentNode);
             if (count($parentIds) > 0) {
                 /**
-                 * @var QueryBuilder $qb
                  *
                  * Do a partial query to optimize SQL time
                  */

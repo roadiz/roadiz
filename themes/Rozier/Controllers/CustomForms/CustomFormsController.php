@@ -3,180 +3,105 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Controllers\CustomForms;
 
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\Entities\CustomForm;
-use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
-use Symfony\Component\Form\Extension\Core\Type\FormType;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Themes\Rozier\Controllers\AbstractAdminController;
 use Themes\Rozier\Forms\CustomFormType;
-use Themes\Rozier\RozierApp;
 
 /**
- * Class CustomFormsController
- *
  * @package Themes\Rozier\Controllers
  */
-class CustomFormsController extends RozierApp
+class CustomFormsController extends AbstractAdminController
 {
     /**
-     * List every node-types.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
+     * @inheritDoc
      */
-    public function indexAction(Request $request)
+    protected function supports(PersistableInterface $item): bool
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
-        /*
-         * Manage get request to filter list
-         */
-        $listManager = $this->createEntityListManager(
-            CustomForm::class,
-            [],
-            ['createdAt' => 'DESC']
-        );
-        $listManager->setDisplayingNotPublishedNodes(true);
-        $listManager->handle();
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['custom_forms'] = $listManager->getEntities();
-
-        return $this->render('custom-forms/list.html.twig', $this->assignation);
+        return $item instanceof CustomForm;
     }
 
     /**
-     * Return an edition form for requested node-type.
-     *
-     * @param Request   $request
-     * @param int $customFormId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function editAction(Request $request, $customFormId)
+    protected function getNamespace(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
-
-        /** @var CustomForm $customForm */
-        $customForm = $this->get('em')->find(CustomForm::class, (int) $customFormId);
-
-        if (null !== $customForm) {
-            $this->assignation['customForm'] = $customForm;
-
-            $form = $this->createForm(CustomFormType::class, $customForm, [
-                'em' => $this->get('em'),
-                'name' => $customForm->getName(),
-            ]);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    $this->get('em')->flush();
-                    $msg = $this->getTranslator()->trans('customForm.%name%.updated', ['%name%' => $customForm->getName()]);
-                    $this->publishConfirmMessage($request, $msg);
-                    return $this->redirect($this->generateUrl('customFormsEditPage', [
-                        'customFormId' => $customForm->getId(),
-                    ]));
-                } catch (EntityAlreadyExistsException $e) {
-                    $form->addError(new FormError($e->getMessage()));
-                }
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('custom-forms/edit.html.twig', $this->assignation);
-        }
-
-        throw new ResourceNotFoundException();
+        return 'custom-form';
     }
 
     /**
-     * Return an creation form for requested node-type.
-     *
-     * @param Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function addAction(Request $request)
+    protected function createEmptyItem(Request $request): PersistableInterface
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS');
-        $customForm = new CustomForm();
-
-        if (null !== $customForm) {
-            $this->assignation['customForm'] = $customForm;
-
-            /*
-             * form
-             */
-            $form = $this->createForm(CustomFormType::class, $customForm, [
-                'em' => $this->get('em'),
-            ]);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                try {
-                    $this->get('em')->persist($customForm);
-                    $this->get('em')->flush();
-
-                    $msg = $this->getTranslator()->trans('customForm.%name%.created', ['%name%' => $customForm->getName()]);
-                    $this->publishConfirmMessage($request, $msg);
-
-                    return $this->redirect($this->generateUrl('customFormsEditPage', [
-                        'customFormId' => $customForm->getId(),
-                    ]));
-                } catch (EntityAlreadyExistsException $e) {
-                    $form->addError(new FormError($e->getMessage()));
-                }
-            }
-
-            $this->assignation['form'] = $form->createView();
-
-            return $this->render('custom-forms/add.html.twig', $this->assignation);
-        }
-
-        throw new ResourceNotFoundException();
+        return new CustomForm();
     }
 
     /**
-     * Return an deletion form for requested node-type.
-     *
-     * @param Request $request
-     * @param int     $customFormId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @inheritDoc
      */
-    public function deleteAction(Request $request, $customFormId)
+    protected function getTemplateFolder(): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_CUSTOMFORMS_DELETE');
+        return 'custom-forms';
+    }
 
-        /** @var CustomForm $customForm */
-        $customForm = $this->get('em')
-                           ->find(CustomForm::class, (int) $customFormId);
+    /**
+     * @inheritDoc
+     */
+    protected function getRequiredRole(): string
+    {
+        return 'ROLE_ACCESS_CUSTOMFORMS';
+    }
 
-        if (null !== $customForm) {
-            $this->assignation['customForm'] = $customForm;
-            $form = $this->createForm(FormType::class, $customForm);
-            $form->handleRequest($request);
-            if ($form->isSubmitted() && $form->isValid()) {
-                $this->get("em")->remove($customForm);
-                $this->get("em")->flush();
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityClass(): string
+    {
+        return CustomForm::class;
+    }
 
-                $msg = $this->getTranslator()->trans('customForm.%name%.deleted', ['%name%' => $customForm->getName()]);
-                $this->publishConfirmMessage($request, $msg);
-                /*
-                 * Redirect to update schema page
-                 */
-                return $this->redirect($this->generateUrl(
-                    'customFormsHomePage'
-                ));
-            }
+    /**
+     * @inheritDoc
+     */
+    protected function getFormType(): string
+    {
+        return CustomFormType::class;
+    }
 
-            $this->assignation['form'] = $form->createView();
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultOrder(): array
+    {
+        return ['createdAt' => 'DESC'];
+    }
 
-            return $this->render('custom-forms/delete.html.twig', $this->assignation);
+    /**
+     * @inheritDoc
+     */
+    protected function getDefaultRouteName(): string
+    {
+        return 'customFormsHomePage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEditRouteName(): string
+    {
+        return 'customFormsEditPage';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityName(PersistableInterface $item): string
+    {
+        if ($item instanceof CustomForm) {
+            return $item->getName();
         }
-
-        throw new ResourceNotFoundException();
+        throw new \InvalidArgumentException('Item should be instance of '.$this->getEntityClass());
     }
 }

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManager;
 use RZ\Roadiz\CMS\Forms\Constraints\ValidAccountConfirmationToken;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -23,7 +22,6 @@ class LoginResetForm extends AbstractType
             'label' => false,
             'constraints' => [
                 new ValidAccountConfirmationToken([
-                    'entityManager' => $options['entityManager'],
                     'ttl' => $options['confirmationTtl'],
                     'message' => 'confirmation.token.is.invalid',
                     'expiredMessage' => 'confirmation.token.has.expired',
@@ -49,13 +47,11 @@ class LoginResetForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired([
-            'entityManager',
             'token',
             'confirmationTtl',
         ]);
 
         $resolver->setAllowedTypes('token', ['string']);
         $resolver->setAllowedTypes('confirmationTtl', ['int']);
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
     }
 }

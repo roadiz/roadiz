@@ -7,7 +7,6 @@ use RZ\Roadiz\CMS\Forms\SeparatorType;
 use RZ\Roadiz\CMS\Forms\ThemesType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,11 +52,7 @@ class SiteInformationType extends AbstractType
                 'required' => false,
                 'label' => 'meta_description',
             ])
-            ->add('timezone', ChoiceType::class, [
-                'choices' => $timeZoneList,
-                'label' => 'timezone',
-                'required' => true,
-            ]);
+        ;
 
         if (count($options['themes_config']) > 0) {
             $builder->add('separator_1', SeparatorType::class, [

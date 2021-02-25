@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Themes\Rozier\Controllers;
 
 use Doctrine\Common\Cache\CacheProvider;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\CMS\Forms\SettingType;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Setting;
@@ -18,11 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Themes\Rozier\RozierApp;
-use Twig_Error_Runtime;
 
-/**
- * Settings controller
- */
 class SettingsController extends RozierApp
 {
     /**
@@ -31,7 +26,6 @@ class SettingsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -49,13 +43,13 @@ class SettingsController extends RozierApp
      * @param int     $settingGroupId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function byGroupAction(Request $request, $settingGroupId)
+    public function byGroupAction(Request $request, int $settingGroupId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
-        $settingGroup = $this->get('em')->find(SettingGroup::class, (int) $settingGroupId);
+        /** @var SettingGroup|null $settingGroup */
+        $settingGroup = $this->get('em')->find(SettingGroup::class, $settingGroupId);
 
         if ($settingGroup !== null) {
             $this->assignation['settingGroup'] = $settingGroup;
@@ -100,12 +94,9 @@ class SettingsController extends RozierApp
         /** @var Setting $setting */
         foreach ($settings as $setting) {
             /** @var Form $form */
-            $form = $this->get('formFactory')->createNamedBuilder($setting->getName(), SettingType::class, $setting, [
-                'entityManager' => $this->get('em'),
+            $form = $this->get('formFactory')->createNamed($setting->getName(), SettingType::class, $setting, [
                 'shortEdit' => true,
-                'documentFactory' => $this->get('document.factory'),
-                'assetPackages' => $this->get('assetPackages'),
-            ])->getForm();
+            ]);
             $form->handleRequest($request);
             if ($form->isSubmitted()) {
                 if ($form->isSubmitted() && $form->isValid()) {
@@ -174,28 +165,18 @@ class SettingsController extends RozierApp
      * @param int     $settingId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function editAction(Request $request, $settingId)
+    public function editAction(Request $request, int $settingId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
         /** @var Setting|null $setting */
-        $setting = $this->get('em')->find(Setting::class, (int) $settingId);
+        $setting = $this->get('em')->find(Setting::class, $settingId);
 
         if ($setting !== null) {
             $this->assignation['setting'] = $setting;
 
             $form = $this->createForm(SettingType::class, $setting, [
-                'entityManager' => $this->get('em'),
-                'shortEdit' => false,
-                'documentFactory' => $this->get('document.factory'),
-                'assetPackages' => $this->get('assetPackages'),
-                'constraints' => [
-                    new UniqueEntity([
-                        'fields' => ['name'],
-                        'entityManager' => $this->get('em')
-                    ]),
-                ]
+                'shortEdit' => false
             ]);
             $form->handleRequest($request);
 
@@ -241,7 +222,6 @@ class SettingsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -251,20 +231,9 @@ class SettingsController extends RozierApp
         $setting->setSettingGroup(null);
 
         $this->assignation['setting'] = $setting;
-
         $form = $this->createForm(SettingType::class, $setting, [
-            'entityManager' => $this->get('em'),
             'shortEdit' => false,
-            'documentFactory' => $this->get('document.factory'),
-            'assetPackages' => $this->get('assetPackages'),
-            'constraints' => [
-                new UniqueEntity([
-                    'fields' => ['name'],
-                    'entityManager' => $this->get('em')
-                ]),
-            ]
         ]);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -293,14 +262,13 @@ class SettingsController extends RozierApp
      * @param int     $settingId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function deleteAction(Request $request, $settingId)
+    public function deleteAction(Request $request, int $settingId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_SETTINGS');
 
         /** @var Setting|null $setting */
-        $setting = $this->get('em')->find(Setting::class, (int) $settingId);
+        $setting = $this->get('em')->find(Setting::class, $settingId);
 
         if (null !== $setting) {
             $this->assignation['setting'] = $setting;

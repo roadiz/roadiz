@@ -1,40 +1,15 @@
 <?php
-/**
- * Copyright © 2014, Ambroise Maupate and Julien Blanchet
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished
- * to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- * OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
- * IN THE SOFTWARE.
- *
- * Except as contained in this notice, the name of the ROADIZ shall not
- * be used in advertising or otherwise to promote the sale, use or other dealings
- * in this Software without prior written authorization from Ambroise Maupate and Julien Blanchet.
- *
- *
- * @file NodeTypeFieldTest.php
- * @author Ambroise Maupate
- */
+declare(strict_types=1);
+
 use RZ\Roadiz\Core\Entities\NodeTypeField;
+use RZ\Roadiz\Tests\SerializedEntityTestTrait;
 
 /**
  * Test node-type field features
  */
-class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
+class NodeTypeFieldTest extends \PHPUnit\Framework\TestCase
 {
+    use SerializedEntityTestTrait;
     /**
      * @dataProvider getGetterNameProvider
      * @param $sourceName
@@ -78,28 +53,40 @@ class NodeTypeFieldTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $a->getName());
     }
 
+    /*
+     * Test empty object serialization
+     */
+    public function testSerialize()
+    {
+        // Arrange
+        $a = new NodeTypeField();
+        // Assert
+        $this->assertJson($this->getSerializer()->serialize($a, 'json'));
+    }
+
     public function setNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "ligula_egestas_mattis_nullam"),
-            array("Véèsti buœlum_Rïsus", "veesti_buoelum_risus"),
-            array("J'aime les sushis", "j_aime_les_sushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "ligula_egestas_mattis_nullam"],
+            ["Véèsti buœlum_Rïsus", "veesti_buoelum_risus"],
+            ["J'aime les sushis", "j_aime_les_sushis"],
+            ["j_aime_les_sushis", "j_aime_les_sushis"],
+        ];
     }
     public function getGetterNameProvider()
     {
-        return array(
-            array("Ligula  $* _--Egestas Mattis Nullam", "getLigulaEgestasMattisNullam"),
-            array("Véèsti buœlum Rïsus", "getVeestiBuoelumRisus"),
-            array("J'aime les sushis", "getJAimeLesSushis"),
-        );
+        return [
+            ["Ligula  $* _--Egestas Mattis Nullam", "getLigulaEgestasMattisNullam"],
+            ["Véèsti buœlum Rïsus", "getVeestiBuoelumRisus"],
+            ["J'aime les sushis", "getJAimeLesSushis"],
+        ];
     }
     public function getSetterNameProvider()
     {
-        return array(
-             array("Ligula  $* _--Egestas Mattis Nullam", "setLigulaEgestasMattisNullam"),
-            array("Véèsti buœlum Rïsus", "setVeestiBuoelumRisus"),
-            array("J'aime les sushis", "setJAimeLesSushis"),
-        );
+        return [
+             ["Ligula  $* _--Egestas Mattis Nullam", "setLigulaEgestasMattisNullam"],
+            ["Véèsti buœlum Rïsus", "setVeestiBuoelumRisus"],
+            ["J'aime les sushis", "setJAimeLesSushis"],
+        ];
     }
 }

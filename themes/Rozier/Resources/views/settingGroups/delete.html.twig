@@ -3,7 +3,9 @@
 {% block content %}
 <section class="content-global">
     <header class="content-header header-settingGroup header-settingGroup-delete">
-       <h1 class="content-title settingGroup-delete-title">{{ "delete.settingGroup.%name%"|trans({'%name%': settingGroup.getName })|u.truncate(25, '[…]', true) }}</h1>
+       <h1 class="content-title settingGroup-delete-title">
+           {{ "delete.settingGroup.%name%"|trans({'%name%': item.getName })|u.truncate(25, '[…]', true) }}
+       </h1>
     </header>
 
     <article class="content content-delete content-no-action-menu">

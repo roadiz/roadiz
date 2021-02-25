@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
 use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\Constraints\NonSqlReservedWord;
 use RZ\Roadiz\CMS\Forms\Constraints\SimpleLatinString;
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueNodeTypeName;
+use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -19,9 +18,6 @@ use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-/**
- *
- */
 class NodeTypeType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -34,10 +30,6 @@ class NodeTypeType extends AbstractType
                     new NotBlank(),
                     new NonSqlReservedWord(),
                     new SimpleLatinString(),
-                    new UniqueNodeTypeName([
-                        'entityManager' => $options['em'],
-                        'currentValue' => $options['name'] ?? '',
-                    ]),
                 ],
             ]);
         }
@@ -109,12 +101,14 @@ class NodeTypeType extends AbstractType
             'attr' => [
                 'class' => 'uk-form node-type-form',
             ],
+            'constraints' => [
+                new UniqueEntity([
+                    'fields' => ['name']
+                ]),
+                new UniqueEntity([
+                    'fields' => ['displayName']
+                ])
+            ]
         ]);
-
-        $resolver->setRequired([
-            'em',
-        ]);
-        $resolver->setAllowedTypes('em', ObjectManager::class);
-        $resolver->setAllowedTypes('name', 'string');
     }
 }

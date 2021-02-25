@@ -10,7 +10,6 @@ use RZ\Roadiz\Core\Bags\Roles;
 use RZ\Roadiz\Core\Bags\Settings;
 
 /**
- * Class BagsServiceProvider
  * @package RZ\Roadiz\Core\Services
  */
 class BagsServiceProvider implements ServiceProviderInterface

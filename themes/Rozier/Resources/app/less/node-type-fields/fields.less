@@ -3,7 +3,6 @@
 \*------------------------------------*/
 
 .rz-node-type-field-dragged {
-    // width:100%;
     background: #ddd;
     border: 1px dashed #b5b5b5;
     display: table-row;
@@ -39,14 +38,6 @@
             color:@grey-interface;
         }
     }
-
-    // td {
-    //     padding: 10px 12px;
-    //     margin: 0;
-    //     border: 0 none;
-
-    //     background-color: rgba(255,255,255,0.75);
-    // }
 }
 
 .node-type-field-col{
@@ -60,14 +51,6 @@
     }
 
 }
-
-// .node-type-field-row{
-//     background:white !important;
-
-//     &:nth-child(2n){
-//         background:#F4F4F4 !important;
-//     }
-// }
 
 .node-type-field-edit-form-row{
     // display:none;
@@ -90,10 +73,17 @@
 
 
 // Add, edit
-#add-node-type-field-form, #edit-node-type-field-form{
+#add-node-type-field-form,
+#edit-node-type-field-form {
     .form-col-checkbox{
         display: inline-block;
         vertical-align: top;
+        @media screen and (min-width: @screen-md-min) {
+            max-width: ~"calc(100%/2 - 2.2em)";
+        }
+        @media screen and (min-width: @screen-lg-min) {
+            max-width: ~"calc(100%/3 - 2.2em)";
+        }
     }
 
     .form-col-minLength{

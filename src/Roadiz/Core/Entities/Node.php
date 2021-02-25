@@ -10,10 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Loggable\Loggable;
 use RZ\Roadiz\Attribute\Model\AttributableInterface;
 use RZ\Roadiz\Attribute\Model\AttributableTrait;
-use RZ\Roadiz\Attribute\Model\AttributeValueInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimedPositioned;
 use RZ\Roadiz\Core\AbstractEntities\LeafInterface;
 use RZ\Roadiz\Core\AbstractEntities\LeafTrait;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -91,7 +91,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base", "node", "log_sources"})
      * @Serializer\Accessor(getter="getNodeName", setter="setNodeName")
      */
-    private $nodeName;
+    private $nodeName = '';
 
     /**
      * @return string
@@ -124,7 +124,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * Disable this parameter if you need to protect your nodeName
      * from title changes.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDynamicNodeName(): bool
     {
@@ -132,18 +132,18 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $dynamicNodeName
+     * @param bool $dynamicNodeName
      * @return $this
      */
     public function setDynamicNodeName($dynamicNodeName): Node
     {
-        $this->dynamicNodeName = (boolean) $dynamicNodeName;
+        $this->dynamicNodeName = (bool) $dynamicNodeName;
         return $this;
     }
 
     /**
      * @ORM\Column(type="boolean", name="home", nullable=false, options={"default" = false})
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"nodes_sources_base", "nodes_sources", "node"})
      */
     private $home = false;
 
@@ -168,12 +168,12 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @Gedmo\Versioned
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"nodes_sources_base", "nodes_sources", "node"})
      */
     private $visible = true;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isVisible(): bool
     {
@@ -181,7 +181,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $visible
+     * @param bool $visible
      * @return $this
      */
     public function setVisible(bool $visible): Node
@@ -246,7 +246,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPublished()
     {
@@ -254,7 +254,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isPending()
     {
@@ -262,7 +262,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDraft()
     {
@@ -270,7 +270,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isDeleted()
     {
@@ -278,7 +278,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $published
+     * @param bool $published
      *
      * @return $this
      * @deprecated You should use node Workflow to perform change on status.
@@ -291,7 +291,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $pending
+     * @param bool $pending
      *
      * @return $this
      * @deprecated You should use node Workflow to perform change on status.
@@ -304,6 +304,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
@@ -311,7 +312,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     private $locked = false;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isLocked()
     {
@@ -319,7 +320,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $locked
+     * @param bool $locked
      *
      * @return $this
      */
@@ -338,7 +339,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     private $priority = 0.8;
 
     /**
-     * @return integer
+     * @return float
      */
     public function getPriority()
     {
@@ -346,7 +347,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param integer $priority
+     * @param float $priority
      *
      * @return $this
      */
@@ -358,6 +359,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", name="hide_children", nullable=false, options={"default" = false})
      * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
@@ -404,7 +406,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isArchived()
     {
@@ -412,7 +414,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $archived
+     * @param bool $archived
      *
      * @return $this
      * @deprecated You should use node Workflow to perform change on status.
@@ -425,6 +427,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=false, options={"default" = false})
      * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
@@ -432,7 +435,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     private $sterile = false;
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function isSterile()
     {
@@ -440,7 +443,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
-     * @param boolean $sterile
+     * @param bool $sterile
      *
      * @return $this
      */
@@ -452,6 +455,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @var string
      * @ORM\Column(type="string", name="children_order")
      * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
@@ -479,6 +483,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @var string
      * @ORM\Column(type="string", name="children_order_direction", length=4)
      * @Gedmo\Versioned
      * @Serializer\Groups({"node"})
@@ -511,7 +516,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @Serializer\Groups({"nodes_sources", "node"})
      * @var NodeType|null
      */
-    private $nodeType;
+    private $nodeType = null;
 
     /**
      * @return NodeType|null
@@ -539,7 +544,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
      * @var Node|null
      * @Serializer\Exclude
      */
-    protected $parent;
+    protected $parent = null;
 
     /**
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\Node", mappedBy="parent", orphanRemoval=true)
@@ -620,6 +625,30 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     }
 
     /**
+     * @param Collection<NodesCustomForms> $customForms
+     * @return Node
+     */
+    public function setCustomForms(Collection $customForms): self
+    {
+        $this->customForms = $customForms;
+        return $this;
+    }
+
+    /**
+     * Used by generated nodes-sources.
+     *
+     * @param NodesCustomForms $nodesCustomForms
+     * @return Node
+     */
+    public function addCustomForm(NodesCustomForms $nodesCustomForms): self
+    {
+        if (!$this->customForms->contains($nodesCustomForms)) {
+            $this->customForms->add($nodesCustomForms);
+        }
+        return $this;
+    }
+
+    /**
      * @ORM\ManyToMany(targetEntity="NodeType")
      * @ORM\JoinTable(name="stack_types")
      * @var Collection<NodeType>
@@ -681,10 +710,10 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * Get node-sources using a given translation.
      *
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      * @return Collection
      */
-    public function getNodeSourcesByTranslation(Translation $translation)
+    public function getNodeSourcesByTranslation(TranslationInterface $translation)
     {
         return $this->nodeSources->filter(function (NodesSources $nodeSource) use ($translation) {
             return $nodeSource->getTranslation()->getLocale() === $translation->getLocale();
@@ -792,6 +821,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
         $this->attributeValues = new ArrayCollection();
 
         $this->setNodeType($nodeType);
+        $this->initAbstractDateTimed();
     }
 
     /**

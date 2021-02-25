@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\ListManagers;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
 use RZ\Roadiz\Core\Repositories\StatusAwareRepository;
 
@@ -33,7 +33,7 @@ class Paginator
      */
     protected $searchPattern = null;
     /**
-     * @var EntityManager
+     * @var EntityManagerInterface
      */
     protected $em;
     /**
@@ -52,13 +52,13 @@ class Paginator
     protected $displayAllNodesStatuses;
 
     /**
-     * @param EntityManager $em           Entity manager
-     * @param string        $entityName   Full qualified entity classname
-     * @param integer       $itemPerPages Item par pages
-     * @param array         $criteria     Force selection criteria
+     * @param EntityManagerInterface $em
+     * @param class-string $entityName
+     * @param int $itemPerPages
+     * @param array $criteria
      */
     public function __construct(
-        EntityManager $em,
+        EntityManagerInterface $em,
         $entityName,
         $itemPerPages = 10,
         array $criteria = []
@@ -231,7 +231,7 @@ class Paginator
         return $this;
     }
     /**
-     * @return integer $itemsPerPage
+     * @return int
      */
     public function getItemsPerPage()
     {

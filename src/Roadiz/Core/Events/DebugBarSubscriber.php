@@ -17,7 +17,6 @@ final class DebugBarSubscriber implements EventSubscriberInterface
     protected $container = null;
 
     /**
-     * DebugPanel constructor.
      * @param Container $container
      */
     public function __construct(Container $container)

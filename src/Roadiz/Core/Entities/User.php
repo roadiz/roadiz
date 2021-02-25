@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractHuman;
-use RZ\Roadiz\Utils\Security\SaltGenerator;
+use RZ\Roadiz\Random\SaltGenerator;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -182,14 +182,12 @@ class User extends AbstractHuman implements AdvancedUserInterface, \Serializable
      */
     private $locale = null;
 
-    /**
-     * Constructor
-     */
     public function __construct()
     {
         $this->roles = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->sendCreationConfirmationEmail(false);
+        $this->initAbstractDateTimed();
 
         $saltGenerator = new SaltGenerator();
         $this->setSalt($saltGenerator->generateSalt());

@@ -24,6 +24,19 @@
         "defaultValues": ""
     },
     {
+        "name": "use_typed_node_names",
+        "value": "1",
+        "visible": true,
+        "encrypted": false,
+        "description": "use_typed_node_names.help",
+        "settingGroup": {
+            "name": "Development",
+            "inMenu": true
+        },
+        "type": 5,
+        "defaultValues": ""
+    },
+    {
         "name": "force_locale_with_urlaliases",
         "description": "force_locale_with_urlaliases.help",
         "visible": true,
@@ -562,5 +575,16 @@
             "inMenu": true
         },
         "type": 5
+    },
+    {
+        "name": "custom_preview_scheme",
+        "description": "custom_preview_scheme.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 0
     }
 ]

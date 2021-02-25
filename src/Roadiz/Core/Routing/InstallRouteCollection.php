@@ -5,12 +5,15 @@ namespace RZ\Roadiz\Core\Routing;
 
 class InstallRouteCollection extends DeferredRouteCollection
 {
-    protected $installClassname;
+    /**
+     * @var class-string
+     */
+    protected string $installClassname;
 
     /**
-     * @param string $installClassname
+     * @param class-string $installClassname
      */
-    public function __construct($installClassname)
+    public function __construct(string $installClassname)
     {
         $this->installClassname = $installClassname;
     }

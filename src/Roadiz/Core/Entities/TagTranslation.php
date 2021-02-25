@@ -29,14 +29,14 @@ class TagTranslation extends AbstractEntity
      * @Serializer\Type("string")
      * @Gedmo\Versioned
      */
-    protected $name;
+    protected $name = '';
     /**
      * @ORM\Column(type="text", nullable=true)
      * @Serializer\Groups({"tag", "node", "nodes_sources"})
      * @Serializer\Type("string")
      * @Gedmo\Versioned
      */
-    protected $description;
+    protected $description = null;
     /**
      * @ORM\ManyToOne(targetEntity="Tag", inversedBy="translatedTags")
      * @ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")
@@ -61,8 +61,7 @@ class TagTranslation extends AbstractEntity
      * )
      * @ORM\OrderBy({"position" = "ASC"})
      * @var Collection<TagTranslationDocuments>
-     * @Serializer\Groups({"tag"})
-     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslationDocuments>")
+     * @Serializer\Exclude
      */
     protected $tagTranslationDocuments;
 
@@ -196,6 +195,10 @@ class TagTranslation extends AbstractEntity
 
     /**
      * @return array
+     *
+     * @Serializer\Groups({"tag"})
+     * @Serializer\VirtualProperty
+     * @Serializer\Type("array<RZ\Roadiz\Core\Entities\Document>")
      */
     public function getDocuments(): array
     {

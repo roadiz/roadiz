@@ -7,8 +7,6 @@ use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterTranslationEvent
- *
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterTranslationEvent extends Event

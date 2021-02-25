@@ -17,23 +17,14 @@ use Symfony\Component\HttpKernel\HttpCache\Store;
  */
 abstract class HttpCache extends BaseHttpCache
 {
-    /**
-     * @var null|string
-     */
-    protected $cacheDir;
+    protected ?string $cacheDir;
+    protected Kernel $kernel;
 
     /**
-     * @var Kernel
-     */
-    protected $kernel;
-
-    /**
-     * Constructor.
-     *
      * @param Kernel $kernel An Kernel instance
-     * @param string $cacheDir The cache directory (default used if null)
+     * @param string|null $cacheDir The cache directory (default used if null)
      */
-    public function __construct(Kernel $kernel, string $cacheDir = null)
+    public function __construct(Kernel $kernel, ?string $cacheDir = null)
     {
         $this->kernel = $kernel;
         $this->cacheDir = $cacheDir;
@@ -51,7 +42,7 @@ abstract class HttpCache extends BaseHttpCache
      *
      * @param Request  $request A Request instance
      * @param bool     $catch     Whether to catch exceptions or not
-     * @param Response $entry   A Response instance (the stale entry if present, null otherwise)
+     * @param Response|null $entry   A Response instance (the stale entry if present, null otherwise)
      *
      * @return Response A Response instance
      */

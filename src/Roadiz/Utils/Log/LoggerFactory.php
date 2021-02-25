@@ -3,9 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Log;
 
-use Gelf\Publisher;
-use Gelf\Transport\HttpTransport;
-use Monolog\Handler\RavenHandler;
+use Monolog\Handler\RotatingFileHandler;
 use Monolog\Handler\StreamHandler;
 use Monolog\Handler\SyslogHandler;
 use Monolog\Logger;
@@ -16,18 +14,10 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class LoggerFactory
 {
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
-    /**
-     * @var array
-     */
-    protected $loggerConfig;
+    protected KernelInterface $kernel;
+    protected array $loggerConfig;
 
     /**
-     * LoggerFactory constructor.
-     *
      * @param KernelInterface $kernel
      * @param array           $loggerConfig
      */
@@ -37,7 +27,7 @@ class LoggerFactory
         $this->loggerConfig = $loggerConfig;
     }
 
-    protected function getLoggerPath(string $name = null)
+    protected function getLoggerPath(string $name = null): string
     {
         return $this->kernel->getLogDir() . '/' .
             ($name ?: $this->kernel->getName()). '_' .
@@ -73,6 +63,30 @@ class LoggerFactory
                                 constant('\Monolog\Logger::'.$config['level'])
                             );
                             break;
+                        case 'rotating_file':
+                            if (empty($config['path'])) {
+                                throw new InvalidConfigurationException(
+                                    'A monolog StreamHandler must define a log "path".'
+                                );
+                            }
+                            if (null !== $name) {
+                                $basename = pathinfo($config['path'], PATHINFO_FILENAME);
+                                $dirname = pathinfo($config['path'], PATHINFO_DIRNAME);
+                                $extension = pathinfo($config['path'], PATHINFO_EXTENSION);
+                                if ($basename !== $name) {
+                                    $filename = $dirname . '/' .  $name . '.' . $extension;
+                                } else {
+                                    $filename = $config['path'];
+                                }
+                            } else {
+                                $filename = $config['path'];
+                            }
+                            $handlers[] = new RotatingFileHandler(
+                                $filename,
+                                $config['max_files'],
+                                constant('\Monolog\Logger::'.$config['level'])
+                            );
+                            break;
                         case 'syslog':
                             if (empty($config['ident'])) {
                                 throw new InvalidConfigurationException(
@@ -91,12 +105,18 @@ class LoggerFactory
                                     'A monolog GELFHandler must define a log "url".'
                                 );
                             }
-                            $publisher = new Publisher(HttpTransport::fromUrl($config['url']));
-
-                            $handlers[] = new TolerantGelfHandler(
-                                $publisher,
-                                constant('\Monolog\Logger::'.$config['level'])
-                            );
+                            if (class_exists('\Gelf\Publisher') &&
+                                class_exists('\Gelf\Transport\HttpTransport')) {
+                                $publisher = new \Gelf\Publisher(\Gelf\Transport\HttpTransport::fromUrl($config['url']));
+                                $handlers[] = new TolerantGelfHandler(
+                                    $publisher,
+                                    constant('\Monolog\Logger::'.$config['level'])
+                                );
+                            } else {
+                                throw new InvalidConfigurationException(
+                                    'A monolog GELFHandler requires "graylog2/gelf-php" library.'
+                                );
+                            }
                             break;
                         case 'sentry':
                             if (empty($config['url'])) {
@@ -111,19 +131,6 @@ class LoggerFactory
                                 $client = \Sentry\ClientBuilder::create($sentryConfig)->getClient();
                                 $handler = new \Sentry\Monolog\Handler(
                                     new \Sentry\State\Hub($client),
-                                    constant('\Monolog\Logger::'.$config['level'])
-                                );
-                                $handlers[] = $handler;
-                            } elseif (class_exists('\Raven_Client') &&
-                                class_exists('\Raven_ErrorHandler')
-                            ) {
-                                $client = new \Raven_Client($config['url']);
-                                $error_handler = new \Raven_ErrorHandler($client);
-                                $error_handler->registerExceptionHandler();
-                                $error_handler->registerErrorHandler();
-                                $error_handler->registerShutdownFunction();
-                                $handler = new RavenHandler(
-                                    $client,
                                     constant('\Monolog\Logger::'.$config['level'])
                                 );
                                 $handlers[] = $handler;
@@ -154,7 +161,7 @@ class LoggerFactory
 
     /**
      * @param string $name
-     *
+     * @param string $filename
      * @return LoggerInterface
      */
     public function createLogger(string $name = 'roadiz', string $filename = 'roadiz'): LoggerInterface

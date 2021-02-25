@@ -30,7 +30,7 @@
  */
 use RZ\Roadiz\Core\Routing\RouteHandler;
 
-class RouteHandlerTest extends PHPUnit_Framework_TestCase
+class RouteHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider getBaseRouteProvider

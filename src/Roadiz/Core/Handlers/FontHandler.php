@@ -6,20 +6,20 @@ namespace RZ\Roadiz\Core\Handlers;
 use RZ\Roadiz\Core\Entities\Font;
 
 /**
- * Handle operations with fonts entities..
+ * Handle operations with fonts entities.
  */
 class FontHandler extends AbstractHandler
 {
-    /**
-     * @var Font
-     */
-    protected $font;
+    protected ?Font $font = null;
 
     /**
      * @return Font
      */
-    public function getFont()
+    public function getFont(): Font
     {
+        if (null === $this->font) {
+            throw new \BadMethodCallException('Font is null');
+        }
         return $this->font;
     }
 

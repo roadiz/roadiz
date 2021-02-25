@@ -32,9 +32,9 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\ListManagers\NodePaginator;
 use RZ\Roadiz\Core\ListManagers\Paginator;
-use RZ\Roadiz\Tests\DefaultThemeDependentCase;
+use RZ\Roadiz\Tests\DefaultThemeWithNodesDependentCase;
 
-class PaginatorTest extends DefaultThemeDependentCase
+class PaginatorTest extends DefaultThemeWithNodesDependentCase
 {
     public function testNodePaginatorTotalCount()
     {
@@ -49,9 +49,7 @@ class PaginatorTest extends DefaultThemeDependentCase
 
     /**
      * @dataProvider getTestingItemPerPage
-     *
      * @param $itemPerPage
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function testNodePaginatorFindByAtPage($itemPerPage)
@@ -101,9 +99,7 @@ class PaginatorTest extends DefaultThemeDependentCase
 
     /**
      * @dataProvider getTestingItemPerPage
-     *
      * @param $itemPerPage
-     *
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function testPaginatorFindByAtPage($itemPerPage)

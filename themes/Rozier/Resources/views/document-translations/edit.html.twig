@@ -20,7 +20,6 @@
                 }) }}" class="uk-alert-close uk-close"></a>
                 <h4>{% trans %}versions.viewing_a_previous_version{% endtrans %}</h4>
                 <p>{{ currentVersion.loggedAt|format_datetime('full', 'short', locale=app.request.locale) }} - {{ currentVersion.username }}</p>
-
                 {% if revertForm %}
                     {{ form_start(revertForm, { attr: {id: 'revert-node-source-form'}}) }}
                     {{ form_widget(revertForm) }}

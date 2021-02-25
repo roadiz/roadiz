@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\Document;
 
 use RZ\Roadiz\Core\Entities\Document;
+use RZ\Roadiz\Core\Models\DocumentInterface;
 
 /**
  * Create private documents from UploadedFile.
@@ -17,7 +18,7 @@ class PrivateDocumentFactory extends AbstractDocumentFactory
     /**
      * @inheritDoc
      */
-    protected function createDocument()
+    protected function createDocument(): DocumentInterface
     {
         $document = new Document();
         $document->setPrivate(true);

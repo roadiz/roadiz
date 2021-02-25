@@ -15,7 +15,6 @@ use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -31,11 +30,8 @@ use Themes\Rozier\Forms\TagType;
 use Themes\Rozier\RozierApp;
 use Themes\Rozier\Traits\VersionedControllerTrait;
 use Themes\Rozier\Widgets\TagTreeWidget;
-use Twig_Error_Runtime;
 
 /**
- * Class TagsController
- *
  * @package Themes\Rozier\Controllers\Tags
  */
 class TagsController extends RozierApp
@@ -48,7 +44,6 @@ class TagsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -80,26 +75,22 @@ class TagsController extends RozierApp
     /**
      * Return an edition form for current translated tag.
      *
-     * @param Request        $request
-     * @param integer        $tagId
-     * @param integer | null $translationId
+     * @param Request $request
+     * @param int $tagId
+     * @param int|null $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function editTranslatedAction(Request $request, $tagId, $translationId = null)
+    public function editTranslatedAction(Request $request, int $tagId, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
-
-        /** @var TranslationRepository $translationRepository */
-        $translationRepository = $this->get('em')->getRepository(Translation::class);
 
         if (null === $translationId) {
             /** @var Translation $translation */
             $translation = $this->get('defaultTranslation');
         } else {
             /** @var Translation $translation */
-            $translation = $this->get('em')->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, $translationId);
         }
 
         if (null !== $translation) {
@@ -145,7 +136,6 @@ class TagsController extends RozierApp
             }
 
             $form = $this->createForm(TagTranslationType::class, $tagTranslation, [
-                'em' => $this->get('em'),
                 'tagName' => $tag->getTagName(),
                 'disabled' => $this->isReadOnly,
             ]);
@@ -192,6 +182,8 @@ class TagsController extends RozierApp
                     ], JsonResponse::HTTP_BAD_REQUEST);
                 }
             }
+            /** @var TranslationRepository $translationRepository */
+            $translationRepository = $this->get('em')->getRepository(Translation::class);
 
             $this->assignation['tag'] = $tag;
             $this->assignation['translation'] = $translation;
@@ -211,7 +203,6 @@ class TagsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function bulkDeleteAction(Request $request)
     {
@@ -267,7 +258,6 @@ class TagsController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
     public function addAction(Request $request)
     {
@@ -280,9 +270,7 @@ class TagsController extends RozierApp
         if ($tag !== null &&
             $translation !== null) {
             $this->assignation['tag'] = $tag;
-            $form = $this->createForm(TagType::class, $tag, [
-                'em' => $this->get('em'),
-            ]);
+            $form = $this->createForm(TagType::class, $tag);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -326,24 +314,21 @@ class TagsController extends RozierApp
      * Return a edition form for requested tag settings .
      *
      * @param Request $request
-     * @param int     $tagId
+     * @param int $tagId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function editSettingsAction(Request $request, $tagId)
+    public function editSettingsAction(Request $request, int $tagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
 
         /** @var Tag $tag */
-        $tag = $this->get('em')
-            ->find(Tag::class, (int) $tagId);
+        $tag = $this->get('em')->find(Tag::class, $tagId);
 
         if ($tag !== null) {
             $form = $this->createForm(TagType::class, $tag, [
-                'em' => $this->get('em'),
                 'tagName' => $tag->getTagName(),
             ]);
 
@@ -393,13 +378,12 @@ class TagsController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int     $tagId
-     * @param int     $translationId
+     * @param int $tagId
+     * @param int|null $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function treeAction(Request $request, $tagId, $translationId = null)
+    public function treeAction(Request $request, int $tagId, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
@@ -416,7 +400,7 @@ class TagsController extends RozierApp
         }
 
         if (null !== $tag) {
-            $widget = new TagTreeWidget($request, $this, $tag);
+            $widget = new TagTreeWidget($request, $this->get('em'), $tag);
             $this->assignation['tag'] = $tag;
             $this->assignation['translation'] = $translation;
             $this->assignation['specificTagTree'] = $widget;
@@ -432,15 +416,13 @@ class TagsController extends RozierApp
      * @param int     $tagId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function deleteAction(Request $request, $tagId)
+    public function deleteAction(Request $request, int $tagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS_DELETE');
 
         /** @var Tag $tag */
-        $tag = $this->get('em')
-            ->find(Tag::class, (int) $tagId);
+        $tag = $this->get('em')->find(Tag::class, $tagId);
 
         if ($tag !== null &&
             !$tag->isLocked()) {
@@ -481,32 +463,27 @@ class TagsController extends RozierApp
      * Handle tag creation pages.
      *
      * @param Request $request
-     * @param int     $tagId
-     * @param int     $translationId
+     * @param int $tagId
+     * @param int|null $translationId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function addChildAction(Request $request, $tagId, $translationId = null)
+    public function addChildAction(Request $request, int $tagId, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
         $translation = $this->get('defaultTranslation');
 
         if ($translationId !== null) {
-            $translation = $this->get('em')
-                ->find(Translation::class, (int) $translationId);
+            $translation = $this->get('em')->find(Translation::class, $translationId);
         }
-        $parentTag = $this->get('em')
-            ->find(Tag::class, (int) $tagId);
+        $parentTag = $this->get('em')->find(Tag::class, $tagId);
         $tag = new Tag();
         $tag->setParent($parentTag);
 
         if ($translation !== null &&
             $parentTag !== null) {
-            $form = $this->createForm(TagType::class, $tag, [
-                'em' => $this->get('em'),
-            ]);
+            $form = $this->createForm(TagType::class, $tag);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -559,14 +536,12 @@ class TagsController extends RozierApp
      * @param int     $tagId
      *
      * @return Response
-     * @throws Twig_Error_Runtime
      */
-    public function editNodesAction(Request $request, $tagId)
+    public function editNodesAction(Request $request, int $tagId)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_TAGS');
 
-        $tag = $this->get('em')
-            ->find(Tag::class, (int) $tagId);
+        $tag = $this->get('em')->find(Tag::class, $tagId);
 
         if (null !== $tag) {
             $translation = $this->get('defaultTranslation');

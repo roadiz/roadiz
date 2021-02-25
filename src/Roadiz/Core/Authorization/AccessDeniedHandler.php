@@ -18,22 +18,10 @@ use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
  */
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @var UrlGeneratorInterface
-     */
-    protected $urlGenerator;
-    /**
-     * @var string
-     */
-    private $redirectRoute;
-    /**
-     * @var array
-     */
-    private $redirectParameters;
+    protected LoggerInterface $logger;
+    protected UrlGeneratorInterface $urlGenerator;
+    protected string $redirectRoute;
+    protected array $redirectParameters;
 
     /**
      * @param UrlGeneratorInterface $urlGenerator
@@ -67,7 +55,10 @@ class AccessDeniedHandler implements AccessDeniedHandlerInterface
 
         $returnJson = $request->isXmlHttpRequest() ||
             $request->getRequestFormat() === 'json' ||
-            (count($request->getAcceptableContentTypes()) === 1 && $request->getAcceptableContentTypes()[0] === 'application/json') ||
+            (
+                count($request->getAcceptableContentTypes()) === 1 &&
+                $request->getAcceptableContentTypes()[0] === 'application/json'
+            ) ||
             ($request->attributes->has('_format') && $request->attributes->get('_format') === 'json');
 
         if ($returnJson) {

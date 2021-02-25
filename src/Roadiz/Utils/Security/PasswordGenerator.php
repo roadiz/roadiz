@@ -3,6 +3,13 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Security;
 
+use RZ\Roadiz\Random\PasswordGeneratorInterface;
+use RZ\Roadiz\Random\RandomGenerator;
+
+/**
+ * @deprecated Use \RZ\Roadiz\Random\PasswordGenerator
+ * @package RZ\Roadiz\Utils\Security
+ */
 class PasswordGenerator extends RandomGenerator implements PasswordGeneratorInterface
 {
     /**
@@ -13,13 +20,12 @@ class PasswordGenerator extends RandomGenerator implements PasswordGeneratorInte
      * The available characters in each set are user friendly - there are no ambiguous
      * characters such as i, l, 1, o, 0, etc.
      *
-     * @param  integer $length
-     *
+     * @param int $length
      * @return string
      *
      * @see https://gist.github.com/tylerhall/521810
      */
-    public function generatePassword($length = 9)
+    public function generatePassword(int $length = 12)
     {
         $sets = [];
         $sets[] = 'abcdefghjkmnpqrstuvwxyz';

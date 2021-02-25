@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Viewers;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -14,40 +14,24 @@ use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
-/**
- * UserViewer
- */
 class UserViewer
 {
-    /** @var LoggerInterface */
-    protected $logger;
-
-    /** @var User|null  */
-    protected $user;
-
-    /** @var EntityManager */
-    protected $entityManager;
-
-    /** @var Settings */
-    protected $settingsBag;
-
-    /** @var TranslatorInterface */
-    protected $translator;
-
-    /** @var EmailManager */
-    protected $emailManager;
+    protected EntityManagerInterface $entityManager;
+    protected Settings $settingsBag;
+    protected TranslatorInterface $translator;
+    protected EmailManager $emailManager;
+    protected LoggerInterface $logger;
+    protected ?User $user = null;
 
     /**
-     * @param EntityManager       $entityManager
+     * @param EntityManagerInterface       $entityManager
      * @param Settings            $settingsBag
      * @param TranslatorInterface $translator
      * @param EmailManager        $emailManager
      * @param LoggerInterface     $logger
-     *
-     * @internal param User $user
      */
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         Settings $settingsBag,
         TranslatorInterface $translator,
         EmailManager $emailManager,
@@ -76,7 +60,7 @@ class UserViewer
         $route = 'loginResetPage',
         $htmlTemplate = 'users/reset_password_email.html.twig',
         $txtTemplate = 'users/reset_password_email.txt.twig'
-    ) {
+    ): bool {
         $emailContact = $this->getContactEmail();
         $siteName = $this->getSiteName();
 
@@ -128,9 +112,9 @@ class UserViewer
     /**
      * @return string
      */
-    protected function getContactEmail()
+    protected function getContactEmail(): string
     {
-        $emailContact = $this->settingsBag->get('email_sender');
+        $emailContact = $this->settingsBag->get('email_sender') ?? '';
         if (empty($emailContact)) {
             $emailContact = "noreply@roadiz.io";
         }
@@ -141,9 +125,9 @@ class UserViewer
     /**
      * @return string
      */
-    protected function getSiteName()
+    protected function getSiteName(): string
     {
-        $siteName = $this->settingsBag->get('site_name');
+        $siteName = $this->settingsBag->get('site_name') ?? '';
         if (empty($siteName)) {
             $siteName = "Unnamed site";
         }
@@ -154,7 +138,7 @@ class UserViewer
     /**
      * @return null|User
      */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -163,7 +147,7 @@ class UserViewer
      * @param null|User $user
      * @return UserViewer
      */
-    public function setUser($user)
+    public function setUser(?User $user)
     {
         $this->user = $user;
         return $this;

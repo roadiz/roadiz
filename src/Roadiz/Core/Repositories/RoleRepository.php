@@ -6,8 +6,6 @@ namespace RZ\Roadiz\Core\Repositories;
 use RZ\Roadiz\Core\Entities\Role;
 
 /**
- * Class RoleRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<\RZ\Roadiz\Core\Entities\Role>
  */
@@ -33,6 +31,9 @@ class RoleRepository extends EntityRepository
     /**
      * @param string $roleName
      * @return Role
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function findOneByName($roleName)
     {

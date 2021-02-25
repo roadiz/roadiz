@@ -44,7 +44,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @var Tag|null
      * @Serializer\Exclude
      */
-    protected $parent;
+    protected $parent = null;
     /**
      * @ORM\OneToMany(targetEntity="Tag", mappedBy="parent", orphanRemoval=true, cascade={"persist", "merge"})
      * @ORM\OrderBy({"position" = "ASC"})
@@ -63,7 +63,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      *     cascade={"all"}
      * )
      * @var Collection<TagTranslation>
-     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\Groups({"translated_tag"})
      * @Serializer\Type("ArrayCollection<RZ\Roadiz\Core\Entities\TagTranslation>")
      * @Serializer\Accessor(setter="setTranslatedTags", getter="getTranslatedTags")
      */
@@ -75,12 +75,12 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
      * @Serializer\Type("string")
      * @Serializer\Accessor(getter="getTagName", setter="setTagName")
      */
-    private $tagName;
+    private $tagName = '';
     /**
      * @var string
      * @Serializer\Exclude
      */
-    private $dirtyTagName;
+    private $dirtyTagName = '';
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @Serializer\Groups({"tag", "tag_base", "node", "nodes_sources"})
@@ -123,6 +123,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
         $this->nodes = new ArrayCollection();
         $this->translatedTags = new ArrayCollection();
         $this->children = new ArrayCollection();
+        $this->initAbstractDateTimed();
     }
 
     /**
@@ -217,7 +218,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @return Collection
+     * @return Collection<TagTranslation>
      */
     public function getTranslatedTags(): Collection
     {
@@ -225,7 +226,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     }
 
     /**
-     * @param Collection $translatedTags
+     * @param Collection<TagTranslation> $translatedTags
      *
      * @return Tag
      */
@@ -241,7 +242,7 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
 
     /**
      * @param Translation $translation
-     * @return Collection
+     * @return Collection<TagTranslation>
      */
     public function getTranslatedTagsByTranslation(Translation $translation)
     {
@@ -345,5 +346,47 @@ class Tag extends AbstractDateTimedPositioned implements LeafInterface
     public function __toString()
     {
         return '[' . ($this->getId() > 0 ? $this->getId() : 'NULL') . '] ' . $this->getTagName();
+    }
+
+    /**
+     * @return string|null
+     *
+     * @Serializer\Groups({"tag", "tag_base", "node", "nodes_sources"})
+     * @Serializer\VirtualProperty
+     * @Serializer\Type("string|null")
+     */
+    public function getName(): ?string
+    {
+        return $this->getTranslatedTags()->first() ?
+            $this->getTranslatedTags()->first()->getName() :
+            $this->getTagName();
+    }
+
+    /**
+     * @return string|null
+     *
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\VirtualProperty
+     * @Serializer\Type("string|null")
+     */
+    public function getDescription(): ?string
+    {
+        return $this->getTranslatedTags()->first() ?
+            $this->getTranslatedTags()->first()->getDescription() :
+            '';
+    }
+
+    /**
+     * @return array
+     *
+     * @Serializer\Groups({"tag", "node", "nodes_sources"})
+     * @Serializer\VirtualProperty
+     * @Serializer\Type("array<RZ\Roadiz\Core\Entities\Document>")
+     */
+    public function getDocuments(): array
+    {
+        return $this->getTranslatedTags()->first() ?
+            $this->getTranslatedTags()->first()->getDocuments() :
+            [];
     }
 }

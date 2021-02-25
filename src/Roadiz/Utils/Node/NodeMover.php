@@ -20,36 +20,16 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class NodeMover
+class NodeMover
 {
-    /**
-     * @var UrlGeneratorInterface
-     */
-    protected $urlGenerator;
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $dispatcher;
-    /**
-     * @var CacheProvider
-     */
-    protected $cacheProvider;
-    /**
-     * @var HandlerFactoryInterface
-     */
-    protected $handlerFactory;
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    protected EntityManagerInterface $entityManager;
+    protected UrlGeneratorInterface $urlGenerator;
+    protected HandlerFactoryInterface $handlerFactory;
+    protected EventDispatcherInterface $dispatcher;
+    protected CacheProvider $cacheProvider;
+    protected LoggerInterface $logger;
 
     /**
-     * NodeMover constructor.
-     *
      * @param EntityManagerInterface   $entityManager
      * @param UrlGeneratorInterface    $urlGenerator
      * @param HandlerFactoryInterface  $handlerFactory

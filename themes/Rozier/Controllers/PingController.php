@@ -7,8 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class PingController
- *
  * @package Themes\Rozier\Controllers
  */
 class PingController extends RozierApp

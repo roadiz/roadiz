@@ -129,6 +129,26 @@
                 <target state="translated">Restrict your Open ID / OAuth2 scopes. Write scopes separated with spaces. If you leave it empty, OpenID connection will try to request all available scopes from Discovery document.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_preview_scheme">
+                <source>custom_preview_scheme</source>
+                <target state="translated">Custom preview scheme</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_preview_scheme.help">
+                <source>custom_preview_scheme.help</source>
+                <target state="translated">Replace "?_preview=1" query string to preview website content with a dedicated domain name. It can be useful when using *headless* Roadiz version.</target>
+                <note>Setting description</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="use_typed_node_names">
+                <source>use_typed_node_names</source>
+                <target state="translated">Use typed node names</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="use_typed_node_names.help">
+                <source>use_typed_node_names.help</source>
+                <target state="translated">Once enabled, this option will suffix each name for unreachable nodes (blocks) with their node-type to avoid name conflicts with reachable nodes (pages).</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="openid_username_claim">
                 <source>openid_username_claim</source>
                 <target state="translated">Open ID username claim</target>
@@ -138,6 +158,37 @@
                 <source>openid_username_claim.help</source>
                 <target state="translated">If empty, Roadiz will use standard “email” claim as user-name for every Open ID accounts.</target>
                 <note>Setting description</note>
+            </trans-unit>
+      <!-- Setting groups names -->
+      <trans-unit xml:space="preserve" id="APIs">
+                <source>APIs</source>
+                <target state="translated">APIs</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Development">
+                <source>Development</source>
+                <target state="translated">Development</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Emailings">
+                <source>Emailings</source>
+                <target state="translated">Emailings</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="OpenId">
+                <source>OpenId</source>
+                <target state="translated">OpenId</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Site informations">
+                <source>Site informations</source>
+                <target state="translated">Site information</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Social networks">
+                <source>Social networks</source>
+                <target state="translated">Social networks</target>
+                <note>Setting group name</note>
             </trans-unit>
     </body>
   </file>

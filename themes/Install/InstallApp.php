@@ -6,6 +6,7 @@ namespace Themes\Install;
 use Exception;
 use Locale;
 use RZ\Roadiz\CMS\Controllers\AppController;
+use RZ\Roadiz\Config\Configuration;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Console\Tools\Fixtures;
 use RZ\Roadiz\Console\Tools\Requirements;
@@ -25,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Themes\Install\Forms\UserType;
-use Twig_Error_Runtime;
+use Themes\Rozier\RozierApp;
 
 /**
  * Installation application
@@ -69,7 +70,6 @@ class InstallApp extends AppController
      * @param Request $request
      *
      * @return RedirectResponse|Response
-     * @throws Twig_Error_Runtime
      */
     public function indexAction(Request $request)
     {
@@ -303,16 +303,7 @@ class InstallApp extends AppController
     {
         $builder = $this->createFormBuilder()
             ->add('language', ChoiceType::class, [
-                'choices' => [
-                    'English' => 'en',
-                    'Español' => 'es',
-                    'Français' => 'fr',
-                    'Русский язык' => 'ru',
-                    'Türkçe' => 'tr',
-                    'Italiano' => 'it',
-                    'српска ћирилица' => 'sr_Cyrl',
-                    '中文' => 'zh',
-                ],
+                'choices' => RozierApp::$backendLanguages,
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
@@ -355,6 +346,7 @@ class InstallApp extends AppController
         $kernel = $this->get('kernel');
         return new Fixtures(
             $this->get('em'),
+            $this->get(Configuration::class),
             $kernel->getCacheDir(),
             $kernel->getRootDir() . '/conf/config.yml',
             $kernel->getRootDir(),

@@ -1,152 +1,157 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="file.ext" target-language="ru">
     <body>
       <!-- welcome.user.email -->
       <trans-unit id="welcome.user.email.%site%">
         <source>welcome.user.email.%site%</source>
-        <target xml:lang="ru" state="translated">&#x423;&#x447;&#x435;&#x442;&#x43D;&#x430;&#x44F; &#x437;&#x430;&#x43F;&#x438;&#x441;&#x44C; &#x431;&#x44B;&#x43B;&#x430; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x43D;&#x430; &#x434;&#x43B;&#x44F; &#x432;&#x430;&#x441; &#x43D;&#x430; &#x441;&#x430;&#x439;&#x442;&#x435; %site%.</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x434;&#x43E;&#x431;&#x440;&#x43E; &#x43F;&#x43E;&#x436;&#x430;&#x43B;&#x43E;&#x432;&#x430;&#x442;&#x44C;.&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;.&#x43F;&#x43E;&#x447;&#x442;&#x43E;&#x432;&#x44B;&#x439; &#x44F;&#x449;&#x438;&#x43A;.%site%</target>
-        </alt-trans>
+        <target state="translated">для вас была создана учётная запись на сайте %site%</target>
       </trans-unit>
       <trans-unit id="your.user.account">
         <source>your.user.account</source>
-        <target xml:lang="ru" state="translated">&#x412;&#x430;&#x448;&#x430; &#x443;&#x447;&#x435;&#x442;&#x43D;&#x430;&#x44F; &#x437;&#x430;&#x43F;&#x438;&#x441;&#x44C;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x432;&#x430;&#x448;.&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x439;.&#x430;&#x43A;&#x43A;&#x430;&#x443;&#x43D;&#x442;</target>
-        </alt-trans>
+        <target state="translated">ваша учетная запись</target>
       </trans-unit>
       <trans-unit id="username">
         <source>username</source>
-        <target xml:lang="ru" state="translated">&#x418;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x438;&#x43C;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44F;</target>
-        </alt-trans>
+        <target state="translated">Имя пользователя</target>
       </trans-unit>
       <trans-unit id="email">
         <source>email</source>
-        <target xml:lang="ru" state="translated">&#x42D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x430;&#x44F; &#x43F;&#x43E;&#x447;&#x442;&#x430;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x43F;&#x43E;&#x447;&#x442;&#x43E;&#x432;&#x44B;&#x439; &#x44F;&#x449;&#x438;&#x43A;</target>
-        </alt-trans>
+        <target state="translated">Электронная почта</target>
       </trans-unit>
       <trans-unit id="password">
         <source>password</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44C;</target>
-        </alt-trans>
+        <target state="translated">пароль</target>
       </trans-unit>
       <trans-unit id="for.questions.email">
         <source>for.questions.email</source>
-        <target xml:lang="ru" state="translated">&#x41E;&#x441;&#x442;&#x430;&#x43B;&#x438;&#x441;&#x44C; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;&#x44B;? &#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x44C;&#x442;&#x435; &#x43D;&#x430;&#x43C; &#x43F;&#x438;&#x441;&#x44C;&#x43C;&#x43E;:</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x43F;&#x43E;&#x447;&#x442;&#x43E;&#x432;&#x44B;&#x439; &#x44F;&#x449;&#x438;&#x43A;.&#x434;&#x43B;&#x44F;.&#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;&#x43E;&#x432;</target>
-        </alt-trans>
+        <target state="translated">Остались вопросы? Отправьте нам письмо:</target>
       </trans-unit>
       <!-- Contact forms -->
       <trans-unit id="contact.form">
         <source>contact.form</source>
-        <target xml:lang="ru" state="translated">&#x41A;&#x43E;&#x43D;&#x442;&#x430;&#x43A;&#x442;&#x43D;&#x430;&#x44F; &#x438;&#x43D;&#x444;&#x43E;&#x440;&#x43C;&#x430;&#x446;&#x438;&#x44F;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x444;&#x43E;&#x440;&#x43C;&#x430;.&#x43E;&#x431;&#x440;&#x430;&#x449;&#x435;&#x43D;&#x438;&#x44F;</target>
-        </alt-trans>
+        <target state="translated">Контактная информация</target>
       </trans-unit>
       <trans-unit id="new.contact.form.%site%">
         <source>new.contact.form.%site%</source>
-        <target xml:lang="ru" state="needs-translation">new.contact.form.%site%</target>
+        <target state="translated">Новая контактная форма %site%</target>
       </trans-unit>
       <trans-unit id="form.successfully.sent">
         <source>form.successfully.sent</source>
-        <target xml:lang="ru" state="needs-translation">form.successfully.sent</target>
+        <target state="translated">Ваш запрос был успешно отправлен</target>
+      </trans-unit>
+      <trans-unit id="form.has.errors">
+        <source>form.has.errors</source>
+        <target state="translated">В форме допущены ошибки</target>
       </trans-unit>
       <trans-unit id="%field%.is.mandatory">
         <source>%field%.is.mandatory</source>
-        <target xml:lang="ru" state="translated">&#x41F;&#x43E;&#x43B;&#x435; %field% &#x43D;&#x435; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x43E;</target>
+        <target state="translated">Поле %field% не заполнено</target>
       </trans-unit>
       <trans-unit id="email.not.valid">
         <source>email.not.valid</source>
-        <target xml:lang="ru" state="translated">&#x410;&#x434;&#x440;&#x435;&#x441; &#x44D;&#x43B;&#x435;&#x43A;&#x442;&#x440;&#x43E;&#x43D;&#x43D;&#x43E;&#x439; &#x43F;&#x43E;&#x447;&#x442;&#x44B; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D; &#x43D;&#x435; &#x432;&#x435;&#x440;&#x43D;&#x43E;</target>
+        <target state="translated">Адрес электронной почты указан не верно</target>
       </trans-unit>
       <trans-unit id="date">
         <source>date</source>
-        <target xml:lang="ru" state="translated">&#x414;&#x430;&#x442;&#x430;</target>
-        <alt-trans>
-          <target xml:lang="ru">&#x434;&#x430;&#x442;&#x430;</target>
-        </alt-trans>
+        <target state="translated">Дата</target>
       </trans-unit>
       <trans-unit id="ip.address">
         <source>ip.address</source>
-        <target xml:lang="ru" state="translated">IP &#x430;&#x434;&#x440;&#x435;&#x441;</target>
+        <target state="translated">IP адрес</target>
       </trans-unit>
       <trans-unit id="submittedAt">
         <source>submittedAt</source>
-        <target xml:lang="ru" state="translated">&#x43E;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E;&#x412;</target>
+        <target state="translated">оправленоВ</target>
       </trans-unit>
       <trans-unit id="form.submit">
         <source>form.submit</source>
-        <target xml:lang="ru" state="translated">&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x438;&#x442;&#x44C;</target>
+        <target state="translated">Отправить</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="answer.form">
                 <source>answer.form</source>
-                <target xml:lang="ru" state="translated">&#x424;&#x43E;&#x440;&#x43C;&#x430; &#x434;&#x43B;&#x44F; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x430;</target>
+                <target state="translated">Форма для ответа</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.send">
                 <source>customForm.%name%.send</source>
-                <target xml:lang="ru" state="needs-translation">customForm.%name%.send</target>
+                <target state="translated">Запрос %name% отправлен</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="new.answer.form.%site%">
                 <source>new.answer.form.%site%</source>
-                <target xml:lang="ru" state="needs-translation">new.answer.form.%site%</target>
+                <target state="translated">Новый запрос от %site%</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="file.not.accepted">
                 <source>file.not.accepted</source>
-                <target xml:lang="ru" state="translated">&#x41F;&#x440;&#x438;&#x43A;&#x440;&#x435;&#x43F;&#x43B;&#x435;&#x43D;&#x43D;&#x44B;&#x439; &#x444;&#x430;&#x439;&#x43B; &#x43D;&#x435; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x431;&#x44B;&#x442;&#x44C; &#x43F;&#x440;&#x438;&#x43D;&#x44F;&#x442;</target>
+                <target state="translated">Прикрепленный файл не может быть принят</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.answer.sent">
                 <source>customForm.answer.sent</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x430;&#x448; &#x43E;&#x432;&#x435;&#x442; &#x443;&#x441;&#x43F;&#x435;&#x448;&#x43D;&#x43E; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;</target>
+                <target state="translated">Ваш овет успешно отправлен</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="none">
                 <source>none</source>
-                <target xml:lang="ru" state="translated">(&#x43D;&#x435;&#x442;)</target>
+                <target state="translated">(нет)</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="reset.password.request">
               <source>reset.password.request</source>
-              <target xml:lang="ru" state="translated">&#x417;&#x430;&#x43F;&#x440;&#x43E;&#x441; &#x43D;&#x430; &#x441;&#x431;&#x440;&#x43E;&#x441; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44F;</target>
+              <target state="translated">Запрос на сброс пароля</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
                 <source>you.asked.for.a.password.reset.on.%site%</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x44B; &#x437;&#x430;&#x43F;&#x440;&#x430;&#x448;&#x438;&#x432;&#x430;&#x43B;&#x438; &#x441;&#x431;&#x440;&#x43E;&#x441; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44F; &#x43D;&#x430; %site%</target>
+                <target state="translated">Вы запрашивали сброс пароля на %site%</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
                 <source>you.need.to.choose.a.new.password.using.following.link</source>
-                <target xml:lang="ru" state="translated">&#x412;&#x430;&#x43C; &#x43D;&#x443;&#x436;&#x43D;&#x43E; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x442;&#x44C; &#x43D;&#x43E;&#x432;&#x44B;&#x439; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44C; &#x43A; &#x432;&#x430;&#x448;&#x435;&#x439; &#x443;&#x447;&#x435;&#x442;&#x43D;&#x43E;&#x439; &#x437;&#x430;&#x43F;&#x438;&#x441;&#x438; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x44F; &#x441;&#x441;&#x44B;&#x43B;&#x43A;&#x443; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x443;&#x44E; &#x43D;&#x438;&#x436;&#x435;.</target>
+                <target state="translated">Вам нужно создать новый пароль к вашей учетной записи используя ссылку указаную ниже.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
                 <source>as.a.reminder.here.are.your.credentials</source>
-                <target xml:lang="ru" state="translated">&#x412; &#x43A;&#x430;&#x447;&#x435;&#x441;&#x442;&#x432;&#x435; &#x43D;&#x430;&#x43F;&#x43E;&#x43C;&#x438;&#x43D;&#x430;&#x43D;&#x438;&#x44F;, &#x432;&#x43E;&#x442; &#x432;&#x430;&#x448;&#x438; &#x443;&#x447;&#x435;&#x442;&#x43D;&#x44B;&#x435; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x435;.</target>
+                <target state="translated">В качестве напоминания, вот ваши учетные данные.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
-                <target xml:lang="ru" state="translated">&#x415;&#x441;&#x43B;&#x438; &#x432;&#x44B; &#x43D;&#x435; &#x437;&#x430;&#x43F;&#x440;&#x430;&#x448;&#x438;&#x432;&#x430;&#x43B;&#x438; &#x441;&#x43C;&#x435;&#x43D;&#x443; &#x43F;&#x430;&#x440;&#x43E;&#x43B;&#x44F;, &#x43F;&#x440;&#x43E;&#x441;&#x442;&#x43E; &#x43F;&#x440;&#x43E;&#x438;&#x433;&#x43D;&#x43E;&#x440;&#x438;&#x440;&#x443;&#x439;&#x442;&#x435; &#x44D;&#x442;&#x43E; &#x43F;&#x438;&#x441;&#x44C;&#x43C;&#x43E;</target>
+                <target state="translated">Если вы не запрашивали смену пароля, просто проигнорируйте это письмо</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="reset_your_password">
+                <source>reset_your_password</source>
+                <target state="translated">Сбросить пароль</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
                 <source>you.need.to.fill.this.required.field</source>
-                <target xml:lang="ru" state="translated">&#x42D;&#x442;&#x43E; &#x43F;&#x43E;&#x43B;&#x435; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E; &#x437;&#x430;&#x43F;&#x43E;&#x43B;&#x43D;&#x438;&#x442;&#x44C;</target>
+                <target state="translated">Это поле необходимо заполнить</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="*.required.fields">
                 <source>*.required.fields</source>
-                <target xml:lang="ru" state="translated">* &#x41E;&#x431;&#x44F;&#x437;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E;&#x435; &#x43F;&#x43E;&#x43B;&#x435;</target>
+                <target state="translated">* Обязательное поле</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance">
                 <source>website.is.under.maintenance</source>
-                <target xml:lang="ru" state="needs-translation">website.is.under.maintenance</target>
+                <target state="translated">Сайт закрыт для обслуживания</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon">
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
-                <target xml:lang="ru" state="needs-translation">website.is.under.maintenance.we.will.be.back.soon</target>
+                <target state="translated">Сайт закрыт на обслуживание, но скоро вернётся!</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="yaml.is.not.valid">
+                <source>yaml.is.not.valid.{{ error }}</source>
+                <target state="translated">YAML-код содержит ошибки ({{ error }}).</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="value.is.already.used">
+                <source>value.is.already.used</source>
+                <target state="translated">Это значение уже используется.</target>
+                <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_should_contains_at_least_one_capital_one_digit">
+                <source>password_should_contains_at_least_one_capital_one_digit</source>
+                <target state="translated">пароль должен содержать хотя бы одну заглавную цифру</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_blacklisted">
+                <source>password_blacklisted</source>
+                <target state="translated">пароль в черном списке</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_should_be_at_least_characters_long">
+                <source>password_should_be_at_least_{{length}}_characters_long</source>
+                <target state="translated">пароль должен содержать как минимум %length% символов</target>
             </trans-unit>
     </body>
   </file>

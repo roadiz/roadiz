@@ -13,8 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\Rozier\RozierApp;
 
 /**
- * Class CacheController
- *
  * @package Themes\Rozier\Controllers
  */
 class CacheController extends RozierApp
@@ -23,7 +21,6 @@ class CacheController extends RozierApp
      * @param Request $request
      *
      * @return Response
-     * @throws \Twig_Error_Runtime
      */
     public function deleteDoctrineCache(Request $request)
     {

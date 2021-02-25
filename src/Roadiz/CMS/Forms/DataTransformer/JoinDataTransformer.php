@@ -26,8 +26,6 @@ class JoinDataTransformer implements DataTransformerInterface
     private $entityClassname;
 
     /**
-     * JoinDataTransformer constructor.
-     *
      * @param NodeTypeField $nodeTypeField
      * @param EntityManagerInterface $entityManager
      * @param string $entityClassname
@@ -78,9 +76,17 @@ class JoinDataTransformer implements DataTransformerInterface
     public function reverseTransform($formToEntities)
     {
         if ($this->nodeTypeField->isManyToMany()) {
-            return $this->entityManager->getRepository($this->entityClassname)->findBy([
+            $unorderedEntities = $this->entityManager->getRepository($this->entityClassname)->findBy([
                 'id' => $formToEntities,
             ]);
+            /*
+             * Need to preserve order in POST data
+             */
+            usort($unorderedEntities, function (AbstractEntity $a, AbstractEntity $b) use ($formToEntities) {
+                return array_search($a->getId(), $formToEntities) -
+                    array_search($b->getId(), $formToEntities);
+            });
+            return $unorderedEntities;
         }
         if ($this->nodeTypeField->isManyToOne()) {
             return $this->entityManager->getRepository($this->entityClassname)->findOneBy([

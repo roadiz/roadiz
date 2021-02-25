@@ -26,7 +26,7 @@
         {{ form_end(form) }}
 
         {% apply spaceless %}
-        <ul class="documents-list" id="documents-list-bulk-delete">
+        <div class="documents-list" id="documents-list-bulk-delete">
         {% for document in documents %}
         {% include '@Rozier/documents/singleDocumentThumbnail.html.twig' with {
             document: document,
@@ -34,7 +34,7 @@
             controls: false
         } only %}
         {% endfor %}
-        </ul>
+        </div>
         {% endapply %}
 
     </article>

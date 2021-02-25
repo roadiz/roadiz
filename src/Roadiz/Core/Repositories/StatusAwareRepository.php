@@ -3,18 +3,17 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Repositories;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\QueryBuilder;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Role;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
- * Class StatusAwareRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @template T
  * @extends EntityRepository<T>
@@ -25,7 +24,6 @@ class StatusAwareRepository extends EntityRepository
      * @var bool
      */
     private $displayNotPublishedNodes;
-
     /**
      * @var bool
      */
@@ -34,9 +32,13 @@ class StatusAwareRepository extends EntityRepository
     /**
      * @inheritDoc
      */
-    public function __construct(EntityManager $em, Mapping\ClassMetadata $class, Container $container, $isPreview = false)
-    {
-        parent::__construct($em, $class, $container, $isPreview);
+    public function __construct(
+        EntityManagerInterface $em,
+        Mapping\ClassMetadata $class,
+        Container $container,
+        PreviewResolverInterface $previewResolver
+    ) {
+        parent::__construct($em, $class, $container, $previewResolver);
 
         $this->displayNotPublishedNodes = false;
         $this->displayAllNodesStatuses = false;
@@ -85,13 +87,16 @@ class StatusAwareRepository extends EntityRepository
 
     /**
      * @return bool
+     * @deprecated Do not depend on granted ROLE, preview logic can vary
      */
     protected function isBackendUserWithPreview()
     {
         /** @var AuthorizationCheckerInterface|null $checker */
         $checker = $this->get('securityAuthorizationChecker');
         try {
-            return $this->isPreview === true && null !== $checker && $checker->isGranted(Role::ROLE_BACKEND_USER);
+            return $this->previewResolver->isPreview() &&
+                null !== $checker &&
+                $checker->isGranted($this->previewResolver->getRequiredRole());
         } catch (AuthenticationCredentialsNotFoundException $e) {
             return false;
         }
@@ -114,7 +119,7 @@ class StatusAwareRepository extends EntityRepository
          * Check if user can see not-published node based on its Token
          * and context.
          */
-        if (true === $this->isDisplayingNotPublishedNodes() || $this->isBackendUserWithPreview()) {
+        if (true === $this->isDisplayingNotPublishedNodes() || $this->previewResolver->isPreview()) {
             $qb->andWhere($qb->expr()->lte($prefix . '.status', Node::PUBLISHED));
         } else {
             $qb->andWhere($qb->expr()->eq($prefix . '.status', Node::PUBLISHED));

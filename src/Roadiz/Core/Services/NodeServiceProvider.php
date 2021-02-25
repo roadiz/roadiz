@@ -5,10 +5,14 @@ namespace RZ\Roadiz\Core\Services;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Core\Events\NodeNameSubscriber;
 use RZ\Roadiz\Core\Routing\NodesSourcesPathAggregator;
 use RZ\Roadiz\Core\Routing\OptimizedNodesSourcesGraphPathAggregator;
+use RZ\Roadiz\Core\SearchEngine\Subscriber\DefaultNodesSourcesIndexingSubscriber;
 use RZ\Roadiz\Utils\Node\NodeMover;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\Node\NodeTranstyper;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 class NodeServiceProvider implements ServiceProviderInterface
 {
@@ -39,10 +43,25 @@ class NodeServiceProvider implements ServiceProviderInterface
                 $c['em'],
                 $c['router'],
                 $c['factory.handler'],
-                $c['dispatcher'],
+                $c['proxy.dispatcher'],
                 $c['nodesSourcesUrlCacheProvider'],
                 $c['logger.doctrine']
             );
         };
+
+
+        $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
+            $dispatcher->addSubscriber(new NodeNameSubscriber(
+                $c['logger.doctrine'],
+                $c[NodeNamePolicyInterface::class],
+                $c[NodeMover::class]
+            ));
+            $dispatcher->addSubscriber(
+                new DefaultNodesSourcesIndexingSubscriber(
+                    $c['factory.handler']
+                )
+            );
+            return $dispatcher;
+        });
     }
 }

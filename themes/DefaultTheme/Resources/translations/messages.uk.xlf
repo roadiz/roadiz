@@ -4,47 +4,51 @@
     <body>
       <trans-unit id="hello.world" approved="yes">
         <source>hello.world</source>
-        <target xml:lang="uk">Привіт світ!</target>
+        <target state="final">Привіт світ!</target>
       </trans-unit>
       <trans-unit id="nodeName" approved="yes">
         <source>node.name.is.%name%</source>
-        <target xml:lang="uk">Це вузол %name%</target>
+        <target state="final">Це вузол %name%</target>
       </trans-unit>
       <trans-unit id="translationName" approved="yes">
         <source>translation.is.%name%</source>
-        <target xml:lang="uk">Це переклад "%name%"</target>
+        <target state="final">Це переклад "%name%"</target>
       </trans-unit>
       <trans-unit id="contact" approved="yes">
         <source>contact</source>
-        <target xml:lang="uk">Контакти</target>
+        <target state="final">Контакти</target>
       </trans-unit>
       <trans-unit id="contact.us" approved="yes">
         <source>contact.us</source>
-        <target xml:lang="uk">Повідомте нас</target>
+        <target state="final">Повідомте нас</target>
       </trans-unit>
       <trans-unit id="your.email" approved="yes">
         <source>your.email</source>
-        <target xml:lang="uk">Адреса вашої електронної пошти</target>
+        <target state="final">Адреса вашої електронної пошти</target>
       </trans-unit>
       <trans-unit id="your.name" approved="yes">
         <source>your.name</source>
-        <target xml:lang="uk">Ваше ім'я</target>
+        <target state="final">Ваше ім'я</target>
       </trans-unit>
       <trans-unit id="your.message" approved="yes">
         <source>your.message</source>
-        <target xml:lang="uk">Ваше повідомлення</target>
+        <target state="final">Ваше повідомлення</target>
       </trans-unit>
       <trans-unit id="call.me.back" approved="yes">
         <source>call.me.back</source>
-        <target xml:lang="uk">Передзвоніть мені</target>
+        <target state="final">Передзвоніть мені</target>
       </trans-unit>
       <trans-unit id="send.contact.form" approved="yes">
         <source>send.contact.form</source>
-        <target xml:lang="uk">Відправити форму</target>
+        <target state="final">Відправити форму</target>
       </trans-unit>
       <trans-unit id="document" approved="yes">
-        <source>document</source>
-        <target xml:lang="uk">Прикріпіть зображення чи PDF (&lt; 5 MB)</target>
+        <source><![CDATA[document]]></source>
+        <target state="final"><![CDATA[Прикріпіть зображення чи PDF (&lt; 5 MB)]]></target>
+      </trans-unit>
+      <trans-unit id="error404.message">
+        <source>error404.message</source>
+        <target state="translated">Сторінку не знайдено</target>
       </trans-unit>
     </body>
   </file>

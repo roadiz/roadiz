@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Themes\Rozier\AjaxControllers;
 
 use Doctrine\ORM\EntityManager;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\Serializer;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,8 +18,6 @@ use Themes\Rozier\Models\NodeModel;
 use Themes\Rozier\Models\NodeSourceModel;
 
 /**
- * Class AjaxNodesExplorerController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodesExplorerController extends AbstractAjaxController
@@ -37,8 +37,8 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
         $arrayFilter = $this->parseFilterFromRequest($request);
-        /** @var NodeSourceSearchHandler|null $searchHandler */
-        $searchHandler = $this->get('solr.search.nodeSource');
+        /** @var NodeSourceSearchHandlerInterface|null $searchHandler */
+        $searchHandler = $this->get(NodeSourceSearchHandlerInterface::class);
         if ($request->get('search') !== '' && null !== $searchHandler) {
             $responseArray = $this->getSolrSearchResults($request, $searchHandler, $arrayFilter);
         } else {
@@ -51,9 +51,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
             ]);
         }
 
-        return new JsonResponse(
-            $responseArray
-        );
+        return $this->createSerializedResponse($responseArray);
     }
 
     /**
@@ -93,7 +91,7 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
     /**
      * @param Request $request
-     *
+     * @param array $arrayFilter
      * @return array
      */
     protected function getNodeSearchResults(Request $request, array $arrayFilter): array
@@ -122,13 +120,16 @@ class AjaxNodesExplorerController extends AbstractAjaxController
 
     /**
      * @param Request                 $request
-     * @param NodeSourceSearchHandler $searchHandler
+     * @param NodeSourceSearchHandlerInterface $searchHandler
      * @param array                   $arrayFilter
      *
      * @return array
      */
-    protected function getSolrSearchResults(Request $request, NodeSourceSearchHandler $searchHandler, array $arrayFilter): array
-    {
+    protected function getSolrSearchResults(
+        Request $request,
+        NodeSourceSearchHandlerInterface $searchHandler,
+        array $arrayFilter
+    ): array {
         $searchHandler->boostByUpdateDate();
         $currentPage = $request->get('page', 1);
 
@@ -186,15 +187,11 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         $nodes = $this->sortIsh($nodes, $cleanNodeIds);
         $nodesArray = $this->normalizeNodes($nodes);
 
-        $responseArray = [
+        return $this->createSerializedResponse([
             'status' => 'confirm',
             'statusCode' => 200,
             'items' => $nodesArray
-        ];
-
-        return new JsonResponse(
-            $responseArray
-        );
+        ]);
     }
 
     /**
@@ -224,5 +221,30 @@ class AjaxNodesExplorerController extends AbstractAjaxController
         }
 
         return array_values($nodesArray);
+    }
+
+    /**
+     * @param array $data
+     * @return JsonResponse
+     */
+    protected function createSerializedResponse(array $data): JsonResponse
+    {
+        /** @var Serializer $serializer */
+        $serializer = $this->container['serializer'];
+
+        return new JsonResponse(
+            $serializer->serialize(
+                $data,
+                'json',
+                SerializationContext::create()->setGroups([
+                    'document_display',
+                    'explorer_thumbnail',
+                    'model'
+                ])
+            ),
+            200,
+            [],
+            true
+        );
     }
 }

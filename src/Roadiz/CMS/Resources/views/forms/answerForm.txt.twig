@@ -9,6 +9,5 @@
 
 {% for field in fields %}
 {{ field.label|default(field.name|trans) }}: {% if field.name == "submittedAt" %}{{ field.value|format_datetime("medium", "short", locale=app.request.locale) }}{% else %}{{ field.value }}{% endif %}
-
 {% endfor %}
 {% endblock %}

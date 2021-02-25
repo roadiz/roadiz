@@ -1,0 +1,1124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="./themes/Rozier/Resources/translations/messages.po" source-language="en" datatype="plaintext" target-language="de">
+    <body>
+      <trans-unit xml:space="preserve" id="2">
+        <source>node.%name%.updated</source>
+        <target state="translated">Knoten "%name%" wurde aktuallisiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="3">
+        <source>node.%nodeId%.not_exists</source>
+        <target state="translated">Knoten %nodeId% existiert nicht.</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="4">
+        <source>node.%name%.status.%field%.updated</source>
+        <target state="translated">Der Status "%field%" vom Knoten %name%  wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="5">
+        <source>node.has_no.field.%field%</source>
+        <target state="translated">Knoten hat kein Feld mit dem Namen "%field%".</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="6">
+        <source>node.id.not_specified</source>
+        <target state="translated">Es wurde keine Knoten ID definiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="7">
+        <source>document.%name%.updated</source>
+        <target state="translated">Das Dokument "%name%" wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="8">
+        <source>document.%name%.deleted</source>
+        <target state="translated">Das Dokument "%name%" wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="9">
+        <source>document.%name%.cannot_delete</source>
+        <target state="translated">Das Dokument "%name%" konnte nicht gelöscht werden.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="10">
+        <source>document.%name%.uploaded</source>
+        <target state="translated">Das Dokument "%name%" wurde hochgeladen.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="11">
+        <source>document.cannot_persist</source>
+        <target state="translated">Das Dokument konnte nicht in der Datenbank gespeichert werden.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="12">
+        <source>name</source>
+        <target state="translated">Name</target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="13">
+        <source>description</source>
+        <target state="translated">Beschreibung</target>
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="14">
+        <source>copyright</source>
+        <target state="translated">Copyright</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="15">
+        <source>private</source>
+        <target state="translated">Privat</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="16">
+        <source>choose.documents.to_upload</source>
+        <target state="translated">Wähle die hochzuladenden Dokumente aus.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="17">
+        <source>cache.deleted</source>
+        <target state="translated">Der Cache wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="18">
+        <source>group.%name%.created</source>
+        <target state="translated">Die Gruppe %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="19">
+        <source>group.%name%.deleted</source>
+        <target state="translated">Die Gruppe %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="20">
+        <source>group.%name%.updated</source>
+        <target state="translated">Die Gruppe %name% wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="21">
+        <source>role.%role%.linked_group.%group%</source>
+        <target state="translated">Die Rolle %role% wurde zur Gruppe %group% hinzugefügt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="22">
+        <source>role.%role%.removed_from_group.%group%</source>
+        <target state="translated">Die Rolle %role% wurde aus der Gruppe %group% entefernt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="23">
+        <source>user.%user%.linked.group.%group%</source>
+        <target state="translated">Der Benutzer %user% wurde mit der Gruppe %group% verlinkt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="24">
+        <source>user.%user%.removed_from_group.%group%</source>
+        <target state="translated">Der benutzer %user% wurde aus der Gruppe %group% entfernt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="25">
+        <source>group.name</source>
+        <target state="translated">Gruppenname</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="26">
+        <source>choose.role</source>
+        <target state="translated">Bitte wähle eine Rolle.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="27">
+        <source>choose.user</source>
+        <target state="translated">Bitte wähle einen Benutzer.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="28">
+        <source>group.name.already.exists</source>
+        <target state="translated">Dieser Gruppenname existiert bereits.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="29">
+        <source>theme.%name%.created</source>
+        <target state="translated">Das Theme (%name%) wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="30">
+        <source>theme.%name%.updated</source>
+        <target state="translated">Das Theme (%name%) wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="31">
+        <source>theme.%name%.deleted</source>
+        <target state="translated">Das Theme (%name%) wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="32">
+        <source>themeClass</source>
+        <target state="translated">Theme-Klasse</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="33">
+        <source>available</source>
+        <target state="translated">verfügbar</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="34">
+        <source>hostname</source>
+        <target state="translated">Host-Name</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="35">
+        <source>backendTheme</source>
+        <target state="translated">Backend-Theme</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="36">
+        <source>theme.%name%.no_creation.already_exists</source>
+        <target state="translated">Das Theme (%name%) konnte nicht erstellt werden, da es bereits existiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="37">
+        <source>user.%name%.updated</source>
+        <target state="translated">Der Benutzer %name% wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="38">
+        <source>user.%user%.role.%role%.linked</source>
+        <target state="translated">Der Benutzer %user% wurde der Rolle "%role%" hinzugefügt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="39">
+        <source>user.%name%.role_removed</source>
+        <target state="translated">Der Benutzer %name% wurde von der Rolle entfernt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="40">
+        <source>user.%user%.group.%group%.linked</source>
+        <target state="translated">Der Benutzer %user% wurde der Gruppe %group% hinzugefügt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="41">
+        <source>user.%user%.group.%group%.removed</source>
+        <target state="translated">Der Benutzer %user% wurde aus der Gruppe %group% entfernt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="42">
+        <source>user.%name%.created</source>
+        <target state="translated">Der Benutzer %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="43">
+        <source>user.%name%.deleted</source>
+        <target state="translated">Der Benutzer %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="47">
+        <source>user.facebook_name.%name%._does_not_exist</source>
+        <target state="translated">Der Facebook Profilname (%name%) existiert nicht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="48">
+        <source>email</source>
+        <target state="translated">E-Mail</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="49">
+        <source>username</source>
+        <target state="translated">Benutzername</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="50">
+        <source>password</source>
+        <target state="translated">Passwort</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="51">
+        <source>passwordVerify</source>
+        <target state="translated">Passwortbestätigung</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="52">
+        <source>firstName</source>
+        <target state="translated">Vorname</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="53">
+        <source>lastName</source>
+        <target state="translated">Nachname</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="phone">
+        <source>phone</source>
+        <target state="translated">Telefonnummer</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="54">
+        <source>company</source>
+        <target state="translated">Firma</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="55">
+        <source>job</source>
+        <target state="translated">Funktion</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="56">
+        <source>birthday</source>
+        <target state="translated">Geburtstag</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="57">
+        <source>facebookName</source>
+        <target state="translated">Facebook Profilname</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="58">
+        <source>role.%name%.created</source>
+        <target state="translated">Die Rolle "%name%" wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="59">
+        <source>role.%name%.deleted</source>
+        <target state="translated">Die Rolle "%name%" wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="60">
+        <source>role.%name%.updated</source>
+        <target state="translated">Die Rolle "%name%" wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="61">
+        <source>role.name.must_comply_with_standard</source>
+        <target state="translated">Der Rollenname muss starten mit "ROLE_" darf nur Grossbuchstaben und Unterlinien beinhalten.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="62">
+        <source>role.name.already.exists</source>
+        <target state="translated">Der Rollennamen existiert bereits.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="63">
+        <source>role.required.cannot_be_updated</source>
+        <target state="translated">Diese Rolle wird vom System benötigt und kann nicht geändert werden.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="64">
+        <source>role.is.required</source>
+        <target state="translated">Eine Rolle wird benötigt</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="65">
+        <source>nodeType.imported.created</source>
+        <target state="translated">Der Knotentyp wurde erfolgreich importiert und in der Datenbank gespeichert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="66">
+        <source>nodeType.imported.updated</source>
+        <target state="translated">Der Knotentyp wurde erfolgreich in die Datenbank importiert und gespeichert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="67">
+        <source>file.format.not_valid</source>
+        <target state="translated">Das Fileformat ist nicht gültig.</target>
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="68">
+        <source>file.not_uploaded</source>
+        <target state="translated">Die Datei konnte nicht hochgeladen werden.</target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="69">
+        <source>nodeType.file</source>
+        <target state="translated">Knotentyp Datei</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="70">
+        <source>tag.%name%.updated</source>
+        <target state="translated">Der Tag %name% wurde aktuallisiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="71">
+        <source>tag.%name%.created</source>
+        <target state="translated">Der Tag %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="72">
+        <source>tag.%name%.deleted</source>
+        <target state="translated">Der Tag %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="73">
+        <source>child.tag.%name%.created</source>
+        <target state="translated">Der "Kinder-Tag" %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="77">
+        <source>locked</source>
+        <target state="translated">Gesperrt</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="78">
+        <source>visible</source>
+        <target state="translated">Sichtbar</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="invisible">
+        <source>invisible</source>
+        <target state="translated">unsichtbar</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="79">
+        <source>parent_tagId</source>
+        <target state="translated">"Eltern-Tag" ID</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="80">
+        <source>tagName</source>
+        <target state="translated">Tag name</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="81">
+        <source>node.seo.updated</source>
+        <target state="translated">Die Knotentyp SEO Daten wurden aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="82">
+        <source>node.seo.not.updated</source>
+        <target state="translated">Die Knotentyp SEO Daten konnten nicht aktuallisiert werden.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="83">
+        <source>url_alias.%alias%.updated</source>
+        <target state="translated">Der Url Alias "%alias%" wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="84">
+        <source>url_alias.%alias%.no_update.already_exists</source>
+        <target state="translated">Der Url Alias "%alias%" konnte nicht aktuallisiert werden, weil er schon existiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="85">
+        <source>url_alias.%alias%.deleted</source>
+        <target state="translated">Der Url Alias "%alias%" wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="86">
+        <source>url_alias.%alias%.created.%translation%</source>
+        <target state="translated">Der Url Alias "%alias%" wurde für die Übersetzung "%translation%" angelegt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="87">
+        <source>url_alias.%alias%.no_creation.already_exists</source>
+        <target state="translated">Der Url Alias "%alias%" wurde nicht erstellt, weil er schon existiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="88">
+        <source>url_alias.no_translation.%translation%</source>
+        <target state="translated">Der Url Alias für die Übersetzung %translation% konnte nicht angelegt werden, weil diese nicht existiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="89">
+        <source>urlAlias</source>
+        <target state="translated">Url Alias </target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="90">
+        <source>translation</source>
+        <target state="translated">Übersetzung</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="91">
+        <source>metaTitle</source>
+        <target state="translated">Meta-Titel</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="92">
+        <source>metaKeywords</source>
+        <target state="translated">Meta Stichworte</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="93">
+        <source>metaDescription</source>
+        <target state="translated">Meta Beschreibung</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="94">
+        <source>nodeTypeField.%name%.updated</source>
+        <target state="translated">Das Knotentyp Feld %name% wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="95">
+        <source>nodeTypeField.%name%.created</source>
+        <target state="translated">Das Knotentyp Feld %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="96">
+        <source>nodeTypeField.%name%.deleted</source>
+        <target state="translated">Das Knotentyp Feld %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="97">
+        <source>label</source>
+        <target state="translated">Beschriftung</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="98">
+        <source>type</source>
+        <target state="translated">Typ</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="99">
+        <source>indexed</source>
+        <target state="translated">Index</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="100">
+        <source>defaultValues</source>
+        <target state="translated">Standardwerte</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="101">
+        <source>enter_values_comma_separated</source>
+        <target state="translated">Gib die Werte mit Komma getrennt ein.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="102">
+        <source>node.%name%.translated</source>
+        <target state="translated">Der Knoten %name% wurde übersetzt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="103">
+        <source>node_source.%node_source%.updated.%translation%</source>
+        <target state="translated">Der Knotenursprung %node_source% wurde für die Übersetzung %translation% aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="104">
+        <source>node.%node%.linked.tag.%tag%</source>
+        <target state="translated">Der knoten %node% wurde getagged mit "%tag%".</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="105">
+        <source>tag.%name%.removed</source>
+        <target state="translated">Der Tag %name% wurde entfernt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="106">
+        <source>node.%name%.created</source>
+        <target state="translated">Der Knoten %name% wurde erstellt.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="107">
+        <source>node.%name%.deleted</source>
+        <target state="translated">Der Knoten %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="112">
+        <source>nodeName</source>
+        <target state="translated">Knotenname</target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="113">
+        <source>nodeType</source>
+        <target state="translated">Knotentyp</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="114">
+        <source>priority</source>
+        <target state="translated">Priorität</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="115">
+        <source>node.isHome</source>
+        <target state="translated">Benütze diesen Knoten als Homepage</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="116">
+        <source>choose.tag</source>
+        <target state="translated">Wähle eine Tag aus</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="117">
+        <source>nodeType.%name%.updated</source>
+        <target state="translated">Der Knotentyp %name% wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="118">
+        <source>nodeType.%name%.created</source>
+        <target state="translated">Der Knotentyp %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="119">
+        <source>nodeType.%name%.deleted</source>
+        <target state="translated">Der Knotentyp %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="122">
+        <source>nodeType.displayName</source>
+        <target state="translated">Anzeigename</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="123">
+        <source>nodeType.newsletterType</source>
+        <target state="translated">Newsletter Knotentyp</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="124">
+        <source>nodeType.hidingNodes</source>
+        <target state="translated">Knotentyp soll Knoten verstecken ?</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="125">
+        <source>role.imported</source>
+        <target state="translated">Die Rolle wurde importiert</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="126">
+        <source>role.file</source>
+        <target state="translated">Datei-Rollen</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="127">
+        <source>setting.%name%.updated</source>
+        <target state="translated">Die Einstellung %name% wurde aktuallisiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="128">
+        <source>setting.%name%.created</source>
+        <target state="translated">Die Eigenschaft %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="129">
+        <source>setting.%name%.deleted</source>
+        <target state="translated">Die Eigenschaft %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="130">
+        <source>setting.%name%.no_update.already_exists</source>
+        <target state="translated">Die Eigenschaft %name% kann nicht aktuallisiert werden, weil sie bereits existiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="131">
+        <source>setting.%name%.no_creation.already_exists</source>
+        <target state="translated">Die Eigenschaft %name% kann nicht erstellt werden, weil sie bereits existiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="132">
+        <source>value</source>
+        <target state="translated">Wert</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="133">
+        <source>setting.group</source>
+        <target state="translated">Eigenschaftsgruppe</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="134">
+        <source>database.schema.updated</source>
+        <target state="translated">Das Datenbankschema wurde aktuallisiert.</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="135">
+        <source>database.schema.cannot_updated</source>
+        <target state="translated">Datenbankschema kann nicht aktualisiert werden</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="136">
+        <source>group.imported.updated</source>
+        <target state="translated">Die Gruppe wurde erfolgreich importiert und in der Datebank gespeichert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="137">
+        <source>group.file</source>
+        <target state="translated">Gruppendatei</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="138">
+        <source>font.%name%.created</source>
+        <target state="translated">Die Schrift %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="139">
+        <source>font.%name%.deleted</source>
+        <target state="translated">Die Schrift %name% wurde gelöscht.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="140">
+        <source>font.%name%.updated</source>
+        <target state="translated">Die Schrift %name% wurde aktuallisiert.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="141">
+        <source>font.name</source>
+        <target state="translated">Schriftname</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="142">
+        <source>font.variant</source>
+        <target state="translated">Schriftvariante</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="143">
+        <source>font.eotFile</source>
+        <target state="translated">EOT Schriftdatei</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="144">
+        <source>font.woffFile</source>
+        <target state="translated">WOFF Schriftdatei</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="145">
+        <source>font.otfFile</source>
+        <target state="translated">OTF Schriftdatei</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="146">
+        <source>font.svgFile</source>
+        <target state="translated">SVG Schriftdatei</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="150">
+        <source>settingFile</source>
+        <target state="translated">Einstellungsdatei</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="151">
+        <source>translation.%name%.made_default</source>
+        <target state="translated">Die Übersetzung %name% wurde als Hauptsprache eingestellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="152">
+        <source>translation.%name%.updated</source>
+        <target state="translated">Die Übersetzung %name% wurde aktuallisiert</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="153">
+        <source>translation.%name%.created</source>
+        <target state="translated">Die Übersetzung %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="154">
+        <source>translation.%name%.deleted</source>
+        <target state="translated">Die Übersetzung %name% wurde erstellt.</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="158">
+        <source>locale</source>
+        <target state="translated">Region</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="159">
+        <source>add.tag</source>
+        <target state="translated">Schlagwort hinzufügen</target>
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="161">
+        <source>tags</source>
+        <target state="translated">Schlagwörter</target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="162">
+        <source>id</source>
+        <target state="translated">ID</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="163">
+        <source>actions</source>
+        <target state="translated">Aktionen</target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="164">
+        <source>delete</source>
+        <target state="translated">löschen</target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="168">
+        <source>save</source>
+        <target state="translated">speichern</target>
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="172">
+        <source>cancel</source>
+        <target state="translated">abbrechen</target>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="178">
+        <source>delete.tag</source>
+        <target state="translated">Löschen diese Etikett</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="179">
+        <source>edit.user.%name%.groups</source>
+        <target state="translated">Gruppen von %name% bearbeiten</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="180">
+        <source>group</source>
+        <target state="translated">Gruppe</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="181">
+        <source>unlink</source>
+        <target state="translated">Verknüpfung entfernen</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="182">
+        <source>add.group</source>
+        <target state="translated">Gruppe hinzufügen</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="183">
+        <source>add.user</source>
+        <target state="translated">Nutzer hinzufügen</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="184">
+        <source>back_to.users</source>
+        <target state="translated">Zurück zu den Nutzern</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="185">
+        <source>edit.group.%name%</source>
+        <target state="translated">Gruppe %name% bearbeiten</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="186">
+        <source>Welcome</source>
+        <target state="translated">Willkommen</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="187">
+        <source>edit.user.%name%</source>
+        <target state="translated">Nutzer %name% bearbeiten</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="189">
+        <source>import</source>
+        <target state="translated">importieren</target>
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="190">
+        <source>hello.%name%</source>
+        <target state="translated">Hallo %name%</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="192">
+        <source>edit</source>
+        <target state="translated">bearbeiten</target>
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="195">
+        <source>are_you_sure.delete.tag</source>
+        <target state="translated">Sind Sie einverstanden, diese Etikett zu löschen ?</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="196">
+        <source>search</source>
+        <target state="translated">Suche</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="197">
+        <source>goto.page</source>
+        <target state="translated">Gehe zu Seite</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="198">
+        <source>prev</source>
+        <target state="translated">Zurück</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="199">
+        <source>next</source>
+        <target state="translated">Vor</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="200">
+        <source>delete.user.%name%</source>
+        <target state="translated">lösche %name%</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="201">
+        <source>are_you_sure.delete.user</source>
+        <target state="translated">Möchten Sie diesen Nutzer wirklich löschen</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="202">
+        <source>edit.group.%name%.roles</source>
+        <target state="translated">bearbeiten der %name% Gruppenberechtigungen</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="203">
+        <source>role</source>
+        <target state="translated">Rolle</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="205">
+        <source>add.role</source>
+        <target state="translated">Hinzufügen eine Rolle</target>
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="206">
+        <source>delete.user</source>
+        <target state="translated">Löschen der Benutzer ,,%name%"</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="207">
+        <source>translations</source>
+        <target state="translated">Übersetzung</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="208">
+        <source>add.translation</source>
+        <target state="translated">Hinzufügen eine Übersetzung</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="210">
+        <source>status</source>
+        <target state="translated">Status</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="248">
+        <source>dashboard</source>
+        <target state="translated">Dashboard</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="249">
+        <source>history</source>
+        <target state="translated">Verlauf</target>
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="250">
+        <source>comments</source>
+        <target state="translated">Kommentare</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="251">
+        <source>themes</source>
+        <target state="translated">Themes</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="252">
+        <source>theme</source>
+        <target state="translated">Theme</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="260">
+        <source>export</source>
+        <target state="translated">exportieren</target>
+
+
+
+
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="262">
+        <source>welcome</source>
+        <target state="translated">Wilkommen</target>
+
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="265">
+        <source>add</source>
+        <target state="translated">hinzufügen</target>
+
+
+      </trans-unit>
+      <!-- Count translations -->
+      <!-- Node type fields datatypes -->
+      <!-- Dynamic button in nodeTree add.a.%nodeType% -->
+      <!-- Setting groups -->
+      <!-- Default settings names -->
+      <!-- document usage -->
+      <!-- node statuses -->
+      <!-- are_you_sure.undelete.node.and.data -->
+      <!-- undelete.node.%name% -->
+      <!-- embed documents -->
+      <!-- stacks -->
+      <!-- Node tree contextual menu commands -->
+      <!-- Some constraints messages -->
+      <!-- Font variantes -->
+      <!-- Tag multiple children creation -->
+      <!-- Raw documents -->
+      <!-- Bulk tags -->
+      <!-- Custom form nav bar -->
+      <!-- Node form help messages -->
+      <!-- Font form help messages -->
+      <!-- Node type field form help messages -->
+      <!-- Explorer and Widget translation -->
+      <!-- New Join node-type-field type -->
+    </body>
+  </file>
+</xliff>

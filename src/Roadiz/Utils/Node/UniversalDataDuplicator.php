@@ -3,27 +3,22 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Node;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodesSourcesRepository;
-use RZ\Roadiz\Core\Repositories\NodeTypeFieldRepository;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
 
-class UniversalDataDuplicator
+final class UniversalDataDuplicator
 {
-    /**
-     * @var EntityManager
-     */
-    private $em;
+    private EntityManagerInterface $em;
 
     /**
-     * UniversalDataDuplicator constructor.
-     * @param EntityManager $em
+     * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -35,8 +30,11 @@ class UniversalDataDuplicator
      *
      * @param NodesSources $source
      * @return bool
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\ORMException
      */
-    public function duplicateUniversalContents(NodesSources $source)
+    public function duplicateUniversalContents(NodesSources $source): bool
     {
         /*
          * Only if source is default translation.
@@ -89,7 +87,7 @@ class UniversalDataDuplicator
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function hasDefaultTranslation(NodesSources $source)
+    private function hasDefaultTranslation(NodesSources $source): bool
     {
         /** @var TranslationRepository $translationRepository */
         $translationRepository = $this->em->getRepository(Translation::class);
@@ -113,8 +111,11 @@ class UniversalDataDuplicator
      * @param NodesSources $destSource
      * @param NodeTypeField $field
      */
-    protected function duplicateNonVirtualField(NodesSources $universalSource, NodesSources $destSource, NodeTypeField $field)
-    {
+    protected function duplicateNonVirtualField(
+        NodesSources $universalSource,
+        NodesSources $destSource,
+        NodeTypeField $field
+    ): void {
         $getter = $field->getGetterName();
         $setter = $field->getSetterName();
 
@@ -125,11 +126,12 @@ class UniversalDataDuplicator
      * @param NodesSources  $universalSource
      * @param NodesSources  $destSource
      * @param NodeTypeField $field
-     *
-     * @throws \Doctrine\ORM\ORMException
      */
-    protected function duplicateDocumentsField(NodesSources $universalSource, NodesSources $destSource, NodeTypeField $field)
-    {
+    protected function duplicateDocumentsField(
+        NodesSources $universalSource,
+        NodesSources $destSource,
+        NodeTypeField $field
+    ): void {
         $newDocuments = $this->em
             ->getRepository(NodesSourcesDocuments::class)
             ->findBy(['nodeSource' => $universalSource, 'field' => $field]);

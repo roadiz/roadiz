@@ -26,7 +26,7 @@ class Redirection extends AbstractDateTimed
      * @ORM\Column(type="string", nullable=true)
      * @var string|null
      */
-    private $redirectUri = "";
+    private $redirectUri = null;
 
     /**
      * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\NodesSources")
@@ -129,5 +129,6 @@ class Redirection extends AbstractDateTimed
     public function __construct()
     {
         $this->type = Response::HTTP_MOVED_PERMANENTLY;
+        $this->initAbstractDateTimed();
     }
 }

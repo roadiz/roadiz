@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
+use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Core\AbstractEntities\PositionedInterface;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 
-interface AttributeValueInterface extends PositionedInterface
+interface AttributeValueInterface extends PositionedInterface, PersistableInterface
 {
     /**
      * @return AttributeInterface
@@ -32,11 +33,11 @@ interface AttributeValueInterface extends PositionedInterface
     public function getAttributeValueTranslations(): Collection;
 
     /**
-     * @param Translation $translation
+     * @param TranslationInterface $translation
      *
      * @return AttributeValueTranslationInterface
      */
-    public function getAttributeValueTranslation(Translation $translation): ?AttributeValueTranslationInterface;
+    public function getAttributeValueTranslation(TranslationInterface $translation): ?AttributeValueTranslationInterface;
 
     /**
      * @param Collection<AttributeValueTranslationInterface> $attributeValueTranslations

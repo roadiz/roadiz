@@ -7,28 +7,25 @@ use RZ\Roadiz\Core\Authorization\Chroot\NodeChrootResolver;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\Tag;
 use RZ\Roadiz\Core\Entities\Translation;
-use RZ\Roadiz\Core\Entities\User;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Themes\Rozier\Widgets\NodeTreeWidget;
 
 /**
- * Class AjaxNodeTreeController
- *
  * @package Themes\Rozier\AjaxControllers
  */
 class AjaxNodeTreeController extends AbstractAjaxController
 {
     /**
      * @param Request $request
-     * @param null    $translationId
+     * @param int|null    $translationId
      *
      * @return JsonResponse
      * @throws \Twig\Error\LoaderError
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function getTreeAction(Request $request, $translationId = null)
+    public function getTreeAction(Request $request, ?int $translationId = null)
     {
         $this->denyAccessUnlessGranted('ROLE_ACCESS_NODES');
 
@@ -64,7 +61,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
 
                 $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $node,
                     $translation
                 );
@@ -111,7 +108,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
 
                 $nodeTree = new NodeTreeWidget(
                     $this->getRequest(),
-                    $this,
+                    $this->get('em'),
                     $parent,
                     $translation
                 );
@@ -124,7 +121,7 @@ class AjaxNodeTreeController extends AbstractAjaxController
         $responseArray = [
             'statusCode' => '200',
             'status' => 'success',
-            'nodeTree' => $this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation),
+            'nodeTree' => trim($this->getTwig()->render('widgets/nodeTree/nodeTree.html.twig', $this->assignation)),
         ];
 
         return new JsonResponse(

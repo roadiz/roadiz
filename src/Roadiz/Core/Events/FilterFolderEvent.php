@@ -7,7 +7,6 @@ use RZ\Roadiz\Core\Entities\Folder;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- * Class FilterFolderEvent
  * @package RZ\Roadiz\Core\Events
  */
 abstract class FilterFolderEvent extends Event
@@ -18,7 +17,6 @@ abstract class FilterFolderEvent extends Event
     protected $folder;
 
     /**
-     * FilterFolderEvent constructor.
      * @param Folder $folder
      */
     public function __construct(Folder $folder)

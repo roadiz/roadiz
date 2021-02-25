@@ -1,11 +1,11 @@
-<li class="document-item">
+<div class="document-item" data-uk-tooltip="{animation:true, pos:'bottom'}" title="{{ document.filename }}">
     <div class="document-border"></div>
     <figure class="document-image">
         {% if not document.private and (document.isImage or document.isSvg or document.hasThumbnails) %}
             {{ document|display(thumbnailFormat) }}
         {% endif %}
-        {% if not (document.isImage or document.isSvg) %}
-            <div class="document-platform-icon"><i class="uk-icon-file-{{ document.getShortType }}-o"></i></div>
+        {% if not (document.isImage or document.isSvg) and document.shortType != 'unknown' %}
+            <div class="document-platform-icon"><i class="uk-icon-file-{{ document.shortType }}-o"></i></div>
         {% endif %}
     </figure>
     <div class="document-name">{{ document.filename|default(document.documentTranslations.first.name)|centralTruncate(18, -4)}}</div>
@@ -33,4 +33,4 @@
             {% endif %}
         {% endif %}
     </div>
-</li>
+</div>

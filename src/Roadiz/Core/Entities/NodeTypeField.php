@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use RZ\Roadiz\Contracts\NodeType\NodeTypeFieldInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractField;
 
 /**
@@ -25,7 +26,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractField;
  * )
  * @ORM\HasLifecycleCallbacks
  */
-class NodeTypeField extends AbstractField
+class NodeTypeField extends AbstractField implements NodeTypeFieldInterface
 {
     /**
      * If current field data should be the same over translations or not.
@@ -53,7 +54,7 @@ class NodeTypeField extends AbstractField
      * @ORM\JoinColumn(name="node_type_id", onDelete="CASCADE")
      * @Serializer\Exclude()
      */
-    private $nodeType;
+    private $nodeType = null;
 
     /**
      * @return NodeType|null
@@ -84,7 +85,7 @@ class NodeTypeField extends AbstractField
      */
     public function getNodeTypeName(): string
     {
-        return $this->getNodeType()->getName();
+        return $this->getNodeType() ? $this->getNodeType()->getName() : '';
     }
 
     /**
@@ -96,9 +97,9 @@ class NodeTypeField extends AbstractField
     private $minLength = null;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getMinLength()
+    public function getMinLength(): ?int
     {
         return $this->minLength;
     }
@@ -124,9 +125,9 @@ class NodeTypeField extends AbstractField
     private $maxLength = null;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getMaxLength()
+    public function getMaxLength(): ?int
     {
         return $this->maxLength;
     }
@@ -154,7 +155,7 @@ class NodeTypeField extends AbstractField
     /**
      * @return boolean $isIndexed
      */
-    public function isIndexed()
+    public function isIndexed(): bool
     {
         return $this->indexed;
     }
@@ -182,7 +183,7 @@ class NodeTypeField extends AbstractField
     /**
      * @return boolean $isVisible
      */
-    public function isVisible()
+    public function isVisible(): bool
     {
         return $this->visible;
     }
@@ -202,9 +203,9 @@ class NodeTypeField extends AbstractField
     /**
      * Tell if current field can be searched and indexed in a Search engine server.
      *
-     * @return boolean
+     * @return bool
      */
-    public function isSearchable()
+    public function isSearchable(): bool
     {
         return !$this->excludeFromSearch && (boolean) in_array($this->getType(), static::$searchableTypes);
     }
@@ -215,7 +216,7 @@ class NodeTypeField extends AbstractField
     public function getOneLineSummary()
     {
         return $this->getId() . " — " . $this->getLabel() . ' ['.$this->getName().']' .
-        ' - ' . static::$typeToHuman[$this->getType()] .
+        ' - ' . $this->getTypeName() .
         ($this->isIndexed() ? ' - indexed' : '') .
         (!$this->isVisible() ? ' - hidden' : '') . PHP_EOL;
     }
@@ -232,7 +233,7 @@ class NodeTypeField extends AbstractField
     /**
      * @return bool
      */
-    public function isUniversal()
+    public function isUniversal(): bool
     {
         return $this->universal;
     }

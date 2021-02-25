@@ -12,8 +12,6 @@ use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TypedObjectConstructorInterface;
 
 /**
- * Class RolesImporter
- *
  * @package RZ\Roadiz\CMS\Importers
  */
 class RolesImporter implements EntityImporterInterface, ContainerAwareInterface
@@ -21,8 +19,6 @@ class RolesImporter implements EntityImporterInterface, ContainerAwareInterface
     use ContainerAwareTrait;
 
     /**
-     * NodesImporter constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)

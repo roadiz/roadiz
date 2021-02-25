@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use Doctrine\Persistence\ObjectManager;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NoResultException;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
@@ -15,11 +14,23 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
 /**
- * Class TranstypeType
  * @package Themes\Rozier\Forms
  */
 class TranstypeType extends AbstractType
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -30,7 +41,7 @@ class TranstypeType extends AbstractType
             'nodeTypeId',
             ChoiceType::class,
             [
-                'choices' => $this->getAvailableTypes($options['em'], $options['currentType']),
+                'choices' => $this->getAvailableTypes($options['currentType']),
                 'label' => 'nodeType',
                 'constraints' => [
                     new NotNull(),
@@ -63,22 +74,18 @@ class TranstypeType extends AbstractType
         ]);
 
         $resolver->setRequired([
-            'em',
             'currentType',
         ]);
-
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('currentType', NodeType::class);
     }
 
     /**
-     * @param EntityManager $em
      * @param NodeType $currentType
      * @return array
      */
-    protected function getAvailableTypes(EntityManager $em, NodeType $currentType)
+    protected function getAvailableTypes(NodeType $currentType)
     {
-        $qb = $em->createQueryBuilder();
+        $qb = $this->entityManager->createQueryBuilder();
         $qb->select('n')
            ->from(NodeType::class, 'n')
            ->where($qb->expr()->neq('n.id', $currentType->getId()))

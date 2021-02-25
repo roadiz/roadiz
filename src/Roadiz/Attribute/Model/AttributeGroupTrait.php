@@ -4,24 +4,40 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Attribute\Model;
 
 use Doctrine\Common\Collections\Collection;
-use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Utils\StringHandler;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
- * Trait AttributeGroupTrait
- *
  * @package RZ\Roadiz\Attribute\Model
  */
 trait AttributeGroupTrait
 {
     /**
      * @var string
+     * @ORM\Column(type="string", name="canonical_name", nullable=false, unique=true)
+     * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
+     * @Serializer\Type("string")
      */
-    protected $canonicalName;
+    protected string $canonicalName = '';
+
     /**
      * @var Collection<AttributeInterface>
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Attribute\Model\AttributeInterface", mappedBy="group")
+     * @Serializer\Groups({"attribute_group"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Attribute\Model\AttributeInterface>")
      */
-    protected $attributes;
+    protected Collection $attributes;
+
+    /**
+     * @var Collection<AttributeGroupTranslationInterface>
+     * @ORM\OneToMany(targetEntity="RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface", mappedBy="attributeGroup", cascade={"all"})
+     * @Serializer\Groups({"attribute_group", "attribute", "node", "nodes_sources"})
+     * @Serializer\Type("ArrayCollection<RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface>")
+     * @Serializer\Accessor(getter="getAttributeGroupTranslations", setter="setAttributeGroupTranslations")
+     */
+    protected Collection $attributeGroupTranslations;
 
     public function getName(): ?string
     {
@@ -31,7 +47,7 @@ trait AttributeGroupTrait
         return $this->getCanonicalName();
     }
 
-    public function getTranslatedName(?Translation $translation): ?string
+    public function getTranslatedName(?TranslationInterface $translation): ?string
     {
         if (null === $translation) {
             return $this->getName();

@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Workflow;
 
 use RZ\Roadiz\Core\Entities\Node;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class NodeWorkflow extends Workflow
 {

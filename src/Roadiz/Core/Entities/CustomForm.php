@@ -43,13 +43,13 @@ class CustomForm extends AbstractDateTimed
      * @var string|null
      * @Serializer\Groups({"nodes_sources"})
      */
-    private $description;
+    private $description = null;
     /**
      * @ORM\Column(type="text", nullable=true)
      * @var string|null
      * @Serializer\Groups({"custom_form"})
      */
-    private $email;
+    private $email = null;
     /**
      * @ORM\Column(type="boolean", nullable=false, options={"default" = true})
      * @var bool
@@ -94,6 +94,7 @@ class CustomForm extends AbstractDateTimed
         $this->fields = new ArrayCollection();
         $this->customFormAnswers = new ArrayCollection();
         $this->nodes = new ArrayCollection();
+        $this->initAbstractDateTimed();
     }
 
     /**

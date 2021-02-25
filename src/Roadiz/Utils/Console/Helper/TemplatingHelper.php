@@ -6,12 +6,9 @@ namespace RZ\Roadiz\Utils\Console\Helper;
 use Symfony\Component\Console\Helper\Helper;
 use Twig\Environment;
 
-/**
- * TemplatingHelper.
- */
 class TemplatingHelper extends Helper
 {
-    protected $templating;
+    protected Environment $templating;
 
     public function __construct(Environment $templating)
     {
@@ -27,7 +24,7 @@ class TemplatingHelper extends Helper
     }
 
     /**
-     * Wraps Twig_Environment render method.
+     * Wraps Twig Environment render method.
      *
      * @param  string $templatePath
      * @param  array  $assignation

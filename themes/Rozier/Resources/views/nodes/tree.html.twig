@@ -17,10 +17,10 @@
         </h1>
 
         {% include '@Rozier/widgets/countFiltersBar.html.twig' with {filters: specificNodeTree.filters} only %}
-        {% include '@Rozier/nodes/navBack.html.twig' %}
+        {% include 'nodes/navBack.html.twig' %}
         {% if node %}
-            {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'tree'} %}
-            {% include '@Rozier/nodes/translationBar.html.twig' with {
+            {% include 'nodes/navBar.html.twig' with {"current": 'tree'} %}
+            {% include 'nodes/translationBar.html.twig' with {
                 "current": translation.id,
                 'route': 'nodesTreePage'
             } %}
@@ -64,7 +64,7 @@
         } only %}
     </article>
     {% if node %}
-        {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+        {% include 'nodes/actionsMenu.html.twig' %}
     {% endif %}
 </section>
 {% endblock %}

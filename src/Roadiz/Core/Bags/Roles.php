@@ -4,27 +4,20 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Core\Repositories\RoleRepository;
+use RZ\Roadiz\Bag\LazyParameterBag;
 
 class Roles extends LazyParameterBag
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private EntityManagerInterface $entityManager;
+    private ?RoleRepository $repository = null;
 
     /**
-     * @var RoleRepository
+     * @param EntityManagerInterface $entityManager
      */
-    private $repository;
-
-    /**
-     * SettingsBag constructor.
-     * @param EntityManager $entityManager
-     */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -41,7 +34,7 @@ class Roles extends LazyParameterBag
         return $this->repository;
     }
 
-    protected function populateParameters()
+    protected function populateParameters(): void
     {
         try {
             $roles = $this->getRepository()->findAll();

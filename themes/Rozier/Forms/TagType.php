@@ -17,9 +17,6 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
-/**
- * TagType.
- */
 class TagType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -31,7 +28,6 @@ class TagType extends AbstractType
                     new NotNull(),
                     new NotBlank(),
                     new UniqueTagName([
-                        'entityManager' => $options['em'],
                         'currentValue' => $options['tagName'],
                     ]),
                     new Length([
@@ -87,11 +83,6 @@ class TagType extends AbstractType
             ],
         ]);
 
-        $resolver->setRequired([
-            'em',
-        ]);
-
-        $resolver->setAllowedTypes('em', ObjectManager::class);
         $resolver->setAllowedTypes('tagName', 'string');
     }
 }

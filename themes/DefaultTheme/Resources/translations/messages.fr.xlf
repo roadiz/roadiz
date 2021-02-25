@@ -4,79 +4,83 @@
     <body>
       <trans-unit id="hello.world" approved="yes">
         <source>hello.world</source>
-        <target xml:lang="fr">Bonjour toi !</target>
+        <target state="final">Bonjour toi !</target>
       </trans-unit>
       <trans-unit id="nodeName" approved="yes">
         <source>node.name.is.%name%</source>
-        <target xml:lang="fr">C’est le nœud « %name% »</target>
+        <target state="final">C’est le nœud « %name% »</target>
       </trans-unit>
       <trans-unit id="translationName" approved="yes">
         <source>translation.is.%name%</source>
-        <target xml:lang="fr">On est en « %name% »</target>
+        <target state="final">On est en « %name% »</target>
       </trans-unit>
       <trans-unit id="contact" approved="yes">
         <source>contact</source>
-        <target xml:lang="fr">Contact</target>
+        <target state="final">Contact</target>
       </trans-unit>
       <trans-unit id="contact.us" approved="yes">
         <source>contact.us</source>
-        <target xml:lang="fr">Contactez-nous</target>
+        <target state="final">Contactez-nous</target>
       </trans-unit>
       <trans-unit id="your.email" approved="yes">
         <source>your.email</source>
-        <target xml:lang="fr">Votre email</target>
+        <target state="final">Votre email</target>
       </trans-unit>
       <trans-unit id="your.name" approved="yes">
         <source>your.name</source>
-        <target xml:lang="fr">Votre nom</target>
+        <target state="final">Votre nom</target>
       </trans-unit>
       <trans-unit id="your.message" approved="yes">
         <source>your.message</source>
-        <target xml:lang="fr">Votre message</target>
+        <target state="final">Votre message</target>
       </trans-unit>
       <trans-unit id="call.me.back" approved="yes">
         <source>call.me.back</source>
-        <target xml:lang="fr">Rappelez-moi</target>
+        <target state="final">Rappelez-moi</target>
       </trans-unit>
       <trans-unit id="send.contact.form" approved="yes">
         <source>send.contact.form</source>
-        <target xml:lang="fr">Envoyer le formulaire</target>
+        <target state="final">Envoyer le formulaire</target>
       </trans-unit>
       <trans-unit id="document" approved="yes">
         <source><![CDATA[document]]></source>
-        <target xml:lang="fr"><![CDATA[Joindre une image ou un PDF (< 5 Mo)]]></target>
+        <target state="final"><![CDATA[Joindre une image ou un PDF (< 5 Mo)]]></target>
       </trans-unit>
       <trans-unit id="cookie_choice.consent_message">
         <source>cookie_choice.consent_message</source>
-        <target xml:lang="fr" state="translated">En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de cookies à des fins de mesures d’audience.</target>
+        <target state="translated">En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de cookies à des fins de mesures d’audience.</target>
       </trans-unit>
       <trans-unit id="cookie_choice.close_message">
         <source>cookie_choice.close_message</source>
-        <target xml:lang="fr" state="translated">Fermer</target>
+        <target state="translated">Fermer</target>
       </trans-unit>
       <trans-unit id="cookie_choice.find_out_more_message">
         <source>cookie_choice.find_out_more_message</source>
-        <target xml:lang="fr" state="translated">En savoir plus</target>
+        <target state="translated">En savoir plus</target>
       </trans-unit>
       <trans-unit id="no_javascript_message">
         <source>no_javascript_message</source>
-        <target xml:lang="fr" state="translated">JavaScript est désactivé sur votre navigateur ou celui-ci ne supporte pas cette technologie. Veuillez l'activez ou mettre à jour votre navigateur pour une meilleure expérience de navigation.</target>
+        <target state="translated">JavaScript est désactivé sur votre navigateur ou celui-ci ne supporte pas cette technologie. Veuillez l'activez ou mettre à jour votre navigateur pour une meilleure expérience de navigation.</target>
       </trans-unit>
       <trans-unit id="browser_update.message">
         <source>browser_update.message</source>
-        <target xml:lang="fr" state="translated">Votre navigateur est périmé. Il contient des failles de sécurité et pourrait ne pas afficher certaines fonctionnalités de ce site internet.</target>
+        <target state="translated">Votre navigateur est périmé. Il contient des failles de sécurité et pourrait ne pas afficher certaines fonctionnalités de ce site internet.</target>
       </trans-unit>
       <trans-unit id="browser_update.link">
         <source>browser_update.link</source>
-        <target xml:lang="fr" state="translated">Découvrez comment mettre votre navigateur à jour</target>
+        <target state="translated">Découvrez comment mettre votre navigateur à jour</target>
       </trans-unit>
       <trans-unit id="error404.title">
         <source>error404.title</source>
-        <target xml:lang="fr" state="translated">Erreur 404</target>
+        <target state="translated">Erreur 404</target>
       </trans-unit>
       <trans-unit id="error404.message">
         <source>error404.message</source>
-        <target xml:lang="fr" state="translated">Page introuvable.</target>
+        <target state="translated">Page introuvable.</target>
+      </trans-unit>
+      <trans-unit id=" email.successfully.sent">
+        <source>email.successfully.sent</source>
+        <target state="translated">L’email a été envoyé avec succès.</target>
       </trans-unit>
     </body>
   </file>

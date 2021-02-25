@@ -2,7 +2,7 @@
     {% apply spaceless %}
     <ul class="uk-navbar-nav">
         <li class="uk-navbar-item{% if current == 'customForm' %} uk-active{% endif %}" >
-            <a class="uk-navbar-link" href="{{ path('customFormsEditPage', { customFormId: type.id }) }}">{% trans %}custom-form.parameters{% endtrans %}</a>
+            <a class="uk-navbar-link" href="{{ path('customFormsEditPage', { id: type.id }) }}">{% trans %}custom-form.parameters{% endtrans %}</a>
         </li>
         <li class="uk-navbar-item{% if current == 'customFormFields' %} uk-active{% endif %}" >
             <a class="uk-navbar-link" href="{{ path('customFormFieldsListPage', { customFormId: type.id }) }}">{% trans %}custom-form.fields{% endtrans %}</a>

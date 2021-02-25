@@ -25,22 +25,11 @@ use Symfony\Component\Workflow\Workflow;
  */
 class NodeHandler extends AbstractHandler
 {
-    /**
-     * @var NodeChrootResolver
-     */
-    protected $chrootResolver;
-    /**
-     * @var Registry
-     */
-    private $registry;
-    /**
-     * @var null|Node
-     */
-    private $node;
+    protected NodeChrootResolver $chrootResolver;
+    private Registry $registry;
+    private ?Node $node = null;
 
     /**
-     * NodeHandler constructor.
-     *
      * @param ObjectManager      $objectManager
      * @param Registry           $registry
      * @param NodeChrootResolver $chrootResolver
@@ -58,8 +47,11 @@ class NodeHandler extends AbstractHandler
     /**
      * @return Node
      */
-    public function getNode()
+    public function getNode(): Node
     {
+        if (null === $this->node) {
+            throw new \BadMethodCallException('Node is null');
+        }
         return $this->node;
     }
 
@@ -80,11 +72,11 @@ class NodeHandler extends AbstractHandler
      * @param bool $flush
      * @return $this
      */
-    public function cleanCustomFormsFromField(NodeTypeField $field, $flush = true)
+    public function cleanCustomFormsFromField(NodeTypeField $field, bool $flush = true)
     {
         $nodesCustomForms = $this->objectManager
             ->getRepository(NodesCustomForms::class)
-            ->findBy(['node' => $this->node, 'field' => $field]);
+            ->findBy(['node' => $this->getNode(), 'field' => $field]);
 
         foreach ($nodesCustomForms as $ncf) {
             $this->objectManager->remove($ncf);
@@ -103,17 +95,21 @@ class NodeHandler extends AbstractHandler
      * @param CustomForm $customForm
      * @param NodeTypeField $field
      * @param bool $flush
-     * @param null|integer $position
+     * @param null|float $position
      * @return $this
      */
-    public function addCustomFormForField(CustomForm $customForm, NodeTypeField $field, $flush = true, $position = null)
-    {
-        $ncf = new NodesCustomForms($this->node, $customForm, $field);
+    public function addCustomFormForField(
+        CustomForm $customForm,
+        NodeTypeField $field,
+        bool $flush = true,
+        ?float $position = null
+    ) {
+        $ncf = new NodesCustomForms($this->getNode(), $customForm, $field);
 
         if (null === $position) {
             $latestPosition = $this->objectManager
                 ->getRepository(NodesCustomForms::class)
-                ->getLatestPosition($this->node, $field);
+                ->getLatestPosition($this->getNode(), $field);
             $ncf->setPosition($latestPosition + 1);
         } else {
             $ncf->setPosition($position);
@@ -129,34 +125,33 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * Get custom forms linked to current node for a given fieldname.
+     * Get custom forms linked to current node for a given field name.
      *
      * @param string $fieldName Name of the node-type field
      * @return array
      */
-    public function getCustomFormsFromFieldName($fieldName)
+    public function getCustomFormsFromFieldName(string $fieldName): array
     {
         return $this->objectManager
             ->getRepository(CustomForm::class)
             ->findByNodeAndField(
-                $this->node,
-                $this->node->getNodeType()->getFieldByName($fieldName)
+                $this->getNode(),
+                $this->getNode()->getNodeType()->getFieldByName($fieldName)
             );
     }
 
     /**
      * Remove every node to node associations for a given field.
      *
-     * @param \RZ\Roadiz\Core\Entities\NodeTypeField $field
-     *
+     * @param NodeTypeField $field
      * @param bool $flush
      * @return $this
      */
-    public function cleanNodesFromField(NodeTypeField $field, $flush = true)
+    public function cleanNodesFromField(NodeTypeField $field, bool $flush = true)
     {
         $nodesToNodes = $this->objectManager
             ->getRepository(NodesToNodes::class)
-            ->findBy(['nodeA' => $this->node, 'field' => $field]);
+            ->findBy(['nodeA' => $this->getNode(), 'field' => $field]);
 
         foreach ($nodesToNodes as $ntn) {
             $this->objectManager->remove($ntn);
@@ -175,17 +170,17 @@ class NodeHandler extends AbstractHandler
      * @param Node $node
      * @param NodeTypeField $field
      * @param bool $flush
-     * @param null|integer $position
+     * @param null|float $position
      * @return $this
      */
-    public function addNodeForField(Node $node, NodeTypeField $field, $flush = true, $position = null)
+    public function addNodeForField(Node $node, NodeTypeField $field, bool $flush = true, ?float $position = null)
     {
-        $ntn = new NodesToNodes($this->node, $node, $field);
+        $ntn = new NodesToNodes($this->getNode(), $node, $field);
 
         if (null === $position) {
             $latestPosition = $this->objectManager
                 ->getRepository(NodesToNodes::class)
-                ->getLatestPosition($this->node, $field);
+                ->getLatestPosition($this->getNode(), $field);
             $ntn->setPosition($latestPosition + 1);
         } else {
             $ntn->setPosition($position);
@@ -200,33 +195,33 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * Get nodes linked to current node for a given fieldname.
+     * Get nodes linked to current node for a given field name.
      *
      * @param string $fieldName Name of the node-type field
      *
      * @return Node[]
      */
-    public function getNodesFromFieldName($fieldName)
+    public function getNodesFromFieldName(string $fieldName): array
     {
         return $this->getRepository()
             ->findByNodeAndField(
-                $this->node,
-                $this->node->getNodeType()->getFieldByName($fieldName)
+                $this->getNode(),
+                $this->getNode()->getNodeType()->getFieldByName($fieldName)
             );
     }
 
     /**
-     * Get nodes reversed-linked to current node for a given fieldname.
+     * Get nodes reversed-linked to current node for a given field name.
      *
      * @param string $fieldName Name of the node-type field
      * @return Node[]
      */
-    public function getReverseNodesFromFieldName($fieldName)
+    public function getReverseNodesFromFieldName(string $fieldName): array
     {
         return $this->getRepository()
             ->findByReverseNodeAndField(
-                $this->node,
-                $this->node->getNodeType()->getFieldByName($fieldName)
+                $this->getNode(),
+                $this->getNode()->getNodeType()->getFieldByName($fieldName)
             );
     }
 
@@ -235,13 +230,13 @@ class NodeHandler extends AbstractHandler
      *
      * @param Translation $translation
      *
-     * @return null|object|NodesSources
+     * @return null|NodesSources
      */
-    public function getNodeSourceByTranslation($translation)
+    public function getNodeSourceByTranslation($translation): ?NodesSources
     {
         return $this->objectManager
             ->getRepository(NodesSources::class)
-            ->findOneBy(["node" => $this->node, "translation" => $translation]);
+            ->findOneBy(["node" => $this->getNode(), "translation" => $translation]);
     }
 
     /**
@@ -252,7 +247,7 @@ class NodeHandler extends AbstractHandler
     private function removeChildren()
     {
         /** @var Node $node */
-        foreach ($this->node->getChildren() as $node) {
+        foreach ($this->getNode()->getChildren() as $node) {
             $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->removeWithChildrenAndAssociations();
@@ -268,7 +263,7 @@ class NodeHandler extends AbstractHandler
     public function removeAssociations()
     {
         /** @var NodesSources $ns */
-        foreach ($this->node->getNodeSources() as $ns) {
+        foreach ($this->getNode()->getNodeSources() as $ns) {
             $this->objectManager->remove($ns);
         }
 
@@ -286,7 +281,7 @@ class NodeHandler extends AbstractHandler
     {
         $this->removeChildren();
         $this->removeAssociations();
-        $this->objectManager->remove($this->node);
+        $this->objectManager->remove($this->getNode());
 
         return $this;
     }
@@ -296,7 +291,7 @@ class NodeHandler extends AbstractHandler
      */
     private function getWorkflow(): Workflow
     {
-        return $this->registry->get($this->node);
+        return $this->registry->get($this->getNode());
     }
 
     /**
@@ -309,12 +304,12 @@ class NodeHandler extends AbstractHandler
     public function softRemoveWithChildren()
     {
         $workflow = $this->getWorkflow();
-        if ($workflow->can($this->node, 'delete')) {
-            $workflow->apply($this->node, 'delete');
+        if ($workflow->can($this->getNode(), 'delete')) {
+            $workflow->apply($this->getNode(), 'delete');
         }
 
         /** @var Node $node */
-        foreach ($this->node->getChildren() as $node) {
+        foreach ($this->getNode()->getChildren() as $node) {
             $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->softRemoveWithChildren();
@@ -333,12 +328,12 @@ class NodeHandler extends AbstractHandler
     public function softUnremoveWithChildren()
     {
         $workflow = $this->getWorkflow();
-        if ($workflow->can($this->node, 'undelete')) {
-            $workflow->apply($this->node, 'undelete');
+        if ($workflow->can($this->getNode(), 'undelete')) {
+            $workflow->apply($this->getNode(), 'undelete');
         }
 
         /** @var Node $node */
-        foreach ($this->node->getChildren() as $node) {
+        foreach ($this->getNode()->getChildren() as $node) {
             $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->softUnremoveWithChildren();
@@ -357,12 +352,12 @@ class NodeHandler extends AbstractHandler
     public function publishWithChildren()
     {
         $workflow = $this->getWorkflow();
-        if ($workflow->can($this->node, 'publish')) {
-            $workflow->apply($this->node, 'publish');
+        if ($workflow->can($this->getNode(), 'publish')) {
+            $workflow->apply($this->getNode(), 'publish');
         }
 
         /** @var Node $node */
-        foreach ($this->node->getChildren() as $node) {
+        foreach ($this->getNode()->getChildren() as $node) {
             $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->publishWithChildren();
@@ -380,12 +375,12 @@ class NodeHandler extends AbstractHandler
     public function archiveWithChildren()
     {
         $workflow = $this->getWorkflow();
-        if ($workflow->can($this->node, 'archive')) {
-            $workflow->apply($this->node, 'archive');
+        if ($workflow->can($this->getNode(), 'archive')) {
+            $workflow->apply($this->getNode(), 'archive');
         }
 
         /** @var Node $node */
-        foreach ($this->node->getChildren() as $node) {
+        foreach ($this->getNode()->getChildren() as $node) {
             $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
             $handler->setNode($node);
             $handler->archiveWithChildren();
@@ -400,7 +395,7 @@ class NodeHandler extends AbstractHandler
      * @deprecated Just here not to break themes.
      * @return bool
      */
-    public function isRelatedToNewsletter()
+    public function isRelatedToNewsletter(): bool
     {
         return false;
     }
@@ -412,9 +407,9 @@ class NodeHandler extends AbstractHandler
      *
      * @return bool
      */
-    public function isRelatedToNode(Node $relative)
+    public function isRelatedToNode(Node $relative): bool
     {
-        if ($this->node->getId() === $relative->getId()) {
+        if ($this->getNode()->getId() === $relative->getId()) {
             return true;
         }
 
@@ -429,31 +424,29 @@ class NodeHandler extends AbstractHandler
 
     /**
      * Return every node’s parents
+     *
      * @param TokenStorageInterface|null $tokenStorage
      * @return array<LeafInterface|Node>
      */
-    public function getParents(TokenStorageInterface $tokenStorage = null)
+    public function getParents(?TokenStorageInterface $tokenStorage = null): array
     {
-        if (null !== $this->node) {
-            $parentsArray = [];
-            $parent = $this->node->getParent();
-            $user = null;
-            $chroot = null;
+        $parentsArray = [];
+        $parent = $this->getNode()->getParent();
+        $user = null;
+        $chroot = null;
 
-            if ($tokenStorage !== null) {
-                $user = $tokenStorage->getToken()->getUser();
-                /** @var Node|null $chroot */
-                $chroot = $this->chrootResolver->getChroot($user);
-            }
-
-            while ($parent !== null && $parent !== $chroot) {
-                $parentsArray[] = $parent;
-                $parent = $parent->getParent();
-            }
-
-            return array_reverse($parentsArray);
+        if ($tokenStorage !== null) {
+            $user = $tokenStorage->getToken()->getUser();
+            /** @var Node|null $chroot */
+            $chroot = $this->chrootResolver->getChroot($user);
         }
-        return [];
+
+        while ($parent !== null && $parent !== $chroot) {
+            $parentsArray[] = $parent;
+            $parent = $parent->getParent();
+        }
+
+        return array_reverse($parentsArray);
     }
 
     /**
@@ -462,13 +455,13 @@ class NodeHandler extends AbstractHandler
      * Warning, this method does not flush.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** node
+     * @return float Return the next position after the **last** node
      */
-    public function cleanPositions($setPositions = true)
+    public function cleanPositions(bool $setPositions = true): float
     {
-        if ($this->node->getParent() !== null) {
+        if ($this->getNode()->getParent() !== null) {
             $parentHandler = new static($this->objectManager, $this->registry, $this->chrootResolver);
-            $parentHandler->setNode($this->node->getParent());
+            $parentHandler->setNode($this->getNode()->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
             return $this->cleanRootNodesPositions($setPositions);
@@ -481,9 +474,9 @@ class NodeHandler extends AbstractHandler
      * Warning, this method does not flush.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** node
+     * @return float Return the next position after the **last** node
      */
-    public function cleanChildrenPositions($setPositions = true)
+    public function cleanChildrenPositions(bool $setPositions = true): float
     {
         /*
          * Force collection to sort on position
@@ -493,7 +486,7 @@ class NodeHandler extends AbstractHandler
             'position' => Criteria::ASC
         ]);
 
-        $children = $this->node->getChildren()->matching($sort);
+        $children = $this->getNode()->getChildren()->matching($sort);
         $i = 1;
         /** @var Node $child */
         foreach ($children as $child) {
@@ -512,9 +505,9 @@ class NodeHandler extends AbstractHandler
      * Warning, this method does not flush.
      *
      * @param bool $setPositions
-     * @return int Return the next position after the **last** node
+     * @return float Return the next position after the **last** node
      */
-    public function cleanRootNodesPositions($setPositions = true)
+    public function cleanRootNodesPositions(bool $setPositions = true): float
     {
         $nodes = $this->getRepository()
             ->setDisplayingNotPublishedNodes(true)
@@ -534,11 +527,12 @@ class NodeHandler extends AbstractHandler
 
     /**
      * Return all node offspring id.
+     *
      * @return array
      */
-    public function getAllOffspringId()
+    public function getAllOffspringId(): array
     {
-        return $this->getRepository()->findAllOffspringIdByNode($this->node);
+        return $this->getRepository()->findAllOffspringIdByNode($this->getNode());
     }
 
     /**
@@ -556,7 +550,7 @@ class NodeHandler extends AbstractHandler
         foreach ($defaults as $default) {
             $default->setHome(false);
         }
-        $this->node->setHome(true);
+        $this->getNode()->setHome(true);
         $this->objectManager->flush();
 
         return $this;
@@ -570,7 +564,7 @@ class NodeHandler extends AbstractHandler
      */
     public function duplicate()
     {
-        $duplicator = new NodeDuplicator($this->node, $this->objectManager);
+        $duplicator = new NodeDuplicator($this->getNode(), $this->objectManager);
         return $duplicator->duplicate();
     }
 
@@ -583,10 +577,10 @@ class NodeHandler extends AbstractHandler
      * @return Node|null
      */
     public function getPrevious(
-        array $criteria = null,
-        array $order = null
+        ?array $criteria = null,
+        ?array $order = null
     ) {
-        if ($this->node->getPosition() <= 1) {
+        if ($this->getNode()->getPosition() <= 1) {
             return null;
         }
         if (null === $order) {
@@ -597,14 +591,14 @@ class NodeHandler extends AbstractHandler
             $criteria = [];
         }
 
-        $criteria['parent'] = $this->node->getParent();
+        $criteria['parent'] = $this->getNode()->getParent();
         /*
          * Use < operator to get first previous nodeSource
          * even if it’s not the previous position index
          */
         $criteria['position'] = [
             '<',
-            $this->node->getPosition(),
+            $this->getNode()->getPosition(),
         ];
 
         $order['position'] = 'DESC';
@@ -624,8 +618,8 @@ class NodeHandler extends AbstractHandler
      * @return Node|null
      */
     public function getNext(
-        array $criteria = null,
-        array $order = null
+        ?array $criteria = null,
+        ?array $order = null
     ) {
         if (null === $criteria) {
             $criteria = [];
@@ -634,7 +628,7 @@ class NodeHandler extends AbstractHandler
             $order = [];
         }
 
-        $criteria['parent'] = $this->node->getParent();
+        $criteria['parent'] = $this->getNode()->getParent();
 
         /*
          * Use > operator to get first next nodeSource
@@ -642,7 +636,7 @@ class NodeHandler extends AbstractHandler
          */
         $criteria['position'] = [
             '>',
-            $this->node->getPosition(),
+            $this->getNode()->getPosition(),
         ];
         $order['position'] = 'ASC';
 

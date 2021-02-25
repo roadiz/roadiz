@@ -10,10 +10,7 @@ use Symfony\Component\Console\Helper\Helper;
 
 class LoggerHelper extends Helper
 {
-    /**
-     * @var KernelInterface
-     */
-    protected $kernel;
+    protected KernelInterface $kernel;
 
     /**
      * @param KernelInterface $kernel

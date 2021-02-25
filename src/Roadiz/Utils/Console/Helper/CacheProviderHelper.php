@@ -6,12 +6,9 @@ namespace RZ\Roadiz\Utils\Console\Helper;
 use Doctrine\Common\Cache\CacheProvider;
 use Symfony\Component\Console\Helper\Helper;
 
-/**
- * CacheProviderHelper.
- */
 class CacheProviderHelper extends Helper
 {
-    private $cacheProvider;
+    protected CacheProvider $cacheProvider;
 
     /**
      * @param CacheProvider $cacheProvider
@@ -24,7 +21,7 @@ class CacheProviderHelper extends Helper
     /**
      * @return CacheProvider
      */
-    public function getCacheProvider()
+    public function getCacheProvider(): CacheProvider
     {
         return $this->cacheProvider;
     }

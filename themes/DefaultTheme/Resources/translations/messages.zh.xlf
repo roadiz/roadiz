@@ -78,6 +78,10 @@
         <source>error404.message</source>
         <target state="translated">无法找到请求的页面。</target>
       </trans-unit>
+      <trans-unit id=" email.successfully.sent">
+        <source>email.successfully.sent</source>
+        <target state="translated">电子邮件已成功发送</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

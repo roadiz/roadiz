@@ -29,8 +29,8 @@
  */
 namespace Themes\DefaultTheme\Controllers;
 
+use RZ\Roadiz\Core\AbstractEntities\TranslationInterface;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
@@ -41,7 +41,6 @@ use Symfony\Component\Validator\Constraints\File;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
- * Class ContactController
  * @package Themes\DefaultTheme\Controllers
  */
 class ContactController extends DefaultThemeApp
@@ -49,17 +48,16 @@ class ContactController extends DefaultThemeApp
     /**
      * @param Request          $request
      * @param Node|null        $node
-     * @param Translation|null $translation
+     * @param TranslationInterface|null $translation
      * @param string           $_locale
      * @param null             $_route
      *
      * @return null|\Symfony\Component\HttpFoundation\Response
-     * @throws \Twig_Error_Runtime
      */
     public function indexAction(
         Request $request,
         Node $node = null,
-        Translation $translation = null,
+        TranslationInterface $translation = null,
         $_locale = "en",
         $_route = null
     ) {
@@ -119,13 +117,7 @@ class ContactController extends DefaultThemeApp
             $this->assignation['route'] = $_route;
             $response = $this->render('pages/contact.html.twig', $this->assignation);
 
-            if (!$this->get('kernel')->isDebug() &&
-                !$this->get('kernel')->isPreview()) {
-                $response->setPublic();
-                $response->setSharedMaxAge(60*2);
-            }
-
-            return $response;
+            return $this->makeResponseCachable($request, $response, 2);
         } catch (NoTranslationAvailableException $e) {
             throw new ResourceNotFoundException($e->getMessage(), 0, $e);
         }
@@ -146,12 +138,6 @@ class ContactController extends DefaultThemeApp
 
         $response = $this->render('pages/thank.html.twig', $this->assignation);
 
-        if (!$this->get('kernel')->isDebug() &&
-            !$this->get('kernel')->isPreview()) {
-            $response->setPublic();
-            $response->setSharedMaxAge(60*2);
-        }
-
-        return $response;
+        return $this->makeResponseCachable($request, $response, 2);
     }
 }

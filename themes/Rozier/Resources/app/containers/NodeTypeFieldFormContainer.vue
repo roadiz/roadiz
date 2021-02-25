@@ -117,6 +117,12 @@
                         view: CodeMirror,
                         mode: 'yaml'
                     }
+                },
+                4: { // markdown.type
+                    defaultValues: {
+                        view: CodeMirror,
+                        mode: 'yaml'
+                    }
                 }
             }
         },

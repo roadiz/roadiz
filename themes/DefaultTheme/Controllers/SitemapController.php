@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Themes\DefaultTheme\DefaultThemeApp;
 
 /**
- * Class SitemapController
  * @package Themes\DefaultTheme\Controllers
  */
 class SitemapController extends DefaultThemeApp
@@ -19,9 +18,6 @@ class SitemapController extends DefaultThemeApp
      * @param string  $_locale
      *
      * @return Response
-     * @throws \Twig_Error_Loader
-     * @throws \Twig_Error_Runtime
-     * @throws \Twig_Error_Syntax
      */
     public function sitemapAction(
         Request $request,

@@ -4,31 +4,21 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Bags;
 
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Setting;
 use RZ\Roadiz\Core\Repositories\SettingRepository;
+use RZ\Roadiz\Bag\LazyParameterBag;
 
-/**
- * Class Settings
- * @package RZ\Roadiz\Core\Bags
- */
 class Settings extends LazyParameterBag
 {
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-    /**
-     * @var SettingRepository
-     */
-    private $repository;
+    private EntityManagerInterface $entityManager;
+    private ?SettingRepository $repository = null;
 
     /**
-     * SettingsBag constructor.
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManager $entityManager)
+    public function __construct(EntityManagerInterface $entityManager)
     {
         parent::__construct();
         $this->entityManager = $entityManager;
@@ -45,7 +35,7 @@ class Settings extends LazyParameterBag
         return $this->repository;
     }
 
-    protected function populateParameters()
+    protected function populateParameters(): void
     {
         try {
             $settings = $this->getRepository()->findAll();
@@ -78,17 +68,13 @@ class Settings extends LazyParameterBag
      */
     public function getDocument($key): ?Document
     {
-        if (null !== $this->entityManager) {
-            try {
-                $id = $this->getInt($key);
-                return $this->entityManager
-                            ->getRepository(Document::class)
-                            ->findOneById($id);
-            } catch (\Exception $e) {
-                return null;
-            }
+        try {
+            $id = $this->getInt($key);
+            return $this->entityManager
+                        ->getRepository(Document::class)
+                        ->findOneById($id);
+        } catch (\Exception $e) {
+            return null;
         }
-
-        return null;
     }
 }

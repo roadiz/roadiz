@@ -5,36 +5,30 @@ namespace RZ\Roadiz\Utils\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Repository\RepositoryFactory;
+use Doctrine\Persistence\ObjectRepository;
 use Pimple\Container;
 use RZ\Roadiz\Core\Repositories\EntityRepository;
+use RZ\Roadiz\Preview\PreviewResolverInterface;
 
-class RoadizRepositoryFactory implements RepositoryFactory
+final class RoadizRepositoryFactory implements RepositoryFactory
 {
-    /**
-     * @var bool
-     */
-    private $isPreview;
-
     /**
      * The list of EntityRepository instances.
      *
-     * @var \Doctrine\Common\Persistence\ObjectRepository[]
+     * @var ObjectRepository[]
      */
-    private $repositoryList = [];
-    /**
-     * @var Container
-     */
-    private $container;
+    private array $repositoryList = [];
+    private Container $container;
+    private PreviewResolverInterface $previewResolver;
 
     /**
-     * RoadizRepositoryFactory constructor.
      * @param Container $container
-     * @param bool $isPreview
+     * @param PreviewResolverInterface $previewResolver
      */
-    public function __construct(Container $container, $isPreview = false)
+    public function __construct(Container $container, PreviewResolverInterface $previewResolver)
     {
-        $this->isPreview = $isPreview;
         $this->container = $container;
+        $this->previewResolver = $previewResolver;
     }
 
     /**
@@ -54,21 +48,20 @@ class RoadizRepositoryFactory implements RepositoryFactory
     /**
      * Create a new repository instance for an entity class.
      *
-     * @param \Doctrine\ORM\EntityManagerInterface $entityManager The EntityManager instance.
-     * @param string                               $entityName    The name of the entity.
+     * @param EntityManagerInterface $entityManager The EntityManager instance.
+     * @param class-string $entityName The name of the entity.
      *
-     * @return \Doctrine\Common\Persistence\ObjectRepository
+     * @return ObjectRepository
      */
-    private function createRepository(EntityManagerInterface $entityManager, $entityName)
+    private function createRepository(EntityManagerInterface $entityManager, string $entityName)
     {
-        /* @var $metadata \Doctrine\ORM\Mapping\ClassMetadata */
-        $metadata            = $entityManager->getClassMetadata($entityName);
+        $metadata = $entityManager->getClassMetadata($entityName);
         $repositoryClassName = $metadata->customRepositoryClassName
             ?: $entityManager->getConfiguration()->getDefaultRepositoryClassName();
 
         if (is_subclass_of($repositoryClassName, EntityRepository::class) ||
             $repositoryClassName == EntityRepository::class) {
-            return new $repositoryClassName($entityManager, $metadata, $this->container, $this->isPreview);
+            return new $repositoryClassName($entityManager, $metadata, $this->container, $this->previewResolver);
         }
 
         return new $repositoryClassName($entityManager, $metadata);

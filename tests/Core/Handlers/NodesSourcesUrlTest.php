@@ -43,7 +43,7 @@ class NodesSourcesUrlTest extends SchemaDependentCase
      * Nothing special to do except init collection
      * array.
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 

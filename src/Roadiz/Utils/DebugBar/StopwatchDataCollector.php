@@ -8,21 +8,14 @@ use DebugBar\DebugBarException;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Twig\Profiler\Profile;
 
-class StopwatchDataCollector extends TimeDataCollector
+final class StopwatchDataCollector extends TimeDataCollector
 {
-    /**
-     * @var Stopwatch
-     */
-    private $stopwatch;
-    /**
-     * @var Profile
-     */
-    private $twigProfile;
+    private Stopwatch $stopwatch;
+    private ?Profile $twigProfile;
 
     /**
      * @param Stopwatch $stopwatch
      * @param Profile|null $twigProfile
-     * @internal param float $requestStartTime
      */
     public function __construct(Stopwatch $stopwatch, Profile $twigProfile = null)
     {

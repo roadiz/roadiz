@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\CMS\Forms;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\NodeType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -16,6 +16,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class NodeTypesType extends AbstractType
 {
     /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     */
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function configureOptions(OptionsResolver $resolver)
@@ -23,18 +36,13 @@ class NodeTypesType extends AbstractType
         $resolver->setDefaults([
             'showInvisible' => false,
         ]);
-        $resolver->setRequired([
-            'entityManager',
-        ]);
-
-        $resolver->setAllowedTypes('entityManager', [EntityManager::class]);
         $resolver->setAllowedTypes('showInvisible', ['boolean']);
         $resolver->setNormalizer('choices', function (Options $options, $choices) {
             $criteria = [];
             if ($options['showInvisible'] === false) {
                 $criteria['visible'] = true;
             }
-            $nodeTypes = $options['entityManager']->getRepository(NodeType::class)->findBy($criteria);
+            $nodeTypes = $this->entityManager->getRepository(NodeType::class)->findBy($criteria);
 
             /** @var NodeType $nodeType */
             foreach ($nodeTypes as $nodeType) {

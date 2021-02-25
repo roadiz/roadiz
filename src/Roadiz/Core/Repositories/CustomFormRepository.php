@@ -7,8 +7,6 @@ use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodeTypeField;
 
 /**
- * Class CustomFormRepository
- *
  * @package RZ\Roadiz\Core\Repositories
  * @extends EntityRepository<\RZ\Roadiz\Core\Entities\CustomForm>
  */

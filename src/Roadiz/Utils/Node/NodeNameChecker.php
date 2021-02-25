@@ -5,30 +5,65 @@ namespace RZ\Roadiz\Utils\Node;
 
 use Doctrine\ORM\EntityManagerInterface;
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\UrlAlias;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Core\Repositories\UrlAliasRepository;
 use RZ\Roadiz\Utils\StringHandler;
 
 /**
- * Class NodeNameChecker
  * @package RZ\Roadiz\Utils\Node
  */
-class NodeNameChecker
+class NodeNameChecker implements NodeNamePolicyInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    protected EntityManagerInterface $entityManager;
+    protected bool $useTypedSuffix;
 
     /**
-     * NodeNameChecker constructor.
-     *
      * @param EntityManagerInterface $entityManager
+     * @param bool $useTypedSuffix
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, bool $useTypedSuffix = false)
     {
         $this->entityManager = $entityManager;
+        $this->useTypedSuffix = $useTypedSuffix;
+    }
+
+    public function getCanonicalNodeName(NodesSources $nodeSource): string
+    {
+        if ($nodeSource->getTitle() !== '') {
+            if ($nodeSource->getNode()->getNodeType()->isReachable() || !$this->useTypedSuffix) {
+                return StringHandler::slugify($nodeSource->getTitle());
+            }
+            return sprintf(
+                '%s-%s',
+                StringHandler::slugify($nodeSource->getTitle()),
+                StringHandler::slugify($nodeSource->getNodeTypeName()),
+            );
+        }
+        return sprintf(
+            '%s-%s',
+            StringHandler::slugify($nodeSource->getNodeTypeName()),
+            uniqid()
+        );
+    }
+
+    public function getSafeNodeName(NodesSources $nodeSource): string
+    {
+        return sprintf(
+            '%s-%s',
+            $this->getCanonicalNodeName($nodeSource),
+            uniqid()
+        );
+    }
+
+    public function getDatestampedNodeName(NodesSources $nodeSource): string
+    {
+        return sprintf(
+            '%s-%s',
+            $this->getCanonicalNodeName($nodeSource),
+            $nodeSource->getPublishedAt()->format('Y-m-d')
+        );
     }
 
     /**
@@ -38,7 +73,7 @@ class NodeNameChecker
      * @param string $nodeName Node name to test
      * @return bool
      */
-    public function isNodeNameWithUniqId(string $canonicalNodeName, string $nodeName)
+    public function isNodeNameWithUniqId(string $canonicalNodeName, string $nodeName): bool
     {
         $pattern = '#^' . preg_quote($canonicalNodeName) . '\-[0-9a-z]{13}$#';
         $returnState = preg_match_all($pattern, $nodeName);

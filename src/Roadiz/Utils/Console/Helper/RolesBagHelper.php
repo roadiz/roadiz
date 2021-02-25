@@ -9,13 +9,9 @@ use Symfony\Component\Console\Helper\Helper;
 
 class RolesBagHelper extends Helper
 {
-    /**
-     * @var Roles
-     */
-    private $rolesBag;
+    protected Roles $rolesBag;
 
     /**
-     * RolesBagHelper constructor.
      * @param Roles $rolesBag
      */
     public function __construct(Roles $rolesBag)

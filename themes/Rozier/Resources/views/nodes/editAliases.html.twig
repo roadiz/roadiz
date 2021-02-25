@@ -14,9 +14,9 @@
             {{ "edit.node.%name%.seo"|trans({'%name%': currentTitle})|u.truncate(25, '[…]', true) }}
            {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
-        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'seo'} %}
-        {% include '@Rozier/nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'seo'} %}
+        {% include 'nodes/translationSEOBar.html.twig' with {"current": translation.getId} %}
     </header>
 
     <article class="content content-node-edit-seo">
@@ -103,6 +103,6 @@
         </div>
     </article>
 
-    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

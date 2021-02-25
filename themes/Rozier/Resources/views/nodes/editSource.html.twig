@@ -13,9 +13,9 @@
             {{ ("edit.nodeSource.%name%"|trans({'%name%': currentTitle}))|u.truncate(30, '[…]', false) }}
             {% include '@Rozier/nodes/nodeTypeCircle.html.twig' %}
         </h1>
-        {% include '@Rozier/nodes/navBack.html.twig' %}
-        {% include '@Rozier/nodes/navBar.html.twig' with {"current": 'source'} %}
-        {% include '@Rozier/nodes/translationBar.html.twig' with {"current": translation.getId} %}
+        {% include 'nodes/navBack.html.twig' %}
+        {% include 'nodes/navBar.html.twig' with {"current": 'source'} %}
+        {% include 'nodes/translationBar.html.twig' with {"current": translation.getId} %}
     </header>
 
     <article class="content content-node-edit-source">
@@ -27,7 +27,6 @@
                 }) }}" class="uk-alert-close uk-close"></a>
                 <h4>{% trans %}versions.viewing_a_previous_version{% endtrans %}</h4>
                 <p>{{ currentVersion.loggedAt|format_datetime('full', 'short', locale=app.request.locale) }} - {{ currentVersion.username }}</p>
-
                 {% if revertForm %}
                     {{ form_start(revertForm, { attr: {id: 'revert-node-source-form'}}) }}
                     {{ form_widget(revertForm) }}
@@ -61,6 +60,6 @@
         {{ form_end(form) }}
     </article>
 
-    {% include '@Rozier/nodes/actionsMenu.html.twig' %}
+    {% include 'nodes/actionsMenu.html.twig' %}
 </section>
 {% endblock %}

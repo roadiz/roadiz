@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Services;
 
-use DebugBar\DataCollector\MessagesCollector;
 use Doctrine\DBAL\Logging\DebugStack;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -21,10 +20,6 @@ class DebugServiceProvider implements ServiceProviderInterface
         $container->extend('dispatcher', function (EventDispatcherInterface $dispatcher, Container $c) {
             return new TraceableEventDispatcher($dispatcher, $c['stopwatch']);
         });
-
-        $container['messagescollector'] = function () {
-            return new MessagesCollector();
-        };
 
         $container['doctrine.debugstack'] = function () {
             return new DebugStack();

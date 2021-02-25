@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Events;
 
 use Monolog\Logger;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
 use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use RZ\Roadiz\Utils\Node\NodeMover;
-use RZ\Roadiz\Utils\Node\NodeNameChecker;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -17,32 +18,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 /**
  * Updates node name against default node-source title is applicable.
  */
-class NodeNameSubscriber implements EventSubscriberInterface
+final class NodeNameSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var NodeMover
-     */
-    protected $nodeMover;
-    /**
-     * @var Logger
-     */
-    private $logger;
-    /**
-     * @var NodeNameChecker
-     */
-    private $nodeNameChecker;
+    private NodeMover $nodeMover;
+
+    private Logger $logger;
+
+    private NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
-     * NodeNameSubscriber constructor.
-     *
-     * @param Logger          $logger
-     * @param NodeNameChecker $nodeNameChecker
-     * @param NodeMover       $nodeMover
+     * @param Logger $logger
+     * @param NodeNamePolicyInterface $nodeNamePolicy
+     * @param NodeMover $nodeMover
      */
-    public function __construct(Logger $logger, NodeNameChecker $nodeNameChecker, NodeMover $nodeMover)
+    public function __construct(Logger $logger, NodeNamePolicyInterface $nodeNamePolicy, NodeMover $nodeMover)
     {
         $this->logger = $logger;
-        $this->nodeNameChecker = $nodeNameChecker;
+        $this->nodeNamePolicy = $nodeNamePolicy;
         $this->nodeMover = $nodeMover;
     }
 
@@ -61,8 +53,11 @@ class NodeNameSubscriber implements EventSubscriberInterface
      * @param string                       $eventName
      * @param EventDispatcherInterface     $dispatcher
      */
-    public function onBeforeUpdate(NodesSourcesPreUpdatedEvent $event, $eventName, EventDispatcherInterface $dispatcher)
-    {
+    public function onBeforeUpdate(
+        NodesSourcesPreUpdatedEvent $event,
+        $eventName,
+        EventDispatcherInterface $dispatcher
+    ): void {
         $nodeSource = $event->getNodeSource();
         $title = $nodeSource->getTitle();
 
@@ -73,15 +68,15 @@ class NodeNameSubscriber implements EventSubscriberInterface
         if ("" != $title &&
             true === $nodeSource->getNode()->isDynamicNodeName() &&
             $nodeSource->getTranslation()->isDefaultTranslation()) {
-            $testingNodeName = StringHandler::slugify($title);
+            $testingNodeName = $this->nodeNamePolicy->getCanonicalNodeName($nodeSource);
 
             /*
              * Node name wont be updated if name already taken OR
              * if it is ALREADY suffixed with a unique ID.
              */
             if ($testingNodeName != $nodeSource->getNode()->getNodeName() &&
-                $this->nodeNameChecker->isNodeNameValid($testingNodeName) &&
-                !$this->nodeNameChecker->isNodeNameWithUniqId(
+                $this->nodeNamePolicy->isNodeNameValid($testingNodeName) &&
+                !$this->nodeNamePolicy->isNodeNameWithUniqId(
                     $testingNodeName,
                     $nodeSource->getNode()->getNodeName()
                 )) {
@@ -93,11 +88,11 @@ class NodeNameSubscriber implements EventSubscriberInterface
                 } catch (SameNodeUrlException $e) {
                     $oldPaths = [];
                 }
-                $alreadyUsed = $this->nodeNameChecker->isNodeNameAlreadyUsed($title);
+                $alreadyUsed = $this->nodeNamePolicy->isNodeNameAlreadyUsed($testingNodeName);
                 if (!$alreadyUsed) {
-                    $nodeSource->getNode()->setNodeName($title);
+                    $nodeSource->getNode()->setNodeName($testingNodeName);
                 } else {
-                    $nodeSource->getNode()->setNodeName($title . '-' . uniqid());
+                    $nodeSource->getNode()->setNodeName($this->nodeNamePolicy->getSafeNodeName($nodeSource));
                 }
 
                 /*

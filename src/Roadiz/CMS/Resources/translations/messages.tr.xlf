@@ -5,153 +5,145 @@
       <!-- welcome.user.email -->
       <trans-unit id="welcome.user.email.%site%">
         <source>welcome.user.email.%site%</source>
-        <target xml:lang="tr" state="translated">Kullanıcı hesabınız %site% üzerinde oluşturuldu</target>
+        <target state="translated">Kullanıcı hesabınız %site% üzerinde oluşturuldu</target>
       </trans-unit>
       <trans-unit id="your.user.account">
         <source>your.user.account</source>
-        <target xml:lang="tr" state="translated">Kullanıcı hesabınız</target>
+        <target state="translated">Kullanıcı hesabınız</target>
       </trans-unit>
       <trans-unit id="username" approved="yes">
         <source>username</source>
-        <target xml:lang="tr">Kullanıcı adı</target>
-        <alt-trans>
-          <target xml:lang="tr">kullanıcı adı</target>
-        </alt-trans>
+        <target state="final">Kullanıcı adı</target>
       </trans-unit>
       <trans-unit id="email" approved="yes">
         <source>email</source>
-        <target xml:lang="tr">E-posta</target>
-        <alt-trans>
-          <target xml:lang="tr">e-posta</target>
-        </alt-trans>
+        <target state="final">E-posta</target>
       </trans-unit>
       <trans-unit id="password" approved="yes">
         <source>password</source>
-        <target xml:lang="tr">Parola</target>
-        <alt-trans>
-          <target xml:lang="tr">Şifre</target>
-        </alt-trans>
+        <target state="final">Parola</target>
       </trans-unit>
       <trans-unit id="for.questions.email">
         <source>for.questions.email</source>
-        <target xml:lang="tr" state="translated">Sorunuz mu var? Bize e posta yollayın</target>
+        <target state="translated">Sorunuz mu var? Bize e posta yollayın</target>
       </trans-unit>
       <!-- Contact forms -->
       <trans-unit id="contact.form" approved="yes">
         <source>contact.form</source>
-        <target xml:lang="tr">İletişim formu</target>
+        <target state="final">İletişim formu</target>
       </trans-unit>
       <trans-unit id="new.contact.form.%site%">
         <source>new.contact.form.%site%</source>
-        <target xml:lang="tr" state="translated">%site% üzerinden yeni iletişim isteği</target>
+        <target state="translated">%site% üzerinden yeni iletişim isteği</target>
       </trans-unit>
       <trans-unit id="form.successfully.sent">
         <source>form.successfully.sent</source>
-        <target xml:lang="tr" state="translated">Formunuz başarıyla gönderildi</target>
+        <target state="translated">Formunuz başarıyla gönderildi</target>
       </trans-unit>
       <trans-unit id="form.has.errors">
         <source>form.has.errors</source>
-        <target xml:lang="tr" state="translated">Formunuz geçerli değil. Lütfen zorunlu alanları doğru doldurun.</target>
+        <target state="translated">Formunuz geçerli değil. Lütfen zorunlu alanları doğru doldurun.</target>
       </trans-unit>
       <trans-unit id="%field%.is.mandatory">
         <source>%field%.is.mandatory</source>
-        <target xml:lang="tr" state="translated">%field% alanı zorunludur</target>
+        <target state="translated">%field% alanı zorunludur</target>
       </trans-unit>
       <trans-unit id="email.not.valid">
         <source>email.not.valid</source>
-        <target xml:lang="tr" state="translated">E postanız geçerli değil</target>
+        <target state="translated">E postanız geçerli değil</target>
       </trans-unit>
       <trans-unit id="date" approved="yes">
         <source>date</source>
-        <target xml:lang="tr">Tarih</target>
+        <target state="final">Tarih</target>
       </trans-unit>
       <trans-unit id="ip.address" approved="yes">
         <source>ip.address</source>
-        <target xml:lang="tr">IP adresi</target>
-        <alt-trans>
-          <target xml:lang="tr">ip.adresi</target>
-        </alt-trans>
+        <target state="final">IP adresi</target>
       </trans-unit>
       <trans-unit id="submittedAt">
         <source>submittedAt</source>
-        <target xml:lang="tr" state="translated">%date will be first% de gönderildi</target>
+        <target state="translated">%date will be first% de gönderildi</target>
       </trans-unit>
       <trans-unit id="form.submit">
         <source>form.submit</source>
-        <target xml:lang="tr" state="translated">Gönder</target>
+        <target state="translated">Gönder</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="answer.form">
                 <source>answer.form</source>
-                <target xml:lang="tr" state="translated">Formu cevapla.</target>
-            <alt-trans><target xml:lang="tr">Cevap formu.</target></alt-trans></trans-unit>
+                <target state="translated">Formu cevapla.</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.%name%.send">
                 <source>customForm.%name%.send</source>
-                <target xml:lang="tr" state="translated">Cevabı %name% gönderdi.</target>
+                <target state="translated">Cevabı %name% gönderdi.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="new.answer.form.%site%">
                 <source>new.answer.form.%site%</source>
-                <target xml:lang="tr" state="translated">%site% formundan yeni cevap.</target>
+                <target state="translated">%site% formundan yeni cevap.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="file.not.accepted">
                 <source>file.not.accepted</source>
-                <target xml:lang="tr" state="translated">Eklenmiş dosya kabul edilmedi.</target>
+                <target state="translated">Eklenmiş dosya kabul edilmedi.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="customForm.answer.sent">
                 <source>customForm.answer.sent</source>
-                <target xml:lang="tr" state="translated">Cevabınız başarıyla gönderildi.</target>
+                <target state="translated">Cevabınız başarıyla gönderildi.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="none" approved="yes">
                 <source>none</source>
-                <target xml:lang="tr">Yok</target>
-            <alt-trans><target xml:lang="tr">yok</target></alt-trans></trans-unit>
+                <target state="final">Yok</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="reset.password.request">
               <source>reset.password.request</source>
-              <target xml:lang="tr" state="translated">Parola sıfırlama isteği</target>
+              <target state="translated">Parola sıfırlama isteği</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.asked.for.a.password.reset.on.%site%">
                 <source>you.asked.for.a.password.reset.on.%site%</source>
-                <target xml:lang="tr" state="translated">%site% üzerinde parola sıfırlama isteğiniz var</target>
+                <target state="translated">%site% üzerinde parola sıfırlama isteğiniz var</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.choose.a.new.password.using.following.link">
                 <source>you.need.to.choose.a.new.password.using.following.link</source>
-                <target xml:lang="tr" state="translated">Bağlantıyı kullanarak hesabınız için yeni parola oluşturmanız gerekiyor.</target>
+                <target state="translated">Bağlantıyı kullanarak hesabınız için yeni parola oluşturmanız gerekiyor.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="as.a.reminder.here.are.your.credentials">
                 <source>as.a.reminder.here.are.your.credentials</source>
-                <target xml:lang="tr" state="translated">Bir hatırlatma olarak, herkese açık bilgileriniz burada.</target>
+                <target state="translated">Bir hatırlatma olarak, herkese açık bilgileriniz burada.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="if.you.didnt.request.this.password.reset.ignore.this.email">
                 <source>if.you.didnt.request.this.password.reset.ignore.this.email</source>
-                <target xml:lang="tr" state="translated">Bu e posta talebi sizden gelmemişse, görmezden gelebilirsiniz. Parolanız değişmemiş olacak.</target>
+                <target state="translated">Bu e posta talebi sizden gelmemişse, görmezden gelebilirsiniz. Parolanız değişmemiş olacak.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="reset_your_password">
                 <source>reset_your_password</source>
-                <target xml:lang="tr" state="translated">Parolanızı sıfırlayın</target>
+                <target state="translated">Parolanızı sıfırlayın</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="you.need.to.fill.this.required.field">
                 <source>you.need.to.fill.this.required.field</source>
-                <target xml:lang="tr" state="translated">Gerekli alanları doldurmanız gerek.</target>
+                <target state="translated">Gerekli alanları doldurmanız gerek.</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="*.required.fields">
                 <source>*.required.fields</source>
-                <target xml:lang="tr" state="translated">* Zorunlu alanlar</target>
+                <target state="translated">* Zorunlu alanlar</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance">
                 <source>website.is.under.maintenance</source>
-                <target xml:lang="tr" state="translated">Web sitesi bakımda</target>
+                <target state="translated">Web sitesi bakımda</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="website.is.under.maintenance.we.will.be.back.soon">
                 <source>website.is.under.maintenance.we.will.be.back.soon</source>
-                <target xml:lang="tr" state="translated">Web sitesi şu an bakımda, yakında karşınızda olacak!</target>
+                <target state="translated">Web sitesi şu an bakımda, yakında karşınızda olacak!</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="yaml.is.not.valid">
                 <source>yaml.is.not.valid.{{ error }}</source>
-                <target xml:lang="tr" state="translated">YAML kodu geçerli değil ({{ error }})</target>
+                <target state="translated">YAML kodu geçerli değil ({{ error }})</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="value.is.already.used">
                 <source>value.is.already.used</source>
-                <target xml:lang="tr" state="translated">Bu değer zaten kullanılıyor.</target>
+                <target state="translated">Bu değer zaten kullanılıyor.</target>
                 <note>Error message meaning that user can’t use that value for this object (eg. Object name is already used).</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="password_should_be_at_least_characters_long">
+                <source>password_should_be_at_least_{{length}}_characters_long</source>
+                <target state="translated">Parola en az %length% karakter uzunluğunda olmalıdır.</target>
             </trans-unit>
     </body>
   </file>

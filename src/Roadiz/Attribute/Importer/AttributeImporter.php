@@ -17,8 +17,6 @@ class AttributeImporter implements EntityImporterInterface, ContainerAwareInterf
     use ContainerAwareTrait;
 
     /**
-     * AttributeImporter constructor.
-     *
      * @param Container $container
      */
     public function __construct(Container $container)

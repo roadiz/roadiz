@@ -33,8 +33,6 @@ class Recaptcha extends Constraint
     public $verifyUrl;
 
     /**
-     * Construct
-     *
      * @param Request $request
      * @param array $options
      */
