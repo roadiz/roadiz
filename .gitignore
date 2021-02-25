@@ -9,6 +9,7 @@
 /clear_cache.php
 /pimple.json
 /assets
+project_env.sh
 
 # Ignore Google webmaster tool verification
 /google*.html

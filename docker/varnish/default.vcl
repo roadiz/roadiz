@@ -14,12 +14,12 @@ vcl 4.0;
 
 # Default backend definition. Set this to point to your content server.
 backend default {
-    .host = "app_roadiz";
+    .host = "app";
     .port = "80";
 }
 
 acl local {
-    "app_roadiz";
+    "app";
     "varnish";
     "localhost";
 }

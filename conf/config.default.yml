@@ -1,40 +1,39 @@
 ---
-appNamespace: "chooseAnUniqueNameForYourApp"
-timezone: "Europe/Paris"
+appNamespace: '%env(string:APP_NAMESPACE)%'
+timezone: '%env(string:APP_TIMEZONE)%'
 doctrine:
     driver: "pdo_mysql"
-    host: "localhost"
-    user: ""
-    password: ""
-    dbname: ""
+    host: '%env(string:MYSQL_HOST)%'
+    user: '%env(string:MYSQL_USER)%'
+    password: '%env(string:MYSQL_PASSWORD)%'
+    dbname: '%env(string:MYSQL_DATABASE)%'
+    server_version: '%env(string:MYSQL_VERSION)%'
+    # "utf8mb4" charset requires at least mysql 5.7
+    # due to large index requirement.
+    # otherwise change it to "utf8"
     charset: utf8mb4
-    server_version: 8.0
     default_table_options:
         charset: utf8mb4
         collate: utf8mb4_unicode_ci
-        row_format: DYNAMIC
+# Choose a Doctrine strategy for NodesSources
+# inheritance classes. BE CAREFUL, if you change this
+# setting after creating content in your website, all
+# node-sources data will be lost.
+inheritance:
+    type: single_table
 # http://symfony.com/doc/current/reference/configuration/doctrine.html#caching-drivers
-# If null or empty, Roadiz will try to detect best cache driver available
+# If null or empty, Roadiz will use ArrayCache
 cacheDriver:
-    type: array
+    type: apcu
     host: ~
     port: ~
 security:
-    secret: "change#this#secret#very#important"
-    session_name: roadiz_token
-    # Switch session cookie secure to TRUE ONLY if your
-    # website is served with HTTPS only
-    session_cookie_secure: false
+    secret: '%env(string:APP_SECURITY_SECRET)%'
+    session_name: '%env(string:APP_SECURITY_SESSION_NAME)%'
+    session_cookie_secure: '%env(bool:APP_SECURITY_COOKIE_SECURE)%'
     session_cookie_httponly: true
-    # Change default password algorithm from sha512 to argon2i
     algorithm: argon2i
-mailer:
-    type: ~
-    host: "localhost"
-    port: 25
-    encryption: ~
-    username: ""
-    password: ""
+
 themes:
     - classname: \Themes\DefaultTheme\DefaultThemeApp
       hostname: '*'
@@ -43,30 +42,39 @@ additionalServiceProviders:
     - \Themes\DefaultTheme\Services\DefaultThemeServiceProvider
 additionalCommands:
     - \Themes\DefaultTheme\Commands\DefaultThemeCommand
+
+mailer:
+    type: '%env(string:MAILER_TYPE)%'
+    host: '%env(string:MAILER_HOST)%'
+    port: '%env(int:MAILER_PORT)%'
+    encryption: '%env(MAILER_ENCRYPTION)%'
+    username: '%env(MAILER_USER)%'
+    password: '%env(MAILER_PASSWORD)%'
+
+# Lifetime of remember-me cookie in seconds (30 days)
+rememberMeLifetime: 2592000
 # Image intervention and Intervention Request
 # settings for generating image on the fly
 assetsProcessing:
     # gd or imagick (gd does not support TIFF and PSD formats)
-    driver: gd
-    defaultQuality: 95
+    driver: '%env(string:APP_ASSETS_DRIVER)%'
+    defaultQuality: '%env(int:APP_ASSETS_DEFAULT_QUALITY)%'
     # pixel size limit () after roadiz
     # should create a smaller copy.
-    maxPixelSize: 2500
-    jpegoptimPath: ~
-    pngquantPath: ~
-# Choose a Doctrine strategy for NodesSources
-# inheritance classes. BE CAREFUL, if you change this
-# setting after creating content in your website, all
-# node-sources data will be lost.
-inheritance:
-    type: single_table
+    maxPixelSize: '%env(int:APP_ASSETS_MAX_PIXEL_SIZE)%'
+    jpegoptimPath: /usr/bin/jpegoptim
+    pngquantPath: /usr/bin/pngquant
+    subscribers: []
+#
+# Solr endpoint example
+#
 #solr:
 #    endpoint:
 #        localhost:
-#            host: "localhost"
-#            port: "8983"
+#            host: '%env(string:SOLR_HOST)%'
+#            port: '%env(int:SOLR_PORT)%'
 #            path: "/"
-#            core: "mycore"
+#            core: '%env(string:SOLR_CORE_NAME)%'
 #            timeout: 3
 #            username: ""
 #            password: ""
@@ -80,8 +88,21 @@ inheritance:
 #        bearer: ~
 #        email: ~
 #        key: ~
-#
 #    frontend:
 #        varnish:
-#            host: varnish_roadiz
-#            domainName: roadiz.test
+#            host: '%env(string:VARNISH_HOST)%'
+#            domainName: '%env(string:VARNISH_DOMAIN)%'
+
+#
+# Monolog non-default configuration
+#
+#monolog:
+#    handlers:
+#        default:
+#            type: rotating_file
+#            path: '%kernel.log_dir%/roadiz.log'
+#            level: DEBUG
+#        sentry:
+#            type: sentry
+#            level: WARNING
+#            url: '%env(string:APP_SENTRY_DSN)%'

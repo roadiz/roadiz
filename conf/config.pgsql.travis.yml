@@ -28,13 +28,10 @@ themes:
     - classname: \Themes\DefaultTheme\DefaultThemeApp
       hostname: '*'
       routePrefix: ''
-entities:
-    - "src/Roadiz/Core/Entities"
-    - "vendor/roadiz/models/src/Roadiz/Core/AbstractEntities"
-    - "gen-src/GeneratedNodeSources"
 # Lifetime of remember-me cookie in seconds (30 days)
 rememberMeLifetime: 2592000
-additionalServiceProviders: []
+additionalServiceProviders:
+    - \Themes\DefaultTheme\Services\DefaultThemeServiceProvider
 additionalCommands:
     - \Themes\DefaultTheme\Commands\DefaultThemeCommand
 assetsProcessing:

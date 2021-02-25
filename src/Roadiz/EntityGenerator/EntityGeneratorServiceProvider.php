@@ -21,9 +21,9 @@ class EntityGeneratorServiceProvider implements ServiceProviderInterface
     /**
      * @inheritDoc
      */
-    public function register(Container $container)
+    public function register(Container $pimple)
     {
-        $container[EntityGeneratorFactory::class] = function (Container $c) {
+        $pimple[EntityGeneratorFactory::class] = function (Container $c) {
             return new EntityGeneratorFactory($c['nodeTypesBag'], [
                 'parent_class' => NodesSources::class,
                 'repository_class' => NodesSourcesRepository::class,

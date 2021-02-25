@@ -5,21 +5,12 @@ declare(strict_types=1);
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Kernel;
 use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\ErrorHandler\Debug;
 
 set_time_limit(0);
-
-if (PHP_VERSION_ID < 70400) {
-    echo 'Your PHP version is ' . phpversion() . "." . PHP_EOL;
-    echo 'You need a least PHP version 7.4.0.' . PHP_EOL;
-    exit(1);
-}
-
 /** @deprecated Use Kernel::getProjectDir()  */
 define('ROADIZ_ROOT', dirname(__DIR__));
-// Include Composer Autoload (relative to project root).
-require dirname(__DIR__) . "/vendor/autoload.php";
+require dirname(realpath(__DIR__)) . "/bootstrap.php";
 
 $input = new ArgvInput();
 $env = $input->getParameterOption(['--env', '-e'], getenv('APP_ENV') ?: 'dev');
@@ -31,8 +22,5 @@ if ($debug) {
 }
 
 $kernel = new Kernel($env, $debug, $preview);
-$dotenv = new Dotenv();
-$dotenv->load($kernel->getProjectDir() . '/.env');
-
 $application = new RoadizApplication($kernel);
 $application->run($input);
