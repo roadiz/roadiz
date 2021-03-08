@@ -29,6 +29,7 @@
 
 namespace Themes\DefaultTheme\Form;
 
+use RZ\Roadiz\CMS\Forms\ColorType;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
@@ -64,6 +65,9 @@ class TestType extends AbstractType
                     'Fusce' => 'Fusce',
                     'Inceptos Bibendum' => 'Inceptos Bibendum',
                 ],
+                'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
+            ])
+            ->add('color', ColorType::class, [
                 'help' => 'Nullam id dolor id nibh ultricies vehicula ut id elit. Donec ullamcorper nulla non metus auctor fringilla.'
             ])
             ->add('choice_bullet', ChoiceType::class, [
