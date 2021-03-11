@@ -450,7 +450,14 @@ class NodesController extends RozierApp
         /** @var Workflow $workflow */
         $workflow = $this->get('workflow.registry')->get($node);
         if (!$workflow->can($node, 'delete')) {
-            throw new BadRequestHttpException(sprintf('Node #%s cannot be deleted.', $nodeId));
+            $this->publishErrorMessage($request, sprintf('Node #%s cannot be deleted.', $nodeId));
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                [
+                    'nodeId' => $node->getId(),
+                    'translationId' => $this->get('defaultTranslation')->getId()
+                ]
+            ));
         }
 
         $this->assignation['node'] = $node;
@@ -574,7 +581,14 @@ class NodesController extends RozierApp
         /** @var Workflow $workflow */
         $workflow = $this->get('workflow.registry')->get($node);
         if (!$workflow->can($node, 'undelete')) {
-            throw new BadRequestHttpException(sprintf('Node #%s cannot be undeleted.', $nodeId));
+            $this->publishErrorMessage($request, sprintf('Node #%s cannot be undeleted.', $nodeId));
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                [
+                    'nodeId' => $node->getId(),
+                    'translationId' => $this->get('defaultTranslation')->getId()
+                ]
+            ));
         }
 
         $this->assignation['node'] = $node;
@@ -652,7 +666,14 @@ class NodesController extends RozierApp
         /** @var Workflow $workflow */
         $workflow = $this->get('workflow.registry')->get($node);
         if (!$workflow->can($node, 'publish')) {
-            throw new BadRequestHttpException(sprintf('Node #%s cannot be publish.', $nodeId));
+            $this->publishErrorMessage($request, sprintf('Node #%s cannot be published.', $nodeId));
+            return $this->redirect($this->generateUrl(
+                'nodesEditSourcePage',
+                [
+                    'nodeId' => $node->getId(),
+                    'translationId' => $this->get('defaultTranslation')->getId()
+                ]
+            ));
         }
 
         $form = $this->createForm();
