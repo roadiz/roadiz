@@ -214,34 +214,41 @@ class NodeHandler extends AbstractHandler
     }
 
     /**
-     * Get nodes linked to current node for a given fieldname.
+     * Get nodes linked to current node for a given field name.
      *
      * @param string $fieldName Name of the node-type field
-     *
      * @return Node[]
      */
     public function getNodesFromFieldName($fieldName)
     {
-        return $this->getRepository()
-            ->findByNodeAndField(
-                $this->node,
-                $this->node->getNodeType()->getFieldByName($fieldName)
-            );
+        $field = $this->getNode()->getNodeType()->getFieldByName($fieldName);
+        if (null !== $field) {
+            return $this->getRepository()
+                ->findByNodeAndField(
+                    $this->getNode(),
+                    $field
+                );
+        }
+        return [];
     }
 
     /**
-     * Get nodes reversed-linked to current node for a given fieldname.
+     * Get nodes reversed-linked to current node for a given field name.
      *
      * @param string $fieldName Name of the node-type field
      * @return Node[]
      */
     public function getReverseNodesFromFieldName($fieldName)
     {
-        return $this->getRepository()
-            ->findByReverseNodeAndField(
-                $this->node,
-                $this->node->getNodeType()->getFieldByName($fieldName)
-            );
+        $field = $this->getNode()->getNodeType()->getFieldByName($fieldName);
+        if (null !== $field) {
+            return $this->getRepository()
+                ->findByReverseNodeAndField(
+                    $this->getNode(),
+                    $field
+                );
+        }
+        return [];
     }
 
     /**
