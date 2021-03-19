@@ -173,12 +173,16 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getDocumentsFromFieldName($fieldName)
     {
-        return $this->objectManager
-            ->getRepository(Document::class)
-            ->findByNodeSourceAndField(
-                $this->nodeSource,
-                $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName)
-            );
+        $field = $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName);
+        if (null !== $field) {
+            return $this->objectManager
+                ->getRepository(Document::class)
+                ->findByNodeSourceAndField(
+                    $this->nodeSource,
+                    $field
+                );
+        }
+        return [];
     }
 
     /**
@@ -557,13 +561,17 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getNodesFromFieldName($fieldName)
     {
-        return $this->objectManager
-            ->getRepository(Node::class)
-            ->findByNodeAndFieldAndTranslation(
-                $this->nodeSource->getNode(),
-                $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName),
-                $this->nodeSource->getTranslation()
-            );
+        $field = $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName);
+        if (null !== $field) {
+            return $this->objectManager
+                ->getRepository(Node::class)
+                ->findByNodeAndFieldAndTranslation(
+                    $this->nodeSource->getNode(),
+                    $field,
+                    $this->nodeSource->getTranslation()
+                );
+        }
+        return [];
     }
 
     /**
@@ -575,12 +583,16 @@ class NodesSourcesHandler extends AbstractHandler
      */
     public function getReverseNodesFromFieldName($fieldName)
     {
-        return $this->objectManager
-            ->getRepository(Node::class)
-            ->findByReverseNodeAndFieldNameAndTranslation(
-                $this->nodeSource->getNode(),
-                $fieldName,
-                $this->nodeSource->getTranslation()
-            );
+        $field = $this->nodeSource->getNode()->getNodeType()->getFieldByName($fieldName);
+        if (null !== $field) {
+            return $this->objectManager
+                ->getRepository(Node::class)
+                ->findByReverseNodeAndFieldAndTranslation(
+                    $this->nodeSource->getNode(),
+                    $field,
+                    $this->nodeSource->getTranslation()
+                );
+        }
+        return [];
     }
 }
