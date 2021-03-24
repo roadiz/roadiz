@@ -16,6 +16,7 @@ use RZ\Roadiz\Core\Entities\NodeTypeField;
 use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\NodeRepository;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\Workflow;
@@ -28,20 +29,34 @@ class NodeHandler extends AbstractHandler
     protected NodeChrootResolver $chrootResolver;
     private Registry $registry;
     private ?Node $node = null;
+    private NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
      * @param ObjectManager      $objectManager
      * @param Registry           $registry
      * @param NodeChrootResolver $chrootResolver
+     * @param NodeNamePolicyInterface $nodeNamePolicy
      */
     final public function __construct(
         ObjectManager $objectManager,
         Registry $registry,
-        NodeChrootResolver $chrootResolver
+        NodeChrootResolver $chrootResolver,
+        NodeNamePolicyInterface $nodeNamePolicy
     ) {
         parent::__construct($objectManager);
         $this->registry = $registry;
         $this->chrootResolver = $chrootResolver;
+        $this->nodeNamePolicy = $nodeNamePolicy;
+    }
+
+    protected function createSelf(): self
+    {
+        return new static(
+            $this->objectManager,
+            $this->registry,
+            $this->chrootResolver,
+            $this->nodeNamePolicy
+        );
     }
 
     /**
@@ -255,7 +270,7 @@ class NodeHandler extends AbstractHandler
     {
         /** @var Node $node */
         foreach ($this->getNode()->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
+            $handler = $this->createSelf();
             $handler->setNode($node);
             $handler->removeWithChildrenAndAssociations();
         }
@@ -317,7 +332,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->getNode()->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
+            $handler = $this->createSelf();
             $handler->setNode($node);
             $handler->softRemoveWithChildren();
         }
@@ -341,7 +356,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->getNode()->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
+            $handler = $this->createSelf();
             $handler->setNode($node);
             $handler->softUnremoveWithChildren();
         }
@@ -365,7 +380,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->getNode()->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
+            $handler = $this->createSelf();
             $handler->setNode($node);
             $handler->publishWithChildren();
         }
@@ -388,7 +403,7 @@ class NodeHandler extends AbstractHandler
 
         /** @var Node $node */
         foreach ($this->getNode()->getChildren() as $node) {
-            $handler = new NodeHandler($this->objectManager, $this->registry, $this->chrootResolver);
+            $handler = $this->createSelf();
             $handler->setNode($node);
             $handler->archiveWithChildren();
         }
@@ -467,7 +482,7 @@ class NodeHandler extends AbstractHandler
     public function cleanPositions(bool $setPositions = true): float
     {
         if ($this->getNode()->getParent() !== null) {
-            $parentHandler = new static($this->objectManager, $this->registry, $this->chrootResolver);
+            $parentHandler = $this->createSelf();
             $parentHandler->setNode($this->getNode()->getParent());
             return $parentHandler->cleanChildrenPositions($setPositions);
         } else {
@@ -571,7 +586,11 @@ class NodeHandler extends AbstractHandler
      */
     public function duplicate()
     {
-        $duplicator = new NodeDuplicator($this->getNode(), $this->objectManager);
+        $duplicator = new NodeDuplicator(
+            $this->getNode(),
+            $this->objectManager,
+            $this->nodeNamePolicy
+        );
         return $duplicator->duplicate();
     }
 
