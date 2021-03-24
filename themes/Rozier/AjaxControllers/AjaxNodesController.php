@@ -16,6 +16,7 @@ use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
 use RZ\Roadiz\Utils\Node\NodeMover;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use RZ\Roadiz\Utils\Node\UniqueNodeGenerator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -82,7 +83,11 @@ class AjaxNodesController extends AbstractAjaxController
                     $responseArray = $this->updatePosition($request->request->all(), $node);
                     break;
                 case 'duplicate':
-                    $duplicator = new NodeDuplicator($node, $this->get('em'));
+                    $duplicator = new NodeDuplicator(
+                        $node,
+                        $this->get('em'),
+                        $this->get(NodeNamePolicyInterface::class)
+                    );
                     $newNode = $duplicator->duplicate();
                     /*
                      * Dispatch event

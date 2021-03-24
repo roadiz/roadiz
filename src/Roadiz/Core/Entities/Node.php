@@ -886,6 +886,8 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
                 }
             }
             // Get a random string after node-name.
+            // This is for safety reasons
+            // NodeDuplicator service will override it
             $namePrefix = $this->getNodeSources()->first()->getTitle() != "" ?
                 $this->getNodeSources()->first()->getTitle() :
                 $this->nodeName;
