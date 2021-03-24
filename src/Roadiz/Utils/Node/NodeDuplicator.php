@@ -18,17 +18,21 @@ final class NodeDuplicator
 {
     private Node $originalNode;
     private ObjectManager $em;
+    private NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
      * @param Node $originalNode
      * @param ObjectManager $em
+     * @param NodeNamePolicyInterface $nodeNamePolicy
      */
     public function __construct(
         Node $originalNode,
-        ObjectManager $em
+        ObjectManager $em,
+        NodeNamePolicyInterface $nodeNamePolicy
     ) {
         $this->em = $em;
         $this->originalNode = $originalNode;
+        $this->nodeNamePolicy = $nodeNamePolicy;
     }
 
     /**
@@ -74,6 +78,10 @@ final class NodeDuplicator
      */
     private function doDuplicate(Node &$node): Node
     {
+        $node->setNodeName(
+            $this->nodeNamePolicy->getSafeNodeName($node->getNodeSources()->first())
+        );
+
         /** @var Node $child */
         foreach ($node->getChildren() as $child) {
             $child->setParent($node);

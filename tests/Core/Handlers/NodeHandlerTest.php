@@ -52,7 +52,11 @@ class NodeHandlerTest extends DefaultThemeDependentCase
                 static::getManager()->flush();
                 $nbNode = count(static::$runtimeCollection);
 
-                $duplicator = new NodeDuplicator($node, static::getManager());
+                $duplicator = new NodeDuplicator(
+                    $node,
+                    static::getManager(),
+                    static::get(\RZ\Roadiz\Utils\Node\NodeNamePolicyInterface::class)
+                );
                 $duplicatedNode = $duplicator->duplicate();
 
                 $this->assertEquals($node->getNodeSources()->count(), $duplicatedNode->getNodeSources()->count());

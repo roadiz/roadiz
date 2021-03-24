@@ -44,7 +44,7 @@ class NodeNameChecker implements NodeNamePolicyInterface
         return sprintf(
             '%s-%s',
             StringHandler::slugify($nodeSource->getNodeTypeName()),
-            uniqid()
+            null !== $nodeSource->getNode() ? $nodeSource->getNode()->getId() : $nodeSource->getId()
         );
     }
 

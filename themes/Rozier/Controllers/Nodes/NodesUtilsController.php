@@ -8,6 +8,7 @@ use RZ\Roadiz\Core\Events\Node\NodeCreatedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Serializers\NodeJsonSerializer;
 use RZ\Roadiz\Utils\Node\NodeDuplicator;
+use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -116,7 +117,11 @@ class NodesUtilsController extends RozierApp
         $existingNode = $this->get('em')->find(Node::class, $nodeId);
 
         try {
-            $duplicator = new NodeDuplicator($existingNode, $this->get('em'));
+            $duplicator = new NodeDuplicator(
+                $existingNode,
+                $this->get('em'),
+                $this->get(NodeNamePolicyInterface::class)
+            );
             $newNode = $duplicator->duplicate();
 
             /*
