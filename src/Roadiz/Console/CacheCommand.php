@@ -60,7 +60,7 @@ class CacheCommand extends Command
                 'clear-assets',
                 null,
                 InputOption::VALUE_NONE,
-                'Clear compiled route collections'
+                'Clear all cached image thumbnails.'
             )
             ->addOption(
                 'clear-templates',
@@ -96,10 +96,11 @@ class CacheCommand extends Command
         try {
             /** @var Kernel $kernel */
             $kernel = $this->getHelper('kernel')->getKernel();
+            /** @var EventDispatcher $dispatcher */
+            $dispatcher = $kernel->get('dispatcher');
             $this->entityManager = $this->getHelper('entityManager')->getEntityManager();
             $this->nsCacheHelper = $this->getHelper('ns-cache');
 
-            $assetsClearer = new AssetsClearer($kernel->getPublicCachePath());
             $doctrineClearer = new DoctrineCacheClearer($this->entityManager, $kernel);
             $routingClearer = new RoutingCacheClearer($kernel->getCacheDir());
             $templatesClearer = new TemplatesCacheClearer($kernel->getCacheDir());
@@ -125,8 +126,14 @@ class CacheCommand extends Command
                 $routingClearer->clear();
                 $outputs[] = $routingClearer->getOutput();
             } elseif ($input->getOption('clear-assets')) {
-                $assetsClearer->clear();
-                $outputs[] = $assetsClearer->getOutput();
+                $event = new CachePurgeAssetsRequestEvent($kernel);
+                $dispatcher->dispatch($event);
+                foreach ($event->getMessages() as $message) {
+                    $outputs[] = sprintf('<info>%s</info>: %s', $message['description'], $message['message']);
+                }
+                foreach ($event->getErrors() as $message) {
+                    $outputs[] = sprintf('<info>%s</info>: <error>%s</error>', $message['description'], $message['message']);
+                }
             } elseif ($input->getOption('clear-templates')) {
                 $templatesClearer->clear();
                 $outputs[] = $templatesClearer->getOutput();
@@ -137,11 +144,8 @@ class CacheCommand extends Command
                 $nodeSourcesUrlsClearer->clear();
                 $outputs[] = $nodeSourcesUrlsClearer->getOutput();
             } else {
-                /** @var EventDispatcher $dispatcher */
-                $dispatcher = $kernel->get('dispatcher');
                 $event = new CachePurgeRequestEvent($kernel);
                 $dispatcher->dispatch($event);
-                $dispatcher->dispatch(new CachePurgeAssetsRequestEvent($kernel));
 
                 foreach ($event->getMessages() as $message) {
                     $outputs[] = sprintf('<info>%s</info>: %s', $message['description'], $message['message']);
