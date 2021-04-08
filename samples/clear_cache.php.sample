@@ -46,7 +46,6 @@ $kernel->getContainer()->offsetSet('request', $request);
 $dispatcher = $kernel->get('dispatcher');
 $event = new CachePurgeRequestEvent($kernel);
 $dispatcher->dispatch($event);
-$dispatcher->dispatch(new CachePurgeAssetsRequestEvent($kernel));
 
 $text = [
     'status' => 'ok',
