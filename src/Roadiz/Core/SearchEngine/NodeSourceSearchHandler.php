@@ -156,6 +156,16 @@ class NodeSourceSearchHandler extends AbstractSearchHandler implements NodeSourc
             if (!is_array($args['publishedAt']) && $args['publishedAt'] instanceof \DateTime) {
                 $tmp .= $args['publishedAt']->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z');
             } elseif (isset($args['publishedAt'][0]) &&
+                $args['publishedAt'][0] === "BETWEEN" &&
+                isset($args['publishedAt'][1]) &&
+                $args['publishedAt'][1] instanceof \DateTime &&
+                isset($args['publishedAt'][2]) &&
+                $args['publishedAt'][2] instanceof \DateTime) {
+                $tmp .= "[" .
+                    $args['publishedAt'][1]->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z') .
+                    " TO " .
+                    $args['publishedAt'][2]->setTimezone(new \DateTimeZone('UTC'))->format('Y-m-d\TH:i:s\Z') . "]";
+            } elseif (isset($args['publishedAt'][0]) &&
                 $args['publishedAt'][0] === "<=" &&
                 isset($args['publishedAt'][1]) &&
                 $args['publishedAt'][1] instanceof \DateTime) {
