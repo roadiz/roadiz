@@ -22,7 +22,7 @@ class RecaptchaValidator extends ConstraintValidator
     {
         if ($constraint instanceof Recaptcha) {
             $propertyPath = $this->context->getPropertyPath();
-            $responseField = $constraint->request->request->get('g-recaptcha-response');
+            $responseField = $constraint->request->request->get($constraint->fieldName);
 
             if (empty($responseField)) {
                 $this->context->buildViolation($constraint->emptyMessage)
