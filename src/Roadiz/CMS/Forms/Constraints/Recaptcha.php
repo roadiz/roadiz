@@ -12,21 +12,22 @@ class Recaptcha extends Constraint
      * @var Request
      */
     public $request;
-
     /**
      * @var string
      */
     public $emptyMessage = 'you_must_show_youre_not_robot';
-
     /**
      * @var string
      */
     public $invalidMessage = 'recaptcha_is_invalid.try_again';
-
     /**
      * @var string
      */
     public $privateKey;
+    /**
+     * @var string
+     */
+    public $fieldName = 'g-recaptcha-response';
     /**
      * @var string
      */

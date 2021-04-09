@@ -24,10 +24,10 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -130,7 +130,6 @@ class ContactFormManager extends EmailManager
     public function disableCsrfProtection()
     {
         $this->options['csrf_protection'] = false;
-
         return $this;
     }
 
@@ -264,24 +263,29 @@ class ContactFormManager extends EmailManager
      *       <div class="g-recaptcha" data-sitekey="{{ configs.publicKey }}"></div>
      *   {%- endblock recaptcha_widget %}
      *
+     * If you are using API REST POST form, use 'g-recaptcha-response' name
+     * to enable Validator to get challenge value.
      *
-     * @return ContactFormManager $this
+     * @return ContactFormManager
      */
-    public function withGoogleRecaptcha()
-    {
+    public function withGoogleRecaptcha(
+        string $name = 'recaptcha',
+        string $validatorFieldName = 'g-recaptcha-response'
+    ) {
         $publicKey = $this->settingsBag->get('recaptcha_public_key');
         $privateKey = $this->settingsBag->get('recaptcha_private_key');
         $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
 
         if (!empty($publicKey) &&
             !empty($privateKey)) {
-            $this->getFormBuilder()->add('recaptcha', RecaptchaType::class, [
+            $this->getFormBuilder()->add($name, RecaptchaType::class, [
                 'label' => false,
                 'configs' => [
                     'publicKey' => $publicKey,
                 ],
                 'constraints' => [
                     new Recaptcha($this->request, [
+                        'fieldName' => $validatorFieldName,
                         'privateKey' => $privateKey,
                         'verifyUrl' => $verifyUrl,
                     ]),
