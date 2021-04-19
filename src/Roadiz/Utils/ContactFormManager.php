@@ -495,6 +495,11 @@ class ContactFormManager extends EmailManager
         ];
     }
 
+    protected function isFieldPrivate($key): bool
+    {
+        return is_string($key) && substr($key, 0, 1) === '_';
+    }
+
     /**
      * @param array $formData
      * @param array $fields
@@ -503,7 +508,7 @@ class ContactFormManager extends EmailManager
     protected function flattenFormData(array $formData, array $fields): array
     {
         foreach ($formData as $key => $value) {
-            if ($key[0] == '_' || $value instanceof UploadedFile) {
+            if ($this->isFieldPrivate($key) || $value instanceof UploadedFile) {
                 continue;
             } elseif (is_array($value) && count($value) > 0) {
                 $fields[] = [
