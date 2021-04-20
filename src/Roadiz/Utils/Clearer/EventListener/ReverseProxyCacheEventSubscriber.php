@@ -95,7 +95,7 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
             /** @var UrlGeneratorInterface $urlGenerator */
             $urlGenerator = $this->container['router'];
             $nodeSource = $event->getNodeSource();
-            while (!$nodeSource->getNode()->getNodeType()->isReachable()) {
+            while (!$nodeSource->isReachable()) {
                 $nodeSource = $nodeSource->getParent();
                 if (null === $nodeSource) {
                     return;
