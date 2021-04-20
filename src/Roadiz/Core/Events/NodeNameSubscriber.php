@@ -81,7 +81,7 @@ final class NodeNameSubscriber implements EventSubscriberInterface
                     $nodeSource->getNode()->getNodeName()
                 )) {
                 try {
-                    if ($nodeSource->getNode()->getNodeType()->isReachable()) {
+                    if ($nodeSource->isReachable()) {
                         $oldPaths = $this->nodeMover->getNodeSourcesUrls($nodeSource->getNode());
                         $oldUpdateAt = $nodeSource->getNode()->getUpdatedAt();
                     }
