@@ -192,7 +192,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
 
     /**
      * @ORM\Column(type="integer")
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"node"})
      * @internal You should use node Workflow to perform change on status.
      */
     private $status = Node::DRAFT;
@@ -513,7 +513,7 @@ class Node extends AbstractDateTimedPositioned implements LeafInterface, Attribu
     /**
      * @ORM\ManyToOne(targetEntity="NodeType")
      * @ORM\JoinColumn(onDelete="CASCADE")
-     * @Serializer\Groups({"nodes_sources", "node"})
+     * @Serializer\Groups({"node"})
      * @var NodeType|null
      */
     private $nodeType = null;

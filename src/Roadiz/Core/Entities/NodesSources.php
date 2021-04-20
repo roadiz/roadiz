@@ -101,6 +101,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @ORM\ManyToOne(targetEntity="Translation", inversedBy="nodeSources")
      * @ORM\JoinColumn(name="translation_id", referencedColumnName="id", onDelete="CASCADE")
      * @Serializer\Groups({"nodes_sources", "log_sources"})
+     * @Serializer\Exclude(if="!object.isReachable()")
      */
     private $translation = null;
 
@@ -129,6 +130,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @ORM\OneToMany(targetEntity="RZ\Roadiz\Core\Entities\UrlAlias", mappedBy="nodeSource", cascade={"remove"})
      * @var Collection<UrlAlias>
      * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Exclude(if="!object.isReachable()")
      */
     private $urlAliases;
 
@@ -309,6 +311,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @ORM\Column(type="datetime", name="published_at", unique=false, nullable=true)
      * @Serializer\Groups({"nodes_sources", "nodes_sources_base"})
      * @Gedmo\Versioned
+     * @Serializer\Exclude(if="!object.isPublishable()")
      */
     protected $publishedAt;
 
@@ -334,6 +337,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
      * @ORM\Column(type="string", name="meta_title", unique=false)
      * @Serializer\Groups({"nodes_sources"})
      * @Gedmo\Versioned
+     * @Serializer\Exclude(if="!object.isReachable()")
      */
     protected $metaTitle = '';
 
@@ -359,6 +363,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     /**
      * @ORM\Column(type="text", name="meta_keywords")
      * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Exclude(if="!object.isReachable()")
      * @Gedmo\Versioned
      */
     protected $metaKeywords = '';
@@ -385,6 +390,7 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
     /**
      * @ORM\Column(type="text", name="meta_description")
      * @Serializer\Groups({"nodes_sources"})
+     * @Serializer\Exclude(if="!object.isReachable()")
      * @Gedmo\Versioned
      */
     protected $metaDescription = '';
@@ -476,6 +482,26 @@ class NodesSources extends AbstractEntity implements ObjectManagerAware, Loggabl
         return '#' . $this->getId() .
         ' <' . $this->getTitle() . '>[' . $this->getTranslation()->getLocale() .
         '], type="' . $this->getNodeTypeName() . '"';
+    }
+
+    /**
+     * Overridden in NS classes.
+     *
+     * @return bool
+     */
+    public function isPublishable(): bool
+    {
+        return $this->getNode()->getNodeType()->isPublishable();
+    }
+
+    /**
+     * Overridden in NS classes.
+     *
+     * @return bool
+     */
+    public function isReachable(): bool
+    {
+        return $this->getNode()->getNodeType()->isReachable();
     }
 
     /**

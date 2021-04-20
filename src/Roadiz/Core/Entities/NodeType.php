@@ -30,7 +30,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface
     /**
      * @var string
      * @ORM\Column(type="string", unique=true)
-     * @Serializer\Groups({"node_type", "node", "nodes_sources"})
+     * @Serializer\Groups({"node_type", "node"})
      * @Serializer\Type("string")
      */
     private $name = '';
@@ -55,7 +55,7 @@ class NodeType extends AbstractEntity implements NodeTypeInterface
     /**
      * @var string
      * @ORM\Column(name="display_name", type="string")
-     * @Serializer\Groups({"node_type", "node", "nodes_soutces"})
+     * @Serializer\Groups({"node_type", "node"})
      * @Serializer\Type("string")
      */
     private $displayName;

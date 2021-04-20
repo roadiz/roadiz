@@ -32,7 +32,7 @@ class NodeNameChecker implements NodeNamePolicyInterface
     public function getCanonicalNodeName(NodesSources $nodeSource): string
     {
         if ($nodeSource->getTitle() !== '') {
-            if ($nodeSource->getNode()->getNodeType()->isReachable() || !$this->useTypedSuffix) {
+            if ($nodeSource->isReachable() || !$this->useTypedSuffix) {
                 return StringHandler::slugify($nodeSource->getTitle());
             }
             return sprintf(
