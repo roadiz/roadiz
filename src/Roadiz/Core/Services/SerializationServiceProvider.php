@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Services;
 use JMS\Serializer\EventDispatcher\EventDispatcher;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\EventDispatcher\Subscriber\DoctrineProxySubscriber;
+use JMS\Serializer\Expression\ExpressionEvaluator;
 use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
 use JMS\Serializer\Serializer;
@@ -25,6 +26,7 @@ use RZ\Roadiz\Core\Serializers\ObjectConstructor\SettingObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TagObjectConstructor;
 use RZ\Roadiz\Core\Serializers\ObjectConstructor\TranslationObjectConstructor;
 use RZ\Roadiz\Utils\CustomForm\CustormFormAnswerSerializer;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class SerializationServiceProvider implements ServiceProviderInterface
 {
@@ -39,6 +41,7 @@ class SerializationServiceProvider implements ServiceProviderInterface
             return SerializerBuilder::create()
                 ->setCacheDir($kernel->getCacheDir())
                 ->setDebug($kernel->isDebug())
+                ->setExpressionEvaluator(new ExpressionEvaluator(new ExpressionLanguage()))
                 ->setPropertyNamingStrategy(
                     new SerializedNameAnnotationStrategy(
                         new IdenticalPropertyNamingStrategy()
