@@ -139,6 +139,16 @@
                 <target state="translated">Replace "?_preview=1" query string to preview website content with a dedicated domain name. It can be useful when using *headless* Roadiz version.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_public_scheme">
+                <source>custom_public_scheme</source>
+                <target state="translated">Custom public scheme</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_public_scheme.help">
+                <source>custom_public_scheme.help</source>
+                <target state="translated">Replace your public website URL with a dedicated domain name. It can be useful when using *headless* Roadiz version.</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="use_typed_node_names">
                 <source>use_typed_node_names</source>
                 <target state="translated">Use typed node names</target>
