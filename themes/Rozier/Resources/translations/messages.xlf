@@ -4757,6 +4757,21 @@
         <source>document.filesize</source>
         <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="document.duration">
+        <source>document.duration</source>
+        <note>Label for timed documents duration (in seconds)</note>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.media_not_found_or_private">
+        <source>document.media_not_found_or_private</source>
+        <note>Error message when external media request fails with NotFound response.</note>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.is_only_external">
+        <source>document.is_only_external</source>
+        <note>Warning message displayed when document does not have any file locally.</note>
+        <target></target>
+      </trans-unit>
 
       <trans-unit xml:space="preserve" id="reachable">
         <source>reachable</source>

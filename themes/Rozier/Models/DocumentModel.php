@@ -69,7 +69,7 @@ class DocumentModel implements ModelInterface
 
         return [
             'id' => $this->document->getId(),
-            'filename' => $this->document->getFilename(),
+            'filename' => (string) $this->document,
             'name' => $name,
             'hasThumbnail' => $hasThumbnail,
             'isImage' => $this->document->isImage(),

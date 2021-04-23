@@ -93,7 +93,9 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
 
                 if (null !== $copyright || null !== $description) {
                     if (null !== $this->logger) {
-                        $this->logger->debug('EXIF information available for document.', ['document' => $document->getFilename()]);
+                        $this->logger->debug('EXIF information available for document.', [
+                            'document' => (string) $document
+                        ]);
                     }
                     $defaultTranslation = $this->entityManager
                                                ->getRepository(Translation::class)

@@ -8,7 +8,7 @@
             <div class="document-platform-icon"><i class="uk-icon-file-{{ document.shortType }}-o"></i></div>
         {% endif %}
     </figure>
-    <div class="document-name">{{ document.filename|default(document.documentTranslations.first.name)|centralTruncate(18, -4)}}</div>
+    <div class="document-name">{{ document|centralTruncate(18, -4) }}</div>
     <div class="document-overflow">
         {% if controls %}
         <input class="document-checkbox" type="checkbox" name="documents[]" value="{{ document.id }}" />

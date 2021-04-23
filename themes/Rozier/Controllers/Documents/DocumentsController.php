@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Controllers\Documents;
 
 use Doctrine\ORM\EntityManager;
+use GuzzleHttp\Exception\RequestException;
 use RZ\Roadiz\Core\Entities\AttributeDocuments;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Folder;
@@ -207,7 +208,7 @@ class DocumentsController extends RozierApp
                     /*
                      * Prefix document filename
                      */
-                    $cloneDocument->setFilename('original_' . $cloneDocument->getFilename());
+                    $cloneDocument->setFilename('original_' . $cloneDocument);
                     $newPath = $packages->getDocumentFilePath($cloneDocument);
                     $fs->rename(
                         $oldPath,
@@ -231,7 +232,7 @@ class DocumentsController extends RozierApp
                 /** @var Translator $translator */
                 $translator = $this->get('translator');
                 $msg = $translator->trans('document.%name%.updated', [
-                    '%name%' => $document->getFilename(),
+                    '%name%' => (string) $document,
                 ]);
 
                 return new JsonResponse([
@@ -285,14 +286,14 @@ class DocumentsController extends RozierApp
                         $documentFactory->setFile($newDocumentFile);
                         $documentFactory->updateDocument($document);
                         $msg = $this->getTranslator()->trans('document.file.%name%.updated', [
-                            '%name%' => $document->getFilename(),
+                            '%name%' => (string) $document,
                         ]);
                         $this->get('em')->flush();
                         $this->publishConfirmMessage($request, $msg);
                     }
 
                     $msg = $this->getTranslator()->trans('document.%name%.updated', [
-                       '%name%' => $document->getFilename(),
+                       '%name%' => (string) $document,
                     ]);
                     $this->publishConfirmMessage($request, $msg);
                     $this->get("dispatcher")->dispatch(
@@ -392,6 +393,9 @@ class DocumentsController extends RozierApp
                     $this->assignation['infos']['width'] = $document->getImageWidth() . 'px';
                     $this->assignation['infos']['height'] = $document->getImageHeight() . 'px';
                 }
+                if ($document->getMediaDuration() > 0) {
+                    $this->assignation['infos']['duration'] = $document->getMediaDuration() . ' sec';
+                }
             }
 
             return $this->render('documents/preview.html.twig', $this->assignation);
@@ -428,10 +432,14 @@ class DocumentsController extends RozierApp
                     );
                     $this->get('em')->remove($document);
                     $this->get('em')->flush();
-                    $msg = $this->getTranslator()->trans('document.%name%.deleted', ['%name%' => $document->getFilename()]);
+                    $msg = $this->getTranslator()->trans('document.%name%.deleted', [
+                        '%name%' => (string) $document
+                    ]);
                     $this->publishConfirmMessage($request, $msg);
                 } catch (\Exception $e) {
-                    $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', ['%name%' => $document->getFilename()]);
+                    $msg = $this->getTranslator()->trans('document.%name%.cannot_delete', [
+                        '%name%' => (string) $document
+                    ]);
                     $this->get('logger')->error($e->getMessage());
                     $this->publishErrorMessage($request, $msg);
                 }
@@ -483,7 +491,7 @@ class DocumentsController extends RozierApp
                     $this->get('em')->remove($document);
                     $msg = $this->getTranslator()->trans(
                         'document.%name%.deleted',
-                        ['%name%' => $document->getFilename()]
+                        ['%name%' => (string) $document]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 }
@@ -582,7 +590,7 @@ class DocumentsController extends RozierApp
                 if (is_iterable($document)) {
                     foreach ($document as $singleDocument) {
                         $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
-                            '%name%' => $singleDocument->getFilename(),
+                            '%name%' => (string) $singleDocument,
                         ]);
                         $this->publishConfirmMessage($request, $msg);
                         $this->get("dispatcher")->dispatch(
@@ -591,7 +599,7 @@ class DocumentsController extends RozierApp
                     }
                 } else {
                     $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
-                        '%name%' => $document->getFilename(),
+                        '%name%' => (string) $document,
                     ]);
                     $this->publishConfirmMessage($request, $msg);
                     $this->get("dispatcher")->dispatch(
@@ -602,6 +610,15 @@ class DocumentsController extends RozierApp
                  * Force redirect to avoid resending form when refreshing page
                  */
                 return $this->redirect($this->generateUrl('documentsHomePage', ['folderId' => $folderId]));
+            } catch (RequestException $e) {
+                $this->get('logger')->error($e->getRequest()->getUri() . ' failed.');
+                if (null !== $e->getResponse() && in_array($e->getResponse()->getStatusCode(), [401, 403, 404])) {
+                    $form->addError(new FormError(
+                        $this->getTranslator()->trans('document.media_not_found_or_private')
+                    ));
+                } else {
+                    $form->addError(new FormError($this->getTranslator()->trans($e->getMessage())));
+                }
             } catch (\RuntimeException $e) {
                 $form->addError(new FormError($this->getTranslator()->trans($e->getMessage())));
             } catch (\InvalidArgumentException $e) {
@@ -632,7 +649,7 @@ class DocumentsController extends RozierApp
             $document = $this->randomDocument($folderId);
 
             $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
-                '%name%' => $document->getFilename(),
+                '%name%' => (string) $document,
             ]);
             $this->publishConfirmMessage($request, $msg);
 
@@ -705,7 +722,7 @@ class DocumentsController extends RozierApp
 
                 if (false !== $document) {
                     $msg = $this->getTranslator()->trans('document.%name%.uploaded', [
-                        '%name%' => $document->getFilename(),
+                        '%name%' => (string) $document,
                     ]);
                     $this->publishConfirmMessage($request, $msg);
 
@@ -1068,8 +1085,10 @@ class DocumentsController extends RozierApp
 
             /** @var Document $document */
             foreach ($documents as $document) {
-                $documentPath = $this->get('assetPackages')->getDocumentFilePath($document);
-                $zip->addFile($documentPath, $document->getFilename());
+                if (!empty($document->getFilename())) {
+                    $documentPath = $this->get('assetPackages')->getDocumentFilePath($document);
+                    $zip->addFile($documentPath, $document->getFilename());
+                }
             }
 
             $zip->close();
