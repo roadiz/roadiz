@@ -4634,6 +4634,11 @@
         <note>Error message when external media request fails with NotFound response.</note>
         <target state="translated">Media cannot be found or it is flagged as private</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="document.is_only_external">
+        <source>document.is_only_external</source>
+        <note>Warning message displayed when document does not have any file locally.</note>
+        <target state="translated">Document is not linked to any local file.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="reachable" approved="yes">
         <source>reachable</source>
         <target state="final">Reachable</target>
