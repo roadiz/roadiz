@@ -66,18 +66,26 @@
 
                 {% block node_public_urls %}
                     {# Only add preview/see button for Reachable node-types #}
-                    {% if node.nodeType.reachable %}
-                        {% if source and node.published %}
+                    {% if source and source.Reachable %}
+                        {% if bags.settings.get('custom_public_scheme') %}
+                            {% set publicUrl = url(source, {
+                                'canonicalScheme': bags.settings.get('custom_public_scheme'),
+                                '_no_cache': 1
+                            }) %}
+                        {% else %}
+                            {% set publicUrl = path(source, {
+                                '_no_cache': 1
+                            }) %}
+                        {% endif %}
+                        {% if node.published and publicUrl%}
                             <a class="uk-button public-url-link"
                                target="_blank"
-                               href="{{ path(source, {
-                                   '_no_cache': 1
-                               }) }}">
+                               href="{{ publicUrl }}">
                                 <i class="uk-icon-rz-visibility"></i>
                                 <span class="label">{% trans %}see.page{% endtrans %}</span>
                             </a>
                         {% endif %}
-                        {% if source and (node.published or node.draft or node.pending) %}
+                        {% if node.published or node.draft or node.pending %}
                             {% if bags.settings.get('custom_preview_scheme') %}
                                 {% set previewUrl = url(source, {
                                     'canonicalScheme': bags.settings.get('custom_preview_scheme'),

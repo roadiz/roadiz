@@ -107,13 +107,21 @@ class NodesSourcesController extends RozierApp
                                     NodeRouter::NO_CACHE_PARAMETER => true
                                 ]);
                             }
-                            $url = $this->generateUrl($source, [
-                                NodeRouter::NO_CACHE_PARAMETER => true
-                            ]);
+
+                            if ($this->get('settingsBag')->get('custom_public_scheme')) {
+                                $publicUrl = $this->generateUrl($source, [
+                                    'canonicalScheme' => $this->get('settingsBag')->get('custom_public_scheme'),
+                                    NodeRouter::NO_CACHE_PARAMETER => true
+                                ], Router::ABSOLUTE_URL);
+                            } else {
+                                $publicUrl = $this->generateUrl($source, [
+                                    NodeRouter::NO_CACHE_PARAMETER => true
+                                ]);
+                            }
 
                             return new JsonResponse([
                                 'status' => 'success',
-                                'public_url' => $source->getNode()->isPublished() ? $url : null,
+                                'public_url' => $source->getNode()->isPublished() ? $publicUrl : null,
                                 'preview_url' => $previewUrl,
                                 'errors' => [],
                             ], JsonResponse::HTTP_PARTIAL_CONTENT);
