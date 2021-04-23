@@ -12,6 +12,11 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\LogRepository")
  * @ORM\Table(name="log", indexes={
  *     @ORM\Index(columns={"datetime"}),
+ *     @ORM\Index(columns={"node_source_id", "datetime"}, name="log_ns_datetime"),
+ *     @ORM\Index(columns={"username", "datetime"}, name="log_username_datetime"),
+ *     @ORM\Index(columns={"user_id", "datetime"}, name="log_user_datetime"),
+ *     @ORM\Index(columns={"level", "datetime"}, name="log_level_datetime"),
+ *     @ORM\Index(columns={"channel", "datetime"}, name="log_channel_datetime"),
  *     @ORM\Index(columns={"level"}),
  *     @ORM\Index(columns={"username"}),
  *     @ORM\Index(columns={"channel"})

@@ -13,7 +13,9 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  * custom data structure.
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
- * @ORM\Table(name="custom_form_field_attributes")
+ * @ORM\Table(name="custom_form_field_attributes", indexes={
+ *     @ORM\Index(columns={"custom_form_answer_id", "custom_form_field_id"}, name="cffattribute_answer_field")
+ * })
  * @ORM\HasLifecycleCallbacks
  */
 class CustomFormFieldAttribute extends AbstractEntity

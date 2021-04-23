@@ -23,7 +23,8 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"visible"}),
  *     @ORM\Index(columns={"position"}),
  *     @ORM\Index(columns={"created_at"}),
- *     @ORM\Index(columns={"updated_at"})
+ *     @ORM\Index(columns={"updated_at"}),
+ *     @ORM\Index(columns={"parent_id", "position"}, name="folder_parent_position")
  * })
  */
 class Folder extends AbstractDateTimedPositioned implements FolderInterface
