@@ -169,13 +169,13 @@ class DocumentTranslationsController extends RozierApp
 
                     $msg = $this->getTranslator()->trans(
                         'document.translation.%name%.deleted',
-                        ['%name%' => $document->getFilename()]
+                        ['%name%' => (string) $document]
                     );
                     $this->publishConfirmMessage($request, $msg);
                 } catch (Exception $e) {
                     $msg = $this->getTranslator()->trans(
                         'document.translation.%name%.cannot_delete',
-                        ['%name%' => $document->getFilename()]
+                        ['%name%' => (string) $document]
                     );
                     $this->publishErrorMessage($request, $msg);
                 }
@@ -230,7 +230,7 @@ class DocumentTranslationsController extends RozierApp
         if ($entity instanceof DocumentTranslation) {
             $this->get('em')->flush();
             $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
-                '%name%' => $entity->getDocument()->getFilename(),
+                '%name%' => (string) $entity->getDocument(),
             ]);
             $this->publishConfirmMessage($request, $msg);
 

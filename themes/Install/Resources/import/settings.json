@@ -586,5 +586,16 @@
             "inMenu": true
         },
         "type": 0
+    },
+    {
+        "name": "custom_public_scheme",
+        "description": "custom_public_scheme.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "Site informations",
+            "inMenu": true
+        },
+        "type": 0
     }
 ]

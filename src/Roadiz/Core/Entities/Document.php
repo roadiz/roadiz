@@ -12,6 +12,8 @@ use RZ\Roadiz\Core\Models\AdvancedDocumentInterface;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Models\FolderInterface;
 use RZ\Roadiz\Core\Models\HasThumbnailInterface;
+use RZ\Roadiz\Core\Models\SizeableInterface;
+use RZ\Roadiz\Core\Models\TimeableInterface;
 use RZ\Roadiz\Utils\StringHandler;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -26,7 +28,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"mime_type"})
  * })
  */
-class Document extends AbstractDocument implements AdvancedDocumentInterface, HasThumbnailInterface
+class Document extends AbstractDocument implements AdvancedDocumentInterface, HasThumbnailInterface, SizeableInterface, TimeableInterface
 {
     /**
      * @ORM\OneToOne(targetEntity="Document", inversedBy="downscaledDocument", cascade={"all"}, fetch="EXTRA_LAZY")
@@ -141,6 +143,13 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
      * @Serializer\Type("int")
      */
     private $imageHeight = 0;
+    /**
+     * @var integer
+     * @ORM\Column(type="integer", name="duration", nullable=false, options={"default" = 0})
+     * @Serializer\Groups({"document", "document_display", "nodes_sources", "tag", "attribute"})
+     * @Serializer\Type("int")
+     */
+    private $mediaDuration = 0;
     /**
      * @var string|null
      * @ORM\Column(type="string", name="average_color", length=7, unique=false, nullable=true)
@@ -531,6 +540,24 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     }
 
     /**
+     * @return int
+     */
+    public function getMediaDuration(): int
+    {
+        return $this->mediaDuration;
+    }
+
+    /**
+     * @param int $mediaDuration
+     * @return Document
+     */
+    public function setMediaDuration(int $mediaDuration): Document
+    {
+        $this->mediaDuration = $mediaDuration;
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getImageAverageColor(): ?string
@@ -668,5 +695,20 @@ class Document extends AbstractDocument implements AdvancedDocumentInterface, Ha
     public function needsThumbnail(): bool
     {
         return !$this->isProcessable();
+    }
+
+    public function __toString()
+    {
+        if (!empty($this->getFilename())) {
+            return $this->getFilename();
+        }
+        $translation = $this->getDocumentTranslations()->first();
+        if (false !== $translation && !empty($translation->getName())) {
+            return $translation->getName();
+        }
+        if (!empty($this->getEmbedPlatform())) {
+            return $this->getEmbedPlatform() . ' ('.$this->getEmbedId().')';
+        }
+        return (string) $this->getId();
     }
 }

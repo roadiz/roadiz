@@ -18,10 +18,17 @@
                 {% block login_footer %}
                     <div id="login-link">
                         {% if not hide_website %}
+                            {% set publicUrl = '/' %}
+                            {% if request.basePath %}
+                                {% set publicUrl = request.basePath %}
+                            {% endif %}
+                            {% if bags.settings.get('custom_public_scheme') %}
+                                {% set publicUrl = bags.settings.get('custom_public_scheme') %}
+                            {% endif %}
                             <a id="frontend-home-link"
                                title="{% trans %}see.website{% endtrans %}"
                                target="_blank"
-                               href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"><span class="uk-icon-button uk-icon-rz-earth"></span>
+                               href="{{ publicUrl }}"><span class="uk-icon-button uk-icon-rz-earth"></span>
                                 <span class="text">{% trans %}view.site{% endtrans %}</span>
                             </a>
                         {% endif %}
