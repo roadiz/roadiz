@@ -139,6 +139,16 @@
                 <target state="translated">Remplace la query-string "?preview=1" des URL de prévisualisation par un nom de domaine personnalisé. Cela peut être utile avec la version *Headless* de Roadiz.</target>
                 <note>Setting description</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_public_scheme">
+                <source>custom_public_scheme</source>
+                <target state="translated">Système d'URL public personnalisé</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_public_scheme.help">
+                <source>custom_public_scheme.help</source>
+                <target state="translated">Remplace les URL publics de votre site web avec un nom de domaine personnalisé. Cela peut être utile avec la version *Headless* de Roadiz.</target>
+                <note>Setting description</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="use_typed_node_names">
                 <source>use_typed_node_names</source>
                 <target state="translated">Utiliser des noms de nœuds typés</target>
