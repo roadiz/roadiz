@@ -141,13 +141,15 @@ class DocumentHandler extends AbstractHandler
     public function getDownloadResponse()
     {
         $fs = new Filesystem();
-        $documentPath = $this->packages->getDocumentFilePath($this->document);
+        if ($this->document->isLocal()) {
+            $documentPath = $this->packages->getDocumentFilePath($this->document);
 
-        if ($fs->exists($documentPath)) {
-            $response =  new BinaryFileResponse($documentPath, Response::HTTP_OK, [], false);
-            $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
+            if ($fs->exists($documentPath)) {
+                $response =  new BinaryFileResponse($documentPath, Response::HTTP_OK, [], false);
+                $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT);
 
-            return $response;
+                return $response;
+            }
         }
 
         throw new ResourceNotFoundException();

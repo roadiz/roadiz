@@ -1,12 +1,19 @@
 <nav id="admin-menu-nav">
     <header>
         <div id="frontend-home-area">
+            {% set publicUrl = '/' %}
+            {% if request.basePath %}
+                {% set publicUrl = request.basePath %}
+            {% endif %}
+            {% if bags.settings.get('custom_public_scheme') %}
+                {% set publicUrl = bags.settings.get('custom_public_scheme') %}
+            {% endif %}
             <a id="frontend-home-link"
                title="{% trans %}see.website{% endtrans %}"
                class="uk-icon-button uk-icon-rz-earth"
                data-uk-tooltip="{pos:'right', animation:'true'}"
                target="_blank"
-               href="{% if request.basePath %}{{ request.basePath }}{% else %}/{% endif %}"></a>
+               href="{{ publicUrl }}"></a>
         </div>
         {% if (is_granted('ROLE_ACCESS_NODES')) %}
         <hr/>

@@ -22,8 +22,12 @@ use JMS\Serializer\Annotation as Serializer;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\DocumentRepository")
  * @ORM\Table(name="documents", indexes={
+ *     @ORM\Index(columns={"created_at"}, name="document_created_at"),
+ *     @ORM\Index(columns={"updated_at"}, name="document_updated_at"),
  *     @ORM\Index(columns={"raw"}),
+ *     @ORM\Index(columns={"raw", "created_at"}, name="document_raw_created_at"),
  *     @ORM\Index(columns={"private"}),
+ *     @ORM\Index(columns={"embedPlatform"}, name="document_embed_platform"),
  *     @ORM\Index(columns={"raw", "private"}),
  *     @ORM\Index(columns={"mime_type"})
  * })

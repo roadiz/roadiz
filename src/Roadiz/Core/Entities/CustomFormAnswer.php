@@ -12,7 +12,8 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\EntityRepository")
  * @ORM\Table(name="custom_form_answers",  indexes={
  *     @ORM\Index(columns={"ip"}),
- *     @ORM\Index(columns={"submitted_at"})
+ *     @ORM\Index(columns={"submitted_at"}),
+ *     @ORM\Index(columns={"custom_form_id", "submitted_at"}, name="answer_customform_submitted_at")
  * })
  */
 class CustomFormAnswer extends AbstractEntity

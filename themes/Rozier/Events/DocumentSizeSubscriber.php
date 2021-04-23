@@ -51,7 +51,7 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
      */
     protected function supports(DocumentInterface $document)
     {
-        if ($document->isImage()) {
+        if ($document->isLocal() && $document->isImage()) {
             return true;
         }
 

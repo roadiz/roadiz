@@ -12,7 +12,9 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractPositioned;
  *
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\NodesCustomFormsRepository")
  * @ORM\Table(name="nodes_custom_forms", indexes={
- *     @ORM\Index(columns={"position"})
+ *     @ORM\Index(columns={"position"}),
+ *     @ORM\Index(columns={"node_id", "position"}, name="customform_node_position"),
+ *     @ORM\Index(columns={"node_id", "node_type_field_id", "position"}, name="customform_node_field_position")
  * })
  */
 class NodesCustomForms extends AbstractPositioned

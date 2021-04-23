@@ -18,7 +18,8 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractField;
  * }, indexes={
 *      @ORM\Index(columns={"position"}),
 *      @ORM\Index(columns={"group_name"}),
-*      @ORM\Index(columns={"type"})
+*      @ORM\Index(columns={"type"}),
+ *     @ORM\Index(columns={"custom_form_id", "position"}, name="cfield_customform_position")
 *  })
  * @ORM\HasLifecycleCallbacks
  */

@@ -20,7 +20,8 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractField;
  *         @ORM\Index(columns={"group_name"}),
  *         @ORM\Index(columns={"group_name_canonical"}),
  *         @ORM\Index(columns={"type"}),
- *         @ORM\Index(columns={"universal"})
+ *         @ORM\Index(columns={"universal"}),
+ *         @ORM\Index(columns={"node_type_id", "position"}, name="ntf_type_position")
  *     },
  *     uniqueConstraints={@ORM\UniqueConstraint(columns={"name", "node_type_id"})}
  * )

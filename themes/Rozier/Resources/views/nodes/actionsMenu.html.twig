@@ -91,6 +91,12 @@
                                     'canonicalScheme': bags.settings.get('custom_preview_scheme'),
                                     '_no_cache': 1
                                 }) %}
+                            {% elseif bags.settings.get('custom_public_scheme') %}
+                                {% set previewUrl = url(source, {
+                                    'canonicalScheme': bags.settings.get('custom_public_scheme'),
+                                    '_preview': 1,
+                                    '_no_cache': 1
+                                }) %}
                             {% else %}
                                 {% set previewUrl = path(source, {
                                     '_preview': 1,

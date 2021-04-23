@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Entity(repositoryClass="RZ\Roadiz\Core\Repositories\TagTranslationDocumentsRepository")
  * @ORM\Table(name="tags_translations_documents", indexes={
  *     @ORM\Index(columns={"position"}),
- *     @ORM\Index(columns={"tag_translation_id", "position"})
+ *     @ORM\Index(columns={"tag_translation_id", "position"}, name="tagtranslation_position")
  * })
  */
 class TagTranslationDocuments extends AbstractPositioned

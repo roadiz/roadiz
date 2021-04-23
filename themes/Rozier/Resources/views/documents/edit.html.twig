@@ -33,17 +33,19 @@
                     <td>{% trans %}updated.at{% endtrans %}</td>
                     <td>{{ document.updatedAt|format_datetime('long', locale=app.request.locale) }}</td>
                 </tr>
-                <tr>
-                    <td>{% trans %}document.filepath{% endtrans %}</td>
-                    <td>{{ document|path }}</td>
-                </tr>
-                {% if not document.private %}
+                {% if document.Local %}
+                    <tr>
+                        <td>{% trans %}document.filepath{% endtrans %}</td>
+                        <td>{{ document|path }}</td>
+                    </tr>
+                {% endif %}
+                {% if not document.private and document.Local %}
                     <tr>
                         <td>{% trans %}document.public_url{% endtrans %}</td>
                         <td>{{ document|url({noProcess: true}) }}</td>
                     </tr>
                 {% endif %}
-                {% if rawDocument %}
+                {% if rawDocument and rawDocument.Local %}
                     <tr>
                         <td>{% trans %}document.raw_document{% endtrans %}</td>
                         <td><p>{{ rawDocument|path }}</p><p><a href="{{ path('documentsDownloadPage', { documentId: rawDocument.id}) }}" class="uk-button uk-button-small rz-no-ajax-link"><i class="uk-icon-cloud-download"></i> {% trans %}download.raw.document{% endtrans %}</a></p></td>
