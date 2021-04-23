@@ -314,7 +314,9 @@ class FoldersController extends RozierApp
 
             /** @var Document $document */
             foreach ($documents as $document) {
-                $zip->addFile($packages->getDocumentFilePath($document), $document->getFilename());
+                if (!empty($document->getFilename())) {
+                    $zip->addFile($packages->getDocumentFilePath($document), $document->getFilename());
+                }
             }
 
             // Close and send to users
