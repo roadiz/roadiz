@@ -75,7 +75,7 @@ class DocumentDownscaleCommand extends Command
                     try {
                         $this->downscaler->processDocumentFromExistingRaw($document);
                     } catch (NotReadableException $exception) {
-                        $io->error($exception->getMessage() . ' - ' . $document->getFilename());
+                        $io->error($exception->getMessage() . ' - ' . (string) $document);
                     }
                     $io->progressAdvance();
                 }

@@ -58,6 +58,9 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
      */
     protected function supports(DocumentInterface $document)
     {
+        if (!$document->isLocal()) {
+            return false;
+        }
         if (!function_exists('exif_read_data')) {
             return false;
         }

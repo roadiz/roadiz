@@ -59,7 +59,7 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
      */
     protected function supports(DocumentInterface $document)
     {
-        if ($document->isProcessable() && $document instanceof Document) {
+        if ($document->isLocal() && $document->isProcessable() && $document instanceof Document) {
             return true;
         }
 

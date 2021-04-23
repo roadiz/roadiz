@@ -49,7 +49,7 @@ class DocumentFilesizeSubscriber implements EventSubscriberInterface
      */
     protected function supports(DocumentInterface $document)
     {
-        if (null !== $document->getRelativePath()) {
+        if ($document->isLocal() && null !== $document->getRelativePath()) {
             return true;
         }
 

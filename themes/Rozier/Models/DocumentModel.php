@@ -40,7 +40,7 @@ class DocumentModel implements ModelInterface
 
     public function toArray()
     {
-        $name = $this->document->getFilename();
+        $name = (string) $this->document;
 
         if ($this->document->getDocumentTranslations()->first() &&
             $this->document->getDocumentTranslations()->first()->getName()) {

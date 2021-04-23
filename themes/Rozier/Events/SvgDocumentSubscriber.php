@@ -46,6 +46,9 @@ class SvgDocumentSubscriber implements EventSubscriberInterface
     public function onSvgUploaded(FilterDocumentEvent $event)
     {
         $document = $event->getDocument();
+        if (!$document->isLocal()) {
+            return;
+        }
         $documentPath = $this->packages->getDocumentFilePath($document);
 
         // Create a new sanitizer instance

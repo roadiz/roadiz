@@ -158,12 +158,8 @@ class DocumentExtension extends AbstractExtension
                 return null;
             }
         }
-        if (null !== $document && $document->isImage()) {
-            $size = $this->getImageSize($document);
-            return $size['width'] >= $size['height'] ? 'landscape' : 'portrait';
-        }
-
-        return null;
+        $size = $this->getImageSize($document);
+        return $size['width'] >= $size['height'] ? 'landscape' : 'portrait';
     }
 
     /**
@@ -183,16 +179,9 @@ class DocumentExtension extends AbstractExtension
                 ];
             }
         }
-        if (null !== $document && $document->isImage()) {
-            return [
-                'width' => $document->getImageWidth(),
-                'height' => $document->getImageHeight(),
-            ];
-        }
-
         return [
-            'width' => 0,
-            'height' => 0,
+            'width' => $document->getImageWidth(),
+            'height' => $document->getImageHeight(),
         ];
     }
 
@@ -211,9 +200,7 @@ class DocumentExtension extends AbstractExtension
             }
         }
 
-        if (null !== $document &&
-            $document->isImage() &&
-            null !== $ratio = $document->getImageRatio()) {
+        if (null !== $document && null !== $ratio = $document->getImageRatio()) {
             return $ratio;
         }
 
@@ -226,7 +213,7 @@ class DocumentExtension extends AbstractExtension
      */
     public function getPath(Document $document = null)
     {
-        if (null !== $document) {
+        if (null !== $document && $document->isLocal()) {
             return $this->assetPackages->getDocumentFilePath($document);
         }
 
@@ -239,7 +226,7 @@ class DocumentExtension extends AbstractExtension
      */
     public function exists(Document $document = null)
     {
-        if (null !== $document) {
+        if (null !== $document && $document->isLocal()) {
             $fs = new Filesystem();
             return $fs->exists($this->assetPackages->getDocumentFilePath($document));
         }

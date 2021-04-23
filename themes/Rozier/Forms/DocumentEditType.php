@@ -11,6 +11,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,13 +27,17 @@ class DocumentEditType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('referer', HiddenType::class, [
-                'data' => $options['referer'],
-                'mapped' => false,
-            ])
-            ->add('filename', TextType::class, [
+        /** @var Document $document */
+        $document = $builder->getData();
+        $builder->add('referer', HiddenType::class, [
+            'data' => $options['referer'],
+            'mapped' => false,
+        ]);
+
+        if ($document->isLocal()) {
+            $builder->add('filename', TextType::class, [
                 'label' => 'filename',
+                'empty_data' => '',
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
@@ -42,24 +47,28 @@ class DocumentEditType extends AbstractType
                         'message' => 'value_is_not_a_valid_filename'
                     ]),
                     new UniqueFilename([
-                        'document' => $builder->getData(),
+                        'document' => $document,
                     ]),
                 ],
             ])
-            ->add('mimeType', TextType::class, [
-                'label' => 'document.mimeType',
-                'required' => true,
-                'constraints' => [
-                    new NotNull(),
-                    new NotBlank(),
-                ],
-            ])
-            ->add('private', CheckboxType::class, [
-                'label' => 'private',
-                'help' => 'document.private.help',
-                'required' => false,
-            ])
-            ->add('newDocument', FileType::class, [
+                ->add('mimeType', TextType::class, [
+                    'label' => 'document.mimeType',
+                    'empty_data' => '',
+                    'required' => true,
+                    'constraints' => [
+                        new NotNull(),
+                        new NotBlank(),
+                    ],
+                ])
+                ->add('private', CheckboxType::class, [
+                    'label' => 'private',
+                    'help' => 'document.private.help',
+                    'required' => false,
+                ])
+            ;
+        }
+
+        $builder->add('newDocument', FileType::class, [
                 'label' => 'overwrite.document',
                 'required' => false,
                 'mapped' => false,
@@ -79,10 +88,29 @@ class DocumentEditType extends AbstractType
                 'required' => false,
             ])
         ;
+
+        if ($document->isImage() || $document->isVideo() || $document->isEmbed()) {
+            $builder->add('imageWidth', IntegerType::class, [
+                'label' => 'document.width',
+                'required' => false
+            ]);
+            $builder->add('imageHeight', IntegerType::class, [
+                'label' => 'document.height',
+                'required' => false
+            ]);
+        }
+
+        if ($document->isAudio() || $document->isVideo() || $document->isEmbed()) {
+            $builder->add('mediaDuration', IntegerType::class, [
+                'label' => 'document.duration',
+                'required' => false
+            ]);
+        }
+
         /*
          * Display thumbnails only if current Document is original.
          */
-        if (null === $builder->getData()->getOriginal()) {
+        if (null === $document->getOriginal()) {
             $builder->add('thumbnails', DocumentCollectionType::class, [
                 'label' => 'document.thumbnails',
                 'multiple' => true,

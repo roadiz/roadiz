@@ -175,7 +175,7 @@ class DocumentsController extends RozierApp
         /** @var Document $document */
         $document = $this->get('em')->find(Document::class, $documentId);
 
-        if ($document !== null) {
+        if ($document !== null && $document->isLocal()) {
             // Assign document
             $this->assignation['document'] = $document;
 
@@ -343,10 +343,6 @@ class DocumentsController extends RozierApp
         $document = $this->get('em')->find(Document::class, $documentId);
 
         if ($document !== null) {
-            /** @var Packages $packages */
-            $packages = $this->get('assetPackages');
-            $documentPath = $packages->getDocumentFilePath($document);
-
             $this->assignation['document'] = $document;
             $this->assignation['thumbnailFormat'] = [
                 'width' => 750,
@@ -385,17 +381,15 @@ class DocumentsController extends RozierApp
                 $this->assignation['thumbnailFormat']['picture'] = true;
             }
 
-            if (file_exists($documentPath)) {
-                $this->assignation['infos'] = [
-                    'filesize' => sprintf('%.3f MB', ($document->getFilesize())/pow(1024, 2)),
-                ];
-                if ($document->isProcessable()) {
-                    $this->assignation['infos']['width'] = $document->getImageWidth() . 'px';
-                    $this->assignation['infos']['height'] = $document->getImageHeight() . 'px';
-                }
-                if ($document->getMediaDuration() > 0) {
-                    $this->assignation['infos']['duration'] = $document->getMediaDuration() . ' sec';
-                }
+            $this->assignation['infos'] = [
+                'filesize' => sprintf('%.3f MB', ($document->getFilesize())/pow(1024, 2)),
+            ];
+            if ($document->isProcessable()) {
+                $this->assignation['infos']['width'] = $document->getImageWidth() . 'px';
+                $this->assignation['infos']['height'] = $document->getImageHeight() . 'px';
+            }
+            if ($document->getMediaDuration() > 0) {
+                $this->assignation['infos']['duration'] = $document->getMediaDuration() . ' sec';
             }
 
             return $this->render('documents/preview.html.twig', $this->assignation);
@@ -1085,7 +1079,7 @@ class DocumentsController extends RozierApp
 
             /** @var Document $document */
             foreach ($documents as $document) {
-                if (!empty($document->getFilename())) {
+                if ($document->isLocal()) {
                     $documentPath = $this->get('assetPackages')->getDocumentFilePath($document);
                     $zip->addFile($documentPath, $document->getFilename());
                 }

@@ -101,6 +101,12 @@ class NodesSourcesController extends RozierApp
                                     'canonicalScheme' => $this->get('settingsBag')->get('custom_preview_scheme'),
                                     NodeRouter::NO_CACHE_PARAMETER => true
                                 ], Router::ABSOLUTE_URL);
+                            } elseif ($this->get('settingsBag')->get('custom_public_scheme')) {
+                                $previewUrl = $this->generateUrl($source, [
+                                    'canonicalScheme' => $this->get('settingsBag')->get('custom_public_scheme'),
+                                    '_preview' => 1,
+                                    NodeRouter::NO_CACHE_PARAMETER => true
+                                ], Router::ABSOLUTE_URL);
                             } else {
                                 $previewUrl = $this->generateUrl($source, [
                                     '_preview' => 1,

@@ -116,7 +116,7 @@ class SolariumDocumentTranslation extends AbstractSolarium
 
         if ($this->logger !== null && count($folderNames) > 0) {
             $this->logger->debug('Indexed document.', [
-                'document' => $this->rzDocument->getFilename(),
+                'document' => (string) $this->rzDocument,
                 'locale' => $this->documentTranslation->getTranslation()->getLocale(),
                 'folders' => $folderNames,
             ]);
