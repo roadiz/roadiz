@@ -9,6 +9,8 @@ use RZ\Roadiz\CMS\Importers\NodeTypesImporter;
 use RZ\Roadiz\Core\Entities\NodeType;
 use RZ\Roadiz\Documentation\Generators\DocumentationGenerator;
 use RZ\Roadiz\Documentation\Generators\NodeTypeGenerator;
+use RZ\Roadiz\Typescript\Declaration\DeclarationGeneratorFactory;
+use RZ\Roadiz\Typescript\Declaration\Generators\DeclarationGenerator;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
@@ -104,6 +106,28 @@ class NodeTypesUtilsController extends RozierApp
         );
         $response->prepare($request);
 
+        return $response;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function exportTypeScriptDeclarationAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_NODETYPES');
+
+        $documentationGenerator = new DeclarationGenerator(
+            new DeclarationGeneratorFactory($this->get('nodeTypesBag'))
+        );
+
+        $fileName = 'roadiz-app-' . date('Ymd-His') . '.d.ts';
+        $response = new Response($documentationGenerator->getContents(), Response::HTTP_OK, [
+            'Content-type' => 'application/x-typescript',
+            'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
+        ]);
+        $response->prepare($request);
         return $response;
     }
 

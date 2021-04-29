@@ -33,6 +33,10 @@ nodesTypesExportDocumentationPage:
     path:     /export/documentation
     defaults:
         _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportDocumentationAction
+nodesTypesExportTypeScriptPage:
+    path:     /export/typescript
+    defaults:
+        _controller: Themes\Rozier\Controllers\NodeTypes\NodeTypesUtilsController::exportTypeScriptDeclarationAction
 
 nodeTypesSchemaUpdate:
     path:     /update-schema
