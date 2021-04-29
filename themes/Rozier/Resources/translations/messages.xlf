@@ -5320,11 +5320,6 @@
             <target></target>
             <note>Button label, for exporting node-type Markdown documentation</note>
         </trans-unit>
-        <trans-unit xml:space="preserve" id="export.typescript_declaration">
-            <source>export.typescript_declaration</source>
-            <target></target>
-            <note>Button label, for exporting node-types into a TypeScript declaration file.</note>
-        </trans-unit>
         <trans-unit xml:space="preserve" id="hide_roadiz_version">
             <source>hide_roadiz_version</source>
             <target></target>
