@@ -63,6 +63,7 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\Index(columns={"status", "parent_node_id"}, name="node_status_parent"),
  *     @ORM\Index(columns={"nodeType_id", "status", "parent_node_id"}, name="node_nodetype_status_parent"),
  *     @ORM\Index(columns={"visible", "parent_node_id"}),
+ *     @ORM\Index(columns={"visible", "parent_node_id", "position"}, name="node_visible_parent_position"),
  *     @ORM\Index(columns={"home"})
  * })
  * @ORM\HasLifecycleCallbacks
