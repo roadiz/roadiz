@@ -24,7 +24,9 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"position"}),
  *     @ORM\Index(columns={"created_at"}),
  *     @ORM\Index(columns={"updated_at"}),
- *     @ORM\Index(columns={"parent_tag_id", "visible"})
+ *     @ORM\Index(columns={"parent_tag_id", "visible"}, name="tag_parent_visible"),
+ *     @ORM\Index(columns={"visible", "position"}, name="tag_visible_position"),
+ *     @ORM\Index(columns={"parent_tag_id", "visible", "position"}, name="tag_parent_visible_position")
  * })
  */
 class Tag extends AbstractDateTimedPositioned implements LeafInterface

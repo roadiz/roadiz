@@ -24,10 +24,10 @@ use Doctrine\ORM\Mapping as ORM;
  * }, indexes={
  *     @ORM\Index(columns={"title"}),
  *     @ORM\Index(columns={"published_at"}),
- *     @ORM\Index(columns={"published_at", "translation_id"}),
  *     @ORM\Index(columns={"node_id", "translation_id", "published_at"}),
  *     @ORM\Index(columns={"title", "published_at"}),
- *     @ORM\Index(columns={"title", "published_at", "translation_id"})
+ *     @ORM\Index(columns={"title", "published_at", "translation_id"}),
+ *     @ORM\Index(columns={"translation_id", "published_at"}, name="ns_translation_publishedat")
  * })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
