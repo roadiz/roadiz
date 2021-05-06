@@ -19,6 +19,10 @@ final class Version20210423161606 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
+        $this->skipIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
         $this->addSql('CREATE INDEX document_created_at ON documents (created_at)');
         $this->addSql('CREATE INDEX document_updated_at ON documents (updated_at)');
         $this->addSql('CREATE INDEX document_raw_created_at ON documents (raw, created_at)');
@@ -35,6 +39,10 @@ final class Version20210423161606 extends AbstractMigration
 
     public function down(Schema $schema) : void
     {
+        $this->skipIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
         $this->addSql('DROP INDEX document_created_at ON documents');
         $this->addSql('DROP INDEX document_updated_at ON documents');
         $this->addSql('DROP INDEX document_raw_created_at ON documents');

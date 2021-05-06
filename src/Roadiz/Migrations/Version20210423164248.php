@@ -16,6 +16,10 @@ final class Version20210423164248 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
+        $this->skipIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
         $this->addSql('CREATE INDEX answer_customform_submitted_at ON custom_form_answers (custom_form_id, submitted_at)');
         $this->addSql('CREATE INDEX cffattribute_answer_field ON custom_form_field_attributes (custom_form_answer_id, custom_form_field_id)');
         $this->addSql('CREATE INDEX cfield_customform_position ON custom_form_fields (custom_form_id, position)');
@@ -44,6 +48,10 @@ final class Version20210423164248 extends AbstractMigration
 
     public function down(Schema $schema) : void
     {
+        $this->skipIf(
+            $this->connection->getDatabasePlatform()->getName() !== 'mysql',
+            'Migration can only be executed safely on \'mysql\'.'
+        );
         $this->addSql('DROP INDEX answer_customform_submitted_at ON custom_form_answers');
         $this->addSql('DROP INDEX cffattribute_answer_field ON custom_form_field_attributes');
         $this->addSql('DROP INDEX cfield_customform_position ON custom_form_fields');
