@@ -47,7 +47,8 @@ use JMS\Serializer\Annotation as Serializer;
  *     @ORM\UniqueConstraint(columns={"node_id", "translation_id"})
  * }, indexes={
  *     @ORM\Index(columns={"title"}),
- *     @ORM\Index(columns={"published_at"})
+ *     @ORM\Index(columns={"published_at"}),
+ *     @ORM\Index(columns={"translation_id", "published_at"}, name="ns_translation_publishedat")
  * })
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discr", type="string")
