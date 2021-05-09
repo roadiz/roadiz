@@ -5158,6 +5158,11 @@
             <target state="translated">Exporter la documentation</target>
             <note>Button label, for exporting node-type Markdown documentation</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="export.typescript_declaration">
+            <source>export.typescript_declaration</source>
+            <target state="translated">Exporter les déclarations Typescript</target>
+            <note>Button label, for exporting node-types into a TypeScript declaration file.</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="hide_roadiz_version">
             <source>hide_roadiz_version</source>
             <target state="translated">Cacher la version de Roadiz</target>
