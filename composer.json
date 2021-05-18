@@ -53,13 +53,14 @@
         "phpoffice/phpspreadsheet":                "^1.15",
         "pimple/pimple":                           "^3.3.1",
         "rezozero/crypto":                         "^0.2.0",
-        "roadiz/doc-generator":                    "~1.6.0",
+        "roadiz/doc-generator":                    "dev-main",
         "roadiz/documents":                        "~1.6.4",
-        "roadiz/entity-generator":                 "~1.6.5",
+        "roadiz/dts-generator":                    "dev-main",
+        "roadiz/entity-generator":                 "dev-main",
         "roadiz/jwt":                              "~1.6.0",
         "roadiz/markdown":                         "~1.6.0",
         "roadiz/models":                           "~1.6.0",
-        "roadiz/nodetype-contracts":               "~1.0.0",
+        "roadiz/nodetype-contracts":               "dev-main",
         "roadiz/openid":                           "~1.6.0",
         "roadiz/random":                           "~1.6.0",
         "rollerworks/password-strength-validator": "^1.3.2",
@@ -89,8 +90,7 @@
         "twig/html-extra":                         "^3.0",
         "twig/intl-extra":                         "^3.0",
         "twig/string-extra":                       "^3.0",
-        "twig/twig":                               "^3.0",
-        "roadiz/dts-generator": "dev-main"
+        "twig/twig":                               "^3.0"
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.7",
