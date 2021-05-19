@@ -33,8 +33,9 @@ class DocumentSearchHandler extends AbstractSearchHandler
              * Only need these fields as Doctrine
              * will do the rest.
              */
-            $query->addFields([
+            $query->setFields([
                 'id',
+                'sort',
                 'document_type_s',
                 SolariumDocumentTranslation::IDENTIFIER_KEY,
                 'filename_s',
@@ -49,8 +50,8 @@ class DocumentSearchHandler extends AbstractSearchHandler
                 ]);
             }
 
-            $solrRequest = $this->client->select($query);
-            return json_decode($solrRequest->getResponse()->getBody(), true);
+            $solrRequest = $this->client->execute($query);
+            return $solrRequest->getData();
         } else {
             return null;
         }
