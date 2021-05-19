@@ -59,7 +59,7 @@ abstract class AbstractSearchHandler implements SearchHandlerInterface
     ): SearchResultsInterface {
         $args = $this->argFqProcess($args);
         $args["fq"][] = "document_type_s:" . $this->getDocumentType();
-        $args = array_merge($this->getHighlightingOptions(), $args);
+        $args = array_merge($this->getHighlightingOptions($args), $args);
         $response = $this->nativeSearch($q, $args, $rows, $searchTags, $proximity, $page);
         return new SolrSearchResults(null !== $response ? $response : [], $this->em);
     }
@@ -78,9 +78,8 @@ abstract class AbstractSearchHandler implements SearchHandlerInterface
     /**
      * @return array
      */
-    protected function getHighlightingOptions(): array
+    protected function getHighlightingOptions(array &$args = []): array
     {
-        $args = [];
         $tmp = [];
         $tmp["hl"] = true;
         $tmp["hl.fl"] = $this->getCollectionField($args);
@@ -374,7 +373,7 @@ abstract class AbstractSearchHandler implements SearchHandlerInterface
                         "query" => $v,
                     ]);
                 }
-            } else {
+            } elseif (is_scalar($value)) {
                 $query->addParam($key, $value);
             }
         }

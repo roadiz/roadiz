@@ -79,7 +79,7 @@ class SolrSearchResults implements SearchResultsInterface
                             }
                             return [
                                 $key => $object,
-                                'highlighting' => $this->response['highlighting'][$item['id']],
+                                'highlighting' => $this->getHighlighting($item['id']),
                             ];
                         }
                         return $object;
@@ -90,6 +90,27 @@ class SolrSearchResults implements SearchResultsInterface
         }
 
         return $this->resultItems;
+    }
+
+    /**
+     * Merge collection_txt localized fields.
+     * 
+     * @param string $id
+     * @return array|array[]|mixed
+     */
+    protected function getHighlighting(string $id)
+    {
+        $highlights = $this->response['highlighting'][$id];
+        if (!isset($highlights['collection_txt'])) {
+            $collectionTxt = [];
+            foreach ($highlights as $field => $value) {
+                $collectionTxt = array_merge($collectionTxt, $value);
+            }
+            $highlights = array_merge($highlights, [
+                'collection_txt' => $collectionTxt
+            ]);
+        }
+        return $highlights;
     }
 
     /**
