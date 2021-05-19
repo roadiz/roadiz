@@ -69,7 +69,7 @@ class SolrSearchResults implements SearchResultsInterface
             $this->resultItems = [];
             if (null !== $this->response &&
                 isset($this->response['response']['docs'])) {
-                $this->resultItems = array_map(
+                $this->resultItems = array_filter(array_map(
                     function ($item) {
                         $object = $this->getHydratedItem($item);
                         if (isset($this->response["highlighting"])) {
@@ -85,7 +85,7 @@ class SolrSearchResults implements SearchResultsInterface
                         return $object;
                     },
                     $this->response['response']['docs']
-                );
+                ));
             }
         }
 
@@ -94,7 +94,7 @@ class SolrSearchResults implements SearchResultsInterface
 
     /**
      * Merge collection_txt localized fields.
-     * 
+     *
      * @param string $id
      * @return array|array[]|mixed
      */
