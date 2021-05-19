@@ -64,7 +64,8 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
              * Only need these fields as Doctrine
              * will do the rest.
              */
-            $query->addFields([
+            $query->setFields([
+                'score',
                 'id',
                 'document_type_s',
                 SolariumNodeSource::IDENTIFIER_KEY,
@@ -79,8 +80,8 @@ class NodeSourceSearchHandler extends AbstractSearchHandler
                 ]);
             }
 
-            $solrRequest = $this->client->select($query);
-            return json_decode($solrRequest->getResponse()->getBody(), true);
+            $solrRequest = $this->client->execute($query);
+            return $solrRequest->getData();
         } else {
             return null;
         }
