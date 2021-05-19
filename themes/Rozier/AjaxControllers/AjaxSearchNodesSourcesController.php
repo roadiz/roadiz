@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Themes\Rozier\AjaxControllers;
 
 use RZ\Roadiz\Core\Entities\NodesSources;
+use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
 use RZ\Roadiz\Core\SearchEngine\GlobalNodeSourceSearchHandler;
+use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,20 +57,7 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
                 if (!key_exists($source->getNode()->getId(), $responseArray['data']) &&
                     null !== $source &&
                     $source instanceof NodesSources) {
-                    $responseArray['data'][$source->getNode()->getId()] = [
-                        'title' => $source->getTitle() ?? $source->getNode()->getNodeName(),
-                        'nodeId' => $source->getNode()->getId(),
-                        'translationId' => $source->getTranslation()->getId(),
-                        'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
-                        'typeColor' => $source->getNode()->getNodeType()->getColor(),
-                        'url' => $this->generateUrl(
-                            'nodesEditSourcePage',
-                            [
-                                'nodeId' => $source->getNode()->getId(),
-                                'translationId' => $source->getTranslation()->getId(),
-                            ]
-                        ),
-                    ];
+                    $responseArray['data'][$source->getNode()->getId()] = $this->getNodeSourceData($source);
                 }
             }
             /*
@@ -87,5 +76,41 @@ class AjaxSearchNodesSourcesController extends AbstractAjaxController
             'data' => [],
             'responseText' => 'No results found.',
         ]);
+    }
+
+    protected function getNodeSourceData(NodesSources $source): array
+    {
+        /** @var DocumentUrlGeneratorInterface $documentUrlGenerator */
+        $documentUrlGenerator = $this->get('document.url_generator');
+        $thumbnail = null;
+        $displayableNSDoc = $source->getDocumentsByFields()->filter(function (NodesSourcesDocuments $nsDoc) {
+            return $nsDoc->getDocument()->isImage() || $nsDoc->getDocument()->isSvg();
+        })->first();
+        if ($displayableNSDoc instanceof NodesSourcesDocuments) {
+            $thumbnail = $displayableNSDoc->getDocument();
+            $documentUrlGenerator->setDocument($thumbnail);
+            $documentUrlGenerator->setOptions([
+                "fit" => "60x60",
+                "quality" => 80
+            ]);
+        }
+        return [
+            'title' => $source->getTitle() ?? $source->getNode()->getNodeName(),
+            'parent' => $source->getParent() ?
+                $source->getParent()->getTitle() ?? $source->getParent()->getNode()->getNodeName() :
+                null,
+            'thumbnail' => $thumbnail ? $documentUrlGenerator->getUrl() : null,
+            'nodeId' => $source->getNode()->getId(),
+            'translationId' => $source->getTranslation()->getId(),
+            'typeName' => $source->getNode()->getNodeType()->getDisplayName(),
+            'typeColor' => $source->getNode()->getNodeType()->getColor(),
+            'url' => $this->generateUrl(
+                'nodesEditSourcePage',
+                [
+                    'nodeId' => $source->getNode()->getId(),
+                    'translationId' => $source->getTranslation()->getId(),
+                ]
+            ),
+        ];
     }
 }

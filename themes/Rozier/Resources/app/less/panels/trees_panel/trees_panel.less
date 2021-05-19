@@ -219,9 +219,7 @@
     height: @global-header-height;
     background-color: @maintree-search-bg;
     text-align: center;
-    .transition(height ease 0.4s);
     overflow: hidden;
-
 
     form {
         padding-top: 36px;
@@ -268,7 +266,9 @@
         }
     }
     &.focus-on {
-        height: 370px;
+        min-height: @global-header-height - 40px;
+        height: auto;
+        padding-bottom: 40px; // tab btn height
     }
 
     #nodes-sources-search-results {
@@ -277,7 +277,6 @@
         position: relative;
         z-index: 9999;
 
-        li a,
         #see-all {
             display: block;
             background-color: #AFAFAF;
@@ -298,22 +297,6 @@
             &:hover {
                 background: darken(@maintree-search-input-bg, 4%);
                 color: #333;
-            }
-
-            .type {
-                text-transform: uppercase;
-                font-size: 8px;
-                float: right;
-                display: inline-block;
-                background-color: rgba(0, 0, 0, 0.15);
-                padding: 4px 6px 2px;
-                border-radius: 8px;
-                line-height: 8px;
-                color: rgba(255, 255, 255, 0.65);
-                text-shadow: 0px -1px 0px rgba(0, 0, 0, 0.3);
-                letter-spacing: 0.04em;
-                margin-top: 1px;
-                margin-right: -7px;
             }
 
             &:after {
@@ -340,11 +323,90 @@
     }
 }
 
+.nodes-sources-search-results-item {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    grid-gap: 8px;
+    align-items: center;
+    color: #444;
+    .box-sizing();
+    font-size: 11px;
+    line-height: 1;
+
+    border-left: 4px solid transparent;
+    border-right: 1px solid darken(@maintree-search-input-bg, 4%);
+    border-bottom: 1px solid darken(@maintree-search-input-bg, 4%);
+    .transition(~'background ease 0.35s, color ease 0.35s');
+    .text-ellipsis();
+
+    &:hover {
+        text-decoration: none;
+        background: darken(@maintree-search-input-bg, 4%);
+        color: #333;
+    }
+
+    li:first-child > & {
+        border-top: 1px solid darken(@maintree-search-input-bg, 4%);
+    }
+
+    .image-container {
+        height: 100%;
+    }
+
+    img {
+        width: 40px;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .texts-header {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        margin-bottom: 5px;
+        justify-content: space-between;
+        grid-gap: 8px;
+        border-bottom: 1px solid #9c9c9c;
+        padding-bottom: 3px;
+    }
+
+    .parent,
+    .type {
+        text-transform: uppercase;
+        font-size: 8px;
+        display: block;
+        letter-spacing: 0.04em;
+        text-overflow: ellipsis;
+    }
+
+    .type {
+        text-align: right;
+        overflow: hidden;
+    }
+
+    .texts {
+        display: block;
+        text-align: left;
+        padding: 8px 8px 8px 0;
+    }
+
+    .title {
+        display: block;
+        margin: 0;
+        white-space: normal;
+        line-height: 1.2;
+        color: #191919;
+    }
+}
+
 #tree-menu {
     margin-top: -40px;
     border-bottom: 1px solid rgba(0,0,0,0.2);
     box-shadow: 0 1px 0 rgba(255,255,255,0.6);
     text-align: center;
+    background-color: @maintree-search-bg;
 
     li {
         height: 39px;
