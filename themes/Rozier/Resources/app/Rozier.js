@@ -473,63 +473,6 @@ export default class Rozier {
     }
 
     /**
-     * Handle ajax search node source.
-     * @param event
-     */
-    onSearchNodesSources (event) {
-        let $input = $(event.currentTarget)
-
-        if (event.keyCode === 27) {
-            $input.blur()
-        }
-
-        if ($input.val().length > 1) {
-            clearTimeout(this.searchNodesSourcesDelay)
-            this.searchNodesSourcesDelay = window.setTimeout(() => {
-                let postData = {
-                    _token: this.ajaxToken,
-                    _action: 'searchNodesSources',
-                    searchTerms: $input.val()
-                }
-
-                $.ajax({
-                    url: this.routes.searchNodesSourcesAjax,
-                    type: 'GET',
-                    dataType: 'json',
-                    data: postData
-                })
-                    .done(data => {
-                        let $results = $('#nodes-sources-search-results')
-                        if (typeof data.data !== 'undefined' &&
-                            data.data.length > 0) {
-                            $results.empty()
-                            for (let i in data.data) {
-                                $results.append('<li><a href="' + data.data[i].url +
-                                    '" style="border-left-color:' + data.data[i].typeColor + '"><span class="title">' + data.data[i].title +
-                                    '</span> <span class="type">' + data.data[i].typeName +
-                                    '</span></a></li>')
-                            }
-                        } else {
-                            $results.empty()
-                        }
-                    })
-                    .fail(() => {
-                        let $results = $('#nodes-sources-search-results')
-                        $results.empty()
-                    })
-            }, 200)
-        }
-    }
-
-    /**
-     * On submit search nodes sources
-     * @return {boolean}
-     */
-    onSubmitSearchNodesSources () {
-        return false
-    }
-
-    /**
      * @param event
      * @param rootEl
      * @param el
