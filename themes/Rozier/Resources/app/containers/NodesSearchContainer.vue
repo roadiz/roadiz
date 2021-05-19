@@ -31,12 +31,12 @@
             }, 50),
             disableFocus: debounce(function () {
                 this.nodeSourceSearchDisableFocus()
-            }, 50)
+            }, 500) // wait to enable click on links
         },
         watch: {
             searchTerms: debounce(function (newValue, oldValue) {
                 this.nodesSourceSearchUpdate(newValue, oldValue)
-            }, 350),
+            }, 200),
             isFocus: function () {
                 if (!this.isFocus) {
                     this.$refs.searchTermsInput.blur()
