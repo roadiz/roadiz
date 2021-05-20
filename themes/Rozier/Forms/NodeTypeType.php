@@ -60,6 +60,11 @@ class NodeTypeType extends AbstractType
                 'required' => false,
                 'help' => 'mark_this_typed_nodes_as_reachable_with_an_url',
             ])
+            ->add('searchable', CheckboxType::class, [
+                'label' => 'nodeType.searchable',
+                'required' => false,
+                'help' => 'allow_this_types_nodes_title_to_be_indexed_into_search_engine',
+            ])
             ->add('hidingNodes', CheckboxType::class, [
                 'label' => 'nodeType.hidingNodes',
                 'required' => false,

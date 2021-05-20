@@ -3754,6 +3754,14 @@
           <source>nodeType.hiding_nodes</source>
           <target></target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.searchable">
+          <source>nodeType.searchable</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="allow_this_types_nodes_title_to_be_indexed_into_search_engine">
+          <source>allow_this_types_nodes_title_to_be_indexed_into_search_engine</source>
+          <target></target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.%name%.created">
           <source>newsletter.%name%.created</source>
           <target></target>
