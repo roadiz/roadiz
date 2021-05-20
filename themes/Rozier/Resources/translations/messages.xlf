@@ -2950,10 +2950,6 @@
         <source>exclude_this_field_from_api_serialization_if_expression_result_is_true</source>
         <target></target>
       </trans-unit>
-      <trans-unit xml:space="preserve" id="enter_symfony_expression_language_with_object_as_var_name">
-        <source>enter_symfony_expression_language_with_object_as_var_name</source>
-        <target></target>
-      </trans-unit>
 
       <trans-unit xml:space="preserve" id="export.all.nodes">
         <source>export.all.nodes</source>
