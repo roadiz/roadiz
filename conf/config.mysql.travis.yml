@@ -5,7 +5,7 @@ doctrine:
     driver: "pdo_mysql"
     host: "localhost"
     user: "root"
-    password: ""
+    password: '%env(string:MYSQL_PASSWORD)%'
     dbname: "roadiz_tests"
     server_version: '%env(string:MYSQL_VERSION)%'
     # Do not use utf8mb4 before MySQL 5.7

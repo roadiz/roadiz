@@ -69,6 +69,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             php: 7.4
             install: sh .travis/composer_install.sh
             script: sh .travis/php_lint.sh
@@ -80,6 +81,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             php: 8.0
             install: sh .travis/composer_install.sh
             script: sh .travis/php_lint.sh
@@ -91,6 +93,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             php: nightly
             install: sh .travis/composer_install.sh
             script: sh .travis/php_lint.sh
@@ -105,6 +108,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -118,6 +122,7 @@ jobs:
             env:
                 - DB=mariadb
                 - MYSQL_VERSION=mariadb-10.5.2
+                - MYSQL_PASSWORD=travis
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -141,6 +146,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -154,6 +160,7 @@ jobs:
             env:
                 - DB=mariadb
                 - MYSQL_VERSION=mariadb-10.5.2
+                - MYSQL_PASSWORD=travis
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -177,6 +184,7 @@ jobs:
             env:
                 - DB=mysql
                 - MYSQL_VERSION=5.7
+                - MYSQL_PASSWORD=
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
@@ -190,6 +198,7 @@ jobs:
             env:
                 - DB=mariadb
                 - MYSQL_VERSION=mariadb-10.5.2
+                - MYSQL_PASSWORD=travis
             before_script: sh .travis/php_unit_install.sh
             script: sh .travis/php_unit.sh
         -   stage: "PHP unit tests"
