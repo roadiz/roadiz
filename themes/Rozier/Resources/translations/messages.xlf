@@ -2906,14 +2906,48 @@
         <source>default.translation</source>
         <target></target>
       </trans-unit>
-
       <trans-unit xml:space="preserve" id="nodeTypeField.minLength">
         <source>nodeTypeField.minLength</source>
         <target></target>
       </trans-unit>
-
       <trans-unit xml:space="preserve" id="nodeTypeField.maxLength">
         <source>nodeTypeField.maxLength</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="no_limit">
+        <source>no_limit</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serialization">
+        <source>nodeTypeField.serialization</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.excludedFromSerialization">
+        <source>nodeTypeField.excludedFromSerialization</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationMaxDepth">
+        <source>nodeTypeField.serializationMaxDepth</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationExclusionExpression">
+        <source>nodeTypeField.serializationExclusionExpression</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationGroups">
+        <source>nodeTypeField.serializationGroups</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization">
+        <source>exclude_this_field_from_api_serialization</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="default_value">
+        <source>default_value</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization_if_expression_result_is_true">
+        <source>exclude_this_field_from_api_serialization_if_expression_result_is_true</source>
         <target></target>
       </trans-unit>
 
@@ -3718,6 +3752,14 @@
       </trans-unit>
       <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
           <source>nodeType.hiding_nodes</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.searchable">
+          <source>nodeType.searchable</source>
+          <target></target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="allow_this_types_nodes_title_to_be_indexed_into_search_engine">
+          <source>allow_this_types_nodes_title_to_be_indexed_into_search_engine</source>
           <target></target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.%name%.created">
