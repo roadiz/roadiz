@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Contracts\NodeType\NodeTypeInterface;
+use RZ\Roadiz\Contracts\NodeType\SearchableInterface;
 use RZ\Roadiz\Core\AbstractEntities\AbstractEntity;
 use RZ\Roadiz\Utils\StringHandler;
 
@@ -22,10 +23,11 @@ use RZ\Roadiz\Utils\StringHandler;
  *     @ORM\Index(columns={"publishable"}),
  *     @ORM\Index(columns={"hiding_nodes"}),
  *     @ORM\Index(columns={"hiding_non_reachable_nodes"}),
- *     @ORM\Index(columns={"reachable"})
+ *     @ORM\Index(columns={"reachable"}),
+ *     @ORM\Index(columns={"searchable"}, name="nt_searchable")
  * })
  */
-class NodeType extends AbstractEntity implements NodeTypeInterface
+class NodeType extends AbstractEntity implements NodeTypeInterface, SearchableInterface
 {
     /**
      * @var string
@@ -343,6 +345,34 @@ class NodeType extends AbstractEntity implements NodeTypeInterface
     {
         $this->defaultTtl = $defaultTtl;
 
+        return $this;
+    }
+
+    /**
+     * Define if this node-type title will be indexed during its parent indexation.
+     *
+     * @var bool
+     * @ORM\Column(name="searchable", type="boolean", nullable=false, options={"default" = true})
+     * @Serializer\Groups("node_type")
+     * @Serializer\Type("boolean")
+     */
+    private $searchable = true;
+
+    /**
+     * @return bool
+     */
+    public function isSearchable(): bool
+    {
+        return $this->searchable;
+    }
+
+    /**
+     * @param bool $searchable
+     * @return NodeType
+     */
+    public function setSearchable(bool $searchable): NodeType
+    {
+        $this->searchable = $searchable;
         return $this;
     }
 

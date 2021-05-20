@@ -25,7 +25,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "birthday",
@@ -43,7 +45,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "nationality",
@@ -61,7 +65,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "email",
@@ -79,7 +85,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "civil_status",
@@ -97,7 +105,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "education",
@@ -115,7 +125,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "languages",
@@ -133,7 +145,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "computer_sciences",
@@ -151,7 +165,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "professional_organization",
@@ -169,7 +185,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "job",
@@ -187,7 +205,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "experience_years",
@@ -205,7 +225,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "skills",
@@ -223,7 +245,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "experience",
@@ -241,7 +265,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "other_information",
@@ -254,7 +280,9 @@
             "universal": false,
             "expanded": false,
             "placeholder": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "publishings",
@@ -272,7 +300,9 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         },
         {
             "name": "seminars",
@@ -290,7 +320,10 @@
             "placeholder": null,
             "minLength": null,
             "maxLength": null,
-            "nodeTypeName": "Person"
+            "nodeTypeName": "Person",
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         }
-    ]
+    ],
+    "searchable": true
 }

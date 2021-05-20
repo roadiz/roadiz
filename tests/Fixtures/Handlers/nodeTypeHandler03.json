@@ -18,10 +18,11 @@
             "universal": false,
             "indexed": false,
             "visible": true,
-            "excludeFromSearch": false
-
+            "excludeFromSearch": false,
+            "excludedFromSerialization": false
         }
     ],
     "defaultTtl": 0,
+    "searchable": true,
     "hidingNonReachableNodes": false
 }
