@@ -2864,6 +2864,42 @@
         <source>nodeTypeField.maxLength</source>
         <target state="final">Max length</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="no_limit">
+        <source>no_limit</source>
+        <target state="translated">No limit</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serialization">
+        <source>nodeTypeField.serialization</source>
+        <target state="translated">Serialization</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.excludedFromSerialization">
+        <source>nodeTypeField.excludedFromSerialization</source>
+        <target state="translated">Exclude field from node-source serialization?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationMaxDepth">
+        <source>nodeTypeField.serializationMaxDepth</source>
+        <target state="translated">Maximum serialization depth</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationExclusionExpression">
+        <source>nodeTypeField.serializationExclusionExpression</source>
+        <target state="translated">Serialization exclusion expression</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationGroups">
+        <source>nodeTypeField.serializationGroups</source>
+        <target state="translated">Custom serialization groups</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization">
+        <source>exclude_this_field_from_api_serialization</source>
+        <target state="translated">Prevents this field to be serialized when a node-source is queried from API.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="default_value">
+        <source>default_value</source>
+        <target state="translated">Default value</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization_if_expression_result_is_true">
+        <source>exclude_this_field_from_api_serialization_if_expression_result_is_true</source>
+        <target state="translated">Prevents this field to be serialized only if given expression result is true. This requires a valid Symfony Expression Language string.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="export.all.nodes" approved="yes">
         <source>export.all.nodes</source>
         <target state="final">Export all nodes</target>
@@ -3635,6 +3671,14 @@
       <trans-unit xml:space="preserve" id="nodeType.hiding_nodes" approved="yes">
           <source>nodeType.hiding_nodes</source>
           <target state="final">This type hides its node-tree</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.searchable">
+          <source>nodeType.searchable</source>
+          <target state="translated">Searchable?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="allow_this_types_nodes_title_to_be_indexed_into_search_engine">
+          <source>allow_this_types_nodes_title_to_be_indexed_into_search_engine</source>
+          <target state="translated">Allows node-source title of this type to be indexed into search engine.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.%name%.created" approved="yes">
           <source>newsletter.%name%.created</source>
