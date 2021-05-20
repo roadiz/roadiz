@@ -2864,6 +2864,42 @@
         <source>nodeTypeField.maxLength</source>
         <target state="final">Longueur maximale</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="no_limit">
+        <source>no_limit</source>
+        <target state="translated">Aucune limite</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serialization">
+        <source>nodeTypeField.serialization</source>
+        <target state="translated">Sérialisation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.excludedFromSerialization">
+        <source>nodeTypeField.excludedFromSerialization</source>
+        <target state="translated">Exclure ce champ de la sérialisation de la source du nœud ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationMaxDepth">
+        <source>nodeTypeField.serializationMaxDepth</source>
+        <target state="translated">Profondeur maximale de sérialisation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationExclusionExpression">
+        <source>nodeTypeField.serializationExclusionExpression</source>
+        <target state="translated">Expression d'exclusion de la sérialisation</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationGroups">
+        <source>nodeTypeField.serializationGroups</source>
+        <target state="translated">Groupes de sérialisation personnalisés</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization">
+        <source>exclude_this_field_from_api_serialization</source>
+        <target state="translated">Empêche ce champ d'être sérialisé lors d'un appel API pour une source de nœud.</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="default_value">
+        <source>default_value</source>
+        <target state="translated">Valeur par défaut</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_api_serialization_if_expression_result_is_true">
+        <source>exclude_this_field_from_api_serialization_if_expression_result_is_true</source>
+        <target state="translated">Empêche ce champ d'être sérialisé seulement si le résultat de l'expression est vrai. La syntaxe utilisée est le Symfony Expression Language.</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="export.all.nodes" approved="yes">
         <source>export.all.nodes</source>
         <target state="final">Exporter tout</target>
@@ -3635,6 +3671,14 @@
       <trans-unit xml:space="preserve" id="nodeType.hiding_nodes" approved="yes">
           <source>nodeType.hiding_nodes</source>
           <target state="final">Type cachant son arborescence</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.searchable">
+          <source>nodeType.searchable</source>
+          <target state="translated">Visible lors de la recherche ?</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="allow_this_types_nodes_title_to_be_indexed_into_search_engine">
+          <source>allow_this_types_nodes_title_to_be_indexed_into_search_engine</source>
+          <target state="translated">Permet aux titres des sources de nœud de ce type d'être indexé dans le moteur de recherche.</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.%name%.created" approved="yes">
           <source>newsletter.%name%.created</source>
