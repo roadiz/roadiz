@@ -84,7 +84,7 @@
         "symfony/stopwatch":                       "~4.4.1",
         "symfony/translation":                     "~4.4.1",
         "symfony/twig-bridge":                     "~4.4.1",
-        "symfony/validator":                       "~4.4.1",
+        "symfony/validator":                       "^5.1",
         "symfony/workflow":                        "^4.4.1",
         "symfony/yaml":                            "~4.4.1",
         "twig/html-extra":                         "^3.0",

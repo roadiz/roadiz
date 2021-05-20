@@ -104,9 +104,19 @@ class NodeTypeFieldType extends AbstractType
         ->add('minLength', IntegerType::class, [
             'label' => 'nodeTypeField.minLength',
             'required' => false,
+            'attr' => [
+                'placeholder' => 'no_limit',
+            ],
         ])
         ->add('maxLength', IntegerType::class, [
             'label' => 'nodeTypeField.maxLength',
+            'required' => false,
+            'attr' => [
+                'placeholder' => 'no_limit',
+            ],
+        ])
+        ->add('serialization', NodeTypeFieldSerializationType::class, [
+            'data_class' => NodeTypeField::class,
             'required' => false,
         ]);
     }
