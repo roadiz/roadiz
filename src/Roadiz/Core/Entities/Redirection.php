@@ -17,13 +17,13 @@ use Symfony\Component\HttpFoundation\Response;
 class Redirection extends AbstractDateTimed
 {
     /**
-     * @ORM\Column(type="string", unique=true)
+     * @ORM\Column(type="string", unique=true, length=255)
      * @var string
      */
     private $query = "";
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(type="text", nullable=true, length=2048)
      * @var string|null
      */
     private $redirectUri = null;
