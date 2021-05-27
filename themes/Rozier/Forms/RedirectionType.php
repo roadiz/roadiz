@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 
@@ -29,12 +30,20 @@ class RedirectionType extends AbstractType
             'constraints' => [
                 new NotNull(),
                 new NotBlank(),
+                new Length([
+                    'max' => 255
+                ])
             ],
         ]);
         if ($options['only_query'] === false) {
             $builder->add('redirectUri', TextType::class, [
                 'label' => 'redirection.redirect_uri',
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'max' => 2048
+                    ])
+                ]
             ])
             ->add('type', ChoiceType::class, [
                 'label' => 'redirection.type',
