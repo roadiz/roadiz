@@ -7,6 +7,7 @@ use RZ\Roadiz\CMS\Forms\Constraints\UniqueEntity;
 use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +37,7 @@ class RedirectionType extends AbstractType
             ],
         ]);
         if ($options['only_query'] === false) {
-            $builder->add('redirectUri', TextType::class, [
+            $builder->add('redirectUri', TextareaType::class, [
                 'label' => 'redirection.redirect_uri',
                 'required' => false,
                 'constraints' => [

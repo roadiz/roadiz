@@ -54,9 +54,9 @@
                         </td>
                         <td>
                             {% if item.redirectNodeSource %}
-                                <i class="uk-icon uk-icon-magic"></i> {{ path(item.redirectNodeSource) }}
+                                <i class="uk-icon uk-icon-magic"></i> {{ path(item.redirectNodeSource) -}}
                             {% else %}
-                                {{ item.redirectUri }}
+                                {{- item.redirectUri|u.truncate(80, '…') -}}
                             {% endif %}
                         </td>
                         <td>{{ item.typeAsString|trans }}</td>
