@@ -27,7 +27,7 @@
                 <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
             {% endif %}
         {% else %}
-            <div class="document-mime-type">{{ document.getShortMimeType|u.truncate(13, '…', false) }}</div>
+            <div class="document-mime-type">{{ document.shortMimeType|u.truncate(13, '…') }}</div>
             {% if document.private %}
                 <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
             {% endif %}
