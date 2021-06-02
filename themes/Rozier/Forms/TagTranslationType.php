@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Forms;
 
-use RZ\Roadiz\CMS\Forms\Constraints\UniqueTagName;
 use RZ\Roadiz\CMS\Forms\MarkdownType;
 use RZ\Roadiz\Core\Entities\TagTranslation;
 use RZ\Roadiz\CMS\Forms\TagTranslationDocumentType;
@@ -24,9 +23,7 @@ class TagTranslationType extends AbstractType
                 'constraints' => [
                     new NotNull(),
                     new NotBlank(),
-                    new UniqueTagName([
-                        'currentValue' => $options['tagName'],
-                    ]),
+                    // Allow users to rename Tag the same, but tag slug must be different!
                     new Length([
                         'max' => 255,
                     ])

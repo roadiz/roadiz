@@ -14,6 +14,7 @@ use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\TagHandler;
 use RZ\Roadiz\Core\Repositories\TranslationRepository;
+use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\FormError;
@@ -147,9 +148,13 @@ class TagsController extends RozierApp
                      * Update tag slug if not locked
                      * only from default translation.
                      */
-                    if (!$tag->isLocked() &&
-                        $translation->isDefaultTranslation()) {
-                        $tag->setTagName($tagTranslation->getName());
+                    $newTagName = StringHandler::slugify($tagTranslation->getName());
+                    if ($tag->getTagName() !== $newTagName) {
+                        if (!$tag->isLocked() &&
+                            $translation->isDefaultTranslation() &&
+                            !$this->tagNameExists($newTagName)) {
+                            $tag->setTagName($tagTranslation->getName());
+                        }
                     }
                     $this->get('em')->flush();
                     /*
@@ -197,6 +202,18 @@ class TagsController extends RozierApp
         }
 
         throw new ResourceNotFoundException();
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    protected function tagNameExists(string $name): bool
+    {
+        $entity = $this->get('em')->getRepository(Tag::class)->findOneByTagName($name);
+
+        return (null !== $entity);
     }
 
     /**
