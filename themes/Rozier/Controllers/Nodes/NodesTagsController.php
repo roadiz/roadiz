@@ -36,7 +36,6 @@ class NodesTagsController extends RozierApp
     {
         $this->validateNodeAccessForRole('ROLE_ACCESS_NODES', $nodeId);
 
-        $translation = $this->get('defaultTranslation');
         /** @var NodesSources $source */
         $source = $this->get('em')
                        ->getRepository(NodesSources::class)
@@ -44,8 +43,18 @@ class NodesTagsController extends RozierApp
                        ->setDisplayingNotPublishedNodes(true)
                        ->findOneBy([
                            'node.id' => $nodeId,
-                           'translation' => $translation
+                           'translation' => $this->get('defaultTranslation')
                        ]);
+        if (null === $source) {
+            /** @var NodesSources $source */
+            $source = $this->get('em')
+                ->getRepository(NodesSources::class)
+                ->setDisplayingAllNodesStatuses(true)
+                ->setDisplayingNotPublishedNodes(true)
+                ->findOneBy([
+                    'node.id' => $nodeId,
+                ]);
+        }
 
         if (null !== $source) {
             $node = $source->getNode();
@@ -70,14 +79,13 @@ class NodesTagsController extends RozierApp
                 ));
             }
 
-            $this->assignation['translation'] = $translation;
+            $this->assignation['translation'] = $source->getTranslation();
             $this->assignation['node'] = $node;
             $this->assignation['source'] = $source;
             $this->assignation['form'] = $form->createView();
 
             return $this->render('nodes/editTags.html.twig', $this->assignation);
         }
-
 
         throw new ResourceNotFoundException();
     }
