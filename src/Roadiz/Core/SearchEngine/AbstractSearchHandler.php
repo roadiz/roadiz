@@ -248,6 +248,22 @@ abstract class AbstractSearchHandler
     abstract protected function parseSolrResponse($response);
 
     /**
+     * @param string $input
+     * @return string
+     */
+    public function escapeQuery(string $input): string
+    {
+        $qHelper = new Helper();
+        $input = $qHelper->filterControlCharacters($input);
+        $input = $qHelper->escapeTerm($input);
+        // Solarium does not escape Lucene reserved words
+        // https://stackoverflow.com/questions/10337908/how-to-properly-escape-or-and-and-in-lucene-query
+        $input = preg_replace("#\\b(AND|OR|NOT)\\b#", "\\\\\\\\$1", $input);
+
+        return $input;
+    }
+
+    /**
      * Default Solr query builder.
      *
      * Extends this method to customize your Solr queries. Eg. to boost custom fields.
@@ -261,7 +277,6 @@ abstract class AbstractSearchHandler
     protected function buildQuery($q, array &$args, $searchTags = false, $proximity = 10000000)
     {
         $q = null !== $q ? trim($q) : '';
-        $qHelper = new Helper();
         $singleWord = $this->isQuerySingleWord($q);
         $titleField = $this->getTitleField($args);
         $collectionField = $this->getCollectionField($args);
@@ -272,19 +287,19 @@ abstract class AbstractSearchHandler
          * @see https://lucene.apache.org/solr/guide/6_6/the-standard-query-parser.html#TheStandardQueryParser-FuzzySearches
          */
         $words = preg_split('#[\s,]+#', $q, -1, PREG_SPLIT_NO_EMPTY);
-        $fuzzyiedQuery = implode(' ', array_map(function (string $word) use ($proximity, $qHelper) {
+        $fuzzyiedQuery = implode(' ', array_map(function (string $word) use ($proximity) {
             /*
              * Do not fuzz short words: Solr crashes
              */
             if (strlen($word) > 3) {
-                return $qHelper->escapeTerm($word) . '~' . $proximity;
+                return $this->escapeQuery($word) . '~' . $proximity;
             }
-            return $qHelper->escapeTerm($word);
+            return $this->escapeQuery($word);
         }, $words));
         /*
          * Only escape exact query
          */
-        $exactQuery = $qHelper->escapeTerm($q);
+        $exactQuery = $this->escapeQuery($q);
         if (!$singleWord) {
             /*
              * adds quotes if multi word exact query
