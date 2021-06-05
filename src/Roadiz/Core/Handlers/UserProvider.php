@@ -88,10 +88,6 @@ class UserProvider implements UserProviderInterface
      */
     public function supportsClass($class)
     {
-        if ($class == User::class) {
-            return true;
-        }
-
-        return false;
+        return $class === User::class;
     }
 }

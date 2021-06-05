@@ -38,7 +38,9 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleHierarchyVoter;
 use Symfony\Component\Security\Core\Encoder\EncoderFactory;
+use Symfony\Component\Security\Core\User\ChainUserProvider;
 use Symfony\Component\Security\Core\User\UserChecker;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\UriSafeTokenGenerator;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
@@ -155,13 +157,17 @@ class SecurityServiceProvider implements ServiceProviderInterface
             );
         };
 
+        $container[UserProviderInterface::class] = function (Container $c) {
+            return new ChainUserProvider($c['userProviders']);
+        };
+
         /*
          * userProviders should be extendable to add new UserProviderInterface implementation
          * if we add external IdentityProvider to expose private Roadiz content
          */
         $container['userProviders'] = function (Container $c) {
             return [
-                $c['userProvider'],
+                $c[UserProvider::class],
             ];
         };
 
@@ -169,7 +175,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             return new AccessMap();
         };
 
-        $container['userProvider'] = function (Container $c) {
+        $container[UserProvider::class] = function (Container $c) {
             return new UserProvider($c['em']);
         };
 
@@ -184,7 +190,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container['daoAuthenticationProvider'] = function (Container $c) {
             return new AttemptAwareDaoAuthenticationProvider(
                 $c[LoginAttemptManager::class],
-                $c['userProvider'],
+                $c[UserProviderInterface::class],
                 $c['userChecker'],
                 Kernel::SECURITY_DOMAIN,
                 $c['userEncoderFactory']
@@ -224,7 +230,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
             /** @var RequestContext $requestContext */
             $requestContext = $c['requestContext'];
             return new TokenBasedRememberMeServices(
-                [$c['userProvider']],
+                $c['userProviders'],
                 $c['config']["security"]['secret'],
                 Kernel::SECURITY_DOMAIN,
                 [
@@ -352,7 +358,7 @@ class SecurityServiceProvider implements ServiceProviderInterface
         $container["switchUser"] = function (Container $c) {
             return new SwitchUserListener(
                 $c['securityTokenStorage'],
-                $c['userProvider'],
+                $c[UserProviderInterface::class],
                 $c['userChecker'],
                 $c['config']["security"]['secret'],
                 $c['accessDecisionManager'],
