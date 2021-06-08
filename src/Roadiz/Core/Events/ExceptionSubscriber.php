@@ -61,7 +61,7 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
         Container $container,
         ThemeResolverInterface $themeResolver,
         LoggerInterface $logger,
-        $debug = false
+        bool $debug = false
     ) {
         $this->logger = $logger;
         $this->debug = $debug;
@@ -101,6 +101,14 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
         }
 
         if (!$this->viewer->isFormatJson($event->getRequest())) {
+            /**
+             * Do not prevent Symfony Debug tool to perform
+             * in debug mode.
+             * Only if response is not JSON
+             */
+            if ($this->debug) {
+                return;
+            }
             /*
              * Themed exception pages…
              */
