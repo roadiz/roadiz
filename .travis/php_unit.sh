@@ -1,5 +1,6 @@
 #!/bin/sh -x
 # Migrations are supported on MySQL/MariaDB/PostgreSQL
+php bin/roadiz bin/roadiz debug:configuration -n || exit 1;
 php bin/roadiz migration:migrate --allow-no-migration -n || exit 1;
 
 php bin/roadiz install -n --env=install || exit 1;
