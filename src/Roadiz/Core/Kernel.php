@@ -268,18 +268,12 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
                 $kernel::$cmsVersion,
                 $kernel->isDebug()
             ));
-            if (!$kernel->isDebug()) {
-                /**
-                 * Do not prevent Symfony Debug tool to perform
-                 * in debug mode.
-                 */
-                $dispatcher->addSubscriber(new ExceptionSubscriber(
-                    $c,
-                    $c['themeResolver'],
-                    $c['logger'],
-                    $kernel->isDebug()
-                ));
-            }
+            $dispatcher->addSubscriber(new ExceptionSubscriber(
+                $c,
+                $c['themeResolver'],
+                $c['logger'],
+                $kernel->isDebug()
+            ));
             $dispatcher->addSubscriber(new ThemesSubscriber($kernel, $c['stopwatch']));
             $dispatcher->addSubscriber(new ControllerMatchedSubscriber($kernel, $c['stopwatch']));
 
