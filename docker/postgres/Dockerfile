@@ -1,4 +1,4 @@
-FROM postgres:13
+FROM postgres:12
 MAINTAINER Ambroise Maupate <ambroise@rezo-zero.com>
 
 ARG USER_UID=1000
