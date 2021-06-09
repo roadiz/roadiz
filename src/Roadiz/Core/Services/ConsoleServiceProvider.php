@@ -66,6 +66,7 @@ class ConsoleServiceProvider implements ServiceProviderInterface
                 new Console\DocumentFilesizeCommand(),
                 new Console\DocumentAverageColorCommand(),
                 new Console\DocumentPruneCommand(),
+                new Console\DocumentPruneOrphansCommand(),
                 new Console\ThemeMigrateCommand(),
                 new Console\VersionsPurgeCommand(),
                 new Console\GeneratePrivateKeyCommand(),
