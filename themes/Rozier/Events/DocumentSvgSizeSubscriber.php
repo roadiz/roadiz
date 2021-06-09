@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Events;
 
-use Intervention\Image\Exception\NotReadableException;
-use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Entities\Document;
-use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
+use RZ\Roadiz\Core\Events\DocumentSvgUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\Document\SvgSizeResolver;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class DocumentSizeSubscriber implements EventSubscriberInterface
+class DocumentSvgSizeSubscriber implements EventSubscriberInterface
 {
     private Packages $packages;
     private ?LoggerInterface $logger;
@@ -33,18 +32,17 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            DocumentImageUploadedEvent::class => ['onImageUploaded', 0],
+            DocumentSvgUploadedEvent::class => ['onImageUploaded', 0],
         ];
     }
 
     /**
      * @param DocumentInterface $document
-     *
      * @return bool
      */
     protected function supports(DocumentInterface $document)
     {
-        if ($document->isLocal() && $document->isImage()) {
+        if ($document->isLocal() && $document->isSvg()) {
             return true;
         }
 
@@ -58,21 +56,12 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         if ($this->supports($document) && $document instanceof Document) {
-            $documentPath = $this->packages->getDocumentFilePath($document);
             try {
-                $manager = new ImageManager();
-                $imageProcess = $manager->make($documentPath);
-                $document->setImageWidth($imageProcess->width());
-                $document->setImageHeight($imageProcess->height());
-            } catch (NotReadableException $exception) {
-                /*
-                 * Do nothing
-                 * just return 0 width and height
-                 */
-                $this->logger->warning('Document file is not a readable image.', [
-                    'id' => $document->getId(),
-                    'path' => $documentPath,
-                ]);
+                $svgSizeResolver = new SvgSizeResolver($document, $this->packages);
+                $document->setImageWidth($svgSizeResolver->getWidth());
+                $document->setImageHeight($svgSizeResolver->getHeight());
+            } catch (\RuntimeException $exception) {
+                $this->logger->error($exception->getMessage());
             }
         }
     }

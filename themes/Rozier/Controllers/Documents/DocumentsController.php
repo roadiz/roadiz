@@ -18,7 +18,6 @@ use RZ\Roadiz\Core\Events\DocumentUpdatedEvent;
 use RZ\Roadiz\Core\Exceptions\APINeedsAuthentificationException;
 use RZ\Roadiz\Core\Exceptions\EntityAlreadyExistsException;
 use RZ\Roadiz\Core\Handlers\DocumentHandler;
-use RZ\Roadiz\Core\ListManagers\EntityListManager;
 use RZ\Roadiz\Core\ListManagers\QueryBuilderListManager;
 use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Core\Repositories\DocumentRepository;
@@ -384,7 +383,7 @@ class DocumentsController extends RozierApp
             $this->assignation['infos'] = [
                 'filesize' => sprintf('%.3f MB', ($document->getFilesize())/pow(1024, 2)),
             ];
-            if ($document->isProcessable()) {
+            if ($document->isProcessable() || $document->isSvg()) {
                 $this->assignation['infos']['width'] = $document->getImageWidth() . 'px';
                 $this->assignation['infos']['height'] = $document->getImageHeight() . 'px';
             }

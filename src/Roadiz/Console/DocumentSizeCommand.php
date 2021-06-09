@@ -8,6 +8,7 @@ use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
+use RZ\Roadiz\Utils\Document\SvgSizeResolver;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -81,6 +82,14 @@ class DocumentSizeCommand extends Command
                  * just return 0 width and height
                  */
                 $this->io->error($documentPath . ' is not a readable image.');
+            }
+        } elseif ($document->isSvg()) {
+            try {
+                $svgSizeResolver = new SvgSizeResolver($document, $packages);
+                $document->setImageWidth($svgSizeResolver->getWidth());
+                $document->setImageHeight($svgSizeResolver->getHeight());
+            } catch (\RuntimeException $exception) {
+                $this->io->error($exception->getMessage());
             }
         }
     }

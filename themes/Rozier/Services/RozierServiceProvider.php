@@ -11,6 +11,7 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Themes\Rozier\Events\DocumentFilesizeSubscriber;
 use Themes\Rozier\Events\DocumentSizeSubscriber;
+use Themes\Rozier\Events\DocumentSvgSizeSubscriber;
 use Themes\Rozier\Events\ExifDocumentSubscriber;
 use Themes\Rozier\Events\ImageColorDocumentSubscriber;
 use Themes\Rozier\Events\NodeDuplicationSubscriber;
@@ -120,6 +121,12 @@ final class RozierServiceProvider implements ServiceProviderInterface
                  */
                 $dispatcher->addSubscriber(
                     new DocumentSizeSubscriber(
+                        $c['assetPackages'],
+                        $c['logger']
+                    )
+                );
+                $dispatcher->addSubscriber(
+                    new DocumentSvgSizeSubscriber(
                         $c['assetPackages'],
                         $c['logger']
                     )

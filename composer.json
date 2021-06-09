@@ -54,7 +54,7 @@
         "pimple/pimple":                           "^3.3.1",
         "rezozero/crypto":                         "^0.2.0",
         "roadiz/doc-generator":                    "dev-main",
-        "roadiz/documents":                        "~1.6.4",
+        "roadiz/documents":                        "~1.6.5",
         "roadiz/dts-generator":                    "dev-main",
         "roadiz/entity-generator":                 "dev-main",
         "roadiz/jwt":                              "~1.6.0",
