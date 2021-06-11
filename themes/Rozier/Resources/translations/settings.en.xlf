@@ -195,10 +195,25 @@
                 <target state="translated">Site information</target>
                 <note>Setting group name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="Site information">
+                <source>Site information</source>
+                <target state="translated">Site information</target>
+                <note>Setting group name</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="Social networks">
                 <source>Social networks</source>
                 <target state="translated">Social networks</target>
                 <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="dashboard_iframe">
+                <source>dashboard_iframe</source>
+                <target state="translated">Custom iframe for dashboard</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="dashboard_iframe.help">
+                <source>dashboard_iframe.help</source>
+                <target state="translated">Displays a custom iframe on your back-office dashboard, for example, plausible.io website analytics embed.</target>
+                <note>Setting help name</note>
             </trans-unit>
     </body>
   </file>
