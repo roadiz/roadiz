@@ -5,9 +5,9 @@ import debug from 'debug'
 import WebpackNotifierPlugin from 'webpack-notifier'
 import path from 'path'
 import CleanWebpackPlugin from 'clean-webpack-plugin'
-import BundleAnalyzer from 'webpack-bundle-analyzer'
+// import BundleAnalyzer from 'webpack-bundle-analyzer'
 
-const BundleAnalyzerPlugin = BundleAnalyzer.BundleAnalyzerPlugin
+// const BundleAnalyzerPlugin = BundleAnalyzer.BundleAnalyzerPlugin
 const dbg = debug('Roadiz-front:webpack-config:base  ')
 dbg.color = debug.colors[3]
 

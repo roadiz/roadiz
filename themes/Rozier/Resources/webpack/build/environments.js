@@ -8,6 +8,7 @@ import Harddisk from 'html-webpack-harddisk-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import debug from 'debug'
 import OptimizeCSSPlugin from 'optimize-css-assets-webpack-plugin'
+import UglifyJsPlugin from 'uglifyjs-webpack-plugin'
 
 const dbg = debug('Roadiz-front:webpack-config:environments  ')
 dbg.color = debug.colors[5]
@@ -23,7 +24,7 @@ export default {
             watchOptions: {
                 // poll: config.watchInterval,
                 aggregateTimeout: 50,
-                ignored: [/node_modules/, '/bower_components/' ,'/Resources\/app\/vendor/']
+                ignored: [/node_modules/, '/bower_components/', '/Resources/app/vendor/']
             }
         },
         resolve: {
@@ -96,7 +97,7 @@ export default {
                                         autoprefixer: {
                                             add: true,
                                             remove: true,
-                                            browsers: ['last 2 version', 'ie 11', 'ie 10']
+                                            browsers: ['last 2 version']
                                         },
                                         discardComments: {
                                             removeAll: true
@@ -126,17 +127,13 @@ export default {
                         NODE_ENV: '"production"'
                     }
                 }),
-                new webpack.optimize.UglifyJsPlugin({
-                    beautify: false,
-                    mangle: {
-                        screw_ie8: true,
-                        keep_fnames: true
-                    },
-                    compress: {
-                        screw_ie8: true,
-                        warnings: false
-                    },
-                    comments: false,
+                new UglifyJsPlugin({
+                    exclude: [
+                        /\/Resources\/app\/vendor/,
+                        /\/node_modules/,
+                        /\/bower_components/
+                    ],
+                    test: /\.js(\?.*)?$/i,
                     parallel: true
                 }),
                 new OptimizeCSSPlugin({
