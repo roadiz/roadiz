@@ -195,10 +195,25 @@
                 <target state="translated">Informations du site</target>
                 <note>Setting group name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="Site information">
+                <source>Site information</source>
+                <target state="translated">Informations du site</target>
+                <note>Setting group name</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="Social networks">
                 <source>Social networks</source>
                 <target state="translated">Réseaux sociaux</target>
                 <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="dashboard_iframe">
+                <source>dashboard_iframe</source>
+                <target state="translated">Iframe personnalisée pour le Dashboard</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="dashboard_iframe.help">
+                <source>dashboard_iframe.help</source>
+                <target state="translated">Permet d'afficher une iframe sur le dashboard du back-office. Par exemple, les statistiques de visites à l'aide de plausible.io</target>
+                <note>Setting help name</note>
             </trans-unit>
     </body>
   </file>
