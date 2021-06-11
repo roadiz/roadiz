@@ -14,6 +14,11 @@
     </header>
 
     <article class="content content-dashboard">
+        {% if bags.settings.get('dashboard_iframe') %}
+            <div class="dashboard-iframe">
+                {{- bags.settings.get('dashboard_iframe')|striptags(['iframe','script'])|raw -}}
+            </div>
+        {% endif %}
         {% if latestLogs %}
         <div id="latest-sources">
             <h3>{% trans %}latest.node-sources.updates{% endtrans %}</h3>
