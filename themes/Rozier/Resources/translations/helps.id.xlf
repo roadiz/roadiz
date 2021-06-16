@@ -2,18 +2,54 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="" source-language="en" datatype="plaintext" target-language="id">
     <body>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        </body>
+      <trans-unit xml:space="preserve" id="document.private.help">
+                <source>document.private.help</source>
+                <target state="translated">Pindahkan berkas dokumen saat ini ke direktori server non-publik. Opsi ini menonaktifkan tampilan dokumen di situs web Anda.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="document.imageAverageColor.help">
+                <source>document.imageAverageColor.help</source>
+                <target state="translated">Gambar rata-rata gambar, berguna untuk membuat placeholder berwarna selama pemuatan gambar di situs web Anda.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="node.nodeName.help">
+                <source>node.nodeName.help</source>
+                <target state="translated">Nama node harus unik dan digunakan untuk menghasilkan URL halaman Anda dan mengambil node saat ini di tema. Itu tidak boleh mengandung karakter khusus.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.tagName.help">
+                <source>tag.tagName.help</source>
+                <target state="translated">Nama tag harus unik dan digunakan untuk menghasilkan URL halaman Anda dan mengambil tag saat ini di tema. Itu tidak boleh mengandung karakter khusus.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="tag.locked.help">
+                <source>tag.locked.help</source>
+                <target state="translated">Tag yang dikunci tidak diganti namanya setelah memperbarui judul yang diterjemahkan. Ini mencegah penghapusan juga.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.metaTitle.help">
+                <source>nodeSource.metaTitle.help</source>
+                <target state="translated">Judul SEO memungkinkan Anda untuk menulis seluruh judul halaman Anda. Untuk tampilan optimal di mesin pencari, judulnya tidak boleh melebihi 55 hingga 65 karakter rata-rata.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.metaKeywords.help">
+                <source>nodeSource.metaKeywords.help</source>
+                <target state="translated">Kata kunci SEO sekarang opsional dan tidak lagi diperhitungkan oleh mesin pencari.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.metaDescription.help">
+                <source>nodeSource.metaDescription.help</source>
+                <target state="translated">Deskripsi SEO adalah ringkasan dalam beberapa karakter halaman Anda. Tujuannya adalah untuk menggambarkan kontennya secara singkat. Deskripsi ini harus antara 120 dan 155 karakter.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.urlAlias.help">
+                <source>nodeSource.urlAlias.help</source>
+                <target state="translated">URL alias memungkinkan Anda untuk menulis ulang bagian terakhir dari URL halaman Anda untuk setiap terjemahan. Mereka harus berbeda dari nama simpul dan unik di seluruh situs Anda.</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeSource.redirections.help">
+                <source>nodeSource.redirections.help</source>
+                <target state="translated">Pengalihan otomatis selalu mengarahkan pengunjung dari sebuah jalur permintaan tertentu ke URL node saat ini (up-to-date), untuk terjemahan ini. Pengalihan yang dibuat akan menjadi jenis "permanen".</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.hidingNonReachableNodes.help">
+                <source>nodeType.hidingNonReachableNodes.help</source>
+                <target state="translated">Jenis node ini hanya akan menyembunyikan node anak tersebut yang tidak dapat dijangkau</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="exclude_this_field_from_fulltext_search_engine">
+                <source>exclude_this_field_from_fulltext_search_engine</source>
+                <target state="translated">Kecualikan nilai bidang ini dari mesin-pencari teks-lengkap.</target>
+            </trans-unit>
+    </body>
   </file>
 </xliff>
