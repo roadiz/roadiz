@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Message\Services;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
+use Pimple\Exception\UnknownIdentifierException;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Message\GuzzleRequestMessage;
 use RZ\Roadiz\Message\Handler\GuzzleRequestMessageHandler;
@@ -39,6 +40,8 @@ final class MessengerServiceProvider implements ServiceProviderInterface
      */
     public function register(Container $pimple)
     {
+        $transportNames = [];
+
         $pimple['logger.messenger'] = function (Container $c) {
             /** @var LoggerFactory $factory */
             $factory = $c[LoggerFactory::class];
@@ -49,24 +52,16 @@ final class MessengerServiceProvider implements ServiceProviderInterface
             return new PhpSerializer();
         };
 
-        $pimple['messenger.transports'] = function (Container $c) {
-            /** @var TransportFactoryInterface $transportFactory */
-            $transportFactory = $c[TransportFactoryInterface::class];
-            /** @var Serializer $serializer */
-            $serializer = $c['messenger.serializer'];
-
-            return array_map(function (array $config) use ($transportFactory, $serializer) {
-                return $transportFactory->createTransport($config['dsn'], $config['options'], $serializer);
-            }, $c['config']['messenger']['transports']);
-        };
-
-        $pimple['messenger.default_transport'] = function (Container $c) {
-            /** @var TransportFactoryInterface $transportFactory */
-            $transportFactory = $c[TransportFactoryInterface::class];
-            $dsn = $c['config']['messenger']['transports']['default']['dsn'] ?? 'sync://';
-            $options = $c['config']['messenger']['transports']['default']['options'] ?? [];
-            return $transportFactory->createTransport($dsn, $options, $c['messenger.serializer']);
-        };
+        foreach ($pimple['config']['messenger']['transports'] as $transportName => $params) {
+            $transportNames[] = 'messenger.transports.' . $transportName;
+            $pimple['messenger.transports.' . $transportName] = function (Container $c) use ($params) {
+                /** @var TransportFactoryInterface $transportFactory */
+                $transportFactory = $c[TransportFactoryInterface::class];
+                /** @var Serializer $serializer */
+                $serializer = $c['messenger.serializer'];
+                return $transportFactory->createTransport($params['dsn'], $params['options'], $serializer);
+            };
+        }
 
         $pimple['messenger.default_bus'] = function (Container $c) {
             return new MessageBus($c['messenger.default_bus.middlewares']);
@@ -90,11 +85,24 @@ final class MessengerServiceProvider implements ServiceProviderInterface
         };
 
         $pimple['messenger.senders'] = function (Container $c) {
-            return [
+            $defaults = [
                 GuzzleRequestMessage::class => [
-                    'messenger.default_transport'
+                    'messenger.transports.default'
                 ]
             ];
+            /*
+             * Override default messages senders with user configuration.
+             */
+            foreach ($c['config']['messenger']['routing'] as $class => $transportName) {
+                if (!class_exists($class)) {
+                    throw new \LogicException(\sprintf('Class "%s" does not exist.', $class));
+                }
+                if (!$c->offsetExists('messenger.transports.' . $transportName)) {
+                    throw new UnknownIdentifierException('messenger.transports.' . $transportName);
+                }
+                $defaults[$class] = ['messenger.transports.' . $transportName];
+            }
+            return $defaults;
         };
 
         $pimple[TransportFactoryInterface::class] = function (Container $c) {
@@ -102,7 +110,6 @@ final class MessengerServiceProvider implements ServiceProviderInterface
                 new SyncTransportFactory($c[MessageBusInterface::class]),
                 new DoctrineTransportFactory($c[ManagerRegistry::class]),
                 new AmqpTransportFactory(),
-                new RedisTransportFactory(),
                 new RedisTransportFactory(),
             ]);
         };
@@ -138,7 +145,7 @@ final class MessengerServiceProvider implements ServiceProviderInterface
             );
         };
 
-        $pimple->extend('console.commands', function (array $commands, Container $c) {
+        $pimple->extend('console.commands', function (array $commands, Container $c) use ($transportNames) {
             return array_merge($commands, [
                 new DebugCommand([
                     'messenger.default_bus' => $c['messenger.default_bus'],
@@ -148,9 +155,7 @@ final class MessengerServiceProvider implements ServiceProviderInterface
                     new \Pimple\Psr11\Container($c),
                     $c['proxy.dispatcher'],
                     $c['logger.messenger'],
-                    [
-                        'messenger.default_transport'
-                    ]
+                    $transportNames
                 ),
             ]);
         });

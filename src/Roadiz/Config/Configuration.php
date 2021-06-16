@@ -388,7 +388,7 @@ EOD
     protected function addMessengerNode()
     {
         $builder = new TreeBuilder('messenger');
-        $node = $builder->getRootNode();
+        $node = $builder->getRootNode()->addDefaultsIfNotSet();
 
         $node->children()
             ->scalarNode('failure_transport')
@@ -413,6 +413,13 @@ EOD
                     ->end()
                     ->arrayNode('options')
                     ->end()
+                ->end()
+            ->end()->end()
+            ->arrayNode('routing')
+                ->useAttributeAsKey('name')
+                ->prototype('scalar')
+                    ->cannotBeEmpty()
+                    ->info('Map message names to a transport')
                 ->end()
             ->end()
         ->end();
