@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Events;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentFileUploadedEvent;
 use RZ\Roadiz\Core\Models\DocumentInterface;
@@ -14,25 +15,19 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class DocumentFilesizeSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Packages
-     */
-    private $packages;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private Packages $packages;
+    private LoggerInterface $logger;
 
     /**
      * @param Packages $packages
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         Packages $packages,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->packages = $packages;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     public static function getSubscribedEvents()

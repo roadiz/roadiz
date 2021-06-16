@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\Node;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\Redirection;
@@ -30,12 +31,12 @@ class NodeMover
     protected LoggerInterface $logger;
 
     /**
-     * @param EntityManagerInterface   $entityManager
-     * @param UrlGeneratorInterface    $urlGenerator
-     * @param HandlerFactoryInterface  $handlerFactory
+     * @param EntityManagerInterface $entityManager
+     * @param UrlGeneratorInterface $urlGenerator
+     * @param HandlerFactoryInterface $handlerFactory
      * @param EventDispatcherInterface $dispatcher
-     * @param CacheProvider            $cacheProvider
-     * @param LoggerInterface          $logger
+     * @param CacheProvider $cacheProvider
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -43,11 +44,11 @@ class NodeMover
         HandlerFactoryInterface $handlerFactory,
         EventDispatcherInterface $dispatcher,
         CacheProvider $cacheProvider,
-        LoggerInterface $logger
+        ?LoggerInterface $logger = null
     ) {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->dispatcher = $dispatcher;
         $this->cacheProvider = $cacheProvider;
         $this->handlerFactory = $handlerFactory;

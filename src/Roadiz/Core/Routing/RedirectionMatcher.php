@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Core\Routing;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\CMS\Controllers\RedirectionController;
 use RZ\Roadiz\Core\Entities\Redirection;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -29,18 +30,18 @@ final class RedirectionMatcher extends UrlMatcher
      * @param RequestContext $context
      * @param EntityManagerInterface $entityManager
      * @param Stopwatch $stopwatch
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         RequestContext $context,
         EntityManagerInterface $entityManager,
         Stopwatch $stopwatch,
-        LoggerInterface $logger
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct(new RouteCollection(), $context);
         $this->entityManager = $entityManager;
         $this->stopwatch = $stopwatch;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->repository = $this->entityManager->getRepository(Redirection::class);
     }
     /**

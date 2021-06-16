@@ -35,6 +35,7 @@ use RZ\Roadiz\Utils\Security\Firewall;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpKernel\EventListener\ResponseListener;
 use Symfony\Component\HttpKernel\EventListener\SessionListener;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class EventDispatcherServiceProvider implements \Pimple\ServiceProviderInterface
 {
@@ -83,8 +84,16 @@ class EventDispatcherServiceProvider implements \Pimple\ServiceProviderInterface
             $dispatcher->addSubscriber(new RoutingCacheEventSubscriber());
             $dispatcher->addSubscriber(new TemplatesCacheEventSubscriber());
             $dispatcher->addSubscriber(new TranslationsCacheEventSubscriber());
-            $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber($c, $c['logger.cache']));
-            $dispatcher->addSubscriber(new CloudflareCacheEventSubscriber($c, $c['logger.cache']));
+            $dispatcher->addSubscriber(new ReverseProxyCacheEventSubscriber(
+                $c,
+                $c[MessageBusInterface::class],
+                $c['logger.cache']
+            ));
+            $dispatcher->addSubscriber(new CloudflareCacheEventSubscriber(
+                $c,
+                $c[MessageBusInterface::class],
+                $c['logger.cache']
+            ));
             $dispatcher->addSubscriber(new ResponseListener($kernel->getCharset()));
             $dispatcher->addSubscriber(new MaintenanceModeSubscriber($c));
             $dispatcher->addSubscriber(new LoggableUsernameSubscriber($c));

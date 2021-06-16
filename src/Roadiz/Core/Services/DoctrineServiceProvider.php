@@ -18,6 +18,7 @@ use Doctrine\ORM\Events;
 use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
 use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -52,6 +53,7 @@ use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Doctrine\CacheFactory;
 use RZ\Roadiz\Utils\Doctrine\Loggable\UserLoggableListener;
+use RZ\Roadiz\Utils\Doctrine\RoadizManagerRegistry;
 use RZ\Roadiz\Utils\Doctrine\RoadizRepositoryFactory;
 use RZ\Roadiz\Utils\Doctrine\SchemaUpdater;
 use RZ\Roadiz\Utils\Theme\ThemeInfo;
@@ -169,6 +171,10 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             return $c['em'];
         };
 
+        $container[ManagerRegistry::class] = function (Container $c) {
+            return new RoadizManagerRegistry($c['em']);
+        };
+
         $container[ResolveTargetEntityListener::class] = function () {
             $resolveListener = new ResolveTargetEntityListener();
             $resolveListener->addResolveTargetEntity(
@@ -225,7 +231,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             try {
                 /** @var Kernel $kernel */
                 $kernel = $c['kernel'];
-                $em = EntityManager::create($c['config']["doctrine"], $c['em.config']);
+                $em = EntityManager::create($c['config']['doctrine'], $c['em.config']);
                 $evm = $em->getEventManager();
 
                 // Add the ResolveTargetEntityListener

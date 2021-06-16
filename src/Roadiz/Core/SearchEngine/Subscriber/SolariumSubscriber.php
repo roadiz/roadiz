@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\SearchEngine\Subscriber;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\NodesSources;
@@ -44,17 +45,17 @@ class SolariumSubscriber implements EventSubscriberInterface
     protected SolariumFactoryInterface $solariumFactory;
 
     /**
-     * @param Client|null              $solr
-     * @param LoggerInterface          $logger
+     * @param Client|null $solr
+     * @param LoggerInterface|null $logger
      * @param SolariumFactoryInterface $solariumFactory
      */
     public function __construct(
         ?Client $solr,
-        LoggerInterface $logger,
+        ?LoggerInterface $logger,
         SolariumFactoryInterface $solariumFactory
     ) {
         $this->solr = $solr;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->solariumFactory = $solariumFactory;
     }
 

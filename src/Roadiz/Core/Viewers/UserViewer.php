@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Viewers;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Bags\Settings;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\User;
@@ -24,24 +25,24 @@ class UserViewer
     protected ?User $user = null;
 
     /**
-     * @param EntityManagerInterface       $entityManager
-     * @param Settings            $settingsBag
+     * @param EntityManagerInterface $entityManager
+     * @param Settings $settingsBag
      * @param TranslatorInterface $translator
-     * @param EmailManager        $emailManager
-     * @param LoggerInterface     $logger
+     * @param EmailManager $emailManager
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         Settings $settingsBag,
         TranslatorInterface $translator,
         EmailManager $emailManager,
-        LoggerInterface $logger
+        ?LoggerInterface $logger = null
     ) {
         $this->entityManager = $entityManager;
         $this->settingsBag = $settingsBag;
         $this->translator = $translator;
         $this->emailManager = $emailManager;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**

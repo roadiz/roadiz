@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Utils\Node;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Entities\NodesSourcesDocuments;
@@ -21,14 +22,14 @@ final class NodeTranstyper
 
     /**
      * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface        $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        ?LoggerInterface $logger = null
     ) {
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**

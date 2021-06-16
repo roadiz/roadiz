@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Themes\Rozier\Events;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentSvgUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
@@ -15,7 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DocumentSvgSizeSubscriber implements EventSubscriberInterface
 {
     private Packages $packages;
-    private ?LoggerInterface $logger;
+    private LoggerInterface $logger;
 
     /**
      * @param Packages $packages
@@ -23,10 +24,10 @@ class DocumentSvgSizeSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         Packages $packages,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->packages = $packages;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     public static function getSubscribedEvents()

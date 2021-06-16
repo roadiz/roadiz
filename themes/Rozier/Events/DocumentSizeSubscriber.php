@@ -6,6 +6,7 @@ namespace Themes\Rozier\Events;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
@@ -16,7 +17,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class DocumentSizeSubscriber implements EventSubscriberInterface
 {
     private Packages $packages;
-    private ?LoggerInterface $logger;
+    private LoggerInterface $logger;
 
     /**
      * @param Packages $packages
@@ -24,10 +25,10 @@ class DocumentSizeSubscriber implements EventSubscriberInterface
      */
     public function __construct(
         Packages $packages,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->packages = $packages;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     public static function getSubscribedEvents()

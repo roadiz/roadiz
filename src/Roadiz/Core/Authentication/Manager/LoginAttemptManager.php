@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Authentication\Manager;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\LoginAttempt;
 use RZ\Roadiz\Core\Exceptions\TooManyLoginAttemptsException;
 use RZ\Roadiz\Core\Repositories\LoginAttemptRepository;
@@ -21,18 +22,18 @@ class LoginAttemptManager
     protected ?LoginAttemptRepository $loginAttemptRepository = null;
 
     /**
-     * @param RequestStack           $requestStack
+     * @param RequestStack $requestStack
      * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface        $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         RequestStack $requestStack,
         EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        ?LoggerInterface $logger = null
     ) {
         $this->requestStack = $requestStack;
         $this->entityManager = $entityManager;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**

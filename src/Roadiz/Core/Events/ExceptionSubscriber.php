@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\Events;
 
 use Pimple\Container;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\CMS\Controllers\AppController;
 use RZ\Roadiz\Core\ContainerAwareInterface;
 use RZ\Roadiz\Core\ContainerAwareTrait;
@@ -36,12 +37,10 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
      * @var LoggerInterface
      */
     protected $logger;
-
     /**
      * @var bool
      */
     protected $debug;
-
     /**
      * @var ExceptionViewer
      */
@@ -52,18 +51,18 @@ class ExceptionSubscriber implements EventSubscriberInterface, ContainerAwareInt
     private $themeResolver;
 
     /**
-     * @param Container              $container
+     * @param Container $container
      * @param ThemeResolverInterface $themeResolver
-     * @param LoggerInterface        $logger
-     * @param bool                   $debug
+     * @param LoggerInterface|null $logger
+     * @param bool $debug
      */
     public function __construct(
         Container $container,
         ThemeResolverInterface $themeResolver,
-        LoggerInterface $logger,
+        ?LoggerInterface $logger = null,
         bool $debug = false
     ) {
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->debug = $debug;
 
         $this->viewer = new ExceptionViewer();

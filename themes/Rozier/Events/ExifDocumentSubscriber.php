@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\DocumentTranslation;
 use RZ\Roadiz\Core\Entities\Translation;
@@ -14,33 +16,24 @@ use RZ\Roadiz\Core\Models\DocumentInterface;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class ExifDocumentSubscriber implements EventSubscriberInterface
+final class ExifDocumentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Packages
-     */
-    private $packages;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private Packages $packages;
+    private LoggerInterface $logger;
+    private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManager $entityManager
+     * @param EntityManagerInterface $entityManager
      * @param Packages $packages
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         Packages $packages,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->packages = $packages;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->entityManager = $entityManager;
     }
 
@@ -95,11 +88,9 @@ class ExifDocumentSubscriber implements EventSubscriberInterface
                 $description = $this->getDescription($exif);
 
                 if (null !== $copyright || null !== $description) {
-                    if (null !== $this->logger) {
-                        $this->logger->debug('EXIF information available for document.', [
-                            'document' => (string) $document
-                        ]);
-                    }
+                    $this->logger->debug('EXIF information available for document.', [
+                        'document' => (string) $document
+                    ]);
                     $defaultTranslation = $this->entityManager
                                                ->getRepository(Translation::class)
                                                ->findDefault();

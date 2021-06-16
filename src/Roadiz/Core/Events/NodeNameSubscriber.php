@@ -3,15 +3,14 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Core\Events;
 
-use Monolog\Logger;
-use RZ\Roadiz\Core\Entities\NodesSources;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Events\Node\NodePathChangedEvent;
 use RZ\Roadiz\Core\Events\Node\NodeUpdatedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesPreUpdatedEvent;
 use RZ\Roadiz\Utils\Node\Exception\SameNodeUrlException;
 use RZ\Roadiz\Utils\Node\NodeMover;
 use RZ\Roadiz\Utils\Node\NodeNamePolicyInterface;
-use RZ\Roadiz\Utils\StringHandler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -21,19 +20,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 final class NodeNameSubscriber implements EventSubscriberInterface
 {
     private NodeMover $nodeMover;
-
-    private Logger $logger;
-
+    private LoggerInterface $logger;
     private NodeNamePolicyInterface $nodeNamePolicy;
 
     /**
-     * @param Logger $logger
+     * @param LoggerInterface|null $logger
      * @param NodeNamePolicyInterface $nodeNamePolicy
      * @param NodeMover $nodeMover
      */
-    public function __construct(Logger $logger, NodeNamePolicyInterface $nodeNamePolicy, NodeMover $nodeMover)
+    public function __construct(?LoggerInterface $logger, NodeNamePolicyInterface $nodeNamePolicy, NodeMover $nodeMover)
     {
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->nodeNamePolicy = $nodeNamePolicy;
         $this->nodeMover = $nodeMover;
     }
