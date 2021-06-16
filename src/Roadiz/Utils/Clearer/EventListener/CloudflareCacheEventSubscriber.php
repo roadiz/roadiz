@@ -6,8 +6,11 @@ namespace RZ\Roadiz\Utils\Clearer\EventListener;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Pimple\Container;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
@@ -17,13 +20,16 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class CloudflareCacheEventSubscriber implements EventSubscriberInterface
 {
     protected Container $container;
+    private ?LoggerInterface $logger;
 
     /**
      * @param Container $container
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, ?LoggerInterface $logger = null)
     {
         $this->container = $container;
+        $this->logger = $logger;
     }
     /**
      * @inheritDoc
@@ -60,10 +66,7 @@ class CloudflareCacheEventSubscriber implements EventSubscriberInterface
         }
         try {
             $request = $this->createBanRequest();
-            (new Client())->send($request, [
-                'debug' => $event->getKernel()->isDebug(),
-                'timeout' => $this->getConf()['timeout']
-            ]);
+            $this->sendRequest($request);
             $event->addMessage(
                 'Cloudflare cache cleared.',
                 static::class,
@@ -122,10 +125,7 @@ class CloudflareCacheEventSubscriber implements EventSubscriberInterface
                 ],
                 UrlGeneratorInterface::ABSOLUTE_URL
             )]);
-            (new Client())->send($purgeRequest, [
-                'debug' => false,
-                'timeout' => $this->getConf()['timeout']
-            ]);
+            $this->sendRequest($purgeRequest);
         } catch (ClientException $e) {
             // do nothing
         }
@@ -183,5 +183,29 @@ class CloudflareCacheEventSubscriber implements EventSubscriberInterface
         return $this->createRequest([
             'files' => $uris
         ]);
+    }
+
+    /**
+     * @param \GuzzleHttp\Psr7\Request $request
+     * @return ResponseInterface
+     */
+    protected function sendRequest(\GuzzleHttp\Psr7\Request $request): ?ResponseInterface
+    {
+        try {
+            if (null !== $this->logger) {
+                $this->logger->info(sprintf(
+                    'Cloudflare cache %s request: %s',
+                    $request->getMethod(),
+                    $request->getUri()
+                ));
+            }
+            return (new Client())->send($request, [
+                'debug' => false,
+                'timeout' => $this->getConf()['timeout']
+            ]);
+        } catch (GuzzleException $exception) {
+            $this->logger->error($exception->getMessage());
+            return null;
+        }
     }
 }

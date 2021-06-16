@@ -55,6 +55,12 @@ class LoggerServiceProvider implements ServiceProviderInterface
             return $factory->createLogger('roadiz', 'cli');
         };
 
+        $container['logger.cache'] = function (Container $c) {
+            /** @var LoggerFactory $factory */
+            $factory = $c[LoggerFactory::class];
+            return $factory->createLogger('cache', 'cache');
+        };
+
         $container['logger'] = function (Container $c) {
             /** @var LoggerFactory $factory */
             $factory = $c[LoggerFactory::class];

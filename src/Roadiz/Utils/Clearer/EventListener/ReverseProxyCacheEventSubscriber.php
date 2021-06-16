@@ -6,24 +6,33 @@ namespace RZ\Roadiz\Utils\Clearer\EventListener;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
+use GuzzleHttp\Exception\GuzzleException;
 use Pimple\Container;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Workflow\Event\Event;
 
 class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 {
     protected Container $container;
+    private ?LoggerInterface $logger;
 
     /**
      * @param Container $container
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(Container $container)
+    public function __construct(Container $container, ?LoggerInterface $logger = null)
     {
         $this->container = $container;
+        $this->logger = $logger;
     }
     /**
      * @inheritDoc
@@ -33,6 +42,7 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
         return [
             CachePurgeRequestEvent::class => ['onBanRequest', 3],
             NodesSourcesUpdatedEvent::class => ['onPurgeRequest', 3],
+            'workflow.node.completed' => ['onNodeWorkflowCompleted', 3],
         ];
     }
 
@@ -46,6 +56,23 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * @param Event $event
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function onNodeWorkflowCompleted(Event $event): void
+    {
+        $node = $event->getSubject();
+        if ($node instanceof Node) {
+            if (!$this->supportConfig()) {
+                return;
+            }
+            foreach ($node->getNodeSources() as $nodeSource) {
+                $this->purgeNodesSources($nodeSource);
+            }
+        }
+    }
+
+    /**
      * @param CachePurgeRequestEvent $event
      */
     public function onBanRequest(CachePurgeRequestEvent $event)
@@ -56,9 +83,7 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 
         try {
             foreach ($this->createBanRequests() as $name => $request) {
-                (new Client())->send($request, [
-                    'debug' => $event->getKernel()->isDebug()
-                ]);
+                $this->sendRequest($request);
                 $event->addMessage(
                     'Reverse proxy cache cleared.',
                     static::class,
@@ -91,31 +116,7 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        try {
-            /** @var UrlGeneratorInterface $urlGenerator */
-            $urlGenerator = $this->container['router'];
-            $nodeSource = $event->getNodeSource();
-            while (!$nodeSource->isReachable()) {
-                $nodeSource = $nodeSource->getParent();
-                if (null === $nodeSource) {
-                    return;
-                }
-            }
-
-            $purgeRequests = $this->createPurgeRequests($urlGenerator->generate(
-                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
-                [
-                    RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
-                ]
-            ));
-            foreach ($purgeRequests as $request) {
-                (new Client())->send($request, [
-                    'debug' => false
-                ]);
-            }
-        } catch (ClientException $e) {
-            // do nothing
-        }
+        $this->purgeNodesSources($event->getNodeSource());
     }
 
     /**
@@ -137,6 +138,36 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
     }
 
     /**
+     * @param NodesSources $nodeSource
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    protected function purgeNodesSources(NodesSources $nodeSource): void
+    {
+        try {
+            /** @var UrlGeneratorInterface $urlGenerator */
+            $urlGenerator = $this->container['router'];
+            while (!$nodeSource->isReachable()) {
+                $nodeSource = $nodeSource->getParent();
+                if (null === $nodeSource) {
+                    return;
+                }
+            }
+
+            $purgeRequests = $this->createPurgeRequests($urlGenerator->generate(
+                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
+                [
+                    RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
+                ]
+            ));
+            foreach ($purgeRequests as $request) {
+                $this->sendRequest($request);
+            }
+        } catch (ClientException $e) {
+            // do nothing
+        }
+    }
+
+    /**
      * @param string $path
      *
      * @return \GuzzleHttp\Psr7\Request[]
@@ -154,5 +185,29 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
             );
         }
         return $requests;
+    }
+
+    /**
+     * @param \GuzzleHttp\Psr7\Request $request
+     * @return ResponseInterface|null
+     */
+    protected function sendRequest(\GuzzleHttp\Psr7\Request $request): ?ResponseInterface
+    {
+        try {
+            if (null !== $this->logger) {
+                $this->logger->info(sprintf(
+                    'Reverse proxy %s request: %s',
+                    $request->getMethod(),
+                    $request->getUri()
+                ));
+            }
+            return (new Client())->send($request, [
+                'debug' => false,
+                'timeout' => 3
+            ]);
+        } catch (GuzzleException $exception) {
+            $this->logger->error($exception->getMessage());
+            return null;
+        }
     }
 }
