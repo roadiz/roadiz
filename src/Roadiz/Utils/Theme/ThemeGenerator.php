@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Utils\Theme;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Config\ConfigurationHandlerInterface;
 use RZ\Roadiz\Utils\Clearer\ConfigurationCacheClearer;
 use RZ\Roadiz\Utils\Clearer\OPCacheClearer;
@@ -33,21 +34,21 @@ class ThemeGenerator
      * @param string $publicDir
      * @param string $cacheDir
      * @param ConfigurationHandlerInterface $configurationHandler
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
     public function __construct(
         string $projectDir,
         string $publicDir,
         string $cacheDir,
         ConfigurationHandlerInterface $configurationHandler,
-        LoggerInterface $logger
+        ?LoggerInterface $logger = null
     ) {
         $this->filesystem = new Filesystem();
         $this->projectDir = $projectDir;
         $this->publicDir = $publicDir;
         $this->cacheDir = $cacheDir;
         $this->configurationHandler = $configurationHandler;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**

@@ -106,3 +106,14 @@ assetsProcessing:
 #            type: sentry
 #            level: WARNING
 #            url: '%env(string:APP_SENTRY_DSN)%'
+
+#
+# Messenger non-default configuration
+#
+#messenger:
+#    transports:
+#        default:
+#            dsn: '%env(string:APP_MESSENGER_DEFAULT_TRANSPORT_DSN)%'
+#            dsn: sync://
+#            dsn: doctrine://default
+#            options: []

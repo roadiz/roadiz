@@ -3,36 +3,41 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Utils\Clearer\EventListener;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
-use GuzzleHttp\Exception\GuzzleException;
 use Pimple\Container;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
+use RZ\Roadiz\Message\GuzzleRequestMessage;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Workflow\Event\Event;
 
 class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 {
     protected Container $container;
-    private ?LoggerInterface $logger;
+    private LoggerInterface $logger;
+    private MessageBusInterface $bus;
 
     /**
      * @param Container $container
+     * @param MessageBusInterface $bus
      * @param LoggerInterface|null $logger
      */
-    public function __construct(Container $container, ?LoggerInterface $logger = null)
+    public function __construct(Container $container, MessageBusInterface $bus, ?LoggerInterface $logger = null)
     {
         $this->container = $container;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
+        $this->bus = $bus;
     }
     /**
      * @inheritDoc
@@ -189,25 +194,17 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 
     /**
      * @param \GuzzleHttp\Psr7\Request $request
-     * @return ResponseInterface|null
+     * @return void
      */
-    protected function sendRequest(\GuzzleHttp\Psr7\Request $request): ?ResponseInterface
+    protected function sendRequest(\GuzzleHttp\Psr7\Request $request): void
     {
         try {
-            if (null !== $this->logger) {
-                $this->logger->info(sprintf(
-                    'Reverse proxy %s request: %s',
-                    $request->getMethod(),
-                    $request->getUri()
-                ));
-            }
-            return (new Client())->send($request, [
+            $this->bus->dispatch(new Envelope(new GuzzleRequestMessage($request, [
                 'debug' => false,
                 'timeout' => 3
-            ]);
-        } catch (GuzzleException $exception) {
+            ])));
+        } catch (NoHandlerForMessageException $exception) {
             $this->logger->error($exception->getMessage());
-            return null;
         }
     }
 }

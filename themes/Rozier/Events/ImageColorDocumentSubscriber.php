@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace Themes\Rozier\Events;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Events\DocumentImageUploadedEvent;
 use RZ\Roadiz\Core\Events\FilterDocumentEvent;
@@ -17,31 +19,22 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class ImageColorDocumentSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var Packages
-     */
-    private $packages;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
+    private Packages $packages;
+    private LoggerInterface $logger;
+    private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManager        $entityManager
-     * @param Packages             $packages
+     * @param EntityManagerInterface $entityManager
+     * @param Packages $packages
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        EntityManager $entityManager,
+        EntityManagerInterface $entityManager,
         Packages $packages,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->packages = $packages;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->entityManager = $entityManager;
     }
 

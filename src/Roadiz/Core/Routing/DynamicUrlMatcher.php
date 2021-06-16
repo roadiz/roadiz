@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\Routing;
 
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Theme;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use RZ\Roadiz\Utils\Theme\ThemeResolverInterface;
@@ -20,7 +21,7 @@ abstract class DynamicUrlMatcher extends UrlMatcher
 {
     protected ?Theme $theme;
     protected ?Stopwatch $stopwatch;
-    protected ?LoggerInterface $logger;
+    protected LoggerInterface $logger;
     protected ThemeResolverInterface $themeResolver;
     protected PreviewResolverInterface $previewResolver;
 
@@ -36,11 +37,11 @@ abstract class DynamicUrlMatcher extends UrlMatcher
         ThemeResolverInterface $themeResolver,
         PreviewResolverInterface $previewResolver,
         Stopwatch $stopwatch = null,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         parent::__construct(new RouteCollection(), $context);
         $this->stopwatch = $stopwatch;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
         $this->themeResolver = $themeResolver;
         $this->previewResolver = $previewResolver;
     }

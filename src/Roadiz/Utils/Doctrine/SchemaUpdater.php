@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Utils\Doctrine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Console\RoadizApplication;
 use RZ\Roadiz\Core\Kernel;
 use RZ\Roadiz\Utils\Clearer\ClearerInterface;
@@ -23,13 +24,13 @@ final class SchemaUpdater
     /**
      * @param EntityManagerInterface $entityManager
      * @param Kernel $kernel
-     * @param LoggerInterface $logger
+     * @param LoggerInterface|null $logger
      */
-    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, LoggerInterface $logger)
+    public function __construct(EntityManagerInterface $entityManager, Kernel $kernel, ?LoggerInterface $logger = null)
     {
         $this->entityManager = $entityManager;
         $this->kernel = $kernel;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     public function clearMetadata(): void

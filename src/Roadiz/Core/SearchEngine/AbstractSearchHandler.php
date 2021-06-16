@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Core\SearchEngine;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use RZ\Roadiz\Core\Entities\Translation;
 use Solarium\Core\Client\Client;
 use Solarium\Core\Query\Helper;
@@ -14,7 +15,7 @@ abstract class AbstractSearchHandler implements SearchHandlerInterface
 {
     protected ?Client $client = null;
     protected ?EntityManagerInterface $em = null;
-    protected ?LoggerInterface $logger = null;
+    protected LoggerInterface $logger;
     protected int $highlightingFragmentSize = 150;
 
     /**
@@ -25,11 +26,11 @@ abstract class AbstractSearchHandler implements SearchHandlerInterface
     public function __construct(
         Client $client,
         EntityManagerInterface $em,
-        LoggerInterface $logger = null
+        ?LoggerInterface $logger = null
     ) {
         $this->client = $client;
         $this->em = $em;
-        $this->logger = $logger;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**

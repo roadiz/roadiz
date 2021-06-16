@@ -37,6 +37,7 @@ use RZ\Roadiz\Core\Viewers\ExceptionViewer;
 use RZ\Roadiz\Documentation\DocumentationServiceProvider;
 use RZ\Roadiz\EntityGenerator\EntityGeneratorServiceProvider;
 use RZ\Roadiz\Markdown\Services\MarkdownServiceProvider;
+use RZ\Roadiz\Message\Services\MessengerServiceProvider;
 use RZ\Roadiz\OpenId\OpenIdServiceProvider;
 use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Translation\Services\TranslationServiceProvider;
@@ -229,6 +230,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new PreviewServiceProvider());
         $container->register(new EntityGeneratorServiceProvider());
         $container->register(new DocumentationServiceProvider());
+        $container->register(new MessengerServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

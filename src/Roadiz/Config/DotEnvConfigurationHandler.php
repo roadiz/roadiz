@@ -6,10 +6,8 @@ namespace RZ\Roadiz\Config;
 class DotEnvConfigurationHandler extends ConfigurationHandler
 {
     const ENV_PATTERN = '#^\%env\((?:default:(?<fallback>[^:]*):)?(?<cast>[a-z]+)?:?(?<env>[A-Za-z\-\_0-9]+)\)\%$#';
-    /**
-     * @var bool
-     */
-    protected $containsDotEnv = false;
+
+    protected bool $containsDotEnv = false;
 
     /**
      * @param array $configuration
