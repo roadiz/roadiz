@@ -138,9 +138,9 @@
     "bin": ["bin/roadiz"],
     "scripts": {
         "cache-scripts": [
-            "php bin/roadiz cache:clear -e prod",
-            "php bin/roadiz cache:clear -e dev",
-            "php bin/roadiz cache:clear -e prod --preview",
+            "php bin/roadiz cache:clear --clear-appcache --clear-nsurls --clear-translations --clear-templates --clear-routes --clear-configuration -e prod",
+            "php bin/roadiz cache:clear --clear-appcache --clear-nsurls --clear-translations --clear-templates --clear-routes --clear-configuration -e dev",
+            "php bin/roadiz cache:clear --clear-appcache --clear-nsurls --clear-translations --clear-templates --clear-routes --clear-configuration -e prod --preview",
             "php bin/roadiz cache:clear-fpm -e prod",
             "php bin/roadiz cache:clear-fpm -e prod --preview"
         ],
