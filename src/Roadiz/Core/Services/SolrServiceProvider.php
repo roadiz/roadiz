@@ -6,6 +6,12 @@ namespace RZ\Roadiz\Core\Services;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Core\SearchEngine\DocumentSearchHandler;
+use RZ\Roadiz\Core\SearchEngine\Indexer\DocumentIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\FolderIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\IndexerFactory;
+use RZ\Roadiz\Core\SearchEngine\Indexer\NodeIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\NodesSourcesIndexer;
+use RZ\Roadiz\Core\SearchEngine\Indexer\TagIndexer;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
@@ -131,6 +137,50 @@ class SolrServiceProvider implements ServiceProviderInterface
             );
         };
 
+        $container[IndexerFactory::class] = function (Container $c) {
+            return new IndexerFactory(new \Pimple\Psr11\Container($c));
+        };
+
+        $container[NodeIndexer::class] = $container->factory(function (Container $c) {
+            return new NodeIndexer(
+                $c['solr'],
+                $c['em'],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[NodesSourcesIndexer::class] = $container->factory(function (Container $c) {
+            return new NodesSourcesIndexer(
+                $c['solr'],
+                $c['em'],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[DocumentIndexer::class] = $container->factory(function (Container $c) {
+            return new DocumentIndexer(
+                $c['solr'],
+                $c['em'],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[TagIndexer::class] = $container->factory(function (Container $c) {
+            return new TagIndexer(
+                $c['solr'],
+                $c['em'],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
+        $container[FolderIndexer::class] = $container->factory(function (Container $c) {
+            return new FolderIndexer(
+                $c['solr'],
+                $c['em'],
+                $c[SolariumFactoryInterface::class]
+            );
+        });
+
         /*
          * Add custom event subscribers to the general dispatcher.
          *
@@ -140,9 +190,7 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(
                 new SolariumSubscriber(
-                    $c['solr'],
-                    $c['logger'],
-                    $c[SolariumFactoryInterface::class]
+                    $c[IndexerFactory::class]
                 )
             );
             return $dispatcher;
