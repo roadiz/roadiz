@@ -27,8 +27,13 @@ use RZ\Roadiz\Core\Events\Node\NodeVisibilityChangedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesDeletedEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Core\Events\Tag\TagUpdatedEvent;
-use RZ\Roadiz\Core\SearchEngine\Indexer\IndexerFactory;
+use RZ\Roadiz\Core\SearchEngine\Message\AbstractSolrMessage;
+use RZ\Roadiz\Core\SearchEngine\Message\SolrDeleteMessage;
+use RZ\Roadiz\Core\SearchEngine\Message\SolrReindexMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Workflow\Event\Event;
 
 /**
  * Subscribe to Node and NodesSources event to update
@@ -36,22 +41,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class SolariumSubscriber implements EventSubscriberInterface
 {
-    protected IndexerFactory $indexerFactory;
+    protected MessageBusInterface $messageBus;
 
     /**
-     * @param IndexerFactory $indexerFactory
+     * @param MessageBusInterface $messageBus
      */
     public function __construct(
-        IndexerFactory $indexerFactory
+        MessageBusInterface $messageBus
     ) {
-        $this->indexerFactory = $indexerFactory;
+        $this->messageBus = $messageBus;
     }
 
     public static function getSubscribedEvents()
     {
         return [
             NodeUpdatedEvent::class => 'onSolariumNodeUpdate',
-            NodeStatusChangedEvent::class => 'onSolariumNodeUpdate',
+            // NodeStatusChangedEvent::class => 'onSolariumNodeUpdate',
+            'workflow.node.completed' => ['onSolariumNodeWorkflowComplete'],
             NodeVisibilityChangedEvent::class => 'onSolariumNodeUpdate',
             NodesSourcesUpdatedEvent::class => 'onSolariumSingleUpdate',
             NodesSourcesDeletedEvent::class => 'onSolariumSingleDelete',
@@ -66,8 +72,19 @@ class SolariumSubscriber implements EventSubscriberInterface
             DocumentOutFolderEvent::class => 'onSolariumDocumentUpdate',
             DocumentUpdatedEvent::class => 'onSolariumDocumentUpdate',
             DocumentDeletedEvent::class => 'onSolariumDocumentDelete',
-            //FolderUpdatedEvent::class => 'onSolariumFolderUpdate', // Possibly too greedy if lots of docs tagged
+            FolderUpdatedEvent::class => 'onSolariumFolderUpdate', // Possibly too greedy if lots of docs tagged
         ];
+    }
+
+    /**
+     * @param Event $event
+     */
+    public function onSolariumNodeWorkflowComplete(Event $event): void
+    {
+        $node = $event->getSubject();
+        if ($node instanceof Node) {
+            $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Node::class, $node->getId())));
+        }
     }
 
     /**
@@ -79,7 +96,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumSingleUpdate(NodesSourcesUpdatedEvent $event)
     {
-        $this->indexerFactory->getIndexerFor(NodesSources::class)->index($event->getNodeSource()->getId());
+        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(NodesSources::class, $event->getNodeSource()->getId())));
     }
 
     /**
@@ -89,7 +106,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumSingleDelete(NodesSourcesDeletedEvent $event)
     {
-        $this->indexerFactory->getIndexerFor(NodesSources::class)->delete($event->getNodeSource()->getId());
+        $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(NodesSources::class, $event->getNodeSource()->getId())));
     }
 
     /**
@@ -99,7 +116,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumNodeDelete(NodeDeletedEvent $event)
     {
-        $this->indexerFactory->getIndexerFor(Node::class)->delete($event->getNode()->getId());
+        $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(Node::class, $event->getNode()->getId())));
     }
 
     /**
@@ -111,7 +128,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumNodeUpdate(FilterNodeEvent $event)
     {
-        $this->indexerFactory->getIndexerFor(Node::class)->index($event->getNode()->getId());
+        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Node::class, $event->getNode()->getId())));
     }
 
 
@@ -124,7 +141,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         if ($document instanceof Document) {
-            $this->indexerFactory->getIndexerFor(Document::class)->delete($document->getId());
+            $this->messageBus->dispatch(new Envelope(new SolrDeleteMessage(Document::class, $document->getId())));
         }
     }
 
@@ -139,7 +156,7 @@ class SolariumSubscriber implements EventSubscriberInterface
     {
         $document = $event->getDocument();
         if ($document instanceof Document) {
-            $this->indexerFactory->getIndexerFor(Document::class)->index($document->getId());
+            $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Document::class, $document->getId())));
         }
     }
 
@@ -153,7 +170,7 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumTagUpdate(TagUpdatedEvent $event)
     {
-        $this->indexerFactory->getIndexerFor(Tag::class)->index($event->getTag()->getId());
+        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Tag::class, $event->getTag()->getId())));
     }
 
     /**
@@ -166,6 +183,6 @@ class SolariumSubscriber implements EventSubscriberInterface
      */
     public function onSolariumFolderUpdate(FolderUpdatedEvent $event)
     {
-        $this->indexerFactory->getIndexerFor(Folder::class)->index($event->getFolder()->getId());
+        $this->messageBus->dispatch(new Envelope(new SolrReindexMessage(Folder::class, $event->getFolder()->getId())));
     }
 }

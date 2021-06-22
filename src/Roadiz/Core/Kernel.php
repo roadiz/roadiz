@@ -204,17 +204,18 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new BackofficeServiceProvider());
         $container->register(new DoctrineServiceProvider());
         $container->register(new DoctrineFiltersServiceProvider());
+        $container->register(new MessengerServiceProvider());
         $container->register(new EmbedDocumentsServiceProvider());
         $container->register(new EntityApiServiceProvider());
         $container->register(new FormServiceProvider());
         $container->register(new MailerServiceProvider());
         $container->register(new RoutingServiceProvider());
         $container->register(new SecurityServiceProvider());
-        $container->register(new SolrServiceProvider());
         $container->register(new ThemeServiceProvider());
         $container->register(new TranslationServiceProvider());
         $container->register(new TwigServiceProvider());
         $container->register(new LoggerServiceProvider());
+        $container->register(new SolrServiceProvider());
         $container->register(new BagsServiceProvider());
         $container->register(new FactoryServiceProvider());
         $container->register(new ImporterServiceProvider());
@@ -230,7 +231,6 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new PreviewServiceProvider());
         $container->register(new EntityGeneratorServiceProvider());
         $container->register(new DocumentationServiceProvider());
-        $container->register(new MessengerServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

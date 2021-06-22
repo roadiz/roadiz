@@ -10,6 +10,9 @@ use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Message\GuzzleRequestMessage;
 use RZ\Roadiz\Message\Handler\GuzzleRequestMessageHandler;
 use RZ\Roadiz\Utils\Log\LoggerFactory;
+use Symfony\Bridge\Doctrine\Messenger\DoctrineClearEntityManagerWorkerSubscriber;
+use Symfony\Bridge\Doctrine\Messenger\DoctrineCloseConnectionMiddleware;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransportFactory;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransportFactory;
 use Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransportFactory;
@@ -32,6 +35,7 @@ use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Messenger\Transport\Sync\SyncTransportFactory;
 use Symfony\Component\Messenger\Transport\TransportFactory;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class MessengerServiceProvider implements ServiceProviderInterface
 {
@@ -73,8 +77,16 @@ final class MessengerServiceProvider implements ServiceProviderInterface
                 // these middleware MUST be last
                 $c[SendMessageMiddleware::class],
                 $c[HandleMessageMiddleware::class],
+                // Close EM if no more message to handle
+                new DoctrineCloseConnectionMiddleware($c[ManagerRegistry::class]),
             ];
         };
+
+        $pimple->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
+            // We need to clear EM after each handled message to avoid entity cache issues.
+            $dispatcher->addSubscriber(new DoctrineClearEntityManagerWorkerSubscriber($c[ManagerRegistry::class]));
+            return $dispatcher;
+        });
 
         $pimple['messenger.handlers'] = function (Container $c) {
             return [

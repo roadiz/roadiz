@@ -126,3 +126,5 @@ assetsProcessing:
 #            options: []
 #    routing:
 #        RZ\Roadiz\Message\GuzzleRequestMessage: async
+#        RZ\Roadiz\Core\SearchEngine\Message\SolrDeleteMessage: async
+#        RZ\Roadiz\Core\SearchEngine\Message\SolrReindexMessage: async

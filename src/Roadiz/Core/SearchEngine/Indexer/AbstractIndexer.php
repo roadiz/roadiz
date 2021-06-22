@@ -81,6 +81,11 @@ abstract class AbstractIndexer implements Indexer
         $optimizeUpdate->addOptimize(true, true, 5);
         $this->getSolr()->update($optimizeUpdate);
 
+        $this->commitSolr();
+    }
+
+    public function commitSolr()
+    {
         $finalCommitUpdate = $this->getSolr()->createUpdate();
         $finalCommitUpdate->addCommit(true, true, false);
         $this->getSolr()->update($finalCommitUpdate);

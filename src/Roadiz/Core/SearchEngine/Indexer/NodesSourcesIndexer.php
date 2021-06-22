@@ -6,21 +6,28 @@ namespace RZ\Roadiz\Core\SearchEngine\Indexer;
 use RZ\Roadiz\Core\Entities\NodesSources;
 use Solarium\Exception\HttpException;
 use Solarium\Plugin\BufferedAdd\BufferedAdd;
+use Solarium\QueryType\Update\Query\Query as UpdateQuery;
 
 class NodesSourcesIndexer extends AbstractIndexer
 {
     public function index($id): void
     {
-        $this->indexNodeSource($this->entityManager->find(NodesSources::class, $id));
+        $update = $this->getSolr()->createUpdate();
+        $this->indexNodeSource(
+            $this->entityManager->find(NodesSources::class, $id),
+            $update
+        );
+        $update->addCommit(true, true, false);
+        $this->getSolr()->update($update);
     }
 
-    protected function indexNodeSource(?NodesSources $nodeSource): void
+    protected function indexNodeSource(?NodesSources $nodeSource, UpdateQuery $update): void
     {
         if (null !== $nodeSource) {
             try {
                 $solrSource = $this->solariumFactory->createWithNodesSources($nodeSource);
                 $solrSource->getDocumentFromIndex();
-                $solrSource->updateAndCommit();
+                $solrSource->update($update);
             } catch (HttpException $exception) {
                 $this->logger->error($exception->getMessage());
             }

@@ -12,16 +12,24 @@ use RZ\Roadiz\Core\SearchEngine\Indexer\IndexerFactory;
 use RZ\Roadiz\Core\SearchEngine\Indexer\NodeIndexer;
 use RZ\Roadiz\Core\SearchEngine\Indexer\NodesSourcesIndexer;
 use RZ\Roadiz\Core\SearchEngine\Indexer\TagIndexer;
+use RZ\Roadiz\Core\SearchEngine\Message\Handler\SolrDeleteMessageHandler;
+use RZ\Roadiz\Core\SearchEngine\Message\Handler\SolrReindexMessageHandler;
+use RZ\Roadiz\Core\SearchEngine\Message\SolrDeleteMessage;
+use RZ\Roadiz\Core\SearchEngine\Message\SolrReindexMessage;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandler;
 use RZ\Roadiz\Core\SearchEngine\NodeSourceSearchHandlerInterface;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactory;
 use RZ\Roadiz\Core\SearchEngine\SolariumFactoryInterface;
 use RZ\Roadiz\Core\SearchEngine\Subscriber\SolariumSubscriber;
 use RZ\Roadiz\Markdown\MarkdownInterface;
+use RZ\Roadiz\Message\GuzzleRequestMessage;
+use RZ\Roadiz\Message\Handler\GuzzleRequestMessageHandler;
 use Solarium\Client;
 use Solarium\Core\Client\Adapter\AdapterInterface;
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\Messenger\Handler\HandlerDescriptor;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Register Solr services for dependency injection container.
@@ -190,11 +198,43 @@ class SolrServiceProvider implements ServiceProviderInterface
         $container->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(
                 new SolariumSubscriber(
-                    $c[IndexerFactory::class]
+                    $c[MessageBusInterface::class]
                 )
             );
             return $dispatcher;
         });
+
+
+        /*
+         * Handlers
+         */
+        $container->extend('messenger.handlers', function (array $handlers, Container $c) {
+            return array_merge($handlers, [
+                SolrDeleteMessage::class => [
+                    $c[SolrDeleteMessageHandler::class]
+                ],
+                SolrReindexMessage::class => [
+                    $c[SolrReindexMessageHandler::class]
+                ],
+            ]);
+        });
+
+        $container[SolrDeleteMessageHandler::class] = function (Container $c) {
+            return new HandlerDescriptor(
+                new SolrDeleteMessageHandler($c[IndexerFactory::class], $c['logger.messenger']),
+                [
+                    'handles' => SolrDeleteMessage::class,
+                ]
+            );
+        };
+        $container[SolrReindexMessageHandler::class] = function (Container $c) {
+            return new HandlerDescriptor(
+                new SolrReindexMessageHandler($c[IndexerFactory::class], $c['logger.messenger']),
+                [
+                    'handles' => SolrReindexMessage::class,
+                ]
+            );
+        };
 
         return $container;
     }

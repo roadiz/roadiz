@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Core\SearchEngine\Indexer;
 
 use RZ\Roadiz\Core\Entities\Node;
+use RZ\Roadiz\Core\Entities\NodesSources;
 
 final class NodeIndexer extends NodesSourcesIndexer
 {
@@ -11,9 +12,13 @@ final class NodeIndexer extends NodesSourcesIndexer
     {
         $node = $this->entityManager->find(Node::class, $id);
         if (null !== $node) {
+            $update = $this->getSolr()->createUpdate();
+            /** @var NodesSources $nodeSource */
             foreach ($node->getNodeSources() as $nodeSource) {
-                $this->indexNodeSource($nodeSource);
+                $this->indexNodeSource($nodeSource, $update);
             }
+            $update->addCommit(true, true, false);
+            $this->getSolr()->update($update);
         }
     }
 
@@ -24,6 +29,9 @@ final class NodeIndexer extends NodesSourcesIndexer
             foreach ($node->getNodeSources() as $nodeSource) {
                 $this->deleteNodeSource($nodeSource);
             }
+
+            // optimize the index
+            $this->commitSolr();
         }
     }
 }

@@ -115,7 +115,7 @@ abstract class AbstractSolarium
     {
         $update = $this->client->createUpdate();
         $this->update($update);
-        $update->addCommit();
+        $update->addCommit(true, true, false);
 
         $this->logger->debug('[Solr] Document updated.');
         return $this->client->update($update);
@@ -167,7 +167,7 @@ abstract class AbstractSolarium
         $update = $this->client->createUpdate();
 
         if (true === $this->remove($update)) {
-            $update->addCommit();
+            $update->addCommit(true, true, false);
             $this->client->update($update);
         }
     }
@@ -181,7 +181,7 @@ abstract class AbstractSolarium
         $update = $this->client->createUpdate();
 
         if (true === $this->clean($update)) {
-            $update->addCommit();
+            $update->addCommit(true, true, false);
             $this->client->update($update);
         }
     }
