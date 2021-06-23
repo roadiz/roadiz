@@ -15,6 +15,8 @@ RUN apk add --no-cache shadow make git \
 
 # Display errors
 ADD php.ini /usr/local/etc/php/php.ini
+# Added Roadiz messenger for async tasks
+ADD supervisor.ini /etc/supervisor.d/services.ini
 ADD zz-docker.conf /usr/local/etc/php-fpm.d/zz-docker.conf
 ADD nginx /etc/nginx
 
