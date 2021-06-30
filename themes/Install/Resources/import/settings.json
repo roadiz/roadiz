@@ -399,6 +399,17 @@
         "defaultValues": ""
     },
     {
+        "name": "unsplash_client_id",
+        "description": "unsplash_client_id.help",
+        "visible": true,
+        "encrypted": false,
+        "settingGroup": {
+            "name": "APIs",
+            "inMenu": true
+        },
+        "type": 0
+    },
+    {
         "name": "seo_description",
         "visible": true,
         "encrypted": false,

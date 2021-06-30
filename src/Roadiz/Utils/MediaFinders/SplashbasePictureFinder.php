@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Utils\MediaFinders;
 
 /**
- * Util to grab a facebook profile picture from userAlias.
+ * @deprecated splashbase.co is dead.
  */
 class SplashbasePictureFinder extends AbstractSplashbasePictureFinder
 {

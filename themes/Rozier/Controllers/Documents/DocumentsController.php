@@ -24,6 +24,7 @@ use RZ\Roadiz\Core\Repositories\DocumentRepository;
 use RZ\Roadiz\Utils\Asset\Packages;
 use RZ\Roadiz\Utils\Document\DocumentFactory;
 use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\RandomImageFinder;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
@@ -1152,8 +1153,7 @@ class DocumentsController extends RozierApp
      */
     private function randomDocument(?int $folderId = null)
     {
-        $finder = new SplashbasePictureFinder();
-        return $this->createDocumentFromFinder($finder, $folderId);
+        return $this->createDocumentFromFinder($this->get(RandomImageFinder::class), $folderId);
     }
 
     /**

@@ -7,11 +7,15 @@ use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\OpenId\Exception\DiscoveryNotAvailableException;
 use RZ\Roadiz\OpenId\OAuth2LinkGenerator;
+use RZ\Roadiz\Utils\MediaFinders\AbstractEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\EmbedFinderInterface;
+use RZ\Roadiz\Utils\MediaFinders\RandomImageFinder;
 use RZ\Roadiz\Utils\MediaFinders\SplashbasePictureFinder;
 use RZ\Roadiz\Utils\UrlGenerators\DocumentUrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Themes\Rozier\Forms\LoginType;
@@ -103,12 +107,17 @@ class LoginController extends RozierApp
                 return $this->makeResponseCachable($request, $response, 60, true);
             }
         }
-        $splash = new SplashbasePictureFinder();
-        $feed = $splash->getRandomBySearch('road');
-        if (false === $feed) {
-            throw new ResourceNotFoundException();
+        /** @var RandomImageFinder $randomFinder */
+        $randomFinder = $this->get(RandomImageFinder::class);
+        $feed = $randomFinder->getRandomBySearch('road');
+        $url = null;
+
+        if (null !== $feed) {
+            $url = $feed['url'] ?? $feed['urls']['regular'] ?? $feed['urls']['full'] ?? $feed['urls']['raw'] ?? null;
         }
-        $response->setData($feed);
+        $response->setData([
+            'url' => $url ?? $this->get('assetPackages')->getUrl('themes/Rozier/static/assets/img/default_login.jpg')
+        ]);
         return $this->makeResponseCachable($request, $response, 60, true);
     }
 }

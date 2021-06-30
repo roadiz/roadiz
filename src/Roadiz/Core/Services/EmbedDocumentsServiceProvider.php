@@ -7,12 +7,15 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Utils\MediaFinders\DailymotionEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\DeezerEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\EmbedFinderFactory;
 use RZ\Roadiz\Utils\MediaFinders\MixcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\PodcastFinder;
+use RZ\Roadiz\Utils\MediaFinders\RandomImageFinder;
 use RZ\Roadiz\Utils\MediaFinders\SoundcloudEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\SpotifyEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\TedEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\TwitchEmbedFinder;
+use RZ\Roadiz\Utils\MediaFinders\UnsplashPictureFinder;
 use RZ\Roadiz\Utils\MediaFinders\VimeoEmbedFinder;
 use RZ\Roadiz\Utils\MediaFinders\YoutubeEmbedFinder;
 
@@ -45,6 +48,10 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
                 'podcast' => PodcastFinder::class,
                 'twitch' => TwitchEmbedFinder::class
             ];
+        };
+
+        $container[EmbedFinderFactory::class] = function (Container $c) {
+            return new EmbedFinderFactory($c['document.platforms']);
         };
 
         $container['embed_finder.youtube'] = $container->factory(function (Container $c) {
@@ -85,6 +92,14 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
             $finder = new SoundcloudEmbedFinder('', false);
             $finder->setKey($c['settingsBag']->get('soundcloud_client_id'));
             return $finder;
+        });
+
+        $container['embed_finder.unsplash'] = $container->factory(function (Container $c) {
+            return new UnsplashPictureFinder($c['settingsBag']->get('unsplash_client_id') ?? '');
+        });
+
+        $container[RandomImageFinder::class] = $container->factory(function (Container $c) {
+            return $c['embed_finder.unsplash'];
         });
 
         return $container;
