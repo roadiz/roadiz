@@ -220,6 +220,16 @@
                 <target></target>
                 <note>Setting help name</note>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="unsplash_client_id">
+                <source>unsplash_client_id</source>
+                <target></target>
+                <note>Setting name</note>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="unsplash_client_id.help">
+                <source>unsplash_client_id.help</source>
+                <target></target>
+                <note>Setting help name</note>
+            </trans-unit>
         </body>
     </file>
 </xliff>
