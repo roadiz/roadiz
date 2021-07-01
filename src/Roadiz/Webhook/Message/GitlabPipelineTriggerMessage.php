@@ -49,4 +49,15 @@ final class GitlabPipelineTriggerMessage implements AsyncMessage, HttpRequestMes
             http_build_query($postBody)
         );
     }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return [
+            'debug' => false,
+            'timeout' => 3
+        ];
+    }
 }

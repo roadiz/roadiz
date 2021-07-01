@@ -14,6 +14,10 @@ class ValidYamlValidator extends ConstraintValidator
     {
         if ($value != "") {
             try {
+                if (is_array($value)) {
+                    // value already has been parsed into array
+                    return;
+                }
                 Yaml::parse($value);
             } catch (ParseException $e) {
                 $this->context->addViolation($constraint->message, [

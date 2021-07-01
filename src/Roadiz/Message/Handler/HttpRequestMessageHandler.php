@@ -7,10 +7,10 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
-use RZ\Roadiz\Message\GuzzleRequestMessage;
+use RZ\Roadiz\Message\HttpRequestMessage;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-final class GuzzleRequestMessageHandler implements MessageHandlerInterface
+final class HttpRequestMessageHandler implements MessageHandlerInterface
 {
     private LoggerInterface $logger;
     private ?Client $client;
@@ -25,7 +25,7 @@ final class GuzzleRequestMessageHandler implements MessageHandlerInterface
         $this->client = $client ?? new Client();
     }
 
-    public function __invoke(GuzzleRequestMessage $message)
+    public function __invoke(HttpRequestMessage $message)
     {
         try {
             $this->logger->info(sprintf(

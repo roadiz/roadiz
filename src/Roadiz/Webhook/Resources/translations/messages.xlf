@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en-US" datatype="plaintext">
+        <body>
+            <trans-unit xml:space="preserve" id="webhooks">
+                <source>webhooks</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="manage.webhooks">
+                <source>manage.webhooks</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="add.a.webhook">
+                <source>add.a.webhook</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="back_to.webhooks">
+                <source>back_to.webhooks</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="delete.webhook.%name%">
+                <source>delete.webhook.%name%</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="edit.webhook.%name%">
+                <source>edit.webhook.%name%</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
+                <source>are_you_sure.delete.webhook</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.messageType">
+                <source>webhooks.messageType</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.uri">
+                <source>webhooks.uri</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
+                <source>webhooks.lastTriggeredAt</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.payload">
+                <source>webhooks.payload</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
+                <source>webhooks.throttleSeconds</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="never">
+                <source>never</source>
+                <target></target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

@@ -31,6 +31,7 @@ test:
 	php -d "memory_limit=-1" bin/phpstan analyse -c phpstan.neon -l 4 src
 	php -d "memory_limit=-1" bin/phpstan analyse -c phpstan.neon -l 3 themes/Rozier themes/Install themes/DefaultTheme
 	php -d "memory_limit=-1" bin/roadiz lint:twig
+	php -d "memory_limit=-1" bin/roadiz lint:twig src/Roadiz/Webhook/Resources/views
 	php -d "memory_limit=-1" bin/roadiz lint:twig themes/Install/Resources/views
 	php -d "memory_limit=-1" bin/roadiz lint:twig themes/Rozier/Resources/views
 

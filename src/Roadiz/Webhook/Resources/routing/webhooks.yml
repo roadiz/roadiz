@@ -1,0 +1,16 @@
+webhooksAddPage:
+    path:     /add
+    defaults:
+        _controller: RZ\Roadiz\Webhook\Controller\AdminWebhookController::addAction
+
+webhooksEditPage:
+    path:     /edit/{id}
+    defaults:
+        _controller: RZ\Roadiz\Webhook\Controller\AdminWebhookController::editAction
+    requirements: { id : "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" }
+
+webhooksDeletePage:
+    path:     /delete/{id}
+    defaults:
+        _controller: RZ\Roadiz\Webhook\Controller\AdminWebhookController::deleteAction
+    requirements: { id : "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" }

@@ -172,6 +172,10 @@
         "groups": []
     },
     {
+        "name": "ROLE_ACCESS_WEBHOOKS",
+        "groups": []
+    },
+    {
         "name": "ROLE_BACKEND_USER",
         "groups": [
             {

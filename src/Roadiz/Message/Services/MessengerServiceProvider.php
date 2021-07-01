@@ -8,7 +8,8 @@ use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Message\GuzzleRequestMessage;
-use RZ\Roadiz\Message\Handler\GuzzleRequestMessageHandler;
+use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
+use RZ\Roadiz\Message\HttpRequestMessage;
 use RZ\Roadiz\Utils\Log\LoggerFactory;
 use Symfony\Bridge\Doctrine\Messenger\DoctrineClearEntityManagerWorkerSubscriber;
 use Symfony\Bridge\Doctrine\Messenger\DoctrineCloseConnectionMiddleware;
@@ -35,7 +36,6 @@ use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Messenger\Transport\Sync\SyncTransportFactory;
 use Symfony\Component\Messenger\Transport\TransportFactory;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class MessengerServiceProvider implements ServiceProviderInterface
 {
@@ -91,7 +91,7 @@ final class MessengerServiceProvider implements ServiceProviderInterface
         $pimple['messenger.handlers'] = function (Container $c) {
             return [
                 GuzzleRequestMessage::class => [
-                    $c[GuzzleRequestMessageHandler::class]
+                    $c[HttpRequestMessageHandler::class]
                 ],
             ];
         };
@@ -178,11 +178,11 @@ final class MessengerServiceProvider implements ServiceProviderInterface
         /*
          * Allow HTTP requests to be performed async
          */
-        $pimple[GuzzleRequestMessageHandler::class] = function (Container $c) {
+        $pimple[HttpRequestMessageHandler::class] = function (Container $c) {
             return new HandlerDescriptor(
-                new GuzzleRequestMessageHandler(null, $c['logger.messenger']),
+                new HttpRequestMessageHandler(null, $c['logger.messenger']),
                 [
-                    'handles' => GuzzleRequestMessage::class,
+                    'handles' => HttpRequestMessage::class,
                 ]
             );
         };

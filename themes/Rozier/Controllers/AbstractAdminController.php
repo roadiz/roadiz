@@ -118,11 +118,11 @@ abstract class AbstractAdminController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int $id
+     * @param int|string $id Numeric ID or UUID
      * @return RedirectResponse|Response|null
      * @throws \Twig\Error\RuntimeError
      */
-    public function editAction(Request $request, int $id)
+    public function editAction(Request $request, $id)
     {
         $this->denyAccessUnlessGranted($this->getRequiredRole());
 
@@ -203,11 +203,11 @@ abstract class AbstractAdminController extends RozierApp
 
     /**
      * @param Request $request
-     * @param int $id
+     * @param int|string $id Numeric ID or UUID
      * @return RedirectResponse|Response|null
      * @throws \Twig\Error\RuntimeError
      */
-    public function deleteAction(Request $request, int $id)
+    public function deleteAction(Request $request, $id)
     {
         $this->denyAccessUnlessGranted($this->getRequiredDeletionRole());
 

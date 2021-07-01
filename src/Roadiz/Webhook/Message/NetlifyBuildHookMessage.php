@@ -24,4 +24,15 @@ final class NetlifyBuildHookMessage implements AsyncMessage, HttpRequestMessage
     {
         return new Request('POST', $this->uri);
     }
+
+    /**
+     * @return array
+     */
+    public function getOptions(): array
+    {
+        return [
+            'debug' => false,
+            'timeout' => 3
+        ];
+    }
 }
