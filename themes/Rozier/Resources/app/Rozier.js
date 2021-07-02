@@ -78,8 +78,8 @@ export default class Rozier {
         this.mainContentScrollableWidth = null
         this.mainContentScrollableOffsetLeft = null
         this.$backTopBtn = null
-
         this.entriesPanel = null
+        this.collapsedNestableState = null
 
         this.maintreeElementNameRightClick = this.maintreeElementNameRightClick.bind(this)
         this.onNestableNodeTreeChange = this.onNestableNodeTreeChange.bind(this)
@@ -87,6 +87,8 @@ export default class Rozier {
         this.onNestableFolderTreeChange = this.onNestableFolderTreeChange.bind(this)
         this.backTopBtnClick = this.backTopBtnClick.bind(this)
         this.resize = this.resize.bind(this)
+        this.onNestableCollapse = this.onNestableCollapse.bind(this)
+        this.onNestableExpand = this.onNestableExpand.bind(this)
     }
 
     onDocumentReady () {
@@ -95,6 +97,46 @@ export default class Rozier {
          */
         for (let index in window.temp) {
             window.Rozier[index] = window.temp[index]
+        }
+
+        /*
+         * override default nestable settings in order to
+         * store toggle state between reloads.
+         */
+        if (window.localStorage) {
+            this.collapsedNestableState = window.localStorage.getItem('collapsed.uk.nestable')
+            if (!this.collapsedNestableState) {
+                this.saveCollapsedNestableState(null)
+            } else {
+                this.collapsedNestableState = JSON.parse(this.collapsedNestableState)
+            }
+            window.UIkit.on('beforeready.uk.dom', function () {
+                $.extend(window.UIkit.components.nestable.prototype, {
+                    collapseItem: function (li) {
+                        var lists = li.children(this.options._listClass)
+                        if (lists.length) {
+                            li.addClass(this.options.collapsedClass)
+                        }
+                        /*
+                         * Create new event on collapse
+                         */
+                        document.dispatchEvent(new CustomEvent('collapse.uk.nestable', {
+                            'detail': li
+                        }))
+                    }
+                })
+                $.extend(window.UIkit.components.nestable.prototype, {
+                    expandItem: function (li) {
+                        li.removeClass(this.options.collapsedClass)
+                        /*
+                         * Create new event on expand
+                         */
+                        document.dispatchEvent(new CustomEvent('expand.uk.nestable', {
+                            'detail': li
+                        }))
+                    }
+                })
+            })
         }
 
         this.lazyload = new Lazyload()
@@ -141,11 +183,41 @@ export default class Rozier {
         this.refreshMainFolderTree()
     }
 
+    saveCollapsedNestableState (state = null) {
+        if (state === null) {
+            state = {
+                'nodes': [],
+                'tags': [],
+                'folders': []
+            }
+        }
+        window.localStorage.setItem('collapsed.uk.nestable', JSON.stringify(state))
+    }
+
     /**
      * init nestable for ajax
      * @return {[type]} [description]
      */
     initNestables () {
+        this.collapsedNestableState.nodes.forEach((value) => {
+            const li = $('.uk-nestable-item[data-node-id="' + $.escapeSelector(value) + '"]')
+            if (li.length) {
+                li[0].classList.add('uk-collapsed')
+            }
+        })
+        this.collapsedNestableState.tags.forEach((value) => {
+            const li = $('.uk-nestable-item[data-tag-id="' + $.escapeSelector(value) + '"]')
+            if (li.length) {
+                li[0].classList.add('uk-collapsed')
+            }
+        })
+        this.collapsedNestableState.folders.forEach((value) => {
+            const li = $('.uk-nestable-item[data-folder-id="' + $.escapeSelector(value) + '"]')
+            if (li.length) {
+                li[0].classList.add('uk-collapsed')
+            }
+        })
+
         $('.uk-nestable').each((index, element) => {
             let $tree = $(element)
             /*
@@ -167,6 +239,10 @@ export default class Rozier {
 
             window.UIkit.nestable(element, options)
         })
+        document.removeEventListener('collapse.uk.nestable', this.onNestableCollapse)
+        document.addEventListener('collapse.uk.nestable', this.onNestableCollapse)
+        document.removeEventListener('expand.uk.nestable', this.onNestableExpand)
+        document.addEventListener('expand.uk.nestable', this.onNestableExpand)
     }
 
     /**
@@ -470,6 +546,51 @@ export default class Rozier {
     toggleUserPanel () {
         $('#user-panel').toggleClass('minified')
         return false
+    }
+
+    onNestableCollapse ({detail}) {
+        if (detail[0]) {
+            switch (true) {
+            case detail[0].getAttribute('data-node-id') !== null:
+                this.collapsedNestableState.nodes.push(detail[0].getAttribute('data-node-id'))
+                break
+            case detail[0].getAttribute('data-tag-id') !== null:
+                this.collapsedNestableState.tags.push(detail[0].getAttribute('data-tag-id'))
+                break
+            case detail[0].getAttribute('data-folder-id') !== null:
+                this.collapsedNestableState.folders.push(detail[0].getAttribute('data-folder-id'))
+                break
+            }
+
+            this.saveCollapsedNestableState(this.collapsedNestableState)
+        }
+    }
+
+    onNestableExpand ({detail}) {
+        if (detail[0]) {
+            switch (true) {
+            case detail[0].getAttribute('data-node-id') !== null:
+                this.collapsedNestableState.nodes.splice(
+                    this.collapsedNestableState.nodes.indexOf(detail[0].getAttribute('data-node-id')),
+                    1
+                )
+                break
+            case detail[0].getAttribute('data-tag-id') !== null:
+                this.collapsedNestableState.tags.splice(
+                    this.collapsedNestableState.tags.indexOf(detail[0].getAttribute('data-tag-id')),
+                    1
+                )
+                break
+            case detail[0].getAttribute('data-folder-id') !== null:
+                this.collapsedNestableState.folders.splice(
+                    this.collapsedNestableState.folders.indexOf(detail[0].getAttribute('data-folder-id')),
+                    1
+                )
+                break
+            }
+
+            this.saveCollapsedNestableState(this.collapsedNestableState)
+        }
     }
 
     /**
