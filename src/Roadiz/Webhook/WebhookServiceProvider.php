@@ -5,6 +5,7 @@ namespace RZ\Roadiz\Webhook;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
 use RZ\Roadiz\Webhook\EventSubscriber\AutomaticWebhookSubscriber;
 use RZ\Roadiz\Webhook\Form\WebhookType;
@@ -60,7 +61,7 @@ class WebhookServiceProvider implements ServiceProviderInterface
                 'policy' => 'token_bucket',
                 'limit' => 1,
                 'rate' => ['interval' => '30 seconds'],
-            ], new CacheStorage(new ApcuAdapter($c['config']['appNamespace'])));
+            ], new CacheStorage($c[CacheItemPoolInterface::class]));
         };
 
         $pimple->extend('twig.loaderFileSystem', function (FilesystemLoader $filesystemLoader) {
