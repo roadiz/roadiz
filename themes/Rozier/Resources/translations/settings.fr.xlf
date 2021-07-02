@@ -215,6 +215,16 @@
                 <target state="translated">Permet d'afficher une iframe sur le dashboard du back-office. Par exemple, les statistiques de visites à l'aide de plausible.io</target>
                 <note>Setting help name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="unsplash_client_id">
+                <source>unsplash_client_id</source>
+                <target state="translated">Unsplash API : client ID</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="unsplash_client_id.help">
+                <source>unsplash_client_id.help</source>
+                <target state="translated">Client ID de l'API Unsplash, si vous remplissez un client valide, Roadiz sera en mesure de télécharger des images aléatoires sur la page de login et dans la gestion des Documents.</target>
+                <note>Setting help name</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

@@ -2,9 +2,33 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="" source-language="en" datatype="plaintext" target-language="it">
     <body>
+      <trans-unit xml:space="preserve" id="manage.attributes">
+                <source>manage.attributes</source>
+                <target state="translated">manage.attributes</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="attributes">
                 <source>attributes</source>
                 <target state="translated">Attributi</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.code">
+                <source>attributes.code</source>
+                <target state="translated">attributes.code</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="add.a.attribute">
+                <source>add.a.attribute</source>
+                <target state="translated">add.a.attribute</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.code">
+                <source>attributes.form.code</source>
+                <target state="translated">attributes.form.code</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.type">
+                <source>attributes.form.type</source>
+                <target state="translated">attributes.form.type</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="attributes.form.attributeTranslations">
+                <source>attributes.form.attributeTranslations</source>
+                <target state="translated">attributes.form.attributeTranslations</target>
             </trans-unit>
     </body>
   </file>

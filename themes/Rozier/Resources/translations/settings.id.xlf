@@ -140,6 +140,16 @@
                 <note>Setting description</note>
             </trans-unit>
       <!-- Setting groups names -->
+      <trans-unit xml:space="preserve" id="unsplash_client_id">
+                <source>unsplash_client_id</source>
+                <target state="translated">unsplash_client_id</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="unsplash_client_id.help">
+                <source>unsplash_client_id.help</source>
+                <target state="translated">unsplash_client_id.help</target>
+                <note>Setting help name</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>

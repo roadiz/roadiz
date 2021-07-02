@@ -215,6 +215,16 @@
                 <target state="translated">Displays a custom iframe on your back-office dashboard, for example, plausible.io website analytics embed.</target>
                 <note>Setting help name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="unsplash_client_id">
+                <source>unsplash_client_id</source>
+                <target state="translated">Unsplash API : client ID</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="unsplash_client_id.help">
+                <source>unsplash_client_id.help</source>
+                <target state="translated">Unsplash API Client ID, if you fill in a valid ID, Roadiz will be able to upload random images on the login page and in the Documents management.</target>
+                <note>Setting help name</note>
+            </trans-unit>
     </body>
   </file>
 </xliff>
