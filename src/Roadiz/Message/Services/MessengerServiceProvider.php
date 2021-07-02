@@ -7,12 +7,17 @@ use Doctrine\Persistence\ManagerRegistry;
 use Pimple\Container;
 use Pimple\Exception\UnknownIdentifierException;
 use Pimple\ServiceProviderInterface;
+use RZ\Roadiz\Message\AsyncMessage;
 use RZ\Roadiz\Message\GuzzleRequestMessage;
-use RZ\Roadiz\Message\Handler\GuzzleRequestMessageHandler;
+use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
+use RZ\Roadiz\Message\Handler\PurgeReverseProxyCacheMessageHandler;
+use RZ\Roadiz\Message\HttpRequestMessage;
+use RZ\Roadiz\Message\PurgeReverseProxyCacheMessage;
 use RZ\Roadiz\Utils\Log\LoggerFactory;
 use Symfony\Bridge\Doctrine\Messenger\DoctrineClearEntityManagerWorkerSubscriber;
 use Symfony\Bridge\Doctrine\Messenger\DoctrineCloseConnectionMiddleware;
 use Symfony\Component\EventDispatcher\EventDispatcher;
+use Symfony\Component\HttpKernel\HttpKernel;
 use Symfony\Component\Messenger\Bridge\Amqp\Transport\AmqpTransportFactory;
 use Symfony\Component\Messenger\Bridge\Doctrine\Transport\DoctrineTransportFactory;
 use Symfony\Component\Messenger\Bridge\Redis\Transport\RedisTransportFactory;
@@ -35,7 +40,6 @@ use Symfony\Component\Messenger\Transport\Serialization\Serializer;
 use Symfony\Component\Messenger\Transport\Sync\SyncTransportFactory;
 use Symfony\Component\Messenger\Transport\TransportFactory;
 use Symfony\Component\Messenger\Transport\TransportFactoryInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 final class MessengerServiceProvider implements ServiceProviderInterface
 {
@@ -90,15 +94,18 @@ final class MessengerServiceProvider implements ServiceProviderInterface
 
         $pimple['messenger.handlers'] = function (Container $c) {
             return [
-                GuzzleRequestMessage::class => [
-                    $c[GuzzleRequestMessageHandler::class]
+                HttpRequestMessage::class => [
+                    $c[HttpRequestMessageHandler::class]
+                ],
+                PurgeReverseProxyCacheMessage::class => [
+                    $c[PurgeReverseProxyCacheMessageHandler::class]
                 ],
             ];
         };
 
         $pimple['messenger.senders'] = function (Container $c) {
             $defaults = [
-                GuzzleRequestMessage::class => [
+                AsyncMessage::class => [
                     'messenger.transports.default'
                 ]
             ];
@@ -106,8 +113,8 @@ final class MessengerServiceProvider implements ServiceProviderInterface
              * Override default messages senders with user configuration.
              */
             foreach ($c['config']['messenger']['routing'] as $class => $transportName) {
-                if (!class_exists($class)) {
-                    throw new \LogicException(\sprintf('Class "%s" does not exist.', $class));
+                if (!class_exists($class) && !interface_exists($class)) {
+                    throw new \LogicException(\sprintf('Class or interface "%s" does not exist.', $class));
                 }
                 if (!$c->offsetExists('messenger.transports.' . $transportName)) {
                     throw new UnknownIdentifierException('messenger.transports.' . $transportName);
@@ -178,11 +185,26 @@ final class MessengerServiceProvider implements ServiceProviderInterface
         /*
          * Allow HTTP requests to be performed async
          */
-        $pimple[GuzzleRequestMessageHandler::class] = function (Container $c) {
+        $pimple[HttpRequestMessageHandler::class] = function (Container $c) {
             return new HandlerDescriptor(
-                new GuzzleRequestMessageHandler(null, $c['logger.messenger']),
+                new HttpRequestMessageHandler(null, $c['logger.messenger']),
                 [
-                    'handles' => GuzzleRequestMessage::class,
+                    'handles' => HttpRequestMessage::class,
+                ]
+            );
+        };
+
+        $pimple[PurgeReverseProxyCacheMessageHandler::class] = function (Container $c) {
+            return new HandlerDescriptor(
+                new PurgeReverseProxyCacheMessageHandler(
+                    new \Pimple\Psr11\Container($c),
+                    $c['router'],
+                    $c['config'],
+                    $c['em'],
+                    $c['logger.messenger']
+                ),
+                [
+                    'handles' => PurgeReverseProxyCacheMessage::class,
                 ]
             );
         };

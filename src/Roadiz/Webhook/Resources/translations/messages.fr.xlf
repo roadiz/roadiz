@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file original="" source-language="en-US" datatype="plaintext">
+        <body>
+            <trans-unit xml:space="preserve" id="webhooks">
+                <source>webhooks</source>
+                <target>Webhooks</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="manage.webhooks">
+                <source>manage.webhooks</source>
+                <target>Webhooks</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="add.a.webhook">
+                <source>add.a.webhook</source>
+                <target>Ajouter un webhook</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="back_to.webhooks">
+                <source>back_to.webhooks</source>
+                <target>Retour à la liste des webhooks</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="delete.webhook.%name%">
+                <source>delete.webhook.%name%</source>
+                <target>Supprimer le webhook</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="edit.webhook.%name%">
+                <source>edit.webhook.%name%</source>
+                <target>Éditer le webhook</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
+                <source>are_you_sure.delete.webhook</source>
+                <target>Êtes-vous sûr·e de vouloir supprimer ce webhook ?</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.messageType">
+                <source>webhooks.messageType</source>
+                <target>Type de webhook</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.uri">
+                <source>webhooks.uri</source>
+                <target>URI</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
+                <source>webhooks.lastTriggeredAt</source>
+                <target>Dernier déclenchement</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.payload">
+                <source>webhooks.payload</source>
+                <target>Payload</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
+                <source>webhooks.throttleSeconds</source>
+                <target>Temporisation (en secondes)</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="never">
+                <source>never</source>
+                <target>Jamais</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.type.gitlab_pipeline">
+                <source>webhook.type.gitlab_pipeline</source>
+                <target>Gitlab CI Pipeline</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
+                <source>webhook.type.netlify_build_hook</source>
+                <target>Netlify Build hook</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.trigger">
+                <source>webhook.trigger</source>
+                <target>Déclencher le webhook</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.%item%.will_be_triggered_in.%seconds%">
+                <source>webhook.%item%.will_be_triggered_in.%seconds%</source>
+                <target>Le webhook %item% sera déclenché dans %seconds% secondes.</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="are_you_sure.trigger.webhook">
+                <source>are_you_sure.trigger.webhook</source>
+                <target>Êtes-vous sûr·e de vouloir déclencher manuellement ce webhook ?</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="trigger.webhook.%name%">
+                <source>trigger.webhook.%name%</source>
+                <target>Déclencher manuellement le webhook</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.automatic">
+                <source>webhooks.automatic</source>
+                <target>Déclenchement automatique</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.automatic.help">
+                <source>webhooks.automatic.help</source>
+                <target>Le webhook sera déclenché à chaque édition d'un contenu (nœud, étiquette)</target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
+                <source>webhook.too_many_triggered_in_period</source>
+                <target>Veuillez patienter minimum 30 secondes avant de déclencher à nouveau ce webhook.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

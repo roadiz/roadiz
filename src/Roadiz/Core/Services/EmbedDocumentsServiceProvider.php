@@ -95,7 +95,7 @@ class EmbedDocumentsServiceProvider implements ServiceProviderInterface
         });
 
         $container['embed_finder.unsplash'] = $container->factory(function (Container $c) {
-            return new UnsplashPictureFinder($c['settingsBag']->get('unsplash_client_id') ?? '');
+            return new UnsplashPictureFinder($c['settingsBag']->get('unsplash_client_id', '') ?? '');
         });
 
         $container[RandomImageFinder::class] = $container->factory(function (Container $c) {

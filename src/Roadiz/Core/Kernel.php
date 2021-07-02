@@ -43,6 +43,7 @@ use RZ\Roadiz\Preview\PreviewServiceProvider;
 use RZ\Roadiz\Translation\Services\TranslationServiceProvider;
 use RZ\Roadiz\Utils\DebugBar\NullStopwatch;
 use RZ\Roadiz\Utils\Services\UtilsServiceProvider;
+use RZ\Roadiz\Webhook\WebhookServiceProvider;
 use RZ\Roadiz\Workflow\WorkflowServiceProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\HttpFoundation\Request;
@@ -231,6 +232,7 @@ class Kernel implements ServiceProviderInterface, KernelInterface, RebootableInt
         $container->register(new PreviewServiceProvider());
         $container->register(new EntityGeneratorServiceProvider());
         $container->register(new DocumentationServiceProvider());
+        $container->register(new WebhookServiceProvider());
 
         if ($this->isDebug()) {
             $container->register(new DebugServiceProvider());

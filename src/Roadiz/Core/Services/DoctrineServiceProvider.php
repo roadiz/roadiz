@@ -22,6 +22,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\Loggable\LoggableListener;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupInterface;
 use RZ\Roadiz\Attribute\Model\AttributeGroupTranslationInterface;
 use RZ\Roadiz\Attribute\Model\AttributeInterface;
@@ -289,6 +290,17 @@ class DoctrineServiceProvider implements ServiceProviderInterface
             /** @var Kernel $kernel */
             $kernel = $c['kernel'];
             return CacheFactory::fromConfig(
+                $c['config']['cacheDriver'],
+                $kernel->getEnvironment(),
+                $kernel->getCacheDir(),
+                $c['config']["appNamespace"]
+            );
+        });
+
+        $container[CacheItemPoolInterface::class] = $container->factory(function (Container $c) {
+            /** @var Kernel $kernel */
+            $kernel = $c['kernel'];
+            return CacheFactory::psrCacheFromConfig(
                 $c['config']['cacheDriver'],
                 $kernel->getEnvironment(),
                 $kernel->getCacheDir(),

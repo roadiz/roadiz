@@ -5,7 +5,7 @@ namespace RZ\Roadiz\Message;
 
 use Psr\Http\Message\RequestInterface;
 
-final class GuzzleRequestMessage implements AsyncMessage
+final class GuzzleRequestMessage implements AsyncMessage, HttpRequestMessage
 {
     private RequestInterface $request;
     private array $options;

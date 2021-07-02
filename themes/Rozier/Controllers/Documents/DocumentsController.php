@@ -299,6 +299,7 @@ class DocumentsController extends RozierApp
                     $this->get("dispatcher")->dispatch(
                         new DocumentUpdatedEvent($document)
                     );
+                    $this->get('em')->flush();
 
                     $routeParams = ['documentId' => $document->getId()];
 

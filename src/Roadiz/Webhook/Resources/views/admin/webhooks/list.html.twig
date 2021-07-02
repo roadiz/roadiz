@@ -1,0 +1,81 @@
+{% extends '@Rozier/layout.html.twig' %}
+
+{% block content %}
+    <section class="content-global content-nav-and-filters">
+        <header class="content-header header-item header-item-list">
+            <h1 class="content-title item-list-title">{% trans %}webhooks{% endtrans %}</h1>
+            {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
+            <div class="content-header-action-menu">
+                <a class="uk-button" href="{{ path('webhooksAddPage') }}">
+                    <i class="uk-icon-rz-plus"></i> {% trans %}add.a.webhook{% endtrans %}
+                </a>
+            </div>
+        </header>
+
+        {% include '@Rozier/widgets/filtersBar.html.twig' %}
+
+        <article class="content content-no-action-menu">
+            <div class="content-table-cont">
+                <table class="items content-table uk-table webhooks">
+                    <thead>
+                    <tr>
+                        <th>
+                            {% trans %}webhooks.messageType{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'messageType',
+                                'filters': filters,
+                            } only %}
+                        </th>
+                        <th>{% trans %}webhooks.uri{% endtrans %}</th>
+                        <th>{% trans %}webhooks.automatic{% endtrans %}</th>
+                        <th>
+                            {% trans %}webhooks.lastTriggeredAt{% endtrans %}
+                            {% include 'includes/column_ordering.html.twig' with {
+                                'field': 'lastTriggeredAt',
+                                'filters': filters,
+                            } only %}
+                        </th>
+                        <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{- item.messageType -}}</td>
+                            <td class="name">
+                                <a href="{{ path('webhooksEditPage', { id: item.id }) }}">
+                                    {{- item.uri|u.truncate(50) -}}
+                                </a>
+                            </td>
+                            <td>
+                                {% if item.Automatic %}
+                                    <span data-uk-tooltip="{animation:true}"
+                                          title="{% trans %}webhooks.automatic.help{% endtrans %}"
+                                          class="uk-button-status"><i class="uk-icon-flag-checkered"></i></span>
+                                {% endif %}
+                            </td>
+                            <td>{{- item.lastTriggeredAt ? item.lastTriggeredAt|format_datetime(locale=app.request.locale) : 'never'|trans -}}</td>
+                            <td class="table-actions-row">
+                                {% apply spaceless %}
+                                    <a class="uk-button uk-button-content uk-button-small"
+                                       href="{{ path('webhooksTriggerPage', { id: item.id }) }}"
+                                       title="{% trans %}webhook.trigger{% endtrans %}"
+                                       data-uk-tooltip="{animation:true}"><i class="uk-icon-space-shuttle"></i></a>
+                                    <a class="uk-button uk-button-content uk-button-small"
+                                       href="{{ path('webhooksEditPage', { id: item.id }) }}"
+                                       title="{% trans %}edit{% endtrans %}"
+                                       data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-pencil"></i></a>
+                                    <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+                                       href="{{ path('webhooksDeletePage', { id: item.id }) }}"
+                                       title="{% trans %}delete{% endtrans %}"
+                                       data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-trash-mini-o"></i></a>
+                                {% endapply %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+{% endblock %}
