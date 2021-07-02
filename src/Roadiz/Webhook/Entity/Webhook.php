@@ -136,6 +136,28 @@ class Webhook extends AbstractDateTimed
     }
 
     /**
+     * @return \DateInterval
+     * @throws \Exception
+     */
+    public function getThrottleInterval(): \DateInterval
+    {
+        return new \DateInterval('PT'.$this->getThrottleSeconds().'S');
+    }
+
+    /**
+     * @return \DateTime|null
+     * @throws \Exception
+     */
+    public function doNotTriggerBefore(): ?\DateTime
+    {
+        if (null === $this->getLastTriggeredAt()) {
+            return null;
+        }
+        $doNotTriggerBefore = clone $this->getLastTriggeredAt();
+        return $doNotTriggerBefore->add($this->getThrottleInterval());
+    }
+
+    /**
      * @param int $throttleSeconds
      * @return Webhook
      */

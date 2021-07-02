@@ -62,11 +62,11 @@ class NodesTagsController extends RozierApp
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->get('em')->flush();
                 /*
                  * Dispatch event
                  */
                 $this->get('dispatcher')->dispatch(new NodeTaggedEvent($node));
+                $this->get('em')->flush();
 
                 $msg = $this->getTranslator()->trans('node.%node%.linked.tags', [
                     '%node%' => $node->getNodeName(),

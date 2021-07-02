@@ -6,13 +6,18 @@ namespace RZ\Roadiz\Webhook;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
+use RZ\Roadiz\Webhook\EventSubscriber\AutomaticWebhookSubscriber;
 use RZ\Roadiz\Webhook\Form\WebhookType;
 use RZ\Roadiz\Webhook\Message\GitlabPipelineTriggerMessage;
 use RZ\Roadiz\Webhook\Message\NetlifyBuildHookMessage;
 use RZ\Roadiz\Webhook\Message\WebhookMessageFactory;
 use RZ\Roadiz\Webhook\Message\WebhookMessageFactoryInterface;
+use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Symfony\Component\Routing\Generator\UrlGenerator;
 use Symfony\Component\Routing\Loader\YamlFileLoader;
 use Symfony\Component\Routing\RouteCollection;
@@ -44,8 +49,18 @@ class WebhookServiceProvider implements ServiceProviderInterface
         $pimple[WebhookDispatcher::class] = function (Container $c) {
             return new ThrottledWebhookDispatcher(
                 $c[WebhookMessageFactoryInterface::class],
-                $c[MessageBusInterface::class]
+                $c[MessageBusInterface::class],
+                $c['webhook.rate_limiter']
             );
+        };
+
+        $pimple['webhook.rate_limiter'] = function (Container $c) {
+            return new RateLimiterFactory([
+                'id' => 'webhook',
+                'policy' => 'token_bucket',
+                'limit' => 1,
+                'rate' => ['interval' => '30 seconds'],
+            ], new CacheStorage(new ApcuAdapter($c['config']['appNamespace'])));
         };
 
         $pimple->extend('twig.loaderFileSystem', function (FilesystemLoader $filesystemLoader) {
@@ -104,6 +119,14 @@ class WebhookServiceProvider implements ServiceProviderInterface
                 );
             }
             return $translator;
+        });
+
+        $pimple->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
+            $dispatcher->addSubscriber(new AutomaticWebhookSubscriber(
+                $c[WebhookDispatcher::class],
+                $c['em']
+            ));
+            return $dispatcher;
         });
     }
 }

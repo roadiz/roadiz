@@ -281,7 +281,6 @@ class AjaxNodesController extends AbstractAjaxController
                 /*
                  * Dispatch event
                  */
-
                 if ($request->get('statusName') === 'visible') {
                     $msg = $this->getTranslator()->trans('node.%name%.visibility_changed_to.%visible%', [
                         '%name%' => $node->getNodeName(),
@@ -297,6 +296,7 @@ class AjaxNodesController extends AbstractAjaxController
                     $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
                 }
                 $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
+                $this->em()->flush();
 
                 $responseArray = [
                     'statusCode' => Response::HTTP_PARTIAL_CONTENT,

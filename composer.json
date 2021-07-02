@@ -92,7 +92,8 @@
         "twig/html-extra":                         "^3.0",
         "twig/intl-extra":                         "^3.0",
         "twig/string-extra":                       "^3.0",
-        "twig/twig":                               "^3.0"
+        "twig/twig":                               "^3.0",
+        "symfony/rate-limiter": "^5.3"
     },
     "require-dev": {
         "guzzlehttp/psr7": "^1.7",

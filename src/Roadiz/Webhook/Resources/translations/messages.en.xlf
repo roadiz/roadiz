@@ -86,6 +86,10 @@
                 <source>webhooks.automatic.help</source>
                 <target>Webhook will be automatically triggered for each content update (node, tag)</target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
+                <source>webhook.too_many_triggered_in_period</source>
+                <target>Please wait at least 30 seconds before trigerring this webhook again.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

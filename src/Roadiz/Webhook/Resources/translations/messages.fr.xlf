@@ -86,6 +86,10 @@
                 <source>webhooks.automatic.help</source>
                 <target>Le webhook sera déclenché à chaque édition d'un contenu (nœud, étiquette)</target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
+                <source>webhook.too_many_triggered_in_period</source>
+                <target>Veuillez patienter minimum 30 secondes avant de déclencher à nouveau ce webhook.</target>
+            </trans-unit>
         </body>
     </file>
 </xliff>

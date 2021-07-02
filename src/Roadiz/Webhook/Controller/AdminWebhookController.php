@@ -5,13 +5,11 @@ namespace RZ\Roadiz\Webhook\Controller;
 
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Webhook\Entity\Webhook;
+use RZ\Roadiz\Webhook\Exception\TooManyWebhookTriggeredException;
 use RZ\Roadiz\Webhook\Form\WebhookType;
-use RZ\Roadiz\Webhook\Message\WebhookMessageFactoryInterface;
 use RZ\Roadiz\Webhook\WebhookDispatcher;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\MessageBusInterface;
-use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Themes\Rozier\Controllers\AbstractAdminController;
 
 final class AdminWebhookController extends AbstractAdminController
@@ -33,22 +31,25 @@ final class AdminWebhookController extends AbstractAdminController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var WebhookDispatcher $webhookDispatcher */
-            $webhookDispatcher = $this->get(WebhookDispatcher::class);
-            $webhookDispatcher->dispatch($item);
+            try {
+                /** @var WebhookDispatcher $webhookDispatcher */
+                $webhookDispatcher = $this->get(WebhookDispatcher::class);
+                $webhookDispatcher->dispatch($item);
+                $this->get('em')->flush();
 
-            $this->get('em')->flush();
+                $msg = $this->getTranslator()->trans(
+                    'webhook.%item%.will_be_triggered_in.%seconds%',
+                    [
+                        '%item%' => $this->getEntityName($item),
+                        '%seconds%' => $item->getThrottleSeconds(),
+                    ]
+                );
+                $this->publishConfirmMessage($request, $msg);
 
-            $msg = $this->getTranslator()->trans(
-                'webhook.%item%.will_be_triggered_in.%seconds%',
-                [
-                    '%item%' => $this->getEntityName($item),
-                    '%seconds%' => $item->getThrottleSeconds(),
-                ]
-            );
-            $this->publishConfirmMessage($request, $msg);
-
-            return $this->redirect($this->get('urlGenerator')->generate($this->getDefaultRouteName()));
+                return $this->redirect($this->get('urlGenerator')->generate($this->getDefaultRouteName()));
+            } catch (TooManyWebhookTriggeredException $e) {
+                $form->addError(new FormError('webhook.too_many_triggered_in_period'));
+            }
         }
 
         $this->assignation['form'] = $form->createView();
