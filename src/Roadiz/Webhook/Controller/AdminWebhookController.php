@@ -6,11 +6,62 @@ namespace RZ\Roadiz\Webhook\Controller;
 use RZ\Roadiz\Core\AbstractEntities\PersistableInterface;
 use RZ\Roadiz\Webhook\Entity\Webhook;
 use RZ\Roadiz\Webhook\Form\WebhookType;
+use RZ\Roadiz\Webhook\Message\WebhookMessageFactoryInterface;
+use RZ\Roadiz\Webhook\WebhookDispatcher;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Themes\Rozier\Controllers\AbstractAdminController;
 
 final class AdminWebhookController extends AbstractAdminController
 {
+    public function triggerAction(Request $request, string $id)
+    {
+        $this->denyAccessUnlessGranted($this->getRequiredRole());
+
+        /** @var Webhook|null $item */
+        $item = $this->get('em')->find($this->getEntityClass(), $id);
+
+        if (null === $item || !($item instanceof PersistableInterface)) {
+            throw $this->createNotFoundException();
+        }
+
+        $this->denyAccessUnlessItemGranted($item);
+
+        $form = $this->createForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var WebhookDispatcher $webhookDispatcher */
+            $webhookDispatcher = $this->get(WebhookDispatcher::class);
+            $webhookDispatcher->dispatch($item);
+
+            $this->get('em')->flush();
+
+            $msg = $this->getTranslator()->trans(
+                'webhook.%item%.will_be_triggered_in.%seconds%',
+                [
+                    '%item%' => $this->getEntityName($item),
+                    '%seconds%' => $item->getThrottleSeconds(),
+                ]
+            );
+            $this->publishConfirmMessage($request, $msg);
+
+            return $this->redirect($this->get('urlGenerator')->generate($this->getDefaultRouteName()));
+        }
+
+        $this->assignation['form'] = $form->createView();
+        $this->assignation['item'] = $item;
+
+        return $this->render(
+            $this->getTemplateFolder() . '/trigger.html.twig',
+            $this->assignation,
+            null,
+            $this->getTemplateNamespace()
+        );
+    }
+
     protected function supports(PersistableInterface $item): bool
     {
         return $item instanceof Webhook;

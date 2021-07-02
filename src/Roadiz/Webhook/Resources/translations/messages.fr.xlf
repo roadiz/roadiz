@@ -4,87 +4,87 @@
         <body>
             <trans-unit xml:space="preserve" id="webhooks">
                 <source>webhooks</source>
-                <target></target>
+                <target>Webhooks</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="manage.webhooks">
                 <source>manage.webhooks</source>
-                <target></target>
+                <target>Webhooks</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="add.a.webhook">
                 <source>add.a.webhook</source>
-                <target></target>
+                <target>Ajouter un webhook</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="back_to.webhooks">
                 <source>back_to.webhooks</source>
-                <target></target>
+                <target>Retour à la liste des webhooks</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="delete.webhook.%name%">
                 <source>delete.webhook.%name%</source>
-                <target></target>
+                <target>Supprimer le webhook</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="edit.webhook.%name%">
                 <source>edit.webhook.%name%</source>
-                <target></target>
+                <target>Éditer le webhook</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
                 <source>are_you_sure.delete.webhook</source>
-                <target></target>
+                <target>Êtes-vous sûr·e de vouloir supprimer ce webhook ?</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhooks.messageType">
                 <source>webhooks.messageType</source>
-                <target></target>
+                <target>Type de webhook</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhooks.uri">
                 <source>webhooks.uri</source>
-                <target></target>
+                <target>URI</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
                 <source>webhooks.lastTriggeredAt</source>
-                <target></target>
+                <target>Dernier déclenchement</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhooks.payload">
                 <source>webhooks.payload</source>
-                <target></target>
+                <target>Payload</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
                 <source>webhooks.throttleSeconds</source>
-                <target></target>
+                <target>Temporisation (en secondes)</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="never">
                 <source>never</source>
-                <target></target>
+                <target>Jamais</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhook.type.gitlab_pipeline">
                 <source>webhook.type.gitlab_pipeline</source>
-                <target></target>
+                <target>Gitlab CI Pipeline</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
                 <source>webhook.type.netlify_build_hook</source>
-                <target></target>
+                <target>Netlify Build hook</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhook.trigger">
                 <source>webhook.trigger</source>
-                <target></target>
+                <target>Déclencher le webhook</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhook.%item%.will_be_triggered_in.%seconds%">
                 <source>webhook.%item%.will_be_triggered_in.%seconds%</source>
-                <target></target>
+                <target>Le webhook %item% sera déclenché dans %seconds% secondes.</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="are_you_sure.trigger.webhook">
                 <source>are_you_sure.trigger.webhook</source>
-                <target></target>
+                <target>Êtes-vous sûr·e de vouloir déclencher manuellement ce webhook ?</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="trigger.webhook.%name%">
                 <source>trigger.webhook.%name%</source>
-                <target></target>
+                <target>Déclencher manuellement le webhook</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhooks.automatic">
                 <source>webhooks.automatic</source>
-                <target></target>
+                <target>Déclenchement automatique</target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhooks.automatic.help">
                 <source>webhooks.automatic.help</source>
-                <target></target>
+                <target>Le webhook sera déclenché à chaque édition d'un contenu (nœud, étiquette)</target>
             </trans-unit>
         </body>
     </file>

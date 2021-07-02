@@ -27,6 +27,7 @@
                             } only %}
                         </th>
                         <th>{% trans %}webhooks.uri{% endtrans %}</th>
+                        <th>{% trans %}webhooks.automatic{% endtrans %}</th>
                         <th>
                             {% trans %}webhooks.lastTriggeredAt{% endtrans %}
                             {% include 'includes/column_ordering.html.twig' with {
@@ -46,9 +47,20 @@
                                     {{- item.uri|u.truncate(50) -}}
                                 </a>
                             </td>
+                            <td>
+                                {% if item.Automatic %}
+                                    <span data-uk-tooltip="{animation:true}"
+                                          title="{% trans %}webhooks.automatic.help{% endtrans %}"
+                                          class="uk-button-status"><i class="uk-icon-flag-checkered"></i></span>
+                                {% endif %}
+                            </td>
                             <td>{{- item.lastTriggeredAt ? item.lastTriggeredAt|format_datetime(locale=app.request.locale) : 'never'|trans -}}</td>
                             <td class="table-actions-row">
                                 {% apply spaceless %}
+                                    <a class="uk-button uk-button-content uk-button-small"
+                                       href="{{ path('webhooksTriggerPage', { id: item.id }) }}"
+                                       title="{% trans %}webhook.trigger{% endtrans %}"
+                                       data-uk-tooltip="{animation:true}"><i class="uk-icon-space-shuttle"></i></a>
                                     <a class="uk-button uk-button-content uk-button-small"
                                        href="{{ path('webhooksEditPage', { id: item.id }) }}"
                                        title="{% trans %}edit{% endtrans %}"

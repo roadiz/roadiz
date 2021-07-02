@@ -125,6 +125,4 @@ assetsProcessing:
 #            dsn: 'doctrine://default?queue_name=failed_default'
 #            options: []
 #    routing:
-#        RZ\Roadiz\Message\GuzzleRequestMessage: async
-#        RZ\Roadiz\Core\SearchEngine\Message\SolrDeleteMessage: async
-#        RZ\Roadiz\Core\SearchEngine\Message\SolrReindexMessage: async
+#        RZ\Roadiz\Message\AsyncMessage: async

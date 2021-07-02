@@ -9,6 +9,12 @@ webhooksEditPage:
         _controller: RZ\Roadiz\Webhook\Controller\AdminWebhookController::editAction
     requirements: { id : "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" }
 
+webhooksTriggerPage:
+    path:     /trigger/{id}
+    defaults:
+        _controller: RZ\Roadiz\Webhook\Controller\AdminWebhookController::triggerAction
+    requirements: { id : "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" }
+
 webhooksDeletePage:
     path:     /delete/{id}
     defaults:

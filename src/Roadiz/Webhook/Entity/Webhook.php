@@ -14,6 +14,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
  *  @ORM\Index(name="webhook_message_type", columns={"message_type"}),
  *  @ORM\Index(name="webhook_created_at", columns={"created_at"}),
  *  @ORM\Index(name="webhook_updated_at", columns={"updated_at"}),
+ *  @ORM\Index(name="webhook_automatic", columns={"automatic"}),
  *  @ORM\Index(name="webhook_last_triggered_at", columns={"last_triggered_at"})
  * })
  * @ORM\HasLifecycleCallbacks
@@ -64,6 +65,13 @@ class Webhook extends AbstractDateTimed
      * @Serializer\Type("\DateTime")
      */
     protected ?\DateTime $lastTriggeredAt = null;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=false, name="automatic", options={"default" = false})
+     * @Serializer\Type("boolean")
+     */
+    protected bool $automatic = false;
 
     /**
      * @return string|null
@@ -152,6 +160,24 @@ class Webhook extends AbstractDateTimed
     public function setLastTriggeredAt(?\DateTime $lastTriggeredAt): Webhook
     {
         $this->lastTriggeredAt = $lastTriggeredAt;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAutomatic(): bool
+    {
+        return $this->automatic;
+    }
+
+    /**
+     * @param bool $automatic
+     * @return Webhook
+     */
+    public function setAutomatic(bool $automatic): Webhook
+    {
+        $this->automatic = $automatic;
         return $this;
     }
 

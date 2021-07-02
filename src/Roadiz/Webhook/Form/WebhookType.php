@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Webhook\Form;
 
 use RZ\Roadiz\CMS\Forms\Constraints\ValidYaml;
+use RZ\Roadiz\CMS\Forms\ExtendedBooleanType;
 use RZ\Roadiz\CMS\Forms\YamlType;
 use RZ\Roadiz\Webhook\Message\GitlabPipelineTriggerMessage;
 use RZ\Roadiz\Webhook\Message\NetlifyBuildHookMessage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Exception\TransformationFailedException;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -22,15 +24,22 @@ use Symfony\Component\Yaml\Yaml;
 
 final class WebhookType extends AbstractType
 {
+    private array $types;
+
+    /**
+     * @param array $types
+     */
+    public function __construct(array $types)
+    {
+        $this->types = $types;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('messageType', ChoiceType::class, [
             'required' => true,
             'label' => 'webhooks.messageType',
-            'choices' => [
-                'webhook.type.gitlab_pipeline' => GitlabPipelineTriggerMessage::class,
-                'webhook.type.netlify_build_hook' => NetlifyBuildHookMessage::class,
-            ]
+            'choices' => $this->types
         ])->add('uri', TextareaType::class, [
             'required' => true,
             'label' => 'webhooks.uri',
@@ -48,6 +57,10 @@ final class WebhookType extends AbstractType
                 new NotNull(),
                 new GreaterThan(0),
             ]
+        ])->add('automatic', CheckboxType::class, [
+            'required' => false,
+            'label' => 'webhooks.automatic',
+            'help' => 'webhooks.automatic.help',
         ]);
 
         $builder->get('payload')->addModelTransformer(new CallbackTransformer(function (?array $model) {

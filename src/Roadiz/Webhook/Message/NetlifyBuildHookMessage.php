@@ -7,21 +7,36 @@ use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 use RZ\Roadiz\Message\AsyncMessage;
 use RZ\Roadiz\Message\HttpRequestMessage;
+use RZ\Roadiz\Webhook\Entity\Webhook;
 
-final class NetlifyBuildHookMessage implements AsyncMessage, HttpRequestMessage
+final class NetlifyBuildHookMessage implements AsyncMessage, HttpRequestMessage, WebhookMessage
 {
     private string $uri;
+    private ?array $payload;
 
     /**
      * @param string $uri
+     * @param array|null $payload
      */
-    public function __construct(string $uri)
+    public function __construct(string $uri, ?array $payload = null)
     {
         $this->uri = $uri;
+        $this->payload = $payload;
     }
 
     public function getRequest(): RequestInterface
     {
+        if (null !== $this->payload) {
+            return new Request(
+                'POST',
+                $this->uri,
+                [
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                    'Accept'     => 'application/json'
+                ],
+                http_build_query($this->payload)
+            );
+        }
         return new Request('POST', $this->uri);
     }
 
@@ -34,5 +49,14 @@ final class NetlifyBuildHookMessage implements AsyncMessage, HttpRequestMessage
             'debug' => false,
             'timeout' => 3
         ];
+    }
+
+    /**
+     * @param Webhook $webhook
+     * @return static
+     */
+    public static function fromWebhook(Webhook $webhook)
+    {
+        return new self($webhook->getUri(), $webhook->getPayload());
     }
 }

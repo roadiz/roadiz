@@ -6,6 +6,11 @@
                 <span class="icon-container"><i class="uk-icon-rz-trash-mini-o"></i></span>
                 <span class="label"><span class="label-text">{% trans %}delete{% endtrans %}</span></span>
             </a>
+            <a class="uk-button"
+               href="{{ path('webhooksTriggerPage', { id: item.id }) }}">
+                <span class="icon-container"><i class="uk-icon-space-shuttle"></i></span>
+                <span class="label"><span class="label-text">{% trans %}webhook.trigger{% endtrans %}</span></span>
+            </a>
         {% endif %}
     {% endif %}
 </nav>

@@ -7,8 +7,9 @@ use GuzzleHttp\Psr7\Request;
 use Psr\Http\Message\RequestInterface;
 use RZ\Roadiz\Message\AsyncMessage;
 use RZ\Roadiz\Message\HttpRequestMessage;
+use RZ\Roadiz\Webhook\Entity\Webhook;
 
-final class GitlabPipelineTriggerMessage implements AsyncMessage, HttpRequestMessage
+final class GitlabPipelineTriggerMessage implements AsyncMessage, HttpRequestMessage, WebhookMessage
 {
     private string $uri;
     private string $token;
@@ -59,5 +60,20 @@ final class GitlabPipelineTriggerMessage implements AsyncMessage, HttpRequestMes
             'debug' => false,
             'timeout' => 3
         ];
+    }
+
+    /**
+     * @param Webhook $webhook
+     * @return static
+     */
+    public static function fromWebhook(Webhook $webhook)
+    {
+        $payload = $webhook->getPayload();
+        return new self(
+            $webhook->getUri(),
+            $payload['token'] ?? '',
+            $payload['ref'] ?? 'main',
+            $payload['variables'] ?? []
+        );
     }
 }

@@ -106,8 +106,8 @@ final class MessengerServiceProvider implements ServiceProviderInterface
              * Override default messages senders with user configuration.
              */
             foreach ($c['config']['messenger']['routing'] as $class => $transportName) {
-                if (!class_exists($class)) {
-                    throw new \LogicException(\sprintf('Class "%s" does not exist.', $class));
+                if (!class_exists($class) && !interface_exists($class)) {
+                    throw new \LogicException(\sprintf('Class or interface "%s" does not exist.', $class));
                 }
                 if (!$c->offsetExists('messenger.transports.' . $transportName)) {
                     throw new UnknownIdentifierException('messenger.transports.' . $transportName);
