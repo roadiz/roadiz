@@ -1,95 +1,95 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
-    <file original="" source-language="en-US" datatype="plaintext">
-        <body>
-            <trans-unit xml:space="preserve" id="webhooks">
+  <file original="" source-language="en" datatype="plaintext" target-language="en">
+    <body>
+      <trans-unit xml:space="preserve" id="webhooks">
                 <source>webhooks</source>
-                <target>Webhooks</target>
+                <target state="translated">Webhooks</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="manage.webhooks">
+      <trans-unit xml:space="preserve" id="manage.webhooks">
                 <source>manage.webhooks</source>
-                <target>Webhooks</target>
+                <target state="translated">Webhooks</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="add.a.webhook">
+      <trans-unit xml:space="preserve" id="add.a.webhook">
                 <source>add.a.webhook</source>
-                <target>Add a webhook</target>
+                <target state="translated">Add a webhook</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="back_to.webhooks">
+      <trans-unit xml:space="preserve" id="back_to.webhooks">
                 <source>back_to.webhooks</source>
-                <target>Back to webhooks list</target>
+                <target state="translated">Back to webhooks list</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="delete.webhook.%name%">
+      <trans-unit xml:space="preserve" id="delete.webhook.%name%">
                 <source>delete.webhook.%name%</source>
-                <target>Delete this webhook</target>
+                <target state="translated">Delete this webhook</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="edit.webhook.%name%">
+      <trans-unit xml:space="preserve" id="edit.webhook.%name%">
                 <source>edit.webhook.%name%</source>
-                <target>Edit this webhook</target>
+                <target state="translated">Edit this webhook</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
+      <trans-unit xml:space="preserve" id="are_you_sure.delete.webhook">
                 <source>are_you_sure.delete.webhook</source>
-                <target>Are you sure you want to delete this webhook?</target>
+                <target state="translated">Are you sure you want to delete this webhook?</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhooks.messageType">
+      <trans-unit xml:space="preserve" id="webhooks.messageType">
                 <source>webhooks.messageType</source>
-                <target>Webhook type</target>
+                <target state="translated">Webhook type</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhooks.uri">
+      <trans-unit xml:space="preserve" id="webhooks.uri">
                 <source>webhooks.uri</source>
-                <target>URI</target>
+                <target state="translated">URI</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
+      <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
                 <source>webhooks.lastTriggeredAt</source>
-                <target>Last triggered at</target>
+                <target state="translated">Last triggered at</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhooks.payload">
+      <trans-unit xml:space="preserve" id="webhooks.payload">
                 <source>webhooks.payload</source>
-                <target>Payload</target>
+                <target state="translated">Payload</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
+      <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
                 <source>webhooks.throttleSeconds</source>
-                <target>Throttling (in seconds)</target>
+                <target state="translated">Throttling (in seconds)</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="never">
+      <trans-unit xml:space="preserve" id="never">
                 <source>never</source>
-                <target>Never</target>
+                <target state="translated">Never</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhook.type.gitlab_pipeline">
+      <trans-unit xml:space="preserve" id="webhook.type.gitlab_pipeline">
                 <source>webhook.type.gitlab_pipeline</source>
-                <target>Gitlab CI Pipeline</target>
+                <target state="translated">Gitlab CI Pipeline</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
+      <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
                 <source>webhook.type.netlify_build_hook</source>
-                <target>Netlify Build hook</target>
+                <target state="translated">Netlify Build hook</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhook.trigger">
+      <trans-unit xml:space="preserve" id="webhook.trigger">
                 <source>webhook.trigger</source>
-                <target>Trigger webhook</target>
+                <target state="translated">Trigger webhook</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhook.%item%.will_be_triggered_in.%seconds%">
+      <trans-unit xml:space="preserve" id="webhook.%item%.will_be_triggered_in.%seconds%">
                 <source>webhook.%item%.will_be_triggered_in.%seconds%</source>
-                <target>Webhook %item% will be triggered in %seconds% seconds.</target>
+                <target state="translated">Webhook %item% will be triggered in %seconds% seconds.</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="are_you_sure.trigger.webhook">
+      <trans-unit xml:space="preserve" id="are_you_sure.trigger.webhook">
                 <source>are_you_sure.trigger.webhook</source>
-                <target>Are you sure you want to trigger this webhook manually?</target>
+                <target state="translated">Are you sure you want to trigger this webhook manually?</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="trigger.webhook.%name%">
+      <trans-unit xml:space="preserve" id="trigger.webhook.%name%">
                 <source>trigger.webhook.%name%</source>
-                <target>Trigger webhook manually</target>
+                <target state="translated">Trigger webhook manually</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhooks.automatic">
+      <trans-unit xml:space="preserve" id="webhooks.automatic">
                 <source>webhooks.automatic</source>
-                <target>Automatic trigger</target>
+                <target state="translated">Automatic trigger</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhooks.automatic.help">
+      <trans-unit xml:space="preserve" id="webhooks.automatic.help">
                 <source>webhooks.automatic.help</source>
-                <target>Webhook will be automatically triggered for each content update (node, tag)</target>
+                <target state="translated">Webhook will be automatically triggered for each content update (node, tag)</target>
             </trans-unit>
-            <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
+      <trans-unit xml:space="preserve" id="webhook.too_many_triggered_in_period">
                 <source>webhook.too_many_triggered_in_period</source>
-                <target>Please wait at least 30 seconds before trigerring this webhook again.</target>
+                <target state="translated">Please wait at least 30 seconds before triggering this webhook again.</target>
             </trans-unit>
-        </body>
-    </file>
+    </body>
+  </file>
 </xliff>
