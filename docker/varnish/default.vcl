@@ -89,6 +89,13 @@ sub vcl_backend_response {
     # Here you clean the response headers, removing silly Set-Cookie headers
     # and other mistakes your backend does.
 
+    # Cache 404 for short period
+    if (beresp.status == 404) {
+        set beresp.ttl = 30s;
+        unset beresp.http.Set-Cookie;
+        return (deliver);
+    }
+
     # Clean backend responses only on public pages.
     if (bereq.url !~ "^/(rz-admin|preview\.php|clear_cache\.php|install\.php|dev\.php)" && bereq.url !~ "(\?|\&)_preview=") {
         # Remove the cookie header to enable caching

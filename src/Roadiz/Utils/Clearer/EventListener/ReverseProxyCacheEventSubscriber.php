@@ -13,6 +13,7 @@ use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\Cache\CachePurgeRequestEvent;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Message\GuzzleRequestMessage;
+use RZ\Roadiz\Message\PurgeReverseProxyCacheMessage;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -86,34 +87,18 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
             return;
         }
 
-        try {
-            foreach ($this->createBanRequests() as $name => $request) {
-                $this->sendRequest($request);
-                $event->addMessage(
-                    'Reverse proxy cache cleared.',
-                    static::class,
-                    'Reverse proxy cache ['.$name.']'
-                );
-            }
-        } catch (ClientException $e) {
-            $event->addError(
-                $e->getMessage(),
+        foreach ($this->createBanRequests() as $name => $request) {
+            $this->sendRequest($request);
+            $event->addMessage(
+                'Reverse proxy cache cleared.',
                 static::class,
-                'Reverse proxy cache'
-            );
-        } catch (ConnectException $e) {
-            $event->addError(
-                $e->getMessage(),
-                static::class,
-                'Reverse proxy cache'
+                'Reverse proxy cache ['.$name.']'
             );
         }
     }
 
     /**
      * @param NodesSourcesUpdatedEvent $event
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function onPurgeRequest(NodesSourcesUpdatedEvent $event)
     {
@@ -144,52 +129,14 @@ class ReverseProxyCacheEventSubscriber implements EventSubscriberInterface
 
     /**
      * @param NodesSources $nodeSource
-     * @throws \GuzzleHttp\Exception\GuzzleException
      */
     protected function purgeNodesSources(NodesSources $nodeSource): void
     {
         try {
-            /** @var UrlGeneratorInterface $urlGenerator */
-            $urlGenerator = $this->container['router'];
-            while (!$nodeSource->isReachable()) {
-                $nodeSource = $nodeSource->getParent();
-                if (null === $nodeSource) {
-                    return;
-                }
-            }
-
-            $purgeRequests = $this->createPurgeRequests($urlGenerator->generate(
-                RouteObjectInterface::OBJECT_BASED_ROUTE_NAME,
-                [
-                    RouteObjectInterface::ROUTE_OBJECT => $nodeSource,
-                ]
-            ));
-            foreach ($purgeRequests as $request) {
-                $this->sendRequest($request);
-            }
-        } catch (ClientException $e) {
-            // do nothing
+            $this->bus->dispatch(new Envelope(new PurgeReverseProxyCacheMessage($nodeSource->getId())));
+        } catch (NoHandlerForMessageException $exception) {
+            $this->logger->error($exception->getMessage());
         }
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return \GuzzleHttp\Psr7\Request[]
-     */
-    protected function createPurgeRequests($path = "/")
-    {
-        $requests = [];
-        foreach ($this->container['config']['reverseProxyCache']['frontend'] as $name => $frontend) {
-            $requests[$name] = new \GuzzleHttp\Psr7\Request(
-                Request::METHOD_PURGE,
-                'http://' . $frontend['host'] . $path,
-                [
-                    'Host' => $frontend['domainName']
-                ]
-            );
-        }
-        return $requests;
     }
 
     /**

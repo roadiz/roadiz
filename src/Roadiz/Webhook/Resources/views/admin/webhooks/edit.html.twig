@@ -1,0 +1,29 @@
+{% extends '@Rozier/layout.html.twig' %}
+
+{% block content %}
+<section class="content-global edit-item">
+
+    <header class="content-header header-item header-item-add">
+        <h1 class="content-title item-add-title">{{ "edit.webhook.%name%"|trans({'%name%': item}) }}</h1>
+        <a class="content-header-nav-back uk-navbar-content"
+           href="{{ path('webhooksHomePage') }}"
+           title="{% trans %}back_to.webhooks{% endtrans %}"
+           data-uk-tooltip="{animation:true}"><i class="uk-icon-rz-back-parent"></i></a>
+    </header>
+
+    <article class="content content-edit">
+        {% form_theme form '@Rozier/forms.html.twig' %}
+        {{ form_start(form, { attr: { id: "edit-webhook-form" }}) }}
+            {{ form_widget(form) }}
+            <fieldset data-uk-margin>
+                <button data-action-save="#edit-webhook-form" class="uk-button uk-button-primary rz-action-save" type="submit">
+                    <span class="icon-container"><i class="uk-icon-rz-save-mini"></i></span>
+                    <span class="label"><span class="label-text">{% trans %}save{% endtrans %}</span></span>
+                </button>
+            </fieldset>
+        {{ form_end(form) }}
+    </article>
+
+    {% include 'admin/webhooks/actionsMenu.html.twig' with {"item": item} only %}
+</section>
+{% endblock %}

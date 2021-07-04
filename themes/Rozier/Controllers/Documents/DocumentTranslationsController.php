@@ -228,15 +228,14 @@ class DocumentTranslationsController extends RozierApp
          * Dispatch pre-flush event
          */
         if ($entity instanceof DocumentTranslation) {
+            $this->get("dispatcher")->dispatch(
+                new DocumentTranslationUpdatedEvent($entity->getDocument(), $entity)
+            );
             $this->get('em')->flush();
             $msg = $this->getTranslator()->trans('document.translation.%name%.updated', [
                 '%name%' => (string) $entity->getDocument(),
             ]);
             $this->publishConfirmMessage($request, $msg);
-
-            $this->get("dispatcher")->dispatch(
-                new DocumentTranslationUpdatedEvent($entity->getDocument(), $entity)
-            );
         }
     }
 
