@@ -16,7 +16,7 @@ use RZ\Roadiz\Message\GuzzleRequestMessage;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Messenger\Envelope;
-use Symfony\Component\Messenger\Exception\NoHandlerForMessageException;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -202,7 +202,7 @@ class CloudflareCacheEventSubscriber implements EventSubscriberInterface
                 'debug' => false,
                 'timeout' => $this->getConf()['timeout']
             ])));
-        } catch (NoHandlerForMessageException $exception) {
+        } catch (ExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
         }
     }
