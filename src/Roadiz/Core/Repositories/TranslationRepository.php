@@ -44,6 +44,8 @@ class TranslationRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t');
         $qb->andWhere($qb->expr()->eq('t.available', ':available'))
+            // Default translation should be first
+            ->addOrderBy('t.defaultTranslation', 'DESC')
             ->setParameter(':available', true)
             ->setCacheable(true);
 
@@ -82,6 +84,8 @@ class TranslationRepository extends EntityRepository
         $qb = $this->createQueryBuilder('t');
         $qb->select('t.locale')
             ->andWhere($qb->expr()->eq('t.available', ':available'))
+            // Default translation should be first
+            ->addOrderBy('t.defaultTranslation', 'DESC')
             ->setParameter(':available', true)
             ->setCacheable(true);
 
@@ -100,6 +104,8 @@ class TranslationRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('t');
         $qb->select('t.locale')
+            // Default translation should be first
+            ->addOrderBy('t.defaultTranslation', 'DESC')
             ->setCacheable(true);
 
         $query = $qb->getQuery();
@@ -120,6 +126,8 @@ class TranslationRepository extends EntityRepository
             ->andWhere($qb->expr()->isNotNull('t.overrideLocale'))
             ->andWhere($qb->expr()->neq('t.overrideLocale', ':overrideLocale'))
             ->andWhere($qb->expr()->eq('t.available', ':available'))
+            // Default translation should be first
+            ->addOrderBy('t.defaultTranslation', 'DESC')
             ->setParameter(':available', true)
             ->setParameter(':overrideLocale', '')
             ->setCacheable(true);
@@ -141,6 +149,8 @@ class TranslationRepository extends EntityRepository
         $qb->select('t.overrideLocale')
             ->andWhere($qb->expr()->isNotNull('t.overrideLocale'))
             ->andWhere($qb->expr()->neq('t.overrideLocale', ':overrideLocale'))
+            // Default translation should be first
+            ->addOrderBy('t.defaultTranslation', 'DESC')
             ->setParameter(':overrideLocale', '')
             ->setCacheable(true);
 
