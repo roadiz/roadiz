@@ -2,28 +2,62 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file original="" source-language="en" datatype="plaintext" target-language="zh-CN">
     <body>
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-        </body>
+      <trans-unit xml:space="preserve" id="add.a.webhook">
+                <source>add.a.webhook</source>
+                <target state="translated">添加 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="back_to.webhooks">
+                <source>back_to.webhooks</source>
+                <target state="translated">回到 webhook 列表</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.messageType">
+                <source>webhooks.messageType</source>
+                <target state="translated">Webhook 类型</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.uri">
+                <source>webhooks.uri</source>
+                <target state="translated">URI</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.lastTriggeredAt">
+                <source>webhooks.lastTriggeredAt</source>
+                <target state="translated">最后触发于</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.payload">
+                <source>webhooks.payload</source>
+                <target state="translated">Payload</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.throttleSeconds">
+                <source>webhooks.throttleSeconds</source>
+                <target state="translated">节流 (Throttle)（以秒为单位）</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="never">
+                <source>never</source>
+                <target state="translated">从不</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.gitlab_pipeline">
+                <source>webhook.type.gitlab_pipeline</source>
+                <target state="translated">Gitlab CI Pipeline</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
+                <source>webhook.type.netlify_build_hook</source>
+                <target state="translated">Netlify Build hook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.trigger">
+                <source>webhook.trigger</source>
+                <target state="translated">触发 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="are_you_sure.trigger.webhook">
+                <source>are_you_sure.trigger.webhook</source>
+                <target state="translated">您确定要手动触发此 webhook 吗？</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="trigger.webhook.%name%">
+                <source>trigger.webhook.%name%</source>
+                <target state="translated">手动触发 webhook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.automatic">
+                <source>webhooks.automatic</source>
+                <target state="translated">自动触发器</target>
+            </trans-unit>
+    </body>
   </file>
 </xliff>
