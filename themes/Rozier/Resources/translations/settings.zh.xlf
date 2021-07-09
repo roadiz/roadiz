@@ -84,6 +84,21 @@
                 <target state="translated">限制为域名</target>
                 <note>Setting name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_button_label">
+                <source>openid_button_label</source>
+                <target state="translated">与 OpenID 按钮标签连接</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_discovery">
+                <source>openid_discovery</source>
+                <target state="translated">自动发现 OpenID URL</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_username_claim">
+                <source>openid_username_claim</source>
+                <target state="translated">声明 OpenID 用户名</target>
+                <note>Setting name</note>
+            </trans-unit>
       <!-- Setting groups names -->
       <trans-unit xml:space="preserve" id="APIs">
                 <source>APIs</source>
@@ -107,6 +122,11 @@
             </trans-unit>
       <trans-unit xml:space="preserve" id="Site informations">
                 <source>Site informations</source>
+                <target state="translated">站点信息</target>
+                <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="Site information">
+                <source>Site information</source>
                 <target state="translated">站点信息</target>
                 <note>Setting group name</note>
             </trans-unit>
