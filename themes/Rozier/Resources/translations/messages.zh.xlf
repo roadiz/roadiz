@@ -2876,6 +2876,10 @@
         <source>nodeTypeField.serializationMaxDepth</source>
         <target state="translated">最大序列化深度</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="default_value">
+        <source>default_value</source>
+        <target state="translated">默认值</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="export.all.nodes">
         <source>export.all.nodes</source>
         <target state="translated">导出所有节点</target>
@@ -4636,6 +4640,11 @@
         <source>document.filesize</source>
         <target state="translated">文件大小</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="document.duration">
+        <source>document.duration</source>
+        <target state="translated">持续时间（以秒为单位）</target>
+        <note>Label for timed documents duration (in seconds)</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="reachable">
         <source>reachable</source>
         <target state="translated">可到达的</target>
@@ -5174,6 +5183,21 @@
         <source>filter</source>
         <target state="translated">筛选器</target>
         <note>Button label for a generic filtering action.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_created">
+        <source>%namespace%.%item%.was_created</source>
+        <target state="translated">%namespace% "%item%"已创建。</target>
+        <note>Default controller addAction result message.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_updated">
+        <source>%namespace%.%item%.was_updated</source>
+        <target state="translated">%namespace% "%item%"已更新。</target>
+        <note>Default controller editAction result message.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_deleted">
+        <source>%namespace%.%item%.was_deleted</source>
+        <target state="translated">%namespace% "%item%"已删除。</target>
+        <note>Default controller deleteAction result message.</note>
       </trans-unit>
     </body>
   </file>
