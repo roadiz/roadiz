@@ -2864,6 +2864,18 @@
         <source>nodeTypeField.maxLength</source>
         <target state="translated">最大长度</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="no_limit">
+        <source>no_limit</source>
+        <target state="translated">无限制</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serialization">
+        <source>nodeTypeField.serialization</source>
+        <target state="translated">序列化</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationMaxDepth">
+        <source>nodeTypeField.serializationMaxDepth</source>
+        <target state="translated">最大序列化深度</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="export.all.nodes">
         <source>export.all.nodes</source>
         <target state="translated">导出所有节点</target>
@@ -3631,6 +3643,10 @@
       <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
           <source>nodeType.hiding_nodes</source>
           <target state="translated">此类型隐藏了它的节点树</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.searchable">
+          <source>nodeType.searchable</source>
+          <target state="translated">可搜索的？</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.%name%.created">
           <source>newsletter.%name%.created</source>
