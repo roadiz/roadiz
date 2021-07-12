@@ -105,11 +105,15 @@ export default class Rozier {
          */
         if (window.localStorage) {
             this.collapsedNestableState = window.localStorage.getItem('collapsed.uk.nestable')
+            /*
+             * First login into backoffice
+             */
             if (!this.collapsedNestableState) {
                 this.saveCollapsedNestableState(null)
-            } else {
-                this.collapsedNestableState = JSON.parse(this.collapsedNestableState)
+                this.collapsedNestableState = window.localStorage.getItem('collapsed.uk.nestable')
             }
+            this.collapsedNestableState = JSON.parse(this.collapsedNestableState)
+
             window.UIkit.on('beforeready.uk.dom', function () {
                 $.extend(window.UIkit.components.nestable.prototype, {
                     collapseItem: function (li) {
