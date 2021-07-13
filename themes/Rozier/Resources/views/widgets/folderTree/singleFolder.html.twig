@@ -4,7 +4,7 @@
 {% set subFolders = folderTree.childrenFolders(folder) %}
 <li data-folder-id="{{ folder.id }}"
     class="uk-nestable-item uk-nestable-list-item-folder foldertree-element{% if subFolders|length > 0 %} has-children{% endif %}">
-    <div class="foldertree-element-inner uk-nestable-panel uk-nestable-item-folder">
+    <div class="tree-element-inner uk-nestable-panel uk-nestable-item-folder">
         <div class="uk-nestable-handle uk-nestable-handle-folder">
             <i class="{% if subFolders|length > 0 %}uk-icon-rz-folder-tree-mini{% else %}uk-icon-rz-folder-tree-mini{% endif %}"></i>
         </div>
@@ -47,7 +47,7 @@
      # We will have to check after OR inside drag status
      #}
     {% for subFolder in subFolders %}
-        {% include '@Rozier/widgets/folderTree/singleFolder.html.twig' with {
+        {% include 'widgets/folderTree/singleFolder.html.twig' with {
             "folder":subFolder,
             "parent":folder,
             "folderTree":folderTree

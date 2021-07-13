@@ -1,14 +1,8 @@
 
 .tagtree {
     &-element {
-        &-inner {
-            position: relative;
-        }
-
         &-name {
             vertical-align: middle;
-            font-size: 12px;
-            display: inline-block;
             position: relative;
             max-width: 80%;
 
@@ -17,13 +11,12 @@
                 max-width: 100%;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                display: inline-block;
+                display: block;
                 vertical-align: middle;
             }
         }
 
         &:hover {
-
             & > .uk-nestable-panel > .tagtree-contextualmenu {
                 .opacity(1);
             }

@@ -12,7 +12,7 @@
 <li data-tag-id="{{ tag.id }}"
     class="uk-nestable-item uk-nestable-list-item-tag tagtree-element{% if tag.getChildren.count > 0 %} has-children{% endif %}">
 
-    <div class="tagtree-element-inner uk-nestable-panel uk-nestable-item-tag {% if not tag.isVisible %} hidden-tag{% endif %}">
+    <div class="tree-element-inner uk-nestable-panel uk-nestable-item-tag {% if not tag.isVisible %} hidden-tag{% endif %}">
         {% apply spaceless %}
         <div class="{% if canReorder %}uk-nestable-handle {% endif %}uk-nestable-handle-tag">
             <i class="{% if tag.getChildren.count > 0 %}uk-icon-rz-tags{% else %}uk-icon-rz-tag-tree{% endif %}"></i>
@@ -53,7 +53,7 @@
      # We will have to check after OR inside drag status
      #}
     {% for subNode in children %}
-        {% include '@Rozier/widgets/tagTree/singleTag.html.twig' with {
+        {% include 'widgets/tagTree/singleTag.html.twig' with {
             "tag":subNode,
             "parent":tag,
             "tagTree":tagTree,

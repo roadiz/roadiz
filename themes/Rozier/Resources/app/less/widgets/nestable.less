@@ -118,6 +118,14 @@
     }
 }
 
+.tree-element-inner {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 12px;
+    position: relative;
+}
+
 .uk-nestable-panel {
     background: 0 none;
     padding: 2px 5px 2px 12px;
@@ -154,7 +162,8 @@
         & > .non-nestable-handle:before,
         & > .uk-nestable-handle:before {
             position: absolute;
-            top:6px; margin-left:2px;
+            top: 6px;
+            margin-left: 2px;
             .opacity(0);
             z-index:4;
         }
@@ -171,9 +180,9 @@
     &.stack-node {
         & > .non-nestable-handle,
         & > .uk-nestable-handle{
-            width:36px;
-            top: -10px;
-            left: -5px
+            width: 36px;
+            left: -5px;
+            height: 14px;
         }
 
         &.home-stack {
@@ -384,8 +393,8 @@
             }
         }
     }
-    .nodetree-element-inner,
-    .tagtree-element-inner {
+
+    .tree-element-inner {
         &:hover {
             .non-nestable-handle:before,
             .uk-nestable-handle:before {

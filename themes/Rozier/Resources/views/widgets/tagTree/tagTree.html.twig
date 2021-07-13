@@ -19,7 +19,7 @@
             {% if tagTree.canReorder %}data-uk-nestable="{'group':'tagTree'}"{% endif %}
             data-parent-tag-id="{{ tag.getId }}">
                 {% for ctag in tagTree.getTags %}
-                    {% include '@Rozier/widgets/tagTree/singleTag.html.twig' with {
+                    {% include 'widgets/tagTree/singleTag.html.twig' with {
                         "tag":ctag,
                         "tagTree":tagTree,
                         'canReorder': tagTree.canReorder,

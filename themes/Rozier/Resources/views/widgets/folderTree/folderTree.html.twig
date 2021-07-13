@@ -23,7 +23,7 @@
                     data-uk-nestable="{'group':'folderTree'}"
                     data-parent-folder-id="{{ folder.getId }}">
                     {% for cfolder in folderTree.folders %}
-                        {% include '@Rozier/widgets/folderTree/singleFolder.html.twig' with {
+                        {% include 'widgets/folderTree/singleFolder.html.twig' with {
                             "folder":cfolder,
                             "folderTree":folderTree
                         } only %}

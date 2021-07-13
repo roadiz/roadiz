@@ -14,20 +14,14 @@
         top: -4px;
 
         input[type="checkbox"] {
-
             &:checked {
                 display: block;
             }
         }
     }
     &-element {
-        &-inner {
-            position: relative;
-        }
         &-name {
             vertical-align: middle;
-            font-size: 12px;
-            display: inline-block;
             position: relative;
             max-width: 80%;
 
@@ -36,7 +30,7 @@
                 max-width: 100%;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                display: inline-block;
+                display: block;
                 vertical-align: middle;
             }
         }
@@ -53,24 +47,20 @@
             }
         }
     }
-    .uk-badge {
-        text-shadow: none;
-        display: inline-block;
-        padding: 4px 5px 3px;
-        margin: 0;
-        font-weight: normal;
-    }
 
     &-tags {
-        position: relative;
-        display: inline-block;
-        vertical-align: middle;
-        padding: 0 10px;
+        display: none;
 
-        & > a {
-            display: inline-block !important;
+        @media screen and (min-width: 992px) {
+            position: relative;
+            vertical-align: middle;
+            padding: 0 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
         }
     }
+
     &-contextualmenu {
         position: absolute;
         right: 22px;
@@ -96,17 +86,7 @@
 .available-nodetree-tags {
     margin: -1.5em 0 1.5em;
     text-align: center;
-
-    .uk-badge {
-        display: inline-block !important;
-        transition: background-color 0.3s linear;
-        margin: 3px 1px;
-        border: 0 none;
-        display: inline-block;
-        line-height: 1em;
-
-        &:hover {
-            text-decoration: none;
-        }
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

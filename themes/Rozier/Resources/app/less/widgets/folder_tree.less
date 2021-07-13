@@ -1,16 +1,7 @@
-
 .foldertree {
-
     &-element {
-
-        &-inner {
-            position: relative;
-        }
-
         &-name {
             vertical-align: middle;
-            font-size: 12px;
-            display: inline-block;
             position: relative;
             max-width: 80%;
 
@@ -19,7 +10,7 @@
                 max-width: 100%;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                display: inline-block;
+                display: block;
                 vertical-align: middle;
             }
         }
@@ -27,8 +18,8 @@
 
     &-contextualmenu {
         position: absolute;
-        top: 3px; right: 5px;
-        // top: 2px; right: 22px;
+        top: 3px;
+        right: 22px;
 
         .uk-icon-caret-down {
             font-size: 10px;
@@ -99,6 +90,7 @@
         .uk-nestable-handle-folder{
             vertical-align: middle;
             color: darken(@maintree-global-bg, 30%);
+            left: -5px;
 
             &:before {
                 display: none;

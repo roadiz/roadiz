@@ -6,12 +6,19 @@
             <div class="tree-head nodetree-head">
                 <h4>
                     {% trans %}nodeTree{% endtrans %}
-                    <a class="see-all-root-tree" data-uk-tooltip="{animation:true}" title="{% trans %}see_all{% endtrans %}" href="{{ path('nodesTreePage') }}"><i class="uk-icon-search"></i></a>
+                    <a class="see-all-root-tree"
+                       data-uk-tooltip="{animation:true}"
+                       title="{% trans %}see_all{% endtrans %}"
+                       href="{{ path('nodesTreePage') }}"><i class="uk-icon-search"></i></a>
                 </h4>
                 {% if not nodeTree.rootNode %}
-                    <a href="{{ path('nodesAddChildPage') }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.a.node{% endtrans %}</a>
+                    <a href="{{ path('nodesAddChildPage') }}"
+                       class="tree-btn-add"
+                       id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.a.node{% endtrans %}</a>
                 {% else %}
-                    <a href="{{ path('nodesAddChildPage', { nodeId : nodeTree.rootNode.id }) }}" class="tree-btn-add" id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.child.node{% endtrans %}</a>
+                    <a href="{{ path('nodesAddChildPage', { nodeId : nodeTree.rootNode.id }) }}"
+                       class="tree-btn-add"
+                       id="nodetree-btn-add"><i class="uk-icon-rz-plus-simple"></i>{% trans %}add.child.node{% endtrans %}</a>
                 {% endif %}
             </div>
         {% endif %}
@@ -57,7 +64,7 @@
                     {% if nodeTree.isStackTree %}data-stack-tree="1"{% endif %}
                     {% if nodeTree.tag %}data-filter-tag="{{ nodeTree.tag.id }}"{% endif %}>
                     {% for cnode in nodes %}
-                        {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
+                        {% include 'widgets/nodeTree/singleNode.html.twig' with {
                             "node":cnode,
                             "parent":nodeTree.rootNode,
                             "nodeTree":nodeTree,

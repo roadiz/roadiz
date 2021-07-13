@@ -36,7 +36,7 @@ type|lower,
 {% endif %}
 
 {% set innerClasses = [
-'nodetree-element-inner',
+'tree-element-inner',
 'uk-nestable-panel',
 ] %}
 {% if node.isHome and node.isHidingChildren %}{% set innerClasses = innerClasses|merge(['home-stack']) %}{% endif %}
@@ -59,74 +59,87 @@ type|lower,
         <span class="nodetree-list-item-color"></span>
     {% endif %}
     <div class="{{ innerClasses|join(' ') }}">
-        <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}"
-             {%- if not mainNodeTree and not nodeTree.isStackTree -%}
-             title="{{ node.nodeType.displayName }}"
-             data-uk-tooltip="{animation:true}"{%- endif -%}>
-            {% if not mainNodeTree and not nodeTree.isStackTree %}
-                {% set thumbnail = source.documentsByFields.first.document %}
-                {% if thumbnail and (thumbnail.image or thumbnail.svg) and not thumbnail.private %}
-                    <figure class="nodetree-element-img">
-                        {{ thumbnail|display({"fit":"60x60", "quality":80}) }}
-                    </figure>
+
+        {% block nodetree_handle %}
+            <div class="{% if nodeTree.canReorder %}uk-nestable-handle{% else %}non-nestable-handle{% endif %}"
+                {%- if not mainNodeTree and not nodeTree.isStackTree -%}
+                title="{{ node.nodeType.displayName }}"
+                data-uk-tooltip="{animation:true}"{%- endif -%}>
+                {% if not mainNodeTree and not nodeTree.isStackTree %}
+                    {% set thumbnail = source.documentsByFields.first.document %}
+                    {% if thumbnail and (thumbnail.image or thumbnail.svg) and not thumbnail.private %}
+                        <figure class="nodetree-element-img">
+                            {{ thumbnail|display({"fit":"60x60", "quality":80}) }}
+                        </figure>
+                    {% endif %}
                 {% endif %}
-            {% endif %}
 
-            {% if node.isHidingChildren and not node.isHome %}
-                <i class="uk-icon-folder"></i>
-                <span class="icon-stack-folder"></span>
-                <span class="icon-stack-folder icon-stack-folder-final"></span>
-            {% endif %}
-            {% if node.isHome and not node.isHidingChildren and not node.published %}
-                <i class="uk-icon-rz-home-unpublished"></i>
-            {% elseif node.isHome and not node.isHidingChildren %}
-                <i class="uk-icon-rz-home"></i>
-            {% elseif node.isHome and node.isHidingChildren %}
-                <i class="uk-icon-rz-building"></i>
-            {% endif %}
-            {% if nodeTree.isStackTree and node.nodeType.isPublishable and source.publishedAt %}
-                <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|format_date('short', locale=app.request.locale) }}</div>
-            {% endif %}
-        </div>
+                {% if node.isHidingChildren and not node.isHome %}
+                    <i class="uk-icon-folder"></i>
+                    <span class="icon-stack-folder"></span>
+                    <span class="icon-stack-folder icon-stack-folder-final"></span>
+                {% endif %}
+                {% if node.isHome and not node.isHidingChildren and not node.published %}
+                    <i class="uk-icon-rz-home-unpublished"></i>
+                {% elseif node.isHome and not node.isHidingChildren %}
+                    <i class="uk-icon-rz-home"></i>
+                {% elseif node.isHome and node.isHidingChildren %}
+                    <i class="uk-icon-rz-building"></i>
+                {% endif %}
+                {% if nodeTree.isStackTree and node.nodeType.isPublishable and source.publishedAt %}
+                    <div class="nodetree-published-at uk-badge"><i class="uk-icon-clock-o"></i> {{ source.publishedAt|format_date('short', locale=app.request.locale) }}</div>
+                {% endif %}
+            </div>
+        {% endblock %}
 
-        <div class="tree-element-name nodetree-element-name"{% if nodeTree.translation is rtl %} dir="rtl"{% endif %}>
-            {% if node.isHidingChildren %}
-                <a href="{{ path('nodesTreePage', {
-                    nodeId: node.id,
-                    translationId: nodeTree.translation.id
-                }) }}">{{- name -}}</a>
-            {% else %}
-                <a href="{{ path('nodesEditSourcePage', {
-                    nodeId: node.id,
-                    translationId: nodeTree.translation.id,
-                    referer: node.parent ? path('nodesEditSourcePage', {
-                        nodeId: node.parent.id,
+        {% block nodetree_element_name %}
+            <div class="tree-element-name nodetree-element-name"{% if nodeTree.translation is rtl %} dir="rtl"{% endif %}>
+                {% if node.isHidingChildren %}
+                    <a href="{{ path('nodesTreePage', {
+                        nodeId: node.id,
+                        translationId: nodeTree.translation.id
+                    }) }}">{{- name -}}</a>
+                {% else %}
+                    <a href="{{ path('nodesEditSourcePage', {
+                        nodeId: node.id,
                         translationId: nodeTree.translation.id,
-                    }) : null
-                }) }}">{{- name -}}</a>
+                        referer: node.parent ? path('nodesEditSourcePage', {
+                            nodeId: node.parent.id,
+                            translationId: nodeTree.translation.id,
+                        }) : null
+                    }) }}">{{- name -}}</a>
+                {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block nodetree_tags %}
+            {% if nodeTree.isStackTree and node.tags|length %}
+                <div class="nodetree-tags">
+                    {% for tag in node.tags %}
+                        {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
+                        {% set tagName = ttag[0].name|default(tag.tagName) %}
+                        <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName -}}</a>
+                    {% endfor %}
+                </div>
             {% endif %}
-        </div>
+        {% endblock %}
 
-        {% if nodeTree.isStackTree and node.tags|length %}
-            <div class="nodetree-tags">
-                {% for tag in node.tags %}
-                    {% set ttag = tag.translatedTagsByTranslation(nodeTree.translation) %}
-                    {% set tagName = ttag[0].name|default(tag.tagName) %}
-                    <a href="?tagId={{ tag.id }}" class="uk-badge"><i class="uk-icon-tag"></i> {{ tagName -}}</a>
-                {% endfor %}
-            </div>
-        {% endif %}
+        {% block nodetree_custom %}{# Override this block from your theme or app #}{% endblock %}
 
-        {% if nodeTree.isStackTree %}
-            <div class="nodetree-bulk-selection">
-                <input class="node-checkbox" type="checkbox" name="bulk-selection[]" value="{{ node.getId }}" />
-            </div>
-        {% endif %}
+        {% block nodetree_selection %}
+            {% if nodeTree.isStackTree %}
+                <div class="nodetree-bulk-selection">
+                    <input class="node-checkbox" type="checkbox" name="bulk-selection[]" value="{{ node.getId }}" />
+                </div>
+            {% endif %}
+        {% endblock %}
 
-        {% include 'widgets/nodeTree/contextualMenu.html.twig' with {
-            'node': node,
-            'nodeTree': nodeTree
-        } only %}
+        {% block nodetree_contextual_menu %}
+            {%- include 'widgets/nodeTree/contextualMenu.html.twig' with {
+                'node': node,
+                'nodeTree': nodeTree
+            } only -%}
+        {% endblock %}
 
         {% if children %}
             <div class="minus" data-nestable-action="toggle"></div>
@@ -150,7 +163,7 @@ type|lower,
              # We will have to check after OR inside drag status
              #}
                 {% for subNode in children %}
-                    {% include '@Rozier/widgets/nodeTree/singleNode.html.twig' with {
+                    {% include 'widgets/nodeTree/singleNode.html.twig' with {
                     "node":subNode,
                     "parent":node,
                     "request":request,
