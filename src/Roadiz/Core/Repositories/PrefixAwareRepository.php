@@ -11,9 +11,8 @@ use RZ\Roadiz\Utils\Doctrine\ORM\SimpleQueryBuilder;
 /**
  * Class PrefixAwareRepository for defining join-queries prefixes.
  *
- * @package RZ\Roadiz\Core\Repositories
- * @template T
- * @extends EntityRepository<T>
+ * @template TEntityClass of object
+ * @extends \RZ\Roadiz\Core\Repositories\EntityRepository<TEntityClass>
  */
 class PrefixAwareRepository extends EntityRepository
 {
@@ -155,6 +154,7 @@ class PrefixAwareRepository extends EntityRepository
      * @param int|null $limit
      * @param int|null $offset
      * @return array|Paginator
+     * @psalm-return array<TEntityClass>|Paginator<TEntityClass>
      */
     public function findBy(
         array $criteria,
@@ -204,6 +204,7 @@ class PrefixAwareRepository extends EntityRepository
      * @param array|null $order
      *
      * @return Entity
+     * @psalm-return TEntityClass
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function findOneBy(
@@ -240,6 +241,7 @@ class PrefixAwareRepository extends EntityRepository
      * @param string  $alias
      *
      * @return array|Paginator
+     * @psalm-return array<TEntityClass>|Paginator<TEntityClass>
      */
     public function searchBy(
         $pattern,

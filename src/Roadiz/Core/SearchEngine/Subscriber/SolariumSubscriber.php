@@ -54,7 +54,6 @@ class SolariumSubscriber implements EventSubscriberInterface
     {
         return [
             NodeUpdatedEvent::class => 'onSolariumNodeUpdate',
-            // NodeStatusChangedEvent::class => 'onSolariumNodeUpdate',
             'workflow.node.completed' => ['onSolariumNodeWorkflowComplete'],
             NodeVisibilityChangedEvent::class => 'onSolariumNodeUpdate',
             NodesSourcesUpdatedEvent::class => 'onSolariumSingleUpdate',

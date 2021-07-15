@@ -3,11 +3,8 @@ declare(strict_types=1);
 
 namespace RZ\Roadiz\Webhook\Form;
 
-use RZ\Roadiz\CMS\Forms\Constraints\ValidYaml;
-use RZ\Roadiz\CMS\Forms\ExtendedBooleanType;
+use RZ\Roadiz\CMS\Forms\NodesType;
 use RZ\Roadiz\CMS\Forms\YamlType;
-use RZ\Roadiz\Webhook\Message\GitlabPipelineTriggerMessage;
-use RZ\Roadiz\Webhook\Message\NetlifyBuildHookMessage;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -61,6 +58,11 @@ final class WebhookType extends AbstractType
             'required' => false,
             'label' => 'webhooks.automatic',
             'help' => 'webhooks.automatic.help',
+        ])->add('rootNode', NodesType::class, [
+            'required' => false,
+            'label' => 'webhooks.rootNode',
+            'help' => 'webhooks.rootNode.help',
+            'multiple' => false
         ]);
 
         $builder->get('payload')->addModelTransformer(new CallbackTransformer(function (?array $model) {

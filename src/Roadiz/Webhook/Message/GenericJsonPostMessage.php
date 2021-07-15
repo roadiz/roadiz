@@ -9,7 +9,7 @@ use RZ\Roadiz\Message\AsyncMessage;
 use RZ\Roadiz\Message\HttpRequestMessage;
 use RZ\Roadiz\Webhook\Entity\Webhook;
 
-final class NetlifyBuildHookMessage implements AsyncMessage, HttpRequestMessage, WebhookMessage
+final class GenericJsonPostMessage implements AsyncMessage, HttpRequestMessage, WebhookMessage
 {
     private string $uri;
     private ?array $payload;
@@ -26,18 +26,15 @@ final class NetlifyBuildHookMessage implements AsyncMessage, HttpRequestMessage,
 
     public function getRequest(): RequestInterface
     {
-        if (null !== $this->payload) {
-            return new Request(
-                'POST',
-                $this->uri,
-                [
-                    'Content-Type' => 'application/x-www-form-urlencoded',
-                    'Accept'     => 'application/json'
-                ],
-                http_build_query($this->payload)
-            );
-        }
-        return new Request('POST', $this->uri);
+        return new Request(
+            'POST',
+            $this->uri,
+            [
+                'Content-Type' => 'application/json',
+                'Accept'     => 'application/json'
+            ],
+            json_encode($this->payload ?? [], JSON_NUMERIC_CHECK | JSON_THROW_ON_ERROR)
+        );
     }
 
     /**

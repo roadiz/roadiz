@@ -7,13 +7,14 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use RZ\Roadiz\Message\Handler\HttpRequestMessageHandler;
+use RZ\Roadiz\Message\HttpRequestMessage;
 use RZ\Roadiz\Webhook\EventSubscriber\AutomaticWebhookSubscriber;
 use RZ\Roadiz\Webhook\Form\WebhookType;
+use RZ\Roadiz\Webhook\Message\GenericJsonPostMessage;
 use RZ\Roadiz\Webhook\Message\GitlabPipelineTriggerMessage;
 use RZ\Roadiz\Webhook\Message\NetlifyBuildHookMessage;
 use RZ\Roadiz\Webhook\Message\WebhookMessageFactory;
 use RZ\Roadiz\Webhook\Message\WebhookMessageFactoryInterface;
-use Symfony\Component\Cache\Adapter\ApcuAdapter;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Messenger\MessageBusInterface;
@@ -34,6 +35,7 @@ class WebhookServiceProvider implements ServiceProviderInterface
     {
         $pimple['webhook.types'] = function () {
             return [
+                'webhook.type.generic_json_post' => GenericJsonPostMessage::class,
                 'webhook.type.gitlab_pipeline' => GitlabPipelineTriggerMessage::class,
                 'webhook.type.netlify_build_hook' => NetlifyBuildHookMessage::class,
             ];
@@ -51,17 +53,8 @@ class WebhookServiceProvider implements ServiceProviderInterface
             return new ThrottledWebhookDispatcher(
                 $c[WebhookMessageFactoryInterface::class],
                 $c[MessageBusInterface::class],
-                $c['webhook.rate_limiter']
+                new CacheStorage($c[CacheItemPoolInterface::class])
             );
-        };
-
-        $pimple['webhook.rate_limiter'] = function (Container $c) {
-            return new RateLimiterFactory([
-                'id' => 'webhook',
-                'policy' => 'token_bucket',
-                'limit' => 1,
-                'rate' => ['interval' => '30 seconds'],
-            ], new CacheStorage($c[CacheItemPoolInterface::class]));
         };
 
         $pimple->extend('twig.loaderFileSystem', function (FilesystemLoader $filesystemLoader) {
@@ -86,6 +79,15 @@ class WebhookServiceProvider implements ServiceProviderInterface
                 $c[HttpRequestMessageHandler::class]
             ];
             $handlers[NetlifyBuildHookMessage::class] = [
+                $c[HttpRequestMessageHandler::class]
+            ];
+            $handlers[GenericJsonPostMessage::class] = [
+                $c[HttpRequestMessageHandler::class]
+            ];
+            /*
+             * Default handler for all messages implementing HttpRequestMessage
+             */
+            $handlers[HttpRequestMessage::class] = [
                 $c[HttpRequestMessageHandler::class]
             ];
 
@@ -125,7 +127,8 @@ class WebhookServiceProvider implements ServiceProviderInterface
         $pimple->extend('dispatcher', function (EventDispatcher $dispatcher, Container $c) {
             $dispatcher->addSubscriber(new AutomaticWebhookSubscriber(
                 $c[WebhookDispatcher::class],
-                $c['em']
+                $c['em'],
+                $c['factory.handler']
             ));
             return $dispatcher;
         });

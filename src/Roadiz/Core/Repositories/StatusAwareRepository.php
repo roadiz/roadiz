@@ -8,26 +8,19 @@ use Doctrine\ORM\Mapping;
 use Doctrine\ORM\QueryBuilder;
 use Pimple\Container;
 use RZ\Roadiz\Core\Entities\Node;
-use RZ\Roadiz\Core\Entities\Role;
 use RZ\Roadiz\Preview\PreviewResolverInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 
 /**
  * @package RZ\Roadiz\Core\Repositories
- * @template T
- * @extends EntityRepository<T>
+ * @template TEntityClass of object
+ * @extends \RZ\Roadiz\Core\Repositories\EntityRepository<TEntityClass>
  */
 class StatusAwareRepository extends EntityRepository
 {
-    /**
-     * @var bool
-     */
-    private $displayNotPublishedNodes;
-    /**
-     * @var bool
-     */
-    private $displayAllNodesStatuses;
+    private bool $displayNotPublishedNodes;
+    private bool $displayAllNodesStatuses;
 
     /**
      * @inheritDoc

@@ -6,6 +6,7 @@ namespace RZ\Roadiz\Webhook\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
+use RZ\Roadiz\Core\Entities\Node;
 
 /**
  * @package RZ\Roadiz\Webhook\Entity
@@ -15,6 +16,7 @@ use RZ\Roadiz\Core\AbstractEntities\AbstractDateTimed;
  *  @ORM\Index(name="webhook_created_at", columns={"created_at"}),
  *  @ORM\Index(name="webhook_updated_at", columns={"updated_at"}),
  *  @ORM\Index(name="webhook_automatic", columns={"automatic"}),
+ *  @ORM\Index(name="webhook_root_node", columns={"root_node"}),
  *  @ORM\Index(name="webhook_last_triggered_at", columns={"last_triggered_at"})
  * })
  * @ORM\HasLifecycleCallbacks
@@ -72,6 +74,13 @@ class Webhook extends AbstractDateTimed
      * @Serializer\Type("boolean")
      */
     protected bool $automatic = false;
+
+    /**
+     * @var Node|null
+     * @ORM\ManyToOne(targetEntity="RZ\Roadiz\Core\Entities\Node")
+     * @ORM\JoinColumn(name="root_node", onDelete="SET NULL")
+     */
+    protected ?Node $rootNode = null;
 
     /**
      * @return string|null
@@ -200,6 +209,24 @@ class Webhook extends AbstractDateTimed
     public function setAutomatic(bool $automatic): Webhook
     {
         $this->automatic = $automatic;
+        return $this;
+    }
+
+    /**
+     * @return Node|null
+     */
+    public function getRootNode(): ?Node
+    {
+        return $this->rootNode;
+    }
+
+    /**
+     * @param Node|null $rootNode
+     * @return Webhook
+     */
+    public function setRootNode(?Node $rootNode): Webhook
+    {
+        $this->rootNode = $rootNode;
         return $this;
     }
 

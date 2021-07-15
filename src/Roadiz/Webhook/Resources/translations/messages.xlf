@@ -50,6 +50,14 @@
                 <source>webhooks.throttleSeconds</source>
                 <target></target>
             </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.rootNode">
+                <source>webhooks.rootNode</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhooks.rootNode.help">
+                <source>webhooks.rootNode.help</source>
+                <target></target>
+            </trans-unit>
             <trans-unit xml:space="preserve" id="never">
                 <source>never</source>
                 <target></target>
@@ -60,6 +68,10 @@
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
                 <source>webhook.type.netlify_build_hook</source>
+                <target></target>
+            </trans-unit>
+            <trans-unit xml:space="preserve" id="webhook.type.generic_json_post">
+                <source>webhook.type.generic_json_post</source>
                 <target></target>
             </trans-unit>
             <trans-unit xml:space="preserve" id="webhook.trigger">

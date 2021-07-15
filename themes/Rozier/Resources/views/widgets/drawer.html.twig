@@ -13,37 +13,38 @@
 {% endfor %}
 
 {% apply spaceless %}
-    <drawer-container data-vuejs inline-template>
-        <div class="uk-form-row drawer-widget entity-{{ entity }} form-col-{{ name }}"
-             :class="{ 'uk-active' : isActive, 'uk-alert-danger': drawer.errorMessage }"
-             v-if="drawer"
-             ref="drawer"
-             {{ widget_attributes|raw }}
-             {% if entity %}data-accept-entity="{{ entity }}"{% endif %}
-             data-entity-types="[]"
-             data-is-sortable="{{ isSortable }}"
-            {% if provider_class %}data-provider-class="{{ provider_class }}" {% endif %}
-            {% if provider_options %}data-provider-options="{{ provider_options|json_encode }}" {% endif %}
-             data-initial-items="{{ entityIds|json_encode }}">
-            {% if label is empty -%}
-                {% set label = name|humanize %}
-            {%- endif -%}
+    <div class="drawer-widget-wrapper">
+        <drawer-container data-vuejs inline-template>
+            <div class="uk-form-row drawer-widget entity-{{ entity }} form-col-{{ name }}{%- if form.vars.help ?? false %} has-description{%- endif -%}"
+                 :class="{ 'uk-active' : isActive, 'uk-alert-danger': drawer.errorMessage }"
+                 v-if="drawer"
+                 ref="drawer"
+                {{ widget_attributes|raw }}
+                {% if entity %}data-accept-entity="{{ entity }}"{% endif %}
+                 data-entity-types="[]"
+                 data-is-sortable="{{ isSortable }}"
+                {% if provider_class %}data-provider-class="{{ provider_class }}" {% endif %}
+                {% if provider_options %}data-provider-options="{{ provider_options|json_encode }}" {% endif %}
+                 data-initial-items="{{ entityIds|json_encode }}">
+                {% if label is empty -%}
+                    {% set label = name|humanize %}
+                {%- endif -%}
 
-            <nav class="drawer-widget-nav uk-navbar">
-                <ul class="uk-navbar-nav">
-                    <li class="uk-navbar-brand">
-                        <i class="{{ icon }}"></i>
-                    </li>
-                    <li class="uk-navbar-brand label">
-                        {{ label|trans }}
-                        {% if isSortable == 'false' %}
-                        <span class="uk-text-muted">
+                <nav class="drawer-widget-nav uk-navbar">
+                    <ul class="uk-navbar-nav">
+                        <li class="uk-navbar-brand">
+                            <i class="{{ icon }}"></i>
+                        </li>
+                        <li class="uk-navbar-brand label">
+                            {{ label|trans }}
+                            {% if isSortable == 'false' %}
+                                <span class="uk-text-muted">
                             {% trans %}drawer.sortable-not-enable{% endtrans %}
                         </span>
-                        {% endif %}
-                        <span
-                            class="uk-text-muted"
-                            :class="{ 'uk-text-danger': items.length < this.drawer.minLength }">
+                            {% endif %}
+                            <span
+                                class="uk-text-muted"
+                                :class="{ 'uk-text-danger': items.length < this.drawer.minLength }">
                             <template v-if="this.drawer.maxLength < 9999">
                                 ${ items.length } / ${ this.drawer.maxLength }
                             </template>
@@ -51,76 +52,80 @@
                                 ({% trans %}min{% endtrans %}: ${ this.drawer.minLength })
                             </template>
                         </span>
-                        {% if attr['data-universal'] %}
-                            <i data-uk-tooltip="{animation:true}"
-                               title="{% trans %}universal{% endtrans %}"
-                               class="uk-icon uk-icon-flag universal-indicator"></i>
-                        {% endif %}
-                    </li>
-                </ul>
-                <div class="uk-navbar-content uk-navbar-flip">
-                    <div class="drawer-widget-quick-creation uk-button-group">
-                        <rz-button :is-active="drawer.isActive"
-                                   :callback="onExplorerButtonClick">
-                            <i class="uk-icon-rz-explore"></i>
-                            <span class="uk-hidden-small">
+                            {% if attr['data-universal'] %}
+                                <i data-uk-tooltip="{animation:true}"
+                                   title="{% trans %}universal{% endtrans %}"
+                                   class="uk-icon uk-icon-flag universal-indicator"></i>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    <div class="uk-navbar-content uk-navbar-flip">
+                        <div class="drawer-widget-quick-creation uk-button-group">
+                            <rz-button :is-active="drawer.isActive"
+                                       :callback="onExplorerButtonClick">
+                                <i class="uk-icon-rz-explore"></i>
+                                <span class="uk-hidden-small">
                                 {%- trans -%}documents.toggle-explorer{%- endtrans -%}
                             </span>
-                        </rz-button>
-                        {% if enableDropzone %}
-                            <rz-button :is-active="drawer.isDropzoneEnable"
-                                       :callback="onDropzoneButtonClick">
-                                <i class="uk-icon-rz-upload"></i>
-                                <span class="uk-hidden-small">
+                            </rz-button>
+                            {% if enableDropzone %}
+                                <rz-button :is-active="drawer.isDropzoneEnable"
+                                           :callback="onDropzoneButtonClick">
+                                    <i class="uk-icon-rz-upload"></i>
+                                    <span class="uk-hidden-small">
                                     {%- trans -%}documents.toggle-uploader{%- endtrans -%}
                                 </span>
-                            </rz-button>
-                        {% endif %}
+                                </rz-button>
+                            {% endif %}
+                        </div>
                     </div>
-                </div>
-            </nav>
+                </nav>
 
-            <template v-if="drawer.errorMessage">
-                <p class="uk-text-danger">
-                    ${ drawer.errorMessage }
-                </p>
-            </template>
+                <template v-if="drawer.errorMessage">
+                    <p class="uk-text-danger">
+                        ${ drawer.errorMessage }
+                    </p>
+                </template>
 
-            <div class="drawer-widget-sortable-container">
-                <transition name="fade" v-if="drawer.isLoading">
-                    <div class="spinner"></div>
-                </transition>
-                <ul class="drawer-widget-sortable"
-                    data-input-name="{{ name }}">
-                    <draggable
-                        v-model="items"
-                        :options="getOptions()"
+                <div class="drawer-widget-sortable-container">
+                    <transition name="fade" v-if="drawer.isLoading">
+                        <div class="spinner"></div>
+                    </transition>
+                    <ul class="drawer-widget-sortable"
+                        data-input-name="{{ name }}">
+                        <draggable
+                            v-model="items"
+                            :options="getOptions()"
                         >
-                        <transition-group>
-                            <component
-                                v-bind:is="drawer.currentListingView"
-                                v-for="(item, index) in items"
-                                :key="item.id"
-                                :drawer-name="drawerName"
-                                :is-item-explorer="false"
-                                :add-item="addItem"
-                                :remove-item="removeItem"
-                                :index="index"
-                                :item="item">
-                            </component>
-                        </transition-group>
-                    </draggable>
-                </ul>
+                            <transition-group>
+                                <component
+                                    v-bind:is="drawer.currentListingView"
+                                    v-for="(item, index) in items"
+                                    :key="item.id"
+                                    :drawer-name="drawerName"
+                                    :is-item-explorer="false"
+                                    :add-item="addItem"
+                                    :remove-item="removeItem"
+                                    :index="index"
+                                    :item="item">
+                                </component>
+                            </transition-group>
+                        </draggable>
+                    </ul>
+                </div>
+                {% if enableDropzone %}
+                    <dropzone v-if="drawer.isDropzoneEnable"
+                              id="dropzone{{ random() }}"
+                              :language="dropzoneLanguage"
+                              url="{{ path('documentsUploadPage', {_format: 'json'}) }}"
+                              v-on:vdropzone-error="showError"
+                              v-on:vdropzone-success="showSuccess">
+                    </dropzone>
+                {% endif %}
             </div>
-            {% if enableDropzone %}
-                <dropzone v-if="drawer.isDropzoneEnable"
-                          id="dropzone{{ random() }}"
-                          :language="dropzoneLanguage"
-                          url="{{ path('documentsUploadPage', {_format: 'json'}) }}"
-                          v-on:vdropzone-error="showError"
-                          v-on:vdropzone-success="showSuccess">
-                </dropzone>
-            {% endif %}
-        </div>
-    </drawer-container>
+        </drawer-container>
+        {%- if form.vars.help ?? false -%}
+            <small id="{{ form.vars.id }}_help" class="form-row-desc uk-form-label-description drawer-widget-description">{{- form.vars.help|trans|inlineMarkdown -}}</small>
+        {%- endif -%}
+    </div>
 {% endapply %}
