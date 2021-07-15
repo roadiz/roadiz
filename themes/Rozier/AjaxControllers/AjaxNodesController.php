@@ -340,8 +340,6 @@ class AjaxNodesController extends AbstractAjaxController
             '%status%' => $this->getTranslator()->trans(Node::getStatusLabel($node->getStatus())),
         ]);
         $this->publishConfirmMessage($request, $msg, $node->getNodeSources()->first());
-        $this->get('dispatcher')->dispatch(new NodeUpdatedEvent($node));
-        $this->get('dispatcher')->dispatch(new NodeStatusChangedEvent($node));
 
         return new JsonResponse(
             [
