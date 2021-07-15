@@ -50,6 +50,14 @@
                 <source>webhooks.throttleSeconds</source>
                 <target state="translated">Temporisation (en secondes)</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.rootNode">
+                <source>webhooks.rootNode</source>
+                <target state="translated">Nœud racine</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhooks.rootNode.help">
+                <source>webhooks.rootNode.help</source>
+                <target state="translated">Limite le déclenchement des webhooks à ce nœud-racine et à sa descendance pour toutes les modifications liée aux nœuds.</target>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="never">
                 <source>never</source>
                 <target state="translated">Jamais</target>
@@ -61,6 +69,10 @@
       <trans-unit xml:space="preserve" id="webhook.type.netlify_build_hook">
                 <source>webhook.type.netlify_build_hook</source>
                 <target state="translated">Netlify Build hook</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="webhook.type.generic_json_post">
+                <source>webhook.type.generic_json_post</source>
+                <target state="translated">POST JSON générique</target>
             </trans-unit>
       <trans-unit xml:space="preserve" id="webhook.trigger">
                 <source>webhook.trigger</source>
