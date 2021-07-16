@@ -13,6 +13,7 @@
         <h1 class="content-title">{% trans %}documents{% endtrans %}</h1>
         {% endif %}
         {% include '@Rozier/widgets/countFiltersBar.html.twig' %}
+        {% include '@Rozier/documents/backLink.html.twig' %}
         <div class="content-header-action-menu">
             <a class="uk-button" href="{{ path('documentsUploadPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-upload"></i> {% trans %}upload.document{% endtrans %}</a>
             <a class="uk-button" href="{{ path('documentsEmbedPage', {folderId: folder.id}) }}"><i class="uk-icon-rz-embed"></i> {% trans %}embed.document{% endtrans %}</a>
@@ -25,18 +26,20 @@
 
     {% include '@Rozier/documents/filtersBar.html.twig' %}
 
+    {% block content_body %}
     <article class="content">
         {% apply spaceless %}
-        <div class="documents-list">
-        {% for document in documents %}
-        {% include '@Rozier/documents/singleDocumentThumbnail.html.twig' with {
-            document: document,
-            thumbnailFormat: thumbnailFormat,
-            controls: true
-        } only %}
-        {% endfor %}
-        </div>
+            <div class="documents-list">
+                {% for document in documents %}
+                    {% include '@Rozier/documents/singleDocumentThumbnail.html.twig' with {
+                        document: document,
+                        thumbnailFormat: thumbnailFormat,
+                        controls: true
+                    } only %}
+                {% endfor %}
+            </div>
         {% endapply %}
 	</article>
+    {% endblock %}
 </section>
 {% endblock %}

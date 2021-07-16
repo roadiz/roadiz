@@ -11,9 +11,22 @@
                     <input id="uk-form-filter-input-search" type="text" name="search" placeholder="{% trans %}search{% endtrans %}" value="{{ filters.search }}">
                 </div>
                 <div class="rz-select">
-                    <select class="uk-form-control" name="embedPlatform" id="embedPlatform">
+                    <select class="uk-form-control"
+                            onchange="this.form.submit()"
+                            name="list"
+                            id="document_display_list">
+                        <option value="">{{ 'document.document_display_gallery'|trans }}</option>
+                        <option{% if app.request.query.get('list') == '1' %} selected{% endif %}
+                            value="1">{% trans %}documents.document_display_list{% endtrans %}</option>
+                    </select>
+                </div>
+                <div class="rz-select">
+                    <select class="uk-form-control"
+                            onchange="this.form.submit()"
+                            name="embedPlatform"
+                            id="embedPlatform">
                         <option value="">{{ 'document.no_embed_platform'|trans }}</option>
-                        <option{% if embedPlatform == 'splashbase' %} selected{% endif %} value="splashbase">{{ 'random.document'|trans }}</option>
+                        <option{% if embedPlatform == 'unsplash' %} selected{% endif %} value="unsplash">{{ 'random.document'|trans }}</option>
                         {% for availablePlatform, class in availablePlatforms %}
                             <option{% if embedPlatform == availablePlatform %} selected{% endif %}
                                 value="{{ availablePlatform }}">{{ availablePlatform|capitalize }}</option>
@@ -32,22 +45,18 @@
         {% if filters.itemPerPage and filters.itemCount > filters.itemPerPage %}
         <div class="uk-navbar-content uk-hidden-small" id="uk-navbar-filter-pagination">
             <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
-
+                {% if app.request.query.get('list') == '1' %}<input type="hidden" name="list" value="1" />{% endif %}
                 {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
-
                 {% if filters.previousPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.previousPageQuery }}"><i class="uk-icon-rz-prev-page"></i></a>{% endif %}
-
                 <span class="filter-form-text pageTitle">{% trans %}page{% endtrans %}</span>
                 <input class="uk-form-width-mini" id="uk-form-filter-input-page" type="text" name="page"  value="{{ filters.currentPage }}" />
                 <span class="filter-form-text pageCount">/ {{ filters.pageCount }}</span>
-
                 {% if filters.nextPageQuery %}<a class="uk-button uk-button-filter" href="?{{ filters.nextPageQuery }}"><i class="uk-icon-rz-next-page"></i></a>{% endif %}
-
             </form>
         </div>
         {% endif %}
 
-        {% include '@Rozier/widgets/itemPerPage.html.twig' %}
+        {% include '@Rozier/documents/itemPerPage.html.twig' %}
 
         <nav class="bulk-actions documents-bulk-actions">
 

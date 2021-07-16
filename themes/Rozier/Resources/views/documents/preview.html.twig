@@ -53,6 +53,7 @@
                     {% if document.isEmbed and document|embedFinder %}
                         <tr><td>{% trans %}document.source_url{% endtrans %}</td><td>{{ (document|embedFinder).source }}</td></tr>
                     {% endif %}
+                    <tr><td>{% trans %}document.filesize{% endtrans %}</td><td>{{ document.filesize|formatBytes }}</td></tr>
                     {% for key, info in infos %}
                         <tr><td>{{ ('document.' ~ key)|trans }}</td><td>{{ info }}</td></tr>
                     {% endfor %}

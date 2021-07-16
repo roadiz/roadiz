@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Intervention\Image\Exception\NotReadableException;
 use Intervention\Image\ImageManager;
 use Psr\Log\LoggerInterface;
@@ -21,21 +19,17 @@ class ImageColorDocumentSubscriber implements EventSubscriberInterface
 {
     private Packages $packages;
     private LoggerInterface $logger;
-    private EntityManagerInterface $entityManager;
 
     /**
-     * @param EntityManagerInterface $entityManager
      * @param Packages $packages
      * @param LoggerInterface|null $logger
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         Packages $packages,
         ?LoggerInterface $logger = null
     ) {
         $this->packages = $packages;
         $this->logger = $logger ?? new NullLogger();
-        $this->entityManager = $entityManager;
     }
 
     public static function getSubscribedEvents()

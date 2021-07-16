@@ -13,14 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SessionListFilters
 {
-    /**
-     * @var string
-     */
-    private $sessionIdentifier;
-    /**
-     * @var int
-     */
-    private $defaultItemsParPage;
+    private string $sessionIdentifier;
+    private int $defaultItemsParPage;
 
     /**
      * @param string $sessionIdentifier

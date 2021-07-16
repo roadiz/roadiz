@@ -1,0 +1,5 @@
+{% extends "@Rozier/widgets/itemPerPage.html.twig" %}
+
+{% block additional_inputs %}
+{% if app.request.query.get('list') == '1' %}<input type="hidden" name="list" value="1" />{% endif %}
+{% endblock %}

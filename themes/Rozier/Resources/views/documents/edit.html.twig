@@ -2,7 +2,6 @@
 
 {% block content %}
 <section class="content-global manage-document">
-
     <header class="content-header header-document header-document-edit">
         <h1 class="content-title document-edit-title">{{ "edit.document.%name%"|trans({'%name%': document|u.truncate(25, '[…]', true)}) }}</h1>
         {% include '@Rozier/documents/navBar.html.twig' with {'document':document, current:'edit'} %}

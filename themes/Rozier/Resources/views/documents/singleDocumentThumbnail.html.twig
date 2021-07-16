@@ -20,11 +20,15 @@
         </div>
         {% endif %}
         {% if document.isEmbed %}
-            <div class="document-mime-type">{{ document.getEmbedPlatform }}</div>
+            {% set iconName = document.embedPlatform %}
+            {% if document.embedPlatform == 'unsplash' or document.embedPlatform == 'splashbase' %}
+                {% set iconName = 'documents' %}
+            {% endif %}
+            <div class="document-mime-type">{{ document.embedPlatform }}</div>
             {% if document.private %}
                 <div class="document-platform-icon"><i class="uk-icon-lock"></i></div>
             {% else %}
-                <div class="document-platform-icon"><i class="uk-icon-rz-{{ document.getEmbedPlatform }}"></i></div>
+                <div class="document-platform-icon"><i class="uk-icon-rz-{{ iconName }}"></i></div>
             {% endif %}
         {% else %}
             <div class="document-mime-type">{{ document.shortMimeType|u.truncate(13, '…') }}</div>

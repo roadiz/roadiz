@@ -116,7 +116,6 @@ class DocumentsController extends RozierApp
         $joinFolderForm->handleRequest($request);
         if ($joinFolderForm->isSubmitted() && $joinFolderForm->isValid()) {
             $data = $joinFolderForm->getData();
-
             $submitFolder = $joinFolderForm->get('submitFolder');
             $submitUnfolder = $joinFolderForm->get('submitUnfolder');
             if ($submitFolder instanceof ClickableInterface && $submitFolder->isClicked()) {
@@ -160,7 +159,7 @@ class DocumentsController extends RozierApp
         $this->assignation['translation'] = $translation;
         $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
 
-        return $this->render('documents/list.html.twig', $this->assignation);
+        return $this->render($this->getListingTemplate($request), $this->assignation);
     }
 
     /**
@@ -382,9 +381,7 @@ class DocumentsController extends RozierApp
                 $this->assignation['thumbnailFormat']['picture'] = true;
             }
 
-            $this->assignation['infos'] = [
-                'filesize' => sprintf('%.3f MB', ($document->getFilesize())/pow(1024, 2)),
-            ];
+            $this->assignation['infos'] = [];
             if ($document->isProcessable() || $document->isSvg()) {
                 $this->assignation['infos']['width'] = $document->getImageWidth() . 'px';
                 $this->assignation['infos']['height'] = $document->getImageHeight() . 'px';
@@ -804,6 +801,44 @@ class DocumentsController extends RozierApp
     }
 
     /**
+     * See unused documents.
+     *
+     * @param  Request $request
+     * @return Response
+     */
+    public function unusedAction(Request $request)
+    {
+        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
+
+        $this->assignation['orphans'] = true;
+        /** @var DocumentRepository $documentRepository */
+        $documentRepository = $this->get('em')
+            ->getRepository(Document::class);
+
+        $listManager = new QueryBuilderListManager(
+            $request,
+            $documentRepository->getAllUnusedQueryBuilder(),
+            'd'
+        );
+        $listManager->setItemPerPage(static::DEFAULT_ITEM_PER_PAGE);
+
+        /*
+         * Stored in session
+         */
+        $sessionListFilter = new SessionListFilters('unused_documents_item_per_page');
+        $sessionListFilter->handleItemPerPage($request, $listManager);
+
+        $listManager->handle();
+
+        $this->assignation['filters'] = $listManager->getAssignation();
+        $this->assignation['no_sorting'] = true;
+        $this->assignation['documents'] = $listManager->getEntities();
+        $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
+
+        return $this->render('documents/list-table.html.twig', $this->assignation);
+    }
+
+    /**
      * @param Document $doc
      *
      * @return FormInterface
@@ -1220,39 +1255,11 @@ class DocumentsController extends RozierApp
         return false;
     }
 
-    /**
-     * See unused documents.
-     *
-     * @param  Request $request
-     * @return Response
-     */
-    public function unusedAction(Request $request)
+    private function getListingTemplate(Request $request): string
     {
-        $this->denyAccessUnlessGranted('ROLE_ACCESS_DOCUMENTS');
-
-        $this->assignation['orphans'] = true;
-        /** @var DocumentRepository $documentRepository */
-        $documentRepository = $this->get('em')
-            ->getRepository(Document::class);
-
-        $listManager = new QueryBuilderListManager(
-            $request,
-            $documentRepository->getAllUnusedQueryBuilder()
-        );
-        $listManager->setItemPerPage(static::DEFAULT_ITEM_PER_PAGE);
-
-        /*
-         * Stored in session
-         */
-        $sessionListFilter = new SessionListFilters('unused_documents_item_per_page');
-        $sessionListFilter->handleItemPerPage($request, $listManager);
-
-        $listManager->handle();
-
-        $this->assignation['filters'] = $listManager->getAssignation();
-        $this->assignation['documents'] = $listManager->getEntities();
-        $this->assignation['thumbnailFormat'] = $this->thumbnailFormat;
-
-        return $this->render('documents/list.html.twig', $this->assignation);
+        if ($request->query->get('list') === '1') {
+            return 'documents/list-table.html.twig';
+        }
+        return 'documents/list.html.twig';
     }
 }

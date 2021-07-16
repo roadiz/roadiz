@@ -16,24 +16,23 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class RawDocumentsSubscriber implements EventSubscriberInterface
 {
-    /** @var DownscaleImageManager */
-    protected $manager;
+    protected DownscaleImageManager $manager;
 
     /**
      * @param EntityManager $em
      * @param Packages $packages
      * @param LoggerInterface|null $logger
-     * @param EntityManager|string $imageDriver
-     * @param integer $maxPixelSize
+     * @param string $imageDriver
+     * @param int $maxPixelSize
      * @param string $rawImageSuffix
      */
     public function __construct(
         EntityManager $em,
         Packages $packages,
         LoggerInterface $logger = null,
-        $imageDriver = 'gd',
-        $maxPixelSize = 0,
-        $rawImageSuffix = ".raw"
+        string $imageDriver = 'gd',
+        int $maxPixelSize = 0,
+        string $rawImageSuffix = ".raw"
     ) {
         $this->manager = new DownscaleImageManager($em, $packages, $logger, $imageDriver, $maxPixelSize, $rawImageSuffix);
     }

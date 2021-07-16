@@ -9,22 +9,10 @@ use Symfony\Component\HttpFoundation\Request;
 
 class QueryBuilderListManager extends AbstractEntityListManager
 {
-    /**
-     * @var QueryBuilder
-     */
-    protected $queryBuilder;
-    /**
-     * @var Paginator|null
-     */
-    protected $paginator;
-    /**
-     * @var string
-     */
-    protected $identifier;
-    /**
-     * @var bool
-     */
-    protected $debug = false;
+    protected QueryBuilder $queryBuilder;
+    protected ?Paginator $paginator = null;
+    protected string $identifier;
+    protected bool $debug = false;
 
     /**
      * @param Request|null $request

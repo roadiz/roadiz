@@ -5408,6 +5408,17 @@
             <target></target>
             <note>Default controller deleteAction result message.</note>
         </trans-unit>
+
+        <trans-unit id="document.document_display_gallery">
+            <source>document.document_display_gallery</source>
+            <target></target>
+            <note></note>
+        </trans-unit>
+        <trans-unit id="documents.document_display_list">
+            <source>documents.document_display_list</source>
+            <target></target>
+            <note></note>
+        </trans-unit>
     </body>
   </file>
 </xliff>

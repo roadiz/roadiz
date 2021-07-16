@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace RZ\Roadiz\Console;
 
 use Doctrine\ORM\EntityManager;
-use Intervention\Image\ImageManager;
 use RZ\Roadiz\Core\Entities\Document;
 use RZ\Roadiz\Utils\Asset\Packages;
 use Symfony\Component\Console\Command\Command;
@@ -16,12 +15,7 @@ use Symfony\Component\HttpFoundation\File\File;
 
 class DocumentFilesizeCommand extends Command
 {
-    /** @var SymfonyStyle */
-    protected $io;
-    /**
-     * @var ImageManager
-     */
-    private $manager;
+    protected SymfonyStyle $io;
 
     protected function configure()
     {
@@ -37,7 +31,6 @@ class DocumentFilesizeCommand extends Command
         /** @var Packages $packages */
         $packages = $this->getHelper('assetPackages')->getPackages();
         $this->io = new SymfonyStyle($input, $output);
-        $this->manager = new ImageManager();
 
         $batchSize = 20;
         $i = 0;

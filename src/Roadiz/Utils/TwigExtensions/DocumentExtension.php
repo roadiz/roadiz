@@ -48,7 +48,7 @@ class DocumentExtension extends AbstractExtension
         RendererInterface $renderer,
         EmbedFinderFactory $embedFinderFactory,
         Packages $assetPackages,
-        $throwExceptions = false
+        bool $throwExceptions = false
     ) {
         $this->throwExceptions = $throwExceptions;
         $this->renderer = $renderer;
@@ -69,7 +69,20 @@ class DocumentExtension extends AbstractExtension
             new TwigFilter('path', [$this, 'getPath']),
             new TwigFilter('exists', [$this, 'exists']),
             new TwigFilter('embedFinder', [$this, 'getEmbedFinder']),
+            new TwigFilter('formatBytes', array($this, 'formatBytes')),
         ];
+    }
+
+    /**
+     * @param string|int $bytes
+     * @param int $precision
+     * @return string
+     */
+    public function formatBytes($bytes, int $precision = 2)
+    {
+        $size = ['B','kB','MB','GB','TB','PB','EB','ZB','YB'];
+        $factor = floor((strlen((string) $bytes) - 1) / 3);
+        return sprintf("%.{$precision}f", $bytes / pow(1024, $factor)) . @$size[$factor];
     }
 
     /**

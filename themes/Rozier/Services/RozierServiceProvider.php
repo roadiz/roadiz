@@ -139,7 +139,6 @@ final class RozierServiceProvider implements ServiceProviderInterface
                 );
                 $dispatcher->addSubscriber(
                     new ImageColorDocumentSubscriber(
-                        $c['em'],
                         $c['assetPackages'],
                         $c['logger']
                     )

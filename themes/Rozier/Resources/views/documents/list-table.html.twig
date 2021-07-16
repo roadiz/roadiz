@@ -1,0 +1,124 @@
+{% extends "@Rozier/documents/list.html.twig" %}
+
+{% macro single_document(document) %}
+    <tr>
+        <td class="mobile-hidden">
+            <figure class="document-image">
+                {% if not document.private and (document.isImage or document.isSvg or document.hasThumbnails) %}
+                    {{ document|display({
+                        picture: true,
+                        fit: '64x64',
+                        quality: 70
+                    }) }}
+                {% endif %}
+                {% if not (document.isImage or document.isSvg) and document.shortType != 'unknown' %}
+                    <div class="document-platform-icon"><i class="uk-icon-file-{{ document.shortType }}-o"></i></div>
+                {% endif %}
+            </figure>
+        </td>
+        <td>
+            <a href="{{ path('documentsEditPage', { documentId: document.id }) }}">{{ document|centralTruncate(30, -4) }}</a>
+        </td>
+        <td class="mobile-hidden">{{ document.mimeType }}</td>
+        <td>
+            {% if document.filesize > 0 %}<i class="uk-icon-eye"></i> {{ document.filesize|formatBytes }}{% endif %}
+            {% if document.rawDocument %}
+                {% if document.rawDocument.filesize > 0 %}
+                    <br><i data-uk-tooltip="{animation:true}"
+                           title="{{ 'original.document'|trans }}"
+                           class="uk-icon-camera-retro"></i> {{ document.rawDocument.filesize|formatBytes }}
+                {% endif %}
+            {% endif %}
+        </td>
+        <td class="mobile-hidden uk-visible-xlarge">{% if document.imageWidth > 0 %}{{ document.imageWidth }}px{% endif %}</td>
+        <td class="mobile-hidden uk-visible-xlarge">{% if document.imageHeight > 0 %}{{ document.imageHeight }}px{% endif %}</td>
+        <td class="mobile-hidden uk-visible-xlarge">
+            {% if document.embedPlatform %}
+                {% set iconName = document.embedPlatform %}
+                {% if document.embedPlatform == 'unsplash' or document.embedPlatform == 'splashbase' %}
+                    {% set iconName = 'documents' %}
+                {% endif %}
+                <span class="uk-button-status"
+                      data-uk-tooltip="{animation:true}"
+                      title="{{ document.embedPlatform|trans }}"><i class="uk-icon-rz-{{ iconName }}"></i></span>
+            {% endif %}
+        </td>
+        <td>
+            <div class="tagtree-bulk-selection">
+                <input class="tag-checkbox document-checkbox" type="checkbox" name="documents[]" value="{{ document.id }}" />
+            </div>
+            {% apply spaceless %}
+            <a class="uk-button uk-button-content uk-button-small document-link"
+               href="{{ path('documentsEditPage', { documentId: document.id }) }}"><i class="uk-icon-rz-pencil"></i></a>
+            <a class="uk-button uk-button-content uk-button-small uk-button-table-delete"
+               href="{{ path('documentsDeletePage', { documentId: document.id }) }}"><i class="uk-icon-trash-o"></i></a>
+            {% endapply %}
+        </td>
+    </tr>
+{% endmacro %}
+
+{% block content_body %}
+<article class="content content-no-action-menu">
+<div class="content-table-cont">
+    <table class="uk-table content-table">
+        <thead>
+            <tr>
+                <th class="mobile-hidden"></th>
+                <th>
+                    {% trans %}document.filename{% endtrans %}
+                    {% if not no_sorting %}
+                        {% include 'includes/column_ordering.html.twig' with {
+                            'field': 'filename',
+                            'filters': filters,
+                        } only %}
+                    {% endif %}
+                </th>
+                <th class="mobile-hidden">
+                    {% trans %}document.mimeType{% endtrans %}
+                    {% if not no_sorting %}
+                    {% include 'includes/column_ordering.html.twig' with {
+                        'field': 'mimeType',
+                        'filters': filters,
+                    } only %}
+                    {% endif %}
+                </th>
+                <th>
+                    {% trans %}document.filesize{% endtrans %}
+                    {% if not no_sorting %}
+                    {% include 'includes/column_ordering.html.twig' with {
+                        'field': 'filesize',
+                        'filters': filters,
+                    } only %}
+                    {% endif %}
+                </th>
+                <th class="mobile-hidden uk-visible-xlarge">
+                    {% trans %}document.width{% endtrans %}
+                    {% if not no_sorting %}
+                    {% include 'includes/column_ordering.html.twig' with {
+                        'field': 'imageWidth',
+                        'filters': filters,
+                    } only %}
+                    {% endif %}
+                </th>
+                <th class="mobile-hidden uk-visible-xlarge">
+                    {% trans %}document.height{% endtrans %}
+                    {% if not no_sorting %}
+                    {% include 'includes/column_ordering.html.twig' with {
+                        'field': 'imageHeight',
+                        'filters': filters,
+                    } only %}
+                    {% endif %}
+                </th>
+                <th class="mobile-hidden uk-visible-xlarge"></th>
+                <th class="table-actions-row table-actions-row-3">{% trans %}actions{% endtrans %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for document in documents %}
+            {{- _self.single_document(document, thumbnailFormat) -}}
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</article>
+{% endblock %}

@@ -3,7 +3,9 @@
 {% apply spaceless %}
 <form class="uk-form uk-margin-remove uk-display-inline-block" method="get">
     {% if filters.search %}<input type="hidden" name="search" value="{{ filters.search }}" />{% endif %}
-    {% if filters.currentPage %}<input type="hidden" name="page" value="{{ filters.currentPage }}" />{% endif %}
+    {# Current page should be reset to avoid displaying empty results pages because items per page is higher than items count #}
+    <input type="hidden" name="page" value="1" />
+    {% block additional_inputs %}{% endblock %}
     <span class="item-per-page-label">{% trans %}item-per-page.display.count{% endtrans %}</span>
     <div class="rz-select">
         <select class="item-per-page" name="item_per_page">
