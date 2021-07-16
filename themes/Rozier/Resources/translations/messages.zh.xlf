@@ -2864,6 +2864,22 @@
         <source>nodeTypeField.maxLength</source>
         <target state="translated">最大长度</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="no_limit">
+        <source>no_limit</source>
+        <target state="translated">无限制</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serialization">
+        <source>nodeTypeField.serialization</source>
+        <target state="translated">序列化</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeTypeField.serializationMaxDepth">
+        <source>nodeTypeField.serializationMaxDepth</source>
+        <target state="translated">最大序列化深度</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="default_value">
+        <source>default_value</source>
+        <target state="translated">默认值</target>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="export.all.nodes">
         <source>export.all.nodes</source>
         <target state="translated">导出所有节点</target>
@@ -3631,6 +3647,10 @@
       <trans-unit xml:space="preserve" id="nodeType.hiding_nodes">
           <source>nodeType.hiding_nodes</source>
           <target state="translated">此类型隐藏了它的节点树</target>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="nodeType.searchable">
+          <source>nodeType.searchable</source>
+          <target state="translated">可搜索的？</target>
       </trans-unit>
       <trans-unit xml:space="preserve" id="newsletter.%name%.created">
           <source>newsletter.%name%.created</source>
@@ -4620,6 +4640,21 @@
         <source>document.filesize</source>
         <target state="translated">文件大小</target>
       </trans-unit>
+      <trans-unit xml:space="preserve" id="document.duration">
+        <source>document.duration</source>
+        <target state="translated">持续时间（以秒为单位）</target>
+        <note>Label for timed documents duration (in seconds)</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.media_not_found_or_private">
+        <source>document.media_not_found_or_private</source>
+        <target state="translated">媒体未找到或被标记为私有的</target>
+        <note>Error message when external media request fails with NotFound response.</note>
+      </trans-unit>
+      <trans-unit xml:space="preserve" id="document.is_only_external">
+        <source>document.is_only_external</source>
+        <target state="translated">文档未连结至任何本地文件</target>
+        <note>Warning message displayed when document does not have any file locally.</note>
+      </trans-unit>
       <trans-unit xml:space="preserve" id="reachable">
         <source>reachable</source>
         <target state="translated">可到达的</target>
@@ -5139,6 +5174,11 @@
             <target state="translated">导出文件资料</target>
             <note>Button label, for exporting node-type Markdown documentation</note>
         </trans-unit>
+      <trans-unit xml:space="preserve" id="export.typescript_declaration">
+            <source>export.typescript_declaration</source>
+            <target state="translated">导出 Typescript 声明</target>
+            <note>Button label, for exporting node-types into a TypeScript declaration file.</note>
+        </trans-unit>
       <trans-unit xml:space="preserve" id="hide_roadiz_version">
             <source>hide_roadiz_version</source>
             <target state="translated">隐藏 Roadiz 版本</target>
@@ -5158,6 +5198,21 @@
         <source>filter</source>
         <target state="translated">筛选器</target>
         <note>Button label for a generic filtering action.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_created">
+        <source>%namespace%.%item%.was_created</source>
+        <target state="translated">%namespace% "%item%"已创建。</target>
+        <note>Default controller addAction result message.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_updated">
+        <source>%namespace%.%item%.was_updated</source>
+        <target state="translated">%namespace% "%item%"已更新。</target>
+        <note>Default controller editAction result message.</note>
+      </trans-unit>
+      <trans-unit id="%namespace%.%item%.was_deleted">
+        <source>%namespace%.%item%.was_deleted</source>
+        <target state="translated">%namespace% "%item%"已删除。</target>
+        <note>Default controller deleteAction result message.</note>
       </trans-unit>
     </body>
   </file>

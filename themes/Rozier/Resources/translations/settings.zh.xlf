@@ -84,6 +84,36 @@
                 <target state="translated">限制为域名</target>
                 <note>Setting name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_button_label">
+                <source>openid_button_label</source>
+                <target state="translated">与 OpenID 按钮标签连接</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_discovery">
+                <source>openid_discovery</source>
+                <target state="translated">自动发现 OpenID URL</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_preview_scheme">
+                <source>custom_preview_scheme</source>
+                <target state="translated">自定义预览格式</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="custom_public_scheme">
+                <source>custom_public_scheme</source>
+                <target state="translated">自定义公开格式</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="use_typed_node_names">
+                <source>use_typed_node_names</source>
+                <target state="translated">使用已输入的节点名称</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="openid_username_claim">
+                <source>openid_username_claim</source>
+                <target state="translated">声明 OpenID 用户名</target>
+                <note>Setting name</note>
+            </trans-unit>
       <!-- Setting groups names -->
       <trans-unit xml:space="preserve" id="APIs">
                 <source>APIs</source>
@@ -110,10 +140,25 @@
                 <target state="translated">站点信息</target>
                 <note>Setting group name</note>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="Site information">
+                <source>Site information</source>
+                <target state="translated">站点信息</target>
+                <note>Setting group name</note>
+            </trans-unit>
       <trans-unit xml:space="preserve" id="Social networks">
                 <source>Social networks</source>
                 <target state="translated">社交网络</target>
                 <note>Setting group name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="dashboard_iframe">
+                <source>dashboard_iframe</source>
+                <target state="translated">为控制面板自定义 iframe</target>
+                <note>Setting name</note>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="unsplash_client_id">
+                <source>unsplash_client_id</source>
+                <target state="translated">Unsplash API : client ID</target>
+                <note>Setting name</note>
             </trans-unit>
     </body>
   </file>

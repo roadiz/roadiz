@@ -418,6 +418,14 @@
                 <source>import_node</source>
                 <target state="translated">节点</target>
             </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type">
+                <source>inheritance_type</source>
+                <target state="translated">继承映射策略</target>
+            </trans-unit>
+      <trans-unit xml:space="preserve" id="inheritance_type.single_table">
+                <source>inheritance_type.single_table</source>
+                <target state="translated">单表继承</target>
+            </trans-unit>
     </body>
   </file>
 </xliff>
