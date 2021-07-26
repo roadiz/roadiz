@@ -89,7 +89,7 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface, Ser
      * @ORM\Column(name="excluded_from_serialization", type="boolean", nullable=false, options={"default" = false})
      */
     private bool $excludedFromSerialization = false;
-    
+
     /**
      * @return NodeType|null
      */
@@ -351,6 +351,12 @@ class NodeTypeField extends AbstractField implements NodeTypeFieldInterface, Ser
     public function setSerializationGroups(?array $serializationGroups): NodeTypeField
     {
         $this->serializationGroups = $serializationGroups;
+        if (null !== $this->serializationGroups) {
+            $this->serializationGroups = array_filter($this->serializationGroups);
+        }
+        if (empty($this->serializationGroups)) {
+            $this->serializationGroups = null;
+        }
         return $this;
     }
 

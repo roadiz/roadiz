@@ -325,7 +325,7 @@ class DoctrineServiceProvider implements ServiceProviderInterface
 
         $container[SchemaUpdater::class] = function (Container $c) {
             return new SchemaUpdater(
-                $c['em'],
+                $c[ManagerRegistry::class],
                 $c['kernel'],
                 $c['logger.doctrine']
             );
