@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use RZ\Roadiz\Core\Entities\Node;
 use RZ\Roadiz\Core\Events\Node\NodeDuplicatedEvent;
 use RZ\Roadiz\Core\Handlers\HandlerFactoryInterface;
 use RZ\Roadiz\Core\Handlers\NodeHandler;
@@ -15,16 +16,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class NodeDuplicationSubscriber implements EventSubscriberInterface
 {
     protected HandlerFactoryInterface $handlerFactory;
-    private EntityManagerInterface $entityManager;
+    private ManagerRegistry $managerRegistry;
 
     /**
-     * @param EntityManagerInterface  $entityManager
+     * @param ManagerRegistry $managerRegistry
      * @param HandlerFactoryInterface $handlerFactory
      */
-    public function __construct(EntityManagerInterface $entityManager, HandlerFactoryInterface $handlerFactory)
+    public function __construct(ManagerRegistry $managerRegistry, HandlerFactoryInterface $handlerFactory)
     {
-        $this->entityManager = $entityManager;
         $this->handlerFactory = $handlerFactory;
+        $this->managerRegistry = $managerRegistry;
     }
 
     public static function getSubscribedEvents()
@@ -48,6 +49,6 @@ class NodeDuplicationSubscriber implements EventSubscriberInterface
         $nodeHandler->cleanChildrenPositions();
         $nodeHandler->cleanPositions();
 
-        $this->entityManager->flush();
+        $this->managerRegistry->getManagerForClass(Node::class)->flush();
     }
 }

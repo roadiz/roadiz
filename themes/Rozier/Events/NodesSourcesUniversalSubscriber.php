@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Events;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
+use RZ\Roadiz\Core\Entities\NodesSources;
 use RZ\Roadiz\Core\Events\NodesSources\NodesSourcesUpdatedEvent;
 use RZ\Roadiz\Utils\Node\UniversalDataDuplicator;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -13,17 +14,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
  */
 class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
 {
-    private EntityManagerInterface $em;
+    private ManagerRegistry $managerRegistry;
     private UniversalDataDuplicator $universalDataDuplicator;
 
     /**
-     * @param EntityManagerInterface $em
+     * @param ManagerRegistry $managerRegistry
      * @param UniversalDataDuplicator $universalDataDuplicator
      */
-    public function __construct(EntityManagerInterface $em, UniversalDataDuplicator $universalDataDuplicator)
+    public function __construct(ManagerRegistry $managerRegistry, UniversalDataDuplicator $universalDataDuplicator)
     {
-        $this->em = $em;
         $this->universalDataDuplicator = $universalDataDuplicator;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -50,7 +51,7 @@ class NodesSourcesUniversalSubscriber implements EventSubscriberInterface
          * Flush only if duplication happened.
          */
         if (true === $this->universalDataDuplicator->duplicateUniversalContents($source)) {
-            $this->em->flush();
+            $this->managerRegistry->getManagerForClass(NodesSources::class)->flush();
         }
     }
 }

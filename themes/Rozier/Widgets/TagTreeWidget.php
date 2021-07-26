@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace Themes\Rozier\Widgets;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Tag;
-use RZ\Roadiz\Core\Entities\Translation;
 use RZ\Roadiz\Core\Repositories\TagRepository;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -16,13 +14,13 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class TagTreeWidget extends AbstractWidget
 {
-    protected $parentTag = null;
+    protected ?Tag $parentTag = null;
+    /**
+     * @var array<Tag>|Paginator<Tag>|null
+     */
     protected $tags = null;
-    protected $translation = null;
-    protected $canReorder = true;
-    protected $forceTranslation = false;
-    /** @var TagRepository */
-    protected $tagRepository;
+    protected bool $canReorder = true;
+    protected bool $forceTranslation = false;
 
     /**
      * @param Request $request
@@ -40,11 +38,6 @@ final class TagTreeWidget extends AbstractWidget
 
         $this->parentTag = $parent;
         $this->forceTranslation = $forceTranslation;
-        $this->translation = $this->entityManager
-            ->getRepository(Translation::class)
-            ->findOneBy(['defaultTranslation' => true]);
-        $this->tagRepository = $this->entityManager->getRepository(Tag::class);
-        $this->getTagTreeAssignationForParent();
     }
 
     /**
@@ -67,15 +60,15 @@ final class TagTreeWidget extends AbstractWidget
             'parent' => $this->parentTag,
         ];
         if ($this->forceTranslation) {
-            $criteria['translation'] = $this->translation;
+            $criteria['translation'] = $this->getTranslation();
         }
-        $this->tags = $this->tagRepository->findBy($criteria, $ordering);
+        $this->tags = $this->getTagRepository()->findBy($criteria, $ordering);
     }
 
     /**
      * @param Tag|null $parent
      *
-     * @return ArrayCollection<Tag>|Paginator|array<Tag>|null
+     * @return array<Tag>|Paginator<Tag>|null
      */
     public function getChildrenTags(?Tag $parent)
     {
@@ -94,10 +87,10 @@ final class TagTreeWidget extends AbstractWidget
                 'parent' => $parent,
             ];
             if ($this->forceTranslation) {
-                $criteria['translation'] = $this->translation;
+                $criteria['translation'] = $this->getTranslation();
             }
 
-            $this->tags = $this->tagRepository->findBy($criteria, $ordering);
+            $this->tags = $this->getTagRepository()->findBy($criteria, $ordering);
 
             return $this->tags;
         }
@@ -111,25 +104,30 @@ final class TagTreeWidget extends AbstractWidget
     {
         return $this->parentTag;
     }
+
     /**
-     * @return Translation
-     */
-    public function getTranslation()
-    {
-        return $this->translation;
-    }
-    /**
-     * @return ArrayCollection
+     * @return array<Tag>|Paginator<Tag>|null
      */
     public function getTags()
     {
+        if ($this->tags === null) {
+            $this->getTagTreeAssignationForParent();
+        }
         return $this->tags;
+    }
+
+    /**
+     * @return TagRepository
+     */
+    protected function getTagRepository()
+    {
+        return $this->getEntityManager()->getRepository(Tag::class);
     }
 
     /**
      * Gets the value of canReorder.
      *
-     * @return boolean
+     * @return bool
      */
     public function getCanReorder()
     {

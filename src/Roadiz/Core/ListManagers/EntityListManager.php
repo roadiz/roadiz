@@ -19,38 +19,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class EntityListManager extends AbstractEntityListManager
 {
+    protected ?EntityManagerInterface $entityManager = null;
     /**
-     * @var EntityManagerInterface|null
+     * @var class-string|string
      */
-    protected $entityManager = null;
-    /**
-     * @var string
-     */
-    protected $entityName;
-    /**
-     * @var Paginator
-     */
-    protected $paginator = null;
-    /**
-     * @var array|null
-     */
-    protected $orderingArray = null;
-    /**
-     * @var array|null
-     */
-    protected $filteringArray = null;
-    /**
-     * @var string|null
-     */
-    protected $searchPattern = null;
-    /**
-     * @var array|null
-     */
-    protected $assignation = null;
-    /**
-     * @var Translation|null
-     */
-    protected $translation = null;
+    protected string $entityName;
+    protected ?Paginator $paginator = null;
+    protected ?array $orderingArray = null;
+    protected ?array $filteringArray = null;
+    protected ?string $searchPattern = null;
+    protected ?array $assignation = null;
+    protected ?Translation $translation = null;
 
     /**
      * @param Request|null  $request
@@ -63,8 +42,8 @@ class EntityListManager extends AbstractEntityListManager
         ?Request $request,
         EntityManagerInterface $entityManager,
         string $entityName,
-        $preFilters = [],
-        $preOrdering = []
+        array $preFilters = [],
+        array $preOrdering = []
     ) {
         parent::__construct($request);
         $this->entityName = $entityName;

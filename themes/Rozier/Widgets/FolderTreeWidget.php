@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Themes\Rozier\Widgets;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use RZ\Roadiz\Core\Entities\Folder;
-use RZ\Roadiz\Core\Entities\Translation;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -13,11 +13,10 @@ use Symfony\Component\HttpFoundation\Request;
  */
 final class FolderTreeWidget extends AbstractWidget
 {
-    protected $parentFolder = null;
+    protected ?Folder $parentFolder = null;
     /**
-     * @var Translation|null
+     * @var array<Folder>|Paginator<Folder>|null
      */
-    protected $translation = null;
     protected $folders = null;
 
     /**
@@ -28,50 +27,40 @@ final class FolderTreeWidget extends AbstractWidget
     public function __construct(
         Request $request,
         EntityManagerInterface $entityManager,
-        Folder $parent = null
+        ?Folder $parent = null
     ) {
         parent::__construct($request, $entityManager);
-
         $this->parentFolder = $parent;
-        $this->translation = $this->entityManager
-            ->getRepository(Translation::class)
-            ->findOneBy(['defaultTranslation' => true]);
-        $this->getFolderTreeAssignationForParent();
-    }
-
-    /**
-     * Fill twig assignation array with FolderTree entities.
-     */
-    protected function getFolderTreeAssignationForParent()
-    {
-        $this->folders = $this->entityManager
-             ->getRepository(Folder::class)
-             ->findByParentAndTranslation($this->parentFolder, $this->translation);
     }
 
     /**
      * @param Folder $parent
      * @return array
      */
-    public function getChildrenFolders(Folder $parent)
+    public function getChildrenFolders(Folder $parent): array
     {
-        return $this->folders = $this->entityManager
+        return $this->folders = $this->getEntityManager()
                     ->getRepository(Folder::class)
-                    ->findByParentAndTranslation($parent, $this->translation);
+                    ->findByParentAndTranslation($parent, $this->getTranslation());
     }
     /**
-     * @return Folder
+     * @return Folder|null
      */
-    public function getRootFolder()
+    public function getRootFolder(): ?Folder
     {
         return $this->parentFolder;
     }
 
     /**
-     * @return array
+     * @return array<Folder>|Paginator<Folder>
      */
     public function getFolders()
     {
+        if (null === $this->folders) {
+            $this->folders = $this->getEntityManager()
+                ->getRepository(Folder::class)
+                ->findByParentAndTranslation($this->getRootFolder(), $this->getTranslation());
+        }
         return $this->folders;
     }
 }

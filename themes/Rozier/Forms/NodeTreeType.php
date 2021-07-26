@@ -25,18 +25,9 @@ use Themes\Rozier\Widgets\NodeTreeWidget;
  */
 class NodeTreeType extends AbstractType
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    protected $authorizationChecker;
-    /**
-     * @var RequestStack
-     */
-    protected $requestStack;
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected AuthorizationCheckerInterface $authorizationChecker;
+    protected RequestStack $requestStack;
+    protected EntityManagerInterface $entityManager;
 
     /**
      * @param AuthorizationCheckerInterface $authorizationChecker

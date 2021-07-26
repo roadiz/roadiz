@@ -20,42 +20,17 @@ final class NodeTreeWidget extends AbstractWidget
 {
     const SESSION_ITEM_PER_PAGE = 'nodetree_item_per_page';
 
+    protected ?Node $parentNode = null;
     /**
-     * @var Node|null
-     */
-    protected $parentNode = null;
-    /**
-     * @var array|null
+     * @var array<Node>|Paginator<Node>|null
      */
     protected $nodes = null;
-    /**
-     * @var Tag|null
-     */
-    protected $tag = null;
-    /**
-     * @var Translation|null
-     */
-    protected $translation = null;
-    /**
-     * @var array|null
-     */
-    protected $availableTranslations = null;
-    /**
-     * @var bool
-     */
-    protected $stackTree = false;
-    /**
-     * @var array|null
-     */
-    protected $filters = null;
-    /**
-     * @var bool
-     */
-    protected $canReorder = true;
-    /**
-     * @var array
-     */
-    protected $additionalCriteria = [];
+    protected ?Tag $tag = null;
+    protected ?Translation $translation = null;
+    protected bool $stackTree = false;
+    protected ?array $filters = null;
+    protected bool $canReorder = true;
+    protected array $additionalCriteria = [];
 
     /**
      * @param Request $request Current kernel request
@@ -66,32 +41,19 @@ final class NodeTreeWidget extends AbstractWidget
     public function __construct(
         Request $request,
         EntityManagerInterface $entityManager,
-        Node $parent = null,
-        Translation $translation = null
+        ?Node $parent = null,
+        ?Translation $translation = null
     ) {
         parent::__construct($request, $entityManager);
 
         $this->parentNode = $parent;
         $this->translation = $translation;
-
-        if ($this->translation === null) {
-            $this->translation = $this->entityManager
-                ->getRepository(Translation::class)
-                ->findOneBy(['defaultTranslation' => true]);
-        }
-
-        $this->availableTranslations = $this->entityManager
-             ->getRepository(Translation::class)
-             ->findBy([], [
-                 'defaultTranslation' => 'DESC',
-                 'locale' => 'ASC',
-             ]);
     }
 
     /**
      * @return Tag|null
      */
-    public function getTag()
+    public function getTag(): ?Tag
     {
         return $this->tag;
     }
@@ -101,7 +63,7 @@ final class NodeTreeWidget extends AbstractWidget
      *
      * @return $this
      */
-    public function setTag($tag)
+    public function setTag(?Tag $tag)
     {
         $this->tag = $tag;
 
@@ -109,19 +71,19 @@ final class NodeTreeWidget extends AbstractWidget
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
-    public function isStackTree()
+    public function isStackTree(): bool
     {
         return $this->stackTree;
     }
 
     /**
-     * @param boolean $newstackTree
+     * @param bool $newstackTree
      *
      * @return $this
      */
-    public function setStackTree($newstackTree)
+    public function setStackTree(bool $newstackTree)
     {
         $this->stackTree = (boolean) $newstackTree;
 
@@ -164,7 +126,7 @@ final class NodeTreeWidget extends AbstractWidget
      *
      * @return bool
      */
-    protected function canOrderByParent(Node $parent = null, $subRequest = false)
+    protected function canOrderByParent(Node $parent = null, bool $subRequest = false): bool
     {
         if (true === $subRequest || null === $parent) {
             return false;
@@ -185,7 +147,7 @@ final class NodeTreeWidget extends AbstractWidget
      * @param array $additionalCriteria Default: []
      * @return EntityListManagerInterface
      */
-    protected function getListManager(Node $parent = null, $subRequest = false, array $additionalCriteria = [])
+    protected function getListManager(Node $parent = null, bool $subRequest = false, array $additionalCriteria = [])
     {
         $criteria = array_merge($additionalCriteria, [
             'parent' => $parent,
@@ -210,8 +172,8 @@ final class NodeTreeWidget extends AbstractWidget
          * Manage get request to filter list
          */
         $listManager = new EntityListManager(
-            $this->request,
-            $this->entityManager,
+            $this->getRequest(),
+            $this->getEntityManager(),
             Node::class,
             $criteria,
             $ordering
@@ -226,7 +188,7 @@ final class NodeTreeWidget extends AbstractWidget
              * Stored in session
              */
             $sessionListFilter = new SessionListFilters(static::SESSION_ITEM_PER_PAGE);
-            $sessionListFilter->handleItemPerPage($this->request, $listManager);
+            $sessionListFilter->handleItemPerPage($this->getRequest(), $listManager);
         } else {
             $listManager->setItemPerPage(99999);
             $listManager->handle(true);
@@ -245,7 +207,7 @@ final class NodeTreeWidget extends AbstractWidget
      * @param bool $subRequest Default: false
      * @return array|Paginator
      */
-    public function getChildrenNodes(Node $parent = null, $subRequest = false)
+    public function getChildrenNodes(Node $parent = null, bool $subRequest = false)
     {
         return $this->getListManager($parent, $subRequest)->getEntities();
     }
@@ -255,7 +217,7 @@ final class NodeTreeWidget extends AbstractWidget
      * @param bool $subRequest Default: false
      * @return array|Paginator
      */
-    public function getReachableChildrenNodes(Node $parent = null, $subRequest = false)
+    public function getReachableChildrenNodes(Node $parent = null, bool $subRequest = false)
     {
         return $this->getListManager($parent, $subRequest, [
             'nodeType.reachable' => true,
@@ -265,7 +227,7 @@ final class NodeTreeWidget extends AbstractWidget
     /**
      * @return Node|null
      */
-    public function getRootNode()
+    public function getRootNode(): ?Node
     {
         return $this->parentNode;
     }
@@ -281,24 +243,30 @@ final class NodeTreeWidget extends AbstractWidget
     {
         return $this->filters;
     }
+
     /**
-     * @return Translation|null
+     * @return Translation
      */
-    public function getTranslation()
+    public function getTranslation(): Translation
     {
-        return $this->translation;
+        return $this->translation ?? parent::getTranslation();
     }
 
     /**
-     * @return array
+     * @return array<Translation>
      */
-    public function getAvailableTranslations()
+    public function getAvailableTranslations(): array
     {
-        return $this->availableTranslations ?? [];
+        return $this->getEntityManager()
+            ->getRepository(Translation::class)
+            ->findBy([], [
+                'defaultTranslation' => 'DESC',
+                'locale' => 'ASC',
+            ]);
     }
 
     /**
-     * @return array|Paginator
+     * @return array<Node>|Paginator<Node>
      */
     public function getNodes()
     {
@@ -314,9 +282,9 @@ final class NodeTreeWidget extends AbstractWidget
     /**
      * Gets the value of canReorder.
      *
-     * @return boolean
+     * @return bool
      */
-    public function getCanReorder()
+    public function getCanReorder(): bool
     {
         return $this->canReorder;
     }

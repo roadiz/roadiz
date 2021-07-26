@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Themes\Rozier\Widgets;
 
 use Doctrine\ORM\EntityManagerInterface;
+use RZ\Roadiz\Core\Entities\Translation;
+use RZ\Roadiz\Core\Exceptions\NoTranslationAvailableException;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -12,19 +14,14 @@ use Symfony\Component\HttpFoundation\Request;
  */
 abstract class AbstractWidget
 {
-    /**
-     * @var Request
-     */
-    protected $request;
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
+    protected Request $request;
+    private EntityManagerInterface $entityManager;
+    protected ?Translation $defaultTranslation = null;
 
     /**
      * @return Request
      */
-    protected function getRequest()
+    protected function getRequest(): Request
     {
         return $this->request;
     }
@@ -37,5 +34,25 @@ abstract class AbstractWidget
     {
         $this->request = $request;
         $this->entityManager = $entityManager;
+    }
+
+    protected function getEntityManager(): EntityManagerInterface
+    {
+        return $this->entityManager;
+    }
+
+    protected function getTranslation(): Translation
+    {
+        if (null === $this->defaultTranslation) {
+            $this->defaultTranslation = $this->getEntityManager()
+                ->getRepository(Translation::class)
+                ->findOneBy(['defaultTranslation' => true]);
+
+            if (null === $this->defaultTranslation) {
+                throw new NoTranslationAvailableException();
+            }
+        }
+
+        return $this->defaultTranslation;
     }
 }
